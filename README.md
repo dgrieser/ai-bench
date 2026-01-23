@@ -1,3 +1,7 @@
+# AI Benchmarks
+
 This repository is a listing of benchmark results for AI models.
 
-See `llm.md` for LLM Benchmarks.
+## LLM
+
+See [llm.md](llm.md) for LLM Benchmarks.
