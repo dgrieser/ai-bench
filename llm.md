@@ -1,4 +1,6 @@
-See commit date for last update.
+# LLM Benchmarks
+
+*See commit date for last update.*
 
 | Model                       | Params     | Context | Creator | SWE-bench Verified |  Terminal-Bench Hard | τ²-Bench Telecom | BrowseComp | AIME 2025 | GPQA Diamond | LiveCodeBench |  HLE | AA Intelligence Index |
 | --------------------------- | ---------: | ------: | ------: | -----------------: |  ------------------: | ---------------: | ---------: | --------: | -------------: | ------------: | ---: | --------------------: |
@@ -9,45 +11,45 @@ See commit date for last update.
 | [gpt-oss-20B (high)](https://huggingface.co/openai/gpt-oss-20b) | 117B-A5.1B |    131k | [OpenAI](https://openai.com/index/introducing-gpt-oss/) |               34.0 |                   10 |             60.2 |       28.3 |        89 |             78 |            34 |    7 |                    25 |
 | [gpt-oss-120B (high)](https://huggingface.co/openai/gpt-oss-120b) |  21B-A3.6B |    131k | [OpenAI](https://openai.com/index/introducing-gpt-oss/) |               62.4 |             **24** |             65.8 |       28.7 |     **93** |          **88** |            39 |   10 |                 **33** |
 
-## Benchmark sources
+## Sources
 - https://artificialanalysis.ai/leaderboards/models?is_open_weights=open_source
 - https://arxiv.org/html/2508.10925v1
 - https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512
 - https://huggingface.co/zai-org/GLM-4.7-Flash
 
-## Benchmark legend
+## Legend
 ### SWE-bench Verified
-Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.
+Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.  
 https://www.swebench.com/SWE-bench/
 
 ### Terminal-Bench Hard (Agentic Coding & Terminal Use)
-Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.
+Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.  
 https://www.tbench.ai/
 
 ### τ²-Bench Telecom (Agentic Tool Use)
-Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.
+Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.  
 https://arxiv.org/abs/2506.07982
 
 ### BrowseComp
-Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.
+Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.  
 https://openai.com/index/browsecomp/
 
 ### AIME 2025 (Competition Math)
-American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.
+American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.  
 https://maa.org/maa-invitational-competitions/
 
 ### GPQA Diamond (Scientific Reasoning)
-Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.
+Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.  
 https://arxiv.org/abs/2311.12022
 
 ### LiveCodeBench (Coding)
-Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.
+Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.  
 https://livecodebench.github.io/
 
 ### HLE (Reasoning & Knowledge)
-**Humanity's Last Exam**: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.
+**Humanity's Last Exam**: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.  
 https://lastexam.ai/
 
 ### AA Intelligence Index
-Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.
+Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.  
 https://artificialanalysis.ai/methodology/intelligence-benchmarking
