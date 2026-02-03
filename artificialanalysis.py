@@ -18,6 +18,7 @@ FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
 _CONTEXT_CACHE = {}
 _CONTEXT_ENABLED = True
+_VERBOSE = False
 CACHE_PATH = os.path.expanduser("~/.cache/artificialanalysis/models.json")
 _CACHE_WARMED = False
 
@@ -57,7 +58,12 @@ def _fetch_context_window(slug: str):
     if slug in _CONTEXT_CACHE:
         return _CONTEXT_CACHE[slug]
     try:
+        if _VERBOSE:
+            url = MODEL_PAGE_URL.format(slug)
+            print(f"> GET {url}", file=sys.stderr)
         resp = requests.get(MODEL_PAGE_URL.format(slug), timeout=15)
+        if _VERBOSE:
+            print(f"< {resp.status_code} {url}", file=sys.stderr)
         if resp.status_code != 200:
             _CONTEXT_CACHE[slug] = ""
             return ""
@@ -120,7 +126,11 @@ def _ensure_cache():
         _CACHE_WARMED = True
         return cache
     try:
+        if _VERBOSE:
+            print(f"> GET {API_URL}", file=sys.stderr)
         resp = requests.get(API_URL, headers={"x-api-key": api_key}, timeout=15)
+        if _VERBOSE:
+            print(f"< {resp.status_code} {API_URL}", file=sys.stderr)
         if resp.status_code != 200:
             _CACHE_WARMED = True
             return cache
@@ -234,6 +244,7 @@ def main():
     )
     parser.add_argument("--output", "-o", choices=sorted(FORMATS), default="text", help="output format")
     parser.add_argument("--release-date", "-d", help="release date on/after YYYY-mm-dd")
+    parser.add_argument("--verbose", action="store_true", help="log requests to stderr")
 
     model_arg.completer = _model_completer
     # creator arg needs handle to set completer
@@ -246,6 +257,9 @@ def main():
     args = parser.parse_args()
     
     global _CONTEXT_ENABLED
+    global _VERBOSE
+    if args.verbose:
+        _VERBOSE = True
     if args.no_context_window:
         _CONTEXT_ENABLED = False
 
@@ -268,7 +282,11 @@ def main():
         return 1
 
     try:
+        if _VERBOSE:
+            print(f"> GET {API_URL}", file=sys.stderr)
         resp = requests.get(API_URL, headers={"x-api-key": api_key}, timeout=30)
+        if _VERBOSE:
+            print(f"< {resp.status_code} {API_URL}", file=sys.stderr)
     except requests.RequestException as exc:
         print(f"request failed: {exc}", file=sys.stderr)
         return 1
