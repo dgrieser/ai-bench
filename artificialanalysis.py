@@ -281,13 +281,6 @@ def main():
     models = data.get("data", [])
     _save_cache(models)
 
-    if args.output == "json":
-        print(json.dumps(data, indent=2))
-        return 0
-    if args.output == "yaml":
-        print(yaml.safe_dump(data, sort_keys=False))
-        return 0
-
     if args.list_models:
         for m in models:
             slug = m.get("slug")
@@ -334,6 +327,15 @@ def main():
             elif args.closed and is_open is False:
                 filtered.append(m)
         models = filtered
+
+    if args.output == "json":
+        data["data"] = models
+        print(json.dumps(data, indent=2))
+        return 0
+    if args.output == "yaml":
+        data["data"] = models
+        print(yaml.safe_dump(data, sort_keys=False))
+        return 0
 
     _print_table(models, args.output)
     return 0
