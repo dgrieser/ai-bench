@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Benchmarks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.85em;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], select {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.95em;
+            min-width: 200px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 0 30px 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            z-index: 10;
+        }
+
+        th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 700;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            position: relative;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:hover {
+            background: #e9ecef;
+        }
+
+        th.sortable::after {
+            content: ' ↕';
+            opacity: 0.3;
+            font-size: 0.8em;
+        }
+
+        th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            font-size: 0.95em;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .model-name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .model-name a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .creator-badge {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: #495057;
+            text-decoration: none;
+        }
+
+        .creator-badge:hover {
+            background: #dee2e6;
+        }
+
+        .score {
+            text-align: right;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
+            font-weight: 600;
+        }
+
+        .score.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .score.highlight-context {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .score.na {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        .params {
+            text-align: right;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .context {
+            text-align: right;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .benchname {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .bench-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .bench-link:hover {
+            text-decoration: underline;
+        }
+
+        .stats {
+            padding: 15px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 100px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            input[type="text"], select {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LLM Benchmarks</h1>
+            <p class="subtitle">Comprehensive comparison of large language model performance</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Search Models</label>
+                <input type="text" id="searchInput" placeholder="Filter by model name or creator...">
+            </div>
+            <div class="control-group">
+                <label>Category Filter</label>
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Agentic Coding & Terminal Use">Agentic Coding</option>
+                    <option value="Agentic Tool Use">Agentic Tool Use</option>
+                    <option value="Competition Math">Competition Math</option>
+                    <option value="Scientific Reasoning">Scientific Reasoning</option>
+                    <option value="Coding">Coding</option>
+                    <option value="Reasoning & Knowledge">Reasoning & Knowledge</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Sort By</label>
+                <select id="sortBy">
+                    <option value="name">Model Name</option>
+                    <option value="params">Parameters</option>
+                    <option value="context">Context Window</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Order</label>
+                <select id="sortOrder">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="loading" class="loading">Loading benchmark data...</div>
+            <div id="tableContainer" style="display: none;">
+                <table id="benchmarksTable">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <script>
+        // Data storage
+        let rawData = null;
+        let benchmarks = {};
+        let models = [];
+        let currentSort = { column: 'name', direction: 'asc' };
+
+        function applyData(data) {
+            rawData = data;
+            benchmarks = rawData.benchmarks;
+            models = rawData.models;
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+
+            renderTable();
+            setupEventListeners();
+        }
+
+        function showLocalFileFallback() {
+            const loading = document.getElementById('loading');
+            loading.innerHTML = `
+                Cannot auto-load <code>llm.json</code> from <code>file://</code> due to browser security.
+                <br><br>
+                <button id="pickJsonBtn" type="button">Select llm.json</button>
+                <input id="jsonFileInput" type="file" accept=".json,application/json" style="display:none;">
+            `;
+
+            const fileInput = document.getElementById('jsonFileInput');
+            document.getElementById('pickJsonBtn').addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', async (event) => {
+                const file = event.target.files && event.target.files[0];
+                if (!file) return;
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    applyData(data);
+                } catch (error) {
+                    console.error('Failed to parse selected JSON file:', error);
+                    loading.innerHTML = 'Selected file is not valid JSON. Please choose a valid <code>llm.json</code>.';
+                }
+            });
+        }
+
+        // Initialize
+        async function init() {
+            try {
+                const response = await fetch('./llm.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                applyData(data);
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                if (window.location.protocol === 'file:') {
+                    showLocalFileFallback();
+                    return;
+                }
+                document.getElementById('loading').textContent = 'Failed to load benchmark data. Make sure llm.json is in the same directory.';
+            }
+        }
+
+        // Render the main table
+        function renderTable() {
+            renderTableHeader();
+            renderTableBody();
+            updateStats();
+        }
+
+        // Render table headers
+        function renderTableHeader() {
+            const thead = document.getElementById('tableHead');
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+            
+            let html = '<tr>';
+            
+            // Model column
+            html += `<th class="sortable ${sortBy === 'name' ? 'sort-' + sortOrder : ''}" data-sort="name">Model</th>`;
+            
+            // Creator column
+            html += `<th>Creator</th>`;
+            
+            // Parameters column
+            html += `<th class="sortable ${sortBy === 'params' ? 'sort-' + sortOrder : ''}" data-sort="params">Params</th>`;
+            
+            // Context column
+            html += `<th class="sortable ${sortBy === 'context' ? 'sort-' + sortOrder : ''}" data-sort="context">Context</th>`;
+            
+            // Benchmarks columns
+            const benchmarkKeys = Object.keys(benchmarks);
+            for (const key of benchmarkKeys) {
+                html += `<th class="benchname">${benchmarks[key].name}</th>`;
+            }
+            
+            html += '</tr>';
+            thead.innerHTML = html;
+            
+            // Add click handlers for sortable headers
+            thead.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const column = th.dataset.sort;
+                    const currentOrder = document.getElementById('sortOrder').value;
+                    const newOrder = currentSort.column === column && currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    
+                    document.getElementById('sortBy').value = column;
+                    document.getElementById('sortOrder').value = newOrder;
+                    sortAndRender();
+                });
+            });
+        }
+
+        // Render table body
+        function renderTableBody() {
+            const tbody = document.getElementById('tableBody');
+            const filteredModels = getFilteredModels();
+            const sortedModels = sortModels(filteredModels);
+            
+            // Calculate max values for highlighting
+            const maxScores = {};
+            const maxContext = getMaxContext(sortedModels);
+            
+            const benchmarkKeys = Object.keys(benchmarks);
+            for (const key of benchmarkKeys) {
+                maxScores[key] = getMaxScore(sortedModels, key);
+            }
+            
+            let html = '';
+            for (const model of sortedModels) {
+                html += '<tr>';
+                
+                // Model name
+                html += `<td class="model-name">`;
+                if (model.url) {
+                    html += `<a href="${model.url}" target="_blank">${model.name}</a>`;
+                } else {
+                    html += model.name;
+                }
+                html += `</td>`;
+                
+                // Creator
+                html += `<td>`;
+                if (model.creator && model.creator.url) {
+                    html += `<a href="${model.creator.url}" target="_blank" class="creator-badge">${model.creator.name}</a>`;
+                } else {
+                    html += model.creator ? model.creator.name : '-';
+                }
+                html += `</td>`;
+                
+                // Parameters
+                html += `<td class="params">${model.params}</td>`;
+                
+                // Context (highlight if max)
+                const contextClass = model.context === maxContext ? 'highlight-context' : '';
+                html += `<td class="context ${contextClass}">${model.context}</td>`;
+                
+                // Benchmark scores
+                for (const key of benchmarkKeys) {
+                    const score = model.scores[key];
+                    let className = 'score';
+                    let displayValue = '-';
+                    
+                    if (score !== null && score !== undefined) {
+                        displayValue = typeof score === 'number' ? score.toFixed(1) : score;
+                        className += ' highlight';
+                    } else {
+                        className += ' na';
+                    }
+                    
+                    // Check if this score is tied for highest
+                    if (maxScores[key] !== null && score === maxScores[key]) {
+                        className += ' highlight';
+                    } else if (score !== null && score !== undefined) {
+                        className = className.replace(' highlight', '');
+                    }
+                    
+                    html += `<td class="${className}">${displayValue}</td>`;
+                }
+                
+                html += '</tr>';
+            }
+            
+            tbody.innerHTML = html;
+        }
+
+        // Get filtered models based on search and category
+        function getFilteredModels() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            return models.filter(model => {
+                // Search filter
+                const matchesSearch = !searchTerm || 
+                    model.name.toLowerCase().includes(searchTerm) ||
+                    (model.creator && model.creator.name.toLowerCase().includes(searchTerm));
+                
+                // Category filter
+                let matchesCategory = true;
+                if (categoryFilter !== 'all') {
+                    matchesCategory = false;
+                    // Check if the model has a "best_in_table" that includes a benchmark with this category
+                    if (model.best_in_table) {
+                        for (const benchKey of model.best_in_table) {
+                            if (benchmarks[benchKey] && benchmarks[benchKey].category === categoryFilter) {
+                                matchesCategory = true;
+                                break;
+                            }
+                        }
+                    }
+                    // Also check if any of the model's top scores are in this category
+                    if (!matchesCategory) {
+                        for (const [key, score] of Object.entries(model.scores)) {
+                            if (score !== null && benchmarks[key] && benchmarks[key].category === categoryFilter) {
+                                matchesCategory = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                return matchesSearch && matchesCategory;
+            });
+        }
+
+        // Sort models
+        function sortModels(modelsArray) {
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+            
+            return [...modelsArray].sort((a, b) => {
+                let valA, valB;
+                
+                switch (sortBy) {
+                    case 'name':
+                        valA = a.name.toLowerCase();
+                        valB = b.name.toLowerCase();
+                        break;
+                    case 'params':
+                        valA = parseParamValue(a.params);
+                        valB = parseParamValue(b.params);
+                        break;
+                    case 'context':
+                        valA = parseInt(a.context);
+                        valB = parseInt(b.context);
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+                if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Parse parameter string (e.g., "123B", "30B-A3B") to numeric value
+        function parseParamValue(paramStr) {
+            if (!paramStr) return 0;
+            const match = paramStr.match(/(\d+(?:\.\d+)?)/);
+            return match ? parseFloat(match[1]) : 0;
+        }
+
+        // Get maximum score for a benchmark
+        function getMaxScore(modelsArray, benchmarkKey) {
+            const scores = modelsArray
+                .map(m => m.scores[benchmarkKey])
+                .filter(s => s !== null && s !== undefined);
+            return scores.length > 0 ? Math.max(...scores) : null;
+        }
+
+        // Get maximum context window
+        function getMaxContext(modelsArray) {
+            const contexts = modelsArray.map(m => parseInt(m.context)).filter(c => !isNaN(c));
+            return contexts.length > 0 ? Math.max(...contexts) : null;
+        }
+
+        // Update stats display
+        function updateStats() {
+            const filteredModels = getFilteredModels();
+            const statsEl = document.getElementById('stats');
+            statsEl.textContent = `Showing ${filteredModels.length} of ${models.length} models`;
+        }
+
+        // Sort and re-render
+        function sortAndRender() {
+            renderTableBody();
+            updateStats();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', sortAndRender);
+            document.getElementById('categoryFilter').addEventListener('change', sortAndRender);
+            document.getElementById('sortBy').addEventListener('change', sortAndRender);
+            document.getElementById('sortOrder').addEventListener('change', sortAndRender);
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
