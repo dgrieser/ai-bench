@@ -18,7 +18,7 @@
       "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
     },
     "tau2_bench_telecom": {
-      "name": "\u03c4\u00b2-Bench Telecom",
+      "name": "τ²-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "url": "https://arxiv.org/abs/2506.07982"
@@ -54,7 +54,7 @@
     },
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
       "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
     },
     "aa_coding_index": {
@@ -131,8 +131,7 @@
         "hle": 7.1,
         "aa_intelligence_index": 30.1,
         "aa_coding_index": 25.9
-      },
-      "best_in_table": ["tau2_bench_telecom"]
+      }
     },
     {
       "name": "step-3-5-flash-reasoning",
@@ -155,8 +154,7 @@
         "hle": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null
-      },
-      "best_in_table": ["aime_2025"]
+      }
     },
     {
       "name": "minimax-m2-5",
@@ -179,8 +177,7 @@
         "hle": 19.1,
         "aa_intelligence_index": 42.0,
         "aa_coding_index": 37.4
-      },
-      "best_in_table": ["swe_bench_verified", "terminal_bench_2_0", "browsecomp", "hle", "aa_intelligence_index", "aa_coding_index"]
+      }
     },
     {
       "name": "k2-think-v2",
@@ -203,8 +200,7 @@
         "hle": 9.5,
         "aa_intelligence_index": 24.5,
         "aa_coding_index": 15.5
-      },
-      "best_in_table": ["context"]
+      }
     },
     {
       "name": "qwen3-coder-30b-a3b-instruct",
@@ -227,8 +223,7 @@
         "hle": 4.0,
         "aa_intelligence_index": 20.0,
         "aa_coding_index": 19.4
-      },
-      "best_in_table": ["context"]
+      }
     },
     {
       "name": "qwen3-coder-next",
@@ -274,8 +269,7 @@
         "hle": 9.8,
         "aa_intelligence_index": 22.4,
         "aa_coding_index": 14.7
-      },
-      "best_in_table": ["context"]
+      }
     },
     {
       "name": "qwen3-next-80b-a3b-reasoning",
@@ -298,8 +292,7 @@
         "hle": 11.7,
         "aa_intelligence_index": 26.5,
         "aa_coding_index": 19.5
-      },
-      "best_in_table": ["swe_bench_verified", "context"]
+      }
     },
     {
       "name": "gpt-oss-20b",
@@ -347,8 +340,7 @@
         "hle": 18.5,
         "aa_intelligence_index": 33.3,
         "aa_coding_index": 28.6
-      },
-      "best_in_table": ["terminal_bench_hard", "gpqa_diamond", "livecodebench", "hle", "aa_intelligence_index", "aa_coding_index"]
+      }
     }
   ],
   "sources": [
