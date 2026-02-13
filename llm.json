@@ -1,0 +1,364 @@
+{
+  "title": "LLM Benchmarks",
+  "benchmarks": {
+    "swe_bench_verified": {
+      "name": "SWE-bench Verified",
+      "description": "Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.",
+      "url": "https://www.swebench.com/SWE-bench/"
+    },
+    "terminal_bench_hard": {
+      "name": "Terminal-Bench Hard",
+      "category": "Agentic Coding & Terminal Use",
+      "description": "Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.",
+      "url": "https://www.tbench.ai/"
+    },
+    "terminal_bench_2_0": {
+      "name": "Terminal-Bench 2.0",
+      "description": "Terminal-Bench 2.0 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
+      "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
+    },
+    "tau2_bench_telecom": {
+      "name": "\u03c4\u00b2-Bench Telecom",
+      "category": "Agentic Tool Use",
+      "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
+      "url": "https://arxiv.org/abs/2506.07982"
+    },
+    "browsecomp": {
+      "name": "BrowseComp",
+      "description": "Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.",
+      "url": "https://openai.com/index/browsecomp/"
+    },
+    "aime_2025": {
+      "name": "AIME 2025",
+      "category": "Competition Math",
+      "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.",
+      "url": "https://maa.org/maa-invitational-competitions/"
+    },
+    "gpqa_diamond": {
+      "name": "GPQA Diamond",
+      "category": "Scientific Reasoning",
+      "description": "Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.",
+      "url": "https://arxiv.org/abs/2311.12022"
+    },
+    "livecodebench": {
+      "name": "LiveCodeBench",
+      "category": "Coding",
+      "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
+      "url": "https://livecodebench.github.io/"
+    },
+    "hle": {
+      "name": "HLE",
+      "category": "Reasoning & Knowledge",
+      "description": "Humanity's Last Exam: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.",
+      "url": "https://lastexam.ai/"
+    },
+    "aa_intelligence_index": {
+      "name": "AA Intelligence Index",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+    },
+    "aa_coding_index": {
+      "name": "AA Coding Index",
+      "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
+      "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+    }
+  },
+  "models": [
+    {
+      "name": "devstral-2",
+      "url": "https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512",
+      "params": "123B",
+      "context": "256k",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/products/studio#models"
+      },
+      "scores": {
+        "swe_bench_verified": 72.2,
+        "terminal_bench_hard": 18.9,
+        "terminal_bench_2_0": 32.6,
+        "tau2_bench_telecom": 24.9,
+        "browsecomp": null,
+        "aime_2025": 36.7,
+        "gpqa_diamond": 59.4,
+        "livecodebench": 44.8,
+        "hle": 3.6,
+        "aa_intelligence_index": 22.0,
+        "aa_coding_index": 23.7
+      }
+    },
+    {
+      "name": "devstral-small-2",
+      "url": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512",
+      "params": "24B",
+      "context": "256k",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/products/studio#models"
+      },
+      "scores": {
+        "swe_bench_verified": 68.0,
+        "terminal_bench_hard": 16.7,
+        "terminal_bench_2_0": 22.5,
+        "tau2_bench_telecom": 23.4,
+        "browsecomp": null,
+        "aime_2025": 34.3,
+        "gpqa_diamond": 53.2,
+        "livecodebench": 34.8,
+        "hle": 3.4,
+        "aa_intelligence_index": 19.3,
+        "aa_coding_index": 20.7
+      }
+    },
+    {
+      "name": "glm-4-7-flash",
+      "url": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+      "params": "30B-A3B",
+      "context": "200k",
+      "creator": {
+        "name": "Z.AI",
+        "url": "https://docs.z.ai/guides/llm/glm-4.7"
+      },
+      "scores": {
+        "swe_bench_verified": 59.2,
+        "terminal_bench_hard": 22.0,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 98.8,
+        "browsecomp": 42.8,
+        "aime_2025": 91.6,
+        "gpqa_diamond": 58.1,
+        "livecodebench": 64.0,
+        "hle": 7.1,
+        "aa_intelligence_index": 30.1,
+        "aa_coding_index": 25.9
+      },
+      "best_in_table": ["tau2_bench_telecom"]
+    },
+    {
+      "name": "step-3-5-flash-reasoning",
+      "url": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
+      "params": "196B-A11B",
+      "context": "256k",
+      "creator": {
+        "name": "StepFun",
+        "url": "https://static.stepfun.com/blog/step-3.5-flash"
+      },
+      "scores": {
+        "swe_bench_verified": 74.4,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": 51.0,
+        "tau2_bench_telecom": 88.2,
+        "browsecomp": 69.0,
+        "aime_2025": 97.3,
+        "gpqa_diamond": null,
+        "livecodebench": 86.4,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      },
+      "best_in_table": ["terminal_bench_2_0", "browsecomp", "aime_2025"]
+    },
+    {
+      "name": "minimax-m2-5",
+      "url": "https://www.minimax.io/news/minimax-m25/",
+      "params": "230B-A10B",
+      "context": "205k",
+      "creator": {
+        "name": "MiniMax",
+        "url": "https://www.minimax.io/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": 34.8,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 95.3,
+        "browsecomp": null,
+        "aime_2025": null,
+        "gpqa_diamond": 84.8,
+        "livecodebench": null,
+        "hle": 19.1,
+        "aa_intelligence_index": 42.0,
+        "aa_coding_index": 37.4
+      },
+      "best_in_table": ["hle", "aa_intelligence_index", "aa_coding_index"]
+    },
+    {
+      "name": "k2-think-v2",
+      "url": "https://huggingface.co/LLM360/K2-Think-V2",
+      "params": "70B",
+      "context": "262k",
+      "creator": {
+        "name": "MBZUAI",
+        "url": "https://www.k2think.ai/k2think"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": 6.8,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 25.4,
+        "browsecomp": null,
+        "aime_2025": 90.42,
+        "gpqa_diamond": 71.3,
+        "livecodebench": null,
+        "hle": 9.5,
+        "aa_intelligence_index": 24.5,
+        "aa_coding_index": 15.5
+      },
+      "best_in_table": ["context"]
+    },
+    {
+      "name": "qwen3-coder-30b-a3b-instruct",
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "params": "30B-A3B",
+      "context": "262k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 51.6,
+        "terminal_bench_hard": 15.2,
+        "terminal_bench_2_0": 31.3,
+        "tau2_bench_telecom": 34.5,
+        "browsecomp": null,
+        "aime_2025": 29.0,
+        "gpqa_diamond": 51.6,
+        "livecodebench": 40.3,
+        "hle": 4.0,
+        "aa_intelligence_index": 20.0,
+        "aa_coding_index": 19.4
+      },
+      "best_in_table": ["context"]
+    },
+    {
+      "name": "qwen3-coder-next",
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+      "params": "80B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 70.6,
+        "terminal_bench_hard": 18.2,
+        "terminal_bench_2_0": 36.2,
+        "tau2_bench_telecom": 79.5,
+        "browsecomp": null,
+        "aime_2025": null,
+        "gpqa_diamond": 73.7,
+        "livecodebench": null,
+        "hle": 9.3,
+        "aa_intelligence_index": 28.1,
+        "aa_coding_index": 22.9
+      }
+    },
+    {
+      "name": "qwen3-30b-a3b-2507-reasoning",
+      "url": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
+      "params": "30B-A3B",
+      "context": "262k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 22.0,
+        "terminal_bench_hard": 5.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 28.1,
+        "browsecomp": 22.9,
+        "aime_2025": 56.3,
+        "gpqa_diamond": 70.7,
+        "livecodebench": 70.7,
+        "hle": 9.8,
+        "aa_intelligence_index": 22.4,
+        "aa_coding_index": 14.7
+      },
+      "best_in_table": ["context"]
+    },
+    {
+      "name": "qwen3-next-80b-a3b-reasoning",
+      "url": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking",
+      "params": "80B-A3B",
+      "context": "262k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 74.5,
+        "terminal_bench_hard": 9.8,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 41.5,
+        "browsecomp": null,
+        "aime_2025": 84.3,
+        "gpqa_diamond": 75.9,
+        "livecodebench": 78.4,
+        "hle": 11.7,
+        "aa_intelligence_index": 26.5,
+        "aa_coding_index": 19.5
+      },
+      "best_in_table": ["swe_bench_verified", "context"]
+    },
+    {
+      "name": "gpt-oss-20b",
+      "variant": "high",
+      "url": "https://huggingface.co/openai/gpt-oss-20b",
+      "params": "117B-A5.1B",
+      "context": "131k",
+      "creator": {
+        "name": "OpenAI",
+        "url": "https://openai.com/index/introducing-gpt-oss/"
+      },
+      "scores": {
+        "swe_bench_verified": 34.0,
+        "terminal_bench_hard": 10.6,
+        "terminal_bench_2_0": 3.1,
+        "tau2_bench_telecom": 60.2,
+        "browsecomp": 28.3,
+        "aime_2025": 89.3,
+        "gpqa_diamond": 68.8,
+        "livecodebench": 77.7,
+        "hle": 9.8,
+        "aa_intelligence_index": 24.5,
+        "aa_coding_index": 18.5
+      }
+    },
+    {
+      "name": "gpt-oss-120b",
+      "variant": "high",
+      "url": "https://huggingface.co/openai/gpt-oss-120b",
+      "params": "21B-A3.6B",
+      "context": "131k",
+      "creator": {
+        "name": "OpenAI",
+        "url": "https://openai.com/index/introducing-gpt-oss/"
+      },
+      "scores": {
+        "swe_bench_verified": 62.4,
+        "terminal_bench_hard": 23.5,
+        "terminal_bench_2_0": 18.7,
+        "tau2_bench_telecom": 65.8,
+        "browsecomp": 28.7,
+        "aime_2025": 93.4,
+        "gpqa_diamond": 78.2,
+        "livecodebench": 87.8,
+        "hle": 18.5,
+        "aa_intelligence_index": 33.3,
+        "aa_coding_index": 28.6
+      },
+      "best_in_table": ["terminal_bench_hard", "gpqa_diamond", "livecodebench", "hle", "aa_intelligence_index", "aa_coding_index"]
+    }
+  ],
+  "sources": [
+    "https://artificialanalysis.ai/leaderboards/models?is_open_weights=open_source",
+    "https://arxiv.org/html/2508.10925v1",
+    "https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512",
+    "https://huggingface.co/zai-org/GLM-4.7-Flash",
+    "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
+    "https://static.stepfun.com/blog/step-3.5-flash",
+    "https://www.minimax.io/news/minimax-m25/",
+    "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
+  ]
+}
