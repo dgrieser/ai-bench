@@ -156,7 +156,7 @@
         "aa_intelligence_index": null,
         "aa_coding_index": null
       },
-      "best_in_table": ["terminal_bench_2_0", "browsecomp", "aime_2025"]
+      "best_in_table": ["aime_2025"]
     },
     {
       "name": "minimax-m2-5",
@@ -168,11 +168,11 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "swe_bench_verified": null,
+        "swe_bench_verified": 80.2,
         "terminal_bench_hard": 34.8,
-        "terminal_bench_2_0": null,
-        "tau2_bench_telecom": 95.3,
-        "browsecomp": null,
+        "terminal_bench_2_0": 51.7,
+        "tau2_bench_telecom": 97.8,
+        "browsecomp": 76.3,
         "aime_2025": null,
         "gpqa_diamond": 84.8,
         "livecodebench": null,
@@ -180,7 +180,7 @@
         "aa_intelligence_index": 42.0,
         "aa_coding_index": 37.4
       },
-      "best_in_table": ["hle", "aa_intelligence_index", "aa_coding_index"]
+      "best_in_table": ["swe_bench_verified", "terminal_bench_2_0", "browsecomp", "hle", "aa_intelligence_index", "aa_coding_index"]
     },
     {
       "name": "k2-think-v2",
