@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Benchmarks</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --surface: #fffdf9;
+      --surface-alt: #f8f4ec;
+      --text: #1d1a16;
+      --muted: #665f56;
+      --line: #ddd4c5;
+      --accent: #0f766e;
+      --accent-soft: #d6f3ef;
+      --gold: #f59e0b;
+      --gold-soft: #fef3c7;
+      --focus: #0ea5a4;
+      --shadow: 0 20px 40px rgba(29, 26, 22, 0.08);
+      --font-ui: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", "SFMono-Regular", "Consolas", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(1200px 500px at -10% -20%, #ffd8aa 0%, rgba(255, 216, 170, 0) 65%),
+        radial-gradient(900px 420px at 110% -10%, #bae6fd 0%, rgba(186, 230, 253, 0) 70%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+
+    .page {
+      width: min(1600px, 96vw);
+      margin: 24px auto;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 253, 249, 0.98));
+      border: 1px solid rgba(221, 212, 197, 0.8);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 28px 28px 22px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(120deg, rgba(214, 243, 239, 0.9), rgba(255, 253, 249, 0.65) 40%, rgba(254, 243, 199, 0.35));
+      animation: fadeIn 500ms ease;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 900px;
+      line-height: 1.45;
+      font-size: 0.97rem;
+    }
+
+    .controls {
+      padding: 18px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 0.93rem;
+      background: #fff;
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+
+    select[multiple] {
+      min-height: 80px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    button:focus-visible,
+    th:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 1px;
+      border-color: var(--focus);
+    }
+
+    .check {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .toolbar {
+      padding: 10px 24px 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      color: var(--text);
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-ui);
+    }
+
+    button:hover {
+      background: #fbf7ef;
+    }
+
+    .file-input-offscreen {
+      position: fixed;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .table-shell {
+      padding: 0 14px 16px;
+      overflow: auto;
+      max-height: calc(100vh - 280px);
+      min-height: 300px;
+    }
+
+    table {
+      width: max(1160px, 100%);
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.92rem;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f7f1e6;
+      border-bottom: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      padding: 10px 9px;
+      text-align: left;
+      color: #463f36;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 140ms ease;
+    }
+
+    thead th:hover {
+      background: #efe6d8;
+    }
+
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: #fffdf9;
+    }
+
+    thead th:first-child {
+      z-index: 3;
+      background: #f7f1e6;
+    }
+
+    tbody td {
+      border-bottom: 1px solid #f0e8d9;
+      padding: 9px;
+      white-space: nowrap;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #fffaf2;
+    }
+
+    tbody tr:hover td {
+      background: #fdf4e6;
+    }
+
+    .col-model {
+      min-width: 220px;
+      max-width: 340px;
+    }
+
+    .col-model a {
+      color: #0f172a;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .col-model a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .creator a {
+      color: #334155;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .creator a:hover {
+      text-decoration: underline;
+    }
+
+    .mono,
+    .num {
+      font-family: var(--font-mono);
+    }
+
+    .num {
+      text-align: right;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .num.na {
+      color: #9a8f82;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .top-score {
+      background: linear-gradient(120deg, var(--gold-soft), #fff)!important;
+      color: #92400e;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.3);
+    }
+
+    .top-row td {
+      box-shadow: inset 0 -1px 0 rgba(245, 158, 11, 0.35), inset 0 1px 0 rgba(245, 158, 11, 0.2);
+    }
+
+    .sort-indicator {
+      color: var(--accent);
+      font-weight: 800;
+      margin-left: 4px;
+      font-size: 0.82rem;
+    }
+
+    .bench-head {
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .empty {
+      margin: 18px;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .status {
+      padding: 26px;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: #9f1239;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: 100vw;
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .hero,
+      .controls,
+      .toolbar {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .table-shell {
+        max-height: none;
+        min-height: 220px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      table {
+        width: max(1020px, 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" id="app" aria-live="polite">
+    <section class="hero">
+      <h1 id="title">LLM Benchmarks</h1>
+      <p>Compare performance of small(ish) LLM models across benchmark suites.</p>
+    </section>
+
+    <section class="controls" id="controls" hidden>
+      <div class="field">
+        <label for="modelCompare">Compare Models</label>
+        <select id="modelCompare" multiple></select>
+      </div>
+      <div class="field">
+        <label for="search">Search</label>
+        <input id="search" type="text" placeholder="Model or creator">
+      </div>
+      <div class="field">
+        <label for="creator">Creator</label>
+        <select id="creator"></select>
+      </div>
+      <div class="field">
+        <label for="sortBy">Sort By</label>
+        <select id="sortBy"></select>
+      </div>
+      <div class="field">
+        <label for="sortDir">Direction</label>
+        <select id="sortDir">
+          <option value="desc">High to low</option>
+          <option value="asc">Low to high</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="toolbar" id="toolbar" hidden>
+      <span class="pill" id="resultCount">0 models</span>
+      <span class="pill" id="benchmarkCount">0 benchmarks</span>
+      <button id="resetBtn" type="button">Reset Filters</button>
+      <button style="display: none" id="importBtn" type="button">Import llm.json</button>
+      <input id="importFile" class="file-input-offscreen" type="file" accept="application/json,.json">
+    </section>
+
+    <section id="content">
+      <div class="status" id="status">Loading benchmark data...</div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index"];
+      const BENCHMARK_LABEL_OVERRIDES = {
+        aa_intelligence_index: "General Index",
+        aa_coding_index: "Coding Index"
+      };
+
+      const state = {
+        data: null,
+        benchmarkKeys: [],
+        filteredModels: [],
+        filters: {
+          search: "",
+          creator: "all",
+          selectedModels: []
+        },
+        sort: {
+          key: "name",
+          direction: "desc"
+        },
+        eventsBound: false
+      };
+
+      const ui = {
+        title: document.getElementById("title"),
+        controls: document.getElementById("controls"),
+        toolbar: document.getElementById("toolbar"),
+        content: document.getElementById("content"),
+        status: document.getElementById("status"),
+        search: document.getElementById("search"),
+        creator: document.getElementById("creator"),
+        modelCompare: document.getElementById("modelCompare"),
+        sortBy: document.getElementById("sortBy"),
+        sortDir: document.getElementById("sortDir"),
+        resultCount: document.getElementById("resultCount"),
+        benchmarkCount: document.getElementById("benchmarkCount"),
+        importBtn: document.getElementById("importBtn"),
+        importFile: document.getElementById("importFile"),
+        resetBtn: document.getElementById("resetBtn")
+      };
+
+      bindImportEvents();
+      loadData();
+
+      async function loadData() {
+        try {
+          const response = await fetch("https://raw.githubusercontent.com/dgrieser/ai-bench/refs/heads/main/llm.json", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`Request failed (${response.status})`);
+          }
+          const data = await response.json();
+          validateData(data);
+          init(data);
+        } catch (err) {
+          showImportOnly(`Unable to load llm.json automatically. ${err.message}`);
+        }
+      }
+
+      function showImportOnly(message) {
+        ui.toolbar.hidden = false;
+        ui.controls.hidden = true;
+        ui.status.classList.add("error");
+        ui.status.textContent = message;
+        ui.resultCount.textContent = "No data loaded";
+        ui.benchmarkCount.textContent = "Import required";
+      }
+
+      function validateData(data) {
+        if (!data || typeof data !== "object") {
+          throw new Error("Invalid JSON root.");
+        }
+        if (!Array.isArray(data.models) || !data.benchmarks || typeof data.benchmarks !== "object") {
+          throw new Error("Expected models[] and benchmarks{}.");
+        }
+      }
+
+      function init(data) {
+        state.data = data;
+        state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
+
+        ui.title.textContent = data.title || "LLM Benchmarks";
+        ui.controls.hidden = false;
+        ui.toolbar.hidden = false;
+        ui.status.classList.remove("error");
+
+        populateFilters();
+        if (!state.eventsBound) {
+          bindEvents();
+          state.eventsBound = true;
+        }
+        applyAndRender();
+      }
+
+      function bindImportEvents() {
+        ui.importBtn.addEventListener("click", () => {
+          ui.importFile.click();
+        });
+
+        ui.importFile.addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) {
+            return;
+          }
+
+          try {
+            const text = await file.text();
+            const imported = JSON.parse(text);
+            validateData(imported);
+            state.filters.search = "";
+            state.filters.creator = "all";
+            state.filters.selectedModels = [];
+            state.sort.key = "name";
+            state.sort.direction = "desc";
+            ui.search.value = "";
+            ui.creator.value = "all";
+            ui.modelCompare.selectedIndex = -1;
+            ui.sortBy.value = "name";
+            ui.sortDir.value = "desc";
+            init(imported);
+          } catch (err) {
+            ui.content.innerHTML = `<div class="status error">Import failed: ${escapeHtml(err.message || "Invalid JSON file.")}</div>`;
+          } finally {
+            ui.importFile.value = "";
+          }
+        });
+      }
+
+      function populateFilters() {
+        const creators = [...new Set(state.data.models.map((m) => m.creator?.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
+
+        ui.creator.innerHTML = [
+          `<option value="all">All creators</option>`,
+          ...creators.map((creator) => `<option value="${escapeHtml(creator)}">${escapeHtml(creator)}</option>`)
+        ].join("");
+
+        const modelNames = [...new Set(state.data.models.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
+        ui.modelCompare.innerHTML = modelNames
+          .map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+          .join("");
+
+        const fixedSortOptions = [
+          { key: "name", label: "Model name" },
+          { key: "creator", label: "Creator" },
+          { key: "params", label: "Params" },
+          { key: "context", label: "Context" }
+        ];
+
+        const benchmarkSortOptions = state.benchmarkKeys.map((key) => ({
+          key,
+          label: getBenchmarkLabel(key)
+        }));
+
+        ui.sortBy.innerHTML = [
+          ...fixedSortOptions,
+          ...benchmarkSortOptions
+        ].map((option) => `<option value="${escapeHtml(option.key)}">${escapeHtml(option.label)}</option>`).join("");
+
+        ui.sortBy.value = state.sort.key;
+      }
+
+      function bindEvents() {
+        ui.search.addEventListener("input", debounce((event) => {
+          state.filters.search = event.target.value.trim().toLowerCase();
+          applyAndRender();
+        }, 100));
+
+        ui.creator.addEventListener("change", (event) => {
+          state.filters.creator = event.target.value;
+          applyAndRender();
+        });
+
+        ui.modelCompare.addEventListener("change", () => {
+          state.filters.selectedModels = Array.from(ui.modelCompare.selectedOptions).map((option) => option.value);
+          applyAndRender();
+        });
+
+        ui.sortBy.addEventListener("change", (event) => {
+          state.sort.key = event.target.value;
+          applyAndRender();
+        });
+
+        ui.sortDir.addEventListener("change", (event) => {
+          state.sort.direction = event.target.value;
+          applyAndRender();
+        });
+
+        ui.resetBtn.addEventListener("click", () => {
+          if (!state.data) {
+            return;
+          }
+
+          state.filters.search = "";
+          state.filters.creator = "all";
+          state.filters.selectedModels = [];
+          state.sort.key = "name";
+          state.sort.direction = "desc";
+
+          ui.search.value = "";
+          ui.creator.value = "all";
+          ui.modelCompare.selectedIndex = -1;
+          ui.sortBy.value = "name";
+          ui.sortDir.value = "desc";
+
+          applyAndRender();
+        });
+      }
+
+      function applyAndRender() {
+        if (!state.data) {
+          return;
+        }
+
+        const models = state.data.models
+          .map((model) => {
+            return {
+              ...model,
+              creatorName: model.creator?.name || "Unknown"
+            };
+          })
+          .filter((model) => modelPassesFilters(model));
+
+        sortModels(models);
+        state.filteredModels = models;
+
+        renderTable();
+        updateMeta();
+      }
+
+      function modelPassesFilters(model) {
+        if (state.filters.search) {
+          const haystack = `${model.name || ""} ${model.creatorName}`.toLowerCase();
+          if (!haystack.includes(state.filters.search)) {
+            return false;
+          }
+        }
+
+        if (state.filters.creator !== "all" && model.creatorName !== state.filters.creator) {
+          return false;
+        }
+
+        if (state.filters.selectedModels.length && !state.filters.selectedModels.includes(model.name || "Unknown")) {
+          return false;
+        }
+
+        return true;
+      }
+
+      function sortModels(models) {
+        const directionFactor = state.sort.direction === "asc" ? 1 : -1;
+
+        models.sort((a, b) => {
+          const left = valueForSort(a, state.sort.key);
+          const right = valueForSort(b, state.sort.key);
+
+          const leftMissing = left == null || Number.isNaN(left);
+          const rightMissing = right == null || Number.isNaN(right);
+
+          if (leftMissing && rightMissing) {
+            return String(a.name || "").localeCompare(String(b.name || ""));
+          }
+          if (leftMissing) {
+            return 1;
+          }
+          if (rightMissing) {
+            return -1;
+          }
+
+          if (typeof left === "number" && typeof right === "number") {
+            return (left - right) * directionFactor;
+          }
+
+          return String(left).localeCompare(String(right)) * directionFactor;
+        });
+      }
+
+      function valueForSort(model, key) {
+        if (key === "name") {
+          return model.name || "";
+        }
+        if (key === "creator") {
+          return model.creatorName || "";
+        }
+        if (key === "params") {
+          return parseUnitNumber(model.params);
+        }
+        if (key === "context") {
+          return parseUnitNumber(model.context);
+        }
+        return toNumber(model.scores?.[key]);
+      }
+
+      function renderTable() {
+        if (!state.filteredModels.length) {
+          ui.content.innerHTML = `<div class="empty">No models match your filters.</div>`;
+          return;
+        }
+
+        const headers = [
+          { key: "name", label: "Model", className: "col-model" },
+          { key: "creator", label: "Creator" },
+          { key: "params", label: "Params", className: "mono" },
+          { key: "context", label: "Context", className: "mono" },
+          ...state.benchmarkKeys.map((key) => ({
+            key,
+            label: getBenchmarkLabel(key),
+            title: state.data.benchmarks[key]?.description || "",
+            className: "num bench-head"
+          }))
+        ];
+
+        const bestInTableByModel = getBestInTableByModel(state.filteredModels);
+
+        const tableHtml = `
+          <div class="table-shell">
+            <table aria-label="LLM benchmark table">
+              <thead>
+                <tr>
+                  ${headers.map((header) => renderHeaderCell(header)).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set())).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        ui.content.innerHTML = tableHtml;
+
+        ui.content.querySelectorAll("th[data-sort-key]").forEach((th) => {
+          th.addEventListener("click", () => {
+            const key = th.dataset.sortKey;
+            if (!key) {
+              return;
+            }
+            if (state.sort.key === key) {
+              state.sort.direction = state.sort.direction === "desc" ? "asc" : "desc";
+            } else {
+              state.sort.key = key;
+              state.sort.direction = key === "name" || key === "creator" ? "asc" : "desc";
+            }
+
+            ui.sortBy.value = state.sort.key;
+            ui.sortDir.value = state.sort.direction;
+            applyAndRender();
+          });
+        });
+      }
+
+      function renderHeaderCell(header) {
+        const isSorted = state.sort.key === header.key;
+        const sortSymbol = isSorted ? (state.sort.direction === "desc" ? "▼" : "▲") : "";
+        const indicator = isSorted ? `<span class="sort-indicator">${sortSymbol}</span>` : "";
+
+        const className = header.className ? ` ${header.className}` : "";
+        const title = header.title ? ` title="${escapeHtml(header.title)}"` : "";
+
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}>${escapeHtml(header.label)}${indicator}</th>`;
+      }
+
+      function renderRow(model, bestInTable) {
+        const modelName = escapeHtml(model.name || "Unknown");
+        const modelUrl = model.url || "";
+        const creatorName = escapeHtml(model.creatorName);
+        const creatorUrl = model.creator?.url || "";
+        const contextClass = bestInTable.has("context") ? " top-score" : "";
+
+        const scoreCells = state.benchmarkKeys.map((key) => {
+          const value = toNumber(model.scores?.[key]);
+          const isTop = bestInTable.has(key);
+          const className = isTop ? "num top-score" : "num";
+
+          return `<td class="${className}">${formatScore(value)}</td>`;
+        }).join("");
+
+        return `
+          <tr>
+            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${modelName}</a>` : modelName}</td>
+            <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
+            <td class="mono">${escapeHtml(model.params || "-")}</td>
+            <td class="mono${contextClass}">${escapeHtml(model.context || "-")}</td>
+            ${scoreCells}
+          </tr>
+        `;
+      }
+
+      function updateMeta() {
+        const shown = state.filteredModels.length;
+        const total = state.data.models.length;
+        ui.resultCount.textContent = `${shown} of ${total} models`;
+        ui.benchmarkCount.textContent = `${state.benchmarkKeys.length} benchmarks`;
+      }
+
+      function getTopScoresByBenchmark(models) {
+        const topScores = {};
+        state.benchmarkKeys.forEach((key) => {
+          const values = models
+            .map((model) => toNumber(model.scores?.[key]))
+            .filter((value) => Number.isFinite(value));
+          topScores[key] = values.length ? Math.max(...values) : Number.NaN;
+        });
+        return topScores;
+      }
+
+      function getOrderedBenchmarkKeys(benchmarks) {
+        const keys = Object.keys(benchmarks || {});
+        const prioritized = PRIORITY_BENCHMARK_KEYS.filter((key) => keys.includes(key));
+        const remaining = keys.filter((key) => !PRIORITY_BENCHMARK_KEYS.includes(key));
+        return [...prioritized, ...remaining];
+      }
+
+      function getBenchmarkLabel(key) {
+        return BENCHMARK_LABEL_OVERRIDES[key] || state.data?.benchmarks?.[key]?.name || key;
+      }
+
+      function getBestInTableByModel(models) {
+        const result = new Map();
+        models.forEach((model) => result.set(model, new Set()));
+
+        if (!models.length) {
+          return result;
+        }
+
+        const topByBenchmark = getTopScoresByBenchmark(models);
+        const topContext = Math.max(...models.map((m) => parseUnitNumber(m.context)).filter((v) => Number.isFinite(v)));
+
+        models.forEach((model) => {
+          const flags = result.get(model);
+          if (!flags) {
+            return;
+          }
+
+          const contextValue = parseUnitNumber(model.context);
+          if (Number.isFinite(contextValue) && Number.isFinite(topContext) && nearlyEqual(contextValue, topContext)) {
+            flags.add("context");
+          }
+
+          state.benchmarkKeys.forEach((key) => {
+            const value = toNumber(model.scores?.[key]);
+            const top = topByBenchmark[key];
+            if (Number.isFinite(value) && Number.isFinite(top) && nearlyEqual(value, top)) {
+              flags.add(key);
+            }
+          });
+        });
+
+        return result;
+      }
+
+      function formatScore(value) {
+        if (!Number.isFinite(value)) {
+          return '<span class="num na">-</span>';
+        }
+        return value.toFixed(1);
+      }
+
+      function toNumber(value) {
+        if (typeof value === "number" && Number.isFinite(value)) {
+          return value;
+        }
+        if (typeof value === "string") {
+          const parsed = Number(value);
+          return Number.isFinite(parsed) ? parsed : Number.NaN;
+        }
+        return Number.NaN;
+      }
+
+      function parseUnitNumber(raw) {
+        if (raw == null) {
+          return Number.NaN;
+        }
+
+        const text = String(raw).trim().toLowerCase();
+        const match = text.match(/([0-9]*\.?[0-9]+)\s*([a-z]+)/);
+        if (!match) {
+          const plain = Number(text.replace(/,/g, ""));
+          return Number.isFinite(plain) ? plain : Number.NaN;
+        }
+
+        const value = Number(match[1]);
+        const unit = match[2];
+        if (!Number.isFinite(value)) {
+          return Number.NaN;
+        }
+
+        const multipliers = {
+          k: 1e3,
+          m: 1e6,
+          b: 1e9,
+          t: 1e12
+        };
+
+        const tail = unit[0];
+        if (tail in multipliers) {
+          return value * multipliers[tail];
+        }
+
+        return value;
+      }
+
+      function nearlyEqual(a, b) {
+        return Math.abs(a - b) < 1e-9;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function escapeAttr(value) {
+        return escapeHtml(value);
+      }
+
+      function debounce(fn, delayMs) {
+        let timer;
+        return function (...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn.apply(this, args), delayMs);
+        };
+      }
+    })();
+  </script>
+</body>
+</html>
