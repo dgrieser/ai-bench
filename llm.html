@@ -26,6 +26,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      overflow-y: scroll;
+    }
+
     html,
     body {
       margin: 0;
@@ -98,7 +102,7 @@
     input[type="text"],
     select {
       width: 100%;
-      min-height: 40px;
+      height: 50px;
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 8px 11px;
@@ -109,9 +113,10 @@
     }
 
     select[multiple] {
-      min-height: 80px;
+      height: 50px;
       padding-top: 8px;
       padding-bottom: 8px;
+      font-size: 0.73rem;
     }
 
     input[type="text"]:focus,
@@ -181,7 +186,7 @@
     }
 
     .table-shell {
-      padding: 0 14px 16px;
+      padding: 0 0 16px;
       overflow: auto;
       max-height: calc(100vh - 280px);
       min-height: 300px;
@@ -208,6 +213,7 @@
       cursor: pointer;
       user-select: none;
       transition: background-color 140ms ease;
+      font-family: var(--font-mono);
     }
 
     thead th:hover {
@@ -231,6 +237,8 @@
       border-bottom: 1px solid #f0e8d9;
       padding: 9px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     tbody tr:nth-child(even) td {
@@ -246,8 +254,14 @@
       max-width: 340px;
     }
 
+    .col-model {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #222;
+    }
+
     .col-model a {
-      color: #0f172a;
+      color: #222;
       font-weight: 700;
       text-decoration: none;
     }
@@ -257,10 +271,16 @@
       text-decoration: underline;
     }
 
+    .creator {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #222;
+    }
+
     .creator a {
-      color: #334155;
+      color: #222;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .creator a:hover {
@@ -338,6 +358,38 @@
       }
     }
 
+    /* Column resize handles */
+    thead th {
+      position: sticky;
+      overflow: visible;
+    }
+
+    .col-resize-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 7px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 4;
+      background: transparent;
+      transition: background-color 120ms ease;
+    }
+
+    .col-resize-handle:hover,
+    .col-resize-handle:active {
+      background: rgba(180, 140, 60, 0.3);
+    }
+
+    body.col-resizing {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
+    body.col-resizing * {
+      cursor: col-resize !important;
+    }
+
     @media (max-width: 860px) {
       .page {
         width: 100vw;
@@ -356,8 +408,8 @@
       .table-shell {
         max-height: none;
         min-height: 220px;
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 0;
+        padding-right: 0;
       }
 
       table {
@@ -430,10 +482,11 @@
           selectedModels: []
         },
         sort: {
-          key: "name",
+          key: "aa_intelligence_index",
           direction: "desc"
         },
-        eventsBound: false
+        eventsBound: false,
+        columnWidths: {}
       };
 
       const ui = {
@@ -524,12 +577,12 @@
             state.filters.search = "";
             state.filters.creator = "all";
             state.filters.selectedModels = [];
-            state.sort.key = "name";
+            state.sort.key = "aa_intelligence_index";
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.creator.value = "all";
             ui.modelCompare.selectedIndex = -1;
-            ui.sortBy.value = "name";
+            ui.sortBy.value = "aa_intelligence_index";
             ui.sortDir.value = "desc";
             init(imported);
           } catch (err) {
@@ -607,13 +660,13 @@
           state.filters.search = "";
           state.filters.creator = "all";
           state.filters.selectedModels = [];
-          state.sort.key = "name";
+          state.sort.key = "aa_intelligence_index";
           state.sort.direction = "desc";
 
           ui.search.value = "";
           ui.creator.value = "all";
           ui.modelCompare.selectedIndex = -1;
-          ui.sortBy.value = "name";
+          ui.sortBy.value = "aa_intelligence_index";
           ui.sortDir.value = "desc";
 
           applyAndRender();
@@ -760,6 +813,72 @@
             applyAndRender();
           });
         });
+
+        initColumnResize();
+      }
+
+      function initColumnResize() {
+        const table = ui.content.querySelector("table");
+        if (!table) return;
+        const ths = table.querySelectorAll("thead th");
+
+        // Capture natural widths for columns not yet stored
+        ths.forEach((th) => {
+          const key = th.dataset.sortKey;
+          if (key && !state.columnWidths[key]) {
+            state.columnWidths[key] = th.getBoundingClientRect().width;
+          }
+        });
+
+        // Switch to fixed layout and apply stored widths
+        table.style.tableLayout = "fixed";
+        ths.forEach((th) => {
+          const key = th.dataset.sortKey;
+          if (key && state.columnWidths[key]) {
+            th.style.width = state.columnWidths[key] + "px";
+          }
+        });
+
+        // Attach mousedown listeners to resize handles
+        table.querySelectorAll(".col-resize-handle").forEach((handle) => {
+          handle.addEventListener("mousedown", onResizeMouseDown);
+        });
+      }
+
+      function onResizeMouseDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const handle = e.currentTarget;
+        const th = handle.closest("th");
+        const key = handle.dataset.resizeKey;
+        if (!th || !key) return;
+
+        const startX = e.clientX;
+        const startWidth = th.getBoundingClientRect().width;
+
+        document.body.classList.add("col-resizing");
+
+        function onMouseMove(e) {
+          const newWidth = Math.max(50, startWidth + (e.clientX - startX));
+          th.style.width = newWidth + "px";
+        }
+
+        function onMouseUp(e) {
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+          document.body.classList.remove("col-resizing");
+
+          const finalWidth = Math.max(50, startWidth + (e.clientX - startX));
+          state.columnWidths[key] = finalWidth;
+          th.style.width = finalWidth + "px";
+
+          // Swallow the click event the browser fires after mouseup so sort doesn't trigger
+          th.addEventListener("click", (ev) => ev.stopPropagation(), { capture: true, once: true });
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
       }
 
       function renderHeaderCell(header) {
@@ -770,7 +889,8 @@
         const className = header.className ? ` ${header.className}` : "";
         const title = header.title ? ` title="${escapeHtml(header.title)}"` : "";
 
-        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}>${escapeHtml(header.label)}${indicator}</th>`;
+        const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}>${escapeHtml(header.label)}${indicator}${resizeHandle}</th>`;
       }
 
       function renderRow(model, bestInTable) {
