@@ -347,6 +347,76 @@
       color: #9f1239;
     }
 
+    .benchmarks-panel {
+      margin: 16px 16px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .benchmarks-panel h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .benchmarks-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .benchmark-item {
+      border: 1px solid #eee3d2;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fffaf2;
+    }
+
+    .benchmark-head {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .benchmark-name {
+      font-weight: 800;
+      color: #2e2a25;
+    }
+
+    .benchmark-category {
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .benchmark-desc {
+      margin: 0;
+      color: #4a433a;
+      line-height: 1.4;
+      font-size: 0.9rem;
+    }
+
+    .benchmark-links {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .benchmark-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .benchmark-links a:hover {
+      text-decoration: underline;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -777,7 +847,10 @@
 
       function renderTable() {
         if (!state.filteredModels.length) {
-          ui.content.innerHTML = `<div class="empty">No models match your filters.</div>`;
+          ui.content.innerHTML = `
+            <div class="empty">No models match your filters.</div>
+            ${renderBenchmarkDirectory()}
+          `;
           return;
         }
 
@@ -809,6 +882,7 @@
               </tbody>
             </table>
           </div>
+          ${renderBenchmarkDirectory()}
         `;
 
         ui.content.innerHTML = tableHtml;
@@ -832,6 +906,47 @@
         });
 
         initColumnResize();
+      }
+
+      function renderBenchmarkDirectory() {
+        const items = state.benchmarkKeys.map((key) => {
+          const benchmark = state.data?.benchmarks?.[key] || {};
+          const name = getBenchmarkLabel(key);
+          const category = benchmark.category || "";
+          const description = benchmark.description || "";
+          const links = benchmarkLinks(benchmark);
+
+          return `
+            <article class="benchmark-item">
+              <div class="benchmark-head">
+                <span class="benchmark-name">${escapeHtml(name)}</span>
+                ${category ? `<span class="benchmark-category">${escapeHtml(category)}</span>` : ""}
+              </div>
+              ${description ? `<p class="benchmark-desc">${escapeHtml(description)}</p>` : ""}
+              ${links.length ? `<div class="benchmark-links">${links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
+            </article>
+          `;
+        }).join("");
+
+        return `
+          <section class="benchmarks-panel" aria-label="Benchmark details">
+            <h2>Benchmarks</h2>
+            <div class="benchmarks-list">${items}</div>
+          </section>
+        `;
+      }
+
+      function benchmarkLinks(benchmark) {
+        if (!benchmark || typeof benchmark !== "object") {
+          return [];
+        }
+        if (Array.isArray(benchmark.urls)) {
+          return benchmark.urls.filter((url) => typeof url === "string" && url.trim().length > 0);
+        }
+        if (typeof benchmark.url === "string" && benchmark.url.trim().length > 0) {
+          return [benchmark.url];
+        }
+        return [];
       }
 
       function initColumnResize() {
