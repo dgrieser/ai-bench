@@ -318,6 +318,29 @@
       }
     },
     {
+      "name": "longcat-flash-lite",
+      "url": "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite",
+      "params": "68.5B",
+      "context": null,
+      "creator": {
+        "name": "LongCat",
+        "url": "https://longcat.chat/"
+      },
+      "scores": {
+        "swe_bench_verified": 54.4,
+        "terminal_bench_hard": 33.75,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 72.8,
+        "browsecomp": null,
+        "aime_2025": 63.23,
+        "gpqa_diamond": 66.78,
+        "livecodebench": null,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
       "name": "gpt-oss-20b",
       "variant": "high",
       "url": "https://huggingface.co/openai/gpt-oss-20b",
@@ -373,6 +396,8 @@
     "https://huggingface.co/zai-org/GLM-4.7-Flash",
     "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
     "https://static.stepfun.com/blog/step-3.5-flash",
+    "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite",
+    "https://longcat.chat/",
     "https://www.minimax.io/news/minimax-m25/",
     "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
   ]
