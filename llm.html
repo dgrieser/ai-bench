@@ -435,19 +435,12 @@
         <input id="search" type="text" placeholder="Model or creator">
       </div>
       <div class="field">
-        <label for="creator">Creator</label>
-        <select id="creator"></select>
+        <label for="params">Params</label>
+        <select id="params"></select>
       </div>
       <div class="field">
-        <label for="sortBy">Sort By</label>
-        <select id="sortBy"></select>
-      </div>
-      <div class="field">
-        <label for="sortDir">Direction</label>
-        <select id="sortDir">
-          <option value="desc">High to low</option>
-          <option value="asc">Low to high</option>
-        </select>
+        <label for="sortMode">Sort</label>
+        <select id="sortMode"></select>
       </div>
     </section>
 
@@ -478,7 +471,7 @@
         filteredModels: [],
         filters: {
           search: "",
-          creator: "all",
+          params: "all",
           selectedModels: []
         },
         sort: {
@@ -496,10 +489,9 @@
         content: document.getElementById("content"),
         status: document.getElementById("status"),
         search: document.getElementById("search"),
-        creator: document.getElementById("creator"),
+        params: document.getElementById("params"),
         modelCompare: document.getElementById("modelCompare"),
-        sortBy: document.getElementById("sortBy"),
-        sortDir: document.getElementById("sortDir"),
+        sortMode: document.getElementById("sortMode"),
         resultCount: document.getElementById("resultCount"),
         benchmarkCount: document.getElementById("benchmarkCount"),
         importBtn: document.getElementById("importBtn"),
@@ -576,15 +568,14 @@
             const imported = JSON.parse(text);
             validateData(imported);
             state.filters.search = "";
-            state.filters.creator = "all";
+            state.filters.params = "all";
             state.filters.selectedModels = [];
             state.sort.key = "aa_intelligence_index";
             state.sort.direction = "desc";
             ui.search.value = "";
-            ui.creator.value = "all";
+            ui.params.value = "all";
             ui.modelCompare.selectedIndex = -1;
-            ui.sortBy.value = "aa_intelligence_index";
-            ui.sortDir.value = "desc";
+            ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
             init(imported);
           } catch (err) {
             ui.content.innerHTML = `<div class="status error">Import failed: ${escapeHtml(err.message || "Invalid JSON file.")}</div>`;
@@ -595,17 +586,24 @@
       }
 
       function populateFilters() {
-        const creators = [...new Set(state.data.models.map((m) => m.creator?.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
-
-        ui.creator.innerHTML = [
-          `<option value="all">All creators</option>`,
-          ...creators.map((creator) => `<option value="${escapeHtml(creator)}">${escapeHtml(creator)}</option>`)
-        ].join("");
-
         const modelNames = [...new Set(state.data.models.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
         ui.modelCompare.innerHTML = modelNames
           .map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
           .join("");
+
+        const paramOptions = [
+          { value: "all", label: "All parameter sizes" },
+          { value: "lt30", label: "< 30B" },
+          { value: "30to80", label: "30B to 80B" },
+          { value: "80to130", label: "80B to 130B" },
+          { value: "130to250", label: "130B to 250B" },
+          { value: "gte250", label: ">= 250B" }
+        ];
+
+        ui.params.innerHTML = paramOptions
+          .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
+          .join("");
+        ui.params.value = state.filters.params;
 
         const fixedSortOptions = [
           { key: "name", label: "Model name" },
@@ -619,12 +617,17 @@
           label: getBenchmarkLabel(key)
         }));
 
-        ui.sortBy.innerHTML = [
-          ...fixedSortOptions,
-          ...benchmarkSortOptions
-        ].map((option) => `<option value="${escapeHtml(option.key)}">${escapeHtml(option.label)}</option>`).join("");
+        const sortOptions = [...fixedSortOptions, ...benchmarkSortOptions];
+        ui.sortMode.innerHTML = sortOptions.map((option) => {
+          const ascLabel = `${option.label} ↑`;
+          const descLabel = `${option.label} ↓`;
+          return [
+            `<option value="${escapeHtml(sortModeValue(option.key, "desc"))}">${escapeHtml(descLabel)}</option>`,
+            `<option value="${escapeHtml(sortModeValue(option.key, "asc"))}">${escapeHtml(ascLabel)}</option>`
+          ].join("");
+        }).join("");
 
-        ui.sortBy.value = state.sort.key;
+        ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
       }
 
       function bindEvents() {
@@ -633,8 +636,8 @@
           applyAndRender();
         }, 100));
 
-        ui.creator.addEventListener("change", (event) => {
-          state.filters.creator = event.target.value;
+        ui.params.addEventListener("change", (event) => {
+          state.filters.params = event.target.value;
           applyAndRender();
         });
 
@@ -643,13 +646,10 @@
           applyAndRender();
         });
 
-        ui.sortBy.addEventListener("change", (event) => {
-          state.sort.key = event.target.value;
-          applyAndRender();
-        });
-
-        ui.sortDir.addEventListener("change", (event) => {
-          state.sort.direction = event.target.value;
+        ui.sortMode.addEventListener("change", (event) => {
+          const nextSort = parseSortModeValue(event.target.value);
+          state.sort.key = nextSort.key;
+          state.sort.direction = nextSort.direction;
           applyAndRender();
         });
 
@@ -659,16 +659,15 @@
           }
 
           state.filters.search = "";
-          state.filters.creator = "all";
+          state.filters.params = "all";
           state.filters.selectedModels = [];
           state.sort.key = "aa_intelligence_index";
           state.sort.direction = "desc";
 
           ui.search.value = "";
-          ui.creator.value = "all";
+          ui.params.value = "all";
           ui.modelCompare.selectedIndex = -1;
-          ui.sortBy.value = "aa_intelligence_index";
-          ui.sortDir.value = "desc";
+          ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
 
           applyAndRender();
         });
@@ -703,8 +702,26 @@
           }
         }
 
-        if (state.filters.creator !== "all" && model.creatorName !== state.filters.creator) {
-          return false;
+        const modelParams = parseUnitNumber(model.params);
+        if (state.filters.params !== "all") {
+          if (!Number.isFinite(modelParams)) {
+            return false;
+          }
+          if (state.filters.params === "lt30" && !(modelParams < 30e9)) {
+            return false;
+          }
+          if (state.filters.params === "30to80" && !(modelParams >= 30e9 && modelParams <= 80e9)) {
+            return false;
+          }
+          if (state.filters.params === "80to130" && !(modelParams > 80e9 && modelParams <= 130e9)) {
+            return false;
+          }
+          if (state.filters.params === "130to250" && !(modelParams > 130e9 && modelParams < 250e9)) {
+            return false;
+          }
+          if (state.filters.params === "gte250" && !(modelParams >= 250e9)) {
+            return false;
+          }
         }
 
         if (state.filters.selectedModels.length && !state.filters.selectedModels.includes(model.name || "Unknown")) {
@@ -809,8 +826,7 @@
               state.sort.direction = key === "name" || key === "creator" ? "asc" : "desc";
             }
 
-            ui.sortBy.value = state.sort.key;
-            ui.sortDir.value = state.sort.direction;
+            ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
             applyAndRender();
           });
         });
@@ -1036,6 +1052,17 @@
 
       function nearlyEqual(a, b) {
         return Math.abs(a - b) < 1e-9;
+      }
+
+      function sortModeValue(key, direction) {
+        return `${key}::${direction}`;
+      }
+
+      function parseSortModeValue(value) {
+        const parts = String(value).split("::");
+        const key = parts[0] || "aa_intelligence_index";
+        const direction = parts[1] === "asc" ? "asc" : "desc";
+        return { key, direction };
       }
 
       function escapeHtml(value) {
