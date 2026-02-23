@@ -295,6 +295,29 @@
       }
     },
     {
+      "name": "qwen3-5-397b-a17b",
+      "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
+      "params": "397B-A17B",
+      "context": null,
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 76.4,
+        "terminal_bench_hard": 40.9,
+        "terminal_bench_2_0": 52.5,
+        "tau2_bench_telecom": 95.6,
+        "browsecomp": 78.6,
+        "aime_2025": null,
+        "gpqa_diamond": 89.3,
+        "livecodebench": 83.6,
+        "hle": 27.3,
+        "aa_intelligence_index": 45.0,
+        "aa_coding_index": 41.3
+      }
+    },
+    {
       "name": "gpt-oss-20b",
       "variant": "high",
       "url": "https://huggingface.co/openai/gpt-oss-20b",
