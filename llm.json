@@ -73,6 +73,12 @@
       "name": "AA Coding Index",
       "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
       "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+    },
+    "scicode": {
+      "name": "SciCode",
+      "category": "Coding",
+      "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
+      "url": "https://arxiv.org/abs/2407.13168"
     }
   },
   "models": [
@@ -97,7 +103,8 @@
         "livecodebench": 44.8,
         "hle": 3.6,
         "aa_intelligence_index": 22.0,
-        "aa_coding_index": 23.7
+        "aa_coding_index": 23.7,
+        "scicode": 33.1
       }
     },
     {
@@ -121,7 +128,8 @@
         "livecodebench": 34.8,
         "hle": 3.4,
         "aa_intelligence_index": 19.3,
-        "aa_coding_index": 20.7
+        "aa_coding_index": 20.7,
+        "scicode": 28.8
       }
     },
     {
@@ -145,7 +153,8 @@
         "livecodebench": 64.0,
         "hle": 7.1,
         "aa_intelligence_index": 30.1,
-        "aa_coding_index": 25.9
+        "aa_coding_index": 25.9,
+        "scicode": 33.7
       }
     },
     {
@@ -169,7 +178,8 @@
         "livecodebench": 86.4,
         "hle": 23.1,
         "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "aa_coding_index": null,
+        "scicode": null
       }
     },
     {
@@ -193,7 +203,8 @@
         "livecodebench": null,
         "hle": 19.1,
         "aa_intelligence_index": 42.0,
-        "aa_coding_index": 37.4
+        "aa_coding_index": 37.4,
+        "scicode": 42.6
       }
     },
     {
@@ -217,7 +228,8 @@
         "livecodebench": null,
         "hle": 9.5,
         "aa_intelligence_index": 24.5,
-        "aa_coding_index": 15.5
+        "aa_coding_index": 15.5,
+        "scicode": 33
       }
     },
     {
@@ -241,7 +253,8 @@
         "livecodebench": 40.3,
         "hle": 4.0,
         "aa_intelligence_index": 20.0,
-        "aa_coding_index": 19.4
+        "aa_coding_index": 19.4,
+        "scicode": 27.8
       }
     },
     {
@@ -265,7 +278,8 @@
         "livecodebench": 47.5,
         "hle": 9.3,
         "aa_intelligence_index": 28.1,
-        "aa_coding_index": 22.9
+        "aa_coding_index": 22.9,
+        "scicode": 32.3
       }
     },
     {
@@ -289,7 +303,8 @@
         "livecodebench": 70.7,
         "hle": 9.8,
         "aa_intelligence_index": 22.4,
-        "aa_coding_index": 14.7
+        "aa_coding_index": 14.7,
+        "scicode": 33.3
       }
     },
     {
@@ -313,7 +328,8 @@
         "livecodebench": 78.4,
         "hle": 11.7,
         "aa_intelligence_index": 26.5,
-        "aa_coding_index": 19.5
+        "aa_coding_index": 19.5,
+        "scicode": 38.8
       }
     },
     {
@@ -337,7 +353,8 @@
         "livecodebench": 83.6,
         "hle": 27.3,
         "aa_intelligence_index": 45.0,
-        "aa_coding_index": 41.3
+        "aa_coding_index": 41.3,
+        "scicode": 42
       }
     },
     {
@@ -361,7 +378,8 @@
         "livecodebench": null,
         "hle": null,
         "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "aa_coding_index": null,
+        "scicode": null
       }
     },
     {
@@ -386,7 +404,8 @@
         "livecodebench": 77.7,
         "hle": 9.8,
         "aa_intelligence_index": 24.5,
-        "aa_coding_index": 18.5
+        "aa_coding_index": 18.5,
+        "scicode": 34.4
       }
     },
     {
@@ -411,7 +430,8 @@
         "livecodebench": 87.8,
         "hle": 18.5,
         "aa_intelligence_index": 33.3,
-        "aa_coding_index": 28.6
+        "aa_coding_index": 28.6,
+        "scicode": 38.9
       }
     }
   ],
