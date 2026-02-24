@@ -30,7 +30,7 @@
 - https://longcat.chat/
 - https://www.minimax.io/news/minimax-m25/
 - https://www.tbench.ai/leaderboard/terminal-bench/2.0
-- https://www.arxiv.org/pdf/2602.10604
+- https://arxiv.org/pdf/2602.10604
 - https://arxiv.org/abs/2407.13168
 - https://huggingface.co/SamsungSAILMontreal/Qwen3-Coder-Next-REAP
 - https://felloai.com/minimax-m2-5-model/
