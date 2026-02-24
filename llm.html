@@ -550,6 +550,19 @@
       border-radius: 0 6px 6px 0;
     }
 
+    /* ── New model badge ───────────────────────────── */
+
+    .new-badge {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 4px;
+      position: relative;
+      top: -1px;
+      user-select: none;
+      flex-shrink: 0;
+      line-height: 0;
+    }
+
     .sort-indicator {
       position: absolute;
       right: 8px;
@@ -834,6 +847,18 @@
   </style>
 </head>
 <body>
+  <!-- Shared SVG defs for the "NEW" sticker badge (defined once to avoid duplicate IDs) -->
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
+    <defs>
+      <filter id="new-badge-shadow" x="-25%" y="-25%" width="150%" height="150%">
+        <feDropShadow dx="5" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.28"/>
+      </filter>
+      <linearGradient id="new-badge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FF4B2B"/>
+        <stop offset="100%" stop-color="#E21B4D"/>
+      </linearGradient>
+    </defs>
+  </svg>
   <main class="page" id="app" aria-live="polite">
     <section class="hero">
       <h1 id="title">LLM Benchmarks</h1>
@@ -1468,6 +1493,28 @@
         return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}><span class="th-label">${escapeHtml(header.label)}</span>${indicator}${resizeHandle}</th>`;
       }
 
+      function isRecentModel(model) {
+        if (!model.date_added) return false;
+        const added = new Date(model.date_added + "T00:00:00");
+        const now = new Date();
+        const diffMs = now.getTime() - added.getTime();
+        return diffMs >= 0 && diffMs < 7 * 24 * 60 * 60 * 1000;
+      }
+
+      function renderNewBadge() {
+        const pts = "100,10 118.1,32.4 145,22 149.5,50.5 177.9,55 167.6,81.9 190,100 167.6,118.1 177.9,145 149.5,149.5 145,177.9 118.1,167.6 100,190 81.9,167.6 55,177.9 50.5,149.5 22.1,145 32.4,118.1 10,100 32.4,81.9 22.1,55 50.5,50.5 55,22 81.9,32.4";
+        return (
+          `<span class="new-badge" title="Added in the last 7 days">` +
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="22" height="22" aria-label="New model">` +
+          `<g transform="rotate(-12 100 100)">` +
+          `<polygon points="${pts}" fill="url(#new-badge-grad)" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round" filter="url(#new-badge-shadow)"/>` +
+          `<text x="100" y="116" font-family="'Impact','Arial Black',sans-serif" font-size="46" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">NEW</text>` +
+          `</g>` +
+          `</svg>` +
+          `</span>`
+        );
+      }
+
       function renderRow(model, bestInTable) {
         const modelName = escapeHtml(model.name || "Unknown");
         const modelUrl = model.url || "";
@@ -1486,7 +1533,7 @@
 
         return `
           <tr>
-            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${modelName}</a>` : modelName}</td>
+            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${modelName}</a>` : modelName}${isRecentModel(model) ? renderNewBadge() : ""}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${escapeHtml(model.params || "-")}</td>
             <td class="mono">${escapeHtml(model.context || "-")}</td>
