@@ -159,6 +159,38 @@
       font-weight: 700;
     }
 
+    .select-wrap {
+      position: relative;
+    }
+
+    .clear-compare {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      min-height: unset;
+      padding: 0;
+      border-radius: 4px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      transition: color 120ms ease;
+      z-index: 1;
+    }
+
+    .clear-compare:hover {
+      color: var(--text);
+    }
+
 
     input[type="text"]:focus,
     select:focus {
@@ -652,7 +684,10 @@
     <section class="controls" id="controls" hidden>
       <div class="field">
         <label for="modelCompare">Compare Models</label>
-        <select id="modelCompare" multiple></select>
+        <div class="select-wrap">
+          <select id="modelCompare" multiple></select>
+          <button id="clearCompare" class="clear-compare" type="button" hidden title="Unselect all">×</button>
+        </div>
       </div>
       <div class="field">
         <label for="search">Search</label>
@@ -720,7 +755,8 @@
         benchmarkCount: document.getElementById("benchmarkCount"),
         importBtn: document.getElementById("importBtn"),
         importFile: document.getElementById("importFile"),
-        resetBtn: document.getElementById("resetBtn")
+        resetBtn: document.getElementById("resetBtn"),
+        clearCompare: document.getElementById("clearCompare")
       };
 
       bindImportEvents();
@@ -876,6 +912,18 @@
 
         ui.modelCompare.addEventListener("change", () => {
           state.filters.selectedModels = Array.from(ui.modelCompare.selectedOptions).map((option) => option.value);
+          ui.clearCompare.hidden = state.filters.selectedModels.length === 0;
+          applyAndRender();
+        });
+
+        ui.clearCompare.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // prevent select blur/change from firing before click
+        });
+
+        ui.clearCompare.addEventListener("click", () => {
+          Array.from(ui.modelCompare.options).forEach((opt) => { opt.selected = false; });
+          state.filters.selectedModels = [];
+          ui.clearCompare.hidden = true;
           applyAndRender();
         });
 
@@ -900,6 +948,7 @@
           ui.search.value = "";
           ui.params.value = "all";
           ui.modelCompare.selectedIndex = -1;
+          ui.clearCompare.hidden = true;
           ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
 
           applyAndRender();
