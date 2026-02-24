@@ -19,9 +19,8 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
-      --gold-bg: #fef9c3;
-      --gold-text: #713f12;
-      --gold-border: rgba(202, 138, 4, 0.35);
+      --top-score-bg: linear-gradient(to right, rgba(29, 78, 216, 0.03), rgba(29, 78, 216, 0.11));
+      --top-score-text: var(--accent);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
@@ -360,7 +359,7 @@
 
     /* Keep top-score visible on hover */
     tbody tr:hover td.top-score {
-      background: #fef08a !important;
+      background: linear-gradient(to right, rgba(29, 78, 216, 0.06), rgba(29, 78, 216, 0.15)) !important;
     }
 
     .col-model {
@@ -414,6 +413,10 @@
       color: var(--text);
     }
 
+    td.mono {
+      text-align: right;
+    }
+
     td.num {
       font-size: 0.82rem;
       padding-right: 14px;
@@ -425,20 +428,14 @@
       font-weight: 400;
     }
 
-    /* Top score: vivid amber, high contrast */
+    /* Top score: subtle accent tint, no border */
     .top-score {
-      background: var(--gold-bg) !important;
-      color: var(--gold-text) !important;
-      box-shadow: inset 0 0 0 1px var(--gold-border);
-      border-radius: 4px;
+      background: var(--top-score-bg) !important;
+      color: var(--top-score-text) !important;
     }
 
     .top-score.num {
-      font-weight: 800;
-    }
-
-    .top-row td {
-      box-shadow: inset 0 -1px 0 rgba(202, 138, 4, 0.2), inset 0 1px 0 rgba(202, 138, 4, 0.1);
+      font-weight: 700;
     }
 
     .sort-indicator {
@@ -1242,8 +1239,6 @@
         const modelUrl = model.url || "";
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
-        const contextClass = bestInTable.has("context") ? " top-score" : "";
-
         const scoreCells = state.benchmarkKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const isTop = bestInTable.has(key);
@@ -1257,7 +1252,7 @@
             <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${modelName}</a>` : modelName}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${escapeHtml(model.params || "-")}</td>
-            <td class="mono${contextClass}">${escapeHtml(model.context || "-")}</td>
+            <td class="mono">${escapeHtml(model.context || "-")}</td>
             ${scoreCells}
           </tr>
         `;
