@@ -19,7 +19,6 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
-      --top-score-bg: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.11));
       --top-score-text: var(--accent);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
@@ -354,17 +353,26 @@
       text-overflow: ellipsis;
     }
 
-    tbody tr:nth-child(even) td {
+    tbody tr:nth-child(even) {
       background: #fafaf8;
     }
 
-    tbody tr:hover td {
+    /* sticky first column needs explicit background since td overrides tr */
+    tbody tr:nth-child(even) td:first-child {
+      background: #fafaf8;
+    }
+
+    tbody tr:hover {
+      background: #eeeeed;
+    }
+
+    tbody tr:hover td:first-child {
       background: #eeeeed;
     }
 
     /* Keep top-score visible on hover */
     tbody tr:hover td.top-score {
-      background: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.18)) !important;
+      background: linear-gradient(to right, rgba(29, 78, 216, 0), rgba(29, 78, 216, 0.18)) !important;
     }
 
     .col-model {
@@ -433,9 +441,9 @@
       font-weight: 400;
     }
 
-    /* Top score: subtle accent tint, no border */
+    /* Top score: subtle accent gradient, start at low opacity so row background tints through */
     .top-score {
-      background: var(--top-score-bg) !important;
+      background: linear-gradient(to right, rgba(29, 78, 216, 0), rgba(29, 78, 216, 0.11)) !important;
       color: var(--top-score-text) !important;
     }
 
