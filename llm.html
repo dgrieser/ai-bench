@@ -170,6 +170,7 @@
       width: 20px;
       height: 20px;
       min-height: unset;
+      min-width: unset;
       padding: 0;
       border-radius: 4px;
       border: none;
@@ -228,12 +229,15 @@
     .pill {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
-      border-radius: 6px;
+      justify-content: center;
+      padding: 0 12px;
+      min-height: 32px;
+      min-width: 150px;
+      border-radius: 8px;
       background: var(--surface);
       color: var(--muted);
       border: 1px solid var(--line);
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       font-weight: 700;
       font-family: var(--font-mono);
       letter-spacing: 0.03em;
@@ -245,6 +249,7 @@
       border-radius: 8px;
       color: var(--muted);
       min-height: 32px;
+      min-width: 150px;
       padding: 0 12px;
       font-size: 0.78rem;
       font-weight: 700;
@@ -921,6 +926,7 @@
           Array.from(ui.modelCompare.options).forEach((opt) => { opt.selected = false; });
           state.filters.selectedModels = [];
           ui.clearCompare.hidden = true;
+          ui.modelCompare.blur();
           applyAndRender();
         });
 
