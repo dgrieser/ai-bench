@@ -1004,6 +1004,26 @@
           if (e.key === "Escape") ui.modelCompare.classList.remove("open");
         });
 
+        let hoverOpenTimer = null;
+        ui.modelCompare.addEventListener("mouseenter", () => {
+          if (!ui.modelCompare.classList.contains("open")) {
+            hoverOpenTimer = setTimeout(() => {
+              ui.modelCompare.classList.add("open");
+            }, 1500);
+          }
+        });
+        ui.modelCompare.addEventListener("mouseleave", () => {
+          clearTimeout(hoverOpenTimer);
+        });
+
+        ui.modelCompare.addEventListener("wheel", (e) => {
+          if (!ui.modelCompare.classList.contains("open")) {
+            e.preventDefault();
+            ui.modelCompare.classList.add("open");
+            ui.modelCompare.focus();
+          }
+        }, { passive: false });
+
         document.addEventListener("click", () => {
           ui.modelCompare.classList.remove("open");
         });
@@ -1107,13 +1127,12 @@
           applyAndRender();
         });
 
-        ui.clearCompare.addEventListener("click", (e) => {
+        ui.clearCompare.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // prevents blur on modelCompare, keeping it open
           e.stopPropagation();
           state.filters.selectedModels = [];
-          ui.modelCompare.classList.remove("open");
           updateCompareWidget();
           applyAndRender();
-          updateCompareWidget();
         });
 
         ui.sortMode.addEventListener("change", (event) => {
