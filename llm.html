@@ -145,8 +145,13 @@
       padding: 4px 12px 8px;
       font-size: 0.80rem;
       font-weight: 700;
+      color: var(--muted);
       transition: height 200ms ease;
       scrollbar-width: none;
+    }
+
+    select[multiple].has-selection {
+      color: var(--text);
     }
 
     select[multiple]::-webkit-scrollbar {
@@ -159,6 +164,89 @@
 
     .select-wrap {
       position: relative;
+    }
+
+    /* ── Model compare custom widget ──────────────────── */
+
+    .model-compare-widget {
+      width: 100%;
+      max-height: 42px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding-top: 5px;
+      background: var(--surface);
+      cursor: pointer;
+      outline: none;
+      transition: border-color 150ms ease, box-shadow 150ms ease, max-height 200ms ease;
+      scrollbar-width: none;
+    }
+
+    .model-compare-widget::-webkit-scrollbar { display: none; }
+
+    .model-compare-widget.open {
+      max-height: 260px;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+    }
+
+    .model-compare-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      font-size: 0.80rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 80ms ease, color 80ms ease;
+    }
+
+    .model-compare-item:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    .model-compare-item.selected {
+      color: var(--accent);
+    }
+
+    .model-compare-item.selected:hover {
+      background: rgba(29, 78, 216, 0.05);
+    }
+
+    .model-compare-check {
+      flex-shrink: 0;
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      border: 1.5px solid var(--subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 80ms ease, border-color 80ms ease;
+    }
+
+    .model-compare-item.selected .model-compare-check {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .model-compare-item.selected .model-compare-check::after {
+      content: "✓";
+      font-size: 9px;
+      color: white;
+      font-family: var(--font-ui);
+      font-weight: 900;
+      line-height: 1;
+      margin-top: -1px;
+      display: block;
     }
 
     .clear-compare {
@@ -183,7 +271,7 @@
       justify-content: center;
       font-family: var(--font-ui);
       transition: color 120ms ease;
-      z-index: 1;
+      z-index: 10;
     }
 
     .clear-compare:hover {
@@ -353,6 +441,10 @@
       text-overflow: ellipsis;
     }
 
+    tbody tr {
+      background: var(--surface);
+    }
+
     tbody tr:nth-child(even) {
       background: #fafaf8;
     }
@@ -368,11 +460,6 @@
 
     tbody tr:hover td:first-child {
       background: #eeeeed;
-    }
-
-    /* Keep top-score visible on hover */
-    tbody tr:hover td.top-score {
-      background: linear-gradient(to right, rgba(210, 222, 255, 0) 20%, rgba(210, 222, 255, 1)) !important;
     }
 
     .col-model {
@@ -441,14 +528,26 @@
       font-weight: 400;
     }
 
-    /* Top score: subtle accent gradient, start at low opacity so row background tints through */
+    /* Top score: td bg matches its row so span corners are invisible */
     .top-score {
-      background: linear-gradient(to right, rgba(210, 222, 255, 0) 20%, rgba(210, 222, 255, 1)) !important;
       color: var(--top-score-text) !important;
+      padding: 0 !important;
     }
 
     .top-score.num {
       font-weight: 700;
+    }
+
+    tbody tr:nth-child(odd) td.top-score  { background: var(--surface); }
+    tbody tr:nth-child(even) td.top-score { background: #fafaf8; }
+    tbody tr:hover td.top-score           { background: #eeeeed !important; }
+
+    /* Gradient lives on the inner span with border-radius */
+    .top-score-mark {
+      display: block;
+      padding: 9px 14px 9px 10px;
+      background: linear-gradient(to right, rgba(210, 222, 255, 0) 20%, rgba(210, 222, 255, 1));
+      border-radius: 0 6px 6px 0;
     }
 
     .sort-indicator {
@@ -745,8 +844,8 @@
       <div class="field">
         <label for="modelCompare">Compare Models</label>
         <div class="select-wrap">
-          <select id="modelCompare" multiple></select>
-          <button id="clearCompare" class="clear-compare" type="button" hidden title="Unselect all">×</button>
+          <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
+          <button id="clearCompare" class="clear-compare" type="button" title="Unselect all">×</button>
         </div>
       </div>
       <div class="field">
@@ -873,13 +972,40 @@
       }
 
       function bindImportEvents() {
-        ui.modelCompare.addEventListener("focus", function () {
-          if (!this.options.length) return;
-          this.style.height = (this.scrollHeight + 3) + "px";
+        ui.modelCompare.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const item = e.target.closest(".model-compare-item");
+          if (item) {
+            const name = item.dataset.value;
+            const idx = state.filters.selectedModels.indexOf(name);
+            if (idx >= 0) {
+              state.filters.selectedModels.splice(idx, 1);
+            } else {
+              state.filters.selectedModels.push(name);
+            }
+            updateCompareWidget();
+            applyAndRender();
+            return;
+          }
+          ui.modelCompare.classList.toggle("open");
         });
 
-        ui.modelCompare.addEventListener("blur", function () {
-          this.style.height = "42px";
+        ui.modelCompare.addEventListener("focus", () => {
+          ui.modelCompare.classList.add("open");
+        });
+
+        ui.modelCompare.addEventListener("blur", (e) => {
+          if (!ui.modelCompare.contains(e.relatedTarget)) {
+            ui.modelCompare.classList.remove("open");
+          }
+        });
+
+        ui.modelCompare.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") ui.modelCompare.classList.remove("open");
+        });
+
+        document.addEventListener("click", () => {
+          ui.modelCompare.classList.remove("open");
         });
 
         ui.importBtn.addEventListener("click", () => {
@@ -903,7 +1029,6 @@
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.params.value = "all";
-            ui.modelCompare.selectedIndex = -1;
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
             init(imported);
           } catch (err) {
@@ -916,9 +1041,13 @@
 
       function populateFilters() {
         const modelNames = [...new Set(state.data.models.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
-        ui.modelCompare.innerHTML = modelNames
-          .map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
-          .join("");
+        ui.modelCompare.innerHTML = modelNames.map((name) => {
+          const sel = state.filters.selectedModels.includes(name);
+          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(name)}" role="option" aria-selected="${sel}">
+            <span class="model-compare-check"></span>
+            <span>${escapeHtml(name)}</span>
+          </div>`;
+        }).join("");
 
         const paramOptions = [
           { value: "all", label: "All parameter sizes" },
@@ -959,6 +1088,14 @@
         ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
       }
 
+      function updateCompareWidget() {
+        ui.modelCompare.querySelectorAll(".model-compare-item").forEach((item) => {
+          const selected = state.filters.selectedModels.includes(item.dataset.value);
+          item.classList.toggle("selected", selected);
+          item.setAttribute("aria-selected", String(selected));
+        });
+      }
+
       function bindEvents() {
         ui.search.addEventListener("input", debounce((event) => {
           state.filters.search = event.target.value.trim().toLowerCase();
@@ -970,22 +1107,13 @@
           applyAndRender();
         });
 
-        ui.modelCompare.addEventListener("change", () => {
-          state.filters.selectedModels = Array.from(ui.modelCompare.selectedOptions).map((option) => option.value);
-          ui.clearCompare.hidden = state.filters.selectedModels.length === 0;
-          applyAndRender();
-        });
-
-        ui.clearCompare.addEventListener("mousedown", (e) => {
-          e.preventDefault(); // prevent select blur/change from firing before click
-        });
-
-        ui.clearCompare.addEventListener("click", () => {
-          Array.from(ui.modelCompare.options).forEach((opt) => { opt.selected = false; });
+        ui.clearCompare.addEventListener("click", (e) => {
+          e.stopPropagation();
           state.filters.selectedModels = [];
-          ui.clearCompare.hidden = true;
-          ui.modelCompare.blur();
+          ui.modelCompare.classList.remove("open");
+          updateCompareWidget();
           applyAndRender();
+          updateCompareWidget();
         });
 
         ui.sortMode.addEventListener("change", (event) => {
@@ -1008,8 +1136,9 @@
 
           ui.search.value = "";
           ui.params.value = "all";
-          ui.modelCompare.selectedIndex = -1;
-          ui.clearCompare.hidden = true;
+
+          ui.modelCompare.classList.remove("open");
+          updateCompareWidget();
           ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
 
           applyAndRender();
@@ -1329,8 +1458,11 @@
           const value = toNumber(model.scores?.[key]);
           const isTop = bestInTable.has(key);
           const className = isTop ? "num top-score" : "num";
+          const content = isTop
+            ? `<span class="top-score-mark">${formatScore(value)}</span>`
+            : formatScore(value);
 
-          return `<td class="${className}">${formatScore(value)}</td>`;
+          return `<td class="${className}">${content}</td>`;
         }).join("");
 
         return `
