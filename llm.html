@@ -52,7 +52,7 @@
     }
 
     .page {
-      width: min(1600px, 96vw);
+      width: min(2400px, 96vw);
       margin: 32px auto;
       background: var(--surface);
       border: 1px solid var(--line);
@@ -146,7 +146,17 @@
       background-image: none;
       padding: 4px 12px 8px;
       font-size: 0.80rem;
+      font-weight: 700;
       transition: height 200ms ease;
+      scrollbar-width: none;
+    }
+
+    select[multiple]::-webkit-scrollbar {
+      display: none;
+    }
+
+    select[multiple] option {
+      font-weight: 700;
     }
 
 
@@ -485,6 +495,8 @@
       padding: 12px 14px;
       background: var(--surface);
       transition: border-color 150ms ease;
+      display: flex;
+      flex-direction: column;
     }
 
     .benchmark-item:hover {
@@ -523,7 +535,8 @@
     }
 
     .benchmark-links {
-      margin-top: 8px;
+      margin-top: auto;
+      padding-top: 8px;
       display: block;
     }
 
