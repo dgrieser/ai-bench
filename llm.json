@@ -58,6 +58,12 @@
       "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
       "url": "https://livecodebench.github.io/"
     },
+    "scicode": {
+      "name": "SciCode",
+      "category": "Coding",
+      "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
+      "url": "https://arxiv.org/abs/2407.13168"
+    },
     "hle": {
       "name": "HLE",
       "category": "Reasoning & Knowledge",
@@ -73,12 +79,6 @@
       "name": "AA Coding Index",
       "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
       "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
-    },
-    "scicode": {
-      "name": "SciCode",
-      "category": "Coding",
-      "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
-      "url": "https://arxiv.org/abs/2407.13168"
     }
   },
   "models": [
@@ -101,10 +101,10 @@
         "aime_2026": null,
         "gpqa_diamond": 59.4,
         "livecodebench": 44.8,
+        "scicode": 33.1,
         "hle": 3.6,
         "aa_intelligence_index": 22.0,
-        "aa_coding_index": 23.7,
-        "scicode": 33.1
+        "aa_coding_index": 23.7
       }
     },
     {
@@ -126,10 +126,10 @@
         "aime_2026": null,
         "gpqa_diamond": 53.2,
         "livecodebench": 34.8,
+        "scicode": 28.8,
         "hle": 3.4,
         "aa_intelligence_index": 19.3,
-        "aa_coding_index": 20.7,
-        "scicode": 28.8
+        "aa_coding_index": 20.7
       }
     },
     {
@@ -151,10 +151,10 @@
         "aime_2026": null,
         "gpqa_diamond": 58.1,
         "livecodebench": 64.0,
+        "scicode": 33.7,
         "hle": 7.1,
         "aa_intelligence_index": 30.1,
-        "aa_coding_index": 25.9,
-        "scicode": 33.7
+        "aa_coding_index": 25.9
       }
     },
     {
@@ -176,10 +176,10 @@
         "aime_2026": 96.67,
         "gpqa_diamond": 83.5,
         "livecodebench": 86.4,
+        "scicode": null,
         "hle": 23.1,
         "aa_intelligence_index": null,
-        "aa_coding_index": null,
-        "scicode": null
+        "aa_coding_index": null
       }
     },
     {
@@ -201,10 +201,10 @@
         "aime_2026": null,
         "gpqa_diamond": 84.8,
         "livecodebench": null,
+        "scicode": 42.6,
         "hle": 19.1,
         "aa_intelligence_index": 42.0,
-        "aa_coding_index": 37.4,
-        "scicode": 42.6
+        "aa_coding_index": 37.4
       }
     },
     {
@@ -226,10 +226,10 @@
         "aime_2026": null,
         "gpqa_diamond": 71.3,
         "livecodebench": null,
+        "scicode": 33,
         "hle": 9.5,
         "aa_intelligence_index": 24.5,
-        "aa_coding_index": 15.5,
-        "scicode": 33
+        "aa_coding_index": 15.5
       }
     },
     {
@@ -251,10 +251,10 @@
         "aime_2026": null,
         "gpqa_diamond": 51.6,
         "livecodebench": 40.3,
+        "scicode": 27.8,
         "hle": 4.0,
         "aa_intelligence_index": 20.0,
-        "aa_coding_index": 19.4,
-        "scicode": 27.8
+        "aa_coding_index": 19.4
       }
     },
     {
@@ -276,10 +276,10 @@
         "aime_2026": null,
         "gpqa_diamond": 73.7,
         "livecodebench": 47.5,
+        "scicode": 32.3,
         "hle": 9.3,
         "aa_intelligence_index": 28.1,
-        "aa_coding_index": 22.9,
-        "scicode": 32.3
+        "aa_coding_index": 22.9
       }
     },
     {
@@ -301,10 +301,10 @@
         "aime_2026": null,
         "gpqa_diamond": 70.7,
         "livecodebench": 70.7,
+        "scicode": 33.3,
         "hle": 9.8,
         "aa_intelligence_index": 22.4,
-        "aa_coding_index": 14.7,
-        "scicode": 33.3
+        "aa_coding_index": 14.7
       }
     },
     {
@@ -326,10 +326,10 @@
         "aime_2026": null,
         "gpqa_diamond": 75.9,
         "livecodebench": 78.4,
+        "scicode": 38.8,
         "hle": 11.7,
         "aa_intelligence_index": 26.5,
-        "aa_coding_index": 19.5,
-        "scicode": 38.8
+        "aa_coding_index": 19.5
       }
     },
     {
@@ -351,10 +351,10 @@
         "aime_2026": 91.3,
         "gpqa_diamond": 89.3,
         "livecodebench": 83.6,
+        "scicode": 42,
         "hle": 27.3,
         "aa_intelligence_index": 45.0,
-        "aa_coding_index": 41.3,
-        "scicode": 42
+        "aa_coding_index": 41.3
       }
     },
     {
@@ -376,10 +376,10 @@
         "aime_2026": null,
         "gpqa_diamond": 66.78,
         "livecodebench": null,
+        "scicode": null,
         "hle": null,
         "aa_intelligence_index": null,
-        "aa_coding_index": null,
-        "scicode": null
+        "aa_coding_index": null
       }
     },
     {
@@ -402,10 +402,10 @@
         "aime_2026": null,
         "gpqa_diamond": 68.8,
         "livecodebench": 77.7,
+        "scicode": 34.4,
         "hle": 9.8,
         "aa_intelligence_index": 24.5,
-        "aa_coding_index": 18.5,
-        "scicode": 34.4
+        "aa_coding_index": 18.5
       }
     },
     {
@@ -428,10 +428,10 @@
         "aime_2026": null,
         "gpqa_diamond": 78.2,
         "livecodebench": 87.8,
+        "scicode": 38.9,
         "hle": 18.5,
         "aa_intelligence_index": 33.3,
-        "aa_coding_index": 28.6,
-        "scicode": 38.9
+        "aa_coding_index": 28.6
       }
     }
   ],
