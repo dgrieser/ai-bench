@@ -4,29 +4,39 @@
     "swe_bench_verified": {
       "name": "SWE-bench Verified",
       "description": "Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.",
-      "url": "https://www.swebench.com/SWE-bench/"
+      "urls": [
+        "https://www.swebench.com/SWE-bench/"
+      ]
     },
     "terminal_bench_hard": {
       "name": "Terminal-Bench Hard",
       "category": "Agentic Coding & Terminal Use",
       "description": "Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.",
-      "url": "https://www.tbench.ai/"
+      "urls": [
+        "https://www.tbench.ai/"
+      ]
     },
     "terminal_bench_2_0": {
       "name": "Terminal-Bench 2.0",
       "description": "Terminal-Bench 2.0 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
-      "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
+      "urls": [
+        "https://www.tbench.ai/leaderboard/terminal-bench/2.0"
+      ]
     },
     "tau2_bench_telecom": {
       "name": "τ²-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
-      "url": "https://arxiv.org/abs/2506.07982"
+      "urls": [
+        "https://arxiv.org/abs/2506.07982"
+      ]
     },
     "browsecomp": {
       "name": "BrowseComp",
       "description": "Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.",
-      "url": "https://openai.com/index/browsecomp/"
+      "urls": [
+        "https://openai.com/index/browsecomp/"
+      ]
     },
     "aime_2025": {
       "name": "AIME 2025",
@@ -50,35 +60,47 @@
       "name": "GPQA Diamond",
       "category": "Scientific Reasoning",
       "description": "Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.",
-      "url": "https://arxiv.org/abs/2311.12022"
+      "urls": [
+        "https://arxiv.org/abs/2311.12022"
+      ]
     },
     "livecodebench": {
       "name": "LiveCodeBench",
       "category": "Coding",
       "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
-      "url": "https://livecodebench.github.io/"
+      "urls": [
+        "https://livecodebench.github.io/"
+      ]
     },
     "scicode": {
       "name": "SciCode",
       "category": "Coding",
       "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
-      "url": "https://arxiv.org/abs/2407.13168"
+      "urls": [
+        "https://arxiv.org/abs/2407.13168"
+      ]
     },
     "hle": {
       "name": "HLE",
       "category": "Reasoning & Knowledge",
       "description": "Humanity's Last Exam: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.",
-      "url": "https://lastexam.ai/"
+      "urls": [
+        "https://lastexam.ai/"
+      ]
     },
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
-      "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      "urls": [
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      ]
     },
     "aa_coding_index": {
       "name": "AA Coding Index",
       "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
-      "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      "urls": [
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      ]
     }
   },
   "models": [
