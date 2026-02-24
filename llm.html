@@ -19,7 +19,7 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
-      --top-score-bg: linear-gradient(to right, rgba(29, 78, 216, 0.03), rgba(29, 78, 216, 0.11));
+      --top-score-bg: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.11));
       --top-score-text: var(--accent);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
@@ -313,14 +313,14 @@
 
     /* Sorted column: subtle tint */
     thead th:has(.sort-indicator) {
-      background: #eef1fb !important;
+      background: #e2e1de !important;
       color: var(--text) !important;
-      border-bottom-color: #c7d2f5 !important;
+      border-bottom-color: #c9c8c4 !important;
       text-align: left;
     }
 
     thead th:has(.sort-indicator):hover {
-      background: #e4e9f8 !important;
+      background: #d8d7d3 !important;
     }
 
     /* Sticky first column */
@@ -338,7 +338,7 @@
     }
 
     thead th:first-child:has(.sort-indicator) {
-      background: #eef1fb !important;
+      background: #e2e1de !important;
     }
 
     tbody td {
@@ -359,7 +359,7 @@
 
     /* Keep top-score visible on hover */
     tbody tr:hover td.top-score {
-      background: linear-gradient(to right, rgba(29, 78, 216, 0.06), rgba(29, 78, 216, 0.15)) !important;
+      background: linear-gradient(to right, transparent, rgba(29, 78, 216, 0.18)) !important;
     }
 
     .col-model {
@@ -715,7 +715,7 @@
 
   <script>
     (function () {
-      const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index"];
+      const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index", "swe_bench_verified"];
       const BENCHMARK_LABEL_OVERRIDES = {
         aa_intelligence_index: "General Index",
         aa_coding_index: "Coding Index"
@@ -731,7 +731,7 @@
           selectedModels: []
         },
         sort: {
-          key: "aa_intelligence_index",
+          key: "swe_bench_verified",
           direction: "desc"
         },
         eventsBound: false,
@@ -836,7 +836,7 @@
             state.filters.search = "";
             state.filters.params = "all";
             state.filters.selectedModels = [];
-            state.sort.key = "aa_intelligence_index";
+            state.sort.key = "swe_bench_verified";
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.params.value = "all";
@@ -939,7 +939,7 @@
           state.filters.search = "";
           state.filters.params = "all";
           state.filters.selectedModels = [];
-          state.sort.key = "aa_intelligence_index";
+          state.sort.key = "swe_bench_verified";
           state.sort.direction = "desc";
 
           ui.search.value = "";
@@ -1382,7 +1382,7 @@
 
       function parseSortModeValue(value) {
         const parts = String(value).split("::");
-        const key = parts[0] || "aa_intelligence_index";
+        const key = parts[0] || "swe_bench_verified";
         const direction = parts[1] === "asc" ? "asc" : "desc";
         return { key, direction };
       }
