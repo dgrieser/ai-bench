@@ -1319,6 +1319,7 @@
         ];
 
         const bestInTableByModel = getBestInTableByModel(state.filteredModels);
+        const scoreRanges = getScoreRangesByBenchmark(state.filteredModels);
 
         const tableHtml = `
           <div class="table-shell">
@@ -1329,7 +1330,7 @@
                 </tr>
               </thead>
               <tbody>
-                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set())).join("")}
+                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set(), scoreRanges)).join("")}
               </tbody>
             </table>
           </div>
@@ -1505,10 +1506,11 @@
         return diffMs >= 0 && diffMs < 7 * 24 * 60 * 60 * 1000;
       }
 
-      function renderNewBadge() {
+      function renderNewBadge(dateAdded) {
         const pts = "100,10 118.1,32.4 145,22 149.5,50.5 177.9,55 167.6,81.9 190,100 167.6,118.1 177.9,145 149.5,149.5 145,177.9 118.1,167.6 100,190 81.9,167.6 55,177.9 50.5,149.5 22.1,145 32.4,118.1 10,100 32.4,81.9 22.1,55 50.5,50.5 55,22 81.9,32.4";
+        const label = dateAdded ? `Added ${escapeHtml(dateAdded)}` : "Recently added";
         return (
-          `<span class="new-badge" title="Added in the last 7 days">` +
+          `<span class="new-badge" title="${label}">` +
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="22" height="22" aria-label="New model">` +
           `<g transform="rotate(-12 100 100)">` +
           `<polygon points="${pts}" fill="url(#new-badge-grad)" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round" filter="url(#new-badge-shadow)"/>` +
@@ -1519,7 +1521,7 @@
         );
       }
 
-      function renderRow(model, bestInTable) {
+      function renderRow(model, bestInTable, scoreRanges) {
         const modelName = escapeHtml(model.name || "Unknown");
         const modelUrl = model.url || "";
         const creatorName = escapeHtml(model.creatorName);
@@ -1528,17 +1530,17 @@
         const scoreCells = state.benchmarkKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const isTop = bestInTable.has(key);
-          const className = isTop ? "num top-score" : "num";
-          const content = isTop
-            ? `<span class="top-score-mark">${formatScore(value)}</span>`
-            : formatScore(value);
-
-          return `<td class="${className}">${content}</td>`;
+          if (isTop) {
+            return `<td class="num top-score"><span class="top-score-mark">${formatScore(value)}</span></td>`;
+          }
+          const grey = Number.isFinite(value) ? scoreToGrey(value, scoreRanges[key]) : null;
+          const style = grey ? ` style="color:${grey}"` : "";
+          return `<td class="num"${style}>${formatScore(value)}</td>`;
         }).join("");
 
         return `
           <tr>
-            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : (isNew ? `<span class="model-new">${modelName}</span>` : modelName)}${isNew ? renderNewBadge() : ""}</td>
+            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : (isNew ? `<span class="model-new">${modelName}</span>` : modelName)}${isNew ? renderNewBadge(model.date_added) : ""}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${escapeHtml(model.params || "-")}</td>
             <td class="mono">${escapeHtml(model.context || "-")}</td>
@@ -1563,6 +1565,34 @@
           topScores[key] = values.length ? Math.max(...values) : Number.NaN;
         });
         return topScores;
+      }
+
+      function getScoreRangesByBenchmark(models) {
+        const ranges = {};
+        state.benchmarkKeys.forEach((key) => {
+          const values = models
+            .map((m) => toNumber(m.scores?.[key]))
+            .filter((v) => Number.isFinite(v));
+          if (!values.length) { ranges[key] = null; return; }
+          const top = Math.max(...values);
+          const nonTop = values.filter((v) => !nearlyEqual(v, top));
+          ranges[key] = {
+            top,
+            second: nonTop.length ? Math.max(...nonTop) : null,
+            min: nonTop.length ? Math.min(...nonTop) : null
+          };
+        });
+        return ranges;
+      }
+
+      function scoreToGrey(score, range) {
+        if (!range || range.second === null || !Number.isFinite(score)) return null;
+        const { second, min } = range;
+        // t = 0 at min → #8b8b8b (channel 139), t = 1 at second → #111111 (channel 17)
+        const t = nearlyEqual(second, min) ? 1 : Math.max(0, Math.min(1, (score - min) / (second - min)));
+        const channel = Math.round(139 - 122 * t);
+        const hex = channel.toString(16).padStart(2, "0");
+        return `#${hex}${hex}${hex}`;
       }
 
       function getOrderedBenchmarkKeys(benchmarks) {
@@ -1612,7 +1642,7 @@
 
       function formatScore(value) {
         if (!Number.isFinite(value)) {
-          return '<span class="num na">-</span>';
+          return '<span class="num na">&mdash;&nbsp;</span>';
         }
         return value.toFixed(1);
       }
