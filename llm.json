@@ -396,6 +396,84 @@
       }
     },
     {
+      "name": "qwen3-5-122b-a10b",
+      "date_added": "2026-02-25",
+      "url": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
+      "params": "122B-A10B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 72.0,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": 49.4,
+        "tau2_bench_telecom": 79.5,
+        "browsecomp": 63.8,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 86.6,
+        "livecodebench": 78.9,
+        "scicode": null,
+        "hle": 25.3,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
+      "name": "qwen3-5-27b",
+      "date_added": "2026-02-25",
+      "url": "https://artificialanalysis.ai/models/qwen3-5-27b",
+      "params": "27B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 72.4,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": 41.6,
+        "tau2_bench_telecom": 79.0,
+        "browsecomp": 61.0,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 85.5,
+        "livecodebench": 80.7,
+        "scicode": null,
+        "hle": 24.3,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
+      "name": "qwen3.5-35b-a3b",
+      "date_added": "2026-02-25",
+      "url": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
+      "params": "35B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": 69.2,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": 40.5,
+        "tau2_bench_telecom": 81.2,
+        "browsecomp": 61.0,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 84.2,
+        "livecodebench": 74.6,
+        "scicode": null,
+        "hle": 22.4,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
       "name": "longcat-flash-lite",
       "date_added": "2026-02-23",
       "url": "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite",
