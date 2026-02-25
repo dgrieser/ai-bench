@@ -468,6 +468,19 @@
       text-align: left;
     }
 
+    thead th.bench-head:has(.sort-indicator) {
+      text-align: left;
+    }
+
+    thead th.bench-head:has(.sort-indicator) .th-label {
+      max-width: 100%;
+    }
+
+    thead th.bench-head .sort-indicator {
+      top: 9px;
+      transform: none;
+    }
+
     thead th:has(.sort-indicator):hover {
       background: #d8d7d3 !important;
     }
@@ -646,6 +659,7 @@
 
     .bench-head {
       max-width: 120px;
+      text-align: left;
     }
 
     .bench-head .th-label {
@@ -1142,6 +1156,8 @@
         aa_intelligence_index: "Index",
         aa_coding_index: "Coding"
       };
+      const AA_BENCH_ICON_KEYS = new Set(Object.keys(BENCHMARK_LABEL_OVERRIDES));
+      const AA_BENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" width="12" height="12" aria-hidden="true" style="vertical-align:-0.1em;margin-right:3px;flex-shrink:0"><path fill="#1c369e" fill-rule="evenodd" d="M192.75,210.02h42.32l-55.89-97.25-21.29,36.87c11.62,20.13,23.24,40.25,34.86,60.38"/><polygon fill="#7870f2" fill-rule="evenodd" points="103.82 55.97 124.98 19.33 176.61 108.76 167.29 124.68 155.3 145.14 143.32 124.4 103.82 55.97"/><path fill="#1c369e" fill-rule="evenodd" d="M122.41,97.08l-21.13-36.71L14.93,209.94h42.32c78.9-136.66,14.79-25.62,65.16-112.86"/><polygon fill="#4378df" fill-rule="evenodd" points="176.52 190.68 155.36 154.03 123.04 210.02 165.35 210.02 176.52 190.68"/></svg>`;
 
       const state = {
         data: null,
@@ -1651,7 +1667,7 @@
           return `
             <article class="benchmark-item">
               <div class="benchmark-head">
-                <span class="benchmark-name">${escapeHtml(name)}</span>
+                <span class="benchmark-name">${AA_BENCH_ICON_KEYS.has(key) ? AA_BENCH_ICON : ""}${escapeHtml(name)}</span>
                 ${category ? `<span class="benchmark-category">${escapeHtml(category)}</span>` : ""}
               </div>
               ${description ? `<p class="benchmark-desc">${escapeHtml(description)}</p>` : ""}
@@ -1720,6 +1736,7 @@
           const key = th.dataset.sortKey;
           if (key && state.columnWidths[key]) {
             th.style.width = state.columnWidths[key] + "px";
+            th.style.maxWidth = "none";
           }
         });
 
@@ -1746,6 +1763,7 @@
         function onMouseMove(e) {
           const newWidth = Math.max(50, startWidth + (e.clientX - startX));
           th.style.width = newWidth + "px";
+          th.style.maxWidth = "none";
         }
 
         function onMouseUp(e) {
@@ -1756,6 +1774,7 @@
           const finalWidth = Math.max(50, startWidth + (e.clientX - startX));
           state.columnWidths[key] = finalWidth;
           th.style.width = finalWidth + "px";
+          th.style.maxWidth = "none";
 
           // Swallow the click event the browser fires after mouseup so sort doesn't trigger
           th.addEventListener("click", (ev) => ev.stopPropagation(), { capture: true, once: true });
@@ -1774,7 +1793,8 @@
         const title = header.title ? ` title="${escapeHtml(header.title)}"` : "";
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
-        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}><span class="th-label">${escapeHtml(header.label)}</span>${indicator}${resizeHandle}</th>`;
+        const labelContent = AA_BENCH_ICON_KEYS.has(header.key) ? `${AA_BENCH_ICON}${escapeHtml(header.label)}` : escapeHtml(header.label);
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
       }
 
       function isRecentModel(model) {
