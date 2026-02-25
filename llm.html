@@ -66,7 +66,7 @@
     /* ── Hero ─────────────────────────────────────── */
 
     .hero {
-      padding: 32px 40px 26px;
+      padding: 32px 20px 26px;
       border-bottom: 1px solid var(--line);
       animation: fadeIn 350ms ease;
       position: relative;
@@ -94,7 +94,7 @@
     /* ── Controls ─────────────────────────────────── */
 
     .controls {
-      padding: 20px 40px;
+      padding: 20px 20px;
       background: var(--surface);
       border-bottom: 1px solid var(--line);
       display: grid;
@@ -174,6 +174,7 @@
 
     .model-compare-widget {
       width: 100%;
+      height: 42px;
       max-height: 42px;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -190,6 +191,7 @@
     .model-compare-widget::-webkit-scrollbar { display: none; }
 
     .model-compare-widget.open {
+      height: auto;
       max-height: 260px;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
@@ -294,6 +296,45 @@
       color: var(--text);
     }
 
+    /* Collapsed summary line */
+    .model-compare-summary {
+      display: block;
+      padding: 0 36px 0 12px;
+      line-height: 30px;
+      font-size: 0.74rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+
+    .model-compare-summary.is-hint {
+      color: var(--subtle);
+      font-weight: 500;
+      font-style: italic;
+      letter-spacing: 0.01em;
+    }
+
+    .model-compare-widget.open .model-compare-summary {
+      display: none;
+    }
+
+    .model-compare-widget:not(.open) .model-compare-item {
+      display: none;
+    }
+
+
+    input[type="text"]::placeholder {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 500;
+      font-style: italic;
+      letter-spacing: 0.01em;
+    }
 
     input[type="text"]:focus,
     select:focus {
@@ -320,7 +361,7 @@
     /* ── Toolbar ──────────────────────────────────── */
 
     .toolbar {
-      padding: 10px 40px 12px;
+      padding: 10px 20px 12px;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
@@ -639,7 +680,7 @@
     }
 
     .status {
-      padding: 40px;
+      padding: 20px;
       color: var(--muted);
       font-weight: 600;
     }
@@ -652,7 +693,7 @@
 
     .benchmarks-panel {
       margin: 0;
-      padding: 28px 40px 36px;
+      padding: 28px 20px 36px;
       border-top: 1px solid var(--line);
       background: var(--surface-alt);
     }
@@ -745,7 +786,7 @@
 
     .sources-panel {
       margin: 0;
-      padding: 20px 40px 28px;
+      padding: 20px 20px 28px;
       border-top: 1px solid var(--line);
       background: var(--surface);
     }
@@ -1064,7 +1105,10 @@
       </div>
       <div class="field">
         <label for="search">Search</label>
-        <input id="search" type="text" placeholder="Model or creator">
+        <div class="select-wrap">
+          <input id="search" type="text" placeholder="Model or creator">
+          <button id="clearSearch" class="clear-compare" type="button" title="Clear search">×</button>
+        </div>
       </div>
       <div class="field">
         <label for="params">Params</label>
@@ -1129,7 +1173,8 @@
         importBtn: document.getElementById("importBtn"),
         importFile: document.getElementById("importFile"),
         resetBtn: document.getElementById("resetBtn"),
-        clearCompare: document.getElementById("clearCompare")
+        clearCompare: document.getElementById("clearCompare"),
+        clearSearch: document.getElementById("clearSearch")
       };
 
       bindImportEvents();
@@ -1200,6 +1245,11 @@
       }
 
       function bindImportEvents() {
+        let widgetWasOpen = false;
+        ui.modelCompare.addEventListener("mousedown", () => {
+          widgetWasOpen = ui.modelCompare.classList.contains("open");
+        });
+
         ui.modelCompare.addEventListener("click", (e) => {
           e.stopPropagation();
           const item = e.target.closest(".model-compare-item");
@@ -1215,7 +1265,10 @@
             applyAndRender();
             return;
           }
-          ui.modelCompare.classList.toggle("open");
+          // Opening is handled by the focus event; only close here if it was already open
+          if (widgetWasOpen) {
+            ui.modelCompare.classList.remove("open");
+          }
         });
 
         ui.modelCompare.addEventListener("focus", () => {
@@ -1297,6 +1350,11 @@
           </div>`;
         }).join("");
 
+        const summaryEl = document.createElement("div");
+        summaryEl.className = "model-compare-summary";
+        ui.modelCompare.insertBefore(summaryEl, ui.modelCompare.firstChild);
+        updateCompareSummary();
+
         const paramOptions = [
           { value: "all", label: "All parameter sizes" },
           { value: "lt30", label: "< 30B" },
@@ -1342,6 +1400,19 @@
           item.classList.toggle("selected", selected);
           item.setAttribute("aria-selected", String(selected));
         });
+        updateCompareSummary();
+      }
+
+      function updateCompareSummary() {
+        const summary = ui.modelCompare.querySelector(".model-compare-summary");
+        if (!summary) return;
+        if (state.filters.selectedModels.length === 0) {
+          summary.textContent = "Pick models to compare";
+          summary.classList.add("is-hint");
+        } else {
+          summary.textContent = state.filters.selectedModels.join(", ");
+          summary.classList.remove("is-hint");
+        }
       }
 
       function bindEvents() {
@@ -1360,6 +1431,12 @@
           e.stopPropagation();
           state.filters.selectedModels = [];
           updateCompareWidget();
+          applyAndRender();
+        });
+
+        ui.clearSearch.addEventListener("click", () => {
+          ui.search.value = "";
+          state.filters.search = "";
           applyAndRender();
         });
 
