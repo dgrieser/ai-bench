@@ -552,6 +552,10 @@
 
     /* ── New model badge ───────────────────────────── */
 
+    .model-new {
+      color: #991b1b !important;
+    }
+
     .new-badge {
       display: inline-block;
       vertical-align: middle;
@@ -1520,6 +1524,7 @@
         const modelUrl = model.url || "";
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
+        const isNew = isRecentModel(model);
         const scoreCells = state.benchmarkKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const isTop = bestInTable.has(key);
@@ -1533,7 +1538,7 @@
 
         return `
           <tr>
-            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${modelName}</a>` : modelName}${isRecentModel(model) ? renderNewBadge() : ""}</td>
+            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : (isNew ? `<span class="model-new">${modelName}</span>` : modelName)}${isNew ? renderNewBadge() : ""}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${escapeHtml(model.params || "-")}</td>
             <td class="mono">${escapeHtml(model.context || "-")}</td>
