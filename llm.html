@@ -362,9 +362,9 @@
 
     .toolbar {
       padding: 10px 20px 12px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       align-items: center;
       border-bottom: 1px solid var(--line);
       background: var(--surface-alt);
@@ -376,7 +376,7 @@
       justify-content: center;
       padding: 0 12px;
       min-height: 32px;
-      min-width: 150px;
+      width: 100%;
       border-radius: 8px;
       background: var(--surface);
       color: var(--muted);
@@ -393,7 +393,7 @@
       border-radius: 8px;
       color: var(--muted);
       min-height: 32px;
-      min-width: 150px;
+      width: 100%;
       padding: 0 12px;
       font-size: 0.78rem;
       font-weight: 700;
@@ -1023,7 +1023,7 @@
 
     @media (max-width: 860px) {
       .page {
-        width: 100vw;
+        width: 100%;
         margin: 0;
         border-radius: 0;
         border-left-width: 3px;
@@ -1122,6 +1122,7 @@
 
     <section class="toolbar" id="toolbar" hidden>
       <span class="pill" id="resultCount">0 models</span>
+      <span class="pill" id="creatorCount">0 creators</span>
       <span class="pill" id="benchmarkCount">0 benchmarks</span>
       <button id="resetBtn" type="button">Reset Filters</button>
       <button style="display: none" id="importBtn" type="button">Import llm.json</button>
@@ -1169,6 +1170,7 @@
         modelCompare: document.getElementById("modelCompare"),
         sortMode: document.getElementById("sortMode"),
         resultCount: document.getElementById("resultCount"),
+        creatorCount: document.getElementById("creatorCount"),
         benchmarkCount: document.getElementById("benchmarkCount"),
         importBtn: document.getElementById("importBtn"),
         importFile: document.getElementById("importFile"),
@@ -1829,6 +1831,9 @@
         const shown = state.filteredModels.length;
         const total = state.data.models.length;
         ui.resultCount.textContent = `${shown} of ${total} models`;
+        const shownCreators = new Set(state.filteredModels.map((m) => m.creatorName)).size;
+        const totalCreators = new Set(state.data.models.map((m) => m.creator?.name || "Unknown")).size;
+        ui.creatorCount.textContent = `${shownCreators} of ${totalCreators} creators`;
         ui.benchmarkCount.textContent = `${state.benchmarkKeys.length} benchmarks`;
       }
 
