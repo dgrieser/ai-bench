@@ -1826,6 +1826,8 @@
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
+        const newLabel = isNew ? (model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Recently added") : "";
+        const addedLabel = model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Unknown";
         const scoreCells = state.benchmarkKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const isTop = bestInTable.has(key);
@@ -1839,7 +1841,7 @@
 
         return `
           <tr>
-            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : (isNew ? `<span class="model-new">${modelName}</span>` : modelName)}${isNew ? renderNewBadge(model.date_added) : ""}</td>
+            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer" title="${addedLabel}"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : `<span${isNew ? ' class="model-new"' : ""} title="${addedLabel}">${modelName}</span>`}${isNew ? renderNewBadge(model.date_added) : ""}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
