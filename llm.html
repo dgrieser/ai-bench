@@ -193,6 +193,18 @@
       max-height: 260px;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .model-compare-widget.open::-webkit-scrollbar {
+      display: block;
+      width: 6px;
+    }
+
+    .model-compare-widget.open::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 3px;
     }
 
     .model-compare-item {
@@ -256,7 +268,7 @@
     .clear-compare {
       position: absolute;
       top: 50%;
-      right: 6px;
+      right: 10px;
       transform: translateY(-50%);
       width: 20px;
       height: 20px;
@@ -531,6 +543,16 @@
       font-style: normal;
       font-weight: 400;
     }
+
+    .p-unit {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .p-letter {
+      font-variant-caps: all-small-caps;
+    }
+
 
     /* Top score: td bg matches its row so span corners are invisible */
     .top-score {
@@ -1215,7 +1237,7 @@
           if (!ui.modelCompare.classList.contains("open")) {
             hoverOpenTimer = setTimeout(() => {
               ui.modelCompare.classList.add("open");
-            }, 1500);
+            }, 1000);
           }
         });
         ui.modelCompare.addEventListener("mouseleave", () => {
@@ -1719,8 +1741,8 @@
           <tr>
             <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : (isNew ? `<span class="model-new">${modelName}</span>` : modelName)}${isNew ? renderNewBadge(model.date_added) : ""}</td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
-            <td class="mono">${escapeHtml(model.params || "-")}</td>
-            <td class="mono">${escapeHtml(model.context || "-")}</td>
+            <td class="mono">${formatParams(model.params)}</td>
+            <td class="mono">${formatContext(model.context)}</td>
             ${scoreCells}
           </tr>
         `;
@@ -1820,6 +1842,29 @@
         });
 
         return result;
+      }
+
+      function formatContext(raw) {
+        if (!raw) return "-";
+        const str = String(raw).trim();
+        const match = str.match(/^(\d+\.?\d*)([A-Za-z]+)$/);
+        if (!match) return escapeHtml(str);
+        const [, num, unit] = match;
+        return `${escapeHtml(num)}<span class="p-letter">${escapeHtml(unit)}</span>`;
+      }
+
+      function formatParams(raw) {
+        if (!raw) return "-";
+        const str = String(raw).trim();
+        // Matches "117B-A5.1B", "123B", "68.5B-A3B", etc.
+        const match = str.match(/^(\d+\.?\d*)(B)(?:-(A)(\d+\.?\d*)(B))?$/i);
+        if (!match) return escapeHtml(str);
+        const [, mainNum, mainUnit, aPrefix, activeNum, activeUnit] = match;
+        let html = `${escapeHtml(mainNum)}<span class="p-letter">${escapeHtml(mainUnit)}</span>`;
+        if (aPrefix) {
+          html += `<span class="p-unit">&thinsp;-&thinsp;</span>${escapeHtml(aPrefix)}${escapeHtml(activeNum)}<span class="p-letter">${escapeHtml(activeUnit)}</span>`;
+        }
+        return html;
       }
 
       function formatScore(value) {
