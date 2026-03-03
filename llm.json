@@ -407,7 +407,7 @@
       },
       "scores": {
         "swe_bench_verified": 72.0,
-        "terminal_bench_hard": null,
+        "terminal_bench_hard": 31.1,
         "terminal_bench_2_0": 49.4,
         "tau2_bench_telecom": 79.5,
         "browsecomp": 63.8,
@@ -417,8 +417,8 @@
         "livecodebench": 78.9,
         "scicode": null,
         "hle": 25.3,
-        "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "aa_intelligence_index": 41.6,
+        "aa_coding_index": 34.7
       }
     },
     {
@@ -433,7 +433,7 @@
       },
       "scores": {
         "swe_bench_verified": 72.4,
-        "terminal_bench_hard": null,
+        "terminal_bench_hard": 32.6,
         "terminal_bench_2_0": 41.6,
         "tau2_bench_telecom": 79.0,
         "browsecomp": 61.0,
@@ -443,8 +443,8 @@
         "livecodebench": 80.7,
         "scicode": null,
         "hle": 24.3,
-        "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "aa_intelligence_index": 42.1,
+        "aa_coding_index": 34.9
       }
     },
     {
@@ -459,7 +459,7 @@
       },
       "scores": {
         "swe_bench_verified": 69.2,
-        "terminal_bench_hard": null,
+        "terminal_bench_hard": 26.5,
         "terminal_bench_2_0": 40.5,
         "tau2_bench_telecom": 81.2,
         "browsecomp": 61.0,
@@ -469,6 +469,110 @@
         "livecodebench": 74.6,
         "scicode": null,
         "hle": 22.4,
+        "aa_intelligence_index": 37.1,
+        "aa_coding_index": 30.3
+      }
+    },
+    {
+      "name": "qwen3-5-9b",
+      "date_added": "2026-02-25",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
+      "params": "9B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 79.1,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 81.7,
+        "livecodebench": 65.6,
+        "scicode": null,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
+      "name": "qwen3-5-4b",
+      "date_added": "2026-02-25",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-4B",
+      "params": "4B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 79.9,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 76.2,
+        "livecodebench": 55.8,
+        "scicode": null,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
+      "name": "qwen3-5-2b",
+      "date_added": "2026-02-25",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-2B",
+      "params": "2B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 48.8,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "livecodebench": null,
+        "scicode": null,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
+    },
+    {
+      "name": "qwen3-5-0.8b",
+      "date_added": "2026-02-25",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
+      "params": "0.8B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 11.6,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "livecodebench": null,
+        "scicode": null,
+        "hle": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null
       }
@@ -571,6 +675,10 @@
     "https://huggingface.co/datasets/MathArena/aime_2026",
     "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
     "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
-    "https://huggingface.co/Qwen/Qwen3.5-27B"
+    "https://huggingface.co/Qwen/Qwen3.5-27B",
+    "https://huggingface.co/Qwen/Qwen3.5-9B",
+    "https://huggingface.co/Qwen/Qwen3.5-4B",
+    "https://huggingface.co/Qwen/Qwen3.5-2B",
+    "https://huggingface.co/Qwen/Qwen3.5-0.8B"
   ]
 }
