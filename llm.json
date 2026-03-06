@@ -9,6 +9,16 @@
         "https://www.swebench.com/SWE-bench/"
       ]
     },
+    "mmmu_pro": {
+      "name": "MMMU Pro",
+      "category": "Vision-language Reasoning",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
+      "urls": [
+        "https://mmmu-benchmark.github.io/",
+        "https://aclanthology.org/2025.acl-long.1317/",
+        "https://huggingface.co/datasets/MMMU/MMMU_Pro"
+      ]
+    },
     "terminal_bench_hard": {
       "name": "Terminal-Bench Hard",
       "category": "Agentic Coding & Terminal Use",
@@ -121,6 +131,7 @@
       },
       "scores": {
         "swe_bench_verified": 72.2,
+        "mmmu_pro": null,
         "terminal_bench_hard": 18.9,
         "terminal_bench_2_0": 32.6,
         "tau2_bench_telecom": 24.9,
@@ -147,6 +158,7 @@
       },
       "scores": {
         "swe_bench_verified": 68.0,
+        "mmmu_pro": null,
         "terminal_bench_hard": 16.7,
         "terminal_bench_2_0": 22.5,
         "tau2_bench_telecom": 23.4,
@@ -173,6 +185,7 @@
       },
       "scores": {
         "swe_bench_verified": 59.2,
+        "mmmu_pro": null,
         "terminal_bench_hard": 22.0,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 98.8,
@@ -199,6 +212,7 @@
       },
       "scores": {
         "swe_bench_verified": 74.4,
+        "mmmu_pro": null,
         "terminal_bench_hard": 51.0,
         "terminal_bench_2_0": 51.0,
         "tau2_bench_telecom": 88.2,
@@ -225,6 +239,7 @@
       },
       "scores": {
         "swe_bench_verified": 80.2,
+        "mmmu_pro": null,
         "terminal_bench_hard": 34.8,
         "terminal_bench_2_0": 51.7,
         "tau2_bench_telecom": 95.3,
@@ -251,6 +266,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "mmmu_pro": null,
         "terminal_bench_hard": 6.8,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 25.4,
@@ -277,6 +293,7 @@
       },
       "scores": {
         "swe_bench_verified": 51.6,
+        "mmmu_pro": null,
         "terminal_bench_hard": 15.2,
         "terminal_bench_2_0": 31.3,
         "tau2_bench_telecom": 34.5,
@@ -303,6 +320,7 @@
       },
       "scores": {
         "swe_bench_verified": 70.6,
+        "mmmu_pro": null,
         "terminal_bench_hard": 18.2,
         "terminal_bench_2_0": 36.2,
         "tau2_bench_telecom": 79.5,
@@ -329,6 +347,7 @@
       },
       "scores": {
         "swe_bench_verified": 22.0,
+        "mmmu_pro": null,
         "terminal_bench_hard": 5.3,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 28.1,
@@ -355,6 +374,7 @@
       },
       "scores": {
         "swe_bench_verified": 74.5,
+        "mmmu_pro": null,
         "terminal_bench_hard": 9.8,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 41.5,
@@ -381,6 +401,7 @@
       },
       "scores": {
         "swe_bench_verified": 76.4,
+        "mmmu_pro": null,
         "terminal_bench_hard": 40.9,
         "terminal_bench_2_0": 52.5,
         "tau2_bench_telecom": 95.6,
@@ -407,6 +428,7 @@
       },
       "scores": {
         "swe_bench_verified": 72.0,
+        "mmmu_pro": null,
         "terminal_bench_hard": 31.1,
         "terminal_bench_2_0": 49.4,
         "tau2_bench_telecom": 93.6,
@@ -433,6 +455,7 @@
       },
       "scores": {
         "swe_bench_verified": 72.4,
+        "mmmu_pro": null,
         "terminal_bench_hard": 32.6,
         "terminal_bench_2_0": 41.6,
         "tau2_bench_telecom": 93.9,
@@ -459,6 +482,7 @@
       },
       "scores": {
         "swe_bench_verified": 69.2,
+        "mmmu_pro": null,
         "terminal_bench_hard": 26.5,
         "terminal_bench_2_0": 40.5,
         "tau2_bench_telecom": 89.2,
@@ -485,6 +509,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "mmmu_pro": null,
         "terminal_bench_hard": 24.2,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 86.8,
@@ -511,6 +536,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "mmmu_pro": null,
         "terminal_bench_hard": 18.2,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 92.1,
@@ -537,6 +563,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "mmmu_pro": null,
         "terminal_bench_hard": 3.8,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 69,
@@ -563,6 +590,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "mmmu_pro": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 28.9,
@@ -589,6 +617,7 @@
       },
       "scores": {
         "swe_bench_verified": 54.4,
+        "mmmu_pro": null,
         "terminal_bench_hard": 33.75,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 72.8,
@@ -616,6 +645,7 @@
       },
       "scores": {
         "swe_bench_verified": 34.0,
+        "mmmu_pro": null,
         "terminal_bench_hard": 10.6,
         "terminal_bench_2_0": 3.1,
         "tau2_bench_telecom": 60.2,
@@ -643,6 +673,7 @@
       },
       "scores": {
         "swe_bench_verified": 62.4,
+        "mmmu_pro": null,
         "terminal_bench_hard": 23.5,
         "terminal_bench_2_0": 18.7,
         "tau2_bench_telecom": 65.8,
