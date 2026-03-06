@@ -75,8 +75,13 @@ def _parse_mmmu_pro(text: str, slug: str):
     pos = text.find(target)
     if pos == -1:
         return None
-    window = text[max(0, pos - 25000) : pos + 25000]
-    match = re.search(r'"mmmu_pro":([0-9.]+)', window)
+
+    # In the RSC stream, benchmark fields may appear before model_url for
+    # the same model. Restrict to the chunk since the previous model_url.
+    prev_model = text.rfind('"model_url":"/models/', 0, pos)
+    start = prev_model if prev_model != -1 else 0
+    block = text[start : pos + len(target)]
+    match = re.search(r'"mmmu_pro":([0-9.]+)', block)
     if not match:
         return None
     return float(match.group(1))
@@ -115,7 +120,7 @@ def _extract_context_window(m: dict):
 
 
 def _extract_mmmu_pro(m: dict):
-    val = _extract_eval_any(m, ["mmmu_pro", "mmlu_pro"])
+    val = _extract_eval_any(m, ["mmmu_pro"])
     if val is not None:
         return val
     if not _MMMU_PRO_ENABLED:
