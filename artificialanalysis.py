@@ -16,8 +16,9 @@ import yaml
 API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models"
 FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
-_CONTEXT_CACHE = {}
+_PAGE_METRICS_CACHE = {}
 _CONTEXT_ENABLED = True
+_MMMU_PRO_ENABLED = True
 _VERBOSE = False
 CACHE_PATH = os.path.expanduser("~/.cache/artificialanalysis/models.json")
 _CACHE_WARMED = False
@@ -50,36 +51,76 @@ def _extract_creator(m: dict) -> str:
     return ""
 
 
-def _fetch_context_window(slug: str):
-    if not _CONTEXT_ENABLED:
-        return ""
+def _parse_context_window(text: str):
+    m = re.search(r"Context window.+?<span[^>]*>([0-9]+[kmb])", text, re.IGNORECASE)
+    if m:
+        return m.group(1)
+    # RSC payloads expose raw token counts instead of the rendered label.
+    m = re.search(r'"context_window_tokens"\s*:\s*([0-9]+)', text, re.IGNORECASE)
+    if m:
+        tokens = int(m.group(1))
+        if tokens >= 1_000_000_000:
+            return f"{tokens // 1_000_000_000}b"
+        if tokens >= 1_000_000:
+            return f"{tokens // 1_000_000}m"
+        if tokens >= 1_000:
+            return f"{tokens // 1_000}k"
+        return str(tokens)
+    return ""
+
+
+def _parse_mmmu_pro(text: str, slug: str):
+    model_path = f"/models/{slug}"
+    target = f'"model_url":"{model_path}"'
+    pos = text.find(target)
+    if pos == -1:
+        return None
+    window = text[max(0, pos - 25000) : pos + 25000]
+    match = re.search(r'"mmmu_pro":([0-9.]+)', window)
+    if not match:
+        return None
+    return float(match.group(1))
+
+
+def _fetch_page_metrics(slug: str):
     if not slug:
-        return ""
-    if slug in _CONTEXT_CACHE:
-        return _CONTEXT_CACHE[slug]
+        return {"context_window": "", "mmmu_pro": None}
+    if slug in _PAGE_METRICS_CACHE:
+        return _PAGE_METRICS_CACHE[slug]
+
+    result = {"context_window": "", "mmmu_pro": None}
+    url = MODEL_PAGE_URL.format(slug)
     try:
         if _VERBOSE:
-            url = MODEL_PAGE_URL.format(slug)
             print(f"> GET {url}", file=sys.stderr)
-        resp = requests.get(MODEL_PAGE_URL.format(slug), timeout=15)
+        resp = requests.get(url, headers={"RSC": "1"}, timeout=15)
         if _VERBOSE:
             print(f"< {resp.status_code} {url}", file=sys.stderr)
         if resp.status_code != 200:
-            _CONTEXT_CACHE[slug] = ""
-            return ""
-        m = re.search(r"Context window.+?<span[^>]*>([0-9]+[kmb])", resp.text, re.IGNORECASE)
-        if not m:
-            _CONTEXT_CACHE[slug] = ""
-            return ""
-        _CONTEXT_CACHE[slug] = m.group(1)
-        return _CONTEXT_CACHE[slug]
+            _PAGE_METRICS_CACHE[slug] = result
+            return result
+        result["context_window"] = _parse_context_window(resp.text)
+        result["mmmu_pro"] = _parse_mmmu_pro(resp.text, slug)
     except requests.RequestException:
-        _CONTEXT_CACHE[slug] = ""
-        return ""
+        pass
+
+    _PAGE_METRICS_CACHE[slug] = result
+    return result
 
 
 def _extract_context_window(m: dict):
-    return _fetch_context_window(m.get("slug", ""))
+    if not _CONTEXT_ENABLED:
+        return ""
+    return _fetch_page_metrics(m.get("slug", "")).get("context_window", "")
+
+
+def _extract_mmmu_pro(m: dict):
+    val = _extract_eval_any(m, ["mmmu_pro", "mmlu_pro"])
+    if val is not None:
+        return val
+    if not _MMMU_PRO_ENABLED:
+        return None
+    return _fetch_page_metrics(m.get("slug", "")).get("mmmu_pro")
 
 
 def _load_cache():
@@ -182,7 +223,7 @@ def _print_table(models, output):
         ("SciCode", lambda m: _extract_eval_any(m, ["scicode"])),
         ("IFBench", lambda m: _extract_eval_any(m, ["ifbench"])),
         ("AIME 2025", lambda m: _extract_eval_any(m, ["aime_25"])),
-        ("MMLU Pro", lambda m: _extract_eval_any(m, ["mmlu_pro"])),
+        ("MMMU Pro", _extract_mmmu_pro),
     ]
 
     headers = _format_headers([c[0] for c in columns], output)
@@ -197,7 +238,7 @@ def _print_table(models, output):
         "SciCode",
         "IFBench",
         "AIME 2025",
-        "MMLU Pro",
+        "MMMU Pro",
     }
     for m in models:
         row = []
@@ -236,6 +277,11 @@ def main():
         help="skip context window retrieval from model pages",
     )
     parser.add_argument(
+        "--no-mmmu-pro",
+        action="store_true",
+        help="skip MMMU Pro retrieval from model pages",
+    )
+    parser.add_argument(
         "--creator",
         "-c",
         action="append",
@@ -257,11 +303,14 @@ def main():
     args = parser.parse_args()
     
     global _CONTEXT_ENABLED
+    global _MMMU_PRO_ENABLED
     global _VERBOSE
     if args.verbose:
         _VERBOSE = True
     if args.no_context_window:
         _CONTEXT_ENABLED = False
+    if args.no_mmmu_pro:
+        _MMMU_PRO_ENABLED = False
 
     has_filters = any(
         [
