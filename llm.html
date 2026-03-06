@@ -1154,7 +1154,19 @@
       const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index", "swe_bench_verified"];
       const BENCHMARK_LABEL_OVERRIDES = {
         aa_intelligence_index: "Index",
-        aa_coding_index: "Coding"
+        aa_coding_index: "Code",
+        swe_bench_verified: "SWE",
+        terminal_bench_hard: "TBH",
+        terminal_bench_2_0: "TB2.0",
+        tau2_bench_telecom: "τ²",
+        browsecomp: "BrwsCmp",
+        aime_2025: "AIME25",
+        aime_2026: "AIME26",
+        gpqa_diamond: "GPQA",
+        livecodebench: "LCB",
+        scicode: "SCode",
+        hle: "HLE"
+
       };
       const AA_BENCH_ICON_KEYS = new Set(Object.keys(BENCHMARK_LABEL_OVERRIDES));
       const AA_BENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" width="12" height="12" aria-hidden="true" style="vertical-align:-0.1em;margin-right:3px;flex-shrink:0"><path fill="#1c369e" fill-rule="evenodd" d="M192.75,210.02h42.32l-55.89-97.25-21.29,36.87c11.62,20.13,23.24,40.25,34.86,60.38"/><polygon fill="#7870f2" fill-rule="evenodd" points="103.82 55.97 124.98 19.33 176.61 108.76 167.29 124.68 155.3 145.14 143.32 124.4 103.82 55.97"/><path fill="#1c369e" fill-rule="evenodd" d="M122.41,97.08l-21.13-36.71L14.93,209.94h42.32c78.9-136.66,14.79-25.62,65.16-112.86"/><polygon fill="#4378df" fill-rule="evenodd" points="176.52 190.68 155.36 154.03 123.04 210.02 165.35 210.02 176.52 190.68"/></svg>`;
@@ -1607,9 +1619,9 @@
 
         const headers = [
           { key: "name", label: "Model", className: "col-model", maxWidth: 150 },
-          { key: "creator", label: "Creator" },
-          { key: "params", label: "Params", className: "mono" },
-          { key: "context", label: "Context", className: "mono" },
+          { key: "creator", label: "Creator", maxWidth: 80 },
+          { key: "params", label: "Params", className: "mono", maxWidth: 90 },
+          { key: "context", label: "Context", className: "mono", maxWidth: 60 },
           ...state.benchmarkKeys.map((key) => ({
             key,
             label: getBenchmarkLabel(key),
