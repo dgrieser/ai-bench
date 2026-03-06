@@ -128,6 +128,29 @@ def _extract_mmmu_pro(m: dict):
     return _fetch_page_metrics(m.get("slug", "")).get("mmmu_pro")
 
 
+def _enrich_structured_metrics(models):
+    for m in models:
+        evals = m.get("evaluations")
+        if not isinstance(evals, dict):
+            evals = {}
+        evals["mmmu_pro"] = _extract_mmmu_pro(m)
+        m["evaluations"] = evals
+
+        context = _extract_context_window(m)
+        if "evaluations" in m:
+            reordered = {}
+            for key, value in m.items():
+                if key == "context":
+                    continue
+                if key == "evaluations":
+                    reordered["context"] = context
+                reordered[key] = value
+            m.clear()
+            m.update(reordered)
+        else:
+            m["context"] = context
+
+
 def _load_cache():
     try:
         with open(CACHE_PATH, "r", encoding="utf-8") as f:
@@ -401,6 +424,7 @@ def main():
         models = filtered
 
     if args.output == "json":
+        _enrich_structured_metrics(models)
         data["data"] = models
         print(json.dumps(data, indent=2))
         return 0
