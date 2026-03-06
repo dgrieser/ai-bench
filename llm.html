@@ -1154,17 +1154,17 @@
       const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index", "swe_bench_verified"];
       const BENCHMARK_LABEL_OVERRIDES = {
         aa_intelligence_index: "Index",
-        aa_coding_index: "Code",
-        swe_bench_verified: "SWE",
-        terminal_bench_hard: "TBH",
-        terminal_bench_2_0: "TB2.0",
-        tau2_bench_telecom: "τ²",
-        browsecomp: "BrwsCmp",
+        aa_coding_index: "Coding",
+        swe_bench_verified: "SWE Bench",
+        terminal_bench_hard: "TermBenchH",
+        terminal_bench_2_0: "TermBench2.0",
+        tau2_bench_telecom: "τ²Bench",
+        browsecomp: "BrowseComp",
         aime_2025: "AIME25",
         aime_2026: "AIME26",
         gpqa_diamond: "GPQA",
-        livecodebench: "LCB",
-        scicode: "SCode",
+        livecodebench: "LiveCodeBench",
+        scicode: "SciCode",
         hle: "HLE"
 
       };
@@ -1172,7 +1172,8 @@
       const AA_BENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" width="12" height="12" aria-hidden="true" style="vertical-align:-0.1em;margin-right:3px;flex-shrink:0"><path fill="#1c369e" fill-rule="evenodd" d="M192.75,210.02h42.32l-55.89-97.25-21.29,36.87c11.62,20.13,23.24,40.25,34.86,60.38"/><polygon fill="#7870f2" fill-rule="evenodd" points="103.82 55.97 124.98 19.33 176.61 108.76 167.29 124.68 155.3 145.14 143.32 124.4 103.82 55.97"/><path fill="#1c369e" fill-rule="evenodd" d="M122.41,97.08l-21.13-36.71L14.93,209.94h42.32c78.9-136.66,14.79-25.62,65.16-112.86"/><polygon fill="#4378df" fill-rule="evenodd" points="176.52 190.68 155.36 154.03 123.04 210.02 165.35 210.02 176.52 190.68"/></svg>`;
       const MMMU_PRO_BENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="12" height="12" aria-hidden="true" style="vertical-align:-0.1em;margin-right:3px;flex-shrink:0" stroke-linejoin="round"><defs><linearGradient id="mmmu-grad-blue" spreadMethod="pad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#0072ff"/><stop offset="1" stop-color="#7700ff" stop-opacity="0.99"/></linearGradient><linearGradient id="mmmu-grad-yellow" spreadMethod="pad"><stop offset="0" stop-color="#ffe100" stop-opacity="1"/><stop offset="1" stop-color="#ff7b00" stop-opacity="1"/></linearGradient></defs><g display="inline"><path d="m88.17,211.73l-27.52,0a27.52,28.37 0 0 1 -27.52,-28.37l0,-113.46a27.52,28.37 0 0 1 27.52,-28.37l137.62,0a27.52,28.37 0 0 1 27.52,28.37l0,28.37" fill="#ffffff" fill-opacity="0" stroke="#000000" stroke-opacity="0.53" stroke-width="13"/><path d="m95.93,259.46l41.29,-99.28l41.28,63.82l41.29,-35.45l41.28,70.91l-165.14,0z" fill="#000000" fill-opacity="0" stroke="#6b2900" stroke-width="9"/><rect fill="#ffffff" fill-opacity="0.06" height="170.19" rx="27.52" ry="28.37" stroke="url(#mmmu-grad-blue)" stroke-width="13" transform="matrix(1 0 0 1 -5.16114 -6.39888)" width="192.67" x="87.17" y="98.27"/><circle cx="219.79" cy="149" fill="url(#mmmu-grad-yellow)" r="21"/></g></svg>`;
       const BENCHMARK_ICON_MAP = {
-        ...Object.fromEntries(Object.keys(BENCHMARK_LABEL_OVERRIDES).map((k) => [k, AA_BENCH_ICON])),
+        aa_intelligence_index: AA_BENCH_ICON,
+        aa_coding_index: AA_BENCH_ICON,
         mmmu_pro: MMMU_PRO_BENCH_ICON
       };
 
