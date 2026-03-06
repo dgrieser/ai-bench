@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -131,7 +132,7 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "terminal_bench_hard": (("terminalbench_hard",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
-    "mmmu_pro": (("mmmu_pro", "mmlu_pro"), to_percent),
+    "mmmu_pro": (("mmmu_pro",), to_percent),
     "gpqa_diamond": (("gpqa",), to_percent),
     "livecodebench": (("livecodebench",), to_percent),
     "scicode": (("scicode",), to_percent),
@@ -165,8 +166,19 @@ def unique_names(models: list[dict[str, Any]]) -> list[str]:
     return ordered
 
 
+def build_list_models_cmd(aa_script: Path) -> list[str]:
+    return [sys.executable, str(aa_script), "--list-models"]
+
+
+def build_fetch_data_cmd(aa_script: Path, slugs: list[str]) -> list[str]:
+    cmd = [sys.executable, str(aa_script), "-o", "json"]
+    for slug in slugs:
+        cmd.extend(["-m", slug])
+    return cmd
+
+
 def fetch_available_slugs(aa_script: Path) -> set[str]:
-    cmd = [sys.executable, str(aa_script), "--list-models"]
+    cmd = build_list_models_cmd(aa_script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
         raise RuntimeError(f"artificialanalysis.py --list-models failed ({proc.returncode}): {proc.stderr.strip()}")
@@ -174,10 +186,7 @@ def fetch_available_slugs(aa_script: Path) -> set[str]:
 
 
 def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]]:
-    cmd = [sys.executable, str(aa_script), "-o", "json"]
-    for slug in slugs:
-        cmd.extend(["-m", slug])
-
+    cmd = build_fetch_data_cmd(aa_script, slugs)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
         raise RuntimeError(f"artificialanalysis.py failed ({proc.returncode}): {proc.stderr.strip()}")
@@ -258,8 +267,12 @@ def main() -> int:
         raise RuntimeError("Invalid JSON: models must be a list")
 
     slugs = unique_names(models)
+    print("commands:")
+    print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
     available_slugs = fetch_available_slugs(aa_path)
     existing_slugs = [slug for slug in slugs if slug in available_slugs]
+    print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
+    print()
     by_slug = fetch_aa_data(aa_path, existing_slugs)
     matched, _updated, seen_eval_keys, changes = update_scores(doc, by_slug)
 
