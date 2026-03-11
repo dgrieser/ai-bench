@@ -593,7 +593,7 @@
         "mmmu_pro": 25.8,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
-        "tau2_bench_telecom": 28.9,
+        "tau2_bench_telecom": 47.7,
         "browsecomp": null,
         "aime_2025": null,
         "aime_2026": null,
@@ -601,8 +601,28 @@
         "livecodebench": null,
         "scicode": null,
         "hle": 1.2,
-        "aa_intelligence_index": 9,
+        "aa_intelligence_index": 10.5,
         "aa_coding_index": null
+      }
+    },
+    {
+      "name": "nvidia-nemotron-3-super-120b-a12b",
+      "date_added": "2026-03-11",
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+      "params": "120B-A12B",
+      "creator": {
+        "name": "NVIDIA",
+        "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
+      },
+      "context": "1m",
+      "scores": {
+        "terminal_bench_hard": 28.8,
+        "tau2_bench_telecom": 67.8,
+        "gpqa_diamond": 80,
+        "scicode": 36,
+        "hle": 19.2,
+        "aa_intelligence_index": 36,
+        "aa_coding_index": 31.2
       }
     },
     {
@@ -618,18 +638,18 @@
       "scores": {
         "swe_bench_verified": 54.4,
         "mmmu_pro": null,
-        "terminal_bench_hard": 33.75,
+        "terminal_bench_hard": 10.6,
         "terminal_bench_2_0": null,
-        "tau2_bench_telecom": 72.8,
+        "tau2_bench_telecom": 79.5,
         "browsecomp": null,
         "aime_2025": 63.23,
         "aime_2026": null,
-        "gpqa_diamond": 66.78,
+        "gpqa_diamond": 63.6,
         "livecodebench": null,
-        "scicode": null,
-        "hle": null,
-        "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "scicode": 28.4,
+        "hle": 6,
+        "aa_intelligence_index": 23.9,
+        "aa_coding_index": 16.5
       }
     },
     {
