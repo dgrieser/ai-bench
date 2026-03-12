@@ -636,10 +636,24 @@
       color: #991b1b !important;
     }
 
+    .model-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .model-name-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .new-badge {
       display: inline-block;
       vertical-align: middle;
-      margin-left: 4px;
       position: relative;
       top: -1px;
       user-select: none;
@@ -1865,7 +1879,7 @@
 
         return `
           <tr>
-            <td class="col-model">${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer" title="${addedLabel}"${isNew ? ' class="model-new"' : ""}>${modelName}</a>` : `<span${isNew ? ' class="model-new"' : ""} title="${addedLabel}">${modelName}</span>`}${isNew ? renderNewBadge(model.date_added) : ""}</td>
+            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer" title="${addedLabel}" class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a>` : `<span class="model-name-label${isNew ? ' model-new' : ""}" title="${addedLabel}">${modelName}</span>`}</span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
