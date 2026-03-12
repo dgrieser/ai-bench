@@ -712,6 +712,33 @@
         "terminal_bench_2_0": 18.7,
         "terminal_bench_hard": 23.5
       }
+    },
+    {
+      "name": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+      "date_added": "2026-03-12",
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "params": "30B-A3B",
+      "context": "1m",
+      "creator": {
+        "name": "NVIDIA",
+        "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": 13.6,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 40.9,
+        "browsecomp": null,
+        "aime_2025": 91,
+        "aime_2026": null,
+        "gpqa_diamond": 75.7,
+        "livecodebench": 74.1,
+        "scicode": 29.6,
+        "hle": 10.2,
+        "aa_intelligence_index": 24.3,
+        "aa_coding_index": 19
+      }
     }
   ],
   "sources": [
