@@ -12,7 +12,7 @@
     "mmmu_pro": {
       "name": "MMMU Pro",
       "category": "Vision-language Reasoning",
-      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross\u2011disciplinary understanding and integrated visual\u2013text reasoning.",
       "urls": [
         "https://mmmu-benchmark.github.io/",
         "https://aclanthology.org/2025.acl-long.1317/",
@@ -36,7 +36,7 @@
       ]
     },
     "tau2_bench_telecom": {
-      "name": "τ²-Bench Telecom",
+      "name": "\u03c4\u00b2-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "urls": [
@@ -104,7 +104,7 @@
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
@@ -724,7 +724,7 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "swe_bench_verified": null,
+        "swe_bench_verified": 38.8,
         "mmmu_pro": null,
         "terminal_bench_hard": 13.6,
         "terminal_bench_2_0": null,
