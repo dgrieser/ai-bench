@@ -468,12 +468,13 @@
       text-align: left;
     }
 
-    thead th.bench-head:has(.sort-indicator) {
-      text-align: left;
+    thead th.head-right {
+      text-align: right;
+      padding-right: 20px;
     }
 
-    thead th.bench-head:has(.sort-indicator) .th-label {
-      max-width: calc(100% - 10px);
+    thead th.head-right:has(.sort-indicator) {
+      text-align: right;
     }
 
     thead th.bench-head .sort-indicator {
@@ -673,27 +674,29 @@
 
     .bench-head {
       max-width: 120px;
-      text-align: left;
     }
 
-    .bench-head .th-label {
-      display: inline-block;
+    .th-label {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      width: 100%;
+      min-width: 0;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: calc(100% - 6px);
       vertical-align: middle;
     }
 
-    thead th:has(.sort-indicator) .th-label {
-      display: inline-block;
+    .th-label-text {
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: calc(100% - 8px);
-      vertical-align: middle;
     }
 
+    thead th.head-right .th-label {
+      margin-left: auto;
+      justify-content: flex-end;
+    }
 
     .empty {
       margin: 24px;
@@ -1194,6 +1197,7 @@
       const state = {
         data: null,
         benchmarkKeys: [],
+        headerWidthsByKey: {},
         filteredModels: [],
         filters: {
           search: "",
@@ -1207,6 +1211,27 @@
         eventsBound: false,
         columnWidths: {}
       };
+
+      function getHeaderWidthConfig(key, th = null) {
+        const config = state.headerWidthsByKey[key] || {};
+        const fallbackMin = th?.dataset.minWidth ? Number(th.dataset.minWidth) : 75;
+        const fallbackMax = th?.dataset.maxWidth ? Number(th.dataset.maxWidth) : Infinity;
+        const fallbackInitial = th?.dataset.initialWidth ? Number(th.dataset.initialWidth) : undefined;
+        return {
+          minWidth: config.minWidth ?? fallbackMin,
+          maxWidth: config.maxWidth ?? fallbackMax,
+          initialWidth: config.initialWidth ?? fallbackInitial
+        };
+      }
+
+      function syncTableWidth(table) {
+        if (!table) return;
+        const totalWidth = [...table.querySelectorAll("thead th")].reduce((sum, th) => {
+          const width = Number.parseFloat(th.style.width);
+          return sum + (Number.isFinite(width) ? width : th.getBoundingClientRect().width);
+        }, 0);
+        table.style.width = totalWidth + "px";
+      }
 
       const ui = {
         title: document.getElementById("title"),
@@ -1622,6 +1647,39 @@
         return toNumber(model.scores?.[key]);
       }
 
+      function measureModelColumnInitialWidth(models) {
+        const probe = document.createElement("span");
+        probe.className = "model-name-label";
+        probe.style.position = "absolute";
+        probe.style.visibility = "hidden";
+        probe.style.pointerEvents = "none";
+        probe.style.whiteSpace = "nowrap";
+        document.body.appendChild(probe);
+
+        const probeStyles = window.getComputedStyle(probe);
+        const context = document.createElement("canvas").getContext("2d");
+        const font = probeStyles.font || [
+          probeStyles.fontStyle,
+          probeStyles.fontVariant,
+          probeStyles.fontWeight,
+          probeStyles.fontSize,
+          probeStyles.fontFamily
+        ].filter(Boolean).join(" ");
+
+        let widestLabel = 0;
+        if (context) {
+          context.font = font;
+          models.forEach((model) => {
+            const textWidth = context.measureText(model.name || "Unknown").width;
+            const badgeWidth = isRecentModel(model) ? 22 : 0;
+            widestLabel = Math.max(widestLabel, textWidth + badgeWidth);
+          });
+        }
+
+        document.body.removeChild(probe);
+        return Math.ceil(widestLabel + 6);
+      }
+
       function renderTable() {
         if (!state.filteredModels.length) {
           ui.content.innerHTML = `
@@ -1633,18 +1691,24 @@
         }
 
         const headers = [
-          { key: "name", label: "Model", className: "col-model", maxWidth: 250 },
-          { key: "creator", label: "Creator", maxWidth: 80 },
-          { key: "params", label: "Params", className: "mono", maxWidth: 90 },
-          { key: "context", label: "Context", className: "mono", maxWidth: 60 },
+          { key: "name", label: "Model", className: "col-model", minWidth: 100, initialWidth: measureModelColumnInitialWidth(state.filteredModels) },
+          { key: "creator", label: "Creator", minWidth: 90, initialWidth: 90 },
+          { key: "params", label: "Params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
+          { key: "context", label: "Context", className: "mono head-right", minWidth: 95, initialWidth: 95 },
           ...state.benchmarkKeys.map((key) => ({
             key,
             label: getBenchmarkLabel(key),
             title: state.data.benchmarks[key]?.description || "",
-            className: "num bench-head",
-            initialWidth: 100
+            className: "num bench-head head-right",
+            minWidth: 95,
+            initialWidth: 95
           }))
         ];
+        state.headerWidthsByKey = Object.fromEntries(headers.map((header) => [header.key, {
+          minWidth: header.minWidth,
+          maxWidth: header.maxWidth,
+          initialWidth: header.initialWidth
+        }]));
 
         const bestInTableByModel = getBestInTableByModel(state.filteredModels);
         const scoreRanges = getScoreRangesByBenchmark(state.filteredModels);
@@ -1754,26 +1818,53 @@
         const table = ui.content.querySelector("table");
         if (!table) return;
         const ths = table.querySelectorAll("thead th");
+        const shell = table.parentElement;
 
-        // Capture initial widths for columns not yet stored, capped by data-max-width if set
+        // Capture initial widths for columns not yet stored, bounded by configured min/max widths.
         ths.forEach((th) => {
           const key = th.dataset.sortKey;
+          const { minWidth, maxWidth, initialWidth: configuredInitialWidth } = getHeaderWidthConfig(key, th);
+          th.style.minWidth = minWidth + "px";
+          th.style.maxWidth = Number.isFinite(maxWidth) ? maxWidth + "px" : "none";
           if (key && !state.columnWidths[key]) {
-            const initialWidth = th.dataset.initialWidth ? Number(th.dataset.initialWidth) : th.getBoundingClientRect().width;
-            const maxWidth = th.dataset.maxWidth ? Number(th.dataset.maxWidth) : Infinity;
-            state.columnWidths[key] = Math.min(initialWidth, maxWidth);
+            const initialWidth = configuredInitialWidth ?? th.getBoundingClientRect().width;
+            state.columnWidths[key] = Math.max(minWidth, Math.min(initialWidth, maxWidth));
           }
         });
+
+        const benchmarkHeaders = [...ths].filter((th) => state.benchmarkKeys.includes(th.dataset.sortKey));
+        if (shell && benchmarkHeaders.length > 0) {
+          const shellWidth = shell.getBoundingClientRect().width;
+          const totalWidth = [...ths].reduce((sum, th) => {
+            const key = th.dataset.sortKey;
+            return sum + (key ? (state.columnWidths[key] || 0) : 0);
+          }, 0);
+          const extraWidth = Math.floor(shellWidth - totalWidth);
+          if (extraWidth > 0) {
+            const extraPerBenchmark = Math.floor(extraWidth / benchmarkHeaders.length);
+            const remainder = extraWidth % benchmarkHeaders.length;
+            benchmarkHeaders.forEach((th, index) => {
+              const key = th.dataset.sortKey;
+              if (!key) return;
+              const bonus = extraPerBenchmark + (index < remainder ? 1 : 0);
+              state.columnWidths[key] = (state.columnWidths[key] || 0) + bonus;
+            });
+          }
+        }
 
         // Switch to fixed layout and apply stored widths
         table.style.tableLayout = "fixed";
         ths.forEach((th) => {
           const key = th.dataset.sortKey;
           if (key && state.columnWidths[key]) {
-            th.style.width = state.columnWidths[key] + "px";
-            th.style.maxWidth = "none";
+            const { minWidth, maxWidth } = getHeaderWidthConfig(key, th);
+            const clampedWidth = Math.max(minWidth, Math.min(state.columnWidths[key], maxWidth));
+            state.columnWidths[key] = clampedWidth;
+            th.style.width = clampedWidth + "px";
+            th.style.maxWidth = Number.isFinite(maxWidth) ? maxWidth + "px" : "none";
           }
         });
+        syncTableWidth(table);
 
         // Attach mousedown listeners to resize handles
         table.querySelectorAll(".col-resize-handle").forEach((handle) => {
@@ -1792,13 +1883,31 @@
 
         const startX = e.clientX;
         const startWidth = th.getBoundingClientRect().width;
+        const { minWidth, maxWidth } = getHeaderWidthConfig(key, th);
+        const table = th.closest("table");
+        const shell = table?.parentElement || null;
+        const tableWidth = table ? table.getBoundingClientRect().width : Infinity;
+        const shellWidth = shell ? shell.getBoundingClientRect().width : tableWidth;
+        const availableWidth = Math.max(tableWidth, shellWidth);
+        let otherColumnsMinWidth = 0;
+        if (table) {
+          table.querySelectorAll("thead th").forEach((otherTh) => {
+            const otherKey = otherTh.dataset.sortKey;
+            if (!otherKey || otherKey === key) return;
+            const { minWidth: otherMinWidth } = getHeaderWidthConfig(otherKey, otherTh);
+            otherColumnsMinWidth += otherMinWidth;
+          });
+        }
+        const effectiveMaxWidth = Math.min(maxWidth, availableWidth - otherColumnsMinWidth);
 
         document.body.classList.add("col-resizing");
 
         function onMouseMove(e) {
-          const newWidth = Math.max(50, startWidth + (e.clientX - startX));
+          const newWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
           th.style.width = newWidth + "px";
-          th.style.maxWidth = "none";
+          th.style.minWidth = minWidth + "px";
+          th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
+          syncTableWidth(table);
         }
 
         function onMouseUp(e) {
@@ -1806,10 +1915,12 @@
           document.removeEventListener("mouseup", onMouseUp);
           document.body.classList.remove("col-resizing");
 
-          const finalWidth = Math.max(50, startWidth + (e.clientX - startX));
+          const finalWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
           state.columnWidths[key] = finalWidth;
           th.style.width = finalWidth + "px";
-          th.style.maxWidth = "none";
+          th.style.minWidth = minWidth + "px";
+          th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
+          syncTableWidth(table);
 
           // Swallow the click event the browser fires after mouseup so sort doesn't trigger
           th.addEventListener("click", (ev) => ev.stopPropagation(), { capture: true, once: true });
@@ -1829,10 +1940,11 @@
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
         const icon = BENCHMARK_ICON_MAP[header.key] || "";
-        const labelContent = icon ? `${icon}${escapeHtml(header.label)}` : escapeHtml(header.label);
+        const labelContent = `${icon}<span class="th-label-text">${escapeHtml(header.label)}</span>`;
+        const minWidthAttr = header.minWidth != null ? ` data-min-width="${header.minWidth}"` : "";
         const maxWidthAttr = header.maxWidth != null ? ` data-max-width="${header.maxWidth}"` : "";
         const initialWidthAttr = header.initialWidth != null ? ` data-initial-width="${header.initialWidth}"` : "";
-        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}${minWidthAttr}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
       }
 
       function isRecentModel(model) {
