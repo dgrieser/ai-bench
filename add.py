@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import subprocess
 import sys
+import termios
+import tty
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -34,6 +38,18 @@ def prompt_value(label: str) -> str | None:
         return None
 
 
+def prompt_value_with_default(label: str, default: str | None) -> str | None:
+    suffix = f" [{default}]" if default else ""
+    try:
+        raw = input(f"{label}{suffix}: ")
+    except EOFError:
+        return default
+
+    if raw == "":
+        return default
+    return parse_nullable(raw)
+
+
 def parse_args() -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(description="Add a new model to llm.json.")
     parser.add_argument("json_file", nargs="?", default="llm.json", help="Path to the JSON file to update.")
@@ -59,6 +75,239 @@ def load_doc(path: Path) -> dict[str, Any]:
     return doc
 
 
+def get_unique_values(models: list[dict[str, Any]], key: str) -> list[str]:
+    values = {
+        model.get(key)
+        for model in models
+        if isinstance(model, dict) and isinstance(model.get(key), str) and model.get(key)
+    }
+    return sorted(values)
+
+
+def get_creator_names(models: list[dict[str, Any]]) -> list[str]:
+    values = {
+        creator.get("name")
+        for model in models
+        if isinstance(model, dict)
+        for creator in [model.get("creator")]
+        if isinstance(creator, dict) and isinstance(creator.get("name"), str) and creator.get("name")
+    }
+    return sorted(values)
+
+
+def get_creator_urls(models: list[dict[str, Any]]) -> dict[str, str]:
+    urls: dict[str, str] = {}
+    for model in models:
+        creator = model.get("creator")
+        if not isinstance(creator, dict):
+            continue
+        name = creator.get("name")
+        url = creator.get("url")
+        if isinstance(name, str) and name and isinstance(url, str) and url and name not in urls:
+            urls[name] = url
+    return urls
+
+
+def fetch_aa_model_names() -> list[str]:
+    aa_script = Path(__file__).resolve().with_name("artificialanalysis.py")
+    if not aa_script.exists():
+        return []
+
+    proc = subprocess.run(
+        [sys.executable, str(aa_script), "--list-models"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return []
+
+    return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
+    haystack = option.lower()
+    needle = query.lower()
+
+    if needle in haystack:
+        return (0, haystack.index(needle))
+
+    pos = 0
+    gap_score = 0
+    for char in needle:
+        idx = haystack.find(char, pos)
+        if idx == -1:
+            return None
+        gap_score += idx - pos
+        pos = idx + 1
+    return (1, gap_score)
+
+
+def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
+    if not query:
+        return options[:limit]
+
+    scored: list[tuple[tuple[int, int, int], str]] = []
+    for option in options:
+        match = fuzzy_match(query, option)
+        if match is None:
+            continue
+        scored.append(((match[0], match[1], len(option)), option))
+    scored.sort(key=lambda item: item[0])
+    return [option for _, option in scored[:limit]]
+
+
+def supports_live_selector() -> bool:
+    term = os.getenv("TERM", "")
+    return sys.stdin.isatty() and sys.stdout.isatty() and term and term.lower() != "dumb"
+
+
+def _render_live_selector(label: str, buffer: str, matches: list[str], lines_drawn: int) -> int:
+    if lines_drawn:
+        sys.stdout.write(f"\x1b[{lines_drawn}F")
+
+    sys.stdout.write("\r\x1b[2K")
+    sys.stdout.write(f"{label}: {buffer}")
+
+    for match in matches:
+        sys.stdout.write("\r\n\x1b[2K")
+        sys.stdout.write(f"  {match}")
+
+    sys.stdout.write("\x1b[J")
+    if matches:
+        sys.stdout.write(f"\x1b[{len(matches)}F")
+        sys.stdout.write(f"\r{label}: {buffer}")
+    sys.stdout.flush()
+    return 1 + len(matches)
+
+
+def _clear_live_selector(lines_drawn: int) -> None:
+    if not lines_drawn:
+        return
+
+    sys.stdout.write("\r\x1b[2K")
+    for _ in range(lines_drawn - 1):
+        sys.stdout.write("\r\n\x1b[2K")
+    if lines_drawn > 1:
+        sys.stdout.write(f"\x1b[{lines_drawn - 1}F")
+    sys.stdout.write("\r")
+    sys.stdout.flush()
+
+
+def prompt_live_select_or_new(label: str, options: list[str], allow_empty: bool = True) -> str | None:
+    fd = sys.stdin.fileno()
+    previous = termios.tcgetattr(fd)
+    buffer = ""
+    tab_index = -1
+    lines_drawn = 0
+
+    try:
+        tty.setraw(fd)
+        while True:
+            matches = find_matches(buffer, options)
+            lines_drawn = _render_live_selector(label, buffer, matches, lines_drawn)
+            char = sys.stdin.read(1)
+
+            if char in {"\r", "\n"}:
+                value = parse_nullable(buffer)
+                _clear_live_selector(lines_drawn)
+                if value is None:
+                    if allow_empty:
+                        sys.stdout.write("\r\n")
+                        sys.stdout.flush()
+                        return None
+                    print(f"{label} is required.")
+                    buffer = ""
+                    tab_index = -1
+                    lines_drawn = 0
+                    continue
+                sys.stdout.write(f"{label}: {buffer}\r\n")
+                sys.stdout.flush()
+                return value
+
+            if char == "\t":
+                if matches:
+                    tab_index = (tab_index + 1) % len(matches)
+                    buffer = matches[tab_index]
+                continue
+
+            if char == "\x03":
+                raise KeyboardInterrupt
+
+            if char == "\x04":
+                _clear_live_selector(lines_drawn)
+                sys.stdout.write("\r\n")
+                sys.stdout.flush()
+                return None
+
+            if char in {"\x7f", "\b"}:
+                buffer = buffer[:-1]
+                tab_index = -1
+                continue
+
+            if char == "\x1b":
+                next_char = sys.stdin.read(1)
+                if next_char == "[":
+                    sys.stdin.read(1)
+                tab_index = -1
+                continue
+
+            if char.isprintable():
+                buffer += char
+                tab_index = -1
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, previous)
+
+
+def prompt_select_or_new(label: str, options: list[str], allow_empty: bool = True) -> str | None:
+    if not options:
+        return prompt_value(label)
+
+    if supports_live_selector():
+        return prompt_live_select_or_new(label, options, allow_empty=allow_empty)
+
+    while True:
+        try:
+            raw = input(f"{label} (type to search or enter a new value): ")
+        except EOFError:
+            return None
+
+        if raw == "":
+            if allow_empty:
+                return None
+            print(f"{label} is required.")
+            continue
+
+        value = parse_nullable(raw)
+        if value is None:
+            if allow_empty:
+                return None
+            print(f"{label} is required.")
+            continue
+
+        matches = find_matches(value, options)
+        if not matches:
+            return value
+        if len(matches) == 1 and matches[0].lower() == value.lower():
+            return matches[0]
+
+        print(f"Matches for {label}:")
+        for idx, match in enumerate(matches, start=1):
+            print(f"  {idx}. {match}")
+
+        try:
+            choice = input("Select number or press Enter to keep typed value: ").strip()
+        except EOFError:
+            return value
+
+        if choice == "":
+            return value
+        if choice.isdigit():
+            index = int(choice) - 1
+            if 0 <= index < len(matches):
+                return matches[index]
+        print("Invalid selection.")
+
+
 def get_value(args_value: str | None, label: str, interactive: bool) -> str | None:
     parsed = parse_nullable(args_value)
     if parsed is not None or args_value is not None:
@@ -68,20 +317,50 @@ def get_value(args_value: str | None, label: str, interactive: bool) -> str | No
     return None
 
 
-def build_model(args: argparse.Namespace, benchmark_keys: list[str], interactive: bool) -> dict[str, Any]:
-    name = get_value(args.name, "Name", interactive)
+def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool) -> dict[str, Any]:
+    models = doc["models"]
+    benchmark_keys = list(doc["benchmarks"].keys())
+
+    if interactive and args.name is None:
+        name = prompt_select_or_new("Name", fetch_aa_model_names(), allow_empty=False)
+    else:
+        name = get_value(args.name, "Name", interactive)
     if not name:
         raise ValueError("Model name is required.")
+
+    url = get_value(args.url, "URL", interactive)
+
+    if interactive and args.params is None:
+        params = prompt_select_or_new("Params", get_unique_values(models, "params"))
+    else:
+        params = get_value(args.params, "Params", interactive)
+
+    if interactive and args.context is None:
+        context = prompt_select_or_new("Context", get_unique_values(models, "context"))
+    else:
+        context = get_value(args.context, "Context", interactive)
+
+    if interactive and args.creator is None:
+        creator_name = prompt_select_or_new("Creator", get_creator_names(models))
+    else:
+        creator_name = get_value(args.creator, "Creator", interactive)
+
+    creator_urls = get_creator_urls(models)
+    creator_url_default = creator_urls.get(creator_name) if creator_name else None
+    if interactive and args.creator_url is None and creator_url_default:
+        creator_url = prompt_value_with_default("Creator URL", creator_url_default)
+    else:
+        creator_url = get_value(args.creator_url, "Creator URL", interactive)
 
     return {
         "name": name,
         "date_added": date.today().isoformat(),
-        "url": get_value(args.url, "URL", interactive),
-        "params": get_value(args.params, "Params", interactive),
-        "context": get_value(args.context, "Context", interactive),
+        "url": url,
+        "params": params,
+        "context": context,
         "creator": {
-            "name": get_value(args.creator, "Creator", interactive),
-            "url": get_value(args.creator_url, "Creator URL", interactive),
+            "name": creator_name,
+            "url": creator_url,
         },
         "scores": {key: None for key in benchmark_keys},
     }
@@ -103,8 +382,7 @@ def main() -> int:
     doc = load_doc(path)
 
     interactive = sys.stdin.isatty()
-    benchmark_keys = list(doc["benchmarks"].keys())
-    model = build_model(args, benchmark_keys, interactive)
+    model = build_model(doc, args, interactive)
 
     models = doc["models"]
     ensure_unique_name(models, model["name"])
