@@ -1205,7 +1205,7 @@
           selectedModels: []
         },
         sort: {
-          key: "swe_bench_verified",
+          key: "aa_coding_index",
           direction: "desc"
         },
         eventsBound: false,
@@ -1402,7 +1402,7 @@
             state.filters.search = "";
             state.filters.params = "all";
             state.filters.selectedModels = [];
-            state.sort.key = "swe_bench_verified";
+            state.sort.key = "aa_coding_index";
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.params.value = "all";
@@ -1531,7 +1531,7 @@
           state.filters.search = "";
           state.filters.params = "all";
           state.filters.selectedModels = [];
-          state.sort.key = "swe_bench_verified";
+          state.sort.key = "aa_coding_index";
           state.sort.direction = "desc";
 
           ui.search.value = "";
@@ -1782,13 +1782,17 @@
       }
 
       function renderSourcesDirectory() {
-        const sources = state.data?.sources;
-        if (!Array.isArray(sources) || !sources.length) {
+        const sources = [
+          ...(Array.isArray(state.data?.sources) ? state.data.sources : []),
+          ...((state.data?.models || []).map((model) => model?.url))
+        ]
+          .filter((url) => typeof url === "string" && url.trim().length > 0);
+
+        if (!sources.length) {
           return "";
         }
 
-        const links = sources
-          .filter((url) => typeof url === "string" && url.trim().length > 0)
+        const links = [...new Set(sources)]
           .sort((a, b) => a.localeCompare(b))
           .map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`)
           .join("");
@@ -2183,7 +2187,7 @@
 
       function parseSortModeValue(value) {
         const parts = String(value).split("::");
-        const key = parts[0] || "swe_bench_verified";
+        const key = parts[0] || "aa_coding_index";
         const direction = parts[1] === "asc" ? "asc" : "desc";
         return { key, direction };
       }
