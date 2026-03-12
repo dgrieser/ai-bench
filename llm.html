@@ -1619,7 +1619,7 @@
         }
 
         const headers = [
-          { key: "name", label: "Model", className: "col-model", maxWidth: 150 },
+          { key: "name", label: "Model", className: "col-model", maxWidth: 280 },
           { key: "creator", label: "Creator", maxWidth: 80 },
           { key: "params", label: "Params", className: "mono", maxWidth: 90 },
           { key: "context", label: "Context", className: "mono", maxWidth: 60 },
@@ -1627,7 +1627,8 @@
             key,
             label: getBenchmarkLabel(key),
             title: state.data.benchmarks[key]?.description || "",
-            className: "num bench-head"
+            className: "num bench-head",
+            initialWidth: 100
           }))
         ];
 
@@ -1740,13 +1741,13 @@
         if (!table) return;
         const ths = table.querySelectorAll("thead th");
 
-        // Capture natural widths for columns not yet stored, capped by data-max-width if set
+        // Capture initial widths for columns not yet stored, capped by data-max-width if set
         ths.forEach((th) => {
           const key = th.dataset.sortKey;
           if (key && !state.columnWidths[key]) {
-            const naturalWidth = th.getBoundingClientRect().width;
+            const initialWidth = th.dataset.initialWidth ? Number(th.dataset.initialWidth) : th.getBoundingClientRect().width;
             const maxWidth = th.dataset.maxWidth ? Number(th.dataset.maxWidth) : Infinity;
-            state.columnWidths[key] = Math.min(naturalWidth, maxWidth);
+            state.columnWidths[key] = Math.min(initialWidth, maxWidth);
           }
         });
 
@@ -1816,7 +1817,8 @@
         const icon = BENCHMARK_ICON_MAP[header.key] || "";
         const labelContent = icon ? `${icon}${escapeHtml(header.label)}` : escapeHtml(header.label);
         const maxWidthAttr = header.maxWidth != null ? ` data-max-width="${header.maxWidth}"` : "";
-        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}${maxWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
+        const initialWidthAttr = header.initialWidth != null ? ` data-initial-width="${header.initialWidth}"` : "";
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
       }
 
       function isRecentModel(model) {
