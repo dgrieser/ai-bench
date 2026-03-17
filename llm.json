@@ -739,6 +739,33 @@
         "aa_intelligence_index": 24.3,
         "aa_coding_index": 19
       }
+    },
+    {
+      "name": "mistral-small-4",
+      "date_added": "2026-03-17",
+      "url": "https://huggingface.co/mistralai/Mistral-Small-4-119B-2603",
+      "params": "119B-A6.5B",
+      "context": "256k",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/products/studio#models"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "mmmu_pro": 78,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": 84,
+        "aime_2026": null,
+        "gpqa_diamond": 71.2,
+        "livecodebench": 64,
+        "scicode": null,
+        "hle": null,
+        "aa_intelligence_index": null,
+        "aa_coding_index": null
+      }
     }
   ],
   "sources": [
