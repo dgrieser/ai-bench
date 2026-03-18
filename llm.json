@@ -12,7 +12,7 @@
     "mmmu_pro": {
       "name": "MMMU Pro",
       "category": "Vision-language Reasoning",
-      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross\u2011disciplinary understanding and integrated visual\u2013text reasoning.",
       "urls": [
         "https://mmmu-benchmark.github.io/",
         "https://aclanthology.org/2025.acl-long.1317/",
@@ -36,7 +36,7 @@
       ]
     },
     "tau2_bench_telecom": {
-      "name": "τ²-Bench Telecom",
+      "name": "\u03c4\u00b2-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "urls": [
@@ -104,7 +104,7 @@
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
@@ -765,6 +765,33 @@
         "hle": 9.5,
         "aa_intelligence_index": 26.9,
         "aa_coding_index": 24.3
+      }
+    },
+    {
+      "name": "minimax-m2-7",
+      "date_added": "2026-03-18",
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7",
+      "params": "230B-A10B",
+      "context": "204k",
+      "creator": {
+        "name": "MiniMax",
+        "url": "https://www.minimax.io/"
+      },
+      "scores": {
+        "swe_bench_verified": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": 39.4,
+        "terminal_bench_2_0": 57.0,
+        "tau2_bench_telecom": 84.8,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 87.4,
+        "livecodebench": null,
+        "scicode": 47,
+        "hle": 28.1,
+        "aa_intelligence_index": 49.6,
+        "aa_coding_index": 41.9
       }
     }
   ],
