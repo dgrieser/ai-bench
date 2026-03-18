@@ -12,7 +12,7 @@
     "mmmu_pro": {
       "name": "MMMU Pro",
       "category": "Vision-language Reasoning",
-      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross\u2011disciplinary understanding and integrated visual\u2013text reasoning.",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
       "urls": [
         "https://mmmu-benchmark.github.io/",
         "https://aclanthology.org/2025.acl-long.1317/",
@@ -36,7 +36,7 @@
       ]
     },
     "tau2_bench_telecom": {
-      "name": "\u03c4\u00b2-Bench Telecom",
+      "name": "τ²-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "urls": [
@@ -104,7 +104,7 @@
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
@@ -201,7 +201,7 @@
       }
     },
     {
-      "name": "step-3-5-flash-reasoning",
+      "name": "step-3-5-flash",
       "date_added": "2026-02-03",
       "url": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
       "params": "196B-A11B",
@@ -211,20 +211,20 @@
         "url": "https://static.stepfun.com/blog/step-3.5-flash"
       },
       "scores": {
-        "aa_coding_index": null,
-        "aa_intelligence_index": null,
+        "aa_coding_index": 31.6,
+        "aa_intelligence_index": 37.8,
         "aime_2025": 97.3,
         "aime_2026": 96.67,
         "browsecomp": 69.0,
-        "gpqa_diamond": 83.5,
-        "hle": 23.1,
+        "gpqa_diamond": 83.1,
+        "hle": 19.1,
         "livecodebench": 86.4,
         "mmmu_pro": null,
-        "scicode": null,
+        "scicode": 40.4,
         "swe_bench_verified": 74.4,
-        "tau2_bench_telecom": 88.2,
+        "tau2_bench_telecom": 94.4,
         "terminal_bench_2_0": 51.0,
-        "terminal_bench_hard": 51.0
+        "terminal_bench_hard": 27.3
       }
     },
     {
