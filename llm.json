@@ -12,7 +12,7 @@
     "mmmu_pro": {
       "name": "MMMU Pro",
       "category": "Vision-language Reasoning",
-      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross\u2011disciplinary understanding and integrated visual\u2013text reasoning.",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
       "urls": [
         "https://mmmu-benchmark.github.io/",
         "https://aclanthology.org/2025.acl-long.1317/",
@@ -36,7 +36,7 @@
       ]
     },
     "tau2_bench_telecom": {
-      "name": "\u03c4\u00b2-Bench Telecom",
+      "name": "τ²-Bench Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "urls": [
@@ -104,7 +104,7 @@
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including \u03c4\u00b2-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
@@ -752,19 +752,19 @@
       },
       "scores": {
         "swe_bench_verified": null,
-        "mmmu_pro": 78,
-        "terminal_bench_hard": null,
+        "mmmu_pro": 56.8,
+        "terminal_bench_hard": 17.4,
         "terminal_bench_2_0": null,
-        "tau2_bench_telecom": null,
+        "tau2_bench_telecom": 31,
         "browsecomp": null,
         "aime_2025": 84,
         "aime_2026": null,
-        "gpqa_diamond": 71.2,
+        "gpqa_diamond": 76.9,
         "livecodebench": 64,
-        "scicode": null,
-        "hle": null,
-        "aa_intelligence_index": null,
-        "aa_coding_index": null
+        "scicode": 38,
+        "hle": 9.5,
+        "aa_intelligence_index": 26.9,
+        "aa_coding_index": 24.3
       }
     }
   ],
