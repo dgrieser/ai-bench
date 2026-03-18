@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
+DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -145,7 +146,12 @@ def parse_args() -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(
         description="Update benchmark JSON scores by querying artificialanalysis.py with model names as slugs."
     )
-    parser.add_argument("json_file", help="Path to JSON file to read/update")
+    parser.add_argument(
+        "json_file",
+        nargs="?",
+        default=str(DEFAULT_LLM_JSON),
+        help='Path to JSON file to read/update (default: "./llm.json" next to this script)',
+    )
     parser.add_argument(
         "--write",
         "-w",
