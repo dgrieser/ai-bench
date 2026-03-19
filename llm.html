@@ -1168,24 +1168,6 @@
 
   <script>
     (function () {
-      const PRIORITY_BENCHMARK_KEYS = ["aa_intelligence_index", "aa_coding_index", "swe_bench_verified", "swe_bench_pro"];
-      const BENCHMARK_LABEL_OVERRIDES = {
-        aa_intelligence_index: "Index",
-        aa_coding_index: "Coding",
-        swe_bench_verified: "SWE-Bench",
-        swe_bench_pro: "SWE-Bench Pro",
-        terminal_bench_hard: "Term-Bench Hard",
-        terminal_bench_2_0: "Term-Bench 2.0",
-        tau2_bench_telecom: "τ²-Bench",
-        browsecomp: "BrowseComp",
-        aime_2025: "AIME25",
-        aime_2026: "AIME26",
-        gpqa_diamond: "GPQA",
-        livecodebench: "LiveCodeBench",
-        scicode: "SciCode",
-        hle: "HLE"
-
-      };
       const state = {
         data: null,
         benchmarkKeys: [],
@@ -2052,14 +2034,11 @@
       }
 
       function getOrderedBenchmarkKeys(benchmarks) {
-        const keys = Object.keys(benchmarks || {});
-        const prioritized = PRIORITY_BENCHMARK_KEYS.filter((key) => keys.includes(key));
-        const remaining = keys.filter((key) => !PRIORITY_BENCHMARK_KEYS.includes(key));
-        return [...prioritized, ...remaining];
+        return Object.keys(benchmarks || {});
       }
 
       function getBenchmarkLabel(key) {
-        return BENCHMARK_LABEL_OVERRIDES[key] || state.data?.benchmarks?.[key]?.name || key;
+        return state.data?.benchmarks?.[key]?.short_name || state.data?.benchmarks?.[key]?.name || key;
       }
 
       function getBenchmarkIcon(key) {
