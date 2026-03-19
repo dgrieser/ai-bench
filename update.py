@@ -14,6 +14,7 @@ from typing import Any, Callable
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
+JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -284,7 +285,7 @@ def main() -> int:
 
     missing = [slug for slug in slugs if slug not in available_slugs]
     if args.write:
-        llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
     print(f"models in {llm_path}: {len(slugs)}")
     print(f"models available on artificialanalysis.py: {len(existing_slugs)}")

@@ -1,8 +1,27 @@
 {
   "title": "LLM Benchmarks",
   "benchmarks": {
+    "aa_intelligence_index": {
+      "name": "AA Intelligence Index",
+      "short_name": "Index",
+      "category": "Composite Index",
+      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
+      "urls": [
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      ]
+    },
+    "aa_coding_index": {
+      "name": "AA Coding Index",
+      "short_name": "Coding",
+      "category": "Composite Index",
+      "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
+      "urls": [
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      ]
+    },
     "swe_bench_verified": {
       "name": "SWE-bench Verified",
+      "short_name": "SWE Verified",
       "category": "Software Engineering",
       "description": "Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.",
       "urls": [
@@ -11,6 +30,7 @@
     },
     "swe_bench_pro": {
       "name": "SWE-bench Pro",
+      "short_name": "SWE Pro",
       "category": "Software Engineering",
       "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
       "urls": [
@@ -20,6 +40,7 @@
     },
     "mmmu_pro": {
       "name": "MMMU Pro",
+      "short_name": "MMMU Pro",
       "category": "Vision-language Reasoning",
       "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
       "urls": [
@@ -30,6 +51,7 @@
     },
     "terminal_bench_hard": {
       "name": "Terminal-Bench Hard",
+      "short_name": "Term Hard",
       "category": "Agentic Coding & Terminal Use",
       "description": "Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.",
       "urls": [
@@ -38,6 +60,7 @@
     },
     "terminal_bench_2_0": {
       "name": "Terminal-Bench 2.0",
+      "short_name": "Term 2.0",
       "category": "Agentic Coding & Terminal Use",
       "description": "Terminal-Bench 2.0 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
       "urls": [
@@ -46,6 +69,7 @@
     },
     "tau2_bench_telecom": {
       "name": "τ²-Bench Telecom",
+      "short_name": "τ² Telecom",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
       "urls": [
@@ -54,6 +78,7 @@
     },
     "browsecomp": {
       "name": "BrowseComp",
+      "short_name": "BrowseComp",
       "category": "Web Browsing",
       "description": "Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.",
       "urls": [
@@ -62,6 +87,7 @@
     },
     "aime_2025": {
       "name": "AIME 2025",
+      "short_name": "AIME25",
       "category": "Competition Math",
       "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.",
       "urls": [
@@ -71,6 +97,7 @@
     },
     "aime_2026": {
       "name": "AIME 2026",
+      "short_name": "AIME26",
       "category": "Competition Math",
       "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2026 exam set.",
       "urls": [
@@ -80,6 +107,7 @@
     },
     "gpqa_diamond": {
       "name": "GPQA Diamond",
+      "short_name": "GPQA",
       "category": "Scientific Reasoning",
       "description": "Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.",
       "urls": [
@@ -88,6 +116,7 @@
     },
     "livecodebench": {
       "name": "LiveCodeBench",
+      "short_name": "LiveCodeBench",
       "category": "Coding",
       "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
       "urls": [
@@ -96,6 +125,7 @@
     },
     "scicode": {
       "name": "SciCode",
+      "short_name": "SciCode",
       "category": "Scientific Coding",
       "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
       "urls": [
@@ -103,27 +133,12 @@
       ]
     },
     "hle": {
-      "name": "HLE",
+      "name": "Humanity's Last Exam",
+      "short_name": "HLE",
       "category": "Reasoning & Knowledge",
       "description": "Humanity's Last Exam: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.",
       "urls": [
         "https://lastexam.ai/"
-      ]
-    },
-    "aa_intelligence_index": {
-      "name": "AA Intelligence Index",
-      "category": "Composite Index",
-      "description": "Artificial Analysis composite index combining multiple evaluations (including τ²-Bench Telecom, Terminal-Bench Hard, GPQA Diamond, and HLE) to synthesize overall model capability.",
-      "urls": [
-        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
-      ]
-    },
-    "aa_coding_index": {
-      "name": "AA Coding Index",
-      "category": "Composite Index",
-      "description": "Artificial Analysis composite index for coding performance combining multiple evaluations (including Terminal-Bench Hard, and SciCodeBench) to synthesize overall model capability.",
-      "urls": [
-        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
     }
   },
@@ -206,7 +221,7 @@
         "mmmu_pro": 54.0,
         "scicode": 33.7,
         "swe_bench_verified": 59.2,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 40.6,
         "tau2_bench_telecom": 98.8,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 22.0
@@ -262,7 +277,7 @@
         "mmmu_pro": null,
         "scicode": 42.6,
         "swe_bench_verified": 80.2,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 55.4,
         "tau2_bench_telecom": 95.3,
         "terminal_bench_2_0": 51.7,
         "terminal_bench_hard": 34.8
@@ -346,7 +361,7 @@
         "mmmu_pro": null,
         "scicode": 32.3,
         "swe_bench_verified": 70.6,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 44.3,
         "tau2_bench_telecom": 79.5,
         "terminal_bench_2_0": 36.2,
         "terminal_bench_hard": 18.2
@@ -738,7 +753,7 @@
         "mmmu_pro": null,
         "scicode": 38.9,
         "swe_bench_verified": 62.4,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 16.2,
         "tau2_bench_telecom": 65.8,
         "terminal_bench_2_0": 18.7,
         "terminal_bench_hard": 23.5
@@ -812,7 +827,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 56.2,
         "mmmu_pro": null,
         "terminal_bench_hard": 39.4,
         "terminal_bench_2_0": 57.0,

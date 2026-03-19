@@ -24,7 +24,7 @@ class HelpOnErrorArgumentParser(argparse.ArgumentParser):
 
 
 def load_doc(path: Path) -> dict[str, Any]:
-    with path.open() as handle:
+    with path.open(encoding="utf-8") as handle:
         doc = json.load(handle)
 
     if not isinstance(doc, dict):
@@ -383,7 +383,7 @@ def collect_missing_updates(
 
 
 def write_doc(path: Path, doc: dict[str, Any]) -> None:
-    path.write_text(json.dumps(doc, indent=2, ensure_ascii=True) + "\n")
+    path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def main() -> int:
