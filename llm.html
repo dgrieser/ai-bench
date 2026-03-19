@@ -1051,19 +1051,6 @@
       cursor: col-resize !important;
     }
 
-    /* Hand JS all touch events on resize handles — prevents browser scroll-claim */
-    .col-resize-handle {
-      touch-action: none;
-    }
-
-    /* Wider invisible touch target on coarse-pointer devices */
-    @media (pointer: coarse) {
-      .col-resize-handle {
-        width: 24px;
-        right: -9px;
-      }
-    }
-
     /* ── Responsive ───────────────────────────────── */
 
     @media (max-width: 860px) {
@@ -1884,25 +1871,14 @@
         });
         syncTableWidth(table);
 
-        // Attach pointer listeners to resize handles (mouse + touch)
+        // Attach mousedown listeners to resize handles
         table.querySelectorAll(".col-resize-handle").forEach((handle) => {
-          handle.addEventListener("mousedown", onResizeStart);
-          handle.addEventListener("touchstart", onResizeStart, { passive: false });
+          handle.addEventListener("mousedown", onResizeMouseDown);
         });
       }
 
-      function getResizeClientX(e) {
-        if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
-        if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientX;
-        return e.clientX;
-      }
-
-      function onResizeStart(e) {
-        const isTouch = e.type === "touchstart";
-        if (isTouch) {
-          // Prevent page scroll while dragging a column handle
-          e.preventDefault();
-        }
+      function onResizeMouseDown(e) {
+        e.preventDefault();
         e.stopPropagation();
 
         const handle = e.currentTarget;
@@ -1910,7 +1886,7 @@
         const key = handle.dataset.resizeKey;
         if (!th || !key) return;
 
-        const startX = getResizeClientX(e);
+        const startX = e.clientX;
         const startWidth = th.getBoundingClientRect().width;
         const { minWidth, maxWidth } = getHeaderWidthConfig(key, th);
         const table = th.closest("table");
@@ -1931,36 +1907,32 @@
 
         document.body.classList.add("col-resizing");
 
-        function onMove(e) {
-          const newWidth = Math.max(minWidth, Math.min(startWidth + (getResizeClientX(e) - startX), effectiveMaxWidth));
+        function onMouseMove(e) {
+          const newWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
           th.style.width = newWidth + "px";
           th.style.minWidth = minWidth + "px";
           th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
           syncTableWidth(table);
         }
 
-        function onEnd(e) {
-          document.removeEventListener("mousemove", onMove);
-          document.removeEventListener("mouseup", onEnd);
-          document.removeEventListener("touchmove", onMove);
-          document.removeEventListener("touchend", onEnd);
+        function onMouseUp(e) {
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
           document.body.classList.remove("col-resizing");
 
-          const finalWidth = Math.max(minWidth, Math.min(startWidth + (getResizeClientX(e) - startX), effectiveMaxWidth));
+          const finalWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
           state.columnWidths[key] = finalWidth;
           th.style.width = finalWidth + "px";
           th.style.minWidth = minWidth + "px";
           th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
           syncTableWidth(table);
 
-          // Swallow the click/tap event the browser fires after release so sort doesn't trigger
+          // Swallow the click event the browser fires after mouseup so sort doesn't trigger
           th.addEventListener("click", (ev) => ev.stopPropagation(), { capture: true, once: true });
         }
 
-        document.addEventListener("mousemove", onMove);
-        document.addEventListener("mouseup", onEnd);
-        document.addEventListener("touchmove", onMove, { passive: false });
-        document.addEventListener("touchend", onEnd);
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
       }
 
       function renderHeaderCell(header) {
