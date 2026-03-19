@@ -1648,6 +1648,7 @@
       }
 
       function measureModelColumnInitialWidth(models) {
+        if (window.innerWidth <= 860) return 100;
         const probe = document.createElement("span");
         probe.className = "model-name-label";
         probe.style.position = "absolute";
