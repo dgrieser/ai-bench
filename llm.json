@@ -9,6 +9,15 @@
         "https://www.swebench.com/SWE-bench/"
       ]
     },
+    "swe_bench_pro": {
+      "name": "SWE-bench Pro",
+      "category": "Software Engineering",
+      "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
+      "urls": [
+        "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro",
+        "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
+      ]
+    },
     "mmmu_pro": {
       "name": "MMMU Pro",
       "category": "Vision-language Reasoning",
@@ -141,6 +150,7 @@
         "mmmu_pro": null,
         "scicode": 33.1,
         "swe_bench_verified": 72.2,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 24.9,
         "terminal_bench_2_0": 32.6,
         "terminal_bench_hard": 18.9
@@ -168,6 +178,7 @@
         "mmmu_pro": 44.6,
         "scicode": 28.8,
         "swe_bench_verified": 68.0,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 23.4,
         "terminal_bench_2_0": 22.5,
         "terminal_bench_hard": 16.7
@@ -195,6 +206,7 @@
         "mmmu_pro": 54.0,
         "scicode": 33.7,
         "swe_bench_verified": 59.2,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 98.8,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 22.0
@@ -222,6 +234,7 @@
         "mmmu_pro": null,
         "scicode": 40.4,
         "swe_bench_verified": 74.4,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 94.4,
         "terminal_bench_2_0": 51.0,
         "terminal_bench_hard": 27.3
@@ -249,6 +262,7 @@
         "mmmu_pro": null,
         "scicode": 42.6,
         "swe_bench_verified": 80.2,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 95.3,
         "terminal_bench_2_0": 51.7,
         "terminal_bench_hard": 34.8
@@ -276,6 +290,7 @@
         "mmmu_pro": null,
         "scicode": 33,
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 25.4,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 6.8
@@ -303,6 +318,7 @@
         "mmmu_pro": null,
         "scicode": 27.8,
         "swe_bench_verified": 51.6,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 34.5,
         "terminal_bench_2_0": 31.3,
         "terminal_bench_hard": 15.2
@@ -330,6 +346,7 @@
         "mmmu_pro": null,
         "scicode": 32.3,
         "swe_bench_verified": 70.6,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 79.5,
         "terminal_bench_2_0": 36.2,
         "terminal_bench_hard": 18.2
@@ -357,6 +374,7 @@
         "mmmu_pro": null,
         "scicode": 33.3,
         "swe_bench_verified": 22.0,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 28.1,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 5.3
@@ -384,6 +402,7 @@
         "mmmu_pro": null,
         "scicode": 38.8,
         "swe_bench_verified": 74.5,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 41.5,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 9.8
@@ -411,6 +430,7 @@
         "mmmu_pro": 77.3,
         "scicode": 42,
         "swe_bench_verified": 76.4,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 95.6,
         "terminal_bench_2_0": 52.5,
         "terminal_bench_hard": 40.9
@@ -438,6 +458,7 @@
         "mmmu_pro": 75,
         "scicode": 42,
         "swe_bench_verified": 72.0,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 93.6,
         "terminal_bench_2_0": 49.4,
         "terminal_bench_hard": 31.1
@@ -465,6 +486,7 @@
         "mmmu_pro": 75,
         "scicode": 39.5,
         "swe_bench_verified": 72.4,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 93.9,
         "terminal_bench_2_0": 41.6,
         "terminal_bench_hard": 32.6
@@ -492,6 +514,7 @@
         "mmmu_pro": 72.7,
         "scicode": 37.7,
         "swe_bench_verified": 69.2,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 89.2,
         "terminal_bench_2_0": 40.5,
         "terminal_bench_hard": 26.5
@@ -519,6 +542,7 @@
         "mmmu_pro": 69.2,
         "scicode": 27.5,
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 86.8,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 24.2
@@ -546,6 +570,7 @@
         "mmmu_pro": 65.4,
         "scicode": 16.1,
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 92.1,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 18.2
@@ -573,6 +598,7 @@
         "mmmu_pro": 43,
         "scicode": 2.8,
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 69,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 3.8
@@ -600,6 +626,7 @@
         "mmmu_pro": 25.8,
         "scicode": null,
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 47.7,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null
@@ -625,6 +652,7 @@
         "livecodebench": 81.2,
         "scicode": 36,
         "swe_bench_verified": 60.5,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 67.8,
         "terminal_bench_2_0": 31,
         "terminal_bench_hard": 28.8
@@ -652,6 +680,7 @@
         "mmmu_pro": null,
         "scicode": 28.4,
         "swe_bench_verified": 54.4,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 79.5,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 10.6
@@ -680,6 +709,7 @@
         "mmmu_pro": null,
         "scicode": 34.4,
         "swe_bench_verified": 34.0,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 60.2,
         "terminal_bench_2_0": 3.1,
         "terminal_bench_hard": 10.6
@@ -708,6 +738,7 @@
         "mmmu_pro": null,
         "scicode": 38.9,
         "swe_bench_verified": 62.4,
+        "swe_bench_pro": null,
         "tau2_bench_telecom": 65.8,
         "terminal_bench_2_0": 18.7,
         "terminal_bench_hard": 23.5
@@ -725,6 +756,7 @@
       },
       "scores": {
         "swe_bench_verified": 38.8,
+        "swe_bench_pro": null,
         "mmmu_pro": null,
         "terminal_bench_hard": 13.6,
         "terminal_bench_2_0": null,
@@ -752,6 +784,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "mmmu_pro": 56.8,
         "terminal_bench_hard": 17.4,
         "terminal_bench_2_0": null,
@@ -779,6 +812,7 @@
       },
       "scores": {
         "swe_bench_verified": null,
+        "swe_bench_pro": null,
         "mmmu_pro": null,
         "terminal_bench_hard": 39.4,
         "terminal_bench_2_0": 57.0,
