@@ -1051,6 +1051,11 @@
       cursor: col-resize !important;
     }
 
+    /* Hand JS all touch events on resize handles — prevents browser scroll-claim */
+    .col-resize-handle {
+      touch-action: none;
+    }
+
     /* Wider invisible touch target on coarse-pointer devices */
     @media (pointer: coarse) {
       .col-resize-handle {
