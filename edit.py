@@ -59,11 +59,18 @@ def infer_json_file(argv: list[str] | None = None) -> str:
 def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(description="Edit model metadata and scores in llm.json.")
     parser.add_argument("json_file", nargs="?", default="llm.json", help="Path to the JSON file to update.")
-    parser.add_argument("--model", help="Model name to update.")
+    parser.add_argument("-m", "--model", help="Model name to update.")
     parser.add_argument(
         "--missing",
         action="store_true",
-        help="Interactively cycle through all models with missing scores and prompt only for missing values.",
+        help="Interactively prompt only for missing values. Can be scoped with --model and/or --benchmark.",
+    )
+    parser.add_argument(
+        "-b",
+        "--benchmark",
+        action="append",
+        choices=sorted(doc["benchmarks"].keys()),
+        help="Benchmark key to scope --missing to. Repeat to include multiple benchmarks.",
     )
 
     for key, benchmark in doc["benchmarks"].items():
@@ -350,22 +357,30 @@ def collect_updates(
 
 
 def collect_missing_updates(
-    doc: dict[str, Any], interactive: bool
+    doc: dict[str, Any], interactive: bool, model_name: str | None = None, benchmark_keys: list[str] | None = None
 ) -> list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]]:
     if not interactive:
         raise ValueError("--missing requires interactive mode.")
 
+    benchmark_filter = set(benchmark_keys or [])
     planned: list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]] = []
     for model in doc["models"]:
-        if not isinstance(model.get("name"), str):
+        current_model_name = model.get("name")
+        if not isinstance(current_model_name, str):
+            continue
+        if model_name is not None and current_model_name != model_name:
             continue
         missing_keys = get_missing_score_keys(doc, model)
+        if benchmark_filter:
+            missing_keys = [key for key in missing_keys if key in benchmark_filter]
         missing_metadata_keys = get_missing_metadata_keys(model)
+        if benchmark_filter:
+            missing_metadata_keys = []
         if not missing_keys and not missing_metadata_keys:
             continue
 
         print()
-        print(f"Model: {model['name']}")
+        print(f"Model: {current_model_name}")
         score_updates: dict[str, int | float | None] = {}
         metadata_updates: dict[str, str | None] = {}
         scores = model["scores"]
@@ -394,12 +409,22 @@ def main() -> int:
     interactive = sys.stdin.isatty()
     if args.missing:
         score_flags = [key for key in doc["benchmarks"] if getattr(args, key) is not None]
-        if args.model is not None or score_flags:
-            raise ValueError("--missing cannot be combined with --model or benchmark score flags.")
+        if score_flags:
+            raise ValueError("--missing cannot be combined with benchmark score flags.")
+        if args.model is not None and find_model(doc["models"], args.model) is None:
+            raise ValueError(f"Model '{args.model}' does not exist.")
 
-        planned = collect_missing_updates(doc, interactive)
+        planned = collect_missing_updates(doc, interactive, model_name=args.model, benchmark_keys=args.benchmark)
         if not planned:
-            print("No models with missing scores or metadata.")
+            if args.model is not None and args.benchmark:
+                scope = f"missing values for model '{args.model}' in benchmark(s): {', '.join(args.benchmark)}"
+            elif args.model is not None:
+                scope = f"missing values for model '{args.model}'"
+            elif args.benchmark:
+                scope = f"missing values in benchmark(s): {', '.join(args.benchmark)}"
+            else:
+                scope = "missing scores or metadata"
+            print(f"No models with {scope}.")
             return 0
 
         changed = 0
