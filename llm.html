@@ -698,6 +698,13 @@
       justify-content: flex-end;
     }
 
+    .benchmark-icon {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      vertical-align: -0.1em;
+    }
+
     .empty {
       margin: 24px;
       padding: 40px;
@@ -768,6 +775,9 @@
     }
 
     .benchmark-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       font-weight: 700;
       color: var(--text);
       font-size: 0.88rem;
@@ -1739,7 +1749,7 @@
           return `
             <article class="benchmark-item">
               <div class="benchmark-head">
-                <span class="benchmark-name">${getBenchmarkIcon(key)}${escapeHtml(name)}</span>
+                <span class="benchmark-name">${renderBenchmarkIcon(key)}${escapeHtml(name)}</span>
                 ${category ? `<span class="benchmark-category">${escapeHtml(category)}</span>` : ""}
               </div>
               ${description ? `<p class="benchmark-desc">${escapeHtml(description)}</p>` : ""}
@@ -1918,7 +1928,7 @@
         const title = header.title ? ` title="${escapeHtml(header.title)}"` : "";
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
-        const icon = getBenchmarkIcon(header.key);
+        const icon = renderBenchmarkIcon(header.key);
         const labelContent = `${icon}<span class="th-label-text">${escapeHtml(header.label)}</span>`;
         const minWidthAttr = header.minWidth != null ? ` data-min-width="${header.minWidth}"` : "";
         const maxWidthAttr = header.maxWidth != null ? ` data-max-width="${header.maxWidth}"` : "";
@@ -2043,7 +2053,24 @@
 
       function getBenchmarkIcon(key) {
         const icon = state.data?.benchmarks?.[key]?.icon_svg;
-        return typeof icon === "string" ? icon : "";
+        if (typeof icon !== "string") {
+          return "";
+        }
+        if (icon.trim().startsWith("<svg")) {
+          return icon;
+        }
+        return icon;
+      }
+
+      function renderBenchmarkIcon(key) {
+        const icon = getBenchmarkIcon(key);
+        if (!icon) {
+          return "";
+        }
+        if (icon.startsWith("<svg")) {
+          return icon;
+        }
+        return `<img class="benchmark-icon" src="${escapeAttr(icon)}" alt="" aria-hidden="true">`;
       }
 
       function getBestInTableByModel(models) {
