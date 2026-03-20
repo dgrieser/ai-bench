@@ -39,10 +39,21 @@ def load_doc(path: Path) -> dict[str, Any]:
 def infer_json_file(argv: list[str] | None = None) -> str:
     args = list(sys.argv[1:] if argv is None else argv)
     json_file = "llm.json"
+    short_options_with_values = {"-m", "-b"}
     i = 0
     while i < len(args):
         token = args[i]
+        if token == "--":
+            if i + 1 < len(args):
+                json_file = args[i + 1]
+            break
         if token == "--missing":
+            i += 1
+            continue
+        if token in short_options_with_values:
+            i += 2
+            continue
+        if any(token.startswith(option) and token != option for option in short_options_with_values):
             i += 1
             continue
         if token.startswith("--"):
