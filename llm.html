@@ -1417,7 +1417,8 @@
 
         const paramOptions = [
           { value: "all", label: "All parameter sizes" },
-          { value: "lt30", label: "< 30B" },
+          { value: "lt10", label: "< 10B" },
+          { value: "10to30", label: "10B to 30B" },
           { value: "30to80", label: "30B to 80B" },
           { value: "80to130", label: "80B to 130B" },
           { value: "130to250", label: "130B to 250B" },
@@ -1563,7 +1564,10 @@
           if (!Number.isFinite(modelParams)) {
             return false;
           }
-          if (state.filters.params === "lt30" && !(modelParams < 30e9)) {
+          if (state.filters.params === "lt10" && !(modelParams < 10e9)) {
+            return false;
+          }
+          if (state.filters.params === "10to30" && !(modelParams >= 10e9 && modelParams <= 30e9)) {
             return false;
           }
           if (state.filters.params === "30to80" && !(modelParams >= 30e9 && modelParams <= 80e9)) {
@@ -1679,7 +1683,7 @@
           { key: "name", label: "Model", className: "col-model", minWidth: 100, initialWidth: measureModelColumnInitialWidth(state.filteredModels) },
           { key: "creator", label: "Creator", minWidth: 90, initialWidth: 90 },
           { key: "params", label: "Params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
-          { key: "context", label: "Context", className: "mono head-right", minWidth: 95, initialWidth: 95 },
+          { key: "context", label: "Context", className: "mono head-right", minWidth: 100, initialWidth: 100 },
           ...state.benchmarkKeys.map((key) => ({
             key,
             label: getBenchmarkLabel(key),
