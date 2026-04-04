@@ -913,12 +913,12 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "aa_intelligence_index": null,
-        "aa_coding_index": null,
+        "aa_intelligence_index": 39.2,
+        "aa_coding_index": 38.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
-        "mmmu_pro": 76.9,
-        "terminal_bench_hard": null,
+        "mmmu_pro": 73.4,
+        "terminal_bench_hard": 36.4,
         "terminal_bench_2_0": null,
         "tau2_bench_telecom": 59.9,
         "browsecomp": null,
@@ -956,6 +956,62 @@
         "livecodebench": 77.1,
         "scicode": 40,
         "hle": 18.3
+      }
+    },
+    {
+      "name": "gemma-4-e4b",
+      "date_added": "2026-04-04",
+      "url": "https://huggingface.co/google/gemma-4-E4B",
+      "params": "4B",
+      "context": "128k",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/models"
+      },
+      "scores": {
+        "aa_intelligence_index": 18.8,
+        "aa_coding_index": 13.7,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "mmmu_pro": 51.4,
+        "terminal_bench_hard": 8.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 20.8,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 57.6,
+        "livecodebench": null,
+        "scicode": 24.4,
+        "hle": 3.7
+      }
+    },
+    {
+      "name": "gemma-4-e2b",
+      "date_added": "2026-04-04",
+      "url": "https://huggingface.co/google/gemma-4-E2B",
+      "params": "2B",
+      "context": "128k",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/models"
+      },
+      "scores": {
+        "aa_intelligence_index": 15.2,
+        "aa_coding_index": 9,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "mmmu_pro": 44.6,
+        "terminal_bench_hard": 3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 20.8,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 43.3,
+        "livecodebench": null,
+        "scicode": 20.9,
+        "hle": 4.8
       }
     }
   ],
