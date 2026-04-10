@@ -2123,15 +2123,24 @@
       function formatParams(raw) {
         if (!raw) return "-";
         const str = String(raw).trim();
-        // Matches "117B-A5.1B", "123B", "68.5B-A3B", etc.
-        const match = str.match(/^(\d+\.?\d*)(B)(?:-(A)(\d+\.?\d*)(B))?$/i);
-        if (!match) return escapeHtml(str);
-        const [, mainNum, mainUnit, aPrefix, activeNum, activeUnit] = match;
-        let html = `${escapeHtml(mainNum)}<span class="p-letter">${escapeHtml(mainUnit)}</span>`;
-        if (aPrefix) {
-          html += `<span class="p-unit">&thinsp;-&thinsp;</span>${escapeHtml(aPrefix)}${escapeHtml(activeNum)}<span class="p-letter">${escapeHtml(activeUnit)}</span>`;
+        // Matches "123B", "117B-A5.1B", and standalone effective forms like "E4B".
+        const mainMatch = str.match(/^(\d+\.?\d*)(B)(?:-(A)(\d+\.?\d*)(B))?$/i);
+        if (mainMatch) {
+          const [, mainNum, mainUnit, aPrefix, activeNum, activeUnit] = mainMatch;
+          let html = `${escapeHtml(mainNum)}<span class="p-letter">${escapeHtml(mainUnit)}</span>`;
+          if (aPrefix) {
+            html += `<span class="p-unit">&thinsp;-&thinsp;</span>${escapeHtml(aPrefix)}${escapeHtml(activeNum)}<span class="p-letter">${escapeHtml(activeUnit)}</span>`;
+          }
+          return html;
         }
-        return html;
+
+        const effectiveMatch = str.match(/^(E)(\d+\.?\d*)(B)$/i);
+        if (effectiveMatch) {
+          const [, effectivePrefix, effectiveNum, effectiveUnit] = effectiveMatch;
+          return `${escapeHtml(effectivePrefix)}${escapeHtml(effectiveNum)}<span class="p-letter">${escapeHtml(effectiveUnit)}</span>`;
+        }
+
+        return escapeHtml(str);
       }
 
       function formatScore(value) {
