@@ -1013,6 +1013,34 @@
         "scicode": 20.9,
         "hle": 4.8
       }
+    },
+    {
+      "name": "qwen3-6-35b-a3b",
+      "date_added": "2026-04-22",
+      "url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+      "params": "35B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": 43,
+        "aa_coding_index": 18,
+        "swe_bench_verified": 73.4,
+        "swe_bench_pro": 49.5,
+        "mmmu_pro": 75,
+        "terminal_bench_hard": 35,
+        "terminal_bench_2_0": 51.5,
+        "tau2_bench_telecom": 95,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": 92.7,
+        "gpqa_diamond": 84,
+        "livecodebench": 80.4,
+        "scicode": 36,
+        "hle": 20
+      }
     }
   ],
   "sources": [
