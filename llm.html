@@ -1256,7 +1256,7 @@
 
       async function loadData() {
         try {
-          const cacheBustedUrl = `https://raw.githubusercontent.com/dgrieser/ai-bench/refs/heads/main/llm.json?t=${Date.now()}`;
+          const cacheBustedUrl = `https://dgrieser.github.io/ai-bench/llm.json?t=${Date.now()}`;
           const response = await fetch(cacheBustedUrl, { cache: "no-store" });
           if (!response.ok) {
             throw new Error(`Request failed (${response.status})`);
