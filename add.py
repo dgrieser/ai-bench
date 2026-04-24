@@ -14,6 +14,12 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from swe_rebench_mapping import (
+    add_rebench_mapping,
+    fetch_swe_rebench_model_names,
+    load_rebench_to_slug_mapping,
+)
+
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:
@@ -122,6 +128,31 @@ def fetch_aa_model_names() -> list[str]:
         return []
 
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def maybe_add_swe_rebench_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_rebench_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        rebench_names = fetch_swe_rebench_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping SWE-Rebench mapping prompt: {exc}")
+        return
+
+    if not rebench_names:
+        return
+
+    rebench_name = prompt_select_or_new("SWE-Rebench model", rebench_names)
+    if not rebench_name:
+        return
+
+    add_rebench_mapping(rebench_name, model_name)
+    print(f"Added SWE-Rebench mapping '{rebench_name}' -> '{model_name}'")
 
 
 def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
@@ -383,11 +414,11 @@ def main() -> int:
 
     interactive = sys.stdin.isatty()
     model = build_model(doc, args, interactive)
-
     models = doc["models"]
     ensure_unique_name(models, model["name"])
     models.append(model)
     write_doc(path, doc)
+    maybe_add_swe_rebench_mapping(model["name"], interactive)
 
     print(f"Added model '{model['name']}' to {path}")
     return 0

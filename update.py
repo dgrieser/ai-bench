@@ -12,11 +12,10 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
+from swe_rebench_mapping import load_rebench_to_slug_mapping
+
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
-SWE_REBENCH_MAPPING = Path(__file__).resolve().with_name(
-    "model-name-mapping-rebench-to-artificialanalysis.json"
-)
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -217,19 +216,9 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
     return by_slug
 
 
-def load_rebench_to_slug_mapping(mapping_path: Path) -> dict[str, str]:
-    raw = json.loads(mapping_path.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict):
-        raise ValueError("Rebench mapping must be a JSON object.")
-
-    mapping: dict[str, str] = {}
-    for rebench_name, aa_slug in raw.items():
-        if isinstance(rebench_name, str) and rebench_name and isinstance(aa_slug, str) and aa_slug:
-            mapping[rebench_name] = aa_slug
-    return mapping
-
-
-def fetch_swe_rebench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+def fetch_swe_rebench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_swe_rebench_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
@@ -350,7 +339,9 @@ def main() -> int:
     llm_path = Path(args.json_file)
     aa_path = AA_SCRIPT
     swe_rebench_path = SWE_REBENCH_SCRIPT
-    swe_rebench_mapping_path = SWE_REBENCH_MAPPING
+    swe_rebench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-rebench-to-artificialanalysis.json"
+    )
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
     models = doc.get("models", [])
