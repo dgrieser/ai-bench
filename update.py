@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
-from swe_rebench_mapping import load_rebench_to_slug_mapping
+from _swe_rebench_mapping import load_rebench_to_slug_mapping
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")

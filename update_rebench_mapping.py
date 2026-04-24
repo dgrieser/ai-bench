@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from swe_rebench_mapping import (
+from _swe_rebench_mapping import (
     SWE_REBENCH_MAPPING,
     add_rebench_mapping,
     fetch_swe_rebench_model_names,

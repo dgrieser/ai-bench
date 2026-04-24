@@ -14,7 +14,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from swe_rebench_mapping import (
+from _swe_rebench_mapping import (
     add_rebench_mapping,
     fetch_swe_rebench_model_names,
     load_rebench_to_slug_mapping,
