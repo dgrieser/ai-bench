@@ -195,7 +195,7 @@ def main():
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "csv"],
+        choices=["table", "json", "csv", "names"],
         default="table",
         help="Output format (default: table)",
     )
@@ -205,7 +205,10 @@ def main():
 
     if args.format == "json":
         print(json.dumps(scores, indent=2))
-
+    elif args.format == "names":
+        # remove duplicates and print all unique names
+        names = set(r["model"] for r in scores)
+        print("\n".join(sorted(names)))
     elif args.format == "csv":
         print("rank,model,resolved_rate,sem,pass_at_5,window_from,window_to")
         for r in scores:
