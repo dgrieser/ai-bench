@@ -1111,6 +1111,35 @@
         "scicode": 39.8,
         "hle": 21.6
       }
+    },
+    {
+      "name": "deepseek-v4-flash",
+      "date_added": "2026-04-24",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+      "params": "284B-A13B",
+      "context": "1m",
+      "creator": {
+        "name": "DeepSeek",
+        "url": "https://www.deepseek.com/en/"
+      },
+      "scores": {
+        "aa_intelligence_index": 46.5,
+        "aa_coding_index": 38.7,
+        "swe_bench_verified": 79.0,
+        "swe_bench_pro": 52.6,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": 35.6,
+        "terminal_bench_2_0": 56.9,
+        "tau2_bench_telecom": 95,
+        "browsecomp": 73.2,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 89.4,
+        "livecodebench": 91.6,
+        "scicode": 44.9,
+        "hle": 32.1
+      }
     }
   ],
   "sources": [
