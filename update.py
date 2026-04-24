@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update benchmark JSON scores using artificialanalysis.py."""
+"""Update benchmark JSON scores using artificialanalysis.py and swe-rebench."""
 
 from __future__ import annotations
 
@@ -13,6 +13,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
+SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
+SWE_REBENCH_MAPPING = Path(__file__).resolve().with_name(
+    "model-name-mapping-rebench-to-artificialanalysis.json"
+)
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -143,9 +147,10 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "aa_coding_index": (("artificial_analysis_coding_index",), lambda v: v),
 }
 
+
 def parse_args() -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(
-        description="Update benchmark JSON scores by querying artificialanalysis.py with model names as slugs."
+        description="Update benchmark JSON scores by querying artificialanalysis.py and swe-rebench."
     )
     parser.add_argument(
         "json_file",
@@ -184,6 +189,10 @@ def build_fetch_data_cmd(aa_script: Path, slugs: list[str]) -> list[str]:
     return cmd
 
 
+def build_fetch_swe_rebench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--all-models", "--format", "json"]
+
+
 def fetch_available_slugs(aa_script: Path) -> set[str]:
     cmd = build_list_models_cmd(aa_script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
@@ -205,6 +214,43 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
         slug = row.get("slug")
         if isinstance(slug, str) and slug:
             by_slug[slug] = row
+    return by_slug
+
+
+def load_rebench_mapping(mapping_path: Path) -> dict[str, str]:
+    raw = json.loads(mapping_path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError("Rebench mapping must be a JSON object.")
+
+    mapping: dict[str, str] = {}
+    for rebench_name, aa_slug in raw.items():
+        if isinstance(rebench_name, str) and rebench_name and isinstance(aa_slug, str) and aa_slug:
+            mapping[rebench_name] = aa_slug
+    return mapping
+
+
+def fetch_swe_rebench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_swe_rebench_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_swe_rebench.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected swe_rebench JSON format: expected a list")
+
+    mapping = load_rebench_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        rebench_name = row.get("model")
+        if not isinstance(rebench_name, str) or not rebench_name:
+            continue
+        slug = mapping.get(rebench_name)
+        if not slug:
+            continue
+        by_slug.setdefault(slug, row)
     return by_slug
 
 
@@ -263,10 +309,48 @@ def update_scores(
     return matched, updated, seen_eval_keys, changes
 
 
+def update_swe_rebench_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        rebench_model = by_slug.get(slug)
+        if rebench_model is None:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        old_value = scores.get("swe_rebench")
+        new_value = rebench_model.get("resolved_rate")
+
+        # Never overwrite an existing non-null value with null.
+        if old_value is not None and new_value is None:
+            continue
+
+        if old_value != new_value:
+            scores["swe_rebench"] = new_value
+            updated += 1
+            changes.append((slug, "swe_rebench", old_value, new_value))
+
+    return matched, updated, changes
+
+
 def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
     aa_path = AA_SCRIPT
+    swe_rebench_path = SWE_REBENCH_SCRIPT
+    swe_rebench_mapping_path = SWE_REBENCH_MAPPING
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
     models = doc.get("models", [])
@@ -276,12 +360,16 @@ def main() -> int:
     slugs = unique_names(models)
     print("commands:")
     print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
+    print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
     available_slugs = fetch_available_slugs(aa_path)
     existing_slugs = [slug for slug in slugs if slug in available_slugs]
     print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
     print()
     by_slug = fetch_aa_data(aa_path, existing_slugs)
     matched, _updated, seen_eval_keys, changes = update_scores(doc, by_slug)
+    swe_rebench_by_slug = fetch_swe_rebench_data(swe_rebench_path, swe_rebench_mapping_path)
+    swe_matched, swe_updated, swe_changes = update_swe_rebench_scores(doc, swe_rebench_by_slug)
+    changes.extend(swe_changes)
 
     missing = [slug for slug in slugs if slug not in available_slugs]
     if args.write:
@@ -290,6 +378,7 @@ def main() -> int:
     print(f"models in {llm_path}: {len(slugs)}")
     print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
     print(f"models returned by artificialanalysis.py: {len(by_slug)}")
+    print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
@@ -302,6 +391,11 @@ def main() -> int:
             print(f"  - {key}")
     else:
         print("  - (none)")
+    print()
+    print(f"models matched on artificialanalysis.py: {matched}")
+    print(f"models matched on swe_rebench: {swe_matched}")
+    print(f"score values updated from artificialanalysis.py: {_updated}")
+    print(f"score values updated from swe_rebench: {swe_updated}")
     print()
     print_changes_table(changes)
     print()
