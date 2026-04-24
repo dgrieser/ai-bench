@@ -217,7 +217,7 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
     return by_slug
 
 
-def load_rebench_mapping(mapping_path: Path) -> dict[str, str]:
+def load_rebench_to_slug_mapping(mapping_path: Path) -> dict[str, str]:
     raw = json.loads(mapping_path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError("Rebench mapping must be a JSON object.")
@@ -239,7 +239,7 @@ def fetch_swe_rebench_data(script: Path, mapping_path: Path) -> dict[str, dict[s
     if not isinstance(payload, list):
         raise RuntimeError("Unexpected swe_rebench JSON format: expected a list")
 
-    mapping = load_rebench_mapping(mapping_path)
+    rebench_to_slug = load_rebench_to_slug_mapping(mapping_path)
     by_slug: dict[str, dict[str, Any]] = {}
     for row in payload:
         if not isinstance(row, dict):
@@ -247,7 +247,7 @@ def fetch_swe_rebench_data(script: Path, mapping_path: Path) -> dict[str, dict[s
         rebench_name = row.get("model")
         if not isinstance(rebench_name, str) or not rebench_name:
             continue
-        slug = mapping.get(rebench_name)
+        slug = rebench_to_slug.get(rebench_name)
         if not slug:
             continue
         by_slug.setdefault(slug, row)
