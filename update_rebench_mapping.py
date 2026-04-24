@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from add import prompt_select_or_new
 from _swe_rebench_mapping import (
     SWE_REBENCH_MAPPING,
     add_rebench_mapping,
@@ -102,42 +103,16 @@ def prompt_slug_for_rebench_name(rebench_name: str, slugs: list[str]) -> str | N
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
-        try:
-            raw = input(f"Map SWE-Rebench model '{rebench_name}' to llm.json model (blank to skip): ").strip()
-        except EOFError:
-            return None
-
-        if raw == "":
+        label = f"Map SWE-Rebench model '{rebench_name}' to llm.json model"
+        raw = prompt_select_or_new(label, slugs)
+        if raw is None:
             return None
 
         canonical = options_lower.get(raw.lower())
         if canonical is not None:
             return canonical
 
-        matches = find_matches(raw, slugs)
-        if not matches:
-            print("No matches.")
-            continue
-
-        if len(matches) == 1 and matches[0].lower() == raw.lower():
-            return matches[0]
-
-        print("Matches:")
-        for idx, match in enumerate(matches, start=1):
-            print(f"  {idx}. {match}")
-
-        try:
-            choice = input("Select number or press Enter to skip: ").strip()
-        except EOFError:
-            return None
-
-        if choice == "":
-            return None
-        if choice.isdigit():
-            index = int(choice) - 1
-            if 0 <= index < len(matches):
-                return matches[index]
-        print("Invalid selection.")
+        print("Selection must match an existing llm.json model name. Press Enter to skip.")
 
 
 def main() -> int:
@@ -158,18 +133,20 @@ def main() -> int:
     print()
 
     matched = 0
+    without_candidates = 0
     written = 0
     interactive = sys.stdin.isatty()
 
     for rebench_name in unmapped_rebench_names:
         candidates = find_matches(rebench_name, llm_names, limit=5)
-        if not candidates:
-            continue
-
-        matched += 1
         print(f"{rebench_name}")
-        for idx, candidate in enumerate(candidates, start=1):
-            print(f"  {idx}. {candidate}")
+        if candidates:
+            matched += 1
+            for idx, candidate in enumerate(candidates, start=1):
+                print(f"  {idx}. {candidate}")
+        else:
+            without_candidates += 1
+            print("  no candidate matches")
 
         if not (interactive and args.write):
             continue
@@ -184,6 +161,7 @@ def main() -> int:
 
     print()
     print(f"rebench names with candidate matches: {matched}")
+    print(f"rebench names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
