@@ -1140,6 +1140,35 @@
         "scicode": 44.9,
         "hle": 32.1
       }
+    },
+    {
+      "name": "hy3-preview",
+      "date_added": "2026-04-26",
+      "url": "https://huggingface.co/tencent/Hy3-preview",
+      "params": "295B-A21B",
+      "context": "256k",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": 74.4,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": 54.4,
+        "tau2_bench_telecom": null,
+        "browsecomp": 67.1,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 87.2,
+        "livecodebench": 34.86,
+        "scicode": null,
+        "hle": 30.0
+      }
     }
   ],
   "sources": [
