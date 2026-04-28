@@ -1142,7 +1142,7 @@
       }
     },
     {
-      "name": "hy3-preview",
+      "name": "hy3",
       "date_added": "2026-04-26",
       "url": "https://huggingface.co/tencent/Hy3-preview",
       "params": "295B-A21B",
@@ -1152,22 +1152,22 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "aa_intelligence_index": null,
-        "aa_coding_index": null,
+        "aa_intelligence_index": 41.9,
+        "aa_coding_index": 36.5,
         "swe_bench_verified": 74.4,
         "swe_bench_pro": null,
         "swe_rebench": null,
         "mmmu_pro": null,
-        "terminal_bench_hard": null,
+        "terminal_bench_hard": 34.1,
         "terminal_bench_2_0": 54.4,
-        "tau2_bench_telecom": null,
+        "tau2_bench_telecom": 92.7,
         "browsecomp": 67.1,
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": 87.2,
+        "gpqa_diamond": 86.7,
         "livecodebench": 34.86,
-        "scicode": null,
-        "hle": 30.0
+        "scicode": 41.2,
+        "hle": 25.5
       }
     }
   ],
