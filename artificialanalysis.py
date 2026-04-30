@@ -2,6 +2,7 @@
 # PYTHON_ARGCOMPLETE_OK
 
 import argparse
+import html
 import json
 import os
 import re
@@ -69,6 +70,19 @@ def _parse_context_window(text: str):
     return ""
 
 
+def _parse_hugging_face_url(text: str):
+    normalized = html.unescape(text)
+    normalized = normalized.replace("\\/", "/")
+    normalized = re.sub(r"\\u002[fF]", "/", normalized)
+    normalized = normalized.replace("\\u003a", ":").replace("\\u003A", ":")
+
+    match = re.search(r"https://huggingface\.co/[A-Za-z0-9][^\s\"'<>\\),]+", normalized)
+    if not match:
+        return ""
+
+    return match.group(0).rstrip(".,;:")
+
+
 def _parse_mmmu_pro(text: str, slug: str):
     model_path = f"/models/{slug}"
     target = f'"model_url":"{model_path}"'
@@ -89,11 +103,11 @@ def _parse_mmmu_pro(text: str, slug: str):
 
 def _fetch_page_metrics(slug: str):
     if not slug:
-        return {"context_window": "", "mmmu_pro": None}
+        return {"context_window": "", "hugging_face_url": "", "mmmu_pro": None}
     if slug in _PAGE_METRICS_CACHE:
         return _PAGE_METRICS_CACHE[slug]
 
-    result = {"context_window": "", "mmmu_pro": None}
+    result = {"context_window": "", "hugging_face_url": "", "mmmu_pro": None}
     url = MODEL_PAGE_URL.format(slug)
     try:
         if _VERBOSE:
@@ -105,6 +119,7 @@ def _fetch_page_metrics(slug: str):
             _PAGE_METRICS_CACHE[slug] = result
             return result
         result["context_window"] = _parse_context_window(resp.text)
+        result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
         result["mmmu_pro"] = _parse_mmmu_pro(resp.text, slug)
     except requests.RequestException:
         pass
@@ -117,6 +132,10 @@ def _extract_context_window(m: dict):
     if not _CONTEXT_ENABLED:
         return ""
     return _fetch_page_metrics(m.get("slug", "")).get("context_window", "")
+
+
+def _extract_hugging_face_url(m: dict):
+    return _fetch_page_metrics(m.get("slug", "")).get("hugging_face_url", "")
 
 
 def _extract_mmmu_pro(m: dict):
@@ -137,17 +156,25 @@ def _enrich_structured_metrics(models):
         m["evaluations"] = evals
 
         context = _extract_context_window(m)
+        hugging_face_url = _extract_hugging_face_url(m)
+        model_url = hugging_face_url or m.get("url")
         if "evaluations" in m:
             reordered = {}
             for key, value in m.items():
+                if key == "url":
+                    continue
                 if key == "context":
                     continue
                 if key == "evaluations":
+                    if model_url:
+                        reordered["url"] = model_url
                     reordered["context"] = context
                 reordered[key] = value
             m.clear()
             m.update(reordered)
         else:
+            if model_url:
+                m["url"] = model_url
             m["context"] = context
 
 
@@ -239,6 +266,7 @@ def _print_table(models, output):
         ("Name", lambda m: m.get("slug", "")),
         ("Creator", _extract_creator),
         ("Context Window", _extract_context_window),
+        ("Hugging Face", _extract_hugging_face_url),
         ("Intellience Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
         ("Coding Index", lambda m: _extract_eval_any(m, ["artificial_analysis_coding_index"])),
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
