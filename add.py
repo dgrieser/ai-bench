@@ -130,6 +130,50 @@ def fetch_aa_model_names() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def fetch_aa_model_defaults(model_name: str) -> dict[str, str]:
+    aa_script = Path(__file__).resolve().with_name("artificialanalysis.py")
+    if not aa_script.exists():
+        return {}
+
+    proc = subprocess.run(
+        [sys.executable, str(aa_script), "--model", model_name, "--output", "json"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return {}
+
+    try:
+        payload = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return {}
+
+    data = payload.get("data")
+    if not isinstance(data, list) or not data:
+        return {}
+
+    row = data[0]
+    if not isinstance(row, dict) or row.get("slug") != model_name:
+        return {}
+
+    defaults: dict[str, str] = {}
+    for source_key, dest_key in (("url", "url"), ("context", "context")):
+        value = row.get(source_key)
+        if isinstance(value, str) and value.strip():
+            defaults[dest_key] = value.strip()
+
+    creator = row.get("model_creator")
+    if isinstance(creator, dict):
+        creator_name = creator.get("name")
+        creator_url = creator.get("url")
+        if isinstance(creator_name, str) and creator_name.strip():
+            defaults["creator"] = creator_name.strip()
+        if isinstance(creator_url, str) and creator_url.strip():
+            defaults["creator_url"] = creator_url.strip()
+
+    return defaults
+
+
 def maybe_add_swe_rebench_mapping(model_name: str, interactive: bool) -> None:
     if not interactive:
         return
@@ -224,10 +268,12 @@ def _clear_live_selector(lines_drawn: int) -> None:
     sys.stdout.flush()
 
 
-def prompt_live_select_or_new(label: str, options: list[str], allow_empty: bool = True) -> str | None:
+def prompt_live_select_or_new(
+    label: str, options: list[str], allow_empty: bool = True, default: str | None = None
+) -> str | None:
     fd = sys.stdin.fileno()
     previous = termios.tcgetattr(fd)
-    buffer = ""
+    buffer = default or ""
     tab_index = -1
     lines_drawn = 0
 
@@ -289,20 +335,27 @@ def prompt_live_select_or_new(label: str, options: list[str], allow_empty: bool 
         termios.tcsetattr(fd, termios.TCSADRAIN, previous)
 
 
-def prompt_select_or_new(label: str, options: list[str], allow_empty: bool = True) -> str | None:
+def prompt_select_or_new(
+    label: str, options: list[str], allow_empty: bool = True, default: str | None = None
+) -> str | None:
     if not options:
+        if default is not None:
+            return prompt_value_with_default(label, default)
         return prompt_value(label)
 
     if supports_live_selector():
-        return prompt_live_select_or_new(label, options, allow_empty=allow_empty)
+        return prompt_live_select_or_new(label, options, allow_empty=allow_empty, default=default)
 
     while True:
+        suffix = f" [{default}]" if default else ""
         try:
-            raw = input(f"{label} (type to search or enter a new value): ")
+            raw = input(f"{label} (type to search or enter a new value){suffix}: ")
         except EOFError:
-            return None
+            return default
 
         if raw == "":
+            if default is not None:
+                return default
             if allow_empty:
                 return None
             print(f"{label} is required.")
@@ -339,13 +392,17 @@ def prompt_select_or_new(label: str, options: list[str], allow_empty: bool = Tru
         print("Invalid selection.")
 
 
-def get_value(args_value: str | None, label: str, interactive: bool) -> str | None:
+def get_value(
+    args_value: str | None, label: str, interactive: bool, default: str | None = None
+) -> str | None:
     parsed = parse_nullable(args_value)
     if parsed is not None or args_value is not None:
         return parsed
     if interactive:
+        if default is not None:
+            return prompt_value_with_default(label, default)
         return prompt_value(label)
-    return None
+    return default
 
 
 def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool) -> dict[str, Any]:
@@ -359,7 +416,9 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
     if not name:
         raise ValueError("Model name is required.")
 
-    url = get_value(args.url, "URL", interactive)
+    aa_defaults = fetch_aa_model_defaults(name)
+
+    url = get_value(args.url, "URL", interactive, aa_defaults.get("url"))
 
     if interactive and args.params is None:
         params = prompt_select_or_new("Params", get_unique_values(models, "params"))
@@ -367,21 +426,31 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
         params = get_value(args.params, "Params", interactive)
 
     if interactive and args.context is None:
-        context = prompt_select_or_new("Context", get_unique_values(models, "context"))
+        context = prompt_select_or_new(
+            "Context",
+            get_unique_values(models, "context"),
+            default=aa_defaults.get("context"),
+        )
     else:
-        context = get_value(args.context, "Context", interactive)
+        context = get_value(args.context, "Context", interactive, aa_defaults.get("context"))
 
     if interactive and args.creator is None:
-        creator_name = prompt_select_or_new("Creator", get_creator_names(models))
+        creator_name = prompt_select_or_new(
+            "Creator",
+            get_creator_names(models),
+            default=aa_defaults.get("creator"),
+        )
     else:
-        creator_name = get_value(args.creator, "Creator", interactive)
+        creator_name = get_value(args.creator, "Creator", interactive, aa_defaults.get("creator"))
 
     creator_urls = get_creator_urls(models)
-    creator_url_default = creator_urls.get(creator_name) if creator_name else None
+    creator_url_default = aa_defaults.get("creator_url") or (
+        creator_urls.get(creator_name) if creator_name else None
+    )
     if interactive and args.creator_url is None and creator_url_default:
         creator_url = prompt_value_with_default("Creator URL", creator_url_default)
     else:
-        creator_url = get_value(args.creator_url, "Creator URL", interactive)
+        creator_url = get_value(args.creator_url, "Creator URL", interactive, creator_url_default)
 
     return {
         "name": name,
