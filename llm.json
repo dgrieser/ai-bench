@@ -1169,6 +1169,93 @@
         "scicode": 41.2,
         "hle": 25.5
       }
+    },
+    {
+      "name": "granite-4-1-8b",
+      "date_added": "2026-04-30",
+      "url": "https://huggingface.co/ibm-granite/granite-4.1-8b",
+      "params": "8B",
+      "context": "128k",
+      "creator": {
+        "name": "IBM",
+        "url": "https://www.ibm.com/au-en"
+      },
+      "scores": {
+        "aa_intelligence_index": 12.4,
+        "aa_coding_index": 7.3,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 27.8,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 43.3,
+        "livecodebench": null,
+        "scicode": 21.8,
+        "hle": 3.8
+      }
+    },
+    {
+      "name": "granite-4-1-3b",
+      "date_added": "2026-04-30",
+      "url": "https://huggingface.co/ibm-granite/granite-4.1-3b",
+      "params": "3B",
+      "context": "128k",
+      "creator": {
+        "name": "IBM",
+        "url": "https://www.ibm.com/au-en"
+      },
+      "scores": {
+        "aa_intelligence_index": 8.5,
+        "aa_coding_index": 5.5,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": 2.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 19.6,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 31.4,
+        "livecodebench": null,
+        "scicode": 11.9,
+        "hle": 3.4
+      }
+    },
+    {
+      "name": "granite-4-1-30b",
+      "date_added": "2026-04-30",
+      "url": "https://huggingface.co/ibm-granite/granite-4.1-30b",
+      "params": "30B",
+      "context": "128k",
+      "creator": {
+        "name": "IBM",
+        "url": "https://www.ibm.com/au-en"
+      },
+      "scores": {
+        "aa_intelligence_index": 14.7,
+        "aa_coding_index": 10.1,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "terminal_bench_hard": 2.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 42.1,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 48.1,
+        "livecodebench": null,
+        "scicode": 25.8,
+        "hle": 4.2
+      }
     }
   ],
   "sources": [
