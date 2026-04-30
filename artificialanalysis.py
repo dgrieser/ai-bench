@@ -52,6 +52,14 @@ def _extract_creator(m: dict) -> str:
     return ""
 
 
+def _normalize_page_text(text: str):
+    normalized = html.unescape(text)
+    normalized = normalized.replace("\\/", "/")
+    normalized = re.sub(r"\\u002[fF]", "/", normalized)
+    normalized = normalized.replace("\\u003a", ":").replace("\\u003A", ":")
+    return normalized
+
+
 def _parse_context_window(text: str):
     m = re.search(r"Context window.+?<span[^>]*>([0-9]+[kmb])", text, re.IGNORECASE)
     if m:
@@ -71,16 +79,46 @@ def _parse_context_window(text: str):
 
 
 def _parse_hugging_face_url(text: str):
-    normalized = html.unescape(text)
-    normalized = normalized.replace("\\/", "/")
-    normalized = re.sub(r"\\u002[fF]", "/", normalized)
-    normalized = normalized.replace("\\u003a", ":").replace("\\u003A", ":")
-
+    normalized = _normalize_page_text(text)
     match = re.search(r"https://huggingface\.co/[A-Za-z0-9][^\s\"'<>\\),]+", normalized)
     if not match:
         return ""
 
     return match.group(0).rstrip(".,;:")
+
+
+def _parse_creator(text: str, expected_name: str = ""):
+    normalized = _normalize_page_text(text)
+    result = {"name": expected_name, "url": ""}
+
+    if expected_name:
+        name_pattern = re.escape(expected_name)
+        patterns = [
+            rf'"href":"(https?://[^"]+)","target":"_blank"[^{{}}]{{0,250}}"children":"{name_pattern}"',
+            rf'"name":"{name_pattern}"[^{{}}]{{0,500}}"creator_url":"([^"]*)"',
+        ]
+    else:
+        patterns = [
+            r'"href":"(https?://[^"]+)","target":"_blank"[^{}]{0,250}"children":"([^"]+)"',
+            r'"name":"([^"]+)"[^{}]{0,500}"creator_url":"([^"]*)"',
+        ]
+
+    for pattern in patterns:
+        match = re.search(pattern, normalized)
+        if not match:
+            continue
+        if expected_name:
+            result["url"] = match.group(1)
+        elif pattern.startswith('"href"'):
+            result["url"] = match.group(1)
+            result["name"] = match.group(2)
+        else:
+            result["name"] = match.group(1)
+            result["url"] = match.group(2)
+        if result["url"]:
+            break
+
+    return result
 
 
 def _parse_mmmu_pro(text: str, slug: str):
@@ -101,13 +139,13 @@ def _parse_mmmu_pro(text: str, slug: str):
     return float(match.group(1))
 
 
-def _fetch_page_metrics(slug: str):
+def _fetch_page_metrics(slug: str, creator_name: str = ""):
     if not slug:
-        return {"context_window": "", "hugging_face_url": "", "mmmu_pro": None}
+        return {"context_window": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
     if slug in _PAGE_METRICS_CACHE:
         return _PAGE_METRICS_CACHE[slug]
 
-    result = {"context_window": "", "hugging_face_url": "", "mmmu_pro": None}
+    result = {"context_window": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
     url = MODEL_PAGE_URL.format(slug)
     try:
         if _VERBOSE:
@@ -120,6 +158,7 @@ def _fetch_page_metrics(slug: str):
             return result
         result["context_window"] = _parse_context_window(resp.text)
         result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
+        result["creator"] = _parse_creator(resp.text, creator_name)
         result["mmmu_pro"] = _parse_mmmu_pro(resp.text, slug)
     except requests.RequestException:
         pass
@@ -132,6 +171,22 @@ def _extract_context_window(m: dict):
     if not _CONTEXT_ENABLED:
         return ""
     return _fetch_page_metrics(m.get("slug", "")).get("context_window", "")
+
+
+def _extract_creator_name(m: dict):
+    creator = _extract_page_creator(m)
+    return creator.get("name") or _extract_creator(m)
+
+
+def _extract_creator_url(m: dict):
+    return _extract_page_creator(m).get("url", "")
+
+
+def _extract_page_creator(m: dict):
+    creator_name = ""
+    if isinstance(m.get("model_creator"), dict):
+        creator_name = m["model_creator"].get("name", "")
+    return _fetch_page_metrics(m.get("slug", ""), creator_name).get("creator", {})
 
 
 def _extract_hugging_face_url(m: dict):
@@ -157,6 +212,12 @@ def _enrich_structured_metrics(models):
 
         context = _extract_context_window(m)
         hugging_face_url = _extract_hugging_face_url(m)
+        page_creator = _extract_page_creator(m)
+        if isinstance(m.get("model_creator"), dict):
+            if page_creator.get("name"):
+                m["model_creator"]["name"] = page_creator["name"]
+            if page_creator.get("url"):
+                m["model_creator"]["url"] = page_creator["url"]
         model_url = hugging_face_url or m.get("url")
         if "evaluations" in m:
             reordered = {}
@@ -264,7 +325,8 @@ def _extract_eval_any(m: dict, keys):
 def _print_table(models, output):
     columns = [
         ("Name", lambda m: m.get("slug", "")),
-        ("Creator", _extract_creator),
+        ("Creator", _extract_creator_name),
+        ("Creator URL", _extract_creator_url),
         ("Context Window", _extract_context_window),
         ("Hugging Face", _extract_hugging_face_url),
         ("Intellience Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
