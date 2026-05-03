@@ -1256,6 +1256,35 @@
         "scicode": 25.8,
         "hle": 4.2
       }
+    },
+    {
+      "name": "mistral-medium-3-5",
+      "date_added": "2026-05-03",
+      "url": "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B",
+      "params": "128B",
+      "context": "256k",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": 39.2,
+        "aa_coding_index": 35.4,
+        "swe_bench_verified": 77.6,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": 64.9,
+        "terminal_bench_hard": 33.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 94.2,
+        "browsecomp": 48.6,
+        "aime_2025": 86.3,
+        "aime_2026": null,
+        "gpqa_diamond": 74.8,
+        "livecodebench": null,
+        "scicode": 39.6,
+        "hle": 12.8
+      }
     }
   ],
   "sources": [
