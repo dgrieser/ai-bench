@@ -1285,6 +1285,35 @@
         "scicode": 39.6,
         "hle": 12.8
       }
+    },
+    {
+      "name": "ministral-3-14b",
+      "date_added": "2026-01-23",
+      "url": "https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512",
+      "params": "14B",
+      "context": "256k",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": 16,
+        "aa_coding_index": 10.9,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": 49.8,
+        "terminal_bench_hard": 4.5,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 27.2,
+        "browsecomp": null,
+        "aime_2025": 30,
+        "aime_2026": null,
+        "gpqa_diamond": 57.2,
+        "livecodebench": 35.1,
+        "scicode": 23.6,
+        "hle": 4.6
+      }
     }
   ],
   "sources": [
