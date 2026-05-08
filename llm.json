@@ -49,16 +49,6 @@
         "https://swe-rebench.com"
       ]
     },
-    "osworld_verified": {
-      "name": "OSWorld-Verified",
-      "short_name": "OSWorld",
-      "category": "GUI Agent",
-      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
-      "urls": [
-        "https://os-world.github.io",
-        "https://arxiv.org/abs/2404.07972"
-      ]
-    },
     "mmmu_pro": {
       "name": "MMMU Pro",
       "short_name": "MMMU Pro",
@@ -69,6 +59,16 @@
         "https://mmmu-benchmark.github.io/",
         "https://aclanthology.org/2025.acl-long.1317/",
         "https://huggingface.co/datasets/MMMU/MMMU_Pro"
+      ]
+    },
+    "osworld_verified": {
+      "name": "OSWorld-Verified",
+      "short_name": "OSWorld",
+      "category": "GUI Agent",
+      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
+      "urls": [
+        "https://os-world.github.io",
+        "https://arxiv.org/abs/2404.07972"
       ]
     },
     "terminal_bench_hard": {
