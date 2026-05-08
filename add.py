@@ -19,6 +19,11 @@ from _swe_rebench_mapping import (
     fetch_swe_rebench_model_names,
     load_rebench_to_slug_mapping,
 )
+from _osworld_mapping import (
+    add_osworld_mapping,
+    fetch_osworld_model_names,
+    load_osworld_to_slug_mapping,
+)
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -172,6 +177,31 @@ def fetch_aa_model_defaults(model_name: str) -> dict[str, str]:
             defaults["creator_url"] = creator_url.strip()
 
     return defaults
+
+
+def maybe_add_osworld_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_osworld_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        osworld_names = fetch_osworld_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping OSWorld mapping prompt: {exc}")
+        return
+
+    if not osworld_names:
+        return
+
+    osworld_name = prompt_select_or_new("OSWorld model", osworld_names)
+    if not osworld_name:
+        return
+
+    add_osworld_mapping(osworld_name, model_name)
+    print(f"Added OSWorld mapping '{osworld_name}' -> '{model_name}'")
 
 
 def maybe_add_swe_rebench_mapping(model_name: str, interactive: bool) -> None:
@@ -488,6 +518,7 @@ def main() -> int:
     models.append(model)
     write_doc(path, doc)
     maybe_add_swe_rebench_mapping(model["name"], interactive)
+    maybe_add_osworld_mapping(model["name"], interactive)
 
     print(f"Added model '{model['name']}' to {path}")
     return 0

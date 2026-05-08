@@ -13,9 +13,11 @@ from pathlib import Path
 from typing import Any, Callable
 
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
+from _osworld_mapping import load_osworld_to_slug_mapping
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
+OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -334,13 +336,84 @@ def update_swe_rebench_scores(
     return matched, updated, changes
 
 
+def build_fetch_osworld_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_osworld_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_osworld_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_osworld.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected osworld JSON format: expected a list")
+
+    osworld_to_slug = load_osworld_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        osworld_name = row.get("model")
+        if not isinstance(osworld_name, str) or not osworld_name:
+            continue
+        slug = osworld_to_slug.get(osworld_name)
+        if not slug:
+            continue
+        by_slug.setdefault(slug, row)
+    return by_slug
+
+
+def update_osworld_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        osworld_model = by_slug.get(slug)
+        if osworld_model is None:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        old_value = scores.get("osworld_verified")
+        new_value = osworld_model.get("success_rate")
+
+        # Never overwrite an existing non-null value with null.
+        if old_value is not None and new_value is None:
+            continue
+
+        if old_value != new_value:
+            scores["osworld_verified"] = new_value
+            updated += 1
+            changes.append((slug, "osworld_verified", old_value, new_value))
+
+    return matched, updated, changes
+
+
 def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
     aa_path = AA_SCRIPT
     swe_rebench_path = SWE_REBENCH_SCRIPT
+    osworld_path = OSWORLD_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-rebench-to-artificialanalysis.json"
+    )
+    osworld_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-osworld-to-artificialanalysis.json"
     )
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
@@ -352,6 +425,7 @@ def main() -> int:
     print("commands:")
     print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
     print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
+    print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
     available_slugs = fetch_available_slugs(aa_path)
     existing_slugs = [slug for slug in slugs if slug in available_slugs]
     print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
@@ -361,6 +435,9 @@ def main() -> int:
     swe_rebench_by_slug = fetch_swe_rebench_data(swe_rebench_path, swe_rebench_mapping_path)
     swe_matched, swe_updated, swe_changes = update_swe_rebench_scores(doc, swe_rebench_by_slug)
     changes.extend(swe_changes)
+    osworld_by_slug = fetch_osworld_data(osworld_path, osworld_mapping_path)
+    osworld_matched, osworld_updated, osworld_changes = update_osworld_scores(doc, osworld_by_slug)
+    changes.extend(osworld_changes)
 
     missing = [slug for slug in slugs if slug not in available_slugs]
     if args.write:
@@ -370,6 +447,7 @@ def main() -> int:
     print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
     print(f"models returned by artificialanalysis.py: {len(by_slug)}")
     print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
+    print(f"models returned by osworld: {len(osworld_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
@@ -385,8 +463,10 @@ def main() -> int:
     print()
     print(f"models matched on artificialanalysis.py: {matched}")
     print(f"models matched on swe_rebench: {swe_matched}")
+    print(f"models matched on osworld: {osworld_matched}")
     print(f"score values updated from artificialanalysis.py: {_updated}")
     print(f"score values updated from swe_rebench: {swe_updated}")
+    print(f"score values updated from osworld: {osworld_updated}")
     print()
     print_changes_table(changes)
     print()

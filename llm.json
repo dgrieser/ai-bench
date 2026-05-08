@@ -49,6 +49,16 @@
         "https://swe-rebench.com"
       ]
     },
+    "osworld_verified": {
+      "name": "OSWorld-Verified",
+      "short_name": "OSWorld",
+      "category": "GUI Agent",
+      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
+      "urls": [
+        "https://os-world.github.io",
+        "https://arxiv.org/abs/2404.07972"
+      ]
+    },
     "mmmu_pro": {
       "name": "MMMU Pro",
       "short_name": "MMMU Pro",
@@ -181,7 +191,8 @@
         "swe_rebench": 48.77,
         "tau2_bench_telecom": 24.9,
         "terminal_bench_2_0": 32.6,
-        "terminal_bench_hard": 18.9
+        "terminal_bench_hard": 18.9,
+        "osworld_verified": null
       }
     },
     {
@@ -210,7 +221,8 @@
         "swe_rebench": 38.88,
         "tau2_bench_telecom": 23.4,
         "terminal_bench_2_0": 22.5,
-        "terminal_bench_hard": 16.7
+        "terminal_bench_hard": 16.7,
+        "osworld_verified": null
       }
     },
     {
@@ -239,7 +251,8 @@
         "swe_rebench": 34.04,
         "tau2_bench_telecom": 98.8,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 22.0
+        "terminal_bench_hard": 22.0,
+        "osworld_verified": null
       }
     },
     {
@@ -268,7 +281,8 @@
         "swe_rebench": 59.58,
         "tau2_bench_telecom": 87.4,
         "terminal_bench_2_0": 51.0,
-        "terminal_bench_hard": 32.6
+        "terminal_bench_hard": 32.6,
+        "osworld_verified": null
       }
     },
     {
@@ -297,7 +311,8 @@
         "swe_rebench": 54.59,
         "tau2_bench_telecom": 95.3,
         "terminal_bench_2_0": 51.7,
-        "terminal_bench_hard": 34.8
+        "terminal_bench_hard": 34.8,
+        "osworld_verified": null
       }
     },
     {
@@ -326,7 +341,8 @@
         "swe_rebench": 21.03,
         "tau2_bench_telecom": 34.5,
         "terminal_bench_2_0": 31.3,
-        "terminal_bench_hard": 15.2
+        "terminal_bench_hard": 15.2,
+        "osworld_verified": null
       }
     },
     {
@@ -355,7 +371,8 @@
         "swe_rebench": 54.42,
         "tau2_bench_telecom": 79.5,
         "terminal_bench_2_0": 36.2,
-        "terminal_bench_hard": 18.2
+        "terminal_bench_hard": 18.2,
+        "osworld_verified": null
       }
     },
     {
@@ -384,7 +401,8 @@
         "swe_rebench": 5.45,
         "tau2_bench_telecom": 28.1,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 5.3
+        "terminal_bench_hard": 5.3,
+        "osworld_verified": null
       }
     },
     {
@@ -413,7 +431,8 @@
         "swe_rebench": 17.39,
         "tau2_bench_telecom": 41.5,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 9.8
+        "terminal_bench_hard": 9.8,
+        "osworld_verified": null
       }
     },
     {
@@ -442,7 +461,8 @@
         "swe_rebench": 59.94,
         "tau2_bench_telecom": 95.6,
         "terminal_bench_2_0": 52.5,
-        "terminal_bench_hard": 40.9
+        "terminal_bench_hard": 40.9,
+        "osworld_verified": null
       }
     },
     {
@@ -471,7 +491,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 93.6,
         "terminal_bench_2_0": 49.4,
-        "terminal_bench_hard": 31.1
+        "terminal_bench_hard": 31.1,
+        "osworld_verified": null
       }
     },
     {
@@ -500,7 +521,8 @@
         "swe_rebench": 58.95,
         "tau2_bench_telecom": 93.9,
         "terminal_bench_2_0": 41.6,
-        "terminal_bench_hard": 32.6
+        "terminal_bench_hard": 32.6,
+        "osworld_verified": null
       }
     },
     {
@@ -529,7 +551,8 @@
         "swe_rebench": 53.68,
         "tau2_bench_telecom": 89.2,
         "terminal_bench_2_0": 40.5,
-        "terminal_bench_hard": 26.5
+        "terminal_bench_hard": 26.5,
+        "osworld_verified": null
       }
     },
     {
@@ -558,7 +581,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 86.8,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 24.2
+        "terminal_bench_hard": 24.2,
+        "osworld_verified": null
       }
     },
     {
@@ -587,7 +611,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 92.1,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 18.2
+        "terminal_bench_hard": 18.2,
+        "osworld_verified": null
       }
     },
     {
@@ -616,7 +641,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 69,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 3.8
+        "terminal_bench_hard": 3.8,
+        "osworld_verified": null
       }
     },
     {
@@ -645,7 +671,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 47.7,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": null
+        "terminal_bench_hard": null,
+        "osworld_verified": null
       }
     },
     {
@@ -672,7 +699,10 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 67.8,
         "terminal_bench_2_0": 31,
-        "terminal_bench_hard": 28.8
+        "terminal_bench_hard": 28.8,
+        "osworld_verified": null,
+        "mmmu_pro": null,
+        "aime_2026": null
       }
     },
     {
@@ -701,7 +731,8 @@
         "swe_rebench": null,
         "tau2_bench_telecom": 79.5,
         "terminal_bench_2_0": null,
-        "terminal_bench_hard": 10.6
+        "terminal_bench_hard": 10.6,
+        "osworld_verified": null
       }
     },
     {
@@ -731,7 +762,8 @@
         "swe_rebench": 14.29,
         "tau2_bench_telecom": 60.2,
         "terminal_bench_2_0": 3.1,
-        "terminal_bench_hard": 10.6
+        "terminal_bench_hard": 10.6,
+        "osworld_verified": null
       }
     },
     {
@@ -761,7 +793,8 @@
         "swe_rebench": 46.67,
         "tau2_bench_telecom": 65.8,
         "terminal_bench_2_0": 18.7,
-        "terminal_bench_hard": 23.5
+        "terminal_bench_hard": 23.5,
+        "osworld_verified": null
       }
     },
     {
@@ -790,7 +823,8 @@
         "scicode": 29.6,
         "hle": 10.2,
         "aa_intelligence_index": 24.3,
-        "aa_coding_index": 19
+        "aa_coding_index": 19,
+        "osworld_verified": null
       }
     },
     {
@@ -819,7 +853,8 @@
         "scicode": 38,
         "hle": 9.5,
         "aa_intelligence_index": 27.8,
-        "aa_coding_index": 24.3
+        "aa_coding_index": 24.3,
+        "osworld_verified": null
       }
     },
     {
@@ -848,7 +883,8 @@
         "scicode": 47,
         "hle": 28.1,
         "aa_intelligence_index": 49.6,
-        "aa_coding_index": 41.9
+        "aa_coding_index": 41.9,
+        "osworld_verified": null
       }
     },
     {
@@ -877,7 +913,8 @@
         "gpqa_diamond": 63.3,
         "livecodebench": 70.0,
         "scicode": 19.2,
-        "hle": 7
+        "hle": 7,
+        "osworld_verified": null
       }
     },
     {
@@ -906,7 +943,8 @@
         "gpqa_diamond": 73.8,
         "livecodebench": 71.7,
         "scicode": 26.4,
-        "hle": 10.1
+        "hle": 10.1,
+        "osworld_verified": null
       }
     },
     {
@@ -935,7 +973,8 @@
         "gpqa_diamond": 84.9,
         "livecodebench": 57.4,
         "scicode": 26.6,
-        "hle": 10
+        "hle": 10,
+        "osworld_verified": null
       }
     },
     {
@@ -964,7 +1003,8 @@
         "gpqa_diamond": 85.7,
         "livecodebench": 80,
         "scicode": 43.4,
-        "hle": 22.7
+        "hle": 22.7,
+        "osworld_verified": null
       }
     },
     {
@@ -993,7 +1033,8 @@
         "gpqa_diamond": 79.2,
         "livecodebench": 77.1,
         "scicode": 40,
-        "hle": 18.3
+        "hle": 18.3,
+        "osworld_verified": null
       }
     },
     {
@@ -1022,7 +1063,8 @@
         "gpqa_diamond": 57.6,
         "livecodebench": 52,
         "scicode": 24.4,
-        "hle": 3.7
+        "hle": 3.7,
+        "osworld_verified": null
       }
     },
     {
@@ -1051,7 +1093,8 @@
         "gpqa_diamond": 43.3,
         "livecodebench": 44,
         "scicode": 20.9,
-        "hle": 4.8
+        "hle": 4.8,
+        "osworld_verified": null
       }
     },
     {
@@ -1080,7 +1123,8 @@
         "gpqa_diamond": 84.1,
         "livecodebench": 80.4,
         "scicode": 35.8,
-        "hle": 20.2
+        "hle": 20.2,
+        "osworld_verified": null
       }
     },
     {
@@ -1109,7 +1153,8 @@
         "gpqa_diamond": 84.2,
         "livecodebench": 83.9,
         "scicode": 39.8,
-        "hle": 21.6
+        "hle": 21.6,
+        "osworld_verified": null
       }
     },
     {
@@ -1138,7 +1183,8 @@
         "gpqa_diamond": 89.4,
         "livecodebench": 91.6,
         "scicode": 44.9,
-        "hle": 32.1
+        "hle": 32.1,
+        "osworld_verified": null
       }
     },
     {
@@ -1167,7 +1213,8 @@
         "gpqa_diamond": 86.7,
         "livecodebench": 34.86,
         "scicode": 41.2,
-        "hle": 25.5
+        "hle": 25.5,
+        "osworld_verified": null
       }
     },
     {
@@ -1196,7 +1243,8 @@
         "gpqa_diamond": 43.3,
         "livecodebench": null,
         "scicode": 21.8,
-        "hle": 3.8
+        "hle": 3.8,
+        "osworld_verified": null
       }
     },
     {
@@ -1225,7 +1273,8 @@
         "gpqa_diamond": 31.4,
         "livecodebench": null,
         "scicode": 11.9,
-        "hle": 3.4
+        "hle": 3.4,
+        "osworld_verified": null
       }
     },
     {
@@ -1254,7 +1303,8 @@
         "gpqa_diamond": 48.1,
         "livecodebench": null,
         "scicode": 25.8,
-        "hle": 4.2
+        "hle": 4.2,
+        "osworld_verified": null
       }
     },
     {
@@ -1283,7 +1333,8 @@
         "gpqa_diamond": 74.8,
         "livecodebench": null,
         "scicode": 39.6,
-        "hle": 12.8
+        "hle": 12.8,
+        "osworld_verified": null
       }
     },
     {
@@ -1312,7 +1363,8 @@
         "gpqa_diamond": 57.2,
         "livecodebench": 35.1,
         "scicode": 23.6,
-        "hle": 4.6
+        "hle": 4.6,
+        "osworld_verified": null
       }
     }
   ],
