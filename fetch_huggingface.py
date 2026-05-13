@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -65,9 +66,16 @@ def _strip_emphasis(s: str) -> str:
             return s
 
 
+_INVISIBLE_SPACES = ("\xa0", " ", " ", " ", "​")
+
+
 def clean_cell(text: str) -> str:
-    """Strip markdown decoration, footnote markers, numeric-only parens."""
-    s = _strip_emphasis(text.strip())
+    """Decode HTML entities, strip markdown decoration, footnote markers, numeric-only parens."""
+    s = html.unescape(text)
+    for ch in _INVISIBLE_SPACES:
+        s = s.replace(ch, " ")
+    s = re.sub(r"\s+", " ", s).strip()
+    s = _strip_emphasis(s)
     s = s.rstrip(_FOOTNOTE_CHARS).rstrip()
     # Drop trailing footnote refs like " (1)" or " (12,3)" but preserve informative parens.
     s = re.sub(r"\s*\(\s*[\d,]+\s*\)\s*$", "", s)
@@ -135,8 +143,9 @@ def parse_markdown_tables(md: str) -> list[Table]:
     return tables
 
 
-def _strip_tags(html: str) -> str:
-    text = re.sub(r"<[^>]+>", " ", html)
+def _strip_tags(markup: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", markup)
+    text = html.unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 
 
