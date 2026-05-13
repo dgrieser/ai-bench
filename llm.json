@@ -492,7 +492,7 @@
         "tau2_bench_telecom": 93.6,
         "terminal_bench_2_0": 49.4,
         "terminal_bench_hard": 31.1,
-        "osworld_verified": null
+        "osworld_verified": 58.0
       }
     },
     {
@@ -522,7 +522,7 @@
         "tau2_bench_telecom": 93.9,
         "terminal_bench_2_0": 41.6,
         "terminal_bench_hard": 32.6,
-        "osworld_verified": null
+        "osworld_verified": 56.2
       }
     },
     {
@@ -552,7 +552,7 @@
         "tau2_bench_telecom": 89.2,
         "terminal_bench_2_0": 40.5,
         "terminal_bench_hard": 26.5,
-        "osworld_verified": null
+        "osworld_verified": 54.5
       }
     },
     {
@@ -582,7 +582,7 @@
         "tau2_bench_telecom": 86.8,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 24.2,
-        "osworld_verified": null
+        "osworld_verified": 41.8
       }
     },
     {
@@ -612,7 +612,7 @@
         "tau2_bench_telecom": 92.1,
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 18.2,
-        "osworld_verified": null
+        "osworld_verified": 35.6
       }
     },
     {
@@ -1365,6 +1365,66 @@
         "scicode": 23.6,
         "hle": 4.6,
         "osworld_verified": null
+      }
+    },
+    {
+      "name": "nemotron-3-nano-omni-30b-a3b",
+      "date_added": "2026-05-13",
+      "url": "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+      "params": "30B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "NVIDIA",
+        "url": "https://www.nvidia.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": 21.4,
+        "aa_coding_index": 14.8,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": 53.2,
+        "osworld_verified": null,
+        "terminal_bench_hard": 8.3,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 45.3,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 46.9,
+        "livecodebench": null,
+        "scicode": 27.8,
+        "hle": 5.3
+      }
+    },
+    {
+      "name": "minicpm-v4-6-1-3b",
+      "date_added": "2026-05-13",
+      "url": "https://huggingface.co/openbmb/MiniCPM-V-4.6",
+      "params": "1.3B",
+      "context": "256k",
+      "creator": {
+        "name": "OpenBMB",
+        "url": "https://www.openbmb.cn/en/home"
+      },
+      "scores": {
+        "aa_intelligence_index": 12.7,
+        "aa_coding_index": 0.7,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_rebench": null,
+        "mmmu_pro": 37.9,
+        "osworld_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 87.7,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 30.5,
+        "livecodebench": null,
+        "scicode": 2.1,
+        "hle": 4.9
       }
     }
   ],
