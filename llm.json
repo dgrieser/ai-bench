@@ -288,7 +288,7 @@
     {
       "name": "minimax-m2-5",
       "date_added": "2026-02-13",
-      "url": "https://www.minimax.io/news/minimax-m25/",
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5",
       "params": "230B-A10B",
       "context": "204k",
       "creator": {
@@ -386,7 +386,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "aa_coding_index": 14.6,
+        "aa_coding_index": 14.7,
         "aa_intelligence_index": 22.4,
         "aime_2025": 56.3,
         "aime_2026": null,
@@ -438,7 +438,7 @@
     {
       "name": "qwen3-5-397b-a17b",
       "date_added": "2026-02-23",
-      "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
       "params": "397B-A17B",
       "context": "256k",
       "creator": {
@@ -462,7 +462,7 @@
         "tau2_bench_telecom": 95.6,
         "terminal_bench_2_0": 52.5,
         "terminal_bench_hard": 40.9,
-        "osworld_verified": null
+        "osworld_verified": 62.2
       }
     },
     {
@@ -1109,7 +1109,7 @@
       },
       "scores": {
         "aa_intelligence_index": 43.5,
-        "aa_coding_index": 35.2,
+        "aa_coding_index": 35.1,
         "swe_bench_verified": 73.4,
         "swe_bench_pro": 49.5,
         "swe_rebench": null,
