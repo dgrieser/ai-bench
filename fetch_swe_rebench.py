@@ -7,6 +7,8 @@ flight data in a self.__next_f.push() script tag. This script extracts it direct
 without needing a headless browser.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys
