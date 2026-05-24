@@ -167,6 +167,26 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Write changes back to the input JSON file (default is dry-run).",
     )
+    parser.add_argument(
+        "--skip-aa",
+        action="store_true",
+        help="Skip fetching scores from artificialanalysis.py.",
+    )
+    parser.add_argument(
+        "--skip-swe-rebench",
+        action="store_true",
+        help="Skip fetching scores from swe-rebench.",
+    )
+    parser.add_argument(
+        "--skip-osworld",
+        action="store_true",
+        help="Skip fetching scores from osworld.",
+    )
+    parser.add_argument(
+        "--skip-huggingface",
+        action="store_true",
+        help="Skip fetching scores from huggingface.",
+    )
     return parser.parse_args()
 
 
@@ -500,57 +520,102 @@ def main() -> int:
 
     slugs = unique_names(models)
     print("commands:")
-    print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
-    print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
-    print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
-    print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
-    available_slugs = fetch_available_slugs(aa_path)
-    existing_slugs = [slug for slug in slugs if slug in available_slugs]
-    print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
-    print()
-    by_slug = fetch_aa_data(aa_path, existing_slugs)
-    matched, _updated, seen_eval_keys, changes = update_scores(doc, by_slug)
-    swe_rebench_by_slug = fetch_swe_rebench_data(swe_rebench_path, swe_rebench_mapping_path)
-    swe_matched, swe_updated, swe_changes = update_swe_rebench_scores(doc, swe_rebench_by_slug)
-    changes.extend(swe_changes)
-    osworld_by_slug = fetch_osworld_data(osworld_path, osworld_mapping_path)
-    osworld_matched, osworld_updated, osworld_changes = update_osworld_scores(doc, osworld_by_slug)
-    changes.extend(osworld_changes)
-    huggingface_by_slug = fetch_huggingface_data(huggingface_path, huggingface_mapping_path)
-    hf_matched, hf_updated, hf_changes = update_huggingface_scores(doc, huggingface_by_slug)
-    changes.extend(hf_changes)
+    if not args.skip_aa:
+        print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
+    if not args.skip_swe_rebench:
+        print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
+    if not args.skip_osworld:
+        print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
+    if not args.skip_huggingface:
+        print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
 
-    missing = [slug for slug in slugs if slug not in available_slugs]
+    changes: list[tuple[str, str, Any, Any]] = []
+    available_slugs: set[str] = set()
+    existing_slugs: list[str] = []
+    by_slug: dict[str, dict[str, Any]] = {}
+    matched = 0
+    aa_updated = 0
+    seen_eval_keys: set[str] = set()
+
+    if not args.skip_aa:
+        available_slugs = fetch_available_slugs(aa_path)
+        existing_slugs = [slug for slug in slugs if slug in available_slugs]
+        print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
+    print()
+
+    if not args.skip_aa:
+        by_slug = fetch_aa_data(aa_path, existing_slugs)
+        matched, aa_updated, seen_eval_keys, aa_changes = update_scores(doc, by_slug)
+        changes.extend(aa_changes)
+
+    swe_rebench_by_slug: dict[str, dict[str, Any]] = {}
+    swe_matched = 0
+    swe_updated = 0
+    if not args.skip_swe_rebench:
+        swe_rebench_by_slug = fetch_swe_rebench_data(swe_rebench_path, swe_rebench_mapping_path)
+        swe_matched, swe_updated, swe_changes = update_swe_rebench_scores(doc, swe_rebench_by_slug)
+        changes.extend(swe_changes)
+
+    osworld_by_slug: dict[str, dict[str, Any]] = {}
+    osworld_matched = 0
+    osworld_updated = 0
+    if not args.skip_osworld:
+        osworld_by_slug = fetch_osworld_data(osworld_path, osworld_mapping_path)
+        osworld_matched, osworld_updated, osworld_changes = update_osworld_scores(doc, osworld_by_slug)
+        changes.extend(osworld_changes)
+
+    huggingface_by_slug: dict[str, dict[str, Any]] = {}
+    hf_matched = 0
+    hf_updated = 0
+    if not args.skip_huggingface:
+        huggingface_by_slug = fetch_huggingface_data(huggingface_path, huggingface_mapping_path)
+        hf_matched, hf_updated, hf_changes = update_huggingface_scores(doc, huggingface_by_slug)
+        changes.extend(hf_changes)
+
+    missing = [slug for slug in slugs if slug not in available_slugs] if not args.skip_aa else []
     if args.write:
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
     print(f"models in {llm_path}: {len(slugs)}")
-    print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
-    print(f"models returned by artificialanalysis.py: {len(by_slug)}")
-    print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
-    print(f"models returned by osworld: {len(osworld_by_slug)}")
-    print(f"models returned by huggingface: {len(huggingface_by_slug)}")
+    if not args.skip_aa:
+        print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
+        print(f"models returned by artificialanalysis.py: {len(by_slug)}")
+    if not args.skip_swe_rebench:
+        print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
+    if not args.skip_osworld:
+        print(f"models returned by osworld: {len(osworld_by_slug)}")
+    if not args.skip_huggingface:
+        print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
             print(f"  - {slug}")
-    mapped_aa_keys = {aa_key for aa_keys, _transform in SCORE_MAPPINGS.values() for aa_key in aa_keys}
-    ignored_aa_keys = sorted(seen_eval_keys - mapped_aa_keys)
-    print("ignored keys:")
-    if ignored_aa_keys:
-        for key in ignored_aa_keys:
-            print(f"  - {key}")
-    else:
-        print("  - (none)")
+    if not args.skip_aa:
+        mapped_aa_keys = {aa_key for aa_keys, _transform in SCORE_MAPPINGS.values() for aa_key in aa_keys}
+        ignored_aa_keys = sorted(seen_eval_keys - mapped_aa_keys)
+        print("ignored keys:")
+        if ignored_aa_keys:
+            for key in ignored_aa_keys:
+                print(f"  - {key}")
+        else:
+            print("  - (none)")
     print()
-    print(f"models matched on artificialanalysis.py: {matched}")
-    print(f"models matched on swe_rebench: {swe_matched}")
-    print(f"models matched on osworld: {osworld_matched}")
-    print(f"models matched on huggingface: {hf_matched}")
-    print(f"score values updated from artificialanalysis.py: {_updated}")
-    print(f"score values updated from swe_rebench: {swe_updated}")
-    print(f"score values updated from osworld: {osworld_updated}")
-    print(f"score values updated from huggingface: {hf_updated}")
+    if not args.skip_aa:
+        print(f"models matched on artificialanalysis.py: {matched}")
+    if not args.skip_swe_rebench:
+        print(f"models matched on swe_rebench: {swe_matched}")
+    if not args.skip_osworld:
+        print(f"models matched on osworld: {osworld_matched}")
+    if not args.skip_huggingface:
+        print(f"models matched on huggingface: {hf_matched}")
+    if not args.skip_aa:
+        print(f"score values updated from artificialanalysis.py: {aa_updated}")
+    if not args.skip_swe_rebench:
+        print(f"score values updated from swe_rebench: {swe_updated}")
+    if not args.skip_osworld:
+        print(f"score values updated from osworld: {osworld_updated}")
+    if not args.skip_huggingface:
+        print(f"score values updated from huggingface: {hf_updated}")
     print()
     print_changes_table(changes)
     print()
