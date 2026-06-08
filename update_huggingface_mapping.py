@@ -13,8 +13,9 @@ from add import find_matches, prompt_select_or_new
 from _huggingface_mapping import (
     HF_MAPPING,
     add_hf_mapping,
+    add_hf_unmappable,
     fetch_huggingface_benchmark_names,
-    load_hf_to_key_mapping,
+    load_reviewed_hf_labels,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -75,19 +76,19 @@ def main() -> int:
     benchmark_keys = sorted(doc["benchmarks"].keys())
 
     hf_labels = fetch_huggingface_benchmark_names()
-    existing_mapping = load_hf_to_key_mapping()
-    mapped_labels = set(existing_mapping)
-    unmapped_labels = [name for name in hf_labels if name not in mapped_labels]
+    reviewed_labels = load_reviewed_hf_labels()
+    unmapped_labels = [name for name in hf_labels if name not in reviewed_labels]
 
     print(f"benchmarks in {llm_path}: {len(benchmark_keys)}")
     print(f"distinct HF labels found: {len(hf_labels)}")
-    print(f"already mapped: {len(mapped_labels)}")
-    print(f"unmapped: {len(unmapped_labels)}")
+    print(f"already reviewed: {len(reviewed_labels)}")
+    print(f"unreviewed: {len(unmapped_labels)}")
     print()
 
     matched = 0
     without_candidates = 0
     written = 0
+    skipped = 0
     interactive = sys.stdin.isatty()
 
     for label in unmapped_labels:
@@ -106,6 +107,9 @@ def main() -> int:
 
         key = prompt_key_for_label(label, benchmark_keys)
         if not key:
+            add_hf_unmappable(label)
+            skipped += 1
+            print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_hf_mapping(label, key)
@@ -116,6 +120,7 @@ def main() -> int:
     print(f"HF labels with candidate matches: {matched}")
     print(f"HF labels without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
+    print(f"recorded as unmappable: {skipped}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     return 0
