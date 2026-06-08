@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import sys
 import urllib.error
@@ -35,9 +36,22 @@ def normalize_repo(arg: str) -> str:
     return arg.strip("/")
 
 
+def _auth_headers() -> dict[str, str]:
+    """Request headers, with a Bearer token from the environment for gated repos."""
+    headers = {"User-Agent": USER_AGENT, "Accept": "text/plain, text/markdown, */*"}
+    token = (
+        os.environ.get("HF_TOKEN")
+        or os.environ.get("HUGGINGFACE_TOKEN")
+        or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    )
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def fetch_readme(repo: str, timeout: int = 30) -> str:
     """Fetch the raw README.md for repo. Tries main, then master."""
-    headers = {"User-Agent": USER_AGENT, "Accept": "text/plain, text/markdown, */*"}
+    headers = _auth_headers()
     last_error: Exception | None = None
     for branch in ("main", "master"):
         url = f"{HF_BASE}/{repo}/raw/{branch}/README.md"
@@ -171,6 +185,10 @@ def _norm_for_match(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", s.lower())
 
 
+def _tokens(s: str) -> set[str]:
+    return {t for t in re.split(r"[^a-z0-9]+", s.lower()) if t}
+
+
 def _is_category_row(row: list[str], header_count: int) -> bool:
     nonempty = [c for c in row if c.strip()]
     if len(nonempty) <= 1:
@@ -179,26 +197,105 @@ def _is_category_row(row: list[str], header_count: int) -> bool:
     return len(distinct) <= 1
 
 
+_LABEL_DENY_EXACT = {
+    "type", "link", "precision", "model", "modelname", "metric", "size",
+    "license", "date", "releasedate", "quantization", "description", "download",
+    "contextlength", "blackwell", "hopper", "huggingface", "modelscope",
+    "gitcode", "github", "gitee", "weights", "checkpoint",
+}
+_LABEL_DENY_SUB = (
+    "parameter", "totalparam", "activatedparam", "activeparam", "contextlength",
+    "embedding", "attentionhead", "headsize", "kvhead", "mamba", "expert",
+    "activation", "sequencelength", "positionembedding", "hiddensize", "vocab",
+    "statesize", "numberoflayers", "numlayers", "layers",
+)
+# Context-length column labels like "4k", "128k", "1000k", "2m".
+_CONTEXT_LEN_RE = re.compile(r"^\d+(?:\.\d+)?[km]$")
+
+
+def _is_metadata_label(label: str) -> bool:
+    """True for non-benchmark labels (model specs/metadata) that should not be scored."""
+    n = _norm_for_match(label)
+    if not n or n in _LABEL_DENY_EXACT or _CONTEXT_LEN_RE.match(n):
+        return True
+    return any(sub in n for sub in _LABEL_DENY_SUB)
+
+
+def _name_match_score(candidate: str, model_name: str) -> int | None:
+    """Score how well `candidate` names `model_name` (lower = better; None = no match)."""
+    target = _norm_for_match(model_name)
+    c_norm = _norm_for_match(candidate)
+    if not target or not c_norm:
+        return None
+    if c_norm == target:
+        return 0
+    # Allow loose substring matches if length difference is modest.
+    if target in c_norm and len(c_norm) - len(target) <= 24:
+        return len(c_norm) - len(target)
+    if c_norm in target and len(target) - len(c_norm) <= 24 and len(c_norm) >= 6:
+        return (len(target) - len(c_norm)) + 100  # weaker than "candidate contains target"
+    # Token-subset match: names often drop size/param tokens the repo name carries
+    # (e.g. "Mellum2 Thinking" vs "Mellum2-12B-A2.5B-Thinking"), which breaks
+    # contiguous-substring matching.
+    c_tokens = _tokens(candidate)
+    t_tokens = _tokens(model_name)
+    shared = c_tokens & t_tokens
+    subset = c_tokens <= t_tokens or t_tokens <= c_tokens
+    if subset and len("".join(shared)) >= 6:
+        return 200 + len(c_tokens ^ t_tokens)  # weaker than substring matches
+    return None
+
+
+_SIZE_TOKEN_RE = re.compile(r"^\d+(?:\.\d+)?b$")
+
+
+def _select_size_variant_column(table: Table, model_name: str) -> int | None:
+    """Match size-variant headers like '8B Dense' for repos like 'granite-4.1-8b'.
+
+    Fires only when several headers start with a size token and share the same
+    remainder (one model line, varying parameter count), so a lone competitor
+    column in a comparison table is not mistaken for the model.
+    """
+    model_sizes = {t for t in _tokens(model_name) if _SIZE_TOKEN_RE.match(t)}
+    if not model_sizes:
+        return None
+    family: list[tuple[int, str, frozenset[str]]] = []  # (idx, size, remainder)
+    for idx, header in enumerate(table.headers):
+        toks = [t for t in re.split(r"[^a-z0-9]+", clean_cell(header).lower()) if t]
+        if toks and _SIZE_TOKEN_RE.match(toks[0]):
+            family.append((idx, toks[0], frozenset(toks[1:])))
+    if len(family) < 2:
+        return None
+    if len({rem for _, _, rem in family}) != 1:
+        return None
+    matches = [idx for idx, size, _ in family if size in model_sizes]
+    return matches[0] if len(matches) == 1 else None
+
+
 def select_column(table: Table, repo: str) -> int | None:
     """Pick the column matching the HF repo's model name (last path segment)."""
     model_name = repo.split("/")[-1]
-    target = _norm_for_match(model_name)
-    if not target:
-        return None
-
-    best: tuple[int, int] | None = None  # (length_distance, col_idx)
+    best: tuple[int, int] | None = None  # (score, col_idx); lower score wins
     for idx, header in enumerate(table.headers):
-        h_norm = _norm_for_match(clean_cell(header))
-        if not h_norm:
+        score = _name_match_score(clean_cell(header), model_name)
+        if score is None:
             continue
-        if h_norm == target:
-            return idx
-        # Allow loose substring matches if length difference is modest.
-        if target in h_norm and len(h_norm) - len(target) <= 24:
-            score = len(h_norm) - len(target)
-        elif h_norm in target and len(target) - len(h_norm) <= 24 and len(h_norm) >= 6:
-            score = (len(target) - len(h_norm)) + 100  # weaker than "header contains target"
-        else:
+        if best is None or score < best[0]:
+            best = (score, idx)
+    if best is not None:
+        return best[1]
+    return _select_size_variant_column(table, model_name)
+
+
+def select_row(table: Table, repo: str) -> int | None:
+    """For transposed tables (models in rows): pick the row whose first cell names the model."""
+    model_name = repo.split("/")[-1]
+    best: tuple[int, int] | None = None  # (score, row_idx)
+    for idx, row in enumerate(table.rows):
+        if not row:
+            continue
+        score = _name_match_score(clean_cell(row[0]), model_name)
+        if score is None:
             continue
         if best is None or score < best[0]:
             best = (score, idx)
@@ -211,17 +308,33 @@ def extract_scores_from_tables(tables: list[Table], repo: str) -> dict[str, floa
         if not table.headers or not table.rows:
             continue
         col = select_column(table, repo)
-        if col is None or col >= len(table.headers):
+        if col is not None and col < len(table.headers):
+            # Column orientation: benchmarks in column 0, this model in `col`.
+            for row in table.rows:
+                if not row or _is_category_row(row, len(table.headers)):
+                    continue
+                if col >= len(row):
+                    continue
+                label = clean_cell(row[0])
+                if not label or _is_metadata_label(label):
+                    continue
+                value = parse_score(row[col])
+                if value is None:
+                    continue
+                out.setdefault(label, value)
             continue
-        for row in table.rows:
-            if not row or _is_category_row(row, len(table.headers)):
+        # Transposed orientation: this model is a row, benchmarks are the headers.
+        row_idx = select_row(table, repo)
+        if row_idx is None:
+            continue
+        row = table.rows[row_idx]
+        for j in range(1, len(table.headers)):
+            if j >= len(row):
+                break
+            label = clean_cell(table.headers[j])
+            if not label or _is_metadata_label(label):
                 continue
-            if col >= len(row):
-                continue
-            label = clean_cell(row[0])
-            if not label:
-                continue
-            value = parse_score(row[col])
+            value = parse_score(row[j])
             if value is None:
                 continue
             out.setdefault(label, value)
