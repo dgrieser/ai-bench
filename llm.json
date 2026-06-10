@@ -1546,6 +1546,36 @@
         "scicode": null,
         "hle": null
       }
+    },
+    {
+      "name": "north-mini-code",
+      "date_added": "2026-06-10",
+      "url": "https://huggingface.co/CohereLabs/North-Mini-Code-1.0",
+      "params": "30B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "Cohere",
+        "url": "https://cohere.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": 27.6,
+        "aa_coding_index": 33.4,
+        "swe_bench_verified": 67.6,
+        "swe_bench_pro": 40.2,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": 31.1,
+        "terminal_bench_2_0": 36,
+        "tau2_bench_telecom": 37.4,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 75.7,
+        "livecodebench": 70.3,
+        "scicode": 38.2,
+        "hle": 9.9
+      }
     }
   ],
   "sources": [
