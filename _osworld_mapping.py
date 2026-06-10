@@ -13,6 +13,11 @@ OSWORLD_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-osworld-to-artificialanalysis.json"
 )
 
+# Sentinel value stored for OSWorld names reviewed but deliberately not mapped.
+# Kept in the mapping file so they are not prompted again, but never used as a
+# real llm.json model slug.
+UNMAPPABLE = "__unmappable__"
+
 
 def fetch_osworld_model_names() -> list[str]:
     proc = subprocess.run(
@@ -27,13 +32,23 @@ def fetch_osworld_model_names() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
-def load_osworld_to_slug_mapping(path: Path = OSWORLD_MAPPING) -> dict[str, str]:
+def _load_raw_mapping(path: Path = OSWORLD_MAPPING) -> dict[str, str]:
     if not path.exists():
         return {}
     raw: Any = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError(f"Expected a JSON object in {path}")
     return {k: v for k, v in raw.items() if isinstance(k, str) and isinstance(v, str)}
+
+
+def load_osworld_to_slug_mapping(path: Path = OSWORLD_MAPPING) -> dict[str, str]:
+    """Real OSWorld name -> llm.json model slug mappings."""
+    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+
+
+def load_reviewed_osworld_names(path: Path = OSWORLD_MAPPING) -> set[str]:
+    """All OSWorld names already reviewed, including unmappable entries."""
+    return set(_load_raw_mapping(path))
 
 
 def write_osworld_to_slug_mapping(
@@ -48,8 +63,13 @@ def write_osworld_to_slug_mapping(
 def add_osworld_mapping(
     osworld_name: str, slug: str, path: Path = OSWORLD_MAPPING
 ) -> None:
-    mapping = load_osworld_to_slug_mapping(path)
+    mapping = _load_raw_mapping(path)
     if mapping.get(osworld_name) == slug:
         return
     mapping[osworld_name] = slug
     write_osworld_to_slug_mapping(mapping, path)
+
+
+def add_osworld_unmappable(osworld_name: str, path: Path = OSWORLD_MAPPING) -> None:
+    """Record an OSWorld name as reviewed-but-unmapped so it is not prompted again."""
+    add_osworld_mapping(osworld_name, UNMAPPABLE, path)

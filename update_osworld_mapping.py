@@ -13,8 +13,9 @@ from add import prompt_select_or_new
 from _osworld_mapping import (
     OSWORLD_MAPPING,
     add_osworld_mapping,
+    add_osworld_unmappable,
     fetch_osworld_model_names,
-    load_osworld_to_slug_mapping,
+    load_reviewed_osworld_names,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -122,22 +123,22 @@ def main() -> int:
     llm_names = unique_names(doc["models"])
 
     osworld_names = fetch_osworld_model_names()
-    existing_mapping = load_osworld_to_slug_mapping()
-    mapped_names = set(existing_mapping)
-    unmapped_osworld_names = [name for name in osworld_names if name not in mapped_names]
+    reviewed_names = load_reviewed_osworld_names()
+    unreviewed_osworld_names = [name for name in osworld_names if name not in reviewed_names]
 
     print(f"models in {llm_path}: {len(llm_names)}")
     print(f"models on osworld: {len(osworld_names)}")
-    print(f"already mapped osworld names: {len(mapped_names)}")
-    print(f"unmapped osworld names: {len(unmapped_osworld_names)}")
+    print(f"already reviewed osworld names: {len(reviewed_names)}")
+    print(f"unreviewed osworld names: {len(unreviewed_osworld_names)}")
     print()
 
     matched = 0
     without_candidates = 0
     written = 0
+    skipped = 0
     interactive = sys.stdin.isatty()
 
-    for osworld_name in unmapped_osworld_names:
+    for osworld_name in unreviewed_osworld_names:
         candidates = find_matches(osworld_name, llm_names, limit=5)
         print(f"{osworld_name}")
         if candidates:
@@ -153,6 +154,9 @@ def main() -> int:
 
         slug = prompt_slug_for_osworld_name(osworld_name, llm_names)
         if not slug:
+            add_osworld_unmappable(osworld_name)
+            skipped += 1
+            print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_osworld_mapping(osworld_name, slug)
@@ -163,6 +167,7 @@ def main() -> int:
     print(f"osworld names with candidate matches: {matched}")
     print(f"osworld names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
+    print(f"recorded as unmappable: {skipped}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     return 0

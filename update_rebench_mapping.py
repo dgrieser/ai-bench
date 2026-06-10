@@ -13,8 +13,9 @@ from add import prompt_select_or_new
 from _swe_rebench_mapping import (
     SWE_REBENCH_MAPPING,
     add_rebench_mapping,
+    add_rebench_unmappable,
     fetch_swe_rebench_model_names,
-    load_rebench_to_slug_mapping,
+    load_reviewed_rebench_names,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -122,22 +123,22 @@ def main() -> int:
     llm_names = unique_names(doc["models"])
 
     rebench_names = fetch_swe_rebench_model_names()
-    existing_mapping = load_rebench_to_slug_mapping()
-    mapped_names = set(existing_mapping)
-    unmapped_rebench_names = [name for name in rebench_names if name not in mapped_names]
+    reviewed_names = load_reviewed_rebench_names()
+    unreviewed_rebench_names = [name for name in rebench_names if name not in reviewed_names]
 
     print(f"models in {llm_path}: {len(llm_names)}")
     print(f"models on swe_rebench: {len(rebench_names)}")
-    print(f"already mapped swe_rebench names: {len(mapped_names)}")
-    print(f"unmapped swe_rebench names: {len(unmapped_rebench_names)}")
+    print(f"already reviewed swe_rebench names: {len(reviewed_names)}")
+    print(f"unreviewed swe_rebench names: {len(unreviewed_rebench_names)}")
     print()
 
     matched = 0
     without_candidates = 0
     written = 0
+    skipped = 0
     interactive = sys.stdin.isatty()
 
-    for rebench_name in unmapped_rebench_names:
+    for rebench_name in unreviewed_rebench_names:
         candidates = find_matches(rebench_name, llm_names, limit=5)
         print(f"{rebench_name}")
         if candidates:
@@ -153,6 +154,9 @@ def main() -> int:
 
         slug = prompt_slug_for_rebench_name(rebench_name, llm_names)
         if not slug:
+            add_rebench_unmappable(rebench_name)
+            skipped += 1
+            print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_rebench_mapping(rebench_name, slug)
@@ -163,6 +167,7 @@ def main() -> int:
     print(f"rebench names with candidate matches: {matched}")
     print(f"rebench names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
+    print(f"recorded as unmappable: {skipped}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     return 0
