@@ -17,6 +17,10 @@ from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
+from _llmstats_mapping import (
+    load_llmstats_to_slug_mapping,
+    load_llmstats_benchmark_to_key_mapping,
+)
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
@@ -24,6 +28,7 @@ OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
+LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -201,6 +206,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip fetching scores from frontierswe.",
+    )
+    parser.add_argument(
+        "--skip-llmstats",
+        action="store_true",
+        help="Skip fetching scores from llm-stats.com.",
     )
     return parser.parse_args()
 
@@ -645,6 +655,83 @@ def update_frontierswe_scores(
     return matched, updated, changes
 
 
+def build_fetch_llmstats_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_llmstats_data(
+    script: Path, model_mapping_path: Path, benchmark_mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_llmstats_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_llmstats.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected llmstats JSON format: expected a list")
+
+    llmstats_to_slug = load_llmstats_to_slug_mapping(model_mapping_path)
+    label_to_key = load_llmstats_benchmark_to_key_mapping(benchmark_mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        llmstats_name = row.get("model")
+        scores = row.get("scores")
+        if not isinstance(llmstats_name, str) or not llmstats_name or not isinstance(scores, dict):
+            continue
+        slug = llmstats_to_slug.get(llmstats_name)
+        if not slug:
+            continue
+        mapped: dict[str, Any] = {}
+        for label, value in scores.items():
+            key = label_to_key.get(label)
+            if not key or value is None:
+                continue
+            # llm-stats reports 0-1 scores; store as percentages like other sources.
+            mapped.setdefault(key, to_percent(value))
+        if mapped:
+            by_slug.setdefault(slug, {}).update(mapped)
+    return by_slug
+
+
+def update_llmstats_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        llmstats_scores = by_slug.get(slug)
+        if not llmstats_scores:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        for benchmark_key, new_value in llmstats_scores.items():
+            if new_value is None:
+                continue
+            # General aggregator: keep aa (and every named source) leading.
+            # Only fill nulls, never overwrite an existing value.
+            old_value = scores.get(benchmark_key)
+            if old_value is not None:
+                continue
+            scores[benchmark_key] = new_value
+            updated += 1
+            changes.append((slug, benchmark_key, old_value, new_value))
+
+    return matched, updated, changes
+
+
 def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
@@ -654,6 +741,7 @@ def main() -> int:
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
+    llmstats_path = LLMSTATS_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-rebench-to-artificialanalysis.json"
     )
@@ -669,6 +757,12 @@ def main() -> int:
     frontierswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontierswe-to-artificialanalysis.json"
     )
+    llmstats_model_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-llmstats-to-artificialanalysis.json"
+    )
+    llmstats_benchmark_mapping_path = Path(__file__).resolve().with_name(
+        "llmstats-benchmark-name-mapping.json"
+    )
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
     models = doc.get("models", [])
@@ -683,6 +777,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
     if not args.skip_osworld:
         print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
+    if not args.skip_llmstats:
+        print(f"  - {shlex.join(build_fetch_llmstats_cmd(llmstats_path))}")
     if not args.skip_huggingface:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
     if not args.skip_deepswe:
@@ -725,6 +821,16 @@ def main() -> int:
         osworld_matched, osworld_updated, osworld_changes = update_osworld_scores(doc, osworld_by_slug)
         changes.extend(osworld_changes)
 
+    llmstats_by_slug: dict[str, dict[str, Any]] = {}
+    llmstats_matched = 0
+    llmstats_updated = 0
+    if not args.skip_llmstats:
+        llmstats_by_slug = fetch_llmstats_data(
+            llmstats_path, llmstats_model_mapping_path, llmstats_benchmark_mapping_path
+        )
+        llmstats_matched, llmstats_updated, llmstats_changes = update_llmstats_scores(doc, llmstats_by_slug)
+        changes.extend(llmstats_changes)
+
     huggingface_by_slug: dict[str, dict[str, Any]] = {}
     hf_matched = 0
     hf_updated = 0
@@ -761,6 +867,8 @@ def main() -> int:
         print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
     if not args.skip_osworld:
         print(f"models returned by osworld: {len(osworld_by_slug)}")
+    if not args.skip_llmstats:
+        print(f"models returned by llmstats: {len(llmstats_by_slug)}")
     if not args.skip_huggingface:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_deepswe:
@@ -787,6 +895,8 @@ def main() -> int:
         print(f"models matched on swe_rebench: {swe_matched}")
     if not args.skip_osworld:
         print(f"models matched on osworld: {osworld_matched}")
+    if not args.skip_llmstats:
+        print(f"models matched on llmstats: {llmstats_matched}")
     if not args.skip_huggingface:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_deepswe:
@@ -799,6 +909,8 @@ def main() -> int:
         print(f"score values updated from swe_rebench: {swe_updated}")
     if not args.skip_osworld:
         print(f"score values updated from osworld: {osworld_updated}")
+    if not args.skip_llmstats:
+        print(f"score values updated from llmstats: {llmstats_updated}")
     if not args.skip_huggingface:
         print(f"score values updated from huggingface: {hf_updated}")
     if not args.skip_deepswe:

@@ -1,0 +1,274 @@
+#!/usr/bin/env python3
+"""Review the llm-stats.com mapping files against llm.json.
+
+Convenience companion to add.py's prompts. Dry-run by default (preview the
+proposed matches); pass -w/--write to run the interactive review and persist,
+the same way update.py uses -w.
+
+Under -w it walks the llm.json model slugs and the llm-stats benchmark labels,
+pre-filling an auto-match (exact / date-suffix stripped / normalized) as the
+default so you can accept with Enter, type another value, or skip. Benchmark
+labels left blank are recorded as __unmappable__ so add.py stops prompting for
+them. Each answer is written immediately. On a non-interactive terminal, -w
+auto-applies every confident match (and marks leftover labels unmappable).
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+from typing import Any
+
+from add import prompt_key_for_label, prompt_select_or_new
+from _llmstats_mapping import (
+    add_llmstats_benchmark_mapping,
+    add_llmstats_benchmark_unmappable,
+    add_llmstats_mapping,
+    fetch_llmstats_benchmark_names,
+    fetch_llmstats_model_names,
+    load_llmstats_benchmark_to_key_mapping,
+    load_llmstats_to_slug_mapping,
+    load_reviewed_llmstats_benchmarks,
+    load_reviewed_llmstats_names,
+)
+
+DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
+
+# llm-stats benchmark labels whose llm.json key is not a normalized match.
+BENCHMARK_ALIASES = {
+    "gpqa": "gpqa_diamond",
+    "osworld": "osworld_verified",
+}
+
+_DATE_SUFFIX_RE = re.compile(r"-\d{6,8}$")
+
+
+def norm(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", value.lower())
+
+
+def strip_date_suffix(model_id: str) -> str:
+    return _DATE_SUFFIX_RE.sub("", model_id)
+
+
+def load_doc(path: Path) -> dict[str, Any]:
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(doc, dict):
+        raise ValueError("Top-level JSON value must be an object.")
+    return doc
+
+
+def model_slugs(doc: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+    for model in doc.get("models", []):
+        if isinstance(model, dict):
+            name = model.get("name")
+            if isinstance(name, str) and name:
+                out.append(name)
+    return out
+
+
+def benchmark_keys(doc: dict[str, Any]) -> list[str]:
+    benchmarks = doc.get("benchmarks", {})
+    return sorted(benchmarks.keys()) if isinstance(benchmarks, dict) else []
+
+
+def auto_match_model(slug: str, model_ids: list[str]) -> str | None:
+    """Single confident llm-stats model_id for a slug, else None."""
+    ns = norm(slug)
+    exact = [m for m in model_ids if norm(m) == ns]
+    candidates = exact or [m for m in model_ids if norm(strip_date_suffix(m)) == ns]
+    candidates = list(dict.fromkeys(candidates))
+    return candidates[0] if len(candidates) == 1 else None
+
+
+def auto_match_benchmark(label: str, keys: list[str]) -> str | None:
+    by_norm = {norm(k): k for k in keys}
+    target = BENCHMARK_ALIASES.get(label) or by_norm.get(norm(label))
+    return target if target in keys else None
+
+
+def review_models(doc: dict[str, Any], model_ids: list[str], interactive: bool) -> int:
+    slugs = model_slugs(doc)
+    reviewed_ids = load_reviewed_llmstats_names()
+    mapped_slugs = set(load_llmstats_to_slug_mapping().values())
+    added = 0
+
+    for slug in slugs:
+        if slug in mapped_slugs:
+            continue
+        default = auto_match_model(slug, model_ids)
+        if default in reviewed_ids:
+            default = None
+
+        if interactive:
+            choice = prompt_select_or_new(
+                f"llm-stats model for '{slug}'", model_ids, default=default
+            )
+        else:
+            choice = default
+
+        if not choice:
+            continue
+        add_llmstats_mapping(choice, slug)
+        added += 1
+        print(f"Mapped llm-stats '{choice}' -> '{slug}'")
+    return added
+
+
+def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool) -> int:
+    keys = benchmark_keys(doc)
+    reviewed = load_reviewed_llmstats_benchmarks()
+    changed = 0
+
+    for label in labels:
+        if label in reviewed:
+            continue
+        default = auto_match_benchmark(label, keys)
+
+        if interactive:
+            key = prompt_key_for_label("llm-stats benchmark", label, keys, default=default)
+        else:
+            key = default
+
+        if not key:
+            add_llmstats_benchmark_unmappable(label)
+            changed += 1
+            print(f"Recorded llm-stats benchmark '{label}' as unmappable")
+            continue
+        add_llmstats_benchmark_mapping(label, key)
+        changed += 1
+        print(f"Mapped llm-stats benchmark '{label}' -> '{key}'")
+    return changed
+
+
+def preview_models(doc: dict[str, Any], model_ids: list[str]) -> None:
+    slugs = model_slugs(doc)
+    reviewed_ids = load_reviewed_llmstats_names()
+    mapped_slugs = set(load_llmstats_to_slug_mapping().values())
+    matched: list[tuple[str, str]] = []
+    unmatched: list[str] = []
+    for slug in slugs:
+        if slug in mapped_slugs:
+            continue
+        candidate = auto_match_model(slug, model_ids)
+        if candidate and candidate not in reviewed_ids:
+            matched.append((candidate, slug))
+        else:
+            unmatched.append(slug)
+    print(f"model mappings ({len(matched)} proposed):")
+    for mid, slug in sorted(matched, key=lambda kv: kv[1]):
+        arrow = "==" if mid == slug else "->"
+        print(f"  {mid} {arrow} {slug}")
+    if not matched:
+        print("  (none)")
+    print(f"unmapped llm.json models (need a manual answer under -w): {len(unmatched)}")
+    for slug in unmatched:
+        print(f"  - {slug}")
+    print()
+
+
+def preview_benchmarks(doc: dict[str, Any], labels: list[str]) -> None:
+    keys = benchmark_keys(doc)
+    reviewed = load_reviewed_llmstats_benchmarks()
+    matched: list[tuple[str, str]] = []
+    unmappable: list[str] = []
+    for label in labels:
+        if label in reviewed:
+            continue
+        key = auto_match_benchmark(label, keys)
+        if key:
+            matched.append((label, key))
+        else:
+            unmappable.append(label)
+    print(f"benchmark mappings ({len(matched)} proposed):")
+    for label, key in sorted(matched):
+        print(f"  {label} -> {key}")
+    if not matched:
+        print("  (none)")
+    print(f"benchmark labels to mark __unmappable__: {len(unmappable)}")
+    for label in unmappable:
+        print(f"  - {label}")
+    print()
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Review the llm-stats.com mapping files against llm.json."
+    )
+    parser.add_argument(
+        "json_file",
+        nargs="?",
+        default=str(DEFAULT_LLM_JSON),
+        help='Path to llm.json (default: "./llm.json" next to this script).',
+    )
+    parser.add_argument(
+        "--write",
+        "-w",
+        action="store_true",
+        help="Run the interactive review and persist answers (default is dry-run).",
+    )
+    parser.add_argument(
+        "--skip-models",
+        action="store_true",
+        help="Skip the model-name mapping review.",
+    )
+    parser.add_argument(
+        "--skip-benchmarks",
+        action="store_true",
+        help="Skip the benchmark-name mapping review.",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    doc = load_doc(Path(args.json_file))
+
+    model_ids: list[str] = []
+    if not args.skip_models:
+        try:
+            model_ids = fetch_llmstats_model_names()
+        except RuntimeError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+
+    labels: list[str] = []
+    if not args.skip_benchmarks:
+        try:
+            labels = fetch_llmstats_benchmark_names()
+        except RuntimeError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+
+    if not args.write:
+        if not args.skip_models:
+            preview_models(doc, model_ids)
+        if not args.skip_benchmarks:
+            preview_benchmarks(doc, labels)
+        print("dry-run only, pass -w/--write to apply")
+        return 0
+
+    interactive = sys.stdin.isatty()
+    if not interactive:
+        print("non-interactive: auto-applying confident matches")
+
+    added = 0
+    if not args.skip_models:
+        added += review_models(doc, model_ids, interactive)
+    if not args.skip_benchmarks:
+        added += review_benchmarks(doc, labels, interactive)
+
+    print(f"{added} mapping entries updated")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print()
+        raise SystemExit(130)

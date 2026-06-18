@@ -40,6 +40,15 @@ from _huggingface_mapping import (
     fetch_huggingface_benchmark_names,
     load_reviewed_hf_labels,
 )
+from _llmstats_mapping import (
+    add_llmstats_mapping,
+    fetch_llmstats_model_names,
+    load_llmstats_to_slug_mapping,
+    add_llmstats_benchmark_mapping,
+    add_llmstats_benchmark_unmappable,
+    fetch_llmstats_benchmark_names,
+    load_reviewed_llmstats_benchmarks,
+)
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -115,6 +124,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip the FrontierSWE mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-llmstats",
+        action="store_true",
+        help="Skip the llm-stats.com model and benchmark-label mapping prompts.",
     )
     return parser.parse_args()
 
@@ -325,10 +339,66 @@ def maybe_add_frontierswe_mapping(model_name: str, interactive: bool) -> None:
     print(f"Added FrontierSWE mapping '{frontierswe_name}' -> '{model_name}'")
 
 
-def prompt_key_for_hf_label(label: str, keys: list[str]) -> str | None:
+def maybe_add_llmstats_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_llmstats_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        llmstats_names = fetch_llmstats_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping llm-stats mapping prompt: {exc}")
+        return
+
+    if not llmstats_names:
+        return
+
+    llmstats_name = prompt_select_or_new("llm-stats model", llmstats_names)
+    if not llmstats_name:
+        return
+
+    add_llmstats_mapping(llmstats_name, model_name)
+    print(f"Added llm-stats mapping '{llmstats_name}' -> '{model_name}'")
+
+
+def maybe_add_llmstats_benchmark_mapping(doc: dict[str, Any], interactive: bool) -> None:
+    if not interactive:
+        return
+
+    benchmark_keys = sorted(doc["benchmarks"].keys())
+
+    try:
+        llmstats_labels = fetch_llmstats_benchmark_names()
+    except RuntimeError as exc:
+        print(f"Skipping llm-stats benchmark mapping prompt: {exc}")
+        return
+
+    reviewed = load_reviewed_llmstats_benchmarks()
+    unreviewed = [label for label in llmstats_labels if label not in reviewed]
+    if not unreviewed:
+        return
+
+    for label in unreviewed:
+        key = prompt_key_for_label("llm-stats benchmark", label, benchmark_keys)
+        if not key:
+            add_llmstats_benchmark_unmappable(label)
+            print(f"Recorded llm-stats benchmark '{label}' as unmappable")
+            continue
+        add_llmstats_benchmark_mapping(label, key)
+        print(f"Added llm-stats benchmark mapping '{label}' -> '{key}'")
+
+
+def prompt_key_for_label(
+    source_label: str, label: str, keys: list[str], default: str | None = None
+) -> str | None:
     options_lower = {k.lower(): k for k in keys}
     while True:
-        raw = prompt_select_or_new(f"Map HF label '{label}' to llm.json benchmark", keys)
+        raw = prompt_select_or_new(
+            f"Map {source_label} '{label}' to llm.json benchmark", keys, default=default
+        )
         if raw is None:
             return None
         canonical = options_lower.get(raw.lower())
@@ -355,7 +425,7 @@ def maybe_add_huggingface_mapping(doc: dict[str, Any], interactive: bool) -> Non
         return
 
     for label in unreviewed:
-        key = prompt_key_for_hf_label(label, benchmark_keys)
+        key = prompt_key_for_label("HF label", label, benchmark_keys)
         if not key:
             add_hf_unmappable(label)
             print(f"Recorded HF label '{label}' as unmappable")
@@ -661,6 +731,9 @@ def main() -> int:
         maybe_add_deepswe_mapping(model["name"], interactive)
     if not args.skip_frontierswe:
         maybe_add_frontierswe_mapping(model["name"], interactive)
+    if not args.skip_llmstats:
+        maybe_add_llmstats_mapping(model["name"], interactive)
+        maybe_add_llmstats_benchmark_mapping(doc, interactive)
     if not args.skip_huggingface:
         maybe_add_huggingface_mapping(doc, interactive)
 
