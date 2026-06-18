@@ -15,11 +15,13 @@ from typing import Any, Callable
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
+from _deepswe_mapping import load_deepswe_to_slug_mapping
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
+DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -186,6 +188,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-huggingface",
         action="store_true",
         help="Skip fetching scores from huggingface.",
+    )
+    parser.add_argument(
+        "--skip-deepswe",
+        action="store_true",
+        help="Skip fetching scores from deepswe.",
     )
     return parser.parse_args()
 
@@ -496,6 +503,73 @@ def update_huggingface_scores(
     return matched, updated, changes
 
 
+def build_fetch_deepswe_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_deepswe_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_deepswe_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_deepswe.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected deepswe JSON format: expected a list")
+
+    deepswe_to_slug = load_deepswe_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        deepswe_name = row.get("model")
+        if not isinstance(deepswe_name, str) or not deepswe_name:
+            continue
+        slug = deepswe_to_slug.get(deepswe_name)
+        if not slug:
+            continue
+        by_slug.setdefault(slug, row)
+    return by_slug
+
+
+def update_deepswe_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        deepswe_model = by_slug.get(slug)
+        if deepswe_model is None:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        old_value = scores.get("deepswe")
+        new_value = deepswe_model.get("score")
+
+        # Never overwrite an existing non-null value with null.
+        if old_value is not None and new_value is None:
+            continue
+
+        if old_value != new_value:
+            scores["deepswe"] = new_value
+            updated += 1
+            changes.append((slug, "deepswe", old_value, new_value))
+
+    return matched, updated, changes
+
+
 def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
@@ -503,6 +577,7 @@ def main() -> int:
     swe_rebench_path = SWE_REBENCH_SCRIPT
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
+    deepswe_path = DEEPSWE_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-rebench-to-artificialanalysis.json"
     )
@@ -511,6 +586,9 @@ def main() -> int:
     )
     huggingface_mapping_path = Path(__file__).resolve().with_name(
         "huggingface-benchmark-name-mapping.json"
+    )
+    deepswe_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-deepswe-to-artificialanalysis.json"
     )
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
@@ -528,6 +606,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
     if not args.skip_huggingface:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
+    if not args.skip_deepswe:
+        print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
 
     changes: list[tuple[str, str, Any, Any]] = []
     available_slugs: set[str] = set()
@@ -572,6 +652,14 @@ def main() -> int:
         hf_matched, hf_updated, hf_changes = update_huggingface_scores(doc, huggingface_by_slug)
         changes.extend(hf_changes)
 
+    deepswe_by_slug: dict[str, dict[str, Any]] = {}
+    deepswe_matched = 0
+    deepswe_updated = 0
+    if not args.skip_deepswe:
+        deepswe_by_slug = fetch_deepswe_data(deepswe_path, deepswe_mapping_path)
+        deepswe_matched, deepswe_updated, deepswe_changes = update_deepswe_scores(doc, deepswe_by_slug)
+        changes.extend(deepswe_changes)
+
     missing = [slug for slug in slugs if slug not in available_slugs] if not args.skip_aa else []
     if args.write:
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
@@ -586,6 +674,8 @@ def main() -> int:
         print(f"models returned by osworld: {len(osworld_by_slug)}")
     if not args.skip_huggingface:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
+    if not args.skip_deepswe:
+        print(f"models returned by deepswe: {len(deepswe_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
@@ -608,6 +698,8 @@ def main() -> int:
         print(f"models matched on osworld: {osworld_matched}")
     if not args.skip_huggingface:
         print(f"models matched on huggingface: {hf_matched}")
+    if not args.skip_deepswe:
+        print(f"models matched on deepswe: {deepswe_matched}")
     if not args.skip_aa:
         print(f"score values updated from artificialanalysis.py: {aa_updated}")
     if not args.skip_swe_rebench:
@@ -616,6 +708,8 @@ def main() -> int:
         print(f"score values updated from osworld: {osworld_updated}")
     if not args.skip_huggingface:
         print(f"score values updated from huggingface: {hf_updated}")
+    if not args.skip_deepswe:
+        print(f"score values updated from deepswe: {deepswe_updated}")
     print()
     print_changes_table(changes)
     print()
