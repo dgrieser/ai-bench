@@ -1560,7 +1560,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "aa_intelligence_index": 6.9,
+        "aa_intelligence_index": 4.2,
         "aa_coding_index": 0.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -1758,8 +1758,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "aa_intelligence_index": 50.7,
-        "aa_coding_index": 67,
+        "aa_intelligence_index": 51.1,
+        "aa_coding_index": 68.8,
         "swe_bench_verified": null,
         "swe_bench_pro": 62.1,
         "deepswe": 46.2,
@@ -1769,7 +1769,7 @@
         "osworld_verified": null,
         "terminal_bench_hard": 50.8,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": 75.3,
+        "terminal_bench_2_1": 77.9,
         "tau2_bench_telecom": 99.1,
         "browsecomp": null,
         "aime_2025": null,
@@ -1811,6 +1811,72 @@
         "livecodebench": null,
         "scicode": 45.4,
         "hle": 37.1
+      }
+    },
+    {
+      "name": "lfm2-5-8b-a1b",
+      "date_added": "2026-06-19",
+      "url": "https://huggingface.co/LiquidAI/LFM2-8B-A1B",
+      "params": "8B-A1B",
+      "context": "32k",
+      "creator": {
+        "name": "Liquid AI",
+        "url": "https://www.liquid.ai"
+      },
+      "scores": {
+        "aa_intelligence_index": 8.3,
+        "aa_coding_index": 5.6,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": 4.5,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": null,
+        "tau2_bench_telecom": 16.1,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 51.3,
+        "livecodebench": 21.04,
+        "scicode": 7.8,
+        "hle": 6.9
+      }
+    },
+    {
+      "name": "lfm2-5-1-2b-thinking",
+      "date_added": "2026-06-19",
+      "url": "https://huggingface.co/LiquidAI/LFM2.5-1.2B-Thinking",
+      "params": "1.2B",
+      "context": "32k",
+      "creator": {
+        "name": "Liquid AI",
+        "url": "https://www.liquid.ai"
+      },
+      "scores": {
+        "aa_intelligence_index": 2.7,
+        "aa_coding_index": 1.4,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": null,
+        "tau2_bench_telecom": 19.6,
+        "browsecomp": null,
+        "aime_2025": 31.73,
+        "aime_2026": null,
+        "gpqa_diamond": 33.9,
+        "livecodebench": null,
+        "scicode": 4.2,
+        "hle": 6.1
       }
     }
   ],
