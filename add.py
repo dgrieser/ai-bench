@@ -24,6 +24,17 @@ from _osworld_mapping import (
     fetch_osworld_model_names,
     load_osworld_to_slug_mapping,
 )
+from _deepswe_mapping import (
+    add_deepswe_mapping,
+    fetch_deepswe_model_names,
+    load_deepswe_to_slug_mapping,
+)
+from _huggingface_mapping import (
+    add_hf_mapping,
+    add_hf_unmappable,
+    fetch_huggingface_benchmark_names,
+    load_reviewed_hf_labels,
+)
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -70,6 +81,31 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--context", help="Model context string.")
     parser.add_argument("--creator", help="Creator name.")
     parser.add_argument("--creator-url", help="Creator URL.")
+    parser.add_argument(
+        "--skip-aa",
+        action="store_true",
+        help="Skip artificialanalysis.py lookups (name autocomplete and field defaults).",
+    )
+    parser.add_argument(
+        "--skip-swe-rebench",
+        action="store_true",
+        help="Skip the SWE-Rebench mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-osworld",
+        action="store_true",
+        help="Skip the OSWorld mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-huggingface",
+        action="store_true",
+        help="Skip the Hugging Face benchmark-label mapping review.",
+    )
+    parser.add_argument(
+        "--skip-deepswe",
+        action="store_true",
+        help="Skip the DeepSWE mapping prompt.",
+    )
     return parser.parse_args()
 
 
@@ -227,6 +263,70 @@ def maybe_add_swe_rebench_mapping(model_name: str, interactive: bool) -> None:
 
     add_rebench_mapping(rebench_name, model_name)
     print(f"Added SWE-Rebench mapping '{rebench_name}' -> '{model_name}'")
+
+
+def maybe_add_deepswe_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_deepswe_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        deepswe_names = fetch_deepswe_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping DeepSWE mapping prompt: {exc}")
+        return
+
+    if not deepswe_names:
+        return
+
+    deepswe_name = prompt_select_or_new("DeepSWE model", deepswe_names)
+    if not deepswe_name:
+        return
+
+    add_deepswe_mapping(deepswe_name, model_name)
+    print(f"Added DeepSWE mapping '{deepswe_name}' -> '{model_name}'")
+
+
+def prompt_key_for_hf_label(label: str, keys: list[str]) -> str | None:
+    options_lower = {k.lower(): k for k in keys}
+    while True:
+        raw = prompt_select_or_new(f"Map HF label '{label}' to llm.json benchmark", keys)
+        if raw is None:
+            return None
+        canonical = options_lower.get(raw.lower())
+        if canonical is not None:
+            return canonical
+        print("Selection must match an existing llm.json benchmark key. Press Enter to skip.")
+
+
+def maybe_add_huggingface_mapping(doc: dict[str, Any], interactive: bool) -> None:
+    if not interactive:
+        return
+
+    benchmark_keys = sorted(doc["benchmarks"].keys())
+
+    try:
+        hf_labels = fetch_huggingface_benchmark_names()
+    except RuntimeError as exc:
+        print(f"Skipping Hugging Face mapping prompt: {exc}")
+        return
+
+    reviewed = load_reviewed_hf_labels()
+    unreviewed = [label for label in hf_labels if label not in reviewed]
+    if not unreviewed:
+        return
+
+    for label in unreviewed:
+        key = prompt_key_for_hf_label(label, benchmark_keys)
+        if not key:
+            add_hf_unmappable(label)
+            print(f"Recorded HF label '{label}' as unmappable")
+            continue
+        add_hf_mapping(label, key)
+        print(f"Added HF mapping '{label}' -> '{key}'")
 
 
 def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
@@ -440,13 +540,14 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
     benchmark_keys = list(doc["benchmarks"].keys())
 
     if interactive and args.name is None:
-        name = prompt_select_or_new("Name", fetch_aa_model_names(), allow_empty=False)
+        aa_names = [] if args.skip_aa else fetch_aa_model_names()
+        name = prompt_select_or_new("Name", aa_names, allow_empty=False)
     else:
         name = get_value(args.name, "Name", interactive)
     if not name:
         raise ValueError("Model name is required.")
 
-    aa_defaults = fetch_aa_model_defaults(name)
+    aa_defaults = {} if args.skip_aa else fetch_aa_model_defaults(name)
 
     url = get_value(args.url, "URL", interactive, aa_defaults.get("url"))
 
@@ -517,8 +618,14 @@ def main() -> int:
     ensure_unique_name(models, model["name"])
     models.append(model)
     write_doc(path, doc)
-    maybe_add_swe_rebench_mapping(model["name"], interactive)
-    maybe_add_osworld_mapping(model["name"], interactive)
+    if not args.skip_swe_rebench:
+        maybe_add_swe_rebench_mapping(model["name"], interactive)
+    if not args.skip_osworld:
+        maybe_add_osworld_mapping(model["name"], interactive)
+    if not args.skip_deepswe:
+        maybe_add_deepswe_mapping(model["name"], interactive)
+    if not args.skip_huggingface:
+        maybe_add_huggingface_mapping(doc, interactive)
 
     print(f"Added model '{model['name']}' to {path}")
     return 0
