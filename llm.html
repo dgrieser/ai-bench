@@ -1745,7 +1745,7 @@
       function renderBenchmarkDirectory() {
         const items = state.benchmarkKeys.map((key) => {
           const benchmark = state.data?.benchmarks?.[key] || {};
-          const name = getBenchmarkLabel(key);
+          const name = benchmark.name || getBenchmarkLabel(key);
           const category = benchmark.category || "";
           const description = benchmark.description || "";
           const links = benchmarkLinks(benchmark);
