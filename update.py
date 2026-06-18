@@ -16,12 +16,14 @@ from _swe_rebench_mapping import load_rebench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
+from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
+FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -141,6 +143,7 @@ def print_changes_table(changes: list[tuple[str, str, Any, Any]]) -> None:
 
 SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "terminal_bench_hard": (("terminalbench_hard",), to_percent),
+    "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     "mmmu_pro": (("mmmu_pro",), to_percent),
@@ -193,6 +196,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-deepswe",
         action="store_true",
         help="Skip fetching scores from deepswe.",
+    )
+    parser.add_argument(
+        "--skip-frontierswe",
+        action="store_true",
+        help="Skip fetching scores from frontierswe.",
     )
     return parser.parse_args()
 
@@ -570,6 +578,73 @@ def update_deepswe_scores(
     return matched, updated, changes
 
 
+def build_fetch_frontierswe_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_frontierswe_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_frontierswe_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_frontierswe.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected frontierswe JSON format: expected a list")
+
+    frontierswe_to_slug = load_frontierswe_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        frontierswe_name = row.get("model")
+        if not isinstance(frontierswe_name, str) or not frontierswe_name:
+            continue
+        slug = frontierswe_to_slug.get(frontierswe_name)
+        if not slug:
+            continue
+        by_slug.setdefault(slug, row)
+    return by_slug
+
+
+def update_frontierswe_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        frontierswe_model = by_slug.get(slug)
+        if frontierswe_model is None:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        old_value = scores.get("frontierswe")
+        new_value = frontierswe_model.get("score")
+
+        # Never overwrite an existing non-null value with null.
+        if old_value is not None and new_value is None:
+            continue
+
+        if old_value != new_value:
+            scores["frontierswe"] = new_value
+            updated += 1
+            changes.append((slug, "frontierswe", old_value, new_value))
+
+    return matched, updated, changes
+
+
 def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
@@ -578,6 +653,7 @@ def main() -> int:
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
+    frontierswe_path = FRONTIERSWE_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-rebench-to-artificialanalysis.json"
     )
@@ -589,6 +665,9 @@ def main() -> int:
     )
     deepswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-deepswe-to-artificialanalysis.json"
+    )
+    frontierswe_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-frontierswe-to-artificialanalysis.json"
     )
 
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
@@ -608,6 +687,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
     if not args.skip_deepswe:
         print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
+    if not args.skip_frontierswe:
+        print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
 
     changes: list[tuple[str, str, Any, Any]] = []
     available_slugs: set[str] = set()
@@ -660,6 +741,14 @@ def main() -> int:
         deepswe_matched, deepswe_updated, deepswe_changes = update_deepswe_scores(doc, deepswe_by_slug)
         changes.extend(deepswe_changes)
 
+    frontierswe_by_slug: dict[str, dict[str, Any]] = {}
+    frontierswe_matched = 0
+    frontierswe_updated = 0
+    if not args.skip_frontierswe:
+        frontierswe_by_slug = fetch_frontierswe_data(frontierswe_path, frontierswe_mapping_path)
+        frontierswe_matched, frontierswe_updated, frontierswe_changes = update_frontierswe_scores(doc, frontierswe_by_slug)
+        changes.extend(frontierswe_changes)
+
     missing = [slug for slug in slugs if slug not in available_slugs] if not args.skip_aa else []
     if args.write:
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
@@ -676,6 +765,8 @@ def main() -> int:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {len(deepswe_by_slug)}")
+    if not args.skip_frontierswe:
+        print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
@@ -700,6 +791,8 @@ def main() -> int:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_deepswe:
         print(f"models matched on deepswe: {deepswe_matched}")
+    if not args.skip_frontierswe:
+        print(f"models matched on frontierswe: {frontierswe_matched}")
     if not args.skip_aa:
         print(f"score values updated from artificialanalysis.py: {aa_updated}")
     if not args.skip_swe_rebench:
@@ -710,6 +803,8 @@ def main() -> int:
         print(f"score values updated from huggingface: {hf_updated}")
     if not args.skip_deepswe:
         print(f"score values updated from deepswe: {deepswe_updated}")
+    if not args.skip_frontierswe:
+        print(f"score values updated from frontierswe: {frontierswe_updated}")
     print()
     print_changes_table(changes)
     print()

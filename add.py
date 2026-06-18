@@ -29,6 +29,11 @@ from _deepswe_mapping import (
     fetch_deepswe_model_names,
     load_deepswe_to_slug_mapping,
 )
+from _frontierswe_mapping import (
+    add_frontierswe_mapping,
+    fetch_frontierswe_model_names,
+    load_frontierswe_to_slug_mapping,
+)
 from _huggingface_mapping import (
     add_hf_mapping,
     add_hf_unmappable,
@@ -105,6 +110,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-deepswe",
         action="store_true",
         help="Skip the DeepSWE mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-frontierswe",
+        action="store_true",
+        help="Skip the FrontierSWE mapping prompt.",
     )
     return parser.parse_args()
 
@@ -288,6 +298,31 @@ def maybe_add_deepswe_mapping(model_name: str, interactive: bool) -> None:
 
     add_deepswe_mapping(deepswe_name, model_name)
     print(f"Added DeepSWE mapping '{deepswe_name}' -> '{model_name}'")
+
+
+def maybe_add_frontierswe_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_frontierswe_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        frontierswe_names = fetch_frontierswe_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping FrontierSWE mapping prompt: {exc}")
+        return
+
+    if not frontierswe_names:
+        return
+
+    frontierswe_name = prompt_select_or_new("FrontierSWE model", frontierswe_names)
+    if not frontierswe_name:
+        return
+
+    add_frontierswe_mapping(frontierswe_name, model_name)
+    print(f"Added FrontierSWE mapping '{frontierswe_name}' -> '{model_name}'")
 
 
 def prompt_key_for_hf_label(label: str, keys: list[str]) -> str | None:
@@ -624,6 +659,8 @@ def main() -> int:
         maybe_add_osworld_mapping(model["name"], interactive)
     if not args.skip_deepswe:
         maybe_add_deepswe_mapping(model["name"], interactive)
+    if not args.skip_frontierswe:
+        maybe_add_frontierswe_mapping(model["name"], interactive)
     if not args.skip_huggingface:
         maybe_add_huggingface_mapping(doc, interactive)
 
