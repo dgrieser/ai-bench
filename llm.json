@@ -904,7 +904,7 @@
       "scores": {
         "swe_bench_verified": null,
         "swe_bench_pro": 56.2,
-        "deepswe": null,
+        "deepswe": 0.2,
         "swe_rebench": 49.6,
         "mmmu_pro": null,
         "terminal_bench_hard": 39.4,
@@ -1633,6 +1633,37 @@
         "livecodebench": 70.3,
         "scicode": 38.2,
         "hle": 9.9
+      }
+    },
+    {
+      "name": "glm-5-2",
+      "date_added": "2026-06-18",
+      "url": "https://huggingface.co/zai-org/GLM-5.2",
+      "params": "753B-A40B",
+      "context": "1m",
+      "creator": {
+        "name": "Z AI",
+        "url": "https://z.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": 50.7,
+        "aa_coding_index": 67,
+        "swe_bench_verified": null,
+        "swe_bench_pro": 62.1,
+        "deepswe": 46.2,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": 50.8,
+        "terminal_bench_2_0": null,
+        "tau2_bench_telecom": 99.1,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": 99.2,
+        "gpqa_diamond": 89.5,
+        "livecodebench": null,
+        "scicode": 50.5,
+        "hle": 40.1
       }
     }
   ],
