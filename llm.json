@@ -505,7 +505,7 @@
         "aa_intelligence_index": 33.7,
         "aa_coding_index": 48.2,
         "swe_bench_verified": 76.4,
-        "swe_bench_pro": null,
+        "swe_bench_pro": 80.3,
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 56.84,
@@ -1798,7 +1798,7 @@
         "deepswe": 20.4,
         "frontierswe": null,
         "swe_rebench": 47.69,
-        "mmmu_pro": 77.7,
+        "mmmu_pro": 78.6,
         "osworld_verified": 75.2,
         "terminal_bench_hard": 42.4,
         "terminal_bench_2_0": null,
@@ -1877,6 +1877,1374 @@
         "livecodebench": null,
         "scicode": 4.2,
         "hle": 6.1
+      }
+    },
+    {
+      "name": "llama-4-scout",
+      "date_added": "2025-04-05",
+      "url": "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "creator": {
+        "name": "Meta",
+        "url": "https://www.llama.com/"
+      },
+      "context": "10m",
+      "scores": {
+        "terminal_bench_hard": 1.5,
+        "terminal_bench_2_1": 3.7,
+        "tau2_bench_telecom": 15.5,
+        "aime_2025": 14,
+        "mmmu_pro": 52.9,
+        "gpqa_diamond": 58.7,
+        "livecodebench": 29.9,
+        "scicode": 17,
+        "hle": 4.3,
+        "aa_intelligence_index": 10,
+        "aa_coding_index": 8.2,
+        "swe_rebench": 6.0
+      }
+    },
+    {
+      "name": "llama-4-maverick",
+      "date_added": "2025-04-05",
+      "url": "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+      "creator": {
+        "name": "Meta",
+        "url": "https://www.llama.com/"
+      },
+      "context": "1m",
+      "scores": {
+        "terminal_bench_hard": 6.8,
+        "terminal_bench_2_1": 7.9,
+        "tau2_bench_telecom": 17.8,
+        "aime_2025": 19.3,
+        "mmmu_pro": 62.1,
+        "gpqa_diamond": 67.1,
+        "livecodebench": 39.7,
+        "scicode": 33.1,
+        "hle": 4.8,
+        "aa_intelligence_index": 14.3,
+        "aa_coding_index": 16.3,
+        "swe_rebench": 8.57
+      }
+    },
+    {
+      "name": "phi-4",
+      "date_added": "2024-12-12",
+      "url": "https://huggingface.co/microsoft/phi-4",
+      "creator": {
+        "name": "Microsoft",
+        "url": "https://azure.microsoft.com/en-us/products/phi"
+      },
+      "context": "16k",
+      "scores": {
+        "terminal_bench_hard": 3.8,
+        "aime_2025": 18,
+        "gpqa_diamond": 57.5,
+        "livecodebench": 23.1,
+        "scicode": 26,
+        "hle": 4.1,
+        "aa_intelligence_index": 4.9
+      }
+    },
+    {
+      "name": "phi-4-reasoning",
+      "date_added": "2025-04-30",
+      "url": "https://huggingface.co/microsoft/Phi-4-reasoning",
+      "creator": {
+        "name": "Microsoft",
+        "url": "https://azure.microsoft.com/en-us/products/phi"
+      },
+      "scores": {
+        "aime_2025": 62.9,
+        "gpqa_diamond": 65.8,
+        "livecodebench": 53.8
+      }
+    },
+    {
+      "name": "phi-4-reasoning-plus",
+      "date_added": "2025-04-30",
+      "url": "https://huggingface.co/microsoft/Phi-4-reasoning-plus",
+      "creator": {
+        "name": "Microsoft",
+        "url": "https://azure.microsoft.com/en-us/products/phi"
+      },
+      "scores": {
+        "aime_2025": 78,
+        "gpqa_diamond": 68.9,
+        "livecodebench": 53.1
+      }
+    },
+    {
+      "name": "phi-4-reasoning-vision-15b",
+      "date_added": "2026-03-04",
+      "url": "https://huggingface.co/microsoft/Phi-4-reasoning-vision-15B",
+      "creator": {
+        "name": "Microsoft",
+        "url": "https://azure.microsoft.com/en-us/products/phi"
+      },
+      "scores": {
+        "mmmu_pro": 38.5
+      }
+    },
+    {
+      "name": "olmo-3-32b-think",
+      "date_added": "2025-11-20",
+      "url": "https://huggingface.co/allenai/Olmo-3-32B-Think",
+      "creator": {
+        "name": "Allen Institute for AI (Ai2)",
+        "url": "https://allenai.org/olmo"
+      },
+      "scores": {
+        "terminal_bench_hard": 1.5,
+        "aime_2025": 73.7,
+        "gpqa_diamond": 61,
+        "livecodebench": 67.2,
+        "scicode": 28.6,
+        "hle": 5.9,
+        "aa_intelligence_index": 6.4
+      }
+    },
+    {
+      "name": "olmo-3-1-32b-instruct",
+      "date_added": "2025-12-12",
+      "url": "https://huggingface.co/allenai/Olmo-3.1-32B-Instruct",
+      "creator": {
+        "name": "Allen Institute for AI (Ai2)",
+        "url": "https://allenai.org/olmo"
+      },
+      "context": "64k",
+      "scores": {
+        "tau2_bench_telecom": 21.3,
+        "gpqa_diamond": 53.9,
+        "scicode": 16.7,
+        "hle": 4.9,
+        "aa_intelligence_index": 6.5,
+        "aime_2025": 57.9
+      }
+    },
+    {
+      "name": "olmo-3-7b-think",
+      "date_added": "2025-11-20",
+      "url": "https://huggingface.co/allenai/Olmo-3-7B-Think",
+      "creator": {
+        "name": "Allen Institute for AI (Ai2)",
+        "url": "https://allenai.org/olmo"
+      },
+      "context": "64k",
+      "scores": {
+        "terminal_bench_hard": 0.8,
+        "aime_2025": 70.7,
+        "gpqa_diamond": 51.6,
+        "livecodebench": 61.7,
+        "scicode": 21.2,
+        "hle": 5.7,
+        "aa_intelligence_index": 4
+      }
+    },
+    {
+      "name": "olmo-3-7b-instruct",
+      "date_added": "2025-11-20",
+      "url": "https://huggingface.co/allenai/Olmo-3-7B-Instruct",
+      "creator": {
+        "name": "Allen Institute for AI (Ai2)",
+        "url": "https://allenai.org/olmo"
+      },
+      "context": "64k",
+      "scores": {
+        "tau2_bench_telecom": 12.6,
+        "aime_2025": 41.3,
+        "gpqa_diamond": 40,
+        "livecodebench": 26.6,
+        "scicode": 10.3,
+        "hle": 5.8,
+        "aa_intelligence_index": 2.8
+      }
+    },
+    {
+      "name": "jamba-1-7-large",
+      "date_added": "2025-07-07",
+      "url": "https://huggingface.co/ai21labs/AI21-Jamba-Large-1.7",
+      "creator": {
+        "name": "AI21 Labs",
+        "url": "https://www.ai21.com/jamba/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 2.3,
+        "tau2_bench_telecom": 13.5,
+        "aime_2025": 2.3,
+        "gpqa_diamond": 39,
+        "livecodebench": 18.1,
+        "scicode": 18.8,
+        "hle": 3.8,
+        "aa_intelligence_index": 5.3
+      }
+    },
+    {
+      "name": "jamba-1-7-mini",
+      "date_added": "2025-07-07",
+      "url": "https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.7",
+      "creator": {
+        "name": "AI21 Labs",
+        "url": "https://www.ai21.com/jamba/"
+      },
+      "context": "256k",
+      "scores": {
+        "tau2_bench_telecom": 12.6,
+        "aime_2025": 0.3,
+        "gpqa_diamond": 32.2,
+        "livecodebench": 6.1,
+        "scicode": 9.3,
+        "hle": 4.5,
+        "aa_intelligence_index": 2.7
+      }
+    },
+    {
+      "name": "trinity-large-thinking",
+      "date_added": "2026-04-01",
+      "url": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking",
+      "creator": {
+        "name": "Arcee AI",
+        "url": "https://www.arcee.ai/"
+      },
+      "context": "512k",
+      "scores": {
+        "terminal_bench_hard": 22.7,
+        "tau2_bench_telecom": 90.1,
+        "gpqa_diamond": 75.2,
+        "scicode": 36.1,
+        "hle": 14.7,
+        "aa_intelligence_index": 24.5,
+        "aime_2025": 96.3,
+        "swe_bench_verified": 63.2
+      }
+    },
+    {
+      "name": "trinity-mini",
+      "date_added": "2025-12-01",
+      "url": "https://huggingface.co/arcee-ai/Trinity-Mini",
+      "creator": {
+        "name": "Arcee AI",
+        "url": "https://www.arcee.ai/"
+      }
+    },
+    {
+      "name": "hermes-4-llama-3-1-405b",
+      "date_added": "2025-08-26",
+      "url": "https://huggingface.co/NousResearch/Hermes-4-405B",
+      "creator": {
+        "name": "Nous Research",
+        "url": "https://nousresearch.com/releases"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 9.8,
+        "tau2_bench_telecom": 26.6,
+        "aime_2025": 15.3,
+        "gpqa_diamond": 53.6,
+        "livecodebench": 54.6,
+        "scicode": 34.6,
+        "hle": 4.2,
+        "aa_intelligence_index": 8.8
+      }
+    },
+    {
+      "name": "hermes-4-llama-3-1-70b",
+      "date_added": "2025-08-26",
+      "url": "https://huggingface.co/NousResearch/Hermes-4-70B",
+      "creator": {
+        "name": "Nous Research",
+        "url": "https://nousresearch.com/releases"
+      },
+      "context": "128k",
+      "scores": {
+        "tau2_bench_telecom": 21.6,
+        "aime_2025": 11.3,
+        "gpqa_diamond": 49.1,
+        "livecodebench": 26.9,
+        "scicode": 27.7,
+        "hle": 3.6,
+        "aa_intelligence_index": 6.9
+      }
+    },
+    {
+      "name": "hermes-4-14b",
+      "date_added": "2025-08-26",
+      "url": "https://huggingface.co/NousResearch/Hermes-4-14B",
+      "creator": {
+        "name": "Nous Research",
+        "url": "https://nousresearch.com/releases"
+      }
+    },
+    {
+      "name": "reka-flash-3",
+      "date_added": "2025-03-10",
+      "url": "https://huggingface.co/RekaAI/reka-flash-3",
+      "creator": {
+        "name": "Reka AI",
+        "url": "https://www.reka.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "aime_2025": 33.7,
+        "gpqa_diamond": 52.9,
+        "livecodebench": 43.5,
+        "scicode": 26.7,
+        "hle": 5.1,
+        "aa_intelligence_index": 4.1
+      }
+    },
+    {
+      "name": "reka-flash-3-1",
+      "date_added": "2025-07-10",
+      "url": "https://huggingface.co/RekaAI/reka-flash-3.1",
+      "creator": {
+        "name": "Reka AI",
+        "url": "https://www.reka.ai/"
+      }
+    },
+    {
+      "name": "apriel-v1-6-15b-thinker",
+      "date_added": "2025-12-09",
+      "url": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
+      "creator": {
+        "name": "ServiceNow",
+        "url": "https://www.servicenow.com/blogs/2025/apriel-model-family-frontier-reasoning"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 14.4,
+        "tau2_bench_telecom": 69.3,
+        "aime_2025": 88,
+        "gpqa_diamond": 73.3,
+        "livecodebench": 80.7,
+        "scicode": 37.3,
+        "hle": 9.8,
+        "aa_intelligence_index": 20.5,
+        "swe_bench_verified": 16.0,
+        "mmmu_pro": 60.28
+      }
+    },
+    {
+      "name": "deepseek-v3-2-0925",
+      "date_added": "2025-09-29",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp",
+      "creator": {
+        "name": "DeepSeek",
+        "url": "https://www.deepseek.com/en/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 25,
+        "tau2_bench_telecom": 33.9,
+        "aime_2025": 57.7,
+        "gpqa_diamond": 73.8,
+        "livecodebench": 55.4,
+        "scicode": 39.9,
+        "hle": 8.6,
+        "aa_intelligence_index": 21.3,
+        "swe_bench_verified": 73.1,
+        "browsecomp": 51.4
+      }
+    },
+    {
+      "name": "deepseek-r1",
+      "date_added": "2025-05-28",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-0528",
+      "creator": {
+        "name": "DeepSeek",
+        "url": "https://www.deepseek.com/en/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 15.9,
+        "tau2_bench_telecom": 36.5,
+        "aime_2025": 76,
+        "gpqa_diamond": 81.3,
+        "livecodebench": 77,
+        "scicode": 40.3,
+        "hle": 14.9,
+        "aa_intelligence_index": 20.1,
+        "swe_rebench": 18.26,
+        "swe_bench_verified": 44.6,
+        "browsecomp": 8.9
+      }
+    },
+    {
+      "name": "glm-4.5",
+      "date_added": "2025-07-28",
+      "url": "https://huggingface.co/zai-org/GLM-4.5",
+      "creator": {
+        "name": "Z.AI",
+        "url": "https://z.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 22,
+        "tau2_bench_telecom": 43,
+        "aime_2025": 73.7,
+        "gpqa_diamond": 78.2,
+        "livecodebench": 73.8,
+        "scicode": 34.8,
+        "hle": 12.2,
+        "aa_intelligence_index": 19.5,
+        "swe_rebench": 46.36,
+        "swe_bench_verified": 64.2,
+        "browsecomp": 26.4
+      }
+    },
+    {
+      "name": "glm-4-5-air",
+      "date_added": "2025-07-28",
+      "url": "https://huggingface.co/zai-org/GLM-4.5-Air",
+      "creator": {
+        "name": "Z.AI",
+        "url": "https://z.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 20.5,
+        "tau2_bench_telecom": 46.5,
+        "aime_2025": 80.7,
+        "gpqa_diamond": 73.3,
+        "livecodebench": 68.4,
+        "scicode": 30.6,
+        "hle": 6.8,
+        "aa_intelligence_index": 16.5,
+        "swe_rebench": 32.56,
+        "swe_bench_verified": 57.6,
+        "browsecomp": 21.3
+      }
+    },
+    {
+      "name": "glm-4-6",
+      "date_added": "2025-09-30",
+      "url": "https://huggingface.co/zai-org/GLM-4.6",
+      "creator": {
+        "name": "Z.AI",
+        "url": "https://z.ai/"
+      },
+      "context": "200k",
+      "scores": {
+        "terminal_bench_hard": 28.8,
+        "tau2_bench_telecom": 76.9,
+        "aime_2025": 44.3,
+        "gpqa_diamond": 63.2,
+        "livecodebench": 56.1,
+        "scicode": 33.1,
+        "hle": 5.2,
+        "aa_intelligence_index": 23,
+        "swe_rebench": 38.26,
+        "swe_bench_verified": 68,
+        "browsecomp": 45.1
+      }
+    },
+    {
+      "name": "glm-4-7",
+      "date_added": "2025-12-22",
+      "url": "https://huggingface.co/zai-org/GLM-4.7",
+      "creator": {
+        "name": "Z.AI",
+        "url": "https://z.ai/"
+      },
+      "context": "200k",
+      "scores": {
+        "terminal_bench_hard": 31.8,
+        "tau2_bench_telecom": 95.9,
+        "aime_2025": 95,
+        "gpqa_diamond": 85.9,
+        "livecodebench": 89.4,
+        "scicode": 45.1,
+        "hle": 25.1,
+        "aa_intelligence_index": 33.8,
+        "swe_rebench": 31.79,
+        "swe_bench_verified": 73.8,
+        "browsecomp": 52,
+        "terminal_bench_2_0": 41.0
+      }
+    },
+    {
+      "name": "kimi-linear-48b-a3b-instruct",
+      "date_added": "2025-10-30",
+      "url": "https://huggingface.co/moonshotai/Kimi-Linear-48B-A3B-Instruct",
+      "creator": {
+        "name": "Moonshot AI",
+        "url": "https://www.moonshot.ai/"
+      },
+      "context": "1m",
+      "scores": {
+        "terminal_bench_hard": 11.4,
+        "aime_2025": 36.3,
+        "gpqa_diamond": 41.2,
+        "livecodebench": 37.8,
+        "scicode": 19.9,
+        "hle": 2.7,
+        "aa_intelligence_index": 8.5
+      }
+    },
+    {
+      "name": "kimi-dev-72b",
+      "date_added": "2025-06-17",
+      "url": "https://huggingface.co/moonshotai/Kimi-Dev-72B",
+      "creator": {
+        "name": "Moonshot AI",
+        "url": "https://www.moonshot.ai/"
+      }
+    },
+    {
+      "name": "ernie-4-5-300b-a47b",
+      "date_added": "2025-06-30",
+      "url": "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT",
+      "creator": {
+        "name": "Baidu",
+        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 6.1,
+        "aime_2025": 41.3,
+        "gpqa_diamond": 81.1,
+        "livecodebench": 46.7,
+        "scicode": 31.5,
+        "hle": 3.5,
+        "aa_intelligence_index": 9
+      }
+    },
+    {
+      "name": "ernie-4-5-21b-a3b",
+      "date_added": "2025-06-30",
+      "url": "https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-PT",
+      "creator": {
+        "name": "Baidu",
+        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
+      }
+    },
+    {
+      "name": "ernie-4-5-21b-a3b-thinking",
+      "date_added": "2025-09-09",
+      "url": "https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-Thinking",
+      "creator": {
+        "name": "Baidu",
+        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
+      }
+    },
+    {
+      "name": "seed-oss-36b-instruct",
+      "date_added": "2025-08-20",
+      "url": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct",
+      "creator": {
+        "name": "ByteDance",
+        "url": "https://seed.bytedance.com/en/"
+      },
+      "context": "512k",
+      "scores": {
+        "terminal_bench_hard": 6.8,
+        "tau2_bench_telecom": 49.4,
+        "aime_2025": 84.7,
+        "gpqa_diamond": 72.6,
+        "livecodebench": 76.5,
+        "scicode": 36.5,
+        "hle": 9.1,
+        "aa_intelligence_index": 18.3,
+        "swe_bench_verified": 56.0
+      }
+    },
+    {
+      "name": "ling-flash-2-0",
+      "date_added": "2025-09-17",
+      "url": "https://huggingface.co/inclusionAI/Ling-flash-2.0",
+      "creator": {
+        "name": "inclusionAI",
+        "url": "https://huggingface.co/inclusionAI"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 10.6,
+        "tau2_bench_telecom": 20.8,
+        "aime_2025": 65.3,
+        "gpqa_diamond": 65.7,
+        "livecodebench": 58.9,
+        "scicode": 28.9,
+        "hle": 6.3,
+        "aa_intelligence_index": 9.7
+      }
+    },
+    {
+      "name": "ring-flash-2-0",
+      "date_added": "2025-09-19",
+      "url": "https://huggingface.co/inclusionAI/Ring-flash-2.0",
+      "creator": {
+        "name": "inclusionAI",
+        "url": "https://huggingface.co/inclusionAI"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 7.6,
+        "aime_2025": 83.7,
+        "gpqa_diamond": 72.5,
+        "livecodebench": 62.8,
+        "scicode": 16.8,
+        "hle": 8.9,
+        "aa_intelligence_index": 8.2
+      }
+    },
+    {
+      "name": "ling-mini-2-0",
+      "date_added": "2025-09-09",
+      "url": "https://huggingface.co/inclusionAI/Ling-mini-2.0",
+      "creator": {
+        "name": "inclusionAI",
+        "url": "https://huggingface.co/inclusionAI"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 0.8,
+        "tau2_bench_telecom": 13.2,
+        "aime_2025": 49.3,
+        "gpqa_diamond": 56.2,
+        "livecodebench": 42.9,
+        "scicode": 13.5,
+        "hle": 5,
+        "aa_intelligence_index": 3.8
+      }
+    },
+    {
+      "name": "ring-mini-2-0",
+      "date_added": "2025-10-03",
+      "url": "https://huggingface.co/inclusionAI/Ring-mini-2.0",
+      "creator": {
+        "name": "inclusionAI",
+        "url": "https://huggingface.co/inclusionAI"
+      }
+    },
+    {
+      "name": "intern-s1",
+      "date_added": "2025-07-26",
+      "url": "https://huggingface.co/internlm/Intern-S1",
+      "creator": {
+        "name": "Shanghai AI Laboratory",
+        "url": "https://huggingface.co/internlm"
+      },
+      "scores": {
+        "mmmu_pro": 77.7,
+        "gpqa_diamond": 77.3,
+        "aime_2025": 86.0
+      }
+    },
+    {
+      "name": "mimo-v2-flash",
+      "date_added": "2025-12-16",
+      "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash",
+      "creator": {
+        "name": "Xiaomi",
+        "url": "https://huggingface.co/XiaomiMiMo"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 25.8,
+        "tau2_bench_telecom": 83.9,
+        "aime_2025": 67.7,
+        "gpqa_diamond": 65.6,
+        "livecodebench": 40.2,
+        "scicode": 25.9,
+        "hle": 8,
+        "aa_intelligence_index": 23.1,
+        "swe_bench_verified": 73.4,
+        "browsecomp": 58.3,
+        "terminal_bench_2_0": 38.5
+      }
+    },
+    {
+      "name": "dots-llm1-inst",
+      "date_added": "2025-06-06",
+      "url": "https://huggingface.co/rednote-hilab/dots.llm1.inst",
+      "creator": {
+        "name": "RedNote",
+        "url": "https://huggingface.co/rednote-hilab"
+      }
+    },
+    {
+      "name": "longcat-flash-chat",
+      "date_added": "2025-09-01",
+      "url": "https://huggingface.co/meituan-longcat/LongCat-Flash-Chat",
+      "creator": {
+        "name": "LongCat",
+        "url": "https://longcat.chat/"
+      },
+      "scores": {
+        "aime_2025": 61.3,
+        "gpqa_diamond": 73.2,
+        "swe_bench_verified": 60.4,
+        "livecodebench": 48.02,
+        "tau2_bench_telecom": 73.68
+      }
+    },
+    {
+      "name": "longcat-flash-thinking",
+      "date_added": "2025-09-22",
+      "url": "https://huggingface.co/meituan-longcat/LongCat-Flash-Thinking",
+      "creator": {
+        "name": "LongCat",
+        "url": "https://longcat.chat/"
+      },
+      "scores": {
+        "aime_2025": 90.6,
+        "gpqa_diamond": 81.5,
+        "swe_bench_verified": 59.4,
+        "livecodebench": 79.4,
+        "tau2_bench_telecom": 83.1
+      }
+    },
+    {
+      "name": "hunyuan-a13b-instruct",
+      "date_added": "2025-06-27",
+      "url": "https://huggingface.co/tencent/Hunyuan-A13B-Instruct",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "gpqa_diamond": 49.12
+      }
+    },
+    {
+      "name": "hunyuan-7b-instruct",
+      "date_added": "2025-07-30",
+      "url": "https://huggingface.co/tencent/Hunyuan-7B-Instruct",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "gpqa_diamond": 60.1
+      }
+    },
+    {
+      "name": "hunyuan-4b-instruct",
+      "date_added": "2025-07-30",
+      "url": "https://huggingface.co/tencent/Hunyuan-4B-Instruct",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "gpqa_diamond": 61.1
+      }
+    },
+    {
+      "name": "hunyuan-1-8b-instruct",
+      "date_added": "2025-07-30",
+      "url": "https://huggingface.co/tencent/Hunyuan-1.8B-Instruct",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "gpqa_diamond": 47.2
+      }
+    },
+    {
+      "name": "hunyuan-0-5b-instruct",
+      "date_added": "2025-07-30",
+      "url": "https://huggingface.co/tencent/Hunyuan-0.5B-Instruct",
+      "creator": {
+        "name": "Tencent",
+        "url": "https://aistudio.tencent.com/llm/en"
+      },
+      "scores": {
+        "gpqa_diamond": 23.3
+      }
+    },
+    {
+      "name": "step-3",
+      "date_added": "2025-07-31",
+      "url": "https://huggingface.co/stepfun-ai/step3",
+      "creator": {
+        "name": "StepFun",
+        "url": "https://www.stepfun.com/"
+      }
+    },
+    {
+      "name": "minimax-m1-80k",
+      "date_added": "2025-06-16",
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k",
+      "creator": {
+        "name": "MiniMax",
+        "url": "https://minimaxi.com/"
+      },
+      "context": "1m",
+      "scores": {
+        "terminal_bench_hard": 3,
+        "tau2_bench_telecom": 34.2,
+        "aime_2025": 61,
+        "gpqa_diamond": 69.7,
+        "livecodebench": 71.1,
+        "scicode": 37.4,
+        "hle": 8.2,
+        "aa_intelligence_index": 17.7,
+        "swe_bench_verified": 56
+      }
+    },
+    {
+      "name": "skywork-or1-32b",
+      "date_added": "2025-05-13",
+      "url": "https://huggingface.co/Skywork/Skywork-OR1-32B",
+      "creator": {
+        "name": "Skywork",
+        "url": "https://huggingface.co/Skywork"
+      },
+      "scores": {
+        "aime_2025": 73.3,
+        "livecodebench": 63.0
+      }
+    },
+    {
+      "name": "klear-46b-a2-5b-instruct",
+      "date_added": "2025-09-05",
+      "url": "https://huggingface.co/Kwai-Klear/Klear-46B-A2.5B-Instruct",
+      "creator": {
+        "name": "Kuaishou",
+        "url": "https://huggingface.co/Kwai-Klear"
+      }
+    },
+    {
+      "name": "qwen3-32b-instruct",
+      "date_added": "2025-04-28",
+      "url": "https://huggingface.co/Qwen/Qwen3-32B",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "32k",
+      "scores": {
+        "aime_2025": 19.7,
+        "gpqa_diamond": 53.5,
+        "livecodebench": 28.8,
+        "scicode": 28,
+        "hle": 4.3,
+        "aa_intelligence_index": 8.6,
+        "swe_rebench": 8.57
+      }
+    },
+    {
+      "name": "qwen3-14b-instruct",
+      "date_added": "2025-04-28",
+      "url": "https://huggingface.co/Qwen/Qwen3-14B",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "32k",
+      "scores": {
+        "terminal_bench_hard": 5.3,
+        "tau2_bench_telecom": 32.2,
+        "aime_2025": 58,
+        "gpqa_diamond": 47,
+        "livecodebench": 28,
+        "scicode": 26.5,
+        "hle": 4.2,
+        "aa_intelligence_index": 7
+      }
+    },
+    {
+      "name": "qwen3-8b-instruct",
+      "date_added": "2025-04-28",
+      "url": "https://huggingface.co/Qwen/Qwen3-8B",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "32k",
+      "scores": {
+        "terminal_bench_hard": 2.3,
+        "tau2_bench_telecom": 24.9,
+        "aime_2025": 24.3,
+        "gpqa_diamond": 45.2,
+        "livecodebench": 20.2,
+        "scicode": 16.8,
+        "hle": 2.8,
+        "aa_intelligence_index": 5.1
+      }
+    },
+    {
+      "name": "qwen3-4b-instruct",
+      "date_added": "2025-04-28",
+      "url": "https://huggingface.co/Qwen/Qwen3-4B",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "32k",
+      "scores": {
+        "gpqa_diamond": 39.8,
+        "livecodebench": 23.3,
+        "scicode": 16.7,
+        "hle": 3.7,
+        "aa_intelligence_index": 6.8
+      }
+    },
+    {
+      "name": "qwen3-235b-a22b-instruct-2507",
+      "date_added": "2025-07-21",
+      "url": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 15.2,
+        "tau2_bench_telecom": 33.3,
+        "aime_2025": 71.7,
+        "gpqa_diamond": 75.3,
+        "livecodebench": 52.4,
+        "scicode": 36,
+        "hle": 10.6,
+        "aa_intelligence_index": 18.2,
+        "swe_rebench": 25.22
+      }
+    },
+    {
+      "name": "qwen3-235b-a22b-instruct-2507-reasoning",
+      "date_added": "2025-07-25",
+      "url": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 13.6,
+        "tau2_bench_telecom": 53.2,
+        "aime_2025": 91,
+        "gpqa_diamond": 79,
+        "livecodebench": 78.8,
+        "scicode": 42.4,
+        "hle": 15,
+        "aa_intelligence_index": 22.3,
+        "swe_rebench": 14.55
+      }
+    },
+    {
+      "name": "qwen3-coder-480b-a35b-instruct",
+      "date_added": "2025-07-22",
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 18.9,
+        "tau2_bench_telecom": 43.6,
+        "aime_2025": 39.3,
+        "gpqa_diamond": 61.8,
+        "livecodebench": 58.5,
+        "scicode": 35.9,
+        "hle": 4.4,
+        "aa_intelligence_index": 18,
+        "swe_rebench": 39.37,
+        "swe_bench_verified": 69.6
+      }
+    },
+    {
+      "name": "qwq-32b",
+      "date_added": "2025-03-05",
+      "url": "https://huggingface.co/Qwen/QwQ-32B",
+      "creator": {
+        "name": "Alibaba",
+        "url": "https://qwen.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "aime_2025": 29,
+        "gpqa_diamond": 59.3,
+        "livecodebench": 63.1,
+        "scicode": 35.8,
+        "hle": 8.2,
+        "aa_intelligence_index": 13.4
+      }
+    },
+    {
+      "name": "exaone-4-0-32b",
+      "date_added": "2025-07-15",
+      "url": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-32B",
+      "creator": {
+        "name": "LG AI Research",
+        "url": "https://www.lgresearch.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 1.5,
+        "tau2_bench_telecom": 4.1,
+        "aime_2025": 39.3,
+        "gpqa_diamond": 62.8,
+        "livecodebench": 47.2,
+        "scicode": 25.2,
+        "hle": 4.9,
+        "aa_intelligence_index": 6
+      }
+    },
+    {
+      "name": "exaone-4-0-1-2b",
+      "date_added": "2025-07-15",
+      "url": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-1.2B",
+      "creator": {
+        "name": "LG AI Research",
+        "url": "https://www.lgresearch.ai/"
+      },
+      "context": "64k",
+      "scores": {
+        "tau2_bench_telecom": 20.5,
+        "aime_2025": 24,
+        "gpqa_diamond": 42.4,
+        "livecodebench": 29.3,
+        "scicode": 7.4,
+        "hle": 5.8,
+        "aa_intelligence_index": 2.8
+      }
+    },
+    {
+      "name": "solar-open-100b-reasoning",
+      "date_added": "2025-12-17",
+      "url": "https://huggingface.co/upstage/Solar-Open-100B",
+      "creator": {
+        "name": "Upstage",
+        "url": "https://www.upstage.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 2.3,
+        "tau2_bench_telecom": 48.2,
+        "gpqa_diamond": 65.7,
+        "scicode": 26.9,
+        "hle": 9.2,
+        "aa_intelligence_index": 15.1
+      }
+    },
+    {
+      "name": "falcon-h1-34b-instruct",
+      "date_added": "2025-05-21",
+      "url": "https://huggingface.co/tiiuae/Falcon-H1-34B-Instruct",
+      "creator": {
+        "name": "TII",
+        "url": "https://falconllm.tii.ae"
+      },
+      "scores": {
+        "aime_2025": 16.67,
+        "gpqa_diamond": 41.53,
+        "livecodebench": 49.71
+      }
+    },
+    {
+      "name": "falcon-h1r-7b",
+      "date_added": "2026-01-05",
+      "url": "https://huggingface.co/tiiuae/Falcon-H1R-7B",
+      "creator": {
+        "name": "TII",
+        "url": "https://falconllm.tii.ae"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 2.3,
+        "tau2_bench_telecom": 27.8,
+        "aime_2025": 80,
+        "gpqa_diamond": 66.1,
+        "livecodebench": 72.4,
+        "scicode": 24.9,
+        "hle": 10.8,
+        "aa_intelligence_index": 9.8
+      }
+    },
+    {
+      "name": "mistral-large-3",
+      "date_added": "2025-12-02",
+      "url": "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 15.9,
+        "terminal_bench_2_1": 12,
+        "tau2_bench_telecom": 24.6,
+        "aime_2025": 38,
+        "mmmu_pro": 55.7,
+        "gpqa_diamond": 68,
+        "livecodebench": 46.5,
+        "scicode": 36.2,
+        "hle": 4.1,
+        "aa_intelligence_index": 15.9,
+        "aa_coding_index": 20.1
+      }
+    },
+    {
+      "name": "ministral-3-8b",
+      "date_added": "2025-12-02",
+      "url": "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "terminal_bench_hard": 4.5,
+        "terminal_bench_2_1": 6.7,
+        "tau2_bench_telecom": 26.6,
+        "aime_2025": 31.7,
+        "mmmu_pro": 46,
+        "gpqa_diamond": 47.1,
+        "livecodebench": 30.3,
+        "scicode": 20.8,
+        "hle": 4.3,
+        "aa_intelligence_index": 8.9,
+        "aa_coding_index": 11.4
+      }
+    },
+    {
+      "name": "ministral-3-3b",
+      "date_added": "2025-12-02",
+      "url": "https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512",
+      "creator": {
+        "name": "Mistral",
+        "url": "https://mistral.ai/"
+      },
+      "context": "256k",
+      "scores": {
+        "tau2_bench_telecom": 24.9,
+        "aime_2025": 22,
+        "mmmu_pro": 38.1,
+        "gpqa_diamond": 35.8,
+        "livecodebench": 24.7,
+        "scicode": 14.4,
+        "hle": 5.3,
+        "aa_intelligence_index": 5.6,
+        "aa_coding_index": 4.8
+      }
+    },
+    {
+      "name": "hyperclova-x-seed-think-32b",
+      "date_added": "2025-12-26",
+      "url": "https://huggingface.co/naver-hyperclovax/HyperCLOVAX-SEED-Think-32B",
+      "creator": {
+        "name": "Naver",
+        "url": "https://huggingface.co/naver-hyperclovax"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 12.1,
+        "tau2_bench_telecom": 87.4,
+        "aime_2025": 59,
+        "gpqa_diamond": 61.5,
+        "livecodebench": 62.9,
+        "scicode": 28.4,
+        "hle": 5.5,
+        "aa_intelligence_index": 17
+      }
+    },
+    {
+      "name": "gemma-3-27b",
+      "date_added": "2025-03-10",
+      "url": "https://huggingface.co/google/gemma-3-27b-it",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 3.8,
+        "tau2_bench_telecom": 10.5,
+        "aime_2025": 20.7,
+        "mmmu_pro": 48,
+        "gpqa_diamond": 42.8,
+        "livecodebench": 13.7,
+        "scicode": 21.2,
+        "hle": 4.7,
+        "aa_intelligence_index": 4.8
+      }
+    },
+    {
+      "name": "gemma-3-4b",
+      "date_added": "2025-03-10",
+      "url": "https://huggingface.co/google/gemma-3-4b-it",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "context": "128k",
+      "scores": {
+        "terminal_bench_hard": 0.8,
+        "tau2_bench_telecom": 5,
+        "aime_2025": 12.7,
+        "mmmu_pro": 29.9,
+        "gpqa_diamond": 29.1,
+        "livecodebench": 11.2,
+        "scicode": 7.3,
+        "hle": 5.2,
+        "aa_intelligence_index": 1.1
+      }
+    },
+    {
+      "name": "gemma-3-1b",
+      "date_added": "2025-03-10",
+      "url": "https://huggingface.co/google/gemma-3-1b-it",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "context": "32k",
+      "scores": {
+        "tau2_bench_telecom": 10.5,
+        "aime_2025": 3.3,
+        "gpqa_diamond": 23.7,
+        "livecodebench": 1.7,
+        "scicode": 0.7,
+        "hle": 5.2,
+        "aa_intelligence_index": 1
+      }
+    },
+    {
+      "name": "gemma-3-270m",
+      "date_added": "2025-08-14",
+      "url": "https://huggingface.co/google/gemma-3-270m-it",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "context": "32k",
+      "scores": {
+        "tau2_bench_telecom": 9.1,
+        "aime_2025": 2.3,
+        "gpqa_diamond": 22.4,
+        "livecodebench": 0.3,
+        "hle": 4.2,
+        "aa_intelligence_index": 2.4
+      }
+    },
+    {
+      "name": "baichuan-m2-32b",
+      "date_added": "2025-08-10",
+      "url": "https://huggingface.co/baichuan-inc/Baichuan-M2-32B",
+      "creator": {
+        "name": "Baichuan",
+        "url": "https://www.baichuan-ai.com/"
+      },
+      "scores": {
+        "aime_2025": 72.9
+      }
+    },
+    {
+      "name": "telechat2-5-115b",
+      "date_added": "2025-05-10",
+      "url": "https://huggingface.co/Tele-AI/TeleChat2.5-115B",
+      "creator": {
+        "name": "Tele-AI (China Telecom)",
+        "url": "https://huggingface.co/Tele-AI"
+      }
+    },
+    {
+      "name": "rakuten-ai-3-0",
+      "date_added": "2026-03-17",
+      "url": "https://huggingface.co/Rakuten/RakutenAI-3.0",
+      "creator": {
+        "name": "Rakuten",
+        "url": "https://huggingface.co/Rakuten"
+      }
+    },
+    {
+      "name": "stockmark-2-100b",
+      "date_added": "2025-07-08",
+      "url": "https://huggingface.co/stockmark/Stockmark-2-100B-Instruct",
+      "creator": {
+        "name": "Stockmark",
+        "url": "https://huggingface.co/stockmark"
+      }
+    },
+    {
+      "name": "plamo-3-nict-31b-base",
+      "date_added": "2025-10-24",
+      "url": "https://huggingface.co/pfnet/plamo-3-nict-31b-base",
+      "creator": {
+        "name": "Preferred Networks",
+        "url": "https://www.preferred.jp/en/"
+      }
+    },
+    {
+      "name": "krutrim-2",
+      "date_added": "2025-02-02",
+      "url": "https://huggingface.co/krutrim-ai-labs/Krutrim-2-instruct",
+      "creator": {
+        "name": "Ola Krutrim",
+        "url": "https://huggingface.co/krutrim-ai-labs"
+      }
+    },
+    {
+      "name": "xgen-small-9b",
+      "date_added": "2025-05-09",
+      "url": "https://huggingface.co/Salesforce/xgen-small-9B-instruct-r",
+      "creator": {
+        "name": "Salesforce",
+        "url": "https://huggingface.co/Salesforce"
+      }
+    },
+    {
+      "name": "dbrx",
+      "date_added": "2024-03-27",
+      "url": "https://huggingface.co/databricks/dbrx-instruct",
+      "creator": {
+        "name": "Databricks",
+        "url": "https://www.databricks.com/"
+      },
+      "context": "32k",
+      "scores": {
+        "gpqa_diamond": 33.1,
+        "livecodebench": 9.3,
+        "scicode": 11.8,
+        "hle": 6.6,
+        "aa_intelligence_index": 3
+      }
+    },
+    {
+      "name": "arctic-instruct",
+      "date_added": "2024-04-24",
+      "url": "https://huggingface.co/Snowflake/snowflake-arctic-instruct",
+      "creator": {
+        "name": "Snowflake",
+        "url": "https://www.snowflake.com/en/product/features/arctic/"
+      },
+      "context": "4k",
+      "scores": {
+        "aa_intelligence_index": 3.4
+      }
+    },
+    {
+      "name": "grok-1",
+      "date_added": "2024-03-17",
+      "url": "https://huggingface.co/xai-org/grok-1",
+      "creator": {
+        "name": "xAI",
+        "url": "https://x.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": 6
+      }
+    },
+    {
+      "name": "grok-2-1212",
+      "date_added": "2025-08-23",
+      "url": "https://huggingface.co/xai-org/grok-2",
+      "creator": {
+        "name": "xAI",
+        "url": "https://x.ai/"
+      },
+      "context": "128k",
+      "scores": {
+        "gpqa_diamond": 51,
+        "livecodebench": 26.7,
+        "scicode": 28.5,
+        "hle": 3.8,
+        "aa_intelligence_index": 8
       }
     }
   ],
