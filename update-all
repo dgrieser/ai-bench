@@ -1,0 +1,11 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+for s in "${SCRIPT_DIR}"/update_*.py; do
+    echo "+ Running ${s}" 1>&2
+    "${s}" -w
+done
+
+"${SCRIPT_DIR}/update.py" -w
+
