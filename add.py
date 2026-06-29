@@ -34,6 +34,11 @@ from _frontierswe_mapping import (
     fetch_frontierswe_model_names,
     load_frontierswe_to_slug_mapping,
 )
+from _swe_atlas_mapping import (
+    add_swe_atlas_mapping,
+    fetch_swe_atlas_model_names,
+    load_swe_atlas_to_slug_mapping,
+)
 from _huggingface_mapping import (
     add_hf_mapping,
     add_hf_unmappable,
@@ -124,6 +129,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip the FrontierSWE mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-swe-atlas",
+        action="store_true",
+        help="Skip the SWE Atlas mapping prompt.",
     )
     parser.add_argument(
         "--skip-llmstats",
@@ -337,6 +347,31 @@ def maybe_add_frontierswe_mapping(model_name: str, interactive: bool) -> None:
 
     add_frontierswe_mapping(frontierswe_name, model_name)
     print(f"Added FrontierSWE mapping '{frontierswe_name}' -> '{model_name}'")
+
+
+def maybe_add_swe_atlas_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_swe_atlas_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        swe_atlas_names = fetch_swe_atlas_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping SWE Atlas mapping prompt: {exc}")
+        return
+
+    if not swe_atlas_names:
+        return
+
+    swe_atlas_name = prompt_select_or_new("SWE Atlas model", swe_atlas_names)
+    if not swe_atlas_name:
+        return
+
+    add_swe_atlas_mapping(swe_atlas_name, model_name)
+    print(f"Added SWE Atlas mapping '{swe_atlas_name}' -> '{model_name}'")
 
 
 def maybe_add_llmstats_mapping(model_name: str, interactive: bool) -> None:
@@ -731,6 +766,8 @@ def main() -> int:
         maybe_add_deepswe_mapping(model["name"], interactive)
     if not args.skip_frontierswe:
         maybe_add_frontierswe_mapping(model["name"], interactive)
+    if not args.skip_swe_atlas:
+        maybe_add_swe_atlas_mapping(model["name"], interactive)
     if not args.skip_llmstats:
         maybe_add_llmstats_mapping(model["name"], interactive)
         maybe_add_llmstats_benchmark_mapping(doc, interactive)
