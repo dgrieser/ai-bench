@@ -5,12 +5,12 @@ Convenience companion to add.py's prompts. Dry-run by default (preview the
 proposed matches); pass -w/--write to run the interactive review and persist,
 the same way update.py uses -w.
 
-Under -w it walks the llm.json model slugs and the llm-stats benchmark labels,
-pre-filling an auto-match (exact / date-suffix stripped / normalized) as the
-default so you can accept with Enter, type another value, or skip. Benchmark
-labels left blank are recorded as __unmappable__ so add.py stops prompting for
-them. Each answer is written immediately. On a non-interactive terminal, -w
-auto-applies every confident match (and marks leftover labels unmappable).
+Under -w it walks the llm-stats model ids and benchmark labels, pre-filling an
+auto-match (exact / date-suffix stripped / normalized) as the default so you can
+accept with Enter, type another value, or skip. Ids and labels left blank are
+recorded as __unmappable__ so add.py stops prompting for them. Each answer is
+written immediately. On a non-interactive terminal, -w auto-applies every
+confident match (and marks leftover ids and labels unmappable).
 """
 
 from __future__ import annotations
@@ -27,10 +27,9 @@ from _llmstats_mapping import (
     add_llmstats_benchmark_mapping,
     add_llmstats_benchmark_unmappable,
     add_llmstats_mapping,
+    add_llmstats_unmappable,
     fetch_llmstats_benchmark_names,
     fetch_llmstats_model_names,
-    load_llmstats_benchmark_to_key_mapping,
-    load_llmstats_to_slug_mapping,
     load_reviewed_llmstats_benchmarks,
     load_reviewed_llmstats_names,
 )
@@ -76,13 +75,15 @@ def benchmark_keys(doc: dict[str, Any]) -> list[str]:
     return sorted(benchmarks.keys()) if isinstance(benchmarks, dict) else []
 
 
-def auto_match_model(slug: str, model_ids: list[str]) -> str | None:
-    """Single confident llm-stats model_id for a slug, else None."""
-    ns = norm(slug)
-    exact = [m for m in model_ids if norm(m) == ns]
-    candidates = exact or [m for m in model_ids if norm(strip_date_suffix(m)) == ns]
-    candidates = list(dict.fromkeys(candidates))
-    return candidates[0] if len(candidates) == 1 else None
+def auto_match_slug(model_id: str, slugs: list[str]) -> str | None:
+    """Single confident llm.json slug for an llm-stats model_id, else None."""
+    nm = norm(model_id)
+    exact = [s for s in slugs if norm(s) == nm]
+    if not exact:
+        nm = norm(strip_date_suffix(model_id))
+        exact = [s for s in slugs if norm(strip_date_suffix(s)) == nm]
+    exact = list(dict.fromkeys(exact))
+    return exact[0] if len(exact) == 1 else None
 
 
 def auto_match_benchmark(label: str, keys: list[str]) -> str | None:
@@ -94,29 +95,29 @@ def auto_match_benchmark(label: str, keys: list[str]) -> str | None:
 def review_models(doc: dict[str, Any], model_ids: list[str], interactive: bool) -> int:
     slugs = model_slugs(doc)
     reviewed_ids = load_reviewed_llmstats_names()
-    mapped_slugs = set(load_llmstats_to_slug_mapping().values())
-    added = 0
+    changed = 0
 
-    for slug in slugs:
-        if slug in mapped_slugs:
+    for model_id in model_ids:
+        if model_id in reviewed_ids:
             continue
-        default = auto_match_model(slug, model_ids)
-        if default in reviewed_ids:
-            default = None
+        default = auto_match_slug(model_id, slugs)
 
         if interactive:
-            choice = prompt_select_or_new(
-                f"llm-stats model for '{slug}'", model_ids, default=default
+            slug = prompt_select_or_new(
+                f"llm.json slug for '{model_id}'", slugs, default=default
             )
         else:
-            choice = default
+            slug = default
 
-        if not choice:
+        if not slug:
+            add_llmstats_unmappable(model_id)
+            changed += 1
+            print(f"Recorded llm-stats model '{model_id}' as unmappable")
             continue
-        add_llmstats_mapping(choice, slug)
-        added += 1
-        print(f"Mapped llm-stats '{choice}' -> '{slug}'")
-    return added
+        add_llmstats_mapping(model_id, slug)
+        changed += 1
+        print(f"Mapped llm-stats '{model_id}' -> '{slug}'")
+    return changed
 
 
 def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool) -> int:
@@ -148,26 +149,25 @@ def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool)
 def preview_models(doc: dict[str, Any], model_ids: list[str]) -> None:
     slugs = model_slugs(doc)
     reviewed_ids = load_reviewed_llmstats_names()
-    mapped_slugs = set(load_llmstats_to_slug_mapping().values())
     matched: list[tuple[str, str]] = []
-    unmatched: list[str] = []
-    for slug in slugs:
-        if slug in mapped_slugs:
+    unmappable: list[str] = []
+    for model_id in model_ids:
+        if model_id in reviewed_ids:
             continue
-        candidate = auto_match_model(slug, model_ids)
-        if candidate and candidate not in reviewed_ids:
-            matched.append((candidate, slug))
+        slug = auto_match_slug(model_id, slugs)
+        if slug:
+            matched.append((model_id, slug))
         else:
-            unmatched.append(slug)
+            unmappable.append(model_id)
     print(f"model mappings ({len(matched)} proposed):")
-    for mid, slug in sorted(matched, key=lambda kv: kv[1]):
-        arrow = "==" if mid == slug else "->"
-        print(f"  {mid} {arrow} {slug}")
+    for model_id, slug in sorted(matched):
+        arrow = "==" if model_id == slug else "->"
+        print(f"  {model_id} {arrow} {slug}")
     if not matched:
         print("  (none)")
-    print(f"unmapped llm.json models (need a manual answer under -w): {len(unmatched)}")
-    for slug in unmatched:
-        print(f"  - {slug}")
+    print(f"llm-stats model ids to mark __unmappable__: {len(unmappable)}")
+    for model_id in unmappable:
+        print(f"  - {model_id}")
     print()
 
 
