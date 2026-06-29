@@ -2595,7 +2595,9 @@
         "gpqa_diamond": 81.5,
         "swe_bench_verified": 59.4,
         "livecodebench": 79.4,
-        "tau2_bench_telecom": 83.1
+        "tau2_bench_telecom": 83.1,
+        "hle": 25.2,
+        "browsecomp": 56.6
       }
     },
     {
@@ -3383,6 +3385,39 @@
         "livecodebench": null,
         "scicode": null,
         "hle": null
+      }
+    },
+    {
+      "name": "nvidia-nemotron-3-ultra-550b-a55b",
+      "date_added": "2026-06-29",
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "params": "550B-A55B",
+      "context": "256k",
+      "creator": {
+        "name": "NVIDIA",
+        "url": "https://www.nvidia.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": 37.8,
+        "aa_coding_index": 49.3,
+        "swe_bench_verified": 70.7,
+        "swe_bench_pro": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": 36.4,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": 53.9,
+        "tau2_bench_telecom": 83.3,
+        "browsecomp": 44.4,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 86.7,
+        "livecodebench": null,
+        "scicode": 39.9,
+        "hle": 26.6
       }
     }
   ],
