@@ -1679,14 +1679,20 @@
           { key: "creator", label: "Creator", minWidth: 90, initialWidth: 90 },
           { key: "params", label: "Params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
           { key: "context", label: "Context", className: "mono head-right", minWidth: 100, initialWidth: 100 },
-          ...state.benchmarkKeys.map((key) => ({
-            key,
-            label: getBenchmarkLabel(key),
-            title: state.data.benchmarks[key]?.description || "",
-            className: "num bench-head head-right",
-            minWidth: 95,
-            initialWidth: 95
-          }))
+          ...state.benchmarkKeys.map((key) => {
+            const bench = state.data.benchmarks[key] || {};
+            const fullName = bench.name || getBenchmarkLabel(key);
+            const description = bench.description || "";
+            // Tooltip: full benchmark name on the first line, description below.
+            return {
+              key,
+              label: getBenchmarkLabel(key),
+              title: description ? `${fullName}\n${description}` : fullName,
+              className: "num bench-head head-right",
+              minWidth: 95,
+              initialWidth: 95
+            };
+          })
         ];
         state.headerWidthsByKey = Object.fromEntries(headers.map((header) => [header.key, {
           minWidth: header.minWidth,
