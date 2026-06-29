@@ -22,7 +22,6 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
-      --group-accent: #ea580c;
       --top-score-text: var(--accent);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
@@ -673,12 +672,21 @@
       font-size: 0.72rem;
     }
 
-    /* Grouped-sort marker: every benchmark in the active group gets a diamond
-       in the group accent colour — distinct in both shape and colour from the
-       single-column triangle so the group span is obvious. */
+    /* Grouped-sort marker: every benchmark in the active group gets a golden
+       diamond — distinct in both shape and colour from the single-column
+       triangle so the group span is obvious. */
     .sort-indicator.group-indicator {
-      color: var(--group-accent);
       font-size: 0.58rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fceabb 0%, #f0c64b 35%, #d4af37 60%, #a67c00 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+
+    thead th.bench-head .sort-indicator.group-indicator {
+      top: 11px; /* 2px below the standard bench-head indicator position */
     }
 
     .bench-head {
@@ -989,7 +997,11 @@
     }
 
     [data-theme="dark"] .sort-indicator.group-indicator {
-      color: #fb923c;
+      background: linear-gradient(135deg, #fff1c2 0%, #ffd34d 40%, #e6b422 70%, #b8860b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
     }
 
     [data-theme="dark"] thead th:has(.sort-indicator):hover {
