@@ -205,8 +205,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "aa_intelligence_index": 15.5,
-        "aa_coding_index": 23.7,
+        "aa_intelligence_index": 19.2,
+        "aa_coding_index": 31.3,
         "swe_bench_verified": 72.2,
         "swe_bench_pro": null,
         "deepswe": null,
@@ -216,7 +216,7 @@
         "osworld_verified": null,
         "terminal_bench_hard": 18.9,
         "terminal_bench_2_0": 32.6,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 30.3,
         "tau2_bench_telecom": 24.9,
         "browsecomp": null,
         "aime_2025": 36.7,
@@ -239,7 +239,7 @@
       },
       "scores": {
         "aa_intelligence_index": 13.1,
-        "aa_coding_index": 20.7,
+        "aa_coding_index": 29.3,
         "swe_bench_verified": 68.0,
         "swe_bench_pro": null,
         "deepswe": null,
@@ -249,7 +249,7 @@
         "osworld_verified": null,
         "terminal_bench_hard": 16.7,
         "terminal_bench_2_0": 22.5,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 29.6,
         "tau2_bench_telecom": 23.4,
         "browsecomp": null,
         "aime_2025": 34.3,
@@ -900,8 +900,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "aa_intelligence_index": 17.5,
-        "aa_coding_index": 19,
+        "aa_intelligence_index": 14.2,
+        "aa_coding_index": 14.4,
         "swe_bench_verified": 38.8,
         "swe_bench_pro": null,
         "deepswe": null,
@@ -911,7 +911,7 @@
         "osworld_verified": null,
         "terminal_bench_hard": 13.6,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 6.7,
         "tau2_bench_telecom": 40.9,
         "browsecomp": null,
         "aime_2025": 91,
@@ -1494,8 +1494,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "aa_intelligence_index": 10,
-        "aa_coding_index": 14.6,
+        "aa_intelligence_index": 11.1,
+        "aa_coding_index": 14.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "deepswe": null,
@@ -1505,7 +1505,7 @@
         "osworld_verified": null,
         "terminal_bench_hard": 4.5,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": 10.1,
+        "terminal_bench_2_1": 9.7,
         "tau2_bench_telecom": 27.2,
         "browsecomp": null,
         "aime_2025": 30,
@@ -2002,7 +2002,8 @@
         "scicode": 28.6,
         "hle": 5.9,
         "aa_intelligence_index": 6.4
-      }
+      },
+      "context": "64k"
     },
     {
       "name": "olmo-3-1-32b-instruct",
@@ -2548,10 +2549,12 @@
         "livecodebench": 40.2,
         "scicode": 25.9,
         "hle": 8,
-        "aa_intelligence_index": 23.1,
+        "aa_intelligence_index": 24.7,
         "swe_bench_verified": 73.4,
         "browsecomp": 58.3,
-        "terminal_bench_2_0": 38.5
+        "terminal_bench_2_0": 38.5,
+        "terminal_bench_2_1": 61.8,
+        "aa_coding_index": 49.8
       }
     },
     {
@@ -2990,7 +2993,7 @@
       "context": "256k",
       "scores": {
         "terminal_bench_hard": 4.5,
-        "terminal_bench_2_1": 6.7,
+        "terminal_bench_2_1": 4.1,
         "tau2_bench_telecom": 26.6,
         "aime_2025": 31.7,
         "mmmu_pro": 46,
@@ -2998,8 +3001,8 @@
         "livecodebench": 30.3,
         "scicode": 20.8,
         "hle": 4.3,
-        "aa_intelligence_index": 8.9,
-        "aa_coding_index": 11.4
+        "aa_intelligence_index": 9,
+        "aa_coding_index": 9.7
       }
     },
     {
@@ -3019,7 +3022,7 @@
         "livecodebench": 24.7,
         "scicode": 14.4,
         "hle": 5.3,
-        "aa_intelligence_index": 5.6,
+        "aa_intelligence_index": 6.8,
         "aa_coding_index": 4.8
       }
     },
@@ -3061,7 +3064,9 @@
         "livecodebench": 13.7,
         "scicode": 21.2,
         "hle": 4.7,
-        "aa_intelligence_index": 4.8
+        "aa_intelligence_index": 7.4,
+        "terminal_bench_2_1": 4.5,
+        "aa_coding_index": 10.1
       }
     },
     {
@@ -3228,7 +3233,8 @@
       },
       "scores": {
         "aa_intelligence_index": 6
-      }
+      },
+      "context": "8k"
     },
     {
       "name": "grok-2-1212",
@@ -3245,6 +3251,138 @@
         "scicode": 28.5,
         "hle": 3.8,
         "aa_intelligence_index": 8
+      }
+    },
+    {
+      "name": "gemma-4-12b",
+      "date_added": "2026-06-29",
+      "url": "https://huggingface.co/google/gemma-4-12B-it",
+      "params": "12B",
+      "context": "256k",
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "scores": {
+        "aa_intelligence_index": 22,
+        "aa_coding_index": null,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": 69.7,
+        "osworld_verified": null,
+        "terminal_bench_hard": 18.2,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": null,
+        "tau2_bench_telecom": 36.3,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": 75.3,
+        "livecodebench": null,
+        "scicode": 38.2,
+        "hle": 14.8
+      }
+    },
+    {
+      "name": "ornith-1-0-9b",
+      "date_added": "2026-06-29",
+      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B",
+      "params": "9B",
+      "context": "256k",
+      "creator": {
+        "name": "DeepReinforce",
+        "url": "https://deep-reinforce.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": 69.4,
+        "swe_bench_pro": 42.9,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": 43.1,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "livecodebench": null,
+        "scicode": null,
+        "hle": null
+      }
+    },
+    {
+      "name": "ornith-1-0-35b",
+      "date_added": "2026-06-29",
+      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B",
+      "params": "35B-A3B",
+      "context": "256k",
+      "creator": {
+        "name": "DeepReinforce",
+        "url": "https://deep-reinforce.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": 75.6,
+        "swe_bench_pro": 50.4,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": 64.2,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "livecodebench": null,
+        "scicode": null,
+        "hle": null
+      }
+    },
+    {
+      "name": "ornith-1-0-397B",
+      "date_added": "2026-06-29",
+      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B",
+      "params": "397B-A17B",
+      "context": "256k",
+      "creator": {
+        "name": "DeepReinforce",
+        "url": "https://deep-reinforce.com/"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": 82.4,
+        "swe_bench_pro": 62.2,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "mmmu_pro": null,
+        "osworld_verified": null,
+        "terminal_bench_hard": null,
+        "terminal_bench_2_0": null,
+        "terminal_bench_2_1": 77.5,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "livecodebench": null,
+        "scicode": null,
+        "hle": null
       }
     }
   ],
