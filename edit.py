@@ -10,6 +10,7 @@ import re
 import sys
 import termios
 import tty
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -83,6 +84,11 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         choices=sorted(doc["benchmarks"].keys()),
         help="Benchmark key to scope --missing to. Repeat to include multiple benchmarks.",
     )
+    parser.add_argument(
+        "--after",
+        metavar="YYYY-MM-DD",
+        help="Scope --missing to models whose date_added is after this date.",
+    )
 
     for key, benchmark in doc["benchmarks"].items():
         flag = f"--{key.replace('_', '-')}"
@@ -96,6 +102,13 @@ def find_model(models: list[dict[str, Any]], name: str) -> dict[str, Any] | None
         if model.get("name") == name:
             return model
     return None
+
+
+def parse_date(value: str) -> date:
+    try:
+        return date.fromisoformat(value.strip())
+    except ValueError:
+        raise ValueError(f"Invalid date '{value}': expected format YYYY-MM-DD.")
 
 
 def parse_nullable(value: str | None) -> str | None:
@@ -368,7 +381,11 @@ def collect_updates(
 
 
 def collect_missing_updates(
-    doc: dict[str, Any], interactive: bool, model_name: str | None = None, benchmark_keys: list[str] | None = None
+    doc: dict[str, Any],
+    interactive: bool,
+    model_name: str | None = None,
+    benchmark_keys: list[str] | None = None,
+    after: date | None = None,
 ) -> list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]]:
     if not interactive:
         raise ValueError("--missing requires interactive mode.")
@@ -381,6 +398,14 @@ def collect_missing_updates(
             continue
         if model_name is not None and current_model_name != model_name:
             continue
+        if after is not None:
+            raw_date = model.get("date_added")
+            try:
+                model_date = date.fromisoformat(raw_date) if isinstance(raw_date, str) and raw_date.strip() else None
+            except ValueError:
+                model_date = None
+            if model_date is None or model_date <= after:
+                continue
         missing_keys = get_missing_score_keys(doc, model)
         if benchmark_filter:
             missing_keys = [key for key in missing_keys if key in benchmark_filter]
@@ -418,6 +443,13 @@ def main() -> int:
     args = parse_args(doc)
 
     interactive = sys.stdin.isatty()
+
+    after: date | None = None
+    if args.after is not None:
+        if not args.missing:
+            raise ValueError("--after can only be used with --missing.")
+        after = parse_date(args.after)
+
     if args.missing:
         score_flags = [key for key in doc["benchmarks"] if getattr(args, key) is not None]
         if score_flags:
@@ -425,7 +457,9 @@ def main() -> int:
         if args.model is not None and find_model(doc["models"], args.model) is None:
             raise ValueError(f"Model '{args.model}' does not exist.")
 
-        planned = collect_missing_updates(doc, interactive, model_name=args.model, benchmark_keys=args.benchmark)
+        planned = collect_missing_updates(
+            doc, interactive, model_name=args.model, benchmark_keys=args.benchmark, after=after
+        )
         if not planned:
             if args.model is not None and args.benchmark:
                 scope = f"missing values for model '{args.model}' in benchmark(s): {', '.join(args.benchmark)}"
@@ -435,6 +469,8 @@ def main() -> int:
                 scope = f"missing values in benchmark(s): {', '.join(args.benchmark)}"
             else:
                 scope = "missing scores or metadata"
+            if after is not None:
+                scope += f" added after {after.isoformat()}"
             print(f"No models with {scope}.")
             return 0
 
@@ -480,9 +516,13 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__":
+def run() -> int:
     try:
-        raise SystemExit(main())
+        return main()
     except KeyboardInterrupt:
-        print()
-        raise SystemExit(130)
+        print(file=sys.stderr)
+        return 130
+
+
+if __name__ == "__main__":
+    raise SystemExit(run())
