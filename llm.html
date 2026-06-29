@@ -22,6 +22,7 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
+      --group-accent: #ea580c;
       --top-score-text: var(--accent);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
@@ -672,6 +673,14 @@
       font-size: 0.72rem;
     }
 
+    /* Grouped-sort marker: every benchmark in the active group gets a diamond
+       in the group accent colour — distinct in both shape and colour from the
+       single-column triangle so the group span is obvious. */
+    .sort-indicator.group-indicator {
+      color: var(--group-accent);
+      font-size: 0.58rem;
+    }
+
     .bench-head {
       max-width: 120px;
     }
@@ -979,6 +988,10 @@
       border-bottom-color: #3a3936 !important;
     }
 
+    [data-theme="dark"] .sort-indicator.group-indicator {
+      color: #fb923c;
+    }
+
     [data-theme="dark"] thead th:has(.sort-indicator):hover {
       background: #2c2b28 !important;
     }
@@ -1181,6 +1194,7 @@
       const state = {
         data: null,
         benchmarkKeys: [],
+        sortGroups: [],
         headerWidthsByKey: {},
         filteredModels: [],
         filters: {
@@ -1308,6 +1322,9 @@
       function init(data) {
         state.data = data;
         state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
+        state.sortGroups = Array.isArray(data.sortGroups) ? data.sortGroups : [];
+        state.sort.key = defaultSortKey();
+        state.sort.direction = "desc";
 
         ui.title.textContent = data.title || "LLM Benchmarks";
         ui.controls.hidden = false;
@@ -1404,7 +1421,7 @@
             state.filters.search = "";
             state.filters.params = "all";
             state.filters.selectedModels = [];
-            state.sort.key = "aa_coding_index";
+            state.sort.key = defaultSortKey();
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.params.value = "all";
@@ -1445,12 +1462,17 @@
           { key: "context", label: "Context" }
         ];
 
+        const groupSortOptions = (state.sortGroups || []).map((group) => ({
+          key: groupSortKey(group.key),
+          label: group.label || group.key
+        }));
+
         const benchmarkSortOptions = state.benchmarkKeys.map((key) => ({
           key,
           label: getBenchmarkLabel(key)
         }));
 
-        const sortOptions = [...fixedSortOptions, ...benchmarkSortOptions];
+        const sortOptions = [...fixedSortOptions, ...groupSortOptions, ...benchmarkSortOptions];
         ui.sortMode.innerHTML = sortOptions.map((option) => {
           const ascLabel = `${option.label} ↑`;
           const descLabel = `${option.label} ↓`;
@@ -1524,7 +1546,7 @@
           state.filters.search = "";
           state.filters.params = "all";
           state.filters.selectedModels = [];
-          state.sort.key = "aa_coding_index";
+          state.sort.key = defaultSortKey();
           state.sort.direction = "desc";
 
           ui.search.value = "";
@@ -1589,9 +1611,15 @@
       function sortModels(models) {
         const directionFactor = state.sort.direction === "asc" ? 1 : -1;
 
+        // Grouped sort: collapse several benchmarks into one priority-weighted
+        // composite computed over the current (filtered) model set, then sort
+        // on that single number. Computed once per sort, not per comparison.
+        const group = getSortGroup(state.sort.key);
+        const composite = group ? computeGroupComposite(models, group) : null;
+
         models.sort((a, b) => {
-          const left = valueForSort(a, state.sort.key);
-          const right = valueForSort(b, state.sort.key);
+          const left = composite ? composite.get(a) : valueForSort(a, state.sort.key);
+          const right = composite ? composite.get(b) : valueForSort(b, state.sort.key);
 
           const leftMissing = left == null || Number.isNaN(left);
           const rightMissing = right == null || Number.isNaN(right);
@@ -1612,6 +1640,95 @@
 
           return String(left).localeCompare(String(right)) * directionFactor;
         });
+      }
+
+      function groupSortKey(key) {
+        return `group:${key}`;
+      }
+
+      // Default sort = first configured sort group (e.g. grouped coding),
+      // falling back to the AA coding index when no groups are defined.
+      function defaultSortKey() {
+        const groups = state.sortGroups || [];
+        return groups.length ? groupSortKey(groups[0].key) : "aa_coding_index";
+      }
+
+      function getSortGroup(key) {
+        if (typeof key !== "string" || !key.startsWith("group:")) {
+          return null;
+        }
+        return (state.sortGroups || []).find((group) => groupSortKey(group.key) === key) || null;
+      }
+
+      // Per-benchmark percentile rank in [0,1] over present models. Ties share
+      // the average rank. Returns null when fewer than 2 models have a score
+      // (can't rank a single point — e.g. a benchmark only one model ran).
+      function percentileMap(models, key) {
+        const entries = [];
+        models.forEach((model) => {
+          const value = toNumber(model.scores?.[key]);
+          if (Number.isFinite(value)) {
+            entries.push({ model, value });
+          }
+        });
+        if (entries.length < 2) {
+          return null;
+        }
+        entries.sort((a, b) => a.value - b.value);
+        const n = entries.length;
+        const map = new Map();
+        let i = 0;
+        while (i < n) {
+          let j = i;
+          while (j + 1 < n && nearlyEqual(entries[j + 1].value, entries[i].value)) {
+            j += 1;
+          }
+          const pct = ((i + j) / 2) / (n - 1); // average rank of the tie group
+          for (let k = i; k <= j; k += 1) {
+            map.set(entries[k].model, pct);
+          }
+          i = j + 1;
+        }
+        return map;
+      }
+
+      // Priority-weighted normalized composite for a sort group.
+      // - Each benchmark normalized to a percentile rank (kills scale differences).
+      // - Weights decay geometrically down the reliability-ordered list (decay^i),
+      //   so the most reliable benchmark leads and lower ones fill gaps / break ties.
+      // - Missing benchmarks are excluded from both sums (no penalty); the mean is
+      //   renormalized by present weight so coverage doesn't distort scale.
+      // - Shrinkage * presentWeight/(presentWeight + k) pulls thinly-covered models
+      //   toward the middle so a single lucky score can't top a well-tested model.
+      // Returns a Map(model -> composite|null); null sinks to the bottom like a
+      // missing value (model had no scores in the group).
+      function computeGroupComposite(models, group) {
+        const order = Array.isArray(group.benchmarks) ? group.benchmarks : [];
+        const decay = Number.isFinite(group.decay) ? group.decay : 0.6;
+        const shrinkageK = Number.isFinite(group.shrinkageK) ? group.shrinkageK : 0.5;
+        const pctMaps = order.map((key) => percentileMap(models, key));
+        const weights = order.map((_, i) => Math.pow(decay, i));
+
+        const result = new Map();
+        models.forEach((model) => {
+          let sumWeight = 0;
+          let sumWeighted = 0;
+          order.forEach((key, i) => {
+            const pctMap = pctMaps[i];
+            if (!pctMap) return;
+            const pct = pctMap.get(model);
+            if (pct === undefined) return;
+            sumWeight += weights[i];
+            sumWeighted += weights[i] * pct;
+          });
+          if (sumWeight <= 0) {
+            result.set(model, null);
+            return;
+          }
+          const mean = sumWeighted / sumWeight;
+          result.set(model, mean * (sumWeight / (sumWeight + shrinkageK)));
+        });
+        return result;
       }
 
       function valueForSort(model, key) {
@@ -1926,11 +2043,30 @@
 
       function renderHeaderCell(header) {
         const isSorted = state.sort.key === header.key;
-        const sortSymbol = isSorted ? (state.sort.direction === "desc" ? "▼" : "▲") : "";
-        const indicator = isSorted ? `<span class="sort-indicator">${sortSymbol}</span>` : "";
+
+        // When a grouped sort is active, every benchmark in the group is marked
+        // with a diamond carrying its priority rank, so the contributing columns
+        // are visible at a glance even though no single column "is" the sort key.
+        const group = getSortGroup(state.sort.key);
+        const groupBenchmarks = group && Array.isArray(group.benchmarks) ? group.benchmarks : [];
+        const groupRank = groupBenchmarks.indexOf(header.key);
+        const inGroup = groupRank >= 0;
+
+        let indicator = "";
+        if (isSorted) {
+          const sortSymbol = state.sort.direction === "desc" ? "▼" : "▲";
+          indicator = `<span class="sort-indicator">${sortSymbol}</span>`;
+        } else if (inGroup) {
+          indicator = `<span class="sort-indicator group-indicator">◆</span>`;
+        }
 
         const className = header.className ? ` ${header.className}` : "";
-        const title = header.title ? ` title="${escapeHtml(header.title)}"` : "";
+        const titleParts = [];
+        if (header.title) titleParts.push(header.title);
+        if (inGroup) {
+          titleParts.push(`Sorted in “${group.label || group.key}” · priority ${groupRank + 1}/${groupBenchmarks.length}`);
+        }
+        const title = titleParts.length ? ` title="${escapeHtml(titleParts.join("\n"))}"` : "";
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
         const icon = renderBenchmarkIcon(header.key);
