@@ -102,26 +102,22 @@
         "https://swe-rebench.com"
       ]
     },
-    "mmmu_pro": {
-      "name": "MMMU Pro",
-      "short_name": "MMMUPro",
-      "category": "Vision-language Reasoning",
-      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
-      "icon_svg": "icons/mmmu-pro.svg",
+    "livecodebench": {
+      "name": "LiveCodeBench",
+      "short_name": "LCBench",
+      "category": "Coding",
+      "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
       "urls": [
-        "https://mmmu-benchmark.github.io/",
-        "https://aclanthology.org/2025.acl-long.1317/",
-        "https://huggingface.co/datasets/MMMU/MMMU_Pro"
+        "https://livecodebench.github.io/"
       ]
     },
-    "osworld_verified": {
-      "name": "OSWorld-Verified",
-      "short_name": "OSWorld",
-      "category": "GUI Agent",
-      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
+    "scicode": {
+      "name": "SciCode",
+      "short_name": "SciCode",
+      "category": "Scientific Coding",
+      "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
       "urls": [
-        "https://os-world.github.io",
-        "https://arxiv.org/abs/2404.07972"
+        "https://arxiv.org/abs/2407.13168"
       ]
     },
     "terminal_bench_hard": {
@@ -198,24 +194,6 @@
         "https://arxiv.org/abs/2311.12022"
       ]
     },
-    "livecodebench": {
-      "name": "LiveCodeBench",
-      "short_name": "LCBench",
-      "category": "Coding",
-      "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
-      "urls": [
-        "https://livecodebench.github.io/"
-      ]
-    },
-    "scicode": {
-      "name": "SciCode",
-      "short_name": "SciCode",
-      "category": "Scientific Coding",
-      "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
-      "urls": [
-        "https://arxiv.org/abs/2407.13168"
-      ]
-    },
     "hle": {
       "name": "Humanity's Last Exam",
       "short_name": "HLE",
@@ -223,6 +201,28 @@
       "description": "Humanity's Last Exam: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.",
       "urls": [
         "https://lastexam.ai/"
+      ]
+    },
+    "mmmu_pro": {
+      "name": "MMMU Pro",
+      "short_name": "MMMUPro",
+      "category": "Vision-language Reasoning",
+      "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
+      "icon_svg": "icons/mmmu-pro.svg",
+      "urls": [
+        "https://mmmu-benchmark.github.io/",
+        "https://aclanthology.org/2025.acl-long.1317/",
+        "https://huggingface.co/datasets/MMMU/MMMU_Pro"
+      ]
+    },
+    "osworld_verified": {
+      "name": "OSWorld-Verified",
+      "short_name": "OSWorld",
+      "category": "GUI Agent",
+      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
+      "urls": [
+        "https://os-world.github.io",
+        "https://arxiv.org/abs/2404.07972"
       ]
     }
   },
@@ -248,8 +248,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 48.89,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 44.8,
+        "scicode": 33.1,
         "terminal_bench_hard": 18.9,
         "terminal_bench_2_0": 32.6,
         "terminal_bench_2_1": 30.3,
@@ -258,9 +258,9 @@
         "aime_2025": 36.7,
         "aime_2026": null,
         "gpqa_diamond": 59.4,
-        "livecodebench": 44.8,
-        "scicode": 33.1,
-        "hle": 3.6
+        "hle": 3.6,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -284,8 +284,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 37.64,
-        "mmmu_pro": 44.6,
-        "osworld_verified": null,
+        "livecodebench": 34.8,
+        "scicode": 28.8,
         "terminal_bench_hard": 16.7,
         "terminal_bench_2_0": 22.5,
         "terminal_bench_2_1": 29.6,
@@ -294,9 +294,9 @@
         "aime_2025": 34.3,
         "aime_2026": null,
         "gpqa_diamond": 53.2,
-        "livecodebench": 34.8,
-        "scicode": 28.8,
-        "hle": 3.4
+        "hle": 3.4,
+        "mmmu_pro": 44.6,
+        "osworld_verified": null
       }
     },
     {
@@ -320,8 +320,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 36.3,
-        "mmmu_pro": 54.0,
-        "osworld_verified": null,
+        "livecodebench": 64.0,
+        "scicode": 33.7,
         "terminal_bench_hard": 22.0,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -330,9 +330,9 @@
         "aime_2025": 91.6,
         "aime_2026": null,
         "gpqa_diamond": 58.1,
-        "livecodebench": 64.0,
-        "scicode": 33.7,
-        "hle": 7.1
+        "hle": 7.1,
+        "mmmu_pro": 54.0,
+        "osworld_verified": null
       }
     },
     {
@@ -356,8 +356,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 56.87,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 86.4,
+        "scicode": 38.5,
         "terminal_bench_hard": 32.6,
         "terminal_bench_2_0": 51.0,
         "terminal_bench_2_1": null,
@@ -366,9 +366,9 @@
         "aime_2025": 97.3,
         "aime_2026": 96.67,
         "gpqa_diamond": 82.6,
-        "livecodebench": 86.4,
-        "scicode": 38.5,
-        "hle": 22.6
+        "hle": 22.6,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -392,8 +392,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 54.47,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 42.6,
         "terminal_bench_hard": 34.8,
         "terminal_bench_2_0": 51.7,
         "terminal_bench_2_1": null,
@@ -402,9 +402,9 @@
         "aime_2025": 86.3,
         "aime_2026": null,
         "gpqa_diamond": 84.8,
-        "livecodebench": null,
-        "scicode": 42.6,
-        "hle": 19.1
+        "hle": 19.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -428,8 +428,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 21.03,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 40.3,
+        "scicode": 27.8,
         "terminal_bench_hard": 15.2,
         "terminal_bench_2_0": 31.3,
         "terminal_bench_2_1": null,
@@ -438,9 +438,9 @@
         "aime_2025": 29.0,
         "aime_2026": null,
         "gpqa_diamond": 51.6,
-        "livecodebench": 40.3,
-        "scicode": 27.8,
-        "hle": 4.0
+        "hle": 4.0,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -464,8 +464,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 53.36,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 47.5,
+        "scicode": 32.3,
         "terminal_bench_hard": 18.2,
         "terminal_bench_2_0": 36.2,
         "terminal_bench_2_1": null,
@@ -474,9 +474,9 @@
         "aime_2025": 80,
         "aime_2026": null,
         "gpqa_diamond": 73.7,
-        "livecodebench": 47.5,
-        "scicode": 32.3,
-        "hle": 9.3
+        "hle": 9.3,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -500,8 +500,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 5.45,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 70.7,
+        "scicode": 33.3,
         "terminal_bench_hard": 5.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -510,9 +510,9 @@
         "aime_2025": 56.3,
         "aime_2026": null,
         "gpqa_diamond": 70.7,
-        "livecodebench": 70.7,
-        "scicode": 33.3,
-        "hle": 9.8
+        "hle": 9.8,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -536,8 +536,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 17.39,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 78.4,
+        "scicode": 38.8,
         "terminal_bench_hard": 9.8,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -546,9 +546,9 @@
         "aime_2025": 84.3,
         "aime_2026": null,
         "gpqa_diamond": 75.9,
-        "livecodebench": 78.4,
-        "scicode": 38.8,
-        "hle": 11.7
+        "hle": 11.7,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -572,8 +572,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 56.84,
-        "mmmu_pro": 77.3,
-        "osworld_verified": 62.2,
+        "livecodebench": 83.6,
+        "scicode": 42,
         "terminal_bench_hard": 40.9,
         "terminal_bench_2_0": 52.5,
         "terminal_bench_2_1": 51.3,
@@ -582,9 +582,9 @@
         "aime_2025": null,
         "aime_2026": 91.3,
         "gpqa_diamond": 89.3,
-        "livecodebench": 83.6,
-        "scicode": 42,
-        "hle": 27.3
+        "hle": 27.3,
+        "mmmu_pro": 77.3,
+        "osworld_verified": 62.2
       }
     },
     {
@@ -608,8 +608,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 75,
-        "osworld_verified": 58.0,
+        "livecodebench": 78.9,
+        "scicode": 42,
         "terminal_bench_hard": 31.1,
         "terminal_bench_2_0": 49.4,
         "terminal_bench_2_1": 47.6,
@@ -618,9 +618,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 85.7,
-        "livecodebench": 78.9,
-        "scicode": 42,
-        "hle": 23.4
+        "hle": 23.4,
+        "mmmu_pro": 75,
+        "osworld_verified": 58.0
       }
     },
     {
@@ -644,8 +644,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 54.81,
-        "mmmu_pro": 75,
-        "osworld_verified": 56.2,
+        "livecodebench": 80.7,
+        "scicode": 39.5,
         "terminal_bench_hard": 32.6,
         "terminal_bench_2_0": 41.6,
         "terminal_bench_2_1": null,
@@ -654,9 +654,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 85.8,
-        "livecodebench": 80.7,
-        "scicode": 39.5,
-        "hle": 22.2
+        "hle": 22.2,
+        "mmmu_pro": 75,
+        "osworld_verified": 56.2
       }
     },
     {
@@ -680,8 +680,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 50.37,
-        "mmmu_pro": 72.7,
-        "osworld_verified": 54.5,
+        "livecodebench": 74.6,
+        "scicode": 37.7,
         "terminal_bench_hard": 26.5,
         "terminal_bench_2_0": 40.5,
         "terminal_bench_2_1": null,
@@ -690,9 +690,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 84.5,
-        "livecodebench": 74.6,
-        "scicode": 37.7,
-        "hle": 19.7
+        "hle": 19.7,
+        "mmmu_pro": 72.7,
+        "osworld_verified": 54.5
       }
     },
     {
@@ -716,8 +716,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 69.2,
-        "osworld_verified": 41.8,
+        "livecodebench": 65.6,
+        "scicode": 27.5,
         "terminal_bench_hard": 24.2,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 29.2,
@@ -726,9 +726,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 80.6,
-        "livecodebench": 65.6,
-        "scicode": 27.5,
-        "hle": 13.3
+        "hle": 13.3,
+        "mmmu_pro": 69.2,
+        "osworld_verified": 41.8
       }
     },
     {
@@ -752,8 +752,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 65.4,
-        "osworld_verified": 35.6,
+        "livecodebench": 55.8,
+        "scicode": 16.1,
         "terminal_bench_hard": 18.2,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 25.8,
@@ -762,9 +762,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 77.1,
-        "livecodebench": 55.8,
-        "scicode": 16.1,
-        "hle": 7.8
+        "hle": 7.8,
+        "mmmu_pro": 65.4,
+        "osworld_verified": 35.6
       }
     },
     {
@@ -788,8 +788,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 43,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 2.8,
         "terminal_bench_hard": 3.8,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 28.1,
@@ -798,9 +798,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 45.6,
-        "livecodebench": null,
-        "scicode": 2.8,
-        "hle": 2.1
+        "hle": 2.1,
+        "mmmu_pro": 43,
+        "osworld_verified": null
       }
     },
     {
@@ -824,8 +824,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 25.8,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 22.5,
@@ -834,9 +834,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 11.1,
-        "livecodebench": null,
-        "scicode": null,
-        "hle": 1.2
+        "hle": 1.2,
+        "mmmu_pro": 25.8,
+        "osworld_verified": null
       }
     },
     {
@@ -860,8 +860,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 81.2,
+        "scicode": 36,
         "terminal_bench_hard": 28.8,
         "terminal_bench_2_0": 31,
         "terminal_bench_2_1": 38.6,
@@ -870,9 +870,9 @@
         "aime_2025": 90.21,
         "aime_2026": null,
         "gpqa_diamond": 80,
-        "livecodebench": 81.2,
-        "scicode": 36,
-        "hle": 19.2
+        "hle": 19.2,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -896,8 +896,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 28.4,
         "terminal_bench_hard": 10.6,
         "terminal_bench_2_0": 33.75,
         "terminal_bench_2_1": null,
@@ -906,9 +906,9 @@
         "aime_2025": 63.23,
         "aime_2026": null,
         "gpqa_diamond": 63.6,
-        "livecodebench": null,
-        "scicode": 28.4,
-        "hle": 6
+        "hle": 6,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -933,8 +933,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 14.29,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 77.7,
+        "scicode": 34.4,
         "terminal_bench_hard": 10.6,
         "terminal_bench_2_0": 3.1,
         "terminal_bench_2_1": 13.9,
@@ -943,9 +943,9 @@
         "aime_2025": 89.3,
         "aime_2026": null,
         "gpqa_diamond": 68.8,
-        "livecodebench": 77.7,
-        "scicode": 34.4,
-        "hle": 9.8
+        "hle": 9.8,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -970,8 +970,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 46.67,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 87.8,
+        "scicode": 38.9,
         "terminal_bench_hard": 23.5,
         "terminal_bench_2_0": 18.7,
         "terminal_bench_2_1": 26.2,
@@ -980,9 +980,9 @@
         "aime_2025": 93.4,
         "aime_2026": null,
         "gpqa_diamond": 78.2,
-        "livecodebench": 87.8,
-        "scicode": 38.9,
-        "hle": 18.5
+        "hle": 18.5,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1006,8 +1006,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 74.1,
+        "scicode": 29.6,
         "terminal_bench_hard": 13.6,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 6.7,
@@ -1016,9 +1016,9 @@
         "aime_2025": 91,
         "aime_2026": null,
         "gpqa_diamond": 75.7,
-        "livecodebench": 74.1,
-        "scicode": 29.6,
-        "hle": 10.2
+        "hle": 10.2,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1042,8 +1042,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 56.8,
-        "osworld_verified": null,
+        "livecodebench": 64,
+        "scicode": 38,
         "terminal_bench_hard": 17.4,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1052,9 +1052,9 @@
         "aime_2025": 84,
         "aime_2026": null,
         "gpqa_diamond": 76.9,
-        "livecodebench": 64,
-        "scicode": 38,
-        "hle": 9.5
+        "hle": 9.5,
+        "mmmu_pro": 56.8,
+        "osworld_verified": null
       }
     },
     {
@@ -1078,8 +1078,8 @@
         "deepswe": 0.2,
         "frontierswe": null,
         "swe_rebench": 49.6,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 47,
         "terminal_bench_hard": 39.4,
         "terminal_bench_2_0": 57.0,
         "terminal_bench_2_1": 55.4,
@@ -1088,9 +1088,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 87.4,
-        "livecodebench": null,
-        "scicode": 47,
-        "hle": 28.1
+        "hle": 28.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1114,8 +1114,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 70.0,
+        "scicode": 19.2,
         "terminal_bench_hard": 2.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1124,9 +1124,9 @@
         "aime_2025": 88.3,
         "aime_2026": null,
         "gpqa_diamond": 63.3,
-        "livecodebench": 70.0,
-        "scicode": 19.2,
-        "hle": 7
+        "hle": 7,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1150,8 +1150,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 71.7,
+        "scicode": 26.4,
         "terminal_bench_hard": 1.5,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1160,9 +1160,9 @@
         "aime_2025": 88.3,
         "aime_2026": null,
         "gpqa_diamond": 73.8,
-        "livecodebench": 71.7,
-        "scicode": 26.4,
-        "hle": 10.1
+        "hle": 10.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1186,8 +1186,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 57.4,
+        "scicode": 26.6,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1196,9 +1196,9 @@
         "aime_2025": null,
         "aime_2026": 81.5,
         "gpqa_diamond": 84.9,
-        "livecodebench": 57.4,
-        "scicode": 26.6,
-        "hle": 10
+        "hle": 10,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1222,8 +1222,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": 35.84,
-        "mmmu_pro": 73.4,
-        "osworld_verified": null,
+        "livecodebench": 80,
+        "scicode": 43.4,
         "terminal_bench_hard": 36.4,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 43.4,
@@ -1232,9 +1232,9 @@
         "aime_2025": null,
         "aime_2026": 89.2,
         "gpqa_diamond": 85.7,
-        "livecodebench": 80,
-        "scicode": 43.4,
-        "hle": 22.7
+        "hle": 22.7,
+        "mmmu_pro": 73.4,
+        "osworld_verified": null
       }
     },
     {
@@ -1258,8 +1258,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 69.2,
-        "osworld_verified": null,
+        "livecodebench": 77.1,
+        "scicode": 40,
         "terminal_bench_hard": 13.6,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 39,
@@ -1268,9 +1268,9 @@
         "aime_2025": null,
         "aime_2026": 88.3,
         "gpqa_diamond": 79.2,
-        "livecodebench": 77.1,
-        "scicode": 40,
-        "hle": 18.3
+        "hle": 18.3,
+        "mmmu_pro": 69.2,
+        "osworld_verified": null
       }
     },
     {
@@ -1294,8 +1294,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 51.4,
-        "osworld_verified": null,
+        "livecodebench": 52,
+        "scicode": 24.4,
         "terminal_bench_hard": 8.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1304,9 +1304,9 @@
         "aime_2025": null,
         "aime_2026": 42.5,
         "gpqa_diamond": 57.6,
-        "livecodebench": 52,
-        "scicode": 24.4,
-        "hle": 3.7
+        "hle": 3.7,
+        "mmmu_pro": 51.4,
+        "osworld_verified": null
       }
     },
     {
@@ -1330,8 +1330,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 44.6,
-        "osworld_verified": null,
+        "livecodebench": 44,
+        "scicode": 20.9,
         "terminal_bench_hard": 3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1340,9 +1340,9 @@
         "aime_2025": null,
         "aime_2026": 37.5,
         "gpqa_diamond": 43.3,
-        "livecodebench": 44,
-        "scicode": 20.9,
-        "hle": 4.8
+        "hle": 4.8,
+        "mmmu_pro": 44.6,
+        "osworld_verified": null
       }
     },
     {
@@ -1366,8 +1366,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 75,
-        "osworld_verified": null,
+        "livecodebench": 80.4,
+        "scicode": 35.8,
         "terminal_bench_hard": 34.8,
         "terminal_bench_2_0": 51.5,
         "terminal_bench_2_1": 44.9,
@@ -1376,9 +1376,9 @@
         "aime_2025": null,
         "aime_2026": 92.7,
         "gpqa_diamond": 84.1,
-        "livecodebench": 80.4,
-        "scicode": 35.8,
-        "hle": 20.2
+        "hle": 20.2,
+        "mmmu_pro": 75,
+        "osworld_verified": null
       }
     },
     {
@@ -1402,8 +1402,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 74.6,
-        "osworld_verified": null,
+        "livecodebench": 83.9,
+        "scicode": 39.8,
         "terminal_bench_hard": 34.8,
         "terminal_bench_2_0": 59.3,
         "terminal_bench_2_1": 60.7,
@@ -1412,9 +1412,9 @@
         "aime_2025": null,
         "aime_2026": 94.1,
         "gpqa_diamond": 84.2,
-        "livecodebench": 83.9,
-        "scicode": 39.8,
-        "hle": 21.6
+        "hle": 21.6,
+        "mmmu_pro": 74.6,
+        "osworld_verified": null
       }
     },
     {
@@ -1438,8 +1438,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 91.6,
+        "scicode": 44.9,
         "terminal_bench_hard": 35.6,
         "terminal_bench_2_0": 56.9,
         "terminal_bench_2_1": 61.8,
@@ -1448,9 +1448,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 89.4,
-        "livecodebench": 91.6,
-        "scicode": 44.9,
-        "hle": 32.1
+        "hle": 32.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1474,8 +1474,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 34.86,
+        "scicode": 41.2,
         "terminal_bench_hard": 34.1,
         "terminal_bench_2_0": 54.4,
         "terminal_bench_2_1": null,
@@ -1484,9 +1484,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 86.7,
-        "livecodebench": 34.86,
-        "scicode": 41.2,
-        "hle": 25.5
+        "hle": 25.5,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1510,8 +1510,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 21.8,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 3.4,
@@ -1520,9 +1520,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 43.3,
-        "livecodebench": null,
-        "scicode": 21.8,
-        "hle": 3.8
+        "hle": 3.8,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1546,8 +1546,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 11.9,
         "terminal_bench_hard": 2.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1556,9 +1556,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 31.4,
-        "livecodebench": null,
-        "scicode": 11.9,
-        "hle": 3.4
+        "hle": 3.4,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1582,8 +1582,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 25.8,
         "terminal_bench_hard": 2.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 2.6,
@@ -1592,9 +1592,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 48.1,
-        "livecodebench": null,
-        "scicode": 25.8,
-        "hle": 4.2
+        "hle": 4.2,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1618,8 +1618,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 64.9,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 39.6,
         "terminal_bench_hard": 33.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 50.6,
@@ -1628,9 +1628,9 @@
         "aime_2025": 86.3,
         "aime_2026": null,
         "gpqa_diamond": 74.8,
-        "livecodebench": null,
-        "scicode": 39.6,
-        "hle": 12.8
+        "hle": 12.8,
+        "mmmu_pro": 64.9,
+        "osworld_verified": null
       }
     },
     {
@@ -1654,8 +1654,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 49.8,
-        "osworld_verified": null,
+        "livecodebench": 35.1,
+        "scicode": 23.6,
         "terminal_bench_hard": 4.5,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 9.7,
@@ -1664,9 +1664,9 @@
         "aime_2025": 30,
         "aime_2026": null,
         "gpqa_diamond": 57.2,
-        "livecodebench": 35.1,
-        "scicode": 23.6,
-        "hle": 4.6
+        "hle": 4.6,
+        "mmmu_pro": 49.8,
+        "osworld_verified": null
       }
     },
     {
@@ -1690,8 +1690,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 53.2,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 27.8,
         "terminal_bench_hard": 8.3,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1700,9 +1700,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 46.9,
-        "livecodebench": null,
-        "scicode": 27.8,
-        "hle": 5.3
+        "hle": 5.3,
+        "mmmu_pro": 53.2,
+        "osworld_verified": null
       }
     },
     {
@@ -1726,8 +1726,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 37.9,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 2.1,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1736,9 +1736,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 30.5,
-        "livecodebench": null,
-        "scicode": 2.1,
-        "hle": 4.9
+        "hle": 4.9,
+        "mmmu_pro": 37.9,
+        "osworld_verified": null
       }
     },
     {
@@ -1762,8 +1762,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 63.2,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 37.8,
         "terminal_bench_hard": 25,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1772,9 +1772,9 @@
         "aime_2025": 90,
         "aime_2026": null,
         "gpqa_diamond": 76.1,
-        "livecodebench": null,
-        "scicode": 37.8,
-        "hle": 11.4
+        "hle": 11.4,
+        "mmmu_pro": 63.2,
+        "osworld_verified": null
       }
     },
     {
@@ -1798,8 +1798,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 75.3,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 40,
         "terminal_bench_hard": 35.6,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 36,
@@ -1808,9 +1808,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 80.9,
-        "livecodebench": null,
-        "scicode": 40,
-        "hle": 19.9
+        "hle": 19.9,
+        "mmmu_pro": 75.3,
+        "osworld_verified": null
       }
     },
     {
@@ -1834,8 +1834,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 37.5,
-        "osworld_verified": null,
+        "livecodebench": 13.7,
+        "scicode": 17.4,
         "terminal_bench_hard": 0.8,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1844,9 +1844,9 @@
         "aime_2025": 18.3,
         "aime_2026": null,
         "gpqa_diamond": 34.9,
-        "livecodebench": 13.7,
-        "scicode": 17.4,
-        "hle": 4.8
+        "hle": 4.8,
+        "mmmu_pro": 37.5,
+        "osworld_verified": null
       }
     },
     {
@@ -1870,8 +1870,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 69.9,
+        "scicode": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -1880,9 +1880,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 57.6,
-        "livecodebench": 69.9,
-        "scicode": null,
-        "hle": null
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1906,8 +1906,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 70.3,
+        "scicode": 38.2,
         "terminal_bench_hard": 31.1,
         "terminal_bench_2_0": 36,
         "terminal_bench_2_1": null,
@@ -1916,9 +1916,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 75.7,
-        "livecodebench": 70.3,
-        "scicode": 38.2,
-        "hle": 9.9
+        "hle": 9.9,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1942,8 +1942,8 @@
         "deepswe": 46.2,
         "frontierswe": 74.4,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 50.5,
         "terminal_bench_hard": 50.8,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 77.9,
@@ -1952,9 +1952,9 @@
         "aime_2025": null,
         "aime_2026": 99.2,
         "gpqa_diamond": 89.5,
-        "livecodebench": null,
-        "scicode": 50.5,
-        "hle": 40.1
+        "hle": 40.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -1978,8 +1978,8 @@
         "deepswe": 20.4,
         "frontierswe": null,
         "swe_rebench": 47.69,
-        "mmmu_pro": 78.6,
-        "osworld_verified": 75.2,
+        "livecodebench": null,
+        "scicode": 45.4,
         "terminal_bench_hard": 42.4,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 65.2,
@@ -1988,9 +1988,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 92.9,
-        "livecodebench": null,
-        "scicode": 45.4,
-        "hle": 37.1
+        "hle": 37.1,
+        "mmmu_pro": 78.6,
+        "osworld_verified": 75.2
       }
     },
     {
@@ -2014,8 +2014,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": 21.04,
+        "scicode": 7.8,
         "terminal_bench_hard": 4.5,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -2024,9 +2024,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 51.3,
-        "livecodebench": 21.04,
-        "scicode": 7.8,
-        "hle": 6.9
+        "hle": 6.9,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -2050,8 +2050,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 4.2,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -2060,9 +2060,9 @@
         "aime_2025": 31.73,
         "aime_2026": null,
         "gpqa_diamond": 33.9,
-        "livecodebench": null,
-        "scicode": 4.2,
-        "hle": 6.1
+        "hle": 6.1,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -2075,18 +2075,18 @@
       },
       "context": "10m",
       "scores": {
+        "aa_intelligence_index": 10,
+        "aa_coding_index": 8.2,
+        "swe_rebench": 6.0,
+        "livecodebench": 29.9,
+        "scicode": 17,
         "terminal_bench_hard": 1.5,
         "terminal_bench_2_1": 3.7,
         "tau2_bench_telecom": 15.5,
         "aime_2025": 14,
-        "mmmu_pro": 52.9,
         "gpqa_diamond": 58.7,
-        "livecodebench": 29.9,
-        "scicode": 17,
         "hle": 4.3,
-        "aa_intelligence_index": 10,
-        "aa_coding_index": 8.2,
-        "swe_rebench": 6.0
+        "mmmu_pro": 52.9
       }
     },
     {
@@ -2099,18 +2099,18 @@
       },
       "context": "1m",
       "scores": {
+        "aa_intelligence_index": 14.3,
+        "aa_coding_index": 16.3,
+        "swe_rebench": 8.57,
+        "livecodebench": 39.7,
+        "scicode": 33.1,
         "terminal_bench_hard": 6.8,
         "terminal_bench_2_1": 7.9,
         "tau2_bench_telecom": 17.8,
         "aime_2025": 19.3,
-        "mmmu_pro": 62.1,
         "gpqa_diamond": 67.1,
-        "livecodebench": 39.7,
-        "scicode": 33.1,
         "hle": 4.8,
-        "aa_intelligence_index": 14.3,
-        "aa_coding_index": 16.3,
-        "swe_rebench": 8.57
+        "mmmu_pro": 62.1
       }
     },
     {
@@ -2123,13 +2123,13 @@
       },
       "context": "16k",
       "scores": {
+        "aa_intelligence_index": 4.9,
+        "livecodebench": 23.1,
+        "scicode": 26,
         "terminal_bench_hard": 3.8,
         "aime_2025": 18,
         "gpqa_diamond": 57.5,
-        "livecodebench": 23.1,
-        "scicode": 26,
-        "hle": 4.1,
-        "aa_intelligence_index": 4.9
+        "hle": 4.1
       }
     },
     {
@@ -2141,9 +2141,9 @@
         "url": "https://azure.microsoft.com/en-us/products/phi"
       },
       "scores": {
+        "livecodebench": 53.8,
         "aime_2025": 62.9,
-        "gpqa_diamond": 65.8,
-        "livecodebench": 53.8
+        "gpqa_diamond": 65.8
       }
     },
     {
@@ -2155,9 +2155,9 @@
         "url": "https://azure.microsoft.com/en-us/products/phi"
       },
       "scores": {
+        "livecodebench": 53.1,
         "aime_2025": 78,
-        "gpqa_diamond": 68.9,
-        "livecodebench": 53.1
+        "gpqa_diamond": 68.9
       }
     },
     {
@@ -2181,13 +2181,13 @@
         "url": "https://allenai.org/olmo"
       },
       "scores": {
+        "aa_intelligence_index": 6.4,
+        "livecodebench": 67.2,
+        "scicode": 28.6,
         "terminal_bench_hard": 1.5,
         "aime_2025": 73.7,
         "gpqa_diamond": 61,
-        "livecodebench": 67.2,
-        "scicode": 28.6,
-        "hle": 5.9,
-        "aa_intelligence_index": 6.4
+        "hle": 5.9
       },
       "context": "64k"
     },
@@ -2201,12 +2201,12 @@
       },
       "context": "64k",
       "scores": {
-        "tau2_bench_telecom": 21.3,
-        "gpqa_diamond": 53.9,
-        "scicode": 16.7,
-        "hle": 4.9,
         "aa_intelligence_index": 6.5,
-        "aime_2025": 57.9
+        "scicode": 16.7,
+        "tau2_bench_telecom": 21.3,
+        "aime_2025": 57.9,
+        "gpqa_diamond": 53.9,
+        "hle": 4.9
       }
     },
     {
@@ -2219,13 +2219,13 @@
       },
       "context": "64k",
       "scores": {
+        "aa_intelligence_index": 4,
+        "livecodebench": 61.7,
+        "scicode": 21.2,
         "terminal_bench_hard": 0.8,
         "aime_2025": 70.7,
         "gpqa_diamond": 51.6,
-        "livecodebench": 61.7,
-        "scicode": 21.2,
-        "hle": 5.7,
-        "aa_intelligence_index": 4
+        "hle": 5.7
       }
     },
     {
@@ -2238,13 +2238,13 @@
       },
       "context": "64k",
       "scores": {
+        "aa_intelligence_index": 2.8,
+        "livecodebench": 26.6,
+        "scicode": 10.3,
         "tau2_bench_telecom": 12.6,
         "aime_2025": 41.3,
         "gpqa_diamond": 40,
-        "livecodebench": 26.6,
-        "scicode": 10.3,
-        "hle": 5.8,
-        "aa_intelligence_index": 2.8
+        "hle": 5.8
       }
     },
     {
@@ -2257,14 +2257,14 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 5.3,
+        "livecodebench": 18.1,
+        "scicode": 18.8,
         "terminal_bench_hard": 2.3,
         "tau2_bench_telecom": 13.5,
         "aime_2025": 2.3,
         "gpqa_diamond": 39,
-        "livecodebench": 18.1,
-        "scicode": 18.8,
-        "hle": 3.8,
-        "aa_intelligence_index": 5.3
+        "hle": 3.8
       }
     },
     {
@@ -2277,13 +2277,13 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 2.7,
+        "livecodebench": 6.1,
+        "scicode": 9.3,
         "tau2_bench_telecom": 12.6,
         "aime_2025": 0.3,
         "gpqa_diamond": 32.2,
-        "livecodebench": 6.1,
-        "scicode": 9.3,
-        "hle": 4.5,
-        "aa_intelligence_index": 2.7
+        "hle": 4.5
       }
     },
     {
@@ -2296,14 +2296,14 @@
       },
       "context": "512k",
       "scores": {
+        "aa_intelligence_index": 24.5,
+        "swe_bench_verified": 63.2,
+        "scicode": 36.1,
         "terminal_bench_hard": 22.7,
         "tau2_bench_telecom": 90.1,
-        "gpqa_diamond": 75.2,
-        "scicode": 36.1,
-        "hle": 14.7,
-        "aa_intelligence_index": 24.5,
         "aime_2025": 96.3,
-        "swe_bench_verified": 63.2
+        "gpqa_diamond": 75.2,
+        "hle": 14.7
       }
     },
     {
@@ -2325,14 +2325,14 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 8.8,
+        "livecodebench": 54.6,
+        "scicode": 34.6,
         "terminal_bench_hard": 9.8,
         "tau2_bench_telecom": 26.6,
         "aime_2025": 15.3,
         "gpqa_diamond": 53.6,
-        "livecodebench": 54.6,
-        "scicode": 34.6,
-        "hle": 4.2,
-        "aa_intelligence_index": 8.8
+        "hle": 4.2
       }
     },
     {
@@ -2345,13 +2345,13 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 6.9,
+        "livecodebench": 26.9,
+        "scicode": 27.7,
         "tau2_bench_telecom": 21.6,
         "aime_2025": 11.3,
         "gpqa_diamond": 49.1,
-        "livecodebench": 26.9,
-        "scicode": 27.7,
-        "hle": 3.6,
-        "aa_intelligence_index": 6.9
+        "hle": 3.6
       }
     },
     {
@@ -2373,12 +2373,12 @@
       },
       "context": "128k",
       "scores": {
-        "aime_2025": 33.7,
-        "gpqa_diamond": 52.9,
+        "aa_intelligence_index": 4.1,
         "livecodebench": 43.5,
         "scicode": 26.7,
-        "hle": 5.1,
-        "aa_intelligence_index": 4.1
+        "aime_2025": 33.7,
+        "gpqa_diamond": 52.9,
+        "hle": 5.1
       }
     },
     {
@@ -2400,15 +2400,15 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 20.5,
+        "swe_bench_verified": 16.0,
+        "livecodebench": 80.7,
+        "scicode": 37.3,
         "terminal_bench_hard": 14.4,
         "tau2_bench_telecom": 69.3,
         "aime_2025": 88,
         "gpqa_diamond": 73.3,
-        "livecodebench": 80.7,
-        "scicode": 37.3,
         "hle": 9.8,
-        "aa_intelligence_index": 20.5,
-        "swe_bench_verified": 16.0,
         "mmmu_pro": 60.28
       }
     },
@@ -2422,16 +2422,16 @@
       },
       "context": "128k",
       "scores": {
-        "terminal_bench_hard": 25,
-        "tau2_bench_telecom": 33.9,
-        "aime_2025": 57.7,
-        "gpqa_diamond": 73.8,
-        "livecodebench": 55.4,
-        "scicode": 39.9,
-        "hle": 8.6,
         "aa_intelligence_index": 21.3,
         "swe_bench_verified": 73.1,
-        "browsecomp": 51.4
+        "livecodebench": 55.4,
+        "scicode": 39.9,
+        "terminal_bench_hard": 25,
+        "tau2_bench_telecom": 33.9,
+        "browsecomp": 51.4,
+        "aime_2025": 57.7,
+        "gpqa_diamond": 73.8,
+        "hle": 8.6
       }
     },
     {
@@ -2444,17 +2444,17 @@
       },
       "context": "128k",
       "scores": {
-        "terminal_bench_hard": 15.9,
-        "tau2_bench_telecom": 36.5,
-        "aime_2025": 76,
-        "gpqa_diamond": 81.3,
+        "aa_intelligence_index": 20.1,
+        "swe_bench_verified": 44.6,
+        "swe_rebench": 18.26,
         "livecodebench": 77,
         "scicode": 40.3,
-        "hle": 14.9,
-        "aa_intelligence_index": 20.1,
-        "swe_rebench": 18.26,
-        "swe_bench_verified": 44.6,
-        "browsecomp": 8.9
+        "terminal_bench_hard": 15.9,
+        "tau2_bench_telecom": 36.5,
+        "browsecomp": 8.9,
+        "aime_2025": 76,
+        "gpqa_diamond": 81.3,
+        "hle": 14.9
       }
     },
     {
@@ -2467,17 +2467,17 @@
       },
       "context": "128k",
       "scores": {
-        "terminal_bench_hard": 22,
-        "tau2_bench_telecom": 43,
-        "aime_2025": 73.7,
-        "gpqa_diamond": 78.2,
+        "aa_intelligence_index": 19.5,
+        "swe_bench_verified": 64.2,
+        "swe_rebench": 46.36,
         "livecodebench": 73.8,
         "scicode": 34.8,
-        "hle": 12.2,
-        "aa_intelligence_index": 19.5,
-        "swe_rebench": 46.36,
-        "swe_bench_verified": 64.2,
-        "browsecomp": 26.4
+        "terminal_bench_hard": 22,
+        "tau2_bench_telecom": 43,
+        "browsecomp": 26.4,
+        "aime_2025": 73.7,
+        "gpqa_diamond": 78.2,
+        "hle": 12.2
       }
     },
     {
@@ -2490,17 +2490,17 @@
       },
       "context": "128k",
       "scores": {
-        "terminal_bench_hard": 20.5,
-        "tau2_bench_telecom": 46.5,
-        "aime_2025": 80.7,
-        "gpqa_diamond": 73.3,
+        "aa_intelligence_index": 16.5,
+        "swe_bench_verified": 57.6,
+        "swe_rebench": 32.56,
         "livecodebench": 68.4,
         "scicode": 30.6,
-        "hle": 6.8,
-        "aa_intelligence_index": 16.5,
-        "swe_rebench": 32.56,
-        "swe_bench_verified": 57.6,
-        "browsecomp": 21.3
+        "terminal_bench_hard": 20.5,
+        "tau2_bench_telecom": 46.5,
+        "browsecomp": 21.3,
+        "aime_2025": 80.7,
+        "gpqa_diamond": 73.3,
+        "hle": 6.8
       }
     },
     {
@@ -2513,17 +2513,17 @@
       },
       "context": "200k",
       "scores": {
-        "terminal_bench_hard": 28.8,
-        "tau2_bench_telecom": 76.9,
-        "aime_2025": 44.3,
-        "gpqa_diamond": 63.2,
+        "aa_intelligence_index": 23,
+        "swe_bench_verified": 68,
+        "swe_rebench": 38.26,
         "livecodebench": 56.1,
         "scicode": 33.1,
-        "hle": 5.2,
-        "aa_intelligence_index": 23,
-        "swe_rebench": 38.26,
-        "swe_bench_verified": 68,
-        "browsecomp": 45.1
+        "terminal_bench_hard": 28.8,
+        "tau2_bench_telecom": 76.9,
+        "browsecomp": 45.1,
+        "aime_2025": 44.3,
+        "gpqa_diamond": 63.2,
+        "hle": 5.2
       }
     },
     {
@@ -2536,18 +2536,18 @@
       },
       "context": "200k",
       "scores": {
-        "terminal_bench_hard": 31.8,
-        "tau2_bench_telecom": 95.9,
-        "aime_2025": 95,
-        "gpqa_diamond": 85.9,
+        "aa_intelligence_index": 33.8,
+        "swe_bench_verified": 73.8,
+        "swe_rebench": 31.79,
         "livecodebench": 89.4,
         "scicode": 45.1,
-        "hle": 25.1,
-        "aa_intelligence_index": 33.8,
-        "swe_rebench": 31.79,
-        "swe_bench_verified": 73.8,
+        "terminal_bench_hard": 31.8,
+        "terminal_bench_2_0": 41.0,
+        "tau2_bench_telecom": 95.9,
         "browsecomp": 52,
-        "terminal_bench_2_0": 41.0
+        "aime_2025": 95,
+        "gpqa_diamond": 85.9,
+        "hle": 25.1
       }
     },
     {
@@ -2560,13 +2560,13 @@
       },
       "context": "1m",
       "scores": {
+        "aa_intelligence_index": 8.5,
+        "livecodebench": 37.8,
+        "scicode": 19.9,
         "terminal_bench_hard": 11.4,
         "aime_2025": 36.3,
         "gpqa_diamond": 41.2,
-        "livecodebench": 37.8,
-        "scicode": 19.9,
-        "hle": 2.7,
-        "aa_intelligence_index": 8.5
+        "hle": 2.7
       }
     },
     {
@@ -2588,13 +2588,13 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 9,
+        "livecodebench": 46.7,
+        "scicode": 31.5,
         "terminal_bench_hard": 6.1,
         "aime_2025": 41.3,
         "gpqa_diamond": 81.1,
-        "livecodebench": 46.7,
-        "scicode": 31.5,
-        "hle": 3.5,
-        "aa_intelligence_index": 9
+        "hle": 3.5
       }
     },
     {
@@ -2625,15 +2625,15 @@
       },
       "context": "512k",
       "scores": {
+        "aa_intelligence_index": 18.3,
+        "swe_bench_verified": 56.0,
+        "livecodebench": 76.5,
+        "scicode": 36.5,
         "terminal_bench_hard": 6.8,
         "tau2_bench_telecom": 49.4,
         "aime_2025": 84.7,
         "gpqa_diamond": 72.6,
-        "livecodebench": 76.5,
-        "scicode": 36.5,
-        "hle": 9.1,
-        "aa_intelligence_index": 18.3,
-        "swe_bench_verified": 56.0
+        "hle": 9.1
       }
     },
     {
@@ -2646,14 +2646,14 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 9.7,
+        "livecodebench": 58.9,
+        "scicode": 28.9,
         "terminal_bench_hard": 10.6,
         "tau2_bench_telecom": 20.8,
         "aime_2025": 65.3,
         "gpqa_diamond": 65.7,
-        "livecodebench": 58.9,
-        "scicode": 28.9,
-        "hle": 6.3,
-        "aa_intelligence_index": 9.7
+        "hle": 6.3
       }
     },
     {
@@ -2666,13 +2666,13 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 8.2,
+        "livecodebench": 62.8,
+        "scicode": 16.8,
         "terminal_bench_hard": 7.6,
         "aime_2025": 83.7,
         "gpqa_diamond": 72.5,
-        "livecodebench": 62.8,
-        "scicode": 16.8,
-        "hle": 8.9,
-        "aa_intelligence_index": 8.2
+        "hle": 8.9
       }
     },
     {
@@ -2685,14 +2685,14 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 3.8,
+        "livecodebench": 42.9,
+        "scicode": 13.5,
         "terminal_bench_hard": 0.8,
         "tau2_bench_telecom": 13.2,
         "aime_2025": 49.3,
         "gpqa_diamond": 56.2,
-        "livecodebench": 42.9,
-        "scicode": 13.5,
-        "hle": 5,
-        "aa_intelligence_index": 3.8
+        "hle": 5
       }
     },
     {
@@ -2713,9 +2713,9 @@
         "url": "https://huggingface.co/internlm"
       },
       "scores": {
-        "mmmu_pro": 77.7,
+        "aime_2025": 86.0,
         "gpqa_diamond": 77.3,
-        "aime_2025": 86.0
+        "mmmu_pro": 77.7
       }
     },
     {
@@ -2728,19 +2728,19 @@
       },
       "context": "256k",
       "scores": {
-        "terminal_bench_hard": 25.8,
-        "tau2_bench_telecom": 83.9,
-        "aime_2025": 67.7,
-        "gpqa_diamond": 65.6,
+        "aa_intelligence_index": 24.7,
+        "aa_coding_index": 49.8,
+        "swe_bench_verified": 73.4,
         "livecodebench": 40.2,
         "scicode": 25.9,
-        "hle": 8,
-        "aa_intelligence_index": 24.7,
-        "swe_bench_verified": 73.4,
-        "browsecomp": 58.3,
+        "terminal_bench_hard": 25.8,
         "terminal_bench_2_0": 38.5,
         "terminal_bench_2_1": 61.8,
-        "aa_coding_index": 49.8
+        "tau2_bench_telecom": 83.9,
+        "browsecomp": 58.3,
+        "aime_2025": 67.7,
+        "gpqa_diamond": 65.6,
+        "hle": 8
       }
     },
     {
@@ -2761,11 +2761,11 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
-        "aime_2025": 61.3,
-        "gpqa_diamond": 73.2,
         "swe_bench_verified": 60.4,
         "livecodebench": 48.02,
-        "tau2_bench_telecom": 73.68
+        "tau2_bench_telecom": 73.68,
+        "aime_2025": 61.3,
+        "gpqa_diamond": 73.2
       }
     },
     {
@@ -2777,13 +2777,13 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
-        "aime_2025": 90.6,
-        "gpqa_diamond": 81.5,
         "swe_bench_verified": 59.4,
         "livecodebench": 79.4,
         "tau2_bench_telecom": 83.1,
-        "hle": 25.2,
-        "browsecomp": 56.6
+        "browsecomp": 56.6,
+        "aime_2025": 90.6,
+        "gpqa_diamond": 81.5,
+        "hle": 25.2
       }
     },
     {
@@ -2865,15 +2865,15 @@
       },
       "context": "1m",
       "scores": {
+        "aa_intelligence_index": 17.7,
+        "swe_bench_verified": 56,
+        "livecodebench": 71.1,
+        "scicode": 37.4,
         "terminal_bench_hard": 3,
         "tau2_bench_telecom": 34.2,
         "aime_2025": 61,
         "gpqa_diamond": 69.7,
-        "livecodebench": 71.1,
-        "scicode": 37.4,
-        "hle": 8.2,
-        "aa_intelligence_index": 17.7,
-        "swe_bench_verified": 56
+        "hle": 8.2
       }
     },
     {
@@ -2885,8 +2885,8 @@
         "url": "https://huggingface.co/Skywork"
       },
       "scores": {
-        "aime_2025": 73.3,
-        "livecodebench": 63.0
+        "livecodebench": 63.0,
+        "aime_2025": 73.3
       }
     },
     {
@@ -2908,13 +2908,13 @@
       },
       "context": "32k",
       "scores": {
-        "aime_2025": 19.7,
-        "gpqa_diamond": 53.5,
+        "aa_intelligence_index": 8.6,
+        "swe_rebench": 8.57,
         "livecodebench": 28.8,
         "scicode": 28,
-        "hle": 4.3,
-        "aa_intelligence_index": 8.6,
-        "swe_rebench": 8.57
+        "aime_2025": 19.7,
+        "gpqa_diamond": 53.5,
+        "hle": 4.3
       }
     },
     {
@@ -2927,14 +2927,14 @@
       },
       "context": "32k",
       "scores": {
+        "aa_intelligence_index": 7,
+        "livecodebench": 28,
+        "scicode": 26.5,
         "terminal_bench_hard": 5.3,
         "tau2_bench_telecom": 32.2,
         "aime_2025": 58,
         "gpqa_diamond": 47,
-        "livecodebench": 28,
-        "scicode": 26.5,
-        "hle": 4.2,
-        "aa_intelligence_index": 7
+        "hle": 4.2
       }
     },
     {
@@ -2947,14 +2947,14 @@
       },
       "context": "32k",
       "scores": {
+        "aa_intelligence_index": 5.1,
+        "livecodebench": 20.2,
+        "scicode": 16.8,
         "terminal_bench_hard": 2.3,
         "tau2_bench_telecom": 24.9,
         "aime_2025": 24.3,
         "gpqa_diamond": 45.2,
-        "livecodebench": 20.2,
-        "scicode": 16.8,
-        "hle": 2.8,
-        "aa_intelligence_index": 5.1
+        "hle": 2.8
       }
     },
     {
@@ -2967,11 +2967,11 @@
       },
       "context": "32k",
       "scores": {
-        "gpqa_diamond": 39.8,
+        "aa_intelligence_index": 6.8,
         "livecodebench": 23.3,
         "scicode": 16.7,
-        "hle": 3.7,
-        "aa_intelligence_index": 6.8
+        "gpqa_diamond": 39.8,
+        "hle": 3.7
       }
     },
     {
@@ -2984,15 +2984,15 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 18.2,
+        "swe_rebench": 25.22,
+        "livecodebench": 52.4,
+        "scicode": 36,
         "terminal_bench_hard": 15.2,
         "tau2_bench_telecom": 33.3,
         "aime_2025": 71.7,
         "gpqa_diamond": 75.3,
-        "livecodebench": 52.4,
-        "scicode": 36,
-        "hle": 10.6,
-        "aa_intelligence_index": 18.2,
-        "swe_rebench": 25.22
+        "hle": 10.6
       }
     },
     {
@@ -3005,15 +3005,15 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 22.3,
+        "swe_rebench": 14.55,
+        "livecodebench": 78.8,
+        "scicode": 42.4,
         "terminal_bench_hard": 13.6,
         "tau2_bench_telecom": 53.2,
         "aime_2025": 91,
         "gpqa_diamond": 79,
-        "livecodebench": 78.8,
-        "scicode": 42.4,
-        "hle": 15,
-        "aa_intelligence_index": 22.3,
-        "swe_rebench": 14.55
+        "hle": 15
       }
     },
     {
@@ -3026,16 +3026,16 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 18,
+        "swe_bench_verified": 69.6,
+        "swe_rebench": 39.37,
+        "livecodebench": 58.5,
+        "scicode": 35.9,
         "terminal_bench_hard": 18.9,
         "tau2_bench_telecom": 43.6,
         "aime_2025": 39.3,
         "gpqa_diamond": 61.8,
-        "livecodebench": 58.5,
-        "scicode": 35.9,
-        "hle": 4.4,
-        "aa_intelligence_index": 18,
-        "swe_rebench": 39.37,
-        "swe_bench_verified": 69.6
+        "hle": 4.4
       }
     },
     {
@@ -3048,12 +3048,12 @@
       },
       "context": "128k",
       "scores": {
-        "aime_2025": 29,
-        "gpqa_diamond": 59.3,
+        "aa_intelligence_index": 13.4,
         "livecodebench": 63.1,
         "scicode": 35.8,
-        "hle": 8.2,
-        "aa_intelligence_index": 13.4
+        "aime_2025": 29,
+        "gpqa_diamond": 59.3,
+        "hle": 8.2
       }
     },
     {
@@ -3066,14 +3066,14 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 6,
+        "livecodebench": 47.2,
+        "scicode": 25.2,
         "terminal_bench_hard": 1.5,
         "tau2_bench_telecom": 4.1,
         "aime_2025": 39.3,
         "gpqa_diamond": 62.8,
-        "livecodebench": 47.2,
-        "scicode": 25.2,
-        "hle": 4.9,
-        "aa_intelligence_index": 6
+        "hle": 4.9
       }
     },
     {
@@ -3086,13 +3086,13 @@
       },
       "context": "64k",
       "scores": {
+        "aa_intelligence_index": 2.8,
+        "livecodebench": 29.3,
+        "scicode": 7.4,
         "tau2_bench_telecom": 20.5,
         "aime_2025": 24,
         "gpqa_diamond": 42.4,
-        "livecodebench": 29.3,
-        "scicode": 7.4,
-        "hle": 5.8,
-        "aa_intelligence_index": 2.8
+        "hle": 5.8
       }
     },
     {
@@ -3105,12 +3105,12 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 15.1,
+        "scicode": 26.9,
         "terminal_bench_hard": 2.3,
         "tau2_bench_telecom": 48.2,
         "gpqa_diamond": 65.7,
-        "scicode": 26.9,
-        "hle": 9.2,
-        "aa_intelligence_index": 15.1
+        "hle": 9.2
       }
     },
     {
@@ -3122,9 +3122,9 @@
         "url": "https://falconllm.tii.ae"
       },
       "scores": {
+        "livecodebench": 49.71,
         "aime_2025": 16.67,
-        "gpqa_diamond": 41.53,
-        "livecodebench": 49.71
+        "gpqa_diamond": 41.53
       }
     },
     {
@@ -3137,14 +3137,14 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 9.8,
+        "livecodebench": 72.4,
+        "scicode": 24.9,
         "terminal_bench_hard": 2.3,
         "tau2_bench_telecom": 27.8,
         "aime_2025": 80,
         "gpqa_diamond": 66.1,
-        "livecodebench": 72.4,
-        "scicode": 24.9,
-        "hle": 10.8,
-        "aa_intelligence_index": 9.8
+        "hle": 10.8
       }
     },
     {
@@ -3157,17 +3157,17 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 15.9,
+        "aa_coding_index": 20.1,
+        "livecodebench": 46.5,
+        "scicode": 36.2,
         "terminal_bench_hard": 15.9,
         "terminal_bench_2_1": 12,
         "tau2_bench_telecom": 24.6,
         "aime_2025": 38,
-        "mmmu_pro": 55.7,
         "gpqa_diamond": 68,
-        "livecodebench": 46.5,
-        "scicode": 36.2,
         "hle": 4.1,
-        "aa_intelligence_index": 15.9,
-        "aa_coding_index": 20.1
+        "mmmu_pro": 55.7
       }
     },
     {
@@ -3180,17 +3180,17 @@
       },
       "context": "256k",
       "scores": {
+        "aa_intelligence_index": 9,
+        "aa_coding_index": 9.7,
+        "livecodebench": 30.3,
+        "scicode": 20.8,
         "terminal_bench_hard": 4.5,
         "terminal_bench_2_1": 4.1,
         "tau2_bench_telecom": 26.6,
         "aime_2025": 31.7,
-        "mmmu_pro": 46,
         "gpqa_diamond": 47.1,
-        "livecodebench": 30.3,
-        "scicode": 20.8,
         "hle": 4.3,
-        "aa_intelligence_index": 9,
-        "aa_coding_index": 9.7
+        "mmmu_pro": 46
       }
     },
     {
@@ -3203,15 +3203,15 @@
       },
       "context": "256k",
       "scores": {
-        "tau2_bench_telecom": 24.9,
-        "aime_2025": 22,
-        "mmmu_pro": 38.1,
-        "gpqa_diamond": 35.8,
+        "aa_intelligence_index": 6.8,
+        "aa_coding_index": 4.8,
         "livecodebench": 24.7,
         "scicode": 14.4,
+        "tau2_bench_telecom": 24.9,
+        "aime_2025": 22,
+        "gpqa_diamond": 35.8,
         "hle": 5.3,
-        "aa_intelligence_index": 6.8,
-        "aa_coding_index": 4.8
+        "mmmu_pro": 38.1
       }
     },
     {
@@ -3224,14 +3224,14 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 17,
+        "livecodebench": 62.9,
+        "scicode": 28.4,
         "terminal_bench_hard": 12.1,
         "tau2_bench_telecom": 87.4,
         "aime_2025": 59,
         "gpqa_diamond": 61.5,
-        "livecodebench": 62.9,
-        "scicode": 28.4,
-        "hle": 5.5,
-        "aa_intelligence_index": 17
+        "hle": 5.5
       }
     },
     {
@@ -3244,17 +3244,17 @@
       },
       "context": "128k",
       "scores": {
-        "terminal_bench_hard": 3.8,
-        "tau2_bench_telecom": 10.5,
-        "aime_2025": 20.7,
-        "mmmu_pro": 48,
-        "gpqa_diamond": 42.8,
+        "aa_intelligence_index": 7.4,
+        "aa_coding_index": 10.1,
         "livecodebench": 13.7,
         "scicode": 21.2,
-        "hle": 4.7,
-        "aa_intelligence_index": 7.4,
+        "terminal_bench_hard": 3.8,
         "terminal_bench_2_1": 4.5,
-        "aa_coding_index": 10.1
+        "tau2_bench_telecom": 10.5,
+        "aime_2025": 20.7,
+        "gpqa_diamond": 42.8,
+        "hle": 4.7,
+        "mmmu_pro": 48
       }
     },
     {
@@ -3267,15 +3267,15 @@
       },
       "context": "128k",
       "scores": {
+        "aa_intelligence_index": 1.1,
+        "livecodebench": 11.2,
+        "scicode": 7.3,
         "terminal_bench_hard": 0.8,
         "tau2_bench_telecom": 5,
         "aime_2025": 12.7,
-        "mmmu_pro": 29.9,
         "gpqa_diamond": 29.1,
-        "livecodebench": 11.2,
-        "scicode": 7.3,
         "hle": 5.2,
-        "aa_intelligence_index": 1.1
+        "mmmu_pro": 29.9
       }
     },
     {
@@ -3288,13 +3288,13 @@
       },
       "context": "32k",
       "scores": {
+        "aa_intelligence_index": 1,
+        "livecodebench": 1.7,
+        "scicode": 0.7,
         "tau2_bench_telecom": 10.5,
         "aime_2025": 3.3,
         "gpqa_diamond": 23.7,
-        "livecodebench": 1.7,
-        "scicode": 0.7,
-        "hle": 5.2,
-        "aa_intelligence_index": 1
+        "hle": 5.2
       }
     },
     {
@@ -3307,12 +3307,12 @@
       },
       "context": "32k",
       "scores": {
+        "aa_intelligence_index": 2.4,
+        "livecodebench": 0.3,
         "tau2_bench_telecom": 9.1,
         "aime_2025": 2.3,
         "gpqa_diamond": 22.4,
-        "livecodebench": 0.3,
-        "hle": 4.2,
-        "aa_intelligence_index": 2.4
+        "hle": 4.2
       }
     },
     {
@@ -3391,11 +3391,11 @@
       },
       "context": "32k",
       "scores": {
-        "gpqa_diamond": 33.1,
+        "aa_intelligence_index": 3,
         "livecodebench": 9.3,
         "scicode": 11.8,
-        "hle": 6.6,
-        "aa_intelligence_index": 3
+        "gpqa_diamond": 33.1,
+        "hle": 6.6
       }
     },
     {
@@ -3434,11 +3434,11 @@
       },
       "context": "128k",
       "scores": {
-        "gpqa_diamond": 51,
+        "aa_intelligence_index": 8,
         "livecodebench": 26.7,
         "scicode": 28.5,
-        "hle": 3.8,
-        "aa_intelligence_index": 8
+        "gpqa_diamond": 51,
+        "hle": 3.8
       }
     },
     {
@@ -3462,8 +3462,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": 69.7,
-        "osworld_verified": null,
+        "livecodebench": 72.0,
+        "scicode": 38.2,
         "terminal_bench_hard": 18.2,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": null,
@@ -3472,9 +3472,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 75.3,
-        "livecodebench": 72.0,
-        "scicode": 38.2,
-        "hle": 14.8
+        "hle": 14.8,
+        "mmmu_pro": 69.7,
+        "osworld_verified": null
       }
     },
     {
@@ -3498,8 +3498,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 43.1,
@@ -3508,9 +3508,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "livecodebench": null,
-        "scicode": null,
-        "hle": null
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -3534,8 +3534,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 64.2,
@@ -3544,9 +3544,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "livecodebench": null,
-        "scicode": null,
-        "hle": null
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -3570,8 +3570,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": null,
         "terminal_bench_hard": null,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 77.5,
@@ -3580,9 +3580,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "livecodebench": null,
-        "scicode": null,
-        "hle": null
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     },
     {
@@ -3606,8 +3606,8 @@
         "deepswe": null,
         "frontierswe": null,
         "swe_rebench": null,
-        "mmmu_pro": null,
-        "osworld_verified": null,
+        "livecodebench": null,
+        "scicode": 39.9,
         "terminal_bench_hard": 36.4,
         "terminal_bench_2_0": null,
         "terminal_bench_2_1": 53.9,
@@ -3616,9 +3616,9 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 86.7,
-        "livecodebench": null,
-        "scicode": 39.9,
-        "hle": 26.6
+        "hle": 26.6,
+        "mmmu_pro": null,
+        "osworld_verified": null
       }
     }
   ],
