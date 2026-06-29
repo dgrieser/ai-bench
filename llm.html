@@ -1196,6 +1196,24 @@
         columnWidths: {}
       };
 
+      // Single source of truth for the parameter-size filter: drives both the
+      // dropdown options and the filter logic. Ranges are half-open [min, max)
+      // so adjacent buckets never overlap. Boundaries follow common LLM release
+      // tiers (1B / 4B / 8B / 16B / 32B / 70B / 120B / 235B / 405B / 671B …).
+      const PARAM_BUCKETS = [
+        { value: "all", label: "All parameter sizes" },
+        { value: "lt1", label: "< 1B", min: 0, max: 1e9 },
+        { value: "1to4", label: "1B – 4B", min: 1e9, max: 4e9 },
+        { value: "4to8", label: "4B – 8B", min: 4e9, max: 8e9 },
+        { value: "8to16", label: "8B – 16B", min: 8e9, max: 16e9 },
+        { value: "16to32", label: "16B – 32B", min: 16e9, max: 32e9 },
+        { value: "32to70", label: "32B – 70B", min: 32e9, max: 70e9 },
+        { value: "70to130", label: "70B – 130B", min: 70e9, max: 130e9 },
+        { value: "130to250", label: "130B – 250B", min: 130e9, max: 250e9 },
+        { value: "250to500", label: "250B – 500B", min: 250e9, max: 500e9 },
+        { value: "gte500", label: "≥ 500B", min: 500e9, max: Infinity }
+      ];
+
       function getHeaderWidthConfig(key, th = null) {
         const config = state.headerWidthsByKey[key] || {};
         const fallbackMin = th?.dataset.minWidth ? Number(th.dataset.minWidth) : 75;
@@ -1415,17 +1433,7 @@
         ui.modelCompare.insertBefore(summaryEl, ui.modelCompare.firstChild);
         updateCompareSummary();
 
-        const paramOptions = [
-          { value: "all", label: "All parameter sizes" },
-          { value: "lt10", label: "< 10B" },
-          { value: "10to30", label: "10B to 30B" },
-          { value: "30to80", label: "30B to 80B" },
-          { value: "80to130", label: "80B to 130B" },
-          { value: "130to250", label: "130B to 250B" },
-          { value: "gte250", label: ">= 250B" }
-        ];
-
-        ui.params.innerHTML = paramOptions
+        ui.params.innerHTML = PARAM_BUCKETS
           .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
           .join("");
         ui.params.value = state.filters.params;
@@ -1564,22 +1572,9 @@
           if (!Number.isFinite(modelParams)) {
             return false;
           }
-          if (state.filters.params === "lt10" && !(modelParams < 10e9)) {
-            return false;
-          }
-          if (state.filters.params === "10to30" && !(modelParams >= 10e9 && modelParams <= 30e9)) {
-            return false;
-          }
-          if (state.filters.params === "30to80" && !(modelParams >= 30e9 && modelParams <= 80e9)) {
-            return false;
-          }
-          if (state.filters.params === "80to130" && !(modelParams > 80e9 && modelParams <= 130e9)) {
-            return false;
-          }
-          if (state.filters.params === "130to250" && !(modelParams > 130e9 && modelParams < 250e9)) {
-            return false;
-          }
-          if (state.filters.params === "gte250" && !(modelParams >= 250e9)) {
+          const bucket = PARAM_BUCKETS.find((b) => b.value === state.filters.params);
+          // Half-open interval [min, max): adjacent buckets never overlap.
+          if (bucket && !(modelParams >= bucket.min && modelParams < bucket.max)) {
             return false;
           }
         }

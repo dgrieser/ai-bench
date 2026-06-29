@@ -23,7 +23,7 @@
     },
     "swe_bench_verified": {
       "name": "SWE-bench Verified",
-      "short_name": "SWE Verified",
+      "short_name": "SWE-V",
       "category": "Software Engineering",
       "description": "Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.",
       "urls": [
@@ -32,7 +32,7 @@
     },
     "swe_bench_pro": {
       "name": "SWE-bench Pro",
-      "short_name": "SWE Pro",
+      "short_name": "SWE-Pro",
       "category": "Software Engineering",
       "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
       "urls": [
@@ -42,7 +42,7 @@
     },
     "swe_atlas_qna": {
       "name": "SWE Atlas: Codebase Q&A",
-      "short_name": "SWE Atlas QnA",
+      "short_name": "SWE-A QnA",
       "category": "Software Engineering",
       "description": "Codebase Q&A track of Scale AI's SWE Atlas suite (coding agents beyond issue resolution): deep code-comprehension tasks such as tracing execution paths, multi-file reasoning and answering technical questions about production code, with no code changes required; 124 tasks across 11 open-source repos in Go, Python, C and TypeScript. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
       "urls": [
@@ -53,7 +53,7 @@
     },
     "swe_atlas_rf": {
       "name": "SWE Atlas: Refactoring",
-      "short_name": "SWE Atlas RF",
+      "short_name": "SWE-A RF",
       "category": "Software Engineering",
       "description": "Refactoring track of Scale AI's SWE Atlas suite: restructure production code to improve readability and maintainability while preserving behavior; 70 tasks graded by programmatic test validation plus rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
       "urls": [
@@ -64,7 +64,7 @@
     },
     "swe_atlas_tw": {
       "name": "SWE Atlas: Test Writing",
-      "short_name": "SWE Atlas TW",
+      "short_name": "SWE-A TW",
       "category": "Software Engineering",
       "description": "Test Writing track of Scale AI's SWE Atlas suite: write meaningful tests that exercise real functionality and raise coverage; 90 tasks graded by manifest check, mutation testing and rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
       "urls": [
