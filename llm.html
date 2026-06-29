@@ -460,8 +460,9 @@
       color: var(--text);
     }
 
-    /* Sorted column: subtle tint */
-    thead th:has(.sort-indicator) {
+    /* Sorted column: subtle tint — only for a regular single-column sort, not
+       the grouped-sort diamonds (those are marked with .group-indicator). */
+    thead th:has(.sort-indicator:not(.group-indicator)) {
       background: #e2e1de !important;
       color: var(--text) !important;
       border-bottom-color: #c9c8c4 !important;
@@ -482,7 +483,7 @@
       transform: none;
     }
 
-    thead th:has(.sort-indicator):hover {
+    thead th:has(.sort-indicator:not(.group-indicator)):hover {
       background: #d8d7d3 !important;
     }
 
@@ -992,7 +993,7 @@
       color: var(--text);
     }
 
-    [data-theme="dark"] thead th:has(.sort-indicator) {
+    [data-theme="dark"] thead th:has(.sort-indicator:not(.group-indicator)) {
       background: #252422 !important;
       border-bottom-color: #3a3936 !important;
     }
@@ -1006,7 +1007,7 @@
       text-shadow: 0 0 4px rgba(255, 211, 77, 0.5);
     }
 
-    [data-theme="dark"] thead th:has(.sort-indicator):hover {
+    [data-theme="dark"] thead th:has(.sort-indicator:not(.group-indicator)):hover {
       background: #2c2b28 !important;
     }
 
