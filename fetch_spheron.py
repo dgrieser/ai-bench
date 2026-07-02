@@ -71,7 +71,10 @@ def round_gb(value: float | int | None) -> float | int | None:
     if value is None:
         return None
     num = float(value)
-    return round(num) if num >= 10 else round(num, 1)
+    num = round(num) if num >= 10 else round(num, 1)
+    if num == 0.0:
+        return None
+    return num
 
 
 def parse_model(html: str, fallback_id: str) -> dict:
