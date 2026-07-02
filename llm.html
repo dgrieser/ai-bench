@@ -1474,7 +1474,10 @@
           { key: "name", label: "Model name" },
           { key: "creator", label: "Creator" },
           { key: "params", label: "Params" },
-          { key: "context", label: "Context" }
+          { key: "context", label: "Context" },
+          { key: "vram_fp16", label: "VRAM FP16" },
+          { key: "vram_int8", label: "VRAM INT8" },
+          { key: "vram_int4", label: "VRAM INT4" }
         ];
 
         const groupSortOptions = (state.sortGroups || []).map((group) => ({
@@ -1759,6 +1762,15 @@
         if (key === "context") {
           return parseUnitNumber(model.context);
         }
+        if (key === "vram_fp16") {
+          return model.vram?.fp16 ?? NaN;
+        }
+        if (key === "vram_int8") {
+          return model.vram?.int8 ?? NaN;
+        }
+        if (key === "vram_int4") {
+          return model.vram?.int4 ?? NaN;
+        }
         return toNumber(model.scores?.[key]);
       }
 
@@ -1811,6 +1823,9 @@
           { key: "creator", label: "Creator", minWidth: 90, initialWidth: 90 },
           { key: "params", label: "Params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
           { key: "context", label: "Context", className: "mono head-right", minWidth: 100, initialWidth: 100 },
+          { key: "vram_fp16", label: "FP16", title: "Estimated VRAM at FP16 precision (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
+          { key: "vram_int8", label: "INT8", title: "Estimated VRAM at INT8 quantization (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
+          { key: "vram_int4", label: "INT4", title: "Estimated VRAM at INT4 quantization (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
           ...state.benchmarkKeys.map((key) => {
             const bench = state.data.benchmarks[key] || {};
             const fullName = bench.name || getBenchmarkLabel(key);
@@ -1864,7 +1879,8 @@
               state.sort.direction = state.sort.direction === "desc" ? "asc" : "desc";
             } else {
               state.sort.key = key;
-              state.sort.direction = key === "name" || key === "creator" ? "asc" : "desc";
+              state.sort.direction = (key === "name" || key === "creator" ||
+                key === "vram_fp16" || key === "vram_int8" || key === "vram_int4") ? "asc" : "desc";
             }
 
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
@@ -2140,6 +2156,9 @@
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
+            <td class="mono">${formatVram(model.vram?.fp16)}</td>
+            <td class="mono">${formatVram(model.vram?.int8)}</td>
+            <td class="mono">${formatVram(model.vram?.int4)}</td>
             ${scoreCells}
           </tr>
         `;
@@ -2270,6 +2289,13 @@
         if (!match) return escapeHtml(str);
         const [, num, unit] = match;
         return `${escapeHtml(num)}<span class="p-letter">${escapeHtml(unit)}</span>`;
+      }
+
+      function formatVram(raw) {
+        if (raw == null || raw === "") return "-";
+        const num = typeof raw === "number" ? raw : parseFloat(raw);
+        if (!Number.isFinite(num)) return escapeHtml(String(raw));
+        return `${escapeHtml(String(num))}<span class="p-unit">&thinsp;</span><span class="p-letter">GB</span>`;
       }
 
       function formatParams(raw) {

@@ -18,6 +18,7 @@ from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
+from _spheron_mapping import load_spheron_to_slug_mapping
 from _llmstats_mapping import (
     load_llmstats_to_slug_mapping,
     load_llmstats_benchmark_to_key_mapping,
@@ -31,6 +32,7 @@ HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
+SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -214,6 +216,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-swe-atlas",
         action="store_true",
         help="Skip fetching scores from SWE Atlas.",
+    )
+    parser.add_argument(
+        "--skip-spheron",
+        action="store_true",
+        help="Skip fetching VRAM estimates from Spheron.",
     )
     parser.add_argument(
         "--skip-llmstats",
@@ -751,6 +758,84 @@ def update_swe_atlas_scores(
     return matched, updated, changes
 
 
+def build_fetch_spheron_cmd(script: Path, paths: list[str]) -> list[str]:
+    cmd = [sys.executable, str(script), "--format", "json"]
+    for path in paths:
+        cmd.extend(["--model", path])
+    return cmd
+
+
+def fetch_spheron_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    spheron_to_slug = load_spheron_to_slug_mapping(mapping_path)
+    paths = sorted(spheron_to_slug)
+    if not paths:
+        return {}
+
+    cmd = build_fetch_spheron_cmd(script, paths)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_spheron.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected spheron JSON format: expected a list")
+
+    # slug -> {quant -> vram GB}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        if not isinstance(name, str):
+            continue
+        slug = spheron_to_slug.get(name)
+        if not slug:
+            continue
+        by_slug[slug] = {
+            "fp16": row.get("vram_fp16"),
+            "int8": row.get("vram_int8"),
+            "int4": row.get("vram_int4"),
+        }
+    return by_slug
+
+
+def update_spheron_vram(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        vram_data = by_slug.get(slug)
+        if not vram_data:
+            continue
+
+        matched += 1
+        vram = model.setdefault("vram", {})
+        if not isinstance(vram, dict):
+            continue
+
+        for quant in ("fp16", "int8", "int4"):
+            new_value = vram_data.get(quant)
+            old_value = vram.get(quant)
+            # Never overwrite an existing non-null value with null.
+            if old_value is not None and new_value is None:
+                continue
+            if old_value != new_value:
+                vram[quant] = new_value
+                updated += 1
+                changes.append((slug, f"vram_{quant}", old_value, new_value))
+
+    return matched, updated, changes
+
+
 def build_fetch_llmstats_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -838,6 +923,7 @@ def main() -> int:
     deepswe_path = DEEPSWE_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
+    spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-rebench-to-artificialanalysis.json"
@@ -857,6 +943,9 @@ def main() -> int:
     swe_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-swe-atlas-to-artificialanalysis.json"
     )
+    spheron_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-spheron-to-artificialanalysis.json"
+    )
     llmstats_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llmstats-to-artificialanalysis.json"
     )
@@ -873,6 +962,7 @@ def main() -> int:
         raise RuntimeError("Invalid JSON: models must be a list")
 
     slugs = unique_names(models)
+    spheron_paths = sorted(load_spheron_to_slug_mapping(spheron_mapping_path))
     print("commands:")
     if not args.skip_aa:
         print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
@@ -890,6 +980,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
     if not args.skip_swe_atlas:
         print(f"  - {shlex.join(build_fetch_swe_atlas_cmd(swe_atlas_path))}")
+    if not args.skip_spheron and spheron_paths:
+        print(f"  - {shlex.join(build_fetch_spheron_cmd(spheron_path, spheron_paths))}")
 
     changes: list[tuple[str, str, Any, Any]] = []
     available_slugs: set[str] = set()
@@ -975,6 +1067,14 @@ def main() -> int:
         swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = update_swe_atlas_scores(doc, swe_atlas_by_slug)
         changes.extend(swe_atlas_changes)
 
+    spheron_by_slug: dict[str, dict[str, Any]] = {}
+    spheron_matched = 0
+    spheron_updated = 0
+    if not args.skip_spheron:
+        spheron_by_slug = fetch_spheron_data(spheron_path, spheron_mapping_path)
+        spheron_matched, spheron_updated, spheron_changes = update_spheron_vram(doc, spheron_by_slug)
+        changes.extend(spheron_changes)
+
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if not args.skip_aa else []
     if args.write:
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
@@ -997,6 +1097,8 @@ def main() -> int:
         print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
     if not args.skip_swe_atlas:
         print(f"models returned by swe_atlas: {len(swe_atlas_by_slug)}")
+    if not args.skip_spheron:
+        print(f"models returned by spheron: {len(spheron_by_slug)}")
     if missing:
         print("missing models:")
         for slug in missing:
@@ -1027,6 +1129,8 @@ def main() -> int:
         print(f"models matched on frontierswe: {frontierswe_matched}")
     if not args.skip_swe_atlas:
         print(f"models matched on swe_atlas: {swe_atlas_matched}")
+    if not args.skip_spheron:
+        print(f"models matched on spheron: {spheron_matched}")
     if not args.skip_aa:
         print(f"score values updated from artificialanalysis.py: {aa_updated}")
     if not args.skip_swe_rebench:
@@ -1043,6 +1147,8 @@ def main() -> int:
         print(f"score values updated from frontierswe: {frontierswe_updated}")
     if not args.skip_swe_atlas:
         print(f"score values updated from swe_atlas: {swe_atlas_updated}")
+    if not args.skip_spheron:
+        print(f"vram values updated from spheron: {spheron_updated}")
     print()
     print_changes_table(changes)
     print()
