@@ -22,6 +22,7 @@ from _llmstats_mapping import (
     load_llmstats_to_slug_mapping,
     load_llmstats_benchmark_to_key_mapping,
 )
+from _artificialanalysis_mapping import load_llm_to_aa_mapping
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
@@ -270,6 +271,21 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
         if isinstance(slug, str) and slug:
             by_slug[slug] = row
     return by_slug
+
+
+def resolve_aa_slugs(
+    slugs: list[str], available_slugs: set[str], mapping_path: Path
+) -> dict[str, str]:
+    llm_to_aa = load_llm_to_aa_mapping(mapping_path)
+    resolved: dict[str, str] = {}
+    for slug in slugs:
+        if slug in available_slugs:
+            resolved[slug] = slug
+            continue
+        mapped_slug = llm_to_aa.get(slug)
+        if mapped_slug in available_slugs:
+            resolved[slug] = mapped_slug
+    return resolved
 
 
 def fetch_swe_rebench_data(
@@ -844,6 +860,9 @@ def main() -> int:
     llmstats_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llmstats-to-artificialanalysis.json"
     )
+    aa_model_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-llm-to-artificialanalysis.json"
+    )
     llmstats_benchmark_mapping_path = Path(__file__).resolve().with_name(
         "llmstats-benchmark-name-mapping.json"
     )
@@ -875,6 +894,7 @@ def main() -> int:
     changes: list[tuple[str, str, Any, Any]] = []
     available_slugs: set[str] = set()
     existing_slugs: list[str] = []
+    aa_slug_by_model: dict[str, str] = {}
     by_slug: dict[str, dict[str, Any]] = {}
     matched = 0
     aa_updated = 0
@@ -882,12 +902,18 @@ def main() -> int:
 
     if not args.skip_aa:
         available_slugs = fetch_available_slugs(aa_path)
-        existing_slugs = [slug for slug in slugs if slug in available_slugs]
+        aa_slug_by_model = resolve_aa_slugs(slugs, available_slugs, aa_model_mapping_path)
+        existing_slugs = list(dict.fromkeys(aa_slug_by_model.values()))
         print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
     print()
 
     if not args.skip_aa:
-        by_slug = fetch_aa_data(aa_path, existing_slugs)
+        by_aa_slug = fetch_aa_data(aa_path, existing_slugs)
+        by_slug = {
+            slug: by_aa_slug[aa_slug]
+            for slug, aa_slug in aa_slug_by_model.items()
+            if aa_slug in by_aa_slug
+        }
         matched, aa_updated, seen_eval_keys, aa_changes = update_scores(doc, by_slug)
         changes.extend(aa_changes)
 
@@ -949,7 +975,7 @@ def main() -> int:
         swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = update_swe_atlas_scores(doc, swe_atlas_by_slug)
         changes.extend(swe_atlas_changes)
 
-    missing = [slug for slug in slugs if slug not in available_slugs] if not args.skip_aa else []
+    missing = [slug for slug in slugs if slug not in aa_slug_by_model] if not args.skip_aa else []
     if args.write:
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
