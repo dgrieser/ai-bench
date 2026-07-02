@@ -1710,34 +1710,48 @@
         return map;
       }
 
-      // Priority-weighted normalized composite for a sort group.
+      // Group benchmark entries may be plain keys or { key, weight } objects.
+      // Explicit weights express benchmark reliability; entries without one
+      // fall back to geometric decay by list position (decay^i).
+      function groupBenchmarkEntries(group) {
+        const raw = Array.isArray(group.benchmarks) ? group.benchmarks : [];
+        const decay = Number.isFinite(group.decay) ? group.decay : 0.6;
+        return raw.map((entry, i) => {
+          const obj = typeof entry === "string" ? { key: entry } : entry || {};
+          const weight = Number.isFinite(obj.weight) ? obj.weight : Math.pow(decay, i);
+          return { key: obj.key, weight };
+        });
+      }
+
+      // Reliability-weighted normalized composite for a sort group.
       // - Each benchmark normalized to a percentile rank (kills scale differences).
-      // - Weights decay geometrically down the reliability-ordered list (decay^i),
-      //   so the most reliable benchmark leads and lower ones fill gaps / break ties.
+      // - Each benchmark's weight comes from groupBenchmarkEntries (explicit
+      //   weight, or decay^i by position), so the most reliable benchmarks lead
+      //   and lower-weighted ones fill gaps / break ties.
       // - Missing benchmarks are excluded from both sums (no penalty); the mean is
       //   renormalized by present weight so coverage doesn't distort scale.
       // - Shrinkage * presentWeight/(presentWeight + k) pulls thinly-covered models
       //   toward the middle so a single lucky score can't top a well-tested model.
+      //   Pick shrinkageK relative to the total group weight: k / totalWeight ~ 0.2
+      //   keeps the pull comparable when weights are rescaled.
       // Returns a Map(model -> composite|null); null sinks to the bottom like a
       // missing value (model had no scores in the group).
       function computeGroupComposite(models, group) {
-        const order = Array.isArray(group.benchmarks) ? group.benchmarks : [];
-        const decay = Number.isFinite(group.decay) ? group.decay : 0.6;
+        const entries = groupBenchmarkEntries(group);
         const shrinkageK = Number.isFinite(group.shrinkageK) ? group.shrinkageK : 0.5;
-        const pctMaps = order.map((key) => percentileMap(models, key));
-        const weights = order.map((_, i) => Math.pow(decay, i));
+        const pctMaps = entries.map((entry) => percentileMap(models, entry.key));
 
         const result = new Map();
         models.forEach((model) => {
           let sumWeight = 0;
           let sumWeighted = 0;
-          order.forEach((key, i) => {
+          entries.forEach((entry, i) => {
             const pctMap = pctMaps[i];
             if (!pctMap) return;
             const pct = pctMap.get(model);
             if (pct === undefined) return;
-            sumWeight += weights[i];
-            sumWeighted += weights[i] * pct;
+            sumWeight += entry.weight;
+            sumWeighted += entry.weight * pct;
           });
           if (sumWeight <= 0) {
             result.set(model, null);
@@ -2076,12 +2090,12 @@
         const isSorted = state.sort.key === header.key;
 
         // When a grouped sort is active, every benchmark in the group is marked
-        // with a diamond carrying its priority rank, so the contributing columns
-        // are visible at a glance even though no single column "is" the sort key.
+        // with a diamond, so the contributing columns are visible at a glance
+        // even though no single column "is" the sort key.
         const group = getSortGroup(state.sort.key);
-        const groupBenchmarks = group && Array.isArray(group.benchmarks) ? group.benchmarks : [];
-        const groupRank = groupBenchmarks.indexOf(header.key);
-        const inGroup = groupRank >= 0;
+        const groupEntries = group ? groupBenchmarkEntries(group) : [];
+        const groupEntry = groupEntries.find((entry) => entry.key === header.key);
+        const inGroup = groupEntry !== undefined;
 
         let indicator = "";
         if (isSorted) {
@@ -2095,7 +2109,7 @@
         const titleParts = [];
         if (header.title) titleParts.push(header.title);
         if (inGroup) {
-          titleParts.push(`Sorted in “${group.label || group.key}” · priority ${groupRank + 1}/${groupBenchmarks.length}`);
+          titleParts.push(`Sorted in “${group.label || group.key}” · weight ${groupEntry.weight}`);
         }
         const title = titleParts.length ? ` title="${escapeHtml(titleParts.join("\n"))}"` : "";
 
