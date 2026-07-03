@@ -2157,7 +2157,8 @@
       // - Missing benchmarks are excluded from both sums (no penalty); the mean is
       //   renormalized by present weight so coverage doesn't distort scale.
       // - Shrinkage * presentWeight/(presentWeight + k) pulls thinly-covered models
-      //   toward the middle so a single lucky score can't top a well-tested model.
+      //   toward the bottom (percentiles shrink toward 0, the worst rank) so a
+      //   single lucky score can't top a well-tested model.
       //   Pick shrinkageK relative to the total group weight: k / totalWeight ~ 0.2
       //   keeps the pull comparable when weights are rescaled.
       // Returns a Map(model -> composite|null); null sinks to the bottom like a
