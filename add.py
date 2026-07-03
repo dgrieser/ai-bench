@@ -39,6 +39,11 @@ from _swe_atlas_mapping import (
     fetch_swe_atlas_model_names,
     load_swe_atlas_to_slug_mapping,
 )
+from _evals_report_mapping import (
+    add_evals_report_mapping,
+    fetch_evals_report_model_names,
+    load_evals_report_to_slug_mapping,
+)
 from _spheron_mapping import (
     add_spheron_mapping,
     hf_path_from_url,
@@ -139,6 +144,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-swe-atlas",
         action="store_true",
         help="Skip the SWE Atlas mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-evals-report",
+        action="store_true",
+        help="Skip the evals.report mapping prompt.",
     )
     parser.add_argument(
         "--skip-spheron",
@@ -382,6 +392,31 @@ def maybe_add_swe_atlas_mapping(model_name: str, interactive: bool) -> None:
 
     add_swe_atlas_mapping(swe_atlas_name, model_name)
     print(f"Added SWE Atlas mapping '{swe_atlas_name}' -> '{model_name}'")
+
+
+def maybe_add_evals_report_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_evals_report_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        evals_report_names = fetch_evals_report_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping evals.report mapping prompt: {exc}")
+        return
+
+    if not evals_report_names:
+        return
+
+    evals_report_name = prompt_select_or_new("evals.report model", evals_report_names)
+    if not evals_report_name:
+        return
+
+    add_evals_report_mapping(evals_report_name, model_name)
+    print(f"Added evals.report mapping '{evals_report_name}' -> '{model_name}'")
 
 
 def maybe_add_spheron_mapping(model: dict[str, Any], interactive: bool) -> None:
@@ -806,6 +841,8 @@ def main() -> int:
         maybe_add_frontierswe_mapping(model["name"], interactive)
     if not args.skip_swe_atlas:
         maybe_add_swe_atlas_mapping(model["name"], interactive)
+    if not args.skip_evals_report:
+        maybe_add_evals_report_mapping(model["name"], interactive)
     if not args.skip_spheron:
         maybe_add_spheron_mapping(model, interactive)
     if not args.skip_llmstats:

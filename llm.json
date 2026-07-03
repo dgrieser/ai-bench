@@ -34,6 +34,10 @@
           "weight": 0.75
         },
         {
+          "key": "frontiercode",
+          "weight": 0.7
+        },
+        {
           "key": "swe_atlas_qna",
           "weight": 0.65
         },
@@ -153,6 +157,16 @@
       "description": "Benchmarking software engineering skill at the edge of human ability; hand-crafted tasks, scored by Dominance (pairwise win-rate %) and average rank.",
       "urls": [
         "https://www.frontierswe.com"
+      ]
+    },
+    "frontiercode": {
+      "name": "FrontierCode",
+      "short_name": "F-Code",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated (top models score below 30%).",
+      "urls": [
+        "https://cognition.ai/blog/frontier-code",
+        "https://evals.report/benchmarks/frontiercode"
       ]
     },
     "swe_rebench": {
@@ -309,6 +323,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 48.89,
         "livecodebench": 44.8,
         "scicode": 33.1,
@@ -350,6 +365,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 37.64,
         "livecodebench": 34.8,
         "scicode": 28.8,
@@ -391,6 +407,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 36.3,
         "livecodebench": 64.0,
         "scicode": 33.7,
@@ -432,6 +449,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 56.87,
         "livecodebench": 86.4,
         "scicode": 38.5,
@@ -473,6 +491,7 @@
         "swe_atlas_qna": 10.3,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 54.47,
         "livecodebench": null,
         "scicode": 42.6,
@@ -514,6 +533,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 21.03,
         "livecodebench": 40.3,
         "scicode": 27.8,
@@ -555,6 +575,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 53.36,
         "livecodebench": 47.5,
         "scicode": 32.3,
@@ -596,6 +617,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 5.45,
         "livecodebench": 70.7,
         "scicode": 33.3,
@@ -637,6 +659,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 17.39,
         "livecodebench": 78.4,
         "scicode": 38.8,
@@ -678,6 +701,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 56.84,
         "livecodebench": 83.6,
         "scicode": 42,
@@ -719,6 +743,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 78.9,
         "scicode": 42,
@@ -760,6 +785,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 54.81,
         "livecodebench": 80.7,
         "scicode": 39.5,
@@ -801,6 +827,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 50.37,
         "livecodebench": 74.6,
         "scicode": 37.7,
@@ -842,6 +869,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 65.6,
         "scicode": 27.5,
@@ -883,6 +911,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 55.8,
         "scicode": 16.1,
@@ -924,6 +953,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 2.8,
@@ -965,6 +995,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": null,
@@ -1006,6 +1037,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 81.2,
         "scicode": 36,
@@ -1047,6 +1079,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 28.4,
@@ -1089,6 +1122,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 14.29,
         "livecodebench": 77.7,
         "scicode": 34.4,
@@ -1131,6 +1165,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 46.67,
         "livecodebench": 87.8,
         "scicode": 38.9,
@@ -1172,6 +1207,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 74.1,
         "scicode": 29.6,
@@ -1213,6 +1249,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 64,
         "scicode": 38,
@@ -1254,6 +1291,7 @@
         "swe_atlas_qna": null,
         "deepswe": 0.2,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 49.6,
         "livecodebench": null,
         "scicode": 47,
@@ -1295,6 +1333,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 70.0,
         "scicode": 19.2,
@@ -1336,6 +1375,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 71.7,
         "scicode": 26.4,
@@ -1377,6 +1417,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 57.4,
         "scicode": 26.6,
@@ -1418,6 +1459,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 16.41,
         "livecodebench": 80,
         "scicode": 43.4,
@@ -1459,6 +1501,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 77.1,
         "scicode": 40,
@@ -1500,6 +1543,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 52,
         "scicode": 24.4,
@@ -1541,6 +1585,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 44,
         "scicode": 20.9,
@@ -1582,6 +1627,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 33.33,
         "livecodebench": 80.4,
         "scicode": 35.8,
@@ -1623,6 +1669,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 31.79,
         "livecodebench": 83.9,
         "scicode": 39.8,
@@ -1664,6 +1711,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 37.95,
         "livecodebench": 91.6,
         "scicode": 44.9,
@@ -1705,6 +1753,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 34.86,
         "scicode": 41.2,
@@ -1746,6 +1795,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 21.8,
@@ -1787,6 +1837,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 11.9,
@@ -1828,6 +1879,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 25.8,
@@ -1869,6 +1921,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 39.6,
@@ -1910,6 +1963,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 35.1,
         "scicode": 23.6,
@@ -1951,6 +2005,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 27.8,
@@ -1992,6 +2047,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 2.1,
@@ -2033,6 +2089,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 37.8,
@@ -2074,6 +2131,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 40,
@@ -2115,6 +2173,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 13.7,
         "scicode": 17.4,
@@ -2156,6 +2215,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 70.3,
         "scicode": 38.2,
@@ -2197,6 +2257,7 @@
         "swe_atlas_qna": 48.12,
         "deepswe": 46.2,
         "frontierswe": 74.4,
+        "frontiercode": null,
         "swe_rebench": 51.28,
         "livecodebench": null,
         "scicode": 50.5,
@@ -2238,6 +2299,7 @@
         "swe_atlas_qna": null,
         "deepswe": 20.4,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": 47.69,
         "livecodebench": null,
         "scicode": 45.4,
@@ -2279,6 +2341,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 21.04,
         "scicode": 7.8,
@@ -2315,6 +2378,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 4.2,
@@ -2357,7 +2421,8 @@
         "aime_2025": 14,
         "gpqa_diamond": 58.7,
         "hle": 4.3,
-        "mmmu_pro": 52.9
+        "mmmu_pro": 52.9,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 237,
@@ -2386,7 +2451,8 @@
         "aime_2025": 19.3,
         "gpqa_diamond": 67.1,
         "hle": 4.8,
-        "mmmu_pro": 62.1
+        "mmmu_pro": 62.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 875,
@@ -2410,7 +2476,8 @@
         "terminal_bench_hard": 3.8,
         "aime_2025": 18,
         "gpqa_diamond": 57.5,
-        "hle": 4.1
+        "hle": 4.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 32,
@@ -2433,7 +2500,8 @@
         "terminal_bench_hard": 1.5,
         "aime_2025": 73.7,
         "gpqa_diamond": 61,
-        "hle": 5.9
+        "hle": 5.9,
+        "frontiercode": null
       },
       "context": "64k",
       "vram": {
@@ -2457,7 +2525,8 @@
         "tau2_bench_telecom": 21.3,
         "aime_2025": 57.9,
         "gpqa_diamond": 53.9,
-        "hle": 4.9
+        "hle": 4.9,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 70,
@@ -2481,7 +2550,8 @@
         "terminal_bench_hard": 0.8,
         "aime_2025": 70.7,
         "gpqa_diamond": 51.6,
-        "hle": 5.7
+        "hle": 5.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 16,
@@ -2505,7 +2575,8 @@
         "tau2_bench_telecom": 12.6,
         "aime_2025": 41.3,
         "gpqa_diamond": 40,
-        "hle": 5.8
+        "hle": 5.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 16,
@@ -2530,7 +2601,8 @@
         "tau2_bench_telecom": 13.5,
         "aime_2025": 2.3,
         "gpqa_diamond": 39,
-        "hle": 3.8
+        "hle": 3.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 869,
@@ -2554,7 +2626,8 @@
         "tau2_bench_telecom": 12.6,
         "aime_2025": 0.3,
         "gpqa_diamond": 32.2,
-        "hle": 4.5
+        "hle": 4.5,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 112,
@@ -2579,7 +2652,8 @@
         "tau2_bench_telecom": 90.1,
         "aime_2025": 96.3,
         "gpqa_diamond": 75.2,
-        "hle": 14.7
+        "hle": 14.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 869,
@@ -2604,7 +2678,8 @@
         "tau2_bench_telecom": 26.6,
         "aime_2025": 15.3,
         "gpqa_diamond": 53.6,
-        "hle": 4.2
+        "hle": 4.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 885,
@@ -2628,7 +2703,8 @@
         "tau2_bench_telecom": 21.6,
         "aime_2025": 11.3,
         "gpqa_diamond": 49.1,
-        "hle": 3.6
+        "hle": 3.6,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 154,
@@ -2651,7 +2727,8 @@
         "scicode": 26.7,
         "aime_2025": 33.7,
         "gpqa_diamond": 52.9,
-        "hle": 5.1
+        "hle": 5.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 46,
@@ -2678,7 +2755,8 @@
         "aime_2025": 88,
         "gpqa_diamond": 73.3,
         "hle": 9.8,
-        "mmmu_pro": 60.28
+        "mmmu_pro": 60.28,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 32,
@@ -2705,7 +2783,8 @@
         "browsecomp": 51.4,
         "aime_2025": 57.7,
         "gpqa_diamond": 73.8,
-        "hle": 8.6
+        "hle": 8.6,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1494,
@@ -2733,7 +2812,8 @@
         "browsecomp": 8.9,
         "aime_2025": 76,
         "gpqa_diamond": 81.3,
-        "hle": 14.9
+        "hle": 14.9,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1492,
@@ -2761,7 +2841,8 @@
         "browsecomp": 26.4,
         "aime_2025": 73.7,
         "gpqa_diamond": 78.2,
-        "hle": 12.2
+        "hle": 12.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 781,
@@ -2789,7 +2870,8 @@
         "browsecomp": 21.3,
         "aime_2025": 80.7,
         "gpqa_diamond": 73.3,
-        "hle": 6.8
+        "hle": 6.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 241,
@@ -2817,7 +2899,8 @@
         "browsecomp": 45.1,
         "aime_2025": 44.3,
         "gpqa_diamond": 63.2,
-        "hle": 5.2
+        "hle": 5.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 778,
@@ -2848,7 +2931,8 @@
         "gpqa_diamond": 85.9,
         "hle": 25.1,
         "terminal_bench_2_1": 45.3,
-        "aa_coding_index": 45.3
+        "aa_coding_index": 45.3,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 781,
@@ -2872,7 +2956,8 @@
         "terminal_bench_hard": 11.4,
         "aime_2025": 36.3,
         "gpqa_diamond": 41.2,
-        "hle": 2.7
+        "hle": 2.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 107,
@@ -2896,7 +2981,8 @@
         "terminal_bench_hard": 6.1,
         "aime_2025": 41.3,
         "gpqa_diamond": 81.1,
-        "hle": 3.5
+        "hle": 3.5,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 655,
@@ -2922,7 +3008,8 @@
         "tau2_bench_telecom": 49.4,
         "aime_2025": 84.7,
         "gpqa_diamond": 72.6,
-        "hle": 9.1
+        "hle": 9.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 79,
@@ -2947,7 +3034,8 @@
         "tau2_bench_telecom": 20.8,
         "aime_2025": 65.3,
         "gpqa_diamond": 65.7,
-        "hle": 6.3
+        "hle": 6.3,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 224,
@@ -2971,7 +3059,8 @@
         "terminal_bench_hard": 7.6,
         "aime_2025": 83.7,
         "gpqa_diamond": 72.5,
-        "hle": 8.9
+        "hle": 8.9,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 224,
@@ -2996,7 +3085,8 @@
         "tau2_bench_telecom": 13.2,
         "aime_2025": 49.3,
         "gpqa_diamond": 56.2,
-        "hle": 5
+        "hle": 5,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 35,
@@ -3026,7 +3116,8 @@
         "browsecomp": 58.3,
         "aime_2025": 67.7,
         "gpqa_diamond": 65.6,
-        "hle": 8
+        "hle": 8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 675,
@@ -3047,7 +3138,8 @@
         "livecodebench": 48.02,
         "tau2_bench_telecom": 73.68,
         "aime_2025": 61.3,
-        "gpqa_diamond": 73.2
+        "gpqa_diamond": 73.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1225,
@@ -3070,7 +3162,8 @@
         "browsecomp": 56.6,
         "aime_2025": 90.6,
         "gpqa_diamond": 81.5,
-        "hle": 25.2
+        "hle": 25.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1225,
@@ -3096,7 +3189,8 @@
         "tau2_bench_telecom": 34.2,
         "aime_2025": 61,
         "gpqa_diamond": 69.7,
-        "hle": 8.2
+        "hle": 8.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 994,
@@ -3120,7 +3214,8 @@
         "scicode": 28,
         "aime_2025": 19.7,
         "gpqa_diamond": 53.5,
-        "hle": 4.3
+        "hle": 4.3,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 71,
@@ -3145,7 +3240,8 @@
         "tau2_bench_telecom": 32.2,
         "aime_2025": 58,
         "gpqa_diamond": 47,
-        "hle": 4.2
+        "hle": 4.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 32,
@@ -3170,7 +3266,8 @@
         "tau2_bench_telecom": 24.9,
         "aime_2025": 24.3,
         "gpqa_diamond": 45.2,
-        "hle": 2.8
+        "hle": 2.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 18,
@@ -3192,7 +3289,8 @@
         "livecodebench": 23.3,
         "scicode": 16.7,
         "gpqa_diamond": 39.8,
-        "hle": 3.7
+        "hle": 3.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 8.8,
@@ -3218,7 +3316,8 @@
         "tau2_bench_telecom": 33.3,
         "aime_2025": 71.7,
         "gpqa_diamond": 75.3,
-        "hle": 10.6
+        "hle": 10.6,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 513,
@@ -3246,7 +3345,8 @@
         "gpqa_diamond": 79,
         "hle": 15,
         "terminal_bench_2_1": 12,
-        "aa_coding_index": 22.1
+        "aa_coding_index": 22.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 513,
@@ -3273,7 +3373,8 @@
         "tau2_bench_telecom": 43.6,
         "aime_2025": 39.3,
         "gpqa_diamond": 61.8,
-        "hle": 4.4
+        "hle": 4.4,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1047,
@@ -3296,7 +3397,8 @@
         "scicode": 35.8,
         "aime_2025": 29,
         "gpqa_diamond": 59.3,
-        "hle": 8.2
+        "hle": 8.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 71,
@@ -3321,7 +3423,8 @@
         "tau2_bench_telecom": 4.1,
         "aime_2025": 39.3,
         "gpqa_diamond": 62.8,
-        "hle": 4.9
+        "hle": 4.9,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 70,
@@ -3345,7 +3448,8 @@
         "tau2_bench_telecom": 20.5,
         "aime_2025": 24,
         "gpqa_diamond": 42.4,
-        "hle": 5.8
+        "hle": 5.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 2.8,
@@ -3368,7 +3472,8 @@
         "terminal_bench_hard": 2.3,
         "tau2_bench_telecom": 48.2,
         "gpqa_diamond": 65.7,
-        "hle": 9.2
+        "hle": 9.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 224,
@@ -3393,7 +3498,8 @@
         "tau2_bench_telecom": 27.8,
         "aime_2025": 80,
         "gpqa_diamond": 66.1,
-        "hle": 10.8
+        "hle": 10.8,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 17,
@@ -3421,7 +3527,8 @@
         "aime_2025": 38,
         "gpqa_diamond": 68,
         "hle": 4.1,
-        "mmmu_pro": 55.7
+        "mmmu_pro": 55.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 1472,
@@ -3449,7 +3556,8 @@
         "aime_2025": 31.7,
         "gpqa_diamond": 47.1,
         "hle": 4.3,
-        "mmmu_pro": 46
+        "mmmu_pro": 46,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 19,
@@ -3475,7 +3583,8 @@
         "aime_2025": 22,
         "gpqa_diamond": 35.8,
         "hle": 5.3,
-        "mmmu_pro": 38.1
+        "mmmu_pro": 38.1,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 8.4,
@@ -3500,7 +3609,8 @@
         "tau2_bench_telecom": 87.4,
         "aime_2025": 59,
         "gpqa_diamond": 61.5,
-        "hle": 5.5
+        "hle": 5.5,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 73,
@@ -3528,7 +3638,8 @@
         "aime_2025": 20.7,
         "gpqa_diamond": 42.8,
         "hle": 4.7,
-        "mmmu_pro": 48
+        "mmmu_pro": 48,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 60,
@@ -3556,7 +3667,8 @@
         "hle": 5.2,
         "mmmu_pro": 29.9,
         "terminal_bench_2_1": 0.4,
-        "aa_coding_index": 2.7
+        "aa_coding_index": 2.7,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 9.4,
@@ -3580,7 +3692,8 @@
         "tau2_bench_telecom": 10.5,
         "aime_2025": 3.3,
         "gpqa_diamond": 23.7,
-        "hle": 5.2
+        "hle": 5.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 2.2,
@@ -3603,7 +3716,8 @@
         "tau2_bench_telecom": 9.1,
         "aime_2025": 2.3,
         "gpqa_diamond": 22.4,
-        "hle": 4.2
+        "hle": 4.2,
+        "frontiercode": null
       },
       "vram": {
         "fp16": 0.6,
@@ -3625,7 +3739,8 @@
         "livecodebench": 9.3,
         "scicode": 11.8,
         "gpqa_diamond": 33.1,
-        "hle": 6.6
+        "hle": 6.6,
+        "frontiercode": null
       },
       "vram": {}
     },
@@ -3643,7 +3758,8 @@
         "livecodebench": 26.7,
         "scicode": 28.5,
         "gpqa_diamond": 51,
-        "hle": 3.8
+        "hle": 3.8,
+        "frontiercode": null
       },
       "vram": {}
     },
@@ -3667,6 +3783,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 72.0,
         "scicode": 38.2,
@@ -3708,6 +3825,7 @@
         "swe_atlas_qna": 17.9,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": null,
@@ -3749,6 +3867,7 @@
         "swe_atlas_qna": 37.1,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": null,
@@ -3790,6 +3909,7 @@
         "swe_atlas_qna": 41.2,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": null,
@@ -3831,6 +3951,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": null,
         "scicode": 39.9,
@@ -3877,6 +3998,7 @@
         "swe_atlas_qna": null,
         "deepswe": null,
         "frontierswe": null,
+        "frontiercode": null,
         "swe_rebench": null,
         "livecodebench": 69.1,
         "scicode": 34.3,

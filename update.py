@@ -18,6 +18,7 @@ from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
+from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _spheron_mapping import load_spheron_to_slug_mapping
 from _llmstats_mapping import (
     load_llmstats_to_slug_mapping,
@@ -32,6 +33,7 @@ HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
+EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -216,6 +218,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-swe-atlas",
         action="store_true",
         help="Skip fetching scores from SWE Atlas.",
+    )
+    parser.add_argument(
+        "--skip-evals-report",
+        action="store_true",
+        help="Skip fetching scores from evals.report.",
     )
     parser.add_argument(
         "--skip-spheron",
@@ -758,6 +765,79 @@ def update_swe_atlas_scores(
     return matched, updated, changes
 
 
+def build_fetch_evals_report_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--benchmark", "all", "--format", "json"]
+
+
+def fetch_evals_report_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_evals_report_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_evals_report.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected evals_report JSON format: expected a list")
+
+    evals_report_to_slug = load_evals_report_to_slug_mapping(mapping_path)
+    # slug -> {benchmark_key -> best score across reported runs}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        key = row.get("key")
+        score = row.get("score")
+        if not isinstance(name, str) or not isinstance(key, str):
+            continue
+        if not isinstance(score, (int, float)):
+            continue
+        slug = evals_report_to_slug.get(name)
+        if not slug:
+            continue
+        scores = by_slug.setdefault(slug, {})
+        # A model may have several reported runs per benchmark; keep the best.
+        if key not in scores or score > scores[key]:
+            scores[key] = score
+    return by_slug
+
+
+def update_evals_report_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        evals_report_scores = by_slug.get(slug)
+        if not evals_report_scores:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        for benchmark_key, new_value in evals_report_scores.items():
+            old_value = scores.get(benchmark_key)
+            # Never overwrite an existing non-null value with null.
+            if old_value is not None and new_value is None:
+                continue
+            if old_value != new_value:
+                scores[benchmark_key] = new_value
+                updated += 1
+                changes.append((slug, benchmark_key, old_value, new_value))
+
+    return matched, updated, changes
+
+
 def build_fetch_spheron_cmd(script: Path, paths: list[str]) -> list[str]:
     cmd = [sys.executable, str(script), "--format", "json"]
     for path in paths:
@@ -923,6 +1003,7 @@ def main() -> int:
     deepswe_path = DEEPSWE_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
+    evals_report_path = EVALS_REPORT_SCRIPT
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
     swe_rebench_mapping_path = Path(__file__).resolve().with_name(
@@ -942,6 +1023,9 @@ def main() -> int:
     )
     swe_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-swe-atlas-to-artificialanalysis.json"
+    )
+    evals_report_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-evals-report-to-artificialanalysis.json"
     )
     spheron_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-spheron-to-artificialanalysis.json"
@@ -980,6 +1064,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
     if not args.skip_swe_atlas:
         print(f"  - {shlex.join(build_fetch_swe_atlas_cmd(swe_atlas_path))}")
+    if not args.skip_evals_report:
+        print(f"  - {shlex.join(build_fetch_evals_report_cmd(evals_report_path))}")
     if not args.skip_spheron and spheron_paths:
         print(f"  - {shlex.join(build_fetch_spheron_cmd(spheron_path, spheron_paths))}")
 
@@ -1067,6 +1153,14 @@ def main() -> int:
         swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = update_swe_atlas_scores(doc, swe_atlas_by_slug)
         changes.extend(swe_atlas_changes)
 
+    evals_report_by_slug: dict[str, dict[str, Any]] = {}
+    evals_report_matched = 0
+    evals_report_updated = 0
+    if not args.skip_evals_report:
+        evals_report_by_slug = fetch_evals_report_data(evals_report_path, evals_report_mapping_path)
+        evals_report_matched, evals_report_updated, evals_report_changes = update_evals_report_scores(doc, evals_report_by_slug)
+        changes.extend(evals_report_changes)
+
     spheron_by_slug: dict[str, dict[str, Any]] = {}
     spheron_matched = 0
     spheron_updated = 0
@@ -1097,6 +1191,8 @@ def main() -> int:
         print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
     if not args.skip_swe_atlas:
         print(f"models returned by swe_atlas: {len(swe_atlas_by_slug)}")
+    if not args.skip_evals_report:
+        print(f"models returned by evals_report: {len(evals_report_by_slug)}")
     if not args.skip_spheron:
         print(f"models returned by spheron: {len(spheron_by_slug)}")
     if missing:
@@ -1129,6 +1225,8 @@ def main() -> int:
         print(f"models matched on frontierswe: {frontierswe_matched}")
     if not args.skip_swe_atlas:
         print(f"models matched on swe_atlas: {swe_atlas_matched}")
+    if not args.skip_evals_report:
+        print(f"models matched on evals_report: {evals_report_matched}")
     if not args.skip_spheron:
         print(f"models matched on spheron: {spheron_matched}")
     if not args.skip_aa:
@@ -1147,6 +1245,8 @@ def main() -> int:
         print(f"score values updated from frontierswe: {frontierswe_updated}")
     if not args.skip_swe_atlas:
         print(f"score values updated from swe_atlas: {swe_atlas_updated}")
+    if not args.skip_evals_report:
+        print(f"score values updated from evals_report: {evals_report_updated}")
     if not args.skip_spheron:
         print(f"vram values updated from spheron: {spheron_updated}")
     print()
