@@ -1998,13 +1998,17 @@
         const paramsOn = state.filters.params !== "all";
         const compareOn = state.filters.selectedModels.length > 0;
         const gpuOn = Boolean(state.gpu.budget);
+        const sortOn = state.sort.key !== defaultSortKey() || state.sort.direction !== "desc";
+        const vendorOn = state.gpu.vendor !== "all";
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
         ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
+        ui.sortMode.closest(".field")?.classList.toggle("filter-on", sortOn);
+        ui.gpuVendor.closest(".field")?.classList.toggle("filter-on", vendorOn);
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || gpuOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || gpuOn || sortOn || vendorOn);
       }
 
       function modelPassesFilters(model) {
@@ -2656,6 +2660,7 @@
             ui.gpuModel.value = "";
             setGpuCountDisabled(true);
             closeGpuList();
+            updateFilterGlow();
             ui.gpuVram.focus();
             return;
           }
@@ -2667,6 +2672,7 @@
             ui.gpuVram.value = "";
             gpuSetBudget(null);
           }
+          updateFilterGlow();
           if (!ui.gpuModelList.hidden || document.activeElement === ui.gpuModel) {
             openGpuList();
           }
