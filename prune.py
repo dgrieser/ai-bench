@@ -29,10 +29,11 @@ def main() -> int:
         help='Path to JSON file to read/update (default: "./llm.json" next to this script)',
     )
     parser.add_argument(
-        "--max-scores",
+        "--keep-min-scores",
+        "-s",
         type=int,
-        default=3,
-        help="Drop models with this many non-null scores or fewer (default: 3).",
+        required=True,
+        help="Keep only models with at least this many non-null scores; drop the rest.",
     )
     parser.add_argument(
         "--write",
@@ -48,13 +49,13 @@ def main() -> int:
 
     keep, drop = [], []
     for m in models:
-        (drop if score_count(m) <= args.max_scores else keep).append(m)
+        (keep if score_count(m) >= args.keep_min_scores else drop).append(m)
 
     if not drop:
-        print(f"No models with <= {args.max_scores} scores. Nothing to do.")
+        print(f"No models with < {args.keep_min_scores} scores. Nothing to do.")
         return 0
 
-    print(f"Dropping {len(drop)} model(s) with <= {args.max_scores} non-null scores:")
+    print(f"Dropping {len(drop)} model(s) with < {args.keep_min_scores} non-null scores:")
     for m in sorted(drop, key=score_count):
         creator = (m.get("creator") or {}).get("name", "?")
         print(f"  [{score_count(m)}]  {m.get('name', '?'):40s} {creator}")
