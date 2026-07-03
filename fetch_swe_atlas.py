@@ -28,6 +28,8 @@ import argparse
 import json
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 
 
@@ -54,10 +56,22 @@ _ROW_RE = re.compile(r'\{[^{}]*"score":[^{}]*\}')
 _EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
 
 
-def fetch_html(url: str) -> str:
+def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+    for attempt in range(1, retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return resp.read().decode("utf-8", errors="replace")
+        except (urllib.error.URLError, OSError) as exc:
+            if attempt == retries:
+                raise
+            wait = delay * attempt
+            print(
+                f"  attempt {attempt}/{retries} failed ({exc}); retrying in {wait:.0f}s ...",
+                file=sys.stderr,
+            )
+            time.sleep(wait)
+    raise AssertionError("unreachable")
 
 
 def decode_flight(html: str) -> str:
@@ -203,3 +217,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print()
         raise SystemExit(130)
+    except (urllib.error.URLError, OSError) as exc:
+        print(f"error: could not fetch SWE Atlas leaderboard: {exc}", file=sys.stderr)
+        raise SystemExit(1)

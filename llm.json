@@ -3851,6 +3851,47 @@
         "int8": 611,
         "int4": 305
       }
+    },
+    {
+      "name": "diffusiongemma-26b-a4b",
+      "date_added": "2026-07-03",
+      "url": "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
+      "params": "26B-A4B",
+      "context": "256k",
+      "vram": {
+        "fp16": 56,
+        "int8": 28,
+        "int4": 14
+      },
+      "creator": {
+        "name": "Google",
+        "url": "https://deepmind.google/technologies/gemini/"
+      },
+      "scores": {
+        "aa_intelligence_index": 13.5,
+        "aa_coding_index": 19.7,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_atlas_rf": null,
+        "swe_atlas_tw": null,
+        "swe_atlas_qna": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "swe_rebench": null,
+        "livecodebench": 69.1,
+        "scicode": 34.3,
+        "terminal_bench_2_1": 12.4,
+        "terminal_bench_2_0": null,
+        "terminal_bench_hard": null,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": 69.1,
+        "gpqa_diamond": 66.9,
+        "hle": 10.2,
+        "mmmu_pro": 54.3,
+        "osworld_verified": null
+      }
     }
   ],
   "sources": [
