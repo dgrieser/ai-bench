@@ -358,6 +358,284 @@
       font-weight: 600;
     }
 
+    /* ── GPU VRAM filter ──────────────────────────── */
+
+    .gpu-bar {
+      padding: 16px 20px 18px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(150px, 180px) minmax(240px, 1fr) auto minmax(230px, auto);
+      align-items: start;
+    }
+
+    .gpu-bar[hidden] {
+      display: none;
+    }
+
+    .gpu-combo input {
+      padding-right: 30px;
+    }
+
+    .gpu-combo-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      z-index: 30;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .gpu-combo-list[hidden] {
+      display: none;
+    }
+
+    .gpu-option {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .gpu-option:hover,
+    .gpu-option.active {
+      background: var(--surface-alt);
+    }
+
+    .gpu-option.is-selected {
+      color: var(--accent);
+    }
+
+    .gpu-opt-vendor {
+      flex-shrink: 0;
+      width: 36px;
+      color: var(--subtle);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .gpu-opt-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gpu-opt-vram {
+      margin-left: auto;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .gpu-opt-date {
+      flex-shrink: 0;
+      width: 66px;
+      text-align: right;
+      color: var(--subtle);
+      font-weight: 400;
+      font-size: 0.7rem;
+    }
+
+    .gpu-combo-empty {
+      padding: 10px 12px;
+      color: var(--subtle);
+      font-size: 0.75rem;
+      font-style: italic;
+    }
+
+    .gpu-stepper {
+      display: flex;
+      align-items: stretch;
+      height: 42px;
+      width: 118px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+    }
+
+    .gpu-stepper:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+    }
+
+    .gpu-stepper.disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .gpu-stepper button {
+      width: 34px;
+      min-height: unset;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .gpu-stepper button:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+      border-color: transparent;
+    }
+
+    .gpu-stepper input {
+      width: 48px;
+      height: auto;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .gpu-stepper input:focus {
+      border: none;
+      box-shadow: none;
+    }
+
+    .gpu-total {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+    }
+
+    .gpu-eq {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+    }
+
+    .gpu-total input {
+      width: 5.5ch;
+      height: 42px;
+      border: none;
+      border-bottom: 2px solid var(--line);
+      border-radius: 0;
+      padding: 0 2px;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .gpu-total input:focus {
+      border: none;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: none;
+    }
+
+    .gpu-total input::placeholder {
+      font-size: 1.3rem;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .gpu-unit {
+      align-self: flex-end;
+      padding-bottom: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .gpu-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-left: 10px;
+      width: 76px;
+      align-self: center;
+    }
+
+    .gpu-legend[hidden] {
+      display: none;
+    }
+
+    .gpu-legend-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, hsl(150, 62%, 42%), hsl(90, 55%, 44%), hsl(45, 75%, 46%), hsl(20, 78%, 50%));
+    }
+
+    .gpu-legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--subtle);
+    }
+
+    .gpu-legend-labels em {
+      font-style: normal;
+    }
+
+    /* Table VRAM cells under an active GPU budget: hue slides green → amber
+       as the requirement approaches the available VRAM; over-budget entries
+       are struck through. Colors react to theme without a rerender because
+       only the hue is inlined. */
+    td.vram-fit {
+      --fit-h: 150;
+      color: hsl(var(--fit-h), 60%, 33%);
+      font-weight: 700;
+    }
+
+    td.vram-fit .p-letter,
+    td.vram-fit .p-unit {
+      color: inherit;
+      opacity: 0.72;
+    }
+
+    [data-theme="dark"] td.vram-fit {
+      color: hsl(var(--fit-h), 58%, 60%);
+    }
+
+    td.vram-over {
+      color: var(--subtle);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      text-decoration-color: color-mix(in srgb, var(--subtle) 65%, transparent);
+    }
+
+    td.vram-over .p-letter,
+    td.vram-over .p-unit {
+      color: inherit;
+    }
+
+    @media (max-width: 860px) {
+      .gpu-bar {
+        grid-template-columns: 1fr 1fr;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+
     /* ── Toolbar ──────────────────────────────────── */
 
     .toolbar {
@@ -1190,6 +1468,46 @@
       </div>
     </section>
 
+    <section class="gpu-bar" id="gpuBar" hidden aria-label="GPU VRAM filter">
+      <div class="field">
+        <label for="gpuVendor">GPU Vendor</label>
+        <select id="gpuVendor">
+          <option value="all">Any vendor</option>
+          <option value="NVIDIA">NVIDIA</option>
+          <option value="AMD">AMD</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="gpuModel">GPU Model</label>
+        <div class="select-wrap gpu-combo">
+          <input id="gpuModel" type="text" placeholder="Type or pick a GPU" autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-expanded="false" aria-controls="gpuModelList">
+          <button id="gpuClear" class="clear-compare" type="button" title="Clear GPU filter">×</button>
+          <div id="gpuModelList" class="gpu-combo-list" role="listbox" hidden></div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="gpuCount">Cards</label>
+        <div class="gpu-stepper" id="gpuStepper">
+          <button id="gpuCountDown" type="button" aria-label="Fewer cards">−</button>
+          <input id="gpuCount" type="text" inputmode="numeric" value="1" aria-label="Number of graphics cards">
+          <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="gpuVram">Total VRAM</label>
+        <div class="gpu-total">
+          <span class="gpu-eq" aria-hidden="true">=</span>
+          <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
+          <span class="gpu-unit">GB</span>
+          <span class="gpu-legend" id="gpuLegend" hidden aria-hidden="true">
+            <span class="gpu-legend-bar"></span>
+            <span class="gpu-legend-labels"><em>fits</em><em>full</em></span>
+          </span>
+        </div>
+      </div>
+    </section>
+
     <section class="toolbar" id="toolbar" hidden>
       <span class="pill" id="resultCount">0 models</span>
       <span class="pill" id="creatorCount">0 creators</span>
@@ -1222,7 +1540,18 @@
           direction: "desc"
         },
         eventsBound: false,
-        columnWidths: {}
+        columnWidths: {},
+        gpu: {
+          list: [],
+          visible: [],
+          vendor: "all",
+          selected: null,
+          count: 1,
+          custom: false,
+          budget: null,
+          activeIndex: -1,
+          eventsBound: false
+        }
       };
 
       // Single source of truth for the parameter-size filter: drives both the
@@ -1281,7 +1610,18 @@
         importFile: document.getElementById("importFile"),
         resetBtn: document.getElementById("resetBtn"),
         clearCompare: document.getElementById("clearCompare"),
-        clearSearch: document.getElementById("clearSearch")
+        clearSearch: document.getElementById("clearSearch"),
+        gpuBar: document.getElementById("gpuBar"),
+        gpuVendor: document.getElementById("gpuVendor"),
+        gpuModel: document.getElementById("gpuModel"),
+        gpuModelList: document.getElementById("gpuModelList"),
+        gpuClear: document.getElementById("gpuClear"),
+        gpuStepper: document.getElementById("gpuStepper"),
+        gpuCount: document.getElementById("gpuCount"),
+        gpuCountDown: document.getElementById("gpuCountDown"),
+        gpuCountUp: document.getElementById("gpuCountUp"),
+        gpuVram: document.getElementById("gpuVram"),
+        gpuLegend: document.getElementById("gpuLegend")
       };
 
       bindImportEvents();
@@ -1352,6 +1692,7 @@
           state.eventsBound = true;
         }
         applyAndRender();
+        loadGpuData();
       }
 
       function bindImportEvents() {
@@ -1574,6 +1915,7 @@
           updateCompareWidget();
           ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
 
+          gpuResetBar();
           applyAndRender();
         });
       }
@@ -1621,6 +1963,18 @@
 
         if (state.filters.selectedModels.length && !state.filters.selectedModels.includes(model.name || "Unknown")) {
           return false;
+        }
+
+        // GPU VRAM budget: keep a model only if it fits at some quantization
+        // level (int4 is the smallest, so min of the present values decides).
+        if (state.gpu.budget) {
+          const vram = model.vram || {};
+          const requirements = [vram.int4, vram.int8, vram.fp16]
+            .map(toNumber)
+            .filter((value) => Number.isFinite(value));
+          if (!requirements.length || Math.min(...requirements) > state.gpu.budget) {
+            return false;
+          }
         }
 
         return true;
@@ -2170,12 +2524,314 @@
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
-            <td class="mono">${formatVram(model.vram?.fp16)}</td>
-            <td class="mono">${formatVram(model.vram?.int8)}</td>
-            <td class="mono">${formatVram(model.vram?.int4)}</td>
+            ${renderVramCell(model.vram?.fp16)}
+            ${renderVramCell(model.vram?.int8)}
+            ${renderVramCell(model.vram?.int4)}
             ${scoreCells}
           </tr>
         `;
+      }
+
+      /* ── GPU VRAM filter ─────────────────────────── */
+
+      async function loadGpuData() {
+        if (state.gpu.list.length) {
+          return;
+        }
+        const urls = ["gpu.json", `https://dgrieser.github.io/ai-bench/gpu.json?t=${Date.now()}`];
+        for (const url of urls) {
+          try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) {
+              continue;
+            }
+            const list = await response.json();
+            if (Array.isArray(list) && list.length) {
+              initGpuBar(list);
+              return;
+            }
+          } catch (err) {
+            // try next source; the GPU filter is optional
+          }
+        }
+      }
+
+      function initGpuBar(list) {
+        state.gpu.list = list
+          .filter((gpu) => gpu && gpu.model && Number.isFinite(Number(gpu.vram_gb)))
+          .map((gpu) => ({
+            manufacturer: String(gpu.manufacturer || ""),
+            model: String(gpu.model),
+            vram_gb: Number(gpu.vram_gb),
+            release: typeof gpu.release === "string" ? gpu.release : ""
+          }))
+          .sort((a, b) =>
+            a.manufacturer.localeCompare(b.manufacturer) ||
+            a.model.localeCompare(b.model, undefined, { numeric: true }));
+
+        if (!state.gpu.list.length) {
+          return;
+        }
+        ui.gpuBar.hidden = false;
+        if (!state.gpu.eventsBound) {
+          bindGpuEvents();
+          state.gpu.eventsBound = true;
+        }
+      }
+
+      function bindGpuEvents() {
+        ui.gpuVendor.addEventListener("change", (event) => {
+          const vendor = event.target.value;
+          state.gpu.vendor = vendor;
+          if (vendor === "custom") {
+            state.gpu.custom = true;
+            state.gpu.selected = null;
+            ui.gpuModel.value = "";
+            setGpuCountDisabled(true);
+            closeGpuList();
+            ui.gpuVram.focus();
+            return;
+          }
+          state.gpu.custom = false;
+          setGpuCountDisabled(false);
+          if (state.gpu.selected && vendor !== "all" && state.gpu.selected.manufacturer !== vendor) {
+            state.gpu.selected = null;
+            ui.gpuModel.value = "";
+            ui.gpuVram.value = "";
+            gpuSetBudget(null);
+          }
+          if (!ui.gpuModelList.hidden || document.activeElement === ui.gpuModel) {
+            openGpuList();
+          }
+        });
+
+        ui.gpuModel.addEventListener("focus", () => {
+          const keepAll = Boolean(state.gpu.selected && ui.gpuModel.value === state.gpu.selected.model);
+          openGpuList(keepAll);
+        });
+
+        ui.gpuModel.addEventListener("input", () => {
+          if (state.gpu.selected && ui.gpuModel.value !== state.gpu.selected.model) {
+            state.gpu.selected = null;
+            ui.gpuVram.value = "";
+            gpuSetBudget(null);
+          }
+          openGpuList();
+        });
+
+        ui.gpuModel.addEventListener("blur", () => {
+          closeGpuList();
+          if (state.gpu.selected) {
+            ui.gpuModel.value = state.gpu.selected.model;
+          }
+        });
+
+        ui.gpuModel.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeGpuList();
+            return;
+          }
+          if (ui.gpuModelList.hidden && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            event.preventDefault();
+            openGpuList();
+            return;
+          }
+          const count = state.gpu.visible.length;
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault();
+            if (!count) {
+              return;
+            }
+            const step = event.key === "ArrowDown" ? 1 : -1;
+            state.gpu.activeIndex = (state.gpu.activeIndex + step + count) % count;
+            updateActiveGpuOption();
+          } else if (event.key === "Enter") {
+            const pick = state.gpu.activeIndex >= 0
+              ? state.gpu.visible[state.gpu.activeIndex]
+              : (count === 1 ? state.gpu.visible[0] : null);
+            if (pick) {
+              event.preventDefault();
+              gpuSelect(pick);
+            }
+          }
+        });
+
+        ui.gpuModelList.addEventListener("mousedown", (event) => event.preventDefault());
+        ui.gpuModelList.addEventListener("click", (event) => {
+          const option = event.target.closest(".gpu-option");
+          if (!option) {
+            return;
+          }
+          const gpu = state.gpu.visible[Number(option.dataset.index)];
+          if (gpu) {
+            gpuSelect(gpu);
+          }
+        });
+
+        ui.gpuClear.addEventListener("mousedown", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          gpuResetBar();
+          applyAndRender();
+        });
+
+        ui.gpuCountDown.addEventListener("click", () => gpuSetCount(state.gpu.count - 1));
+        ui.gpuCountUp.addEventListener("click", () => gpuSetCount(state.gpu.count + 1));
+        ui.gpuCount.addEventListener("change", () => gpuSetCount(parseInt(ui.gpuCount.value, 10)));
+
+        ui.gpuVram.addEventListener("input", () => {
+          const value = parseFloat(ui.gpuVram.value.replace(",", "."));
+          state.gpu.custom = true;
+          state.gpu.selected = null;
+          state.gpu.vendor = "custom";
+          ui.gpuVendor.value = "custom";
+          ui.gpuModel.value = "";
+          setGpuCountDisabled(true);
+          gpuSetBudget(Number.isFinite(value) && value > 0 ? value : null);
+        });
+      }
+
+      function gpuVisibleList(showAll) {
+        const query = showAll ? "" : ui.gpuModel.value.trim().toLowerCase();
+        const vendor = state.gpu.vendor;
+        return state.gpu.list.filter((gpu) =>
+          (vendor === "all" || vendor === "custom" || gpu.manufacturer === vendor) &&
+          (!query || gpu.model.toLowerCase().includes(query) || gpu.manufacturer.toLowerCase().includes(query)));
+      }
+
+      function openGpuList(showAll = false) {
+        renderGpuList(showAll);
+        ui.gpuModelList.hidden = false;
+        ui.gpuModel.setAttribute("aria-expanded", "true");
+      }
+
+      function closeGpuList() {
+        ui.gpuModelList.hidden = true;
+        ui.gpuModel.setAttribute("aria-expanded", "false");
+        state.gpu.activeIndex = -1;
+      }
+
+      function renderGpuList(showAll = false) {
+        const items = gpuVisibleList(showAll);
+        state.gpu.visible = items;
+        state.gpu.activeIndex = -1;
+        if (!items.length) {
+          ui.gpuModelList.innerHTML = `<div class="gpu-combo-empty">No matching GPU</div>`;
+          return;
+        }
+        ui.gpuModelList.innerHTML = items.map((gpu, index) => {
+          const selected = state.gpu.selected === gpu;
+          const vendorTag = gpu.manufacturer === "NVIDIA" ? "NV" : gpu.manufacturer;
+          return `<div class="gpu-option${selected ? " is-selected" : ""}" role="option" aria-selected="${selected}" data-index="${index}">
+            <span class="gpu-opt-vendor">${escapeHtml(vendorTag)}</span>
+            <span class="gpu-opt-name">${escapeHtml(gpu.model)}</span>
+            <span class="gpu-opt-vram">${escapeHtml(String(gpu.vram_gb))}&thinsp;GB</span>
+            <span class="gpu-opt-date">${escapeHtml(formatGpuRelease(gpu.release))}</span>
+          </div>`;
+        }).join("");
+      }
+
+      function updateActiveGpuOption() {
+        ui.gpuModelList.querySelectorAll(".gpu-option").forEach((el, index) => {
+          const active = index === state.gpu.activeIndex;
+          el.classList.toggle("active", active);
+          if (active) {
+            el.scrollIntoView({ block: "nearest" });
+          }
+        });
+      }
+
+      function gpuSelect(gpu) {
+        state.gpu.selected = gpu;
+        state.gpu.custom = false;
+        ui.gpuModel.value = gpu.model;
+        if (state.gpu.vendor === "custom") {
+          state.gpu.vendor = "all";
+          ui.gpuVendor.value = "all";
+        }
+        setGpuCountDisabled(false);
+        closeGpuList();
+        gpuUpdateBudgetFromSelection();
+      }
+
+      function gpuSetCount(next) {
+        const clamped = Math.max(1, Math.min(16, Math.round(next) || 1));
+        state.gpu.count = clamped;
+        ui.gpuCount.value = String(clamped);
+        if (state.gpu.selected) {
+          gpuUpdateBudgetFromSelection();
+        }
+      }
+
+      function gpuUpdateBudgetFromSelection() {
+        const gpu = state.gpu.selected;
+        const total = gpu ? gpu.vram_gb * state.gpu.count : null;
+        ui.gpuVram.value = total ? String(total) : "";
+        gpuSetBudget(total);
+      }
+
+      function gpuSetBudget(budget) {
+        state.gpu.budget = Number.isFinite(budget) && budget > 0 ? budget : null;
+        ui.gpuLegend.hidden = !state.gpu.budget;
+        applyAndRender();
+      }
+
+      function setGpuCountDisabled(disabled) {
+        ui.gpuStepper.classList.toggle("disabled", disabled);
+        ui.gpuCount.disabled = disabled;
+        ui.gpuCountDown.disabled = disabled;
+        ui.gpuCountUp.disabled = disabled;
+      }
+
+      function gpuResetBar() {
+        state.gpu.vendor = "all";
+        state.gpu.selected = null;
+        state.gpu.count = 1;
+        state.gpu.custom = false;
+        state.gpu.budget = null;
+        if (!ui.gpuBar || ui.gpuBar.hidden) {
+          return;
+        }
+        ui.gpuVendor.value = "all";
+        ui.gpuModel.value = "";
+        ui.gpuCount.value = "1";
+        ui.gpuVram.value = "";
+        ui.gpuLegend.hidden = true;
+        setGpuCountDisabled(false);
+        closeGpuList();
+      }
+
+      const GPU_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      function formatGpuRelease(iso) {
+        if (!iso) {
+          return "";
+        }
+        const [year, month] = iso.split("-");
+        const monthIndex = Number(month);
+        if (Number.isFinite(monthIndex) && monthIndex >= 1 && monthIndex <= 12) {
+          return `${GPU_MONTHS[monthIndex - 1]} ${year}`;
+        }
+        return year || "";
+      }
+
+      // Range-colors a VRAM requirement against the active GPU budget:
+      // green while comfortable, sliding to amber as it approaches 100%,
+      // struck through when it exceeds the budget.
+      function renderVramCell(raw) {
+        const html = formatVram(raw);
+        const budget = state.gpu.budget;
+        const num = typeof raw === "number" ? raw : parseFloat(raw);
+        if (!budget || !Number.isFinite(num)) {
+          return `<td class="mono">${html}</td>`;
+        }
+        const ratio = num / budget;
+        if (ratio > 1) {
+          return `<td class="mono vram-over" title="Needs ${num} GB — over the ${budget} GB budget">${html}</td>`;
+        }
+        const t = Math.max(0, Math.min(1, (ratio - 0.55) / 0.45));
+        const hue = Math.round(150 - t * 130);
+        return `<td class="mono vram-fit" style="--fit-h:${hue}" title="${Math.round(ratio * 100)}% of ${budget} GB budget">${html}</td>`;
       }
 
       function updateMeta() {
