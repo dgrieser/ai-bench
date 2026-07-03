@@ -29,7 +29,13 @@ def _is_open_source(model: dict):
     for key in ("open_source", "is_open_source", "open"):
         if key in model:
             return bool(model.get(key))
-    return None
+    # AA's v2 API no longer carries an open-source flag; fall back to the model
+    # page, which links a weights repo ("Model weights" row) only for open
+    # models. Page metrics are cached, so enrichment reuses this fetch.
+    slug = model.get("slug", "")
+    if not slug:
+        return None
+    return bool(_fetch_page_metrics(slug).get("hugging_face_url", ""))
 
 
 def _parse_release_date(raw: str) -> date:
@@ -78,13 +84,31 @@ def _parse_context_window(text: str):
     return ""
 
 
+def _canonical_hf_url(url: str) -> str:
+    # Reduce to the canonical repo url (https://huggingface.co/<org>/<repo>),
+    # dropping trailing paths like /tree/main, /blob/main/LICENSE, query, or
+    # fragment that sometimes trail the href.
+    match = re.match(r"(https://huggingface\.co/[^/\s\"'<>\\),?#]+/[^/\s\"'<>\\),?#]+)", url)
+    if match:
+        return match.group(1)
+    return url.rstrip("/.,;:")
+
+
 def _parse_hugging_face_url(text: str):
     normalized = _normalize_page_text(text)
-    match = re.search(r"https://huggingface\.co/[A-Za-z0-9][^\s\"'<>\\),]+", normalized)
+    # The model's own weights repo lives in the page's "Model weights" row; the
+    # rest of the page links a global model catalog, so grabbing the first
+    # huggingface.co link picks up an unrelated repo on closed-weights models.
+    # Anchor on the label and take the href that immediately follows it.
+    match = re.search(
+        r'"Model weights".{0,400}?"href":"(https://huggingface\.co/[^"]+)"',
+        normalized,
+        re.DOTALL,
+    )
     if not match:
         return ""
 
-    return match.group(0).rstrip(".,;:")
+    return _canonical_hf_url(match.group(1))
 
 
 def _parse_creator(text: str, expected_name: str = ""):
