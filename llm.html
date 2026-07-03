@@ -360,18 +360,26 @@
 
     /* ── GPU VRAM filter ──────────────────────────── */
 
-    .gpu-bar {
-      padding: 16px 20px 18px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
-      display: grid;
-      gap: 16px;
-      grid-template-columns: minmax(150px, 180px) minmax(240px, 1fr) auto minmax(230px, auto);
-      align-items: start;
+    /* GPU fields live inside the .controls grid as direct items */
+    .gpu-fields {
+      display: contents;
     }
 
-    .gpu-bar[hidden] {
+    .gpu-fields[hidden] {
       display: none;
+    }
+
+    /* One-line layout once the GPU fields are visible */
+    .controls.has-gpu {
+      grid-template-columns:
+        minmax(170px, 1.1fr) minmax(140px, 0.9fr) minmax(130px, 0.85fr) minmax(140px, 0.95fr)
+        minmax(105px, 0.7fr) minmax(170px, 1.2fr) auto minmax(112px, auto);
+    }
+
+    @media (max-width: 1500px) {
+      .controls.has-gpu {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
     }
 
     .gpu-combo input {
@@ -382,7 +390,9 @@
       position: absolute;
       top: calc(100% + 4px);
       left: 0;
-      right: 0;
+      min-width: 100%;
+      width: max-content;
+      max-width: 420px;
       max-height: 300px;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -461,7 +471,7 @@
       display: flex;
       align-items: stretch;
       height: 42px;
-      width: 118px;
+      width: 92px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--surface);
@@ -480,7 +490,7 @@
     }
 
     .gpu-stepper button {
-      width: 34px;
+      width: 26px;
       min-height: unset;
       padding: 0;
       border: none;
@@ -498,7 +508,7 @@
     }
 
     .gpu-stepper input {
-      width: 48px;
+      width: 36px;
       height: auto;
       border: none;
       border-radius: 0;
@@ -507,7 +517,7 @@
       text-align: center;
       font-family: var(--font-mono);
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text);
     }
 
@@ -530,7 +540,7 @@
     }
 
     .gpu-total input {
-      width: 5.5ch;
+      width: 4.8ch;
       height: 42px;
       border: none;
       border-bottom: 2px solid var(--line);
@@ -538,7 +548,7 @@
       padding: 0 2px;
       background: transparent;
       font-family: var(--font-mono);
-      font-size: 1.55rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--text);
       text-align: right;
@@ -551,7 +561,7 @@
     }
 
     .gpu-total input::placeholder {
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-style: normal;
       font-weight: 700;
     }
@@ -563,37 +573,6 @@
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--muted);
-    }
-
-    .gpu-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      margin-left: 10px;
-      width: 76px;
-      align-self: center;
-    }
-
-    .gpu-legend[hidden] {
-      display: none;
-    }
-
-    .gpu-legend-bar {
-      height: 6px;
-      border-radius: 3px;
-      background: linear-gradient(90deg, hsl(150, 62%, 42%), hsl(90, 55%, 44%), hsl(45, 75%, 46%), hsl(20, 78%, 50%));
-    }
-
-    .gpu-legend-labels {
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      color: var(--subtle);
-    }
-
-    .gpu-legend-labels em {
-      font-style: normal;
     }
 
     /* Table VRAM cells under an active GPU budget: hue slides green → amber
@@ -626,14 +605,6 @@
     td.vram-over .p-letter,
     td.vram-over .p-unit {
       color: inherit;
-    }
-
-    @media (max-width: 860px) {
-      .gpu-bar {
-        grid-template-columns: 1fr 1fr;
-        padding-left: 16px;
-        padding-right: 16px;
-      }
     }
 
     /* ── Toolbar ──────────────────────────────────── */
@@ -1466,44 +1437,39 @@
         <label for="sortMode">Sort</label>
         <select id="sortMode"></select>
       </div>
-    </section>
-
-    <section class="gpu-bar" id="gpuBar" hidden aria-label="GPU VRAM filter">
-      <div class="field">
-        <label for="gpuVendor">GPU Vendor</label>
-        <select id="gpuVendor">
-          <option value="all">Any vendor</option>
-          <option value="NVIDIA">NVIDIA</option>
-          <option value="AMD">AMD</option>
-          <option value="custom">Custom</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="gpuModel">GPU Model</label>
-        <div class="select-wrap gpu-combo">
-          <input id="gpuModel" type="text" placeholder="Type or pick a GPU" autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-expanded="false" aria-controls="gpuModelList">
-          <button id="gpuClear" class="clear-compare" type="button" title="Clear GPU filter">×</button>
-          <div id="gpuModelList" class="gpu-combo-list" role="listbox" hidden></div>
+      <div class="gpu-fields" id="gpuBar" hidden aria-label="GPU VRAM filter">
+        <div class="field">
+          <label for="gpuVendor">GPU Vendor</label>
+          <select id="gpuVendor">
+            <option value="all">Any vendor</option>
+            <option value="NVIDIA">NVIDIA</option>
+            <option value="AMD">AMD</option>
+            <option value="custom">Custom</option>
+          </select>
         </div>
-      </div>
-      <div class="field">
-        <label for="gpuCount">Cards</label>
-        <div class="gpu-stepper" id="gpuStepper">
-          <button id="gpuCountDown" type="button" aria-label="Fewer cards">−</button>
-          <input id="gpuCount" type="text" inputmode="numeric" value="1" aria-label="Number of graphics cards">
-          <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
+        <div class="field">
+          <label for="gpuModel">GPU Model</label>
+          <div class="select-wrap gpu-combo">
+            <input id="gpuModel" type="text" placeholder="Type or pick a GPU" autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-expanded="false" aria-controls="gpuModelList">
+            <button id="gpuClear" class="clear-compare" type="button" title="Clear GPU filter">×</button>
+            <div id="gpuModelList" class="gpu-combo-list" role="listbox" hidden></div>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label for="gpuVram">Total VRAM</label>
-        <div class="gpu-total">
-          <span class="gpu-eq" aria-hidden="true">=</span>
-          <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
-          <span class="gpu-unit">GB</span>
-          <span class="gpu-legend" id="gpuLegend" hidden aria-hidden="true">
-            <span class="gpu-legend-bar"></span>
-            <span class="gpu-legend-labels"><em>fits</em><em>full</em></span>
-          </span>
+        <div class="field">
+          <label for="gpuCount">Cards</label>
+          <div class="gpu-stepper" id="gpuStepper">
+            <button id="gpuCountDown" type="button" aria-label="Fewer cards">−</button>
+            <input id="gpuCount" type="text" inputmode="numeric" value="1" aria-label="Number of graphics cards">
+            <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="gpuVram">Total VRAM</label>
+          <div class="gpu-total">
+            <span class="gpu-eq" aria-hidden="true">=</span>
+            <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
+            <span class="gpu-unit">GB</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1620,8 +1586,7 @@
         gpuCount: document.getElementById("gpuCount"),
         gpuCountDown: document.getElementById("gpuCountDown"),
         gpuCountUp: document.getElementById("gpuCountUp"),
-        gpuVram: document.getElementById("gpuVram"),
-        gpuLegend: document.getElementById("gpuLegend")
+        gpuVram: document.getElementById("gpuVram")
       };
 
       bindImportEvents();
@@ -2573,6 +2538,7 @@
           return;
         }
         ui.gpuBar.hidden = false;
+        ui.controls.classList.add("has-gpu");
         if (!state.gpu.eventsBound) {
           bindGpuEvents();
           state.gpu.eventsBound = true;
@@ -2772,7 +2738,6 @@
 
       function gpuSetBudget(budget) {
         state.gpu.budget = Number.isFinite(budget) && budget > 0 ? budget : null;
-        ui.gpuLegend.hidden = !state.gpu.budget;
         applyAndRender();
       }
 
@@ -2796,7 +2761,6 @@
         ui.gpuModel.value = "";
         ui.gpuCount.value = "1";
         ui.gpuVram.value = "";
-        ui.gpuLegend.hidden = true;
         setGpuCountDisabled(false);
         closeGpuList();
       }
