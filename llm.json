@@ -5,19 +5,58 @@
       "key": "coding",
       "label": "Coding (grouped)",
       "benchmarks": [
-        { "key": "deepswe", "weight": 1.0 },
-        { "key": "swe_rebench", "weight": 0.85 },
-        { "key": "swe_bench_pro", "weight": 0.85 },
-        { "key": "swe_atlas_rf", "weight": 0.8 },
-        { "key": "swe_atlas_tw", "weight": 0.8 },
-        { "key": "frontierswe", "weight": 0.8 },
-        { "key": "terminal_bench_2_1", "weight": 0.75 },
-        { "key": "swe_atlas_qna", "weight": 0.65 },
-        { "key": "aa_coding_index", "weight": 0.5 },
-        { "key": "livecodebench", "weight": 0.4 },
-        { "key": "terminal_bench_2_0", "weight": 0.35 },
-        { "key": "scicode", "weight": 0.35 },
-        { "key": "swe_bench_verified", "weight": 0.15 }
+        {
+          "key": "deepswe",
+          "weight": 1.0
+        },
+        {
+          "key": "swe_rebench",
+          "weight": 0.85
+        },
+        {
+          "key": "swe_bench_pro",
+          "weight": 0.85
+        },
+        {
+          "key": "swe_atlas_rf",
+          "weight": 0.8
+        },
+        {
+          "key": "swe_atlas_tw",
+          "weight": 0.8
+        },
+        {
+          "key": "frontierswe",
+          "weight": 0.8
+        },
+        {
+          "key": "terminal_bench_2_1",
+          "weight": 0.75
+        },
+        {
+          "key": "swe_atlas_qna",
+          "weight": 0.65
+        },
+        {
+          "key": "aa_coding_index",
+          "weight": 0.5
+        },
+        {
+          "key": "livecodebench",
+          "weight": 0.4
+        },
+        {
+          "key": "terminal_bench_2_0",
+          "weight": 0.35
+        },
+        {
+          "key": "scicode",
+          "weight": 0.35
+        },
+        {
+          "key": "swe_bench_verified",
+          "weight": 0.15
+        }
       ],
       "decay": 0.6,
       "shrinkageK": 1.5
