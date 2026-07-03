@@ -540,7 +540,7 @@
     }
 
     .gpu-total input {
-      width: 4.8ch;
+      width: 5ch;
       height: 42px;
       border: none;
       border-bottom: 2px solid var(--line);
@@ -548,10 +548,11 @@
       padding: 0 2px;
       background: transparent;
       font-family: var(--font-mono);
-      font-size: 1.35rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--text);
       text-align: right;
+      transition: color 200ms ease, text-shadow 200ms ease;
     }
 
     .gpu-total input:focus {
@@ -605,6 +606,89 @@
     td.vram-over .p-letter,
     td.vram-over .p-unit {
       color: inherit;
+    }
+
+    /* ── Active filter glow ───────────────────────── */
+
+    /* A control that currently constrains the table gets a slowly drifting
+       gradient border and a soft glow; its label picks up the accent. */
+    .field.filter-on label {
+      color: var(--accent);
+    }
+
+    .field.filter-on input[type="text"],
+    .field.filter-on .model-compare-widget {
+      border-color: transparent;
+      background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(120deg, var(--accent), #8b5cf6, #ec4899, #8b5cf6, var(--accent)) border-box;
+      background-size: 100% 100%, 300% 100%;
+      box-shadow: 0 0 14px rgba(29, 78, 216, 0.22);
+      animation: filterFlowInput 7s linear infinite;
+    }
+
+    .field.filter-on select {
+      border-color: transparent;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231d4ed8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center padding-box,
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(120deg, var(--accent), #8b5cf6, #ec4899, #8b5cf6, var(--accent)) border-box;
+      background-size: auto, 100% 100%, 300% 100%;
+      box-shadow: 0 0 14px rgba(29, 78, 216, 0.22);
+      animation: filterFlowSelect 7s linear infinite;
+    }
+
+    @keyframes filterFlowInput {
+      from { background-position: 0 0, 0% 50%; }
+      to   { background-position: 0 0, 300% 50%; }
+    }
+
+    @keyframes filterFlowSelect {
+      from { background-position: right 12px center, 0 0, 0% 50%; }
+      to   { background-position: right 12px center, 0 0, 300% 50%; }
+    }
+
+    [data-theme="dark"] .field.filter-on input[type="text"],
+    [data-theme="dark"] .field.filter-on .model-compare-widget,
+    [data-theme="dark"] .field.filter-on select {
+      box-shadow: 0 0 18px rgba(91, 138, 247, 0.30);
+    }
+
+    [data-theme="dark"] .field.filter-on select {
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b8af7' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+        linear-gradient(var(--surface), var(--surface)),
+        linear-gradient(120deg, var(--accent), #a78bfa, #f472b6, #a78bfa, var(--accent));
+    }
+
+    /* Total VRAM readout lights up with the budget */
+    .field.filter-on .gpu-total input {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      text-shadow: 0 0 14px rgba(29, 78, 216, 0.35);
+    }
+
+    .field.filter-on .gpu-total .gpu-unit,
+    .field.filter-on .gpu-total .gpu-eq {
+      color: var(--accent);
+    }
+
+    [data-theme="dark"] .field.filter-on .gpu-total input {
+      text-shadow: 0 0 16px rgba(91, 138, 247, 0.55);
+    }
+
+    /* Reset button hints when any filter is active */
+    button.filter-on {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .field.filter-on input[type="text"],
+      .field.filter-on .model-compare-widget,
+      .field.filter-on select {
+        animation: none;
+      }
     }
 
     /* ── Toolbar ──────────────────────────────────── */
@@ -1904,6 +1988,23 @@
 
         renderTable();
         updateMeta();
+        updateFilterGlow();
+      }
+
+      // Marks controls that currently constrain the table so CSS can
+      // highlight them (gradient border / glow).
+      function updateFilterGlow() {
+        const searchOn = Boolean(state.filters.search);
+        const paramsOn = state.filters.params !== "all";
+        const compareOn = state.filters.selectedModels.length > 0;
+        const gpuOn = Boolean(state.gpu.budget);
+
+        ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
+        ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
+        ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
+        ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
+        ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || gpuOn);
       }
 
       function modelPassesFilters(model) {
