@@ -732,6 +732,8 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
         params = get_value(args.params, "Params", interactive)
 
     if interactive and args.context is None:
+        if not aa_defaults.get("context") and url:
+            print(f"  context not auto-filled; see {url}")
         context = prompt_select_or_new(
             "Context",
             get_unique_values(models, "context"),

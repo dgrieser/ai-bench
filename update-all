@@ -2,6 +2,12 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# Offer newly released open-weights models for addition first, so the update
+# pass below fills in their scores. Interactive when run from a terminal;
+# report-only otherwise.
+echo "+ Running check_new.py" 1>&2
+"${SCRIPT_DIR}/check_new.py"
+
 for s in "${SCRIPT_DIR}"/update_*.py; do
     echo "+ Running ${s}" 1>&2
     "${s}" -w
