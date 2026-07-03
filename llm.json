@@ -2137,47 +2137,6 @@
       }
     },
     {
-      "name": "mellum2-12b",
-      "date_added": "2026-06-08",
-      "url": "https://huggingface.co/JetBrains/Mellum2-12B-A2.5B-Thinking",
-      "params": "12B-A2.5B",
-      "context": "128k",
-      "creator": {
-        "name": "JetBrains",
-        "url": "https://www.jetbrains.com/mellum/"
-      },
-      "scores": {
-        "aa_intelligence_index": null,
-        "aa_coding_index": null,
-        "swe_bench_verified": null,
-        "swe_bench_pro": null,
-        "swe_atlas_rf": null,
-        "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
-        "deepswe": null,
-        "frontierswe": null,
-        "swe_rebench": null,
-        "livecodebench": 69.9,
-        "scicode": null,
-        "terminal_bench_hard": null,
-        "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
-        "tau2_bench_telecom": null,
-        "browsecomp": null,
-        "aime_2025": null,
-        "aime_2026": null,
-        "gpqa_diamond": 57.6,
-        "hle": null,
-        "mmmu_pro": null,
-        "osworld_verified": null
-      },
-      "vram": {
-        "fp16": 26,
-        "int8": 13,
-        "int4": 6.6
-      }
-    },
-    {
       "name": "north-mini-code",
       "date_added": "2026-06-10",
       "url": "https://huggingface.co/CohereLabs/North-Mini-Code-1.0",
@@ -2460,61 +2419,6 @@
       }
     },
     {
-      "name": "phi-4-reasoning",
-      "date_added": "2025-04-30",
-      "url": "https://huggingface.co/microsoft/Phi-4-reasoning",
-      "creator": {
-        "name": "Microsoft",
-        "url": "https://azure.microsoft.com/en-us/products/phi"
-      },
-      "scores": {
-        "livecodebench": 53.8,
-        "aime_2025": 62.9,
-        "gpqa_diamond": 65.8
-      },
-      "vram": {
-        "fp16": 32,
-        "int8": 16,
-        "int4": 8.0
-      }
-    },
-    {
-      "name": "phi-4-reasoning-plus",
-      "date_added": "2025-04-30",
-      "url": "https://huggingface.co/microsoft/Phi-4-reasoning-plus",
-      "creator": {
-        "name": "Microsoft",
-        "url": "https://azure.microsoft.com/en-us/products/phi"
-      },
-      "scores": {
-        "livecodebench": 53.1,
-        "aime_2025": 78,
-        "gpqa_diamond": 68.9
-      },
-      "vram": {
-        "fp16": 32,
-        "int8": 16,
-        "int4": 8.0
-      }
-    },
-    {
-      "name": "phi-4-reasoning-vision-15b",
-      "date_added": "2026-03-04",
-      "url": "https://huggingface.co/microsoft/Phi-4-reasoning-vision-15B",
-      "creator": {
-        "name": "Microsoft",
-        "url": "https://azure.microsoft.com/en-us/products/phi"
-      },
-      "scores": {
-        "mmmu_pro": 38.5
-      },
-      "vram": {
-        "fp16": 33,
-        "int8": 16,
-        "int4": 8.2
-      }
-    },
-    {
       "name": "olmo-3-32b-think",
       "date_added": "2025-11-20",
       "url": "https://huggingface.co/allenai/Olmo-3-32B-Think",
@@ -2684,20 +2588,6 @@
       }
     },
     {
-      "name": "trinity-mini",
-      "date_added": "2025-12-01",
-      "url": "https://huggingface.co/arcee-ai/Trinity-Mini",
-      "creator": {
-        "name": "Arcee AI",
-        "url": "https://www.arcee.ai/"
-      },
-      "vram": {
-        "fp16": 57,
-        "int8": 28,
-        "int4": 14
-      }
-    },
-    {
       "name": "hermes-4-llama-3-1-405b",
       "date_added": "2025-08-26",
       "url": "https://huggingface.co/NousResearch/Hermes-4-405B",
@@ -2747,20 +2637,6 @@
       }
     },
     {
-      "name": "hermes-4-14b",
-      "date_added": "2025-08-26",
-      "url": "https://huggingface.co/NousResearch/Hermes-4-14B",
-      "creator": {
-        "name": "Nous Research",
-        "url": "https://nousresearch.com/releases"
-      },
-      "vram": {
-        "fp16": 31,
-        "int8": 15,
-        "int4": 7.6
-      }
-    },
-    {
       "name": "reka-flash-3",
       "date_added": "2025-03-10",
       "url": "https://huggingface.co/RekaAI/reka-flash-3",
@@ -2776,20 +2652,6 @@
         "aime_2025": 33.7,
         "gpqa_diamond": 52.9,
         "hle": 5.1
-      },
-      "vram": {
-        "fp16": 46,
-        "int8": 23,
-        "int4": 11
-      }
-    },
-    {
-      "name": "reka-flash-3-1",
-      "date_added": "2025-07-10",
-      "url": "https://huggingface.co/RekaAI/reka-flash-3.1",
-      "creator": {
-        "name": "Reka AI",
-        "url": "https://www.reka.ai/"
       },
       "vram": {
         "fp16": 46,
@@ -3019,20 +2881,6 @@
       }
     },
     {
-      "name": "kimi-dev-72b",
-      "date_added": "2025-06-17",
-      "url": "https://huggingface.co/moonshotai/Kimi-Dev-72B",
-      "creator": {
-        "name": "Moonshot AI",
-        "url": "https://www.moonshot.ai/"
-      },
-      "vram": {
-        "fp16": 158,
-        "int8": 79,
-        "int4": 40
-      }
-    },
-    {
       "name": "ernie-4-5-300b-a47b",
       "date_added": "2025-06-30",
       "url": "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT",
@@ -3054,34 +2902,6 @@
         "fp16": 655,
         "int8": 328,
         "int4": 164
-      }
-    },
-    {
-      "name": "ernie-4-5-21b-a3b",
-      "date_added": "2025-06-30",
-      "url": "https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-PT",
-      "creator": {
-        "name": "Baidu",
-        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
-      },
-      "vram": {
-        "fp16": 48,
-        "int8": 24,
-        "int4": 12
-      }
-    },
-    {
-      "name": "ernie-4-5-21b-a3b-thinking",
-      "date_added": "2025-09-09",
-      "url": "https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-Thinking",
-      "creator": {
-        "name": "Baidu",
-        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
-      },
-      "vram": {
-        "fp16": 48,
-        "int8": 24,
-        "int4": 12
       }
     },
     {
@@ -3185,39 +3005,6 @@
       }
     },
     {
-      "name": "ring-mini-2-0",
-      "date_added": "2025-10-03",
-      "url": "https://huggingface.co/inclusionAI/Ring-mini-2.0",
-      "creator": {
-        "name": "inclusionAI",
-        "url": "https://huggingface.co/inclusionAI"
-      },
-      "vram": {
-        "fp16": 35,
-        "int8": 18,
-        "int4": 8.9
-      }
-    },
-    {
-      "name": "intern-s1",
-      "date_added": "2025-07-26",
-      "url": "https://huggingface.co/internlm/Intern-S1",
-      "creator": {
-        "name": "Shanghai AI Laboratory",
-        "url": "https://huggingface.co/internlm"
-      },
-      "scores": {
-        "aime_2025": 86.0,
-        "gpqa_diamond": 77.3,
-        "mmmu_pro": 77.7
-      },
-      "vram": {
-        "fp16": 525,
-        "int8": 262,
-        "int4": 131
-      }
-    },
-    {
       "name": "mimo-v2-flash",
       "date_added": "2025-12-16",
       "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash",
@@ -3245,20 +3032,6 @@
         "fp16": 675,
         "int8": 338,
         "int4": 169
-      }
-    },
-    {
-      "name": "dots-llm1-inst",
-      "date_added": "2025-06-06",
-      "url": "https://huggingface.co/rednote-hilab/dots.llm1.inst",
-      "creator": {
-        "name": "RedNote",
-        "url": "https://huggingface.co/rednote-hilab"
-      },
-      "vram": {
-        "fp16": 311,
-        "int8": 156,
-        "int4": 78
       }
     },
     {
@@ -3306,105 +3079,6 @@
       }
     },
     {
-      "name": "hunyuan-a13b-instruct",
-      "date_added": "2025-06-27",
-      "url": "https://huggingface.co/tencent/Hunyuan-A13B-Instruct",
-      "creator": {
-        "name": "Tencent",
-        "url": "https://aistudio.tencent.com/llm/en"
-      },
-      "scores": {
-        "gpqa_diamond": 49.12
-      },
-      "vram": {
-        "fp16": 175,
-        "int8": 88,
-        "int4": 44
-      }
-    },
-    {
-      "name": "hunyuan-7b-instruct",
-      "date_added": "2025-07-30",
-      "url": "https://huggingface.co/tencent/Hunyuan-7B-Instruct",
-      "creator": {
-        "name": "Tencent",
-        "url": "https://aistudio.tencent.com/llm/en"
-      },
-      "scores": {
-        "gpqa_diamond": 60.1
-      },
-      "vram": {
-        "fp16": 16,
-        "int8": 8.2,
-        "int4": 4.1
-      }
-    },
-    {
-      "name": "hunyuan-4b-instruct",
-      "date_added": "2025-07-30",
-      "url": "https://huggingface.co/tencent/Hunyuan-4B-Instruct",
-      "creator": {
-        "name": "Tencent",
-        "url": "https://aistudio.tencent.com/llm/en"
-      },
-      "scores": {
-        "gpqa_diamond": 61.1
-      },
-      "vram": {
-        "fp16": 9.2,
-        "int8": 4.6,
-        "int4": 2.3
-      }
-    },
-    {
-      "name": "hunyuan-1-8b-instruct",
-      "date_added": "2025-07-30",
-      "url": "https://huggingface.co/tencent/Hunyuan-1.8B-Instruct",
-      "creator": {
-        "name": "Tencent",
-        "url": "https://aistudio.tencent.com/llm/en"
-      },
-      "scores": {
-        "gpqa_diamond": 47.2
-      },
-      "vram": {
-        "fp16": 3.9,
-        "int8": 2.0,
-        "int4": 1.0
-      }
-    },
-    {
-      "name": "hunyuan-0-5b-instruct",
-      "date_added": "2025-07-30",
-      "url": "https://huggingface.co/tencent/Hunyuan-0.5B-Instruct",
-      "creator": {
-        "name": "Tencent",
-        "url": "https://aistudio.tencent.com/llm/en"
-      },
-      "scores": {
-        "gpqa_diamond": 23.3
-      },
-      "vram": {
-        "fp16": 1.2,
-        "int8": 0.6,
-        "int4": 0.3
-      }
-    },
-    {
-      "name": "step-3",
-      "date_added": "2025-07-31",
-      "url": "https://huggingface.co/stepfun-ai/step3",
-      "creator": {
-        "name": "StepFun",
-        "url": "https://www.stepfun.com/"
-      },
-      "vram": {
-        "fp16": 700,
-        "int8": 350,
-        "int4": 175
-      }
-    },
-    {
       "name": "minimax-m1-80k",
       "date_added": "2025-06-16",
       "url": "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k",
@@ -3428,38 +3102,6 @@
         "fp16": 994,
         "int8": 497,
         "int4": 249
-      }
-    },
-    {
-      "name": "skywork-or1-32b",
-      "date_added": "2025-05-13",
-      "url": "https://huggingface.co/Skywork/Skywork-OR1-32B",
-      "creator": {
-        "name": "Skywork",
-        "url": "https://huggingface.co/Skywork"
-      },
-      "scores": {
-        "livecodebench": 63.0,
-        "aime_2025": 73.3
-      },
-      "vram": {
-        "fp16": 71,
-        "int8": 36,
-        "int4": 18
-      }
-    },
-    {
-      "name": "klear-46b-a2-5b-instruct",
-      "date_added": "2025-09-05",
-      "url": "https://huggingface.co/Kwai-Klear/Klear-46B-A2.5B-Instruct",
-      "creator": {
-        "name": "Kuaishou",
-        "url": "https://huggingface.co/Kwai-Klear"
-      },
-      "vram": {
-        "fp16": 101,
-        "int8": 50,
-        "int4": 25
       }
     },
     {
@@ -3735,25 +3377,6 @@
       }
     },
     {
-      "name": "falcon-h1-34b-instruct",
-      "date_added": "2025-05-21",
-      "url": "https://huggingface.co/tiiuae/Falcon-H1-34B-Instruct",
-      "creator": {
-        "name": "TII",
-        "url": "https://falconllm.tii.ae"
-      },
-      "scores": {
-        "livecodebench": 49.71,
-        "aime_2025": 16.67,
-        "gpqa_diamond": 41.53
-      },
-      "vram": {
-        "fp16": 73,
-        "int8": 37,
-        "int4": 18
-      }
-    },
-    {
       "name": "falcon-h1r-7b",
       "date_added": "2026-01-05",
       "url": "https://huggingface.co/tiiuae/Falcon-H1R-7B",
@@ -3989,103 +3612,6 @@
       }
     },
     {
-      "name": "baichuan-m2-32b",
-      "date_added": "2025-08-10",
-      "url": "https://huggingface.co/baichuan-inc/Baichuan-M2-32B",
-      "creator": {
-        "name": "Baichuan",
-        "url": "https://www.baichuan-ai.com/"
-      },
-      "scores": {
-        "aime_2025": 72.9
-      },
-      "vram": {
-        "fp16": 71,
-        "int8": 36,
-        "int4": 18
-      }
-    },
-    {
-      "name": "telechat2-5-115b",
-      "date_added": "2025-05-10",
-      "url": "https://huggingface.co/Tele-AI/TeleChat2.5-115B",
-      "creator": {
-        "name": "Tele-AI (China Telecom)",
-        "url": "https://huggingface.co/Tele-AI"
-      },
-      "vram": {
-        "fp16": 247,
-        "int8": 123,
-        "int4": 62
-      }
-    },
-    {
-      "name": "rakuten-ai-3-0",
-      "date_added": "2026-03-17",
-      "url": "https://huggingface.co/Rakuten/RakutenAI-3.0",
-      "creator": {
-        "name": "Rakuten",
-        "url": "https://huggingface.co/Rakuten"
-      },
-      "vram": {
-        "fp16": 1463,
-        "int8": 731,
-        "int4": 366
-      }
-    },
-    {
-      "name": "stockmark-2-100b",
-      "date_added": "2025-07-08",
-      "url": "https://huggingface.co/stockmark/Stockmark-2-100B-Instruct",
-      "creator": {
-        "name": "Stockmark",
-        "url": "https://huggingface.co/stockmark"
-      },
-      "vram": {
-        "fp16": 209,
-        "int8": 105,
-        "int4": 52
-      }
-    },
-    {
-      "name": "plamo-3-nict-31b-base",
-      "date_added": "2025-10-24",
-      "url": "https://huggingface.co/pfnet/plamo-3-nict-31b-base",
-      "creator": {
-        "name": "Preferred Networks",
-        "url": "https://www.preferred.jp/en/"
-      },
-      "vram": {
-        "fp16": 69,
-        "int8": 35,
-        "int4": 17
-      }
-    },
-    {
-      "name": "krutrim-2",
-      "date_added": "2025-02-02",
-      "url": "https://huggingface.co/krutrim-ai-labs/Krutrim-2-instruct",
-      "creator": {
-        "name": "Ola Krutrim",
-        "url": "https://huggingface.co/krutrim-ai-labs"
-      },
-      "vram": {}
-    },
-    {
-      "name": "xgen-small-9b",
-      "date_added": "2025-05-09",
-      "url": "https://huggingface.co/Salesforce/xgen-small-9B-instruct-r",
-      "creator": {
-        "name": "Salesforce",
-        "url": "https://huggingface.co/Salesforce"
-      },
-      "vram": {
-        "fp16": 23,
-        "int8": 12,
-        "int4": 5.8
-      }
-    },
-    {
       "name": "dbrx",
       "date_added": "2024-03-27",
       "url": "https://huggingface.co/databricks/dbrx-instruct",
@@ -4101,38 +3627,6 @@
         "gpqa_diamond": 33.1,
         "hle": 6.6
       },
-      "vram": {}
-    },
-    {
-      "name": "arctic-instruct",
-      "date_added": "2024-04-24",
-      "url": "https://huggingface.co/Snowflake/snowflake-arctic-instruct",
-      "creator": {
-        "name": "Snowflake",
-        "url": "https://www.snowflake.com/en/product/features/arctic/"
-      },
-      "context": "4k",
-      "scores": {
-        "aa_intelligence_index": 3.4
-      },
-      "vram": {
-        "fp16": 1043,
-        "int8": 522,
-        "int4": 261
-      }
-    },
-    {
-      "name": "grok-1",
-      "date_added": "2024-03-17",
-      "url": "https://huggingface.co/xai-org/grok-1",
-      "creator": {
-        "name": "xAI",
-        "url": "https://x.ai/"
-      },
-      "scores": {
-        "aa_intelligence_index": 6
-      },
-      "context": "8k",
       "vram": {}
     },
     {
