@@ -4011,7 +4011,49 @@
         "aime_2026": 69.1,
         "gpqa_diamond": 66.9,
         "hle": 10.2,
-        "mmmu_pro": 54.3,
+        "mmmu_pro": 66.5,
+        "osworld_verified": null
+      }
+    },
+    {
+      "name": "agents-a1",
+      "date_added": "2026-07-06",
+      "url": "https://huggingface.co/InternScience/Agents-A1",
+      "params": "35B-A6B",
+      "context": "256k",
+      "vram": {
+        "fp16": 77,
+        "int8": 38,
+        "int4": 19
+      },
+      "creator": {
+        "name": "InternScience",
+        "url": "https://github.com/InternScience"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": null,
+        "swe_bench_pro": null,
+        "swe_atlas_rf": null,
+        "swe_atlas_tw": null,
+        "swe_atlas_qna": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "frontiercode": null,
+        "swe_rebench": null,
+        "livecodebench": null,
+        "scicode": 44.33,
+        "terminal_bench_2_1": null,
+        "terminal_bench_2_0": null,
+        "terminal_bench_hard": null,
+        "tau2_bench_telecom": 79.81,
+        "browsecomp": 75.51,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "hle": 47.6,
+        "mmmu_pro": null,
         "osworld_verified": null
       }
     }
