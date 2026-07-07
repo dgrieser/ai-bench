@@ -2582,13 +2582,15 @@
         const addedLabel = model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Unknown";
         const scoreCells = state.benchmarkKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
+          const updated = model.scores_updated?.[key];
+          const titleAttr = updated ? ` title="Updated ${escapeHtml(updated)}"` : "";
           const isTop = bestInTable.has(key);
           if (isTop) {
-            return `<td class="num top-score"><span class="top-score-mark">${formatScore(value)}</span></td>`;
+            return `<td class="num top-score"${titleAttr}><span class="top-score-mark">${formatScore(value)}</span></td>`;
           }
           const grey = Number.isFinite(value) ? scoreToGrey(value, scoreRanges[key]) : null;
           const style = grey ? ` style="color:${grey}"` : "";
-          return `<td class="num"${style}>${formatScore(value)}</td>`;
+          return `<td class="num"${style}${titleAttr}>${formatScore(value)}</td>`;
         }).join("");
 
         return `

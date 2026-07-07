@@ -12,6 +12,8 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
+from _scores import stamp_score_updated
+
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
@@ -378,6 +380,7 @@ def update_scores(
 
             if old_value != new_value:
                 scores[llm_key] = new_value
+                stamp_score_updated(model, llm_key)
                 updated += 1
                 changes.append((slug, llm_key, old_value, new_value))
 
@@ -414,6 +417,7 @@ def update_swe_rebench_scores(
 
         if old_value != new_value:
             scores["swe_rebench"] = new_value
+            stamp_score_updated(model, "swe_rebench")
             updated += 1
             changes.append((slug, "swe_rebench", old_value, new_value))
 
@@ -481,6 +485,7 @@ def update_osworld_scores(
 
         if old_value != new_value:
             scores["osworld_verified"] = new_value
+            stamp_score_updated(model, "osworld_verified")
             updated += 1
             changes.append((slug, "osworld_verified", old_value, new_value))
 
@@ -552,6 +557,7 @@ def update_huggingface_scores(
             if old_value is not None:
                 continue
             scores[benchmark_key] = new_value
+            stamp_score_updated(model, benchmark_key)
             updated += 1
             changes.append((slug, benchmark_key, old_value, new_value))
 
@@ -619,6 +625,7 @@ def update_deepswe_scores(
 
         if old_value != new_value:
             scores["deepswe"] = new_value
+            stamp_score_updated(model, "deepswe")
             updated += 1
             changes.append((slug, "deepswe", old_value, new_value))
 
@@ -686,6 +693,7 @@ def update_frontierswe_scores(
 
         if old_value != new_value:
             scores["frontierswe"] = new_value
+            stamp_score_updated(model, "frontierswe")
             updated += 1
             changes.append((slug, "frontierswe", old_value, new_value))
 
@@ -759,6 +767,7 @@ def update_swe_atlas_scores(
                 continue
             if old_value != new_value:
                 scores[benchmark_key] = new_value
+                stamp_score_updated(model, benchmark_key)
                 updated += 1
                 changes.append((slug, benchmark_key, old_value, new_value))
 
@@ -832,6 +841,7 @@ def update_evals_report_scores(
                 continue
             if old_value != new_value:
                 scores[benchmark_key] = new_value
+                stamp_score_updated(model, benchmark_key)
                 updated += 1
                 changes.append((slug, benchmark_key, old_value, new_value))
 
@@ -987,6 +997,7 @@ def update_llmstats_scores(
             if old_value is not None:
                 continue
             scores[benchmark_key] = new_value
+            stamp_score_updated(model, benchmark_key)
             updated += 1
             changes.append((slug, benchmark_key, old_value, new_value))
 

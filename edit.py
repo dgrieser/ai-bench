@@ -14,6 +14,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from _scores import stamp_score_updated
+
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 
@@ -482,6 +484,7 @@ def main() -> int:
             for key, value in score_updates.items():
                 if scores.get(key) != value:
                     scores[key] = value
+                    stamp_score_updated(model, key)
                     changed += 1
                     model_changed = True
             for key, value in metadata_updates.items():
@@ -505,6 +508,7 @@ def main() -> int:
     for key, value in score_updates.items():
         if scores.get(key) != value:
             scores[key] = value
+            stamp_score_updated(model, key)
             changed += 1
     for key, value in metadata_updates.items():
         if model.get(key) != value:

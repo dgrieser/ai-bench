@@ -807,6 +807,10 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
             "url": creator_url,
         },
         "scores": {key: None for key in benchmark_keys},
+        # scores_updated mirrors the scores key set; a key's date is stamped
+        # when update.py/edit.py write that score. Consumers read by key and
+        # tolerate absent keys (llm.html uses optional chaining).
+        "scores_updated": {key: None for key in benchmark_keys},
     }
 
 
