@@ -94,10 +94,110 @@
 
     /* ── Controls ─────────────────────────────────── */
 
-    .controls {
-      padding: 20px 20px;
+    /* ── Filters panel (collapsible) ──────────────── */
+
+    .filters {
       background: var(--surface);
       border-bottom: 1px solid var(--line);
+    }
+
+    .filters-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 0;
+      padding: 13px 20px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--subtle);
+      cursor: pointer;
+      text-align: left;
+      transition: color 120ms ease, background-color 120ms ease;
+    }
+
+    .filters-toggle:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+      border: 0;
+    }
+
+    .filters-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+
+    .filters-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    /* Count of active constraints — only meaningful once the fields hide */
+    .filters-count {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      padding: 2px 8px;
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+      border-radius: 999px;
+      line-height: 1.4;
+    }
+
+    .filters:not(.collapsed) .filters-count {
+      display: none;
+    }
+
+    .filters-chevron {
+      width: 12px;
+      height: 8px;
+      margin-left: auto;
+      transform: rotate(180deg);
+    }
+
+    .filters.collapsed .filters-chevron {
+      transform: rotate(0deg);
+    }
+
+    .controls-collapse {
+      display: grid;
+      grid-template-rows: 1fr;
+      overflow: hidden;
+    }
+
+    /* Transitions only after first paint so the initial state doesn't animate */
+    .filters.ready .filters-chevron {
+      transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .filters.ready .controls-collapse {
+      transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Padding-free grid item so the row can shrink fully to 0 when collapsed */
+    .controls-collapse > .controls-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .filters.collapsed .controls-collapse {
+      grid-template-rows: 0fr;
+    }
+
+    /* Once fully open, let field dropdowns (GPU combo, compare list) overflow */
+    .controls-collapse.is-open,
+    .controls-collapse.is-open > .controls-inner {
+      overflow: visible;
+    }
+
+    .controls {
+      padding: 4px 20px 20px;
+      background: var(--surface);
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -689,6 +789,11 @@
       .field.filter-on .model-compare-widget,
       .field.filter-on select {
         animation: none;
+      }
+
+      .filters.ready .controls-collapse,
+      .filters.ready .filters-chevron {
+        transition: none;
       }
     }
 
@@ -1437,6 +1542,7 @@
 
       .hero,
       .controls,
+      .filters-toggle,
       .toolbar {
         padding-left: 16px;
         padding-right: 16px;
@@ -1500,7 +1606,17 @@
       <p>Compare performance of small(ish) LLM models across benchmark suites.</p>
     </section>
 
-    <section class="controls" id="controls" hidden>
+    <section class="filters" id="filtersPanel" hidden>
+      <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
+        <span class="filters-eyebrow">Filters</span>
+        <span class="filters-count" id="filtersCount" hidden></span>
+        <svg class="filters-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="controls-collapse" id="controlsCollapse">
+        <div class="controls-inner">
+        <div class="controls" id="controls">
       <div class="field">
         <label for="modelCompare">Compare Models</label>
         <div class="select-wrap">
@@ -1556,6 +1672,9 @@
             <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
             <span class="gpu-unit">GB</span>
           </div>
+        </div>
+      </div>
+        </div>
         </div>
       </div>
     </section>
@@ -1647,6 +1766,10 @@
 
       const ui = {
         title: document.getElementById("title"),
+        filtersPanel: document.getElementById("filtersPanel"),
+        filtersToggle: document.getElementById("filtersToggle"),
+        filtersCount: document.getElementById("filtersCount"),
+        controlsCollapse: document.getElementById("controlsCollapse"),
         controls: document.getElementById("controls"),
         toolbar: document.getElementById("toolbar"),
         content: document.getElementById("content"),
@@ -1709,11 +1832,39 @@
 
       function showImportOnly(message) {
         ui.toolbar.hidden = false;
-        ui.controls.hidden = true;
+        ui.filtersPanel.hidden = true;
         ui.status.classList.add("error");
         ui.status.textContent = message;
         ui.resultCount.textContent = "No data loaded";
         ui.benchmarkCount.textContent = "Import required";
+      }
+
+      // Collapse/expand the filter fields. overflow on the collapse wrapper is
+      // hidden while animating (so the 0fr squeeze clips) and set visible once
+      // open, so field dropdowns (GPU combo, compare list) aren't clipped.
+      function setFiltersCollapsed(collapsed, animate) {
+        ui.filtersPanel.classList.toggle("collapsed", collapsed);
+        ui.filtersToggle.setAttribute("aria-expanded", String(!collapsed));
+
+        if (collapsed) {
+          ui.controlsCollapse.classList.remove("is-open");
+          return;
+        }
+        if (animate && !prefersReducedMotion()) {
+          ui.controlsCollapse.addEventListener("transitionend", function onEnd(e) {
+            if (e.propertyName !== "grid-template-rows") return;
+            ui.controlsCollapse.removeEventListener("transitionend", onEnd);
+            if (!ui.filtersPanel.classList.contains("collapsed")) {
+              ui.controlsCollapse.classList.add("is-open");
+            }
+          });
+        } else {
+          ui.controlsCollapse.classList.add("is-open");
+        }
+      }
+
+      function prefersReducedMotion() {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       }
 
       function validateData(data) {
@@ -1733,7 +1884,13 @@
         state.sort.direction = "desc";
 
         ui.title.textContent = data.title || "LLM Benchmarks";
-        ui.controls.hidden = false;
+        ui.filtersPanel.hidden = false;
+        // Collapsed on mobile by default, expanded on desktop.
+        setFiltersCollapsed(window.matchMedia("(max-width: 860px)").matches, false);
+        // Enable collapse/chevron transitions only after the initial state paints.
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => ui.filtersPanel.classList.add("ready"));
+        });
         ui.toolbar.hidden = false;
         ui.status.classList.remove("error");
 
@@ -1917,6 +2074,10 @@
       }
 
       function bindEvents() {
+        ui.filtersToggle.addEventListener("click", () => {
+          setFiltersCollapsed(!ui.filtersPanel.classList.contains("collapsed"), true);
+        });
+
         ui.search.addEventListener("input", debounce((event) => {
           state.filters.search = event.target.value.trim().toLowerCase();
           applyAndRender();
@@ -2011,6 +2172,11 @@
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || gpuOn || sortOn || vendorOn);
+
+        // Active-constraint count, surfaced in the toggle bar when collapsed.
+        const activeCount = [searchOn, paramsOn, compareOn, sortOn, gpuOn || vendorOn].filter(Boolean).length;
+        ui.filtersCount.textContent = `${activeCount} active`;
+        ui.filtersCount.hidden = activeCount === 0;
       }
 
       function modelPassesFilters(model) {
