@@ -1829,8 +1829,13 @@
       }
 
       function showImportOnly(message) {
+        // The toolbar now lives inside the filters panel, so keep the panel
+        // visible and hide only the toggle and filter fields — otherwise the
+        // import pills/button would be hidden along with the panel.
+        ui.filtersPanel.hidden = false;
+        ui.filtersToggle.style.display = "none";
+        ui.controls.style.display = "none";
         ui.toolbar.hidden = false;
-        ui.filtersPanel.hidden = true;
         ui.status.classList.add("error");
         ui.status.textContent = message;
         ui.resultCount.textContent = "No data loaded";
