@@ -800,12 +800,11 @@
     /* ── Toolbar ──────────────────────────────────── */
 
     .toolbar {
-      padding: 10px 20px 12px;
+      padding: 10px 20px 16px;
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       align-items: center;
-      border-bottom: 1px solid var(--line);
       background: var(--surface-alt);
     }
 
@@ -1675,17 +1674,16 @@
         </div>
       </div>
         </div>
+        <section class="toolbar" id="toolbar">
+          <span class="pill" id="resultCount">0 models</span>
+          <span class="pill" id="creatorCount">0 creators</span>
+          <span class="pill" id="benchmarkCount">0 benchmarks</span>
+          <button id="resetBtn" type="button">Reset Filters</button>
+          <button style="display: none" id="importBtn" type="button">Import llm.json</button>
+          <input id="importFile" class="file-input-offscreen" type="file" accept="application/json,.json">
+        </section>
         </div>
       </div>
-    </section>
-
-    <section class="toolbar" id="toolbar" hidden>
-      <span class="pill" id="resultCount">0 models</span>
-      <span class="pill" id="creatorCount">0 creators</span>
-      <span class="pill" id="benchmarkCount">0 benchmarks</span>
-      <button id="resetBtn" type="button">Reset Filters</button>
-      <button style="display: none" id="importBtn" type="button">Import llm.json</button>
-      <input id="importFile" class="file-input-offscreen" type="file" accept="application/json,.json">
     </section>
 
     <section id="content">
