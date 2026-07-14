@@ -225,6 +225,29 @@ def fetch_aa_model_names() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def build_name_options(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
+    """Model-slug autocomplete pool: AA names plus llm-stats-only names.
+
+    AA names are returned untagged (display unchanged); llm-stats names not already
+    covered by AA are appended and tagged so the source shows inline in the selector.
+    AA wins on overlap so shared names keep their AA field auto-fill.
+    """
+    aa_names = [] if args.skip_aa else fetch_aa_model_names()
+
+    llmstats_names: list[str] = []
+    if not args.skip_llmstats:
+        try:
+            llmstats_names = fetch_llmstats_model_names()
+        except RuntimeError as exc:
+            print(f"Skipping llm-stats name autocomplete: {exc}")
+
+    aa_set = set(aa_names)
+    extra = sorted(name for name in llmstats_names if name not in aa_set)
+    options = aa_names + extra
+    sources = {name: "llm-stats" for name in extra}
+    return options, sources
+
+
 def fetch_aa_model_defaults(model_name: str) -> dict[str, str]:
     aa_script = Path(__file__).resolve().with_name("artificialanalysis.py")
     if not aa_script.exists():
@@ -576,7 +599,13 @@ def supports_live_selector() -> bool:
     return sys.stdin.isatty() and sys.stdout.isatty() and term and term.lower() != "dumb"
 
 
-def _render_live_selector(label: str, buffer: str, matches: list[str], lines_drawn: int) -> int:
+def _render_live_selector(
+    label: str,
+    buffer: str,
+    matches: list[str],
+    lines_drawn: int,
+    sources: dict[str, str] | None = None,
+) -> int:
     if lines_drawn:
         sys.stdout.write(f"\x1b[{lines_drawn}F")
 
@@ -585,7 +614,8 @@ def _render_live_selector(label: str, buffer: str, matches: list[str], lines_dra
 
     for match in matches:
         sys.stdout.write("\r\n\x1b[2K")
-        sys.stdout.write(f"  {match}")
+        source = sources.get(match) if sources else None
+        sys.stdout.write(f"  {match}  ({source})" if source else f"  {match}")
 
     sys.stdout.write("\x1b[J")
     if matches:
@@ -609,7 +639,11 @@ def _clear_live_selector(lines_drawn: int) -> None:
 
 
 def prompt_live_select_or_new(
-    label: str, options: list[str], allow_empty: bool = True, default: str | None = None
+    label: str,
+    options: list[str],
+    allow_empty: bool = True,
+    default: str | None = None,
+    sources: dict[str, str] | None = None,
 ) -> str | None:
     fd = sys.stdin.fileno()
     previous = termios.tcgetattr(fd)
@@ -621,7 +655,7 @@ def prompt_live_select_or_new(
         tty.setraw(fd)
         while True:
             matches = find_matches(buffer, options)
-            lines_drawn = _render_live_selector(label, buffer, matches, lines_drawn)
+            lines_drawn = _render_live_selector(label, buffer, matches, lines_drawn, sources)
             char = sys.stdin.read(1)
 
             if char in {"\r", "\n"}:
@@ -676,7 +710,11 @@ def prompt_live_select_or_new(
 
 
 def prompt_select_or_new(
-    label: str, options: list[str], allow_empty: bool = True, default: str | None = None
+    label: str,
+    options: list[str],
+    allow_empty: bool = True,
+    default: str | None = None,
+    sources: dict[str, str] | None = None,
 ) -> str | None:
     if not options:
         if default is not None:
@@ -684,7 +722,9 @@ def prompt_select_or_new(
         return prompt_value(label)
 
     if supports_live_selector():
-        return prompt_live_select_or_new(label, options, allow_empty=allow_empty, default=default)
+        return prompt_live_select_or_new(
+            label, options, allow_empty=allow_empty, default=default, sources=sources
+        )
 
     while True:
         suffix = f" [{default}]" if default else ""
@@ -716,7 +756,8 @@ def prompt_select_or_new(
 
         print(f"Matches for {label}:")
         for idx, match in enumerate(matches, start=1):
-            print(f"  {idx}. {match}")
+            source = sources.get(match) if sources else None
+            print(f"  {idx}. {match}  ({source})" if source else f"  {idx}. {match}")
 
         try:
             choice = input("Select number or press Enter to keep typed value: ").strip()
@@ -750,8 +791,8 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
     benchmark_keys = list(doc["benchmarks"].keys())
 
     if interactive and args.name is None:
-        aa_names = [] if args.skip_aa else fetch_aa_model_names()
-        name = prompt_select_or_new("Name", aa_names, allow_empty=False)
+        options, sources = build_name_options(args)
+        name = prompt_select_or_new("Name", options, allow_empty=False, sources=sources)
     else:
         name = get_value(args.name, "Name", interactive)
     if not name:
