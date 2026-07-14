@@ -6131,6 +6131,74 @@
         "mmmu_pro": null,
         "osworld_verified": null
       }
+    },
+    {
+      "name": "laguna-xs-2",
+      "date_added": "2026-07-14",
+      "url": "https://huggingface.co/poolside/Laguna-XS.2",
+      "params": "33B-A3B",
+      "context": "256k",
+      "vram": {
+        "fp16": 73,
+        "int8": 36,
+        "int4": 18
+      },
+      "creator": {
+        "name": "Poolside",
+        "url": "https://poolside.ai/"
+      },
+      "scores": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": 69.9,
+        "swe_bench_pro": 46.3,
+        "swe_atlas_rf": null,
+        "swe_atlas_tw": null,
+        "swe_atlas_qna": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "frontiercode": null,
+        "swe_rebench": null,
+        "livecodebench": null,
+        "scicode": null,
+        "terminal_bench_2_1": null,
+        "terminal_bench_2_0": 35.7,
+        "terminal_bench_hard": null,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
+      },
+      "scores_updated": {
+        "aa_intelligence_index": null,
+        "aa_coding_index": null,
+        "swe_bench_verified": "2026-07-14",
+        "swe_bench_pro": "2026-07-14",
+        "swe_atlas_rf": null,
+        "swe_atlas_tw": null,
+        "swe_atlas_qna": null,
+        "deepswe": null,
+        "frontierswe": null,
+        "frontiercode": null,
+        "swe_rebench": null,
+        "livecodebench": null,
+        "scicode": null,
+        "terminal_bench_2_1": null,
+        "terminal_bench_2_0": "2026-07-14",
+        "terminal_bench_hard": null,
+        "tau2_bench_telecom": null,
+        "browsecomp": null,
+        "aime_2025": null,
+        "aime_2026": null,
+        "gpqa_diamond": null,
+        "hle": null,
+        "mmmu_pro": null,
+        "osworld_verified": null
+      }
     }
   ],
   "sources": [
