@@ -112,19 +112,19 @@
         },
         {
           "key": "swe_bench_pro",
-          "weight": 0.60
+          "weight": 0.40
         },
         {
           "key": "swe_atlas_rf",
-          "weight": 0.85
+          "weight": 0.50
         },
         {
           "key": "swe_atlas_tw",
-          "weight": 0.85
+          "weight": 0.50
         },
         {
           "key": "swe_atlas_qna",
-          "weight": 0.85
+          "weight": 0.50
         },
         {
           "key": "frontierswe",
@@ -160,7 +160,7 @@
         }
       ],
       "decay": 0.6,
-      "shrinkageK": 1.5
+      "shrinkageK": 1.62
     }
   ],
   "benchmarks": {
