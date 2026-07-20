@@ -145,22 +145,100 @@ def _parse_creator(text: str, expected_name: str = ""):
     return result
 
 
-def _parse_mmmu_pro(text: str, slug: str):
-    model_path = f"/models/{slug}"
-    target = f'"model_url":"{model_path}"'
-    pos = text.find(target)
-    if pos == -1:
-        return None
+_PAGE_FLOAT_FIELDS = [
+    ("agenticIndex", "agentic_index"),
+    ("omniscience", "omniscience"),
+    ("gdpval", "gdpval"),
+    ("gdpvalNormalized", "gdpval_normalized"),
+    ("itBenchSre", "it_bench_sre"),
+    ("critpt", "critpt"),
+    ("apexAgents", "apex_agents"),
+    ("mmmuPro", "mmmu_pro"),
+    ("terminalbenchV21", "terminalbench_v2_1"),
+    ("terminalbenchHard", "terminalbench_hard"),
+    ("harveyLabCriteriaPass", "harvey_lab_criteria_pass"),
+    ("automationBenchPartialScore", "automation_bench_partial_score"),
+    ("enterpriseOpsGym", "enterprise_ops_gym"),
+    ("codingIndex", "coding_index"),
+    ("intelligenceIndex", "intelligence_index"),
+    ("livecodebench", "livecodebench"),
+    ("scicode", "scicode"),
+    ("aime25", "aime_25"),
+]
 
-    # In the RSC stream, benchmark fields may appear before model_url for
-    # the same model. Restrict to the chunk since the previous model_url.
-    prev_model = text.rfind('"model_url":"/models/', 0, pos)
-    start = prev_model if prev_model != -1 else 0
-    block = text[start : pos + len(target)]
-    match = re.search(r'"mmmu_pro":([0-9.]+)', block)
-    if not match:
-        return None
-    return float(match.group(1))
+_PAGE_BOOL_FIELDS = [
+    ("microevalsEnabled", "microevals_enabled"),
+    ("intelligenceIndexIsEstimated", "intelligence_index_is_estimated"),
+]
+
+_PAGE_OBJECT_FIELDS = {
+    "omniscienceBreakdown": [
+        ("accuracy", "omniscience_accuracy", float),
+        ("hallucinationRate", "omniscience_hallucination_rate", float),
+    ],
+    "openness": [
+        ("opennessIndex", "openness_index", float),
+        ("modelAvailability", "openness_model_availability", int),
+        ("transparencyMethodology", "openness_transparency_methodology", int),
+        ("transparencyPostTrainingData", "openness_transparency_post_training_data", int),
+        ("transparencyPreTrainingData", "openness_transparency_pre_training_data", int),
+    ],
+    "outputSpeedVariance": [
+        ("p05", "output_speed_p05", float),
+        ("q25", "output_speed_q25", float),
+        ("median", "output_speed_median", float),
+        ("q75", "output_speed_q75", float),
+        ("p95", "output_speed_p95", float),
+    ],
+    "timeToFirstChunkVariance": [
+        ("p05", "ttft_p05", float),
+        ("q25", "ttft_q25", float),
+        ("median", "ttft_median", float),
+        ("q75", "ttft_q75", float),
+        ("p95", "ttft_p95", float),
+    ],
+}
+
+
+def _parse_metrics_block(text: str, slug: str):
+    slug_anchor = f'"slug":"{slug}"'
+    slug_pos = text.find(slug_anchor)
+    if slug_pos == -1:
+        return {}
+    me_pos = text.find('"microevalsEnabled"', slug_pos)
+    if me_pos == -1:
+        return {}
+    chunk = text[me_pos : me_pos + 5000]
+
+    result = {}
+
+    for page_key, result_key in _PAGE_FLOAT_FIELDS:
+        m = re.search(rf'"{page_key}":(null|-?[0-9.]+)', chunk)
+        if m:
+            val = m.group(1)
+            result[result_key] = None if val == "null" else float(val)
+
+    for page_key, result_key in _PAGE_BOOL_FIELDS:
+        m = re.search(rf'"{page_key}":(true|false)', chunk)
+        if m:
+            result[result_key] = m.group(1) == "true"
+
+    for obj_name, sub_fields in _PAGE_OBJECT_FIELDS.items():
+        pattern = r'"' + obj_name + r'":\{([^}]+)\}'
+        m = re.search(pattern, chunk)
+        if not m:
+            continue
+        obj_chunk = m.group(1)
+        for sub_key, result_key, caster in sub_fields:
+            sm = re.search(rf'"{sub_key}":(null|-?[0-9.]+)', obj_chunk)
+            if sm:
+                val = sm.group(1)
+                if val == "null":
+                    result[result_key] = None
+                else:
+                    result[result_key] = caster(float(val))
+
+    return result
 
 
 def _fetch_page_metrics(slug: str, creator_name: str = ""):
@@ -183,7 +261,10 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
         result["context_window"] = _parse_context_window(resp.text)
         result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
         result["creator"] = _parse_creator(resp.text, creator_name)
-        result["mmmu_pro"] = _parse_mmmu_pro(resp.text, slug)
+        metrics = _parse_metrics_block(resp.text, slug)
+        result.update(metrics)
+        if "mmmu_pro" not in result:
+            result["mmmu_pro"] = None
     except requests.RequestException:
         pass
 
@@ -226,13 +307,84 @@ def _extract_mmmu_pro(m: dict):
     return _fetch_page_metrics(m.get("slug", "")).get("mmmu_pro")
 
 
+_PAGE_ONLY_EVALS = [
+    "agentic_index",
+    "omniscience",
+    "omniscience_accuracy",
+    "omniscience_hallucination_rate",
+    "gdpval",
+    "gdpval_normalized",
+    "it_bench_sre",
+    "critpt",
+    "apex_agents",
+    "harvey_lab_criteria_pass",
+    "automation_bench_partial_score",
+    "enterprise_ops_gym",
+]
+
+_PAGE_FALLBACK_EVALS = [
+    "terminalbench_v2_1",
+    "terminalbench_hard",
+    "livecodebench",
+    "scicode",
+    "aime_25",
+]
+
+_PAGE_META_KEYS = [
+    "microevals_enabled",
+    "intelligence_index_is_estimated",
+    "openness_index",
+    "openness_model_availability",
+    "openness_transparency_methodology",
+    "openness_transparency_post_training_data",
+    "openness_transparency_pre_training_data",
+    "output_speed_p05",
+    "output_speed_q25",
+    "output_speed_median",
+    "output_speed_q75",
+    "output_speed_p95",
+    "ttft_p05",
+    "ttft_q25",
+    "ttft_median",
+    "ttft_q75",
+    "ttft_p95",
+]
+
+
+def _extract_page_eval(m: dict, key: str):
+    return _fetch_page_metrics(m.get("slug", "")).get(key)
+
+
+def _extract_eval_or_page(m: dict, api_keys, page_key: str):
+    val = _extract_eval_any(m, api_keys)
+    if val is not None:
+        return val
+    return _fetch_page_metrics(m.get("slug", "")).get(page_key)
+
+
 def _enrich_structured_metrics(models):
     for m in models:
         evals = m.get("evaluations")
         if not isinstance(evals, dict):
             evals = {}
         evals["mmmu_pro"] = _extract_mmmu_pro(m)
+
+        page_metrics = _fetch_page_metrics(m.get("slug", ""))
+        for key in _PAGE_ONLY_EVALS:
+            val = page_metrics.get(key)
+            if val is not None:
+                evals[key] = val
+        for key in _PAGE_FALLBACK_EVALS:
+            if evals.get(key) is None:
+                val = page_metrics.get(key)
+                if val is not None:
+                    evals[key] = val
         m["evaluations"] = evals
+
+        for key in _PAGE_META_KEYS:
+            val = page_metrics.get(key)
+            if val is not None:
+                m[key] = val
 
         context = _extract_context_window(m)
         hugging_face_url = _extract_hugging_face_url(m)
@@ -353,25 +505,36 @@ def _print_table(models, output):
         ("Creator URL", _extract_creator_url),
         ("Context Window", _extract_context_window),
         ("Hugging Face", _extract_hugging_face_url),
-        ("Intellience Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
+        ("Intelligence Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
         ("Coding Index", lambda m: _extract_eval_any(m, ["artificial_analysis_coding_index"])),
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
-        ("Terminal-Bench Hard", lambda m: _extract_eval_any(m, ["terminalbench_hard"])),
+        ("Agentic Index", lambda m: _extract_page_eval(m, "agentic_index")),
+        ("AA-Omniscience", lambda m: _extract_page_eval(m, "omniscience")),
+        ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
         ("tau^2 Bench Telecom", lambda m: _extract_eval_any(m, ["tau2"])),
         ("AA-LCR", lambda m: _extract_eval_any(m, ["lcr"])),
         ("HLE", lambda m: _extract_eval_any(m, ["hle"])),
         ("GPQA Diamond", lambda m: _extract_eval_any(m, ["gpqa_diamond", "gpqa"])),
-        ("LiveCodeBench", lambda m: _extract_eval_any(m, ["livecodebench"])),
-        ("SciCode", lambda m: _extract_eval_any(m, ["scicode"])),
+        ("LiveCodeBench", lambda m: _extract_eval_or_page(m, ["livecodebench"], "livecodebench")),
+        ("SciCode", lambda m: _extract_eval_or_page(m, ["scicode"], "scicode")),
         ("IFBench", lambda m: _extract_eval_any(m, ["ifbench"])),
-        ("AIME 2025", lambda m: _extract_eval_any(m, ["aime_25"])),
+        ("AIME 2025", lambda m: _extract_eval_or_page(m, ["aime_25"], "aime_25")),
         ("MMMU Pro", _extract_mmmu_pro),
+        ("GDPval", lambda m: _extract_page_eval(m, "gdpval_normalized")),
+        ("IT-Bench SRE", lambda m: _extract_page_eval(m, "it_bench_sre")),
+        ("Crit-Pt", lambda m: _extract_page_eval(m, "critpt")),
+        ("Apex Agents", lambda m: _extract_page_eval(m, "apex_agents")),
+        ("Openness", lambda m: _extract_page_eval(m, "openness_index")),
+        ("Out Speed p05", lambda m: _extract_page_eval(m, "output_speed_p05")),
+        ("Out Speed p95", lambda m: _extract_page_eval(m, "output_speed_p95")),
+        ("TTFT p05", lambda m: _extract_page_eval(m, "ttft_p05")),
+        ("TTFT p95", lambda m: _extract_page_eval(m, "ttft_p95")),
     ]
 
     headers = _format_headers([c[0] for c in columns], output)
     rows = []
     percent_cols = {
-        "Terminal-Bench Hard",
+        "Terminal-Bench v2.1",
         "tau^2 Bench Telecom",
         "AA-LCR",
         "HLE",
@@ -381,6 +544,10 @@ def _print_table(models, output):
         "IFBench",
         "AIME 2025",
         "MMMU Pro",
+        "GDPval",
+        "IT-Bench SRE",
+        "Crit-Pt",
+        "Apex Agents",
     }
     for m in models:
         row = []
@@ -543,6 +710,7 @@ def main():
         print(json.dumps(data, indent=2))
         return 0
     if args.output == "yaml":
+        _enrich_structured_metrics(models)
         data["data"] = models
         print(yaml.safe_dump(data, sort_keys=False))
         return 0
