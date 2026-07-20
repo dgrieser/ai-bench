@@ -1,5 +1,102 @@
 {
-  "title": "LLM Benchmarks",
+  "title": "Open-weight LLM Benchmarks",
+  "subtitle": "Compare performance of open-weight LLM models across benchmark suites.",
+  "defaultSort": "coding",
+  "columns": {
+    "name": {
+      "label": "Model",
+      "sortLabel": "Model name"
+    },
+    "creator": {
+      "label": "Creator"
+    },
+    "params": {
+      "label": "Params"
+    },
+    "context": {
+      "label": "Context"
+    },
+    "vram_fp16": {
+      "label": "FP16",
+      "sortLabel": "VRAM FP16",
+      "description": "Estimated VRAM at FP16 precision (GB)"
+    },
+    "vram_int8": {
+      "label": "INT8",
+      "sortLabel": "VRAM INT8",
+      "description": "Estimated VRAM at INT8 quantization (GB)"
+    },
+    "vram_int4": {
+      "label": "INT4",
+      "sortLabel": "VRAM INT4",
+      "description": "Estimated VRAM at INT4 quantization (GB)"
+    }
+  },
+  "paramBuckets": [
+    {
+      "value": "all",
+      "label": "All parameter sizes"
+    },
+    {
+      "value": "lt1",
+      "label": "< 1B",
+      "min": 0,
+      "max": 1000000000
+    },
+    {
+      "value": "1to4",
+      "label": "1B – 4B",
+      "min": 1000000000,
+      "max": 4000000000
+    },
+    {
+      "value": "4to8",
+      "label": "4B – 8B",
+      "min": 4000000000,
+      "max": 8000000000
+    },
+    {
+      "value": "8to16",
+      "label": "8B – 16B",
+      "min": 8000000000,
+      "max": 16000000000
+    },
+    {
+      "value": "16to32",
+      "label": "16B – 32B",
+      "min": 16000000000,
+      "max": 32000000000
+    },
+    {
+      "value": "32to70",
+      "label": "32B – 70B",
+      "min": 32000000000,
+      "max": 70000000000
+    },
+    {
+      "value": "70to130",
+      "label": "70B – 130B",
+      "min": 70000000000,
+      "max": 130000000000
+    },
+    {
+      "value": "130to250",
+      "label": "130B – 250B",
+      "min": 130000000000,
+      "max": 250000000000
+    },
+    {
+      "value": "250to500",
+      "label": "250B – 500B",
+      "min": 250000000000,
+      "max": 500000000000
+    },
+    {
+      "value": "gte500",
+      "label": "≥ 500B",
+      "min": 500000000000
+    }
+  ],
   "sortGroups": [
     {
       "key": "coding",

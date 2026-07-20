@@ -1602,7 +1602,7 @@
         </svg>
       </button>
       <h1 id="title">LLM Benchmarks</h1>
-      <p>Compare performance of small(ish) LLM models across benchmark suites.</p>
+      <p id="subtitle" hidden></p>
     </section>
 
     <section class="filters" id="filtersPanel" hidden>
@@ -1697,6 +1697,7 @@
         data: null,
         benchmarkKeys: [],
         sortGroups: [],
+        paramBuckets: [],
         headerWidthsByKey: {},
         filteredModels: [],
         filters: {
@@ -1705,7 +1706,7 @@
           selectedModels: []
         },
         sort: {
-          key: "aa_coding_index",
+          key: null,
           direction: "desc"
         },
         eventsBound: false,
@@ -1723,23 +1724,48 @@
         }
       };
 
-      // Single source of truth for the parameter-size filter: drives both the
-      // dropdown options and the filter logic. Ranges are half-open [min, max)
-      // so adjacent buckets never overlap. Boundaries follow common LLM release
-      // tiers (1B / 4B / 8B / 16B / 32B / 70B / 120B / 235B / 405B / 671B …).
-      const PARAM_BUCKETS = [
-        { value: "all", label: "All parameter sizes" },
-        { value: "lt1", label: "< 1B", min: 0, max: 1e9 },
-        { value: "1to4", label: "1B – 4B", min: 1e9, max: 4e9 },
-        { value: "4to8", label: "4B – 8B", min: 4e9, max: 8e9 },
-        { value: "8to16", label: "8B – 16B", min: 8e9, max: 16e9 },
-        { value: "16to32", label: "16B – 32B", min: 16e9, max: 32e9 },
-        { value: "32to70", label: "32B – 70B", min: 32e9, max: 70e9 },
-        { value: "70to130", label: "70B – 130B", min: 70e9, max: 130e9 },
-        { value: "130to250", label: "130B – 250B", min: 130e9, max: 250e9 },
-        { value: "250to500", label: "250B – 500B", min: 250e9, max: 500e9 },
-        { value: "gte500", label: "≥ 500B", min: 500e9, max: Infinity }
+      // Parameter-size buckets come from llm.json (data.paramBuckets) and
+      // drive both the dropdown options and the filter logic. Ranges are
+      // half-open [min, max) so adjacent buckets never overlap; omitted
+      // min/max mean 0/Infinity (JSON can't express Infinity).
+      function normalizeParamBuckets(raw) {
+        const buckets = (Array.isArray(raw) ? raw : [])
+          .filter((bucket) => bucket && typeof bucket.value === "string")
+          .map((bucket) => ({
+            value: bucket.value,
+            label: bucket.label || bucket.value,
+            min: Number.isFinite(bucket.min) ? bucket.min : 0,
+            max: Number.isFinite(bucket.max) ? bucket.max : Infinity
+          }));
+        return buckets.length ? buckets : [{ value: "all", label: "All parameter sizes", min: 0, max: Infinity }];
+      }
+
+      // Fixed (non-benchmark) table columns. Only layout lives here — labels,
+      // sort-option labels and tooltips come from data.columns in llm.json.
+      // Order must match the cell order in renderRow.
+      const FIXED_COLUMNS = [
+        { key: "name", className: "col-model", minWidth: 100 },
+        { key: "creator", minWidth: 90, initialWidth: 90 },
+        { key: "params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
+        { key: "context", className: "mono head-right", minWidth: 100, initialWidth: 100 },
+        { key: "vram_fp16", className: "mono head-right", minWidth: 90, initialWidth: 90 },
+        { key: "vram_int8", className: "mono head-right", minWidth: 90, initialWidth: 90 },
+        { key: "vram_int4", className: "mono head-right", minWidth: 90, initialWidth: 90 }
       ];
+
+      function columnMeta(key) {
+        const column = state.data?.columns?.[key];
+        return column && typeof column === "object" ? column : {};
+      }
+
+      function columnLabel(key) {
+        return columnMeta(key).label || key;
+      }
+
+      function columnSortLabel(key) {
+        const meta = columnMeta(key);
+        return meta.sortLabel || meta.label || key;
+      }
 
       function getHeaderWidthConfig(key, th = null) {
         const config = state.headerWidthsByKey[key] || {};
@@ -1764,6 +1790,7 @@
 
       const ui = {
         title: document.getElementById("title"),
+        subtitle: document.getElementById("subtitle"),
         filtersPanel: document.getElementById("filtersPanel"),
         filtersToggle: document.getElementById("filtersToggle"),
         filtersCount: document.getElementById("filtersCount"),
@@ -1883,10 +1910,15 @@
         state.data = data;
         state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
         state.sortGroups = Array.isArray(data.sortGroups) ? data.sortGroups : [];
+        state.paramBuckets = normalizeParamBuckets(data.paramBuckets);
         state.sort.key = defaultSortKey();
         state.sort.direction = "desc";
 
-        ui.title.textContent = data.title || "LLM Benchmarks";
+        const title = data.title || "LLM Benchmarks";
+        ui.title.textContent = title;
+        document.title = title;
+        ui.subtitle.textContent = data.subtitle || "";
+        ui.subtitle.hidden = !data.subtitle;
         ui.filtersPanel.hidden = false;
         // Collapsed on mobile by default, expanded on desktop.
         setFiltersCollapsed(window.matchMedia("(max-width: 860px)").matches, false);
@@ -2017,20 +2049,15 @@
         ui.modelCompare.insertBefore(summaryEl, ui.modelCompare.firstChild);
         updateCompareSummary();
 
-        ui.params.innerHTML = PARAM_BUCKETS
+        ui.params.innerHTML = state.paramBuckets
           .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
           .join("");
         ui.params.value = state.filters.params;
 
-        const fixedSortOptions = [
-          { key: "name", label: "Model name" },
-          { key: "creator", label: "Creator" },
-          { key: "params", label: "Params" },
-          { key: "context", label: "Context" },
-          { key: "vram_fp16", label: "VRAM FP16" },
-          { key: "vram_int8", label: "VRAM INT8" },
-          { key: "vram_int4", label: "VRAM INT4" }
-        ];
+        const fixedSortOptions = FIXED_COLUMNS.map((column) => ({
+          key: column.key,
+          label: columnSortLabel(column.key)
+        }));
 
         const groupSortOptions = (state.sortGroups || []).map((group) => ({
           key: groupSortKey(group.key),
@@ -2195,7 +2222,7 @@
           if (!Number.isFinite(modelParams)) {
             return false;
           }
-          const bucket = PARAM_BUCKETS.find((b) => b.value === state.filters.params);
+          const bucket = state.paramBuckets.find((b) => b.value === state.filters.params);
           // Half-open interval [min, max): adjacent buckets never overlap.
           if (bucket && !(modelParams >= bucket.min && modelParams < bucket.max)) {
             return false;
@@ -2259,11 +2286,20 @@
         return `group:${key}`;
       }
 
-      // Default sort = first configured sort group (e.g. grouped coding),
-      // falling back to the AA coding index when no groups are defined.
+      // Default sort comes from llm.json: data.defaultSort names either a
+      // sort-group key or a plain column/benchmark key. Falls back to the
+      // first sort group, then the first benchmark column.
       function defaultSortKey() {
         const groups = state.sortGroups || [];
-        return groups.length ? groupSortKey(groups[0].key) : "aa_coding_index";
+        const configured = state.data?.defaultSort;
+        if (typeof configured === "string" && configured) {
+          const group = groups.find((g) => g.key === configured);
+          return group ? groupSortKey(group.key) : configured;
+        }
+        if (groups.length) {
+          return groupSortKey(groups[0].key);
+        }
+        return state.benchmarkKeys[0] || "name";
       }
 
       function getSortGroup(key) {
@@ -2429,13 +2465,14 @@
         }
 
         const headers = [
-          { key: "name", label: "Model", className: "col-model", minWidth: 100, initialWidth: measureModelColumnInitialWidth(state.filteredModels) },
-          { key: "creator", label: "Creator", minWidth: 90, initialWidth: 90 },
-          { key: "params", label: "Params", className: "mono head-right", minWidth: 100, initialWidth: 100 },
-          { key: "context", label: "Context", className: "mono head-right", minWidth: 100, initialWidth: 100 },
-          { key: "vram_fp16", label: "FP16", title: "Estimated VRAM at FP16 precision (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
-          { key: "vram_int8", label: "INT8", title: "Estimated VRAM at INT8 quantization (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
-          { key: "vram_int4", label: "INT4", title: "Estimated VRAM at INT4 quantization (GB)", className: "mono head-right", minWidth: 90, initialWidth: 90 },
+          ...FIXED_COLUMNS.map((column) => ({
+            ...column,
+            label: columnLabel(column.key),
+            title: columnMeta(column.key).description,
+            initialWidth: column.key === "name"
+              ? measureModelColumnInitialWidth(state.filteredModels)
+              : column.initialWidth
+          })),
           ...state.benchmarkKeys.map((key) => {
             const bench = state.data.benchmarks[key] || {};
             const fullName = bench.name || getBenchmarkLabel(key);
@@ -3297,7 +3334,7 @@
 
       function parseSortModeValue(value) {
         const parts = String(value).split("::");
-        const key = parts[0] || "aa_coding_index";
+        const key = parts[0] || defaultSortKey();
         const direction = parts[1] === "asc" ? "asc" : "desc";
         return { key, direction };
       }
