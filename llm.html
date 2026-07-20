@@ -3253,8 +3253,9 @@
       function formatParams(raw) {
         if (!raw) return "-";
         const str = String(raw).trim();
-        // Matches "123B", "117B-A5.1B", and standalone effective forms like "E4B".
-        const mainMatch = str.match(/^(\d+\.?\d*)(B)(?:-(A)(\d+\.?\d*)(B))?$/i);
+        // Matches "123B", "117B-A5.1B", "1T-A32B", unknown-active forms like
+        // "2.8T-A~B", and standalone effective forms like "E4B".
+        const mainMatch = str.match(/^(\d+\.?\d*)([BT])(?:-(A)(\d+\.?\d*|~)([BT]))?$/i);
         if (mainMatch) {
           const [, mainNum, mainUnit, aPrefix, activeNum, activeUnit] = mainMatch;
           let html = `${escapeHtml(mainNum)}<span class="p-letter">${escapeHtml(mainUnit)}</span>`;
