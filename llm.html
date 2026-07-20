@@ -2368,19 +2368,23 @@
       // - Each benchmark's weight comes from groupBenchmarkEntries (explicit
       //   weight, or decay^i by position), so the most reliable benchmarks lead
       //   and lower-weighted ones fill gaps / break ties.
-      // - Missing benchmarks are excluded from both sums (no penalty); the mean is
-      //   renormalized by present weight so coverage doesn't distort scale.
-      // - Shrinkage * presentWeight/(presentWeight + k) pulls thinly-covered models
-      //   toward the bottom (percentiles shrink toward 0, the worst rank) so a
-      //   single lucky score can't top a well-tested model.
-      //   Pick shrinkageK relative to the total group weight: k / totalWeight ~ 0.2
-      //   keeps the pull comparable when weights are rescaled.
+      // - Missing benchmarks are imputed at percentile 0.5: absence is ignorance,
+      //   not evidence of a bottom rank. The penalty scales with the weight that
+      //   is actually missing, so a single lucky score still can't top a
+      //   well-tested model, and every model divides by the same total weight,
+      //   which keeps composites comparable and the ranking invariant to
+      //   rescaling all weights.
+      // - Benchmarks nobody can be ranked on (fewer than 2 scored models) are
+      //   left out of the total so they don't dilute anyone.
       // Returns a Map(model -> composite|null); null sinks to the bottom like a
       // missing value (model had no scores in the group).
       function computeGroupComposite(models, group) {
         const entries = groupBenchmarkEntries(group);
-        const shrinkageK = Number.isFinite(group.shrinkageK) ? group.shrinkageK : 0.5;
         const pctMaps = entries.map((entry) => percentileMap(models, entry.key));
+        const totalWeight = entries.reduce(
+          (sum, entry, i) => sum + (pctMaps[i] ? entry.weight : 0),
+          0
+        );
 
         const result = new Map();
         models.forEach((model) => {
@@ -2398,8 +2402,8 @@
             result.set(model, null);
             return;
           }
-          const mean = sumWeighted / sumWeight;
-          result.set(model, mean * (sumWeight / (sumWeight + shrinkageK)));
+          const missingWeight = totalWeight - sumWeight;
+          result.set(model, (sumWeighted + 0.5 * missingWeight) / totalWeight);
         });
         return result;
       }

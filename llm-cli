@@ -1,0 +1,407 @@
+#!/usr/bin/env python3
+"""Render the llm.html benchmark table in the terminal.
+
+Reads llm.json and prints the same table the web page shows: fixed columns
+(model, creator, params, context, VRAM estimates) followed by one column per
+benchmark, sorted the same way as the page's default sort (the "defaultSort"
+key from llm.json, e.g. the coding group composite). Sorting math mirrors
+llm.html exactly: tie-averaged percentile ranks, missing benchmarks imputed
+at percentile 0.5, division by the group's total weight.
+
+On a terminal the table is fitted to the window: benchmark columns that don't
+fit are dropped, least important first (importance = weight in the default
+sort group, then llm.json order). Pass --all to see every column instead,
+paged through `less -RS` so you can scroll horizontally with the arrow keys.
+Piped output always contains every column.
+
+Best-in-table scores are shown in bold (TTY only, or force with --color).
+Models added within the last 7 days are marked with *.
+"""
+
+import argparse
+import json
+import math
+import shutil
+import subprocess
+import sys
+from datetime import date, timedelta
+from pathlib import Path
+
+DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
+
+FIXED_COLUMNS = ["name", "creator", "params", "context", "vram_fp16", "vram_int8", "vram_int4"]
+LEFT_ALIGNED = {"name", "creator"}
+
+BOLD = "\033[1m"
+DIM = "\033[2m"
+RESET = "\033[0m"
+
+
+def to_number(value):
+    if isinstance(value, bool) or value is None:
+        return math.nan
+    if isinstance(value, (int, float)):
+        return float(value) if math.isfinite(value) else math.nan
+    if isinstance(value, str):
+        try:
+            return float(value)
+        except ValueError:
+            return math.nan
+    return math.nan
+
+
+def nearly_equal(a, b):
+    return abs(a - b) < 1e-9
+
+
+def parse_unit_number(raw):
+    if raw is None:
+        return math.nan
+    text = str(raw).strip().lower()
+    import re
+
+    match = re.search(r"([0-9]*\.?[0-9]+)\s*([a-z]+)", text)
+    if not match:
+        try:
+            return float(text.replace(",", ""))
+        except ValueError:
+            return math.nan
+    value = float(match.group(1))
+    multipliers = {"k": 1e3, "m": 1e6, "b": 1e9, "t": 1e12}
+    return value * multipliers.get(match.group(2)[0], 1)
+
+
+def percentile_map(models, key):
+    entries = []
+    for model in models:
+        value = to_number((model.get("scores") or {}).get(key))
+        if math.isfinite(value):
+            entries.append((model["name"], value))
+    if len(entries) < 2:
+        return None
+    entries.sort(key=lambda e: e[1])
+    n = len(entries)
+    result = {}
+    i = 0
+    while i < n:
+        j = i
+        while j + 1 < n and nearly_equal(entries[j + 1][1], entries[i][1]):
+            j += 1
+        pct = ((i + j) / 2) / (n - 1)
+        for k in range(i, j + 1):
+            result[entries[k][0]] = pct
+        i = j + 1
+    return result
+
+
+def group_benchmark_entries(group):
+    raw = group.get("benchmarks") or []
+    decay = group.get("decay", 0.6)
+    entries = []
+    for i, entry in enumerate(raw):
+        obj = {"key": entry} if isinstance(entry, str) else (entry or {})
+        weight = obj.get("weight")
+        if not isinstance(weight, (int, float)):
+            weight = decay ** i
+        entries.append((obj.get("key"), weight))
+    return entries
+
+
+def compute_group_composite(models, group):
+    entries = group_benchmark_entries(group)
+    pct_maps = [percentile_map(models, key) for key, _ in entries]
+    total_weight = sum(w for (_, w), pm in zip(entries, pct_maps) if pm is not None)
+
+    result = {}
+    for model in models:
+        sum_weight = 0.0
+        sum_weighted = 0.0
+        for (_, weight), pm in zip(entries, pct_maps):
+            if pm is None:
+                continue
+            pct = pm.get(model["name"])
+            if pct is None:
+                continue
+            sum_weight += weight
+            sum_weighted += weight * pct
+        if sum_weight <= 0:
+            result[model["name"]] = None
+            continue
+        missing_weight = total_weight - sum_weight
+        result[model["name"]] = (sum_weighted + 0.5 * missing_weight) / total_weight
+    return result
+
+
+def value_for_sort(model, key):
+    if key == "name":
+        return model.get("name") or ""
+    if key == "creator":
+        return (model.get("creator") or {}).get("name") or ""
+    if key == "params":
+        return parse_unit_number(model.get("params"))
+    if key == "context":
+        return parse_unit_number(model.get("context"))
+    if key.startswith("vram_"):
+        return to_number((model.get("vram") or {}).get(key[len("vram_"):]))
+    return to_number((model.get("scores") or {}).get(key))
+
+
+def default_sort_group(doc):
+    groups = doc.get("sortGroups") or []
+    configured = doc.get("defaultSort")
+    group = next((g for g in groups if g.get("key") == configured), None)
+    if group is None and not configured and groups:
+        group = groups[0]
+    return group
+
+
+def sort_models(models, doc):
+    group = default_sort_group(doc)
+    configured = doc.get("defaultSort")
+
+    if group is not None:
+        composite = compute_group_composite(models, group)
+        sort_label = group.get("label") or group.get("key")
+        keyed = [(composite.get(m["name"]), m) for m in models]
+    else:
+        key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
+        sort_label = key
+        keyed = [(value_for_sort(m, key), m) for m in models]
+
+    ascending = group is None and configured in ("name", "creator", "vram_fp16", "vram_int8", "vram_int4")
+
+    def sort_key(item):
+        value, model = item
+        missing = value is None or (isinstance(value, float) and math.isnan(value))
+        if missing:
+            return (1, 0, model.get("name") or "")
+        if isinstance(value, str):
+            return (0, 0, value if ascending else "", model.get("name") or "")
+        return (0, value if ascending else -value, model.get("name") or "")
+
+    keyed.sort(key=sort_key)
+    return [m for _, m in keyed], sort_label
+
+
+def benchmark_priority(doc, benchmark_keys):
+    """Benchmark keys ordered by importance: default-sort-group weight
+    descending first, remaining keys in llm.json order."""
+    group = default_sort_group(doc)
+    weighted = group_benchmark_entries(group) if group else []
+    in_group = [key for key, _ in sorted(weighted, key=lambda e: -e[1]) if key in benchmark_keys]
+    rest = [key for key in benchmark_keys if key not in in_group]
+    return in_group + rest
+
+
+def is_recent(model, today):
+    added = model.get("date_added")
+    if not added:
+        return False
+    try:
+        added_date = date.fromisoformat(added)
+    except ValueError:
+        return False
+    return timedelta(0) <= today - added_date < timedelta(days=7)
+
+
+def format_score(value):
+    return f"{value:.1f}" if math.isfinite(value) else "—"
+
+
+def format_vram(raw):
+    num = to_number(raw)
+    if not math.isfinite(num):
+        return "—"
+    return f"{num:g} GB"
+
+
+def best_scores(models, benchmark_keys):
+    best = {}
+    for key in benchmark_keys:
+        values = [to_number((m.get("scores") or {}).get(key)) for m in models]
+        values = [v for v in values if math.isfinite(v)]
+        if values:
+            best[key] = max(values)
+    return best
+
+
+def fit_columns(doc, benchmark_keys, widths_by_key, term_width):
+    """Pick the columns that fit the terminal. Model and Params always stay;
+    everything else competes by importance: creator and context first, then
+    the default-sort group's benchmarks by weight, then the VRAM estimates,
+    then the remaining benchmarks. Returns (fixed_keys, benchmark_keys) in
+    display order."""
+    bench_priority = benchmark_priority(doc, benchmark_keys)
+    group = default_sort_group(doc)
+    group_keys = [key for key, _ in group_benchmark_entries(group)] if group else []
+    in_group = [key for key in bench_priority if key in group_keys]
+    rest = [key for key in bench_priority if key not in group_keys]
+    candidates = (
+        ["creator", "context"]
+        + in_group
+        + ["vram_int4", "vram_int8", "vram_fp16"]
+        + rest
+    )
+
+    kept = {"name", "params"}
+    used = widths_by_key["name"] + widths_by_key["params"] + 1
+    for key in candidates:
+        cost = widths_by_key[key] + 1
+        if used + cost > term_width:
+            continue
+        used += cost
+        kept.add(key)
+    return (
+        [key for key in FIXED_COLUMNS if key in kept],
+        [key for key in benchmark_keys if key in kept],
+    )
+
+
+# Width caps applied only in fit-to-terminal mode; cells over the cap are
+# truncated with an ellipsis so one long model name can't starve the
+# benchmark columns.
+FIT_CAPS = {"name": 30, "creator": 14}
+
+
+def truncate(text, cap):
+    return text if len(text) <= cap else text[: cap - 1] + "…"
+
+
+def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color, caps=None, fixed_keys=None):
+    benchmarks = doc.get("benchmarks") or {}
+    columns_meta = doc.get("columns") or {}
+    best = best_scores(models, benchmark_keys)
+    today = date.today()
+    caps = caps or {}
+    fixed_keys = fixed_keys if fixed_keys is not None else FIXED_COLUMNS
+
+    def column_label(key):
+        meta = columns_meta.get(key) or {}
+        return meta.get("label") or key
+
+    def benchmark_label(key):
+        bench = benchmarks.get(key) or {}
+        return bench.get("short_name") or bench.get("name") or key
+
+    headers = [column_label(key) for key in fixed_keys] + [benchmark_label(key) for key in shown_keys]
+    all_keys = fixed_keys + shown_keys
+
+    rows = []
+    for model in models:
+        vram = model.get("vram") or {}
+        name = model.get("name") or "Unknown"
+        marker = " *" if is_recent(model, today) else ""
+        if "name" in caps:
+            name = truncate(name, caps["name"] - len(marker))
+        creator = (model.get("creator") or {}).get("name") or ""
+        if "creator" in caps:
+            creator = truncate(creator, caps["creator"])
+        fixed_cells = {
+            "name": name + marker,
+            "creator": creator,
+            "params": str(model.get("params") or "—"),
+            "context": str(model.get("context") or "—"),
+            "vram_fp16": format_vram(vram.get("fp16")),
+            "vram_int8": format_vram(vram.get("int8")),
+            "vram_int4": format_vram(vram.get("int4")),
+        }
+        cells = [fixed_cells[key] for key in fixed_keys]
+        bold_flags = [False] * len(cells)
+        for key in shown_keys:
+            value = to_number((model.get("scores") or {}).get(key))
+            cells.append(format_score(value))
+            bold_flags.append(math.isfinite(value) and key in best and nearly_equal(value, best[key]))
+        rows.append((cells, bold_flags))
+
+    widths = [len(header) for header in headers]
+    for cells, _ in rows:
+        for i, cell in enumerate(cells):
+            widths[i] = max(widths[i], len(cell))
+
+    def pad(text, i):
+        return text.ljust(widths[i]) if all_keys[i] in LEFT_ALIGNED else text.rjust(widths[i])
+
+    title = doc.get("title") or "LLM benchmarks"
+    lines = [f"{title} — {len(models)} models, sorted by {sort_label}"]
+    lines.append("│".join(pad(header, i) for i, header in enumerate(headers)))
+    lines.append("┼".join("─" * width for width in widths))
+    for cells, bold_flags in rows:
+        out = []
+        for i, cell in enumerate(cells):
+            padded = pad(cell, i)
+            if use_color and bold_flags[i]:
+                padded = f"{BOLD}{padded}{RESET}"
+            elif use_color and cell == "—":
+                padded = f"{DIM}{padded}{RESET}"
+            out.append(padded)
+        lines.append("│".join(out))
+
+    lines.append("")
+    lines.append("* added within the last 7 days; bold = best score in table")
+    hidden = (len(benchmark_keys) - len(shown_keys)) + (len(FIXED_COLUMNS) - len(fixed_keys))
+    if hidden:
+        total = len(benchmark_keys) + len(FIXED_COLUMNS)
+        lines.append(f"{hidden} of {total} columns hidden to fit the terminal (--all shows everything)")
+    return "\n".join(lines) + "\n"
+
+
+def page(text):
+    try:
+        subprocess.run(["less", "-RS"], input=text.encode("utf-8"), check=False)
+    except FileNotFoundError:
+        sys.stdout.write(text)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        "json_file",
+        nargs="?",
+        default=str(DEFAULT_LLM_JSON),
+        help='Path to JSON file to read (default: "./llm.json" next to this script)',
+    )
+    parser.add_argument(
+        "--all",
+        "-a",
+        action="store_true",
+        help="Show every benchmark column (paged through `less -RS` on a terminal).",
+    )
+    color_group = parser.add_mutually_exclusive_group()
+    color_group.add_argument("--color", action="store_true", help="Force ANSI styling even when piped.")
+    color_group.add_argument("--no-color", action="store_true", help="Disable ANSI styling.")
+    args = parser.parse_args()
+
+    doc = json.loads(Path(args.json_file).read_text(encoding="utf-8"))
+    models = doc.get("models") or []
+    benchmarks = doc.get("benchmarks") or {}
+    benchmark_keys = list(benchmarks)
+
+    is_tty = sys.stdout.isatty()
+    use_color = args.color or (not args.no_color and is_tty)
+    models, sort_label = sort_models(models, doc)
+
+    shown_keys = benchmark_keys
+    fixed_keys = None
+    caps = None
+    if is_tty and not args.all:
+        caps = FIT_CAPS
+        probe = render_table(doc, models, sort_label, benchmark_keys, benchmark_keys, use_color=False, caps=caps)
+        header_line = probe.split("\n")[1].split("│")
+        widths_by_key = dict(zip(FIXED_COLUMNS + benchmark_keys, (len(cell) for cell in header_line)))
+        term_width = shutil.get_terminal_size().columns
+        fixed_keys, shown_keys = fit_columns(doc, benchmark_keys, widths_by_key, term_width)
+
+    text = render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color, caps=caps, fixed_keys=fixed_keys)
+    if args.all and is_tty:
+        page(text)
+    else:
+        sys.stdout.write(text)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print(file=sys.stderr)
+        raise SystemExit(130)
