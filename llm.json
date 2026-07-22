@@ -2384,8 +2384,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "aa_intelligence_index": 12.5,
-        "aa_coding_index": 13.7,
+        "aa_intelligence_index": 12.2,
+        "aa_coding_index": 9.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -2399,7 +2399,7 @@
         "scicode": 24.4,
         "terminal_bench_hard": 8.3,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 1.9,
         "tau2_bench_telecom": 20.8,
         "browsecomp": null,
         "aime_2025": null,
@@ -2410,8 +2410,8 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-06-18",
-        "aa_coding_index": "2026-04-04",
+        "aa_intelligence_index": "2026-07-22",
+        "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -2425,7 +2425,7 @@
         "scicode": "2026-04-04",
         "terminal_bench_hard": "2026-04-04",
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": "2026-07-22",
         "tau2_bench_telecom": "2026-04-04",
         "browsecomp": null,
         "aime_2025": null,
@@ -2453,7 +2453,7 @@
       },
       "scores": {
         "aa_intelligence_index": 9.3,
-        "aa_coding_index": 9,
+        "aa_coding_index": 7.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -2467,19 +2467,19 @@
         "scicode": 20.9,
         "terminal_bench_hard": 3,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 0.4,
         "tau2_bench_telecom": 20.8,
         "browsecomp": null,
         "aime_2025": null,
         "aime_2026": 37.5,
-        "gpqa_diamond": 43.3,
+        "gpqa_diamond": 37.5,
         "hle": 4.8,
         "mmmu_pro": 44.6,
         "osworld_verified": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-18",
-        "aa_coding_index": "2026-04-04",
+        "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -2493,12 +2493,12 @@
         "scicode": "2026-04-04",
         "terminal_bench_hard": "2026-04-04",
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": "2026-07-22",
         "tau2_bench_telecom": "2026-04-04",
         "browsecomp": null,
         "aime_2025": null,
         "aime_2026": "2026-04-04",
-        "gpqa_diamond": "2026-04-04",
+        "gpqa_diamond": "2026-07-22",
         "hle": "2026-04-04",
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null
@@ -3133,7 +3133,7 @@
       },
       "scores": {
         "aa_intelligence_index": 14.9,
-        "aa_coding_index": 14.8,
+        "aa_coding_index": 13.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -3147,7 +3147,7 @@
         "scicode": 27.8,
         "terminal_bench_hard": 8.3,
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": 6.7,
         "tau2_bench_telecom": 45.3,
         "browsecomp": null,
         "aime_2025": null,
@@ -3159,7 +3159,7 @@
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-18",
-        "aa_coding_index": "2026-05-13",
+        "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
         "swe_atlas_rf": null,
@@ -3173,7 +3173,7 @@
         "scicode": "2026-05-13",
         "terminal_bench_hard": "2026-05-13",
         "terminal_bench_2_0": null,
-        "terminal_bench_2_1": null,
+        "terminal_bench_2_1": "2026-07-22",
         "tau2_bench_telecom": "2026-05-13",
         "browsecomp": null,
         "aime_2025": null,
@@ -3696,7 +3696,7 @@
         "browsecomp": null,
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": 51.3,
+        "gpqa_diamond": 27.4,
         "hle": 6.9,
         "mmmu_pro": null,
         "osworld_verified": null
@@ -3722,7 +3722,7 @@
         "browsecomp": null,
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": "2026-06-19",
+        "gpqa_diamond": "2026-07-22",
         "hle": "2026-06-19",
         "mmmu_pro": null,
         "osworld_verified": null
@@ -4141,7 +4141,7 @@
       },
       "context": "512k",
       "scores": {
-        "aa_intelligence_index": 24.5,
+        "aa_intelligence_index": 18.2,
         "swe_bench_verified": 63.2,
         "scicode": 36.1,
         "terminal_bench_hard": 22.7,
@@ -4149,10 +4149,12 @@
         "aime_2025": 96.3,
         "gpqa_diamond": 75.2,
         "hle": 14.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "terminal_bench_2_1": 20.6,
+        "aa_coding_index": 25.8
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-06-25",
+        "aa_intelligence_index": "2026-07-22",
         "swe_bench_verified": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4160,7 +4162,9 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "terminal_bench_2_1": "2026-07-22",
+        "aa_coding_index": "2026-07-22"
       },
       "vram": {
         "fp16": 869,
