@@ -2376,15 +2376,21 @@
       //   rescaling all weights.
       // - Benchmarks nobody can be ranked on (fewer than 2 scored models) are
       //   left out of the total so they don't dilute anyone.
+      // - A model measured on less than group.minScoredFraction of the total
+      //   weight is left unranked rather than scored: its composite would be
+      //   mostly imputation, and reporting that as a rank implies evidence that
+      //   does not exist.
       // Returns a Map(model -> composite|null); null sinks to the bottom like a
-      // missing value (model had no scores in the group).
+      // missing value (model had no scores in the group, or too few to rank).
       function computeGroupComposite(models, group) {
         const entries = groupBenchmarkEntries(group);
         const pctMaps = entries.map((entry) => percentileMap(models, entry.key));
-        const totalWeight = entries.reduce(
-          (sum, entry, i) => sum + (pctMaps[i] ? entry.weight : 0),
-          0
-        );
+        const weights = entries.map((entry, i) => (pctMaps[i] ? entry.weight : 0));
+        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+        const minScoredFraction = Number.isFinite(group.minScoredFraction)
+          ? group.minScoredFraction
+          : 0;
+        const minScoredWeight = minScoredFraction * totalWeight;
 
         const result = new Map();
         models.forEach((model) => {
@@ -2395,10 +2401,10 @@
             if (!pctMap) return;
             const pct = pctMap.get(model);
             if (pct === undefined) return;
-            sumWeight += entry.weight;
-            sumWeighted += entry.weight * pct;
+            sumWeight += weights[i];
+            sumWeighted += weights[i] * pct;
           });
-          if (sumWeight <= 0) {
+          if (sumWeight <= 0 || sumWeight < minScoredWeight) {
             result.set(model, null);
             return;
           }

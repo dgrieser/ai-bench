@@ -116,15 +116,15 @@
         },
         {
           "key": "swe_atlas_rf",
-          "weight": 0.5
+          "weight": 0.17
         },
         {
           "key": "swe_atlas_tw",
-          "weight": 0.5
+          "weight": 0.17
         },
         {
           "key": "swe_atlas_qna",
-          "weight": 0.5
+          "weight": 0.17
         },
         {
           "key": "frontierswe",
@@ -144,7 +144,7 @@
         },
         {
           "key": "aa_coding_index",
-          "weight": 0.5
+          "weight": 0.2
         },
         {
           "key": "livecodebench",
@@ -162,7 +162,8 @@
           "key": "swe_bench_verified",
           "weight": 0.15
         }
-      ]
+      ],
+      "minScoredFraction": 0.2
     }
   ],
   "benchmarks": {
@@ -3954,7 +3955,8 @@
         "fp16": 237,
         "int8": 118,
         "int4": 59
-      }
+      },
+      "params": "109B-A17B"
     },
     {
       "name": "llama-4-maverick",
@@ -4001,7 +4003,8 @@
         "fp16": 875,
         "int8": 438,
         "int4": 219
-      }
+      },
+      "params": "400B-A17B"
     },
     {
       "name": "phi-4",
@@ -4038,7 +4041,8 @@
         "fp16": 32,
         "int8": 16,
         "int4": 8.0
-      }
+      },
+      "params": "14B"
     },
     {
       "name": "olmo-3-32b-think",
@@ -4075,7 +4079,8 @@
         "fp16": 70,
         "int8": 35,
         "int4": 18
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "olmo-3-1-32b-instruct",
@@ -4110,7 +4115,8 @@
         "fp16": 70,
         "int8": 35,
         "int4": 18
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "olmo-3-7b-think",
@@ -4147,7 +4153,8 @@
         "fp16": 16,
         "int8": 8.0,
         "int4": 4.0
-      }
+      },
+      "params": "7B"
     },
     {
       "name": "olmo-3-7b-instruct",
@@ -4184,7 +4191,8 @@
         "fp16": 16,
         "int8": 8.0,
         "int4": 4.0
-      }
+      },
+      "params": "7B"
     },
     {
       "name": "jamba-1-7-large",
@@ -4223,7 +4231,8 @@
         "fp16": 869,
         "int8": 434,
         "int4": 217
-      }
+      },
+      "params": "398B-A94B"
     },
     {
       "name": "jamba-1-7-mini",
@@ -4260,7 +4269,8 @@
         "fp16": 112,
         "int8": 56,
         "int4": 28
-      }
+      },
+      "params": "52B-A12B"
     },
     {
       "name": "trinity-large-thinking",
@@ -4303,7 +4313,8 @@
         "fp16": 869,
         "int8": 435,
         "int4": 217
-      }
+      },
+      "params": "398B-A13B"
     },
     {
       "name": "hermes-4-llama-3-1-405b",
@@ -4342,7 +4353,8 @@
         "fp16": 885,
         "int8": 442,
         "int4": 221
-      }
+      },
+      "params": "405B"
     },
     {
       "name": "hermes-4-llama-3-1-70b",
@@ -4379,7 +4391,8 @@
         "fp16": 154,
         "int8": 77,
         "int4": 38
-      }
+      },
+      "params": "70B"
     },
     {
       "name": "reka-flash-3",
@@ -4414,7 +4427,8 @@
         "fp16": 46,
         "int8": 23,
         "int4": 11
-      }
+      },
+      "params": "21B"
     },
     {
       "name": "apriel-v1-6-15b-thinker",
@@ -4457,7 +4471,8 @@
         "fp16": 32,
         "int8": 16,
         "int4": 8.1
-      }
+      },
+      "params": "15B"
     },
     {
       "name": "deepseek-v3-2-0925",
@@ -4500,7 +4515,8 @@
         "fp16": 1494,
         "int8": 747,
         "int4": 374
-      }
+      },
+      "params": "671B-A37B"
     },
     {
       "name": "deepseek-r1",
@@ -4545,7 +4561,8 @@
         "fp16": 1492,
         "int8": 746,
         "int4": 373
-      }
+      },
+      "params": "671B-A37B"
     },
     {
       "name": "glm-4.5",
@@ -4590,7 +4607,8 @@
         "fp16": 781,
         "int8": 391,
         "int4": 195
-      }
+      },
+      "params": "355B-A32B"
     },
     {
       "name": "glm-4-5-air",
@@ -4635,7 +4653,8 @@
         "fp16": 241,
         "int8": 120,
         "int4": 60
-      }
+      },
+      "params": "106B-A12B"
     },
     {
       "name": "glm-4-6",
@@ -4680,7 +4699,8 @@
         "fp16": 778,
         "int8": 389,
         "int4": 194
-      }
+      },
+      "params": "355B-A32B"
     },
     {
       "name": "glm-4-7",
@@ -4731,7 +4751,8 @@
         "fp16": 781,
         "int8": 391,
         "int4": 195
-      }
+      },
+      "params": "355B-A32B"
     },
     {
       "name": "kimi-linear-48b-a3b-instruct",
@@ -4768,7 +4789,8 @@
         "fp16": 107,
         "int8": 54,
         "int4": 27
-      }
+      },
+      "params": "48B-A3B"
     },
     {
       "name": "ernie-4-5-300b-a47b",
@@ -4805,7 +4827,8 @@
         "fp16": 655,
         "int8": 328,
         "int4": 164
-      }
+      },
+      "params": "300B-A47B"
     },
     {
       "name": "seed-oss-36b-instruct",
@@ -4846,7 +4869,8 @@
         "fp16": 79,
         "int8": 39,
         "int4": 20
-      }
+      },
+      "params": "36B"
     },
     {
       "name": "ling-flash-2-0",
@@ -4885,7 +4909,8 @@
         "fp16": 224,
         "int8": 112,
         "int4": 56
-      }
+      },
+      "params": "100B-A6B"
     },
     {
       "name": "ring-flash-2-0",
@@ -4922,7 +4947,8 @@
         "fp16": 224,
         "int8": 112,
         "int4": 56
-      }
+      },
+      "params": "100B-A6B"
     },
     {
       "name": "ling-mini-2-0",
@@ -4961,7 +4987,8 @@
         "fp16": 35,
         "int8": 18,
         "int4": 8.9
-      }
+      },
+      "params": "16B-A1.4B"
     },
     {
       "name": "mimo-v2-flash",
@@ -5010,7 +5037,8 @@
         "fp16": 675,
         "int8": 338,
         "int4": 169
-      }
+      },
+      "params": "309B-A15B"
     },
     {
       "name": "longcat-flash-chat",
@@ -5042,7 +5070,9 @@
         "fp16": 1225,
         "int8": 612,
         "int4": 306
-      }
+      },
+      "context": "128k",
+      "params": "560B-A31B"
     },
     {
       "name": "longcat-flash-thinking",
@@ -5078,7 +5108,9 @@
         "fp16": 1225,
         "int8": 612,
         "int4": 306
-      }
+      },
+      "context": "128k",
+      "params": "560B-A27B"
     },
     {
       "name": "minimax-m1-80k",
@@ -5119,7 +5151,8 @@
         "fp16": 994,
         "int8": 497,
         "int4": 249
-      }
+      },
+      "params": "456B-A46B"
     },
     {
       "name": "qwen3-32b-instruct",
@@ -5156,7 +5189,8 @@
         "fp16": 71,
         "int8": 36,
         "int4": 18
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "qwen3-14b-instruct",
@@ -5195,7 +5229,8 @@
         "fp16": 32,
         "int8": 16,
         "int4": 8.0
-      }
+      },
+      "params": "14B"
     },
     {
       "name": "qwen3-8b-instruct",
@@ -5234,7 +5269,8 @@
         "fp16": 18,
         "int8": 8.9,
         "int4": 4.5
-      }
+      },
+      "params": "8B"
     },
     {
       "name": "qwen3-4b-instruct",
@@ -5267,7 +5303,8 @@
         "fp16": 8.8,
         "int8": 4.4,
         "int4": 2.2
-      }
+      },
+      "params": "4B"
     },
     {
       "name": "qwen3-235b-a22b-instruct-2507",
@@ -5308,7 +5345,8 @@
         "fp16": 513,
         "int8": 256,
         "int4": 128
-      }
+      },
+      "params": "235B-A22B"
     },
     {
       "name": "qwen3-235b-a22b-instruct-2507-reasoning",
@@ -5353,7 +5391,8 @@
         "fp16": 513,
         "int8": 256,
         "int4": 128
-      }
+      },
+      "params": "235B-A22B"
     },
     {
       "name": "qwen3-coder-480b-a35b-instruct",
@@ -5396,7 +5435,8 @@
         "fp16": 1047,
         "int8": 523,
         "int4": 262
-      }
+      },
+      "params": "480B-A35B"
     },
     {
       "name": "qwq-32b",
@@ -5431,7 +5471,8 @@
         "fp16": 71,
         "int8": 36,
         "int4": 18
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "exaone-4-0-32b",
@@ -5470,7 +5511,8 @@
         "fp16": 70,
         "int8": 35,
         "int4": 17
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "exaone-4-0-1-2b",
@@ -5507,7 +5549,8 @@
         "fp16": 2.8,
         "int8": 1.4,
         "int4": 0.7
-      }
+      },
+      "params": "1.2B"
     },
     {
       "name": "solar-open-100b-reasoning",
@@ -5542,7 +5585,8 @@
         "fp16": 224,
         "int8": 112,
         "int4": 56
-      }
+      },
+      "params": "100B-A12B"
     },
     {
       "name": "falcon-h1r-7b",
@@ -5581,7 +5625,8 @@
         "fp16": 17,
         "int8": 8.3,
         "int4": 4.1
-      }
+      },
+      "params": "7B"
     },
     {
       "name": "mistral-large-3",
@@ -5626,7 +5671,8 @@
         "fp16": 1472,
         "int8": 736,
         "int4": 368
-      }
+      },
+      "params": "675B-A41B"
     },
     {
       "name": "ministral-3-8b",
@@ -5671,7 +5717,8 @@
         "fp16": 19,
         "int8": 9.7,
         "int4": 4.9
-      }
+      },
+      "params": "8B"
     },
     {
       "name": "ministral-3-3b",
@@ -5712,7 +5759,8 @@
         "fp16": 8.4,
         "int8": 4.2,
         "int4": 2.1
-      }
+      },
+      "params": "3B"
     },
     {
       "name": "hyperclova-x-seed-think-32b",
@@ -5751,7 +5799,8 @@
         "fp16": 73,
         "int8": 36,
         "int4": 18
-      }
+      },
+      "params": "32B"
     },
     {
       "name": "gemma-3-27b",
@@ -5796,7 +5845,8 @@
         "fp16": 60,
         "int8": 30,
         "int4": 15
-      }
+      },
+      "params": "27B"
     },
     {
       "name": "gemma-3-4b",
@@ -5841,7 +5891,8 @@
         "fp16": 9.4,
         "int8": 4.7,
         "int4": 2.3
-      }
+      },
+      "params": "4B"
     },
     {
       "name": "gemma-3-1b",
@@ -5878,7 +5929,8 @@
         "fp16": 2.2,
         "int8": 1.1,
         "int4": 0.5
-      }
+      },
+      "params": "1B"
     },
     {
       "name": "gemma-3-270m",
@@ -5913,7 +5965,8 @@
         "fp16": 0.6,
         "int8": 0.3,
         "int4": 0.1
-      }
+      },
+      "params": "270M"
     },
     {
       "name": "dbrx",
@@ -5942,7 +5995,8 @@
         "frontiercode": null,
         "swe_marathon": null
       },
-      "vram": {}
+      "vram": {},
+      "params": "132B-A36B"
     },
     {
       "name": "grok-2-1212",
@@ -5971,7 +6025,8 @@
         "frontiercode": null,
         "swe_marathon": null
       },
-      "vram": {}
+      "vram": {},
+      "params": "270B-A115B"
     },
     {
       "name": "gemma-4-12b",

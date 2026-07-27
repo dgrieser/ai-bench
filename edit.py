@@ -44,7 +44,7 @@ def load_doc(path: Path) -> dict[str, Any]:
 def infer_json_file(argv: list[str] | None = None) -> str:
     args = list(sys.argv[1:] if argv is None else argv)
     json_file = "llm.json"
-    short_options_with_values = {"-m", "-b"}
+    short_options_with_values = {"-m", "-b", "-f"}
     i = 0
     while i < len(args):
         token = args[i]
@@ -79,7 +79,10 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
     parser.add_argument(
         "--missing",
         action="store_true",
-        help="Interactively prompt only for missing values. Can be scoped with --model and/or --benchmark.",
+        help=(
+            "Interactively prompt only for missing values. "
+            "Can be scoped with --model, --benchmark and/or --field."
+        ),
     )
     parser.add_argument(
         "-b",
@@ -87,6 +90,13 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         action="append",
         choices=sorted(doc["benchmarks"].keys()),
         help="Benchmark key to scope --missing to. Repeat to include multiple benchmarks.",
+    )
+    parser.add_argument(
+        "-f",
+        "--field",
+        action="append",
+        choices=sorted(METADATA_FIELDS),
+        help="Metadata field to scope --missing to. Repeat to include multiple fields.",
     )
     parser.add_argument(
         "--after",
@@ -471,12 +481,15 @@ def collect_missing_updates(
     interactive: bool,
     model_name: str | None = None,
     benchmark_keys: list[str] | None = None,
+    metadata_keys: list[str] | None = None,
     after: date | None = None,
 ) -> list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]]:
     if not interactive:
         raise ValueError("--missing requires interactive mode.")
 
     benchmark_filter = set(benchmark_keys or [])
+    metadata_filter = set(metadata_keys or [])
+    scoped = bool(benchmark_filter or metadata_filter)
     planned: list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]] = []
     for model in doc["models"]:
         current_model_name = model.get("name")
@@ -495,8 +508,12 @@ def collect_missing_updates(
         missing_keys = get_missing_score_keys(doc, model)
         if benchmark_filter:
             missing_keys = [key for key in missing_keys if key in benchmark_filter]
+        elif scoped:
+            missing_keys = []
         missing_metadata_keys = get_missing_metadata_keys(model)
-        if benchmark_filter:
+        if metadata_filter:
+            missing_metadata_keys = [key for key in missing_metadata_keys if key in metadata_filter]
+        elif scoped:
             missing_metadata_keys = []
         if not missing_keys and not missing_metadata_keys:
             continue
@@ -535,6 +552,9 @@ def main() -> int:
             raise ValueError("--after can only be used with --missing.")
         after = parse_date(args.after)
 
+    if args.field and not args.missing:
+        raise ValueError("--field can only be used with --missing.")
+
     if args.missing:
         score_flags = [key for key in doc["benchmarks"] if getattr(args, key) is not None]
         if score_flags:
@@ -549,17 +569,24 @@ def main() -> int:
             raise ValueError(f"Model '{args.model}' does not exist.")
 
         planned = collect_missing_updates(
-            doc, interactive, model_name=args.model, benchmark_keys=args.benchmark, after=after
+            doc,
+            interactive,
+            model_name=args.model,
+            benchmark_keys=args.benchmark,
+            metadata_keys=args.field,
+            after=after,
         )
         if not planned:
-            if args.model is not None and args.benchmark:
-                scope = f"missing values for model '{args.model}' in benchmark(s): {', '.join(args.benchmark)}"
-            elif args.model is not None:
-                scope = f"missing values for model '{args.model}'"
-            elif args.benchmark:
-                scope = f"missing values in benchmark(s): {', '.join(args.benchmark)}"
-            else:
-                scope = "missing scores or metadata"
+            scope = "missing values" if args.benchmark or args.field else "missing scores or metadata"
+            details: list[str] = []
+            if args.model is not None:
+                details.append(f"model '{args.model}'")
+            if args.benchmark:
+                details.append(f"benchmark(s): {', '.join(args.benchmark)}")
+            if args.field:
+                details.append(f"field(s): {', '.join(args.field)}")
+            if details:
+                scope += " for " + "; ".join(details)
             if after is not None:
                 scope += f" added after {after.isoformat()}"
             print(f"No models with {scope}.")
