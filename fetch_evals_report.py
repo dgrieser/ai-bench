@@ -37,6 +37,7 @@ BASE_URL = "https://evals.report/benchmarks/{slug}?tab=scores"
 # evals.report benchmark slug -> llm.json benchmark key.
 BENCHMARKS: dict[str, str] = {
     "frontiercode": "frontiercode",
+    "swe-marathon": "swe_marathon",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}

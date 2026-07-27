@@ -139,6 +139,10 @@
           "weight": 0.9
         },
         {
+          "key": "swe_marathon",
+          "weight": 0.9
+        },
+        {
           "key": "aa_coding_index",
           "weight": 0.5
         },
@@ -263,6 +267,16 @@
       "urls": [
         "https://cognition.ai/blog/frontier-code",
         "https://evals.report/benchmarks/frontiercode"
+      ]
+    },
+    "swe_marathon": {
+      "name": "SWE-Marathon",
+      "short_name": "SWE-Mar",
+      "category": "Software Engineering",
+      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task.",
+      "urls": [
+        "https://www.swe-marathon.org/",
+        "https://arxiv.org/abs/2606.07682"
       ]
     },
     "swe_rebench": {
@@ -421,6 +435,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 48.89,
+        "swe_marathon": null,
         "livecodebench": 44.8,
         "scicode": 33.1,
         "terminal_bench_hard": 18.9,
@@ -447,6 +462,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -489,6 +505,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 37.64,
+        "swe_marathon": null,
         "livecodebench": 34.8,
         "scicode": 28.8,
         "terminal_bench_hard": 16.7,
@@ -515,6 +532,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -557,6 +575,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 36.3,
+        "swe_marathon": null,
         "livecodebench": 64.0,
         "scicode": 33.7,
         "terminal_bench_hard": 22.0,
@@ -583,6 +602,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -625,6 +645,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 56.87,
+        "swe_marathon": null,
         "livecodebench": 86.4,
         "scicode": 38.5,
         "terminal_bench_hard": 32.6,
@@ -651,6 +672,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-03-18",
         "scicode": "2026-04-14",
         "terminal_bench_hard": "2026-04-14",
@@ -693,6 +715,7 @@
         "frontierswe": null,
         "frontiercode": 1.1,
         "swe_rebench": 54.47,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 42.6,
         "terminal_bench_hard": 34.8,
@@ -719,6 +742,7 @@
         "frontierswe": null,
         "frontiercode": "2026-07-03",
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -761,6 +785,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 21.03,
+        "swe_marathon": null,
         "livecodebench": 40.3,
         "scicode": 27.8,
         "terminal_bench_hard": 15.2,
@@ -787,6 +812,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-04-24",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -829,6 +855,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 53.36,
+        "swe_marathon": null,
         "livecodebench": 47.5,
         "scicode": 32.3,
         "terminal_bench_hard": 18.2,
@@ -855,6 +882,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-23",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -897,6 +925,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 5.45,
+        "swe_marathon": null,
         "livecodebench": 70.7,
         "scicode": 33.3,
         "terminal_bench_hard": 5.3,
@@ -923,6 +952,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-04-24",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -965,6 +995,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 17.39,
+        "swe_marathon": null,
         "livecodebench": 78.4,
         "scicode": 38.8,
         "terminal_bench_hard": 9.8,
@@ -991,6 +1022,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-04-24",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -1033,6 +1065,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 56.84,
+        "swe_marathon": null,
         "livecodebench": 83.6,
         "scicode": 42,
         "terminal_bench_hard": 40.9,
@@ -1059,6 +1092,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-23",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-23",
@@ -1101,6 +1135,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 78.9,
         "scicode": 42,
         "terminal_bench_hard": 31.1,
@@ -1127,6 +1162,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-02-25",
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-03",
@@ -1169,6 +1205,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 54.81,
+        "swe_marathon": null,
         "livecodebench": 80.7,
         "scicode": 39.5,
         "terminal_bench_hard": 32.6,
@@ -1195,6 +1232,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-25",
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-03",
@@ -1237,6 +1275,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 50.37,
+        "swe_marathon": null,
         "livecodebench": 74.6,
         "scicode": 37.7,
         "terminal_bench_hard": 26.5,
@@ -1263,6 +1302,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": "2026-02-25",
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-03",
@@ -1305,6 +1345,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 65.6,
         "scicode": 27.5,
         "terminal_bench_hard": 24.2,
@@ -1331,6 +1372,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-03",
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-06",
@@ -1373,6 +1415,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 55.8,
         "scicode": 16.1,
         "terminal_bench_hard": 18.2,
@@ -1399,6 +1442,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-03",
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-06",
@@ -1441,6 +1485,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 2.8,
         "terminal_bench_hard": 3.8,
@@ -1467,6 +1512,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-03-06",
         "terminal_bench_hard": "2026-03-06",
@@ -1509,6 +1555,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -1535,6 +1582,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -1577,6 +1625,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 81.2,
         "scicode": 36,
         "terminal_bench_hard": 28.8,
@@ -1603,6 +1652,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-11",
         "scicode": "2026-03-11",
         "terminal_bench_hard": "2026-03-11",
@@ -1645,6 +1695,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 28.4,
         "terminal_bench_hard": 10.6,
@@ -1671,6 +1722,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-03-11",
         "terminal_bench_hard": "2026-03-11",
@@ -1714,6 +1766,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 14.29,
+        "swe_marathon": null,
         "livecodebench": 77.7,
         "scicode": 34.4,
         "terminal_bench_hard": 10.6,
@@ -1740,6 +1793,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-04-24",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -1783,6 +1837,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 46.67,
+        "swe_marathon": null,
         "livecodebench": 87.8,
         "scicode": 38.9,
         "terminal_bench_hard": 23.5,
@@ -1809,6 +1864,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-04-24",
+        "swe_marathon": null,
         "livecodebench": "2026-02-13",
         "scicode": "2026-02-24",
         "terminal_bench_hard": "2026-02-13",
@@ -1851,6 +1907,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 74.1,
         "scicode": 29.6,
         "terminal_bench_hard": 13.6,
@@ -1877,6 +1934,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-12",
         "scicode": "2026-03-12",
         "terminal_bench_hard": "2026-03-12",
@@ -1919,6 +1977,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 64,
         "scicode": 38,
         "terminal_bench_hard": 17.4,
@@ -1945,6 +2004,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-17",
         "scicode": "2026-03-18",
         "terminal_bench_hard": "2026-03-18",
@@ -1987,6 +2047,7 @@
         "frontierswe": null,
         "frontiercode": 2.4,
         "swe_rebench": 49.6,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 47,
         "terminal_bench_hard": 39.4,
@@ -2013,6 +2074,7 @@
         "frontierswe": null,
         "frontiercode": "2026-07-03",
         "swe_rebench": "2026-06-08",
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-03-18",
         "terminal_bench_hard": "2026-03-18",
@@ -2055,6 +2117,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 70.0,
         "scicode": 19.2,
         "terminal_bench_hard": 2.3,
@@ -2081,6 +2144,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-27",
         "scicode": "2026-03-27",
         "terminal_bench_hard": "2026-03-27",
@@ -2123,6 +2187,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 71.7,
         "scicode": 26.4,
         "terminal_bench_hard": 1.5,
@@ -2149,6 +2214,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-27",
         "scicode": "2026-03-27",
         "terminal_bench_hard": "2026-03-27",
@@ -2191,6 +2257,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 57.4,
         "scicode": 26.6,
         "terminal_bench_hard": null,
@@ -2217,6 +2284,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-03-27",
         "scicode": "2026-03-27",
         "terminal_bench_hard": null,
@@ -2259,6 +2327,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 16.41,
+        "swe_marathon": null,
         "livecodebench": 80,
         "scicode": 43.4,
         "terminal_bench_hard": 36.4,
@@ -2285,6 +2354,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-07-02",
+        "swe_marathon": null,
         "livecodebench": "2026-04-03",
         "scicode": "2026-04-03",
         "terminal_bench_hard": "2026-04-04",
@@ -2327,6 +2397,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 77.1,
         "scicode": 40,
         "terminal_bench_hard": 13.6,
@@ -2353,6 +2424,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-04-04",
         "scicode": "2026-04-04",
         "terminal_bench_hard": "2026-04-05",
@@ -2395,6 +2467,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 52,
         "scicode": 24.4,
         "terminal_bench_hard": 8.3,
@@ -2421,6 +2494,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-04-04",
         "scicode": "2026-04-04",
         "terminal_bench_hard": "2026-04-04",
@@ -2463,6 +2537,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 44,
         "scicode": 20.9,
         "terminal_bench_hard": 3,
@@ -2489,6 +2564,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-04-04",
         "scicode": "2026-04-04",
         "terminal_bench_hard": "2026-04-04",
@@ -2531,6 +2607,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 33.33,
+        "swe_marathon": null,
         "livecodebench": 80.4,
         "scicode": 35.8,
         "terminal_bench_hard": 34.8,
@@ -2557,6 +2634,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-07-02",
+        "swe_marathon": null,
         "livecodebench": "2026-04-22",
         "scicode": "2026-04-22",
         "terminal_bench_hard": "2026-04-22",
@@ -2599,6 +2677,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 31.79,
+        "swe_marathon": null,
         "livecodebench": 83.9,
         "scicode": 39.8,
         "terminal_bench_hard": 34.8,
@@ -2625,6 +2704,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-07-02",
+        "swe_marathon": null,
         "livecodebench": "2026-04-23",
         "scicode": "2026-04-24",
         "terminal_bench_hard": "2026-04-24",
@@ -2667,6 +2747,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 37.95,
+        "swe_marathon": null,
         "livecodebench": 91.6,
         "scicode": 44.9,
         "terminal_bench_hard": 35.6,
@@ -2693,6 +2774,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-07-02",
+        "swe_marathon": null,
         "livecodebench": "2026-04-24",
         "scicode": "2026-04-24",
         "terminal_bench_hard": "2026-04-24",
@@ -2735,6 +2817,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 34.86,
         "scicode": 47.6,
         "terminal_bench_hard": 34.1,
@@ -2761,6 +2844,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-04-28",
         "scicode": "2026-07-14",
         "terminal_bench_hard": "2026-04-28",
@@ -2803,6 +2887,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 21.8,
         "terminal_bench_hard": null,
@@ -2829,6 +2914,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-04-30",
         "terminal_bench_hard": null,
@@ -2871,6 +2957,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 11.9,
         "terminal_bench_hard": 2.3,
@@ -2897,6 +2984,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-04-30",
         "terminal_bench_hard": "2026-04-30",
@@ -2939,6 +3027,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 25.8,
         "terminal_bench_hard": 2.3,
@@ -2965,6 +3054,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-04-30",
         "terminal_bench_hard": "2026-04-30",
@@ -3007,6 +3097,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 39.6,
         "terminal_bench_hard": 33.3,
@@ -3033,6 +3124,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-05-03",
         "terminal_bench_hard": "2026-05-03",
@@ -3075,6 +3167,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 35.1,
         "scicode": 23.6,
         "terminal_bench_hard": 4.5,
@@ -3101,6 +3194,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-05-03",
         "scicode": "2026-05-03",
         "terminal_bench_hard": "2026-05-03",
@@ -3143,6 +3237,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 27.8,
         "terminal_bench_hard": 8.3,
@@ -3169,6 +3264,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-05-13",
         "terminal_bench_hard": "2026-05-13",
@@ -3211,6 +3307,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 2.1,
         "terminal_bench_hard": null,
@@ -3237,6 +3334,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-05-13",
         "terminal_bench_hard": null,
@@ -3279,6 +3377,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 37.8,
         "terminal_bench_hard": 25,
@@ -3305,6 +3404,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-05-24",
         "terminal_bench_hard": "2026-05-24",
@@ -3347,6 +3447,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 40,
         "terminal_bench_hard": 35.6,
@@ -3373,6 +3474,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-06-01",
         "terminal_bench_hard": "2026-06-01",
@@ -3415,6 +3517,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 13.7,
         "scicode": 17.4,
         "terminal_bench_hard": 0.8,
@@ -3441,6 +3544,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-06-06",
         "scicode": "2026-06-06",
         "terminal_bench_hard": "2026-06-06",
@@ -3483,6 +3587,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 70.3,
         "scicode": 38.2,
         "terminal_bench_hard": 31.1,
@@ -3509,6 +3614,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-06-10",
         "scicode": "2026-06-10",
         "terminal_bench_hard": "2026-06-10",
@@ -3551,6 +3657,7 @@
         "frontierswe": 72.5,
         "frontiercode": 24.5,
         "swe_rebench": 51.28,
+        "swe_marathon": 13.0,
         "livecodebench": null,
         "scicode": 50.5,
         "terminal_bench_hard": 50.8,
@@ -3577,6 +3684,7 @@
         "frontierswe": "2026-07-14",
         "frontiercode": "2026-07-27",
         "swe_rebench": "2026-07-02",
+        "swe_marathon": "2026-07-27",
         "livecodebench": null,
         "scicode": "2026-06-18",
         "terminal_bench_hard": "2026-06-18",
@@ -3619,6 +3727,7 @@
         "frontierswe": null,
         "frontiercode": 14.7,
         "swe_rebench": 47.69,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 45.4,
         "terminal_bench_hard": 42.4,
@@ -3645,6 +3754,7 @@
         "frontierswe": null,
         "frontiercode": "2026-07-27",
         "swe_rebench": "2026-06-18",
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-06-18",
         "terminal_bench_hard": "2026-06-18",
@@ -3687,6 +3797,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 21.04,
         "scicode": 7.8,
         "terminal_bench_hard": 4.5,
@@ -3713,6 +3824,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-06-19",
         "scicode": "2026-06-19",
         "terminal_bench_hard": "2026-06-19",
@@ -3750,6 +3862,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 4.2,
         "terminal_bench_hard": null,
@@ -3776,6 +3889,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-06-19",
         "terminal_bench_hard": null,
@@ -3809,6 +3923,7 @@
         "aa_intelligence_index": 10,
         "aa_coding_index": 8.2,
         "swe_rebench": 6.0,
+        "swe_marathon": null,
         "livecodebench": 29.9,
         "scicode": 17,
         "terminal_bench_hard": 1.5,
@@ -3824,6 +3939,7 @@
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -3854,6 +3970,7 @@
         "aa_intelligence_index": 14.3,
         "aa_coding_index": 16.3,
         "swe_rebench": 8.57,
+        "swe_marathon": null,
         "livecodebench": 39.7,
         "scicode": 33.1,
         "terminal_bench_hard": 6.8,
@@ -3869,6 +3986,7 @@
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -3903,7 +4021,8 @@
         "aime_2025": 18,
         "gpqa_diamond": 57.5,
         "hle": 4.1,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -3913,7 +4032,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 32,
@@ -3937,7 +4057,8 @@
         "aime_2025": 73.7,
         "gpqa_diamond": 61,
         "hle": 5.9,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -3947,7 +4068,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "context": "64k",
       "vram": {
@@ -3972,7 +4094,8 @@
         "aime_2025": 57.9,
         "gpqa_diamond": 53.9,
         "hle": 4.9,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -3981,7 +4104,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 70,
@@ -4006,7 +4130,8 @@
         "aime_2025": 70.7,
         "gpqa_diamond": 51.6,
         "hle": 5.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4016,7 +4141,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 16,
@@ -4041,7 +4167,8 @@
         "aime_2025": 41.3,
         "gpqa_diamond": 40,
         "hle": 5.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4051,7 +4178,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 16,
@@ -4077,7 +4205,8 @@
         "aime_2025": 2.3,
         "gpqa_diamond": 39,
         "hle": 3.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4088,7 +4217,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 869,
@@ -4113,7 +4243,8 @@
         "aime_2025": 0.3,
         "gpqa_diamond": 32.2,
         "hle": 4.5,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4123,7 +4254,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 112,
@@ -4150,6 +4282,7 @@
         "gpqa_diamond": 75.2,
         "hle": 14.7,
         "frontiercode": null,
+        "swe_marathon": null,
         "terminal_bench_2_1": 20.6,
         "aa_coding_index": 25.8
       },
@@ -4163,6 +4296,7 @@
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
         "frontiercode": null,
+        "swe_marathon": null,
         "terminal_bench_2_1": "2026-07-22",
         "aa_coding_index": "2026-07-22"
       },
@@ -4190,7 +4324,8 @@
         "aime_2025": 15.3,
         "gpqa_diamond": 53.6,
         "hle": 4.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4201,7 +4336,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 885,
@@ -4226,7 +4362,8 @@
         "aime_2025": 11.3,
         "gpqa_diamond": 49.1,
         "hle": 3.6,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4236,7 +4373,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 154,
@@ -4260,7 +4398,8 @@
         "aime_2025": 33.7,
         "gpqa_diamond": 52.9,
         "hle": 5.1,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4269,7 +4408,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 46,
@@ -4297,7 +4437,8 @@
         "gpqa_diamond": 73.3,
         "hle": 9.8,
         "mmmu_pro": 60.28,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4310,7 +4451,8 @@
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
         "mmmu_pro": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 32,
@@ -4338,7 +4480,8 @@
         "aime_2025": 57.7,
         "gpqa_diamond": 73.8,
         "hle": 8.6,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4351,7 +4494,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 1494,
@@ -4372,6 +4516,7 @@
         "aa_intelligence_index": 20.1,
         "swe_bench_verified": 44.6,
         "swe_rebench": 18.26,
+        "swe_marathon": null,
         "livecodebench": 77,
         "scicode": 40.3,
         "terminal_bench_hard": 15.9,
@@ -4386,6 +4531,7 @@
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4415,6 +4561,7 @@
         "aa_intelligence_index": 19.5,
         "swe_bench_verified": 64.2,
         "swe_rebench": 46.36,
+        "swe_marathon": null,
         "livecodebench": 73.8,
         "scicode": 34.8,
         "terminal_bench_hard": 22,
@@ -4429,6 +4576,7 @@
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4458,6 +4606,7 @@
         "aa_intelligence_index": 16.5,
         "swe_bench_verified": 57.6,
         "swe_rebench": 32.56,
+        "swe_marathon": null,
         "livecodebench": 68.4,
         "scicode": 30.6,
         "terminal_bench_hard": 20.5,
@@ -4472,6 +4621,7 @@
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4501,6 +4651,7 @@
         "aa_intelligence_index": 23,
         "swe_bench_verified": 68,
         "swe_rebench": 38.26,
+        "swe_marathon": null,
         "livecodebench": 56.1,
         "scicode": 33.1,
         "terminal_bench_hard": 28.8,
@@ -4515,6 +4666,7 @@
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4544,6 +4696,7 @@
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 73.8,
         "swe_rebench": 31.79,
+        "swe_marathon": null,
         "livecodebench": 89.4,
         "scicode": 45.1,
         "terminal_bench_hard": 31.8,
@@ -4561,6 +4714,7 @@
         "aa_intelligence_index": "2026-07-02",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -4597,7 +4751,8 @@
         "aime_2025": 36.3,
         "gpqa_diamond": 41.2,
         "hle": 2.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4607,7 +4762,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 107,
@@ -4632,7 +4788,8 @@
         "aime_2025": 41.3,
         "gpqa_diamond": 81.1,
         "hle": 3.5,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4642,7 +4799,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 655,
@@ -4669,7 +4827,8 @@
         "aime_2025": 84.7,
         "gpqa_diamond": 72.6,
         "hle": 9.1,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4681,7 +4840,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 79,
@@ -4707,7 +4867,8 @@
         "aime_2025": 65.3,
         "gpqa_diamond": 65.7,
         "hle": 6.3,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4718,7 +4879,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 224,
@@ -4743,7 +4905,8 @@
         "aime_2025": 83.7,
         "gpqa_diamond": 72.5,
         "hle": 8.9,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4753,7 +4916,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 224,
@@ -4779,7 +4943,8 @@
         "aime_2025": 49.3,
         "gpqa_diamond": 56.2,
         "hle": 5,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4790,7 +4955,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 35,
@@ -4821,7 +4987,8 @@
         "aime_2025": 67.7,
         "gpqa_diamond": 65.6,
         "hle": 8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-29",
@@ -4837,7 +5004,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 675,
@@ -4859,7 +5027,8 @@
         "tau2_bench_telecom": 73.68,
         "aime_2025": 61.3,
         "gpqa_diamond": 73.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "swe_bench_verified": "2026-06-25",
@@ -4867,7 +5036,8 @@
         "tau2_bench_telecom": "2026-06-25",
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 1225,
@@ -4891,7 +5061,8 @@
         "aime_2025": 90.6,
         "gpqa_diamond": 81.5,
         "hle": 25.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "swe_bench_verified": "2026-06-25",
@@ -4901,7 +5072,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-29",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 1225,
@@ -4928,7 +5100,8 @@
         "aime_2025": 61,
         "gpqa_diamond": 69.7,
         "hle": 8.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -4940,7 +5113,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 994,
@@ -4960,6 +5134,7 @@
       "scores": {
         "aa_intelligence_index": 8.6,
         "swe_rebench": 8.57,
+        "swe_marathon": null,
         "livecodebench": 28.8,
         "scicode": 28,
         "aime_2025": 19.7,
@@ -4970,6 +5145,7 @@
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "aime_2025": "2026-06-25",
@@ -5001,7 +5177,8 @@
         "aime_2025": 58,
         "gpqa_diamond": 47,
         "hle": 4.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5012,7 +5189,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 32,
@@ -5038,7 +5216,8 @@
         "aime_2025": 24.3,
         "gpqa_diamond": 45.2,
         "hle": 2.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5049,7 +5228,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 18,
@@ -5072,7 +5252,8 @@
         "scicode": 16.7,
         "gpqa_diamond": 39.8,
         "hle": 3.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5080,7 +5261,8 @@
         "scicode": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 8.8,
@@ -5100,6 +5282,7 @@
       "scores": {
         "aa_intelligence_index": 18.2,
         "swe_rebench": 25.22,
+        "swe_marathon": null,
         "livecodebench": 52.4,
         "scicode": 36,
         "terminal_bench_hard": 15.2,
@@ -5112,6 +5295,7 @@
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -5139,6 +5323,7 @@
       "scores": {
         "aa_intelligence_index": 19.6,
         "swe_rebench": 14.55,
+        "swe_marathon": null,
         "livecodebench": 78.8,
         "scicode": 42.4,
         "terminal_bench_hard": 13.6,
@@ -5153,6 +5338,7 @@
       "scores_updated": {
         "aa_intelligence_index": "2026-07-02",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -5183,6 +5369,7 @@
         "aa_intelligence_index": 18,
         "swe_bench_verified": 69.6,
         "swe_rebench": 39.37,
+        "swe_marathon": null,
         "livecodebench": 58.5,
         "scicode": 35.9,
         "terminal_bench_hard": 18.9,
@@ -5196,6 +5383,7 @@
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": "2026-06-25",
         "swe_rebench": "2026-06-25",
+        "swe_marathon": null,
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
         "terminal_bench_hard": "2026-06-25",
@@ -5227,7 +5415,8 @@
         "aime_2025": 29,
         "gpqa_diamond": 59.3,
         "hle": 8.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5236,7 +5425,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 71,
@@ -5262,7 +5452,8 @@
         "aime_2025": 39.3,
         "gpqa_diamond": 62.8,
         "hle": 4.9,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5273,7 +5464,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 70,
@@ -5298,7 +5490,8 @@
         "aime_2025": 24,
         "gpqa_diamond": 42.4,
         "hle": 5.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5308,7 +5501,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 2.8,
@@ -5332,7 +5526,8 @@
         "tau2_bench_telecom": 48.2,
         "gpqa_diamond": 65.7,
         "hle": 9.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5341,7 +5536,8 @@
         "tau2_bench_telecom": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 224,
@@ -5367,7 +5563,8 @@
         "aime_2025": 80,
         "gpqa_diamond": 66.1,
         "hle": 10.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5378,7 +5575,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 17,
@@ -5407,7 +5605,8 @@
         "gpqa_diamond": 68,
         "hle": 4.1,
         "mmmu_pro": 55.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5421,7 +5620,8 @@
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
         "mmmu_pro": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 1472,
@@ -5450,7 +5650,8 @@
         "gpqa_diamond": 47.1,
         "hle": 4.3,
         "mmmu_pro": 46,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-29",
@@ -5464,7 +5665,8 @@
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
         "mmmu_pro": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 19,
@@ -5491,7 +5693,8 @@
         "gpqa_diamond": 30.1,
         "hle": 5.3,
         "mmmu_pro": 38.1,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-07-27",
@@ -5503,7 +5706,8 @@
         "gpqa_diamond": "2026-07-27",
         "hle": "2026-06-25",
         "mmmu_pro": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 8.4,
@@ -5529,7 +5733,8 @@
         "aime_2025": 59,
         "gpqa_diamond": 61.5,
         "hle": 5.5,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5540,7 +5745,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 73,
@@ -5569,7 +5775,8 @@
         "gpqa_diamond": 42.8,
         "hle": 4.7,
         "mmmu_pro": 48,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-29",
@@ -5583,7 +5790,8 @@
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
         "mmmu_pro": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 60,
@@ -5612,7 +5820,8 @@
         "mmmu_pro": 29.9,
         "terminal_bench_2_1": 0.4,
         "aa_coding_index": 2.7,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5626,7 +5835,8 @@
         "mmmu_pro": "2026-06-25",
         "terminal_bench_2_1": "2026-07-02",
         "aa_coding_index": "2026-07-02",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 9.4,
@@ -5651,7 +5861,8 @@
         "aime_2025": 3.3,
         "gpqa_diamond": 23.7,
         "hle": 5.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5661,7 +5872,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 2.2,
@@ -5685,7 +5897,8 @@
         "aime_2025": 2.3,
         "gpqa_diamond": 22.4,
         "hle": 4.2,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5694,7 +5907,8 @@
         "aime_2025": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {
         "fp16": 0.6,
@@ -5717,7 +5931,8 @@
         "scicode": 11.8,
         "gpqa_diamond": 33.1,
         "hle": 6.6,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5725,7 +5940,8 @@
         "scicode": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {}
     },
@@ -5744,7 +5960,8 @@
         "scicode": 28.5,
         "gpqa_diamond": 51,
         "hle": 3.8,
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "scores_updated": {
         "aa_intelligence_index": "2026-06-25",
@@ -5752,7 +5969,8 @@
         "scicode": "2026-06-25",
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-06-25",
-        "frontiercode": null
+        "frontiercode": null,
+        "swe_marathon": null
       },
       "vram": {}
     },
@@ -5778,6 +5996,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 72.0,
         "scicode": 38.2,
         "terminal_bench_hard": 18.2,
@@ -5804,6 +6023,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-06-29",
         "scicode": "2026-06-29",
         "terminal_bench_hard": "2026-06-29",
@@ -5846,6 +6066,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -5872,6 +6093,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -5914,6 +6136,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -5940,6 +6163,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -5982,6 +6206,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -6008,6 +6233,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_hard": null,
@@ -6050,6 +6276,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 39.9,
         "terminal_bench_hard": 36.4,
@@ -6076,6 +6303,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-06-29",
         "terminal_bench_hard": "2026-06-29",
@@ -6123,6 +6351,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": 69.1,
         "scicode": 34.3,
         "terminal_bench_2_1": 12.4,
@@ -6149,6 +6378,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": "2026-07-03",
         "scicode": "2026-07-03",
         "terminal_bench_2_1": "2026-07-03",
@@ -6191,6 +6421,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 44.33,
         "terminal_bench_2_1": null,
@@ -6217,6 +6448,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-06",
         "terminal_bench_2_1": null,
@@ -6259,6 +6491,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_2_1": null,
@@ -6285,6 +6518,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": null,
         "terminal_bench_2_1": null,
@@ -6327,6 +6561,7 @@
         "frontierswe": null,
         "frontiercode": 14.0,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 46.1,
         "terminal_bench_2_1": 55.1,
@@ -6353,6 +6588,7 @@
         "frontierswe": null,
         "frontiercode": "2026-07-27",
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-16",
         "terminal_bench_2_1": "2026-07-16",
@@ -6395,6 +6631,7 @@
         "frontierswe": 27.3,
         "frontiercode": 17.6,
         "swe_rebench": 37.62,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 50,
         "terminal_bench_2_1": 64,
@@ -6421,6 +6658,7 @@
         "frontierswe": "2026-07-20",
         "frontiercode": "2026-07-27",
         "swe_rebench": "2026-07-20",
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6463,6 +6701,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 35.4,
         "terminal_bench_2_1": 50.2,
@@ -6489,6 +6728,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6531,6 +6771,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": 56.78,
+        "swe_marathon": null,
         "livecodebench": 85.3,
         "scicode": 42.4,
         "terminal_bench_2_1": null,
@@ -6557,6 +6798,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": "2026-07-20",
+        "swe_marathon": null,
         "livecodebench": "2026-07-20",
         "scicode": "2026-07-20",
         "terminal_bench_2_1": null,
@@ -6599,6 +6841,7 @@
         "frontierswe": 25.0,
         "frontiercode": 1.0,
         "swe_rebench": 55.21,
+        "swe_marathon": null,
         "livecodebench": 85.0,
         "scicode": 49,
         "terminal_bench_2_1": 45.7,
@@ -6625,6 +6868,7 @@
         "frontierswe": "2026-07-20",
         "frontiercode": "2026-07-20",
         "swe_rebench": "2026-07-20",
+        "swe_marathon": null,
         "livecodebench": "2026-07-20",
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6667,6 +6911,7 @@
         "frontierswe": 25.4,
         "frontiercode": 3.8,
         "swe_rebench": 46.15,
+        "swe_marathon": null,
         "livecodebench": 89.6,
         "scicode": 53.5,
         "terminal_bench_2_1": 65.9,
@@ -6693,6 +6938,7 @@
         "frontierswe": "2026-07-20",
         "frontiercode": "2026-07-20",
         "swe_rebench": "2026-07-20",
+        "swe_marathon": null,
         "livecodebench": "2026-07-20",
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6735,6 +6981,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 47.5,
         "terminal_bench_2_1": 67.4,
@@ -6761,6 +7008,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6803,6 +7051,7 @@
         "frontierswe": 81.2,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": 42.0,
         "livecodebench": null,
         "scicode": 58.7,
         "terminal_bench_2_1": 85,
@@ -6829,6 +7078,7 @@
         "frontierswe": "2026-07-20",
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": "2026-07-27",
         "livecodebench": null,
         "scicode": "2026-07-20",
         "terminal_bench_2_1": "2026-07-20",
@@ -6871,6 +7121,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": 17.7,
         "terminal_bench_2_1": 6,
@@ -6897,6 +7148,7 @@
         "frontierswe": null,
         "frontiercode": null,
         "swe_rebench": null,
+        "swe_marathon": null,
         "livecodebench": null,
         "scicode": "2026-07-27",
         "terminal_bench_2_1": "2026-07-27",
