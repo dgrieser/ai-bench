@@ -2368,12 +2368,18 @@
       // - Each benchmark's weight comes from groupBenchmarkEntries (explicit
       //   weight, or decay^i by position), so the most reliable benchmarks lead
       //   and lower-weighted ones fill gaps / break ties.
-      // - Missing benchmarks are imputed at percentile 0.5: absence is ignorance,
-      //   not evidence of a bottom rank. The penalty scales with the weight that
-      //   is actually missing, so a single lucky score still can't top a
-      //   well-tested model, and every model divides by the same total weight,
-      //   which keeps composites comparable and the ranking invariant to
-      //   rescaling all weights.
+      // - Missing benchmarks are imputed, not skipped: absence is ignorance, not
+      //   evidence of a bottom rank. The fill starts at percentile 0.5 (median
+      //   model) and slides toward the level the model has actually demonstrated
+      //   as its coverage grows -- fill = 0.5 + (own - 0.5) * coverageShare -- so
+      //   the composite reduces to own*(1 - m^2) + 0.5*m^2 for missing share m.
+      //   The penalty for a blank therefore scales with m^2 rather than m: a model
+      //   measured on almost everything is barely docked for the rest, while one
+      //   measured on almost nothing is still pinned near 0.5, so a single lucky
+      //   score cannot top a well-tested model. Every model divides by the same
+      //   total weight, which keeps composites comparable and the ranking
+      //   invariant to rescaling all weights (coverageShare is a ratio, so no
+      //   absolute weight magnitude leaks into the fill).
       // - Benchmarks nobody can be ranked on (fewer than 2 scored models) are
       //   left out of the total so they don't dilute anyone.
       // - A model measured on less than group.minScoredFraction of the total
@@ -2409,7 +2415,9 @@
             return;
           }
           const missingWeight = totalWeight - sumWeight;
-          result.set(model, (sumWeighted + 0.5 * missingWeight) / totalWeight);
+          const own = sumWeighted / sumWeight;
+          const fill = 0.5 + (own - 0.5) * (sumWeight / totalWeight);
+          result.set(model, (sumWeighted + fill * missingWeight) / totalWeight);
         });
         return result;
       }
