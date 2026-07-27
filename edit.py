@@ -19,6 +19,8 @@ from _scores import stamp_score_updated
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 
+METADATA_FIELDS = {"context": "Context Window", "params": "Model Size"}
+
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:
@@ -91,9 +93,14 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         metavar="YYYY-MM-DD",
         help="Scope --missing to models whose date_added is after this date.",
     )
+    parser.add_argument("--context", help="Context window, e.g. 256k. Use 'null' to clear.")
+    parser.add_argument("--params", help="Model size, e.g. 123B or 230B-A10B. Use 'null' to clear.")
 
+    metadata_flags = {f"--{key}" for key in METADATA_FIELDS}
     for key, benchmark in doc["benchmarks"].items():
         flag = f"--{key.replace('_', '-')}"
+        if flag in metadata_flags:
+            raise ValueError(f"Benchmark key '{key}' collides with the metadata flag {flag}.")
         parser.add_argument(flag, dest=key, help=f"Score for {benchmark.get('name', key)}. Use 'null' to clear.")
 
     return parser.parse_args(argv)
@@ -133,10 +140,27 @@ def parse_score_value(raw: str) -> int | float | None:
     return int(text)
 
 
+def parse_metadata_value(raw: str) -> str | None:
+    text = raw.strip()
+    if not text or text.lower() == "null":
+        return None
+    return text
+
+
 def format_score_value(value: Any) -> str:
     if value is None:
         return "null"
     return str(value)
+
+
+def get_existing_values(models: list[dict[str, Any]], key: str) -> list[str]:
+    return sorted(
+        {
+            model[key]
+            for model in models
+            if isinstance(model, dict) and isinstance(model.get(key), str) and model[key].strip()
+        }
+    )
 
 
 def is_missing_text(value: Any) -> bool:
@@ -311,16 +335,75 @@ def prompt_score(label: str, current: Any) -> int | float | None:
             print(f"Invalid value for {label}: {exc}")
 
 
-def prompt_text(label: str, current: Any) -> str | None:
-    prompt = f"{label} ({current}): " if isinstance(current, str) and current.strip() else f"{label}: "
-    try:
-        raw = input(prompt)
-    except EOFError:
-        return current if isinstance(current, str) else None
+def prompt_metadata_value(label: str, current: Any, options: list[str]) -> str | None:
+    """Prompt for a free-text metadata value, offering existing values as completions.
 
-    if raw == "":
-        return current if isinstance(current, str) else None
-    return parse_nullable(raw)
+    Empty input keeps the current value; 'null' clears it. Tab cycles through the
+    fuzzy matches, but any value is accepted, not only existing ones.
+    """
+    current_text = current if isinstance(current, str) and current.strip() else None
+    label_text = f"{label} ({current_text})" if current_text else label
+
+    if supports_live_selector() and options:
+        fd = sys.stdin.fileno()
+        previous = termios.tcgetattr(fd)
+        buffer = ""
+        tab_index = -1
+        lines_drawn = 0
+
+        try:
+            tty.setraw(fd)
+            while True:
+                matches = find_matches(buffer, options)
+                lines_drawn = _render_live_selector(label_text, buffer, matches, lines_drawn)
+                char = sys.stdin.read(1)
+
+                if char in {"\r", "\n"}:
+                    value = current_text if not buffer.strip() else parse_metadata_value(buffer)
+                    _clear_live_selector(lines_drawn)
+                    sys.stdout.write(f"{label}: {value if value is not None else 'null'}\r\n")
+                    sys.stdout.flush()
+                    return value
+
+                if char == "\t":
+                    if matches:
+                        tab_index = (tab_index + 1) % len(matches)
+                        buffer = matches[tab_index]
+                    continue
+
+                if char == "\x03":
+                    raise KeyboardInterrupt
+
+                if char == "\x04":
+                    _clear_live_selector(lines_drawn)
+                    return current_text
+
+                if char in {"\x7f", "\b"}:
+                    buffer = buffer[:-1]
+                    tab_index = -1
+                    continue
+
+                if char == "\x1b":
+                    next_char = sys.stdin.read(1)
+                    if next_char == "[":
+                        sys.stdin.read(1)
+                    tab_index = -1
+                    continue
+
+                if char.isprintable():
+                    buffer += char
+                    tab_index = -1
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, previous)
+
+    try:
+        raw = input(f"{label_text}: ")
+    except EOFError:
+        return current_text
+
+    if not raw.strip():
+        return current_text
+    return parse_metadata_value(raw)
 
 
 def get_missing_score_keys(doc: dict[str, Any], model: dict[str, Any]) -> list[str]:
@@ -331,12 +414,7 @@ def get_missing_score_keys(doc: dict[str, Any], model: dict[str, Any]) -> list[s
 
 
 def get_missing_metadata_keys(model: dict[str, Any]) -> list[str]:
-    missing: list[str] = []
-    if is_missing_text(model.get("context")):
-        missing.append("context")
-    if is_missing_text(model.get("params")):
-        missing.append("params")
-    return missing
+    return [key for key in METADATA_FIELDS if is_missing_text(model.get(key))]
 
 
 def collect_updates(
@@ -373,11 +451,17 @@ def collect_updates(
             score_updates[key] = prompt_score(benchmark.get("name", key), current)
 
     metadata_updates: dict[str, str | None] = {}
-    if interactive:
-        if is_missing_text(model.get("context")):
-            metadata_updates["context"] = prompt_text("Context Window", model.get("context"))
-        if is_missing_text(model.get("params")):
-            metadata_updates["params"] = prompt_text("Model Size", model.get("params"))
+    for key, label in METADATA_FIELDS.items():
+        raw_value = getattr(args, key)
+
+        if raw_value is not None:
+            metadata_updates[key] = parse_metadata_value(raw_value)
+            continue
+
+        if interactive:
+            metadata_updates[key] = prompt_metadata_value(
+                label, model.get(key), get_existing_values(models, key)
+            )
 
     return model, score_updates, metadata_updates
 
@@ -426,10 +510,9 @@ def collect_missing_updates(
             benchmark = doc["benchmarks"][key]
             score_updates[key] = prompt_score(benchmark.get("name", key), scores.get(key))
         for key in missing_metadata_keys:
-            if key == "context":
-                metadata_updates[key] = prompt_text("Context Window", model.get(key))
-            elif key == "params":
-                metadata_updates[key] = prompt_text("Model Size", model.get(key))
+            metadata_updates[key] = prompt_metadata_value(
+                METADATA_FIELDS[key], model.get(key), get_existing_values(doc["models"], key)
+            )
         planned.append((model, score_updates, metadata_updates))
 
     return planned
@@ -456,6 +539,12 @@ def main() -> int:
         score_flags = [key for key in doc["benchmarks"] if getattr(args, key) is not None]
         if score_flags:
             raise ValueError("--missing cannot be combined with benchmark score flags.")
+        metadata_flags = [key for key in METADATA_FIELDS if getattr(args, key) is not None]
+        if metadata_flags:
+            raise ValueError(
+                "--missing cannot be combined with metadata flags: "
+                + ", ".join(f"--{key}" for key in metadata_flags)
+            )
         if args.model is not None and find_model(doc["models"], args.model) is None:
             raise ValueError(f"Model '{args.model}' does not exist.")
 
