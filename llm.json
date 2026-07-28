@@ -1474,7 +1474,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "aa_intelligence_index": 6.9,
+        "aa_intelligence_index": 7.1,
         "aa_coding_index": 2.9,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -1501,7 +1501,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-07-27",
+        "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -1544,7 +1544,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "aa_intelligence_index": 5.5,
+        "aa_intelligence_index": 5.3,
         "aa_coding_index": 15,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -1571,7 +1571,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-07-07",
+        "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2526,7 +2526,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "aa_intelligence_index": 9.5,
+        "aa_intelligence_index": 9.4,
         "aa_coding_index": 7.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2553,7 +2553,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-07-27",
+        "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5730,7 +5730,7 @@
       },
       "context": "256k",
       "scores": {
-        "aa_intelligence_index": 6.5,
+        "aa_intelligence_index": 6.3,
         "aa_coding_index": 4.8,
         "livecodebench": 24.7,
         "scicode": 14.4,
@@ -5743,7 +5743,7 @@
         "swe_marathon": null
       },
       "scores_updated": {
-        "aa_intelligence_index": "2026-07-27",
+        "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-06-25",
         "livecodebench": "2026-06-25",
         "scicode": "2026-06-25",
@@ -6665,9 +6665,9 @@
       "params": "1.6T-A49B",
       "context": "1m",
       "vram": {
-        "fp16": 1878,
-        "int8": 939,
-        "int4": 470
+        "fp16": 3485,
+        "int8": 1743,
+        "int4": 871
       },
       "creator": {
         "name": "DeepSeek",
@@ -7085,9 +7085,9 @@
       "params": "2.8T-A104B",
       "context": "1m",
       "vram": {
-        "fp16": 3278,
-        "int8": 1639,
-        "int4": 819
+        "fp16": 6060,
+        "int8": 3030,
+        "int4": 1515
       },
       "creator": {
         "name": "Kimi",
