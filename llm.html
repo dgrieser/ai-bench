@@ -744,6 +744,9 @@
         linear-gradient(var(--surface), var(--surface)) padding-box,
         linear-gradient(120deg, var(--accent), #8b5cf6, #ec4899, #8b5cf6, var(--accent)) border-box;
       background-size: auto, 100% 100%, 300% 100%;
+      /* The shorthand above clears background-color; the native option popup is
+         painted from it, so restore it or the dropdown renders white. */
+      background-color: var(--surface);
       box-shadow: 0 0 14px rgba(29, 78, 216, 0.22);
       animation: filterFlowSelect 7s linear infinite;
     }
