@@ -247,7 +247,8 @@
       "urls": [
         "https://deepswe.datacurve.ai/",
         "https://github.com/datacurve-ai/deep-swe",
-        "https://huggingface.co/datasets/datacurve/deep-swe"
+        "https://huggingface.co/datasets/datacurve/deep-swe",
+        "https://benchlm.ai/benchmarks/deepSwe"
       ]
     },
     "frontierswe": {
@@ -276,7 +277,8 @@
       "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task.",
       "urls": [
         "https://www.swe-marathon.org/",
-        "https://arxiv.org/abs/2606.07682"
+        "https://arxiv.org/abs/2606.07682",
+        "https://evals.report/benchmarks/swe-marathon"
       ]
     },
     "swe_rebench": {
@@ -7230,6 +7232,17 @@
     "https://felloai.com/minimax-m2-5-model/",
     "https://huggingface.co/datasets/MathArena/aime_2026",
     "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-    "https://www.swe-marathon.org/"
+    "https://www.swe-marathon.org/",
+    "https://benchlm.ai/benchmarks/deepSwe",
+    "https://www.frontierswe.com",
+    "https://swe-rebench.com",
+    "https://www.tbench.ai/leaderboard/terminal-bench/2.1",
+    "https://os-world.github.io/static/data/osworld_verified_results.xlsx",
+    "https://www.spheron.network/tools/gpu-recommender",
+    "https://evals.report/benchmarks/frontiercode",
+    "https://evals.report/benchmarks/swe-marathon",
+    "https://labs.scale.com/leaderboard/sweatlas-qna",
+    "https://labs.scale.com/leaderboard/sweatlas-refactoring",
+    "https://labs.scale.com/leaderboard/sweatlas-tw"
   ]
 }

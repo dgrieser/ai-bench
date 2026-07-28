@@ -15,3 +15,7 @@ done
 
 "${SCRIPT_DIR}/update.py" -w
 
+# Record the pages the scrapers above read; independent of the scores, so last.
+echo "+ Running fill_source_urls.py" 1>&2
+"${SCRIPT_DIR}/fill_source_urls.py" -w
+
