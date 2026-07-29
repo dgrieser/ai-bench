@@ -220,6 +220,22 @@
       min-width: 0;
     }
 
+    /* Cards + Total VRAM + Reserve act as one control: they occupy a single
+       grid slot and stay together. If the slot ends up narrower than the
+       cluster needs, its members wrap inside the slot rather than the grid
+       pulling them apart. */
+    .field-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      gap: 10px 16px;
+      min-width: 0;
+    }
+
+    .field-cluster > .field {
+      flex: 0 0 auto;
+    }
+
     .field label {
       color: var(--subtle);
       font-size: 0.7rem;
@@ -506,6 +522,12 @@
     @media (max-width: 1500px) {
       .controls.has-gpu {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      /* Pre-measurement default for narrow tracks; updateClusterSpan() refines
+         it with an inline grid-column once layout is known. */
+      .field-cluster {
+        grid-column: span 2;
       }
     }
 
@@ -1684,28 +1706,30 @@
             <div id="gpuModelList" class="gpu-combo-list" role="listbox" hidden></div>
           </div>
         </div>
-        <div class="field">
-          <label for="gpuCount">Cards</label>
-          <div class="gpu-stepper" id="gpuStepper">
-            <button id="gpuCountDown" type="button" aria-label="Fewer cards">−</button>
-            <input id="gpuCount" type="text" inputmode="numeric" value="1" aria-label="Number of graphics cards">
-            <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
+        <div class="field-cluster" id="vramCluster">
+          <div class="field">
+            <label for="gpuCount">Cards</label>
+            <div class="gpu-stepper" id="gpuStepper">
+              <button id="gpuCountDown" type="button" aria-label="Fewer cards">−</button>
+              <input id="gpuCount" type="text" inputmode="numeric" value="1" aria-label="Number of graphics cards">
+              <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label for="gpuVram">Total VRAM</label>
-          <div class="gpu-total" id="gpuTotal">
-            <span class="gpu-eq" aria-hidden="true">=</span>
-            <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
-            <span class="gpu-unit">GB</span>
+          <div class="field">
+            <label for="gpuVram">Total VRAM</label>
+            <div class="gpu-total" id="gpuTotal">
+              <span class="gpu-eq" aria-hidden="true">=</span>
+              <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
+              <span class="gpu-unit">GB</span>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label for="gpuReserve">Reserve</label>
-          <div class="gpu-stepper" id="gpuReserveStepper">
-            <button id="gpuReserveDown" type="button" aria-label="Reserve less VRAM">−</button>
-            <input id="gpuReserve" type="text" inputmode="numeric" value="0%" aria-label="Percent of VRAM to keep free">
-            <button id="gpuReserveUp" type="button" aria-label="Reserve more VRAM">+</button>
+          <div class="field">
+            <label for="gpuReserve">Reserve</label>
+            <div class="gpu-stepper" id="gpuReserveStepper">
+              <button id="gpuReserveDown" type="button" aria-label="Reserve less VRAM">−</button>
+              <input id="gpuReserve" type="text" inputmode="numeric" value="0%" aria-label="Percent of VRAM to keep free">
+              <button id="gpuReserveUp" type="button" aria-label="Reserve more VRAM">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1870,6 +1894,7 @@
         gpuCountDown: document.getElementById("gpuCountDown"),
         gpuCountUp: document.getElementById("gpuCountUp"),
         gpuVram: document.getElementById("gpuVram"),
+        vramCluster: document.getElementById("vramCluster"),
         gpuTotal: document.getElementById("gpuTotal"),
         gpuReserve: document.getElementById("gpuReserve"),
         gpuReserveDown: document.getElementById("gpuReserveDown"),
@@ -1950,12 +1975,41 @@
       // GPU group is present or a filter is added/removed later. Fields flow in
       // DOM order — no field is pinned to a row.
       function updateFilterColumns() {
-        const visibleFields = [...ui.controls.querySelectorAll(".field")]
-          .filter((field) => !field.closest("[hidden]"));
-        if (!visibleFields.length) {
+        // One slot per top-level field; a field cluster counts once, not once
+        // per member.
+        const slots = [...ui.controls.querySelectorAll(".field, .field-cluster")]
+          .filter((el) => !el.closest("[hidden]") && !el.parentElement.closest(".field-cluster"));
+        if (!slots.length) {
           return;
         }
-        ui.controls.style.setProperty("--filter-cols", String(Math.ceil(visibleFields.length / 2)));
+        const columns = Math.ceil(slots.length / 2);
+        ui.controls.style.setProperty("--filter-cols", String(columns));
+        updateClusterSpan(columns);
+      }
+
+      // A cluster keeps to one slot while the slot is at least as wide as the
+      // cluster needs; once the track is narrower it claims as many tracks as
+      // it takes. Member widths are intrinsic (steppers and the VRAM box are
+      // fixed), so the requirement can be measured while wrapped.
+      function updateClusterSpan(columns) {
+        if (!ui.vramCluster) {
+          return;
+        }
+        const members = [...ui.vramCluster.children];
+        const reference = ui.gpuVendor?.closest(".field");
+        if (!members.length || !reference) {
+          return;
+        }
+        const clusterGap = parseFloat(getComputedStyle(ui.vramCluster).columnGap) || 0;
+        const gridGap = parseFloat(getComputedStyle(ui.controls).columnGap) || 0;
+        const needed = members.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
+          + clusterGap * (members.length - 1);
+        const track = reference.getBoundingClientRect().width;
+        if (track <= 0) {
+          return;
+        }
+        const span = Math.max(1, Math.min(columns, Math.ceil((needed + gridGap) / (track + gridGap))));
+        ui.vramCluster.style.gridColumn = span > 1 ? `span ${span}` : "auto";
       }
 
       function prefersReducedMotion() {
@@ -1998,6 +2052,7 @@
         ui.status.classList.remove("error");
 
         populateFilters();
+        updateFilterColumns();
         if (!state.eventsBound) {
           bindEvents();
           state.eventsBound = true;
@@ -2306,6 +2361,8 @@
           state.filters.search = "";
           applyAndRender();
         });
+
+        window.addEventListener("resize", debounce(() => updateFilterColumns(), 150));
 
         ui.sortMode.addEventListener("change", (event) => {
           const nextSort = parseSortModeValue(event.target.value);
