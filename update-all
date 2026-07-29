@@ -2,6 +2,10 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# Record the pages the scrapers above read; independent of the scores, so last.
+echo "+ Running fill_source_urls.py" 1>&2
+"${SCRIPT_DIR}/fill_source_urls.py" -w
+
 # Offer newly released open-weights models for addition first, so the update
 # pass below fills in their scores. Interactive when run from a terminal;
 # report-only otherwise.
@@ -14,8 +18,3 @@ for s in "${SCRIPT_DIR}"/update_*.py; do
 done
 
 "${SCRIPT_DIR}/update.py" -w
-
-# Record the pages the scrapers above read; independent of the scores, so last.
-echo "+ Running fill_source_urls.py" 1>&2
-"${SCRIPT_DIR}/fill_source_urls.py" -w
-
