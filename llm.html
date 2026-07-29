@@ -486,43 +486,26 @@
 
     /* ── GPU VRAM filter ──────────────────────────── */
 
-    /* The GPU fields form their own full-width row inside .controls, so the
-       panel reads as two rows: general filters above, GPU budget below. */
+    /* GPU fields are plain items of the .controls grid, so every field — GPU
+       or not — flows through the same tracks in DOM order. */
     .gpu-fields {
-      display: grid;
-      grid-column: 1 / -1;
-      gap: 16px;
-      align-items: start;
-      /* Capped tracks plus a flexible trailing spacer (the ::after item), so
-         the GPU fields keep sane widths instead of stretching on wide screens */
-      grid-template-columns:
-        minmax(135px, 200px) minmax(190px, 420px) auto minmax(112px, 130px) auto minmax(0, 1fr);
-    }
-
-    .gpu-fields::after {
-      content: "";
+      display: contents;
     }
 
     .gpu-fields[hidden] {
       display: none;
     }
 
-    /* Row one: the four general filters share the width evenly */
+    /* --filter-cols is set from the visible field count (ceil(n / 2)) so the
+       panel lands on two rows whatever fields exist; below the breakpoint the
+       tracks fall back to auto-fit and wrap into as many rows as needed. */
     .controls.has-gpu {
-      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      grid-template-columns: repeat(var(--filter-cols, 5), minmax(150px, 1fr));
     }
 
     @media (max-width: 1500px) {
       .controls.has-gpu {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      }
-
-      .gpu-fields {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      }
-
-      .gpu-fields::after {
-        display: none;
       }
     }
 
@@ -1683,31 +1666,6 @@
       <div class="controls-collapse" id="controlsCollapse">
         <div class="controls-inner">
         <div class="controls" id="controls">
-      <div class="field">
-        <label for="modelCompare">Compare Models</label>
-        <div class="select-wrap">
-          <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
-          <button id="clearCompare" class="clear-compare" type="button" title="Unselect all">×</button>
-        </div>
-      </div>
-      <div class="field">
-        <label for="benchmarkPick">Benchmarks</label>
-        <div class="select-wrap">
-          <div id="benchmarkPick" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Visible benchmarks"></div>
-          <button id="clearBenchmarks" class="clear-compare" type="button" title="Show all benchmarks">×</button>
-        </div>
-      </div>
-      <div class="field">
-        <label for="search">Search</label>
-        <div class="select-wrap">
-          <input id="search" type="text" placeholder="Model or creator">
-          <button id="clearSearch" class="clear-compare" type="button" title="Clear search">×</button>
-        </div>
-      </div>
-      <div class="field">
-        <label for="sortMode">Sort</label>
-        <select id="sortMode"></select>
-      </div>
       <div class="gpu-fields" id="gpuBar" hidden aria-label="GPU VRAM filter">
         <div class="field">
           <label for="gpuVendor">GPU Vendor</label>
@@ -1750,6 +1708,31 @@
             <button id="gpuReserveUp" type="button" aria-label="Reserve more VRAM">+</button>
           </div>
         </div>
+      </div>
+      <div class="field">
+        <label for="modelCompare">Compare Models</label>
+        <div class="select-wrap">
+          <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
+          <button id="clearCompare" class="clear-compare" type="button" title="Unselect all">×</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="benchmarkPick">Benchmarks</label>
+        <div class="select-wrap">
+          <div id="benchmarkPick" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Visible benchmarks"></div>
+          <button id="clearBenchmarks" class="clear-compare" type="button" title="Show all benchmarks">×</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="search">Search</label>
+        <div class="select-wrap">
+          <input id="search" type="text" placeholder="Model or creator">
+          <button id="clearSearch" class="clear-compare" type="button" title="Clear search">×</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="sortMode">Sort</label>
+        <select id="sortMode"></select>
       </div>
         </div>
         <section class="toolbar" id="toolbar">
@@ -1961,6 +1944,18 @@
         } else {
           ui.controlsCollapse.classList.add("is-open");
         }
+      }
+
+      // Half the visible fields per row: the panel stays two rows whether the
+      // GPU group is present or a filter is added/removed later. Fields flow in
+      // DOM order — no field is pinned to a row.
+      function updateFilterColumns() {
+        const visibleFields = [...ui.controls.querySelectorAll(".field")]
+          .filter((field) => !field.closest("[hidden]"));
+        if (!visibleFields.length) {
+          return;
+        }
+        ui.controls.style.setProperty("--filter-cols", String(Math.ceil(visibleFields.length / 2)));
       }
 
       function prefersReducedMotion() {
@@ -3048,6 +3043,7 @@
         }
         ui.gpuBar.hidden = false;
         ui.controls.classList.add("has-gpu");
+        updateFilterColumns();
         if (!state.gpu.eventsBound) {
           bindGpuEvents();
           state.gpu.eventsBound = true;
