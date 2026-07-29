@@ -486,26 +486,43 @@
 
     /* ── GPU VRAM filter ──────────────────────────── */
 
-    /* GPU fields live inside the .controls grid as direct items */
+    /* The GPU fields form their own full-width row inside .controls, so the
+       panel reads as two rows: general filters above, GPU budget below. */
     .gpu-fields {
-      display: contents;
+      display: grid;
+      grid-column: 1 / -1;
+      gap: 16px;
+      align-items: start;
+      /* Capped tracks plus a flexible trailing spacer (the ::after item), so
+         the GPU fields keep sane widths instead of stretching on wide screens */
+      grid-template-columns:
+        minmax(135px, 200px) minmax(190px, 420px) auto minmax(112px, 130px) auto minmax(0, 1fr);
+    }
+
+    .gpu-fields::after {
+      content: "";
     }
 
     .gpu-fields[hidden] {
       display: none;
     }
 
-    /* One-line layout once the GPU fields are visible */
+    /* Row one: the four general filters share the width evenly */
     .controls.has-gpu {
-      grid-template-columns:
-        minmax(150px, 1fr) minmax(145px, 0.95fr) minmax(125px, 0.8fr) minmax(115px, 0.75fr)
-        minmax(125px, 0.85fr) minmax(100px, 0.65fr) minmax(150px, 1.1fr) auto
-        minmax(108px, auto) auto;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
     }
 
     @media (max-width: 1500px) {
       .controls.has-gpu {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .gpu-fields {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .gpu-fields::after {
+        display: none;
       }
     }
 
@@ -1688,10 +1705,6 @@
         </div>
       </div>
       <div class="field">
-        <label for="params">Params</label>
-        <select id="params"></select>
-      </div>
-      <div class="field">
         <label for="sortMode">Sort</label>
         <select id="sortMode"></select>
       </div>
@@ -1762,12 +1775,10 @@
         data: null,
         benchmarkKeys: [],
         sortGroups: [],
-        paramBuckets: [],
         headerWidthsByKey: {},
         filteredModels: [],
         filters: {
           search: "",
-          params: "all",
           selectedModels: [],
           // Benchmarks are opt-out: an empty list means every column shows, so
           // benchmarks added to llm.json later appear without extra bookkeeping.
@@ -1793,22 +1804,6 @@
           eventsBound: false
         }
       };
-
-      // Parameter-size buckets come from llm.json (data.paramBuckets) and
-      // drive both the dropdown options and the filter logic. Ranges are
-      // half-open [min, max) so adjacent buckets never overlap; omitted
-      // min/max mean 0/Infinity (JSON can't express Infinity).
-      function normalizeParamBuckets(raw) {
-        const buckets = (Array.isArray(raw) ? raw : [])
-          .filter((bucket) => bucket && typeof bucket.value === "string")
-          .map((bucket) => ({
-            value: bucket.value,
-            label: bucket.label || bucket.value,
-            min: Number.isFinite(bucket.min) ? bucket.min : 0,
-            max: Number.isFinite(bucket.max) ? bucket.max : Infinity
-          }));
-        return buckets.length ? buckets : [{ value: "all", label: "All parameter sizes", min: 0, max: Infinity }];
-      }
 
       // Fixed (non-benchmark) table columns. Only layout lives here — labels,
       // sort-option labels and tooltips come from data.columns in llm.json.
@@ -1870,7 +1865,6 @@
         content: document.getElementById("content"),
         status: document.getElementById("status"),
         search: document.getElementById("search"),
-        params: document.getElementById("params"),
         modelCompare: document.getElementById("modelCompare"),
         benchmarkPick: document.getElementById("benchmarkPick"),
         sortMode: document.getElementById("sortMode"),
@@ -1986,7 +1980,6 @@
         state.data = data;
         state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
         state.sortGroups = Array.isArray(data.sortGroups) ? data.sortGroups : [];
-        state.paramBuckets = normalizeParamBuckets(data.paramBuckets);
         // Drop hidden keys that no longer exist in the freshly loaded data.
         state.filters.hiddenBenchmarks = state.filters.hiddenBenchmarks
           .filter((key) => state.benchmarkKeys.includes(key));
@@ -2109,13 +2102,11 @@
             const imported = JSON.parse(text);
             validateData(imported);
             state.filters.search = "";
-            state.filters.params = "all";
             state.filters.selectedModels = [];
             state.filters.hiddenBenchmarks = [];
             state.sort.key = defaultSortKey();
             state.sort.direction = "desc";
             ui.search.value = "";
-            ui.params.value = "all";
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
             init(imported);
           } catch (err) {
@@ -2142,11 +2133,6 @@
         updateCompareSummary();
 
         populateBenchmarkPicker();
-
-        ui.params.innerHTML = state.paramBuckets
-          .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
-          .join("");
-        ui.params.value = state.filters.params;
 
         populateSortOptions();
       }
@@ -2306,11 +2292,6 @@
           applyAndRender();
         }, 100));
 
-        ui.params.addEventListener("change", (event) => {
-          state.filters.params = event.target.value;
-          applyAndRender();
-        });
-
         ui.clearCompare.addEventListener("mousedown", (e) => {
           e.preventDefault(); // prevents blur on modelCompare, keeping it open
           e.stopPropagation();
@@ -2344,7 +2325,6 @@
           }
 
           state.filters.search = "";
-          state.filters.params = "all";
           state.filters.selectedModels = [];
           state.filters.hiddenBenchmarks = [];
           state.benchmarkKeys.forEach((key) => delete state.columnWidths[key]);
@@ -2352,7 +2332,6 @@
           state.sort.direction = "desc";
 
           ui.search.value = "";
-          ui.params.value = "all";
 
           ui.modelCompare.classList.remove("open");
           ui.benchmarkPick.classList.remove("open");
@@ -2391,7 +2370,6 @@
       // highlight them (gradient border / glow).
       function updateFilterGlow() {
         const searchOn = Boolean(state.filters.search);
-        const paramsOn = state.filters.params !== "all";
         const compareOn = state.filters.selectedModels.length > 0;
         const benchmarksOn = state.filters.hiddenBenchmarks.length > 0;
         const gpuOn = Boolean(state.gpu.budget);
@@ -2400,7 +2378,6 @@
         const reserveOn = state.gpu.reserve > 0;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
-        ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
         ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
         ui.benchmarkPick.closest(".field")?.classList.toggle("filter-on", benchmarksOn);
         ui.sortMode.closest(".field")?.classList.toggle("filter-on", sortOn);
@@ -2408,11 +2385,11 @@
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || reserveOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || reserveOn);
         updateReserveHint();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
+        const activeCount = [searchOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
       }
@@ -2421,18 +2398,6 @@
         if (state.filters.search) {
           const haystack = `${model.name || ""} ${model.creatorName}`.toLowerCase();
           if (!haystack.includes(state.filters.search)) {
-            return false;
-          }
-        }
-
-        const modelParams = parseUnitNumber(model.params);
-        if (state.filters.params !== "all") {
-          if (!Number.isFinite(modelParams)) {
-            return false;
-          }
-          const bucket = state.paramBuckets.find((b) => b.value === state.filters.params);
-          // Half-open interval [min, max): adjacent buckets never overlap.
-          if (bucket && !(modelParams >= bucket.min && modelParams < bucket.max)) {
             return false;
           }
         }
