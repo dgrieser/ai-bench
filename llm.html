@@ -543,17 +543,11 @@
       grid-column: 1 / -1;
     }
 
-    /* --filter-cols is set from the visible field count (ceil(n / 2)) so the
-       panel lands on two rows whatever fields exist; below the breakpoint the
-       tracks fall back to auto-fit and wrap into as many rows as needed. */
+    /* --filter-cols comes from updateFilterColumns(): the widest column count
+       that both fits the available width and divides the slots evenly, so no
+       row is ever left half-empty. */
     .controls.has-gpu {
-      grid-template-columns: repeat(var(--filter-cols, 5), minmax(185px, 1fr));
-    }
-
-    @media (max-width: 1500px) {
-      .controls.has-gpu {
-        grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-      }
+      grid-template-columns: repeat(var(--filter-cols, 3), minmax(0, 1fr));
     }
 
     .gpu-combo input {
@@ -2006,21 +2000,41 @@
         }
       }
 
-      // Half the visible fields per row: the panel stays two rows whether the
-      // GPU group is present or a filter is added/removed later. Fields flow in
-      // DOM order — no field is pinned to a row.
+      // Narrowest a filter slot may get before dropping a column.
+      const FILTER_SLOT_MIN = 215;
+
+      // Rows are always evenly filled: the column count is the largest divisor
+      // of the slot count that still fits the width, and never the whole set on
+      // one line. Six slots therefore go 3/3, 2/2/2 or 1×6 — never 5+1. Fields
+      // flow in DOM order; none is pinned to a row.
       function updateFilterColumns() {
         // One slot per top-level field; a field cluster counts once, not once
         // per member.
         const slots = [...ui.controls.querySelectorAll(".field, .field-cluster")]
           .filter((el) => !el.closest("[hidden]") && !el.parentElement.closest(".field-cluster"));
         // Full-width fields bring their own row, so they don't count toward the
-        // two-row split of the regular slots.
+        // split of the regular slots.
         const inlineSlots = slots.filter((el) => !el.classList.contains("field-full"));
         if (!inlineSlots.length) {
           return;
         }
-        ui.controls.style.setProperty("--filter-cols", String(Math.ceil(inlineSlots.length / 2)));
+
+        const styles = getComputedStyle(ui.controls);
+        const gap = parseFloat(styles.columnGap) || 0;
+        const available = ui.controls.getBoundingClientRect().width
+          - (parseFloat(styles.paddingLeft) || 0)
+          - (parseFloat(styles.paddingRight) || 0);
+        const fits = Math.max(1, Math.floor((available + gap) / (FILTER_SLOT_MIN + gap)));
+        const limit = Math.min(fits, Math.ceil(inlineSlots.length / 2));
+
+        let columns = 1;
+        for (let candidate = limit; candidate >= 1; candidate -= 1) {
+          if (inlineSlots.length % candidate === 0) {
+            columns = candidate;
+            break;
+          }
+        }
+        ui.controls.style.setProperty("--filter-cols", String(columns));
       }
 
       function prefersReducedMotion() {
@@ -2372,6 +2386,8 @@
           state.filters.search = "";
           applyAndRender();
         });
+
+        window.addEventListener("resize", debounce(() => updateFilterColumns(), 150));
 
         ui.sortMode.addEventListener("change", (event) => {
           const nextSort = parseSortModeValue(event.target.value);
