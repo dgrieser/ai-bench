@@ -8,15 +8,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 OSWORLD_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-osworld-to-artificialanalysis.json"
 )
-
-# Sentinel value stored for OSWorld names reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json model slug.
-UNMAPPABLE = "__unmappable__"
 
 
 def fetch_osworld_model_names() -> list[str]:
@@ -43,12 +40,22 @@ def _load_raw_mapping(path: Path = OSWORLD_MAPPING) -> dict[str, str]:
 
 def load_osworld_to_slug_mapping(path: Path = OSWORLD_MAPPING) -> dict[str, str]:
     """Real OSWorld name -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in SENTINELS}
 
 
-def load_reviewed_osworld_names(path: Path = OSWORLD_MAPPING) -> set[str]:
-    """All OSWorld names already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+def load_reviewed_osworld_names(
+    path: Path = OSWORLD_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All OSWorld names already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_osworld_to_slug_mapping(
@@ -73,3 +80,8 @@ def add_osworld_mapping(
 def add_osworld_unmappable(osworld_name: str, path: Path = OSWORLD_MAPPING) -> None:
     """Record an OSWorld name as reviewed-but-unmapped so it is not prompted again."""
     add_osworld_mapping(osworld_name, UNMAPPABLE, path)
+
+
+def add_osworld_closed_weights(osworld_name: str, path: Path = OSWORLD_MAPPING) -> None:
+    """Record a OSWorld name as skipped because the source reports closed weights."""
+    add_osworld_mapping(osworld_name, CLOSED_WEIGHTS, path)

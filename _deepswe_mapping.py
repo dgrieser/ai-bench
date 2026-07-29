@@ -8,15 +8,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DEEPSWE_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-deepswe-to-artificialanalysis.json"
 )
-
-# Sentinel value stored for DeepSWE names reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json model slug.
-UNMAPPABLE = "__unmappable__"
 
 
 def fetch_deepswe_model_names() -> list[str]:
@@ -32,6 +29,25 @@ def fetch_deepswe_model_names() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def fetch_deepswe_model_openness() -> dict[str, bool | None]:
+    """DeepSWE name -> has open weights, as read from the row's sourceType."""
+    proc = subprocess.run(
+        [sys.executable, str(DEEPSWE_SCRIPT), "--format", "json"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_deepswe.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+    entries: Any = json.loads(proc.stdout)
+    return {
+        entry["model"]: entry.get("open_weights")
+        for entry in entries
+        if isinstance(entry, dict) and isinstance(entry.get("model"), str)
+    }
+
+
 def _load_raw_mapping(path: Path = DEEPSWE_MAPPING) -> dict[str, str]:
     if not path.exists():
         return {}
@@ -43,12 +59,22 @@ def _load_raw_mapping(path: Path = DEEPSWE_MAPPING) -> dict[str, str]:
 
 def load_deepswe_to_slug_mapping(path: Path = DEEPSWE_MAPPING) -> dict[str, str]:
     """Real DeepSWE name -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in SENTINELS}
 
 
-def load_reviewed_deepswe_names(path: Path = DEEPSWE_MAPPING) -> set[str]:
-    """All DeepSWE names already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+def load_reviewed_deepswe_names(
+    path: Path = DEEPSWE_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All DeepSWE names already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_deepswe_to_slug_mapping(
@@ -73,3 +99,8 @@ def add_deepswe_mapping(
 def add_deepswe_unmappable(deepswe_name: str, path: Path = DEEPSWE_MAPPING) -> None:
     """Record a DeepSWE name as reviewed-but-unmapped so it is not prompted again."""
     add_deepswe_mapping(deepswe_name, UNMAPPABLE, path)
+
+
+def add_deepswe_closed_weights(deepswe_name: str, path: Path = DEEPSWE_MAPPING) -> None:
+    """Record a DeepSWE name as skipped because the source reports closed weights."""
+    add_deepswe_mapping(deepswe_name, CLOSED_WEIGHTS, path)

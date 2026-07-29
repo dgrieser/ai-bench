@@ -9,15 +9,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 SWE_REBENCH_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-rebench-to-artificialanalysis.json"
 )
-
-# Sentinel value stored for SWE-Rebench names reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json model slug.
-UNMAPPABLE = "__unmappable__"
 
 
 def fetch_swe_rebench_model_names() -> list[str]:
@@ -52,13 +49,23 @@ def load_rebench_to_slug_mapping(mapping_path: Path = SWE_REBENCH_MAPPING) -> di
     return {
         rebench_name: aa_slug
         for rebench_name, aa_slug in _load_raw_mapping(mapping_path).items()
-        if aa_slug != UNMAPPABLE
+        if aa_slug not in SENTINELS
     }
 
 
-def load_reviewed_rebench_names(mapping_path: Path = SWE_REBENCH_MAPPING) -> set[str]:
-    """All SWE-Rebench names already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(mapping_path))
+def load_reviewed_rebench_names(
+    mapping_path: Path = SWE_REBENCH_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All SWE-Rebench names already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(mapping_path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_rebench_to_slug_mapping(
@@ -83,3 +90,8 @@ def add_rebench_mapping(
 def add_rebench_unmappable(rebench_name: str, mapping_path: Path = SWE_REBENCH_MAPPING) -> None:
     """Record a SWE-Rebench name as reviewed-but-unmapped so it is not prompted again."""
     add_rebench_mapping(rebench_name, UNMAPPABLE, mapping_path)
+
+
+def add_rebench_closed_weights(rebench_name: str, mapping_path: Path = SWE_REBENCH_MAPPING) -> None:
+    """Record a SWE-Rebench name as skipped because the source reports closed weights."""
+    add_rebench_mapping(rebench_name, CLOSED_WEIGHTS, mapping_path)

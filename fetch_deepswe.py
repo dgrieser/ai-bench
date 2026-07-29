@@ -5,6 +5,9 @@ Fetch DeepSWE (pass@1 %) scores from https://benchlm.ai/benchmarks/deepSwe
 The site is a Next.js app that embeds the leaderboard as JSON in a
 <script id="__NEXT_DATA__" type="application/json"> tag. This script extracts it
 directly without needing a headless browser.
+
+Rows carry a ``sourceType`` ("Open Weight" / "Proprietary", or null while a
+model is pending review), reported as ``open_weights``.
 """
 
 from __future__ import annotations
@@ -14,6 +17,8 @@ import json
 import re
 import sys
 import urllib.request
+
+from _openness import source_type_open
 
 
 URL = "https://benchlm.ai/benchmarks/deepSwe"
@@ -50,7 +55,8 @@ def extract_leaderboard(html: str) -> list[dict]:
 
 
 def get_scores() -> list[dict]:
-    """Return a list of dicts with keys: rank, model, slug, creator, score, context_window."""
+    """Return a list of dicts with keys: rank, model, slug, creator, score,
+    context_window, source_type, open_weights (None while sourceType is unset)."""
     print(f"Fetching {URL} ...", file=sys.stderr)
     html = fetch_html(URL)
 
@@ -72,6 +78,8 @@ def get_scores() -> list[dict]:
                 "creator": item.get("creator"),
                 "score": score,
                 "context_window": item.get("contextWindow"),
+                "source_type": item.get("sourceType"),
+                "open_weights": source_type_open(item.get("sourceType")),
             }
         )
 

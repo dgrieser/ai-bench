@@ -5,6 +5,10 @@ The leaderboard page is backed by the zeroeval API. A single endpoint returns
 every model as a flat record with one column per benchmark (keys ending in
 ``_score``, values on a 0-1 scale). The source benchmark label is that key with
 the ``_score`` suffix stripped (e.g. ``gpqa_score`` -> ``gpqa``).
+
+Records also carry a ``license`` ("proprietary" or an open licence name), which
+is reported as ``open_weights`` so closed models can be recognised without a
+lookup elsewhere.
 """
 
 from __future__ import annotations
@@ -13,6 +17,8 @@ import argparse
 import json
 import sys
 import urllib.request
+
+from _openness import license_open
 
 URL = "https://api.zeroeval.com/leaderboard/models/full"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) ai-bench-fetcher/1.0"
@@ -27,11 +33,12 @@ def fetch_json(url: str, timeout: int = 60) -> object:
 
 
 def get_scores() -> list[dict]:
-    """Return a list of dicts with keys: model, name, scores.
+    """Return a list of dicts with keys: model, name, license, open_weights, scores.
 
     ``model`` is the llm-stats model_id, ``scores`` maps the source benchmark
-    label (``_score`` suffix stripped) to its raw 0-1 value. Records without any
-    non-null score are dropped.
+    label (``_score`` suffix stripped) to its raw 0-1 value. ``open_weights`` is
+    None when the record carries no licence. Records without any non-null score
+    are dropped.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     payload = fetch_json(URL)
@@ -59,6 +66,8 @@ def get_scores() -> list[dict]:
             {
                 "model": model_id,
                 "name": item.get("name"),
+                "license": item.get("license"),
+                "open_weights": license_open(item.get("license")),
                 "scores": scores,
             }
         )

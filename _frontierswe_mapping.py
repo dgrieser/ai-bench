@@ -8,15 +8,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 FRONTIERSWE_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-frontierswe-to-artificialanalysis.json"
 )
-
-# Sentinel value stored for FrontierSWE names reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json model slug.
-UNMAPPABLE = "__unmappable__"
 
 
 def fetch_frontierswe_model_names() -> list[str]:
@@ -43,12 +40,22 @@ def _load_raw_mapping(path: Path = FRONTIERSWE_MAPPING) -> dict[str, str]:
 
 def load_frontierswe_to_slug_mapping(path: Path = FRONTIERSWE_MAPPING) -> dict[str, str]:
     """Real FrontierSWE name -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in SENTINELS}
 
 
-def load_reviewed_frontierswe_names(path: Path = FRONTIERSWE_MAPPING) -> set[str]:
-    """All FrontierSWE names already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+def load_reviewed_frontierswe_names(
+    path: Path = FRONTIERSWE_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All FrontierSWE names already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_frontierswe_to_slug_mapping(
@@ -73,3 +80,8 @@ def add_frontierswe_mapping(
 def add_frontierswe_unmappable(frontierswe_name: str, path: Path = FRONTIERSWE_MAPPING) -> None:
     """Record a FrontierSWE name as reviewed-but-unmapped so it is not prompted again."""
     add_frontierswe_mapping(frontierswe_name, UNMAPPABLE, path)
+
+
+def add_frontierswe_closed_weights(frontierswe_name: str, path: Path = FRONTIERSWE_MAPPING) -> None:
+    """Record a FrontierSWE name as skipped because the source reports closed weights."""
+    add_frontierswe_mapping(frontierswe_name, CLOSED_WEIGHTS, path)

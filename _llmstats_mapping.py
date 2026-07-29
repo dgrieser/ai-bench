@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 LLMSTATS_MODEL_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-llmstats-to-artificialanalysis.json"
@@ -21,11 +23,6 @@ LLMSTATS_MODEL_MAPPING = Path(__file__).resolve().with_name(
 LLMSTATS_BENCHMARK_MAPPING = Path(__file__).resolve().with_name(
     "llmstats-benchmark-name-mapping.json"
 )
-
-# Sentinel value stored for names/labels reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json slug or benchmark key.
-UNMAPPABLE = "__unmappable__"
 
 
 def _load_raw_mapping(path: Path) -> dict[str, str]:
@@ -68,16 +65,45 @@ def fetch_llmstats_model_names() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def fetch_llmstats_model_openness() -> dict[str, bool | None]:
+    """llm-stats model_id -> has open weights, as read from its licence field."""
+    proc = subprocess.run(
+        [sys.executable, str(LLMSTATS_SCRIPT), "--format", "json"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_llmstats.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+    entries: Any = json.loads(proc.stdout)
+    return {
+        entry["model"]: entry.get("open_weights")
+        for entry in entries
+        if isinstance(entry, dict) and isinstance(entry.get("model"), str)
+    }
+
+
 def load_llmstats_to_slug_mapping(
     path: Path = LLMSTATS_MODEL_MAPPING,
 ) -> dict[str, str]:
     """Real llm-stats model_id -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in SENTINELS}
 
 
-def load_reviewed_llmstats_names(path: Path = LLMSTATS_MODEL_MAPPING) -> set[str]:
-    """All llm-stats model ids already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+def load_reviewed_llmstats_names(
+    path: Path = LLMSTATS_MODEL_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All llm-stats model ids already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_llmstats_to_slug_mapping(
@@ -97,6 +123,13 @@ def add_llmstats_unmappable(
 ) -> None:
     """Record an llm-stats model id as reviewed-but-unmapped so it is not prompted again."""
     _add_mapping(llmstats_name, UNMAPPABLE, path)
+
+
+def add_llmstats_closed_weights(
+    llmstats_name: str, path: Path = LLMSTATS_MODEL_MAPPING
+) -> None:
+    """Record an llm-stats model id as skipped because its licence is proprietary."""
+    _add_mapping(llmstats_name, CLOSED_WEIGHTS, path)
 
 
 # --- Benchmark-name side (llm-stats label -> llm.json benchmark key) -----------

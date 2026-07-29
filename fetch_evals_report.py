@@ -14,7 +14,12 @@ keep the rest.
 
 Open-weights models are labelled with an " Open" suffix on the model name
 ("Kimi K2.6 Open"); the suffix is stripped for the reported `model` so a
-single name->slug mapping works, `raw` keeps the original label.
+single name->slug mapping works, `raw` keeps the original label, and
+`open_weights` reports the label as a boolean.
+
+Some rows are harness+model composites ("Terminus 2 + GLM 5.1", Lab = "Agent
+systems") whose label never carries the " Open" suffix even when the model is
+open, so those report open_weights=None instead of False.
 
 BENCHMARKS maps the evals.report benchmark slug to our llm.json benchmark
 key; add entries there to scrape more benchmarks.
@@ -41,6 +46,11 @@ BENCHMARKS: dict[str, str] = {
 }
 
 TRUSTED_STATUSES = {"official", "verified"}
+
+# Lab value evals.report uses for harness+model composite rows.
+AGENT_SYSTEMS_LAB = "agent systems"
+
+_OPEN_SUFFIX_RE = re.compile(r"\s+Open$")
 
 HEADERS = {
     "User-Agent": (
@@ -102,11 +112,20 @@ def extract_rows(page_html: str) -> list[dict]:
     return rows
 
 
+def _open_weights(raw: str, lab: str | None) -> bool | None:
+    """Read the " Open" label, or None when the row is a harness composite."""
+    if _OPEN_SUFFIX_RE.search(raw):
+        return True
+    if " + " in raw or (lab or "").strip().lower() == AGENT_SYSTEMS_LAB:
+        return None
+    return False
+
+
 def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
     """Return a flat list of score dicts across the requested benchmarks.
 
-    Keys: benchmark, key, model (raw minus " Open"), raw, lab, score, status,
-    date, rank (rank within the benchmark, 1 = best).
+    Keys: benchmark, key, model (raw minus " Open"), raw, lab, open_weights,
+    score, status, date, rank (rank within the benchmark, 1 = best).
     """
     results: list[dict] = []
     for slug in slugs:
@@ -125,7 +144,7 @@ def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
             if not match:
                 continue
             raw = row["model"]
-            model = re.sub(r"\s+Open$", "", raw)
+            model = _OPEN_SUFFIX_RE.sub("", raw)
             kept.append(
                 {
                     "benchmark": slug,
@@ -133,6 +152,7 @@ def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
                     "model": model,
                     "raw": raw,
                     "lab": row.get("lab"),
+                    "open_weights": _open_weights(raw, row.get("lab")),
                     "score": round(float(match.group(1)), 2),
                     "status": status,
                     "date": row.get("date") or None,

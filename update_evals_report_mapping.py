@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Review and update evals.report to Artificial Analysis name mappings."""
+"""Review and update evals.report to Artificial Analysis name mappings.
+
+llm.json tracks open-weight models only, so names the source reports as
+closed-weight are recorded as __closed_weights__ without prompting. Pass
+--recheck-closed to put those back in the review (sources do get it wrong).
+"""
 
 from __future__ import annotations
 
@@ -9,12 +14,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import is_closed_weights, open_index
 from add import prompt_select_or_new
 from _evals_report_mapping import (
     EVALS_REPORT_MAPPING,
+    add_evals_report_closed_weights,
     add_evals_report_mapping,
     add_evals_report_unmappable,
     fetch_evals_report_model_names,
+    fetch_evals_report_model_openness,
     load_reviewed_evals_report_names,
 )
 
@@ -42,6 +50,17 @@ def parse_args() -> argparse.Namespace:
         "-w",
         action="store_true",
         help=f"Write selected mappings back to {EVALS_REPORT_MAPPING.name}.",
+    )
+    parser.add_argument(
+        "--recheck-closed",
+        action="store_true",
+        help="Prompt for names previously skipped as closed-weight models, "
+        "instead of skipping them again.",
+    )
+    parser.add_argument(
+        "--refresh-openness",
+        action="store_true",
+        help="Rebuild the cached open-weight index before reviewing.",
     )
     return parser.parse_args()
 
@@ -123,7 +142,11 @@ def main() -> int:
     llm_names = unique_names(doc["models"])
 
     evals_report_names = fetch_evals_report_model_names()
-    reviewed_names = load_reviewed_evals_report_names()
+    source_openness = fetch_evals_report_model_openness()
+    reviewed_names = load_reviewed_evals_report_names(
+        include_closed=not args.recheck_closed
+    )
+    open_index(refresh=args.refresh_openness)
     unreviewed_evals_report_names = [
         name for name in evals_report_names if name not in reviewed_names
     ]
@@ -138,6 +161,7 @@ def main() -> int:
     without_candidates = 0
     written = 0
     skipped = 0
+    closed = 0
     interactive = sys.stdin.isatty()
 
     for evals_report_name in unreviewed_evals_report_names:
@@ -150,6 +174,17 @@ def main() -> int:
         else:
             without_candidates += 1
             print("  no candidate matches")
+
+        if not args.recheck_closed and is_closed_weights(
+            evals_report_name,
+            open_weights=source_openness.get(evals_report_name),
+            guard_names=llm_names,
+        ):
+            closed += 1
+            print("  -> closed weights per source, skipped without prompting")
+            if args.write:
+                add_evals_report_closed_weights(evals_report_name)
+            continue
 
         if not (interactive and args.write):
             continue
@@ -170,6 +205,7 @@ def main() -> int:
     print(f"evals.report names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
     print(f"recorded as unmappable: {skipped}")
+    print(f"skipped as closed weights: {closed}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     return 0

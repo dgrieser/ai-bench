@@ -14,15 +14,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 SWE_ATLAS_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-swe-atlas-to-artificialanalysis.json"
 )
-
-# Sentinel value stored for SWE Atlas names reviewed but deliberately not mapped.
-# Kept in the mapping file so they are not prompted again, but never used as a
-# real llm.json model slug.
-UNMAPPABLE = "__unmappable__"
 
 
 def fetch_swe_atlas_model_names() -> list[str]:
@@ -49,12 +46,22 @@ def _load_raw_mapping(path: Path = SWE_ATLAS_MAPPING) -> dict[str, str]:
 
 def load_swe_atlas_to_slug_mapping(path: Path = SWE_ATLAS_MAPPING) -> dict[str, str]:
     """Real SWE Atlas name -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in SENTINELS}
 
 
-def load_reviewed_swe_atlas_names(path: Path = SWE_ATLAS_MAPPING) -> set[str]:
-    """All SWE Atlas names already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+def load_reviewed_swe_atlas_names(
+    path: Path = SWE_ATLAS_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """All SWE Atlas names already reviewed, whether mapped or skipped.
+
+    include_closed=False drops the names auto-recorded as closed-weight, so a
+    source that mislabelled one can be reviewed again.
+    """
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if include_closed or value != CLOSED_WEIGHTS
+    }
 
 
 def write_swe_atlas_to_slug_mapping(
@@ -79,3 +86,8 @@ def add_swe_atlas_mapping(
 def add_swe_atlas_unmappable(swe_atlas_name: str, path: Path = SWE_ATLAS_MAPPING) -> None:
     """Record a SWE Atlas name as reviewed-but-unmapped so it is not prompted again."""
     add_swe_atlas_mapping(swe_atlas_name, UNMAPPABLE, path)
+
+
+def add_swe_atlas_closed_weights(swe_atlas_name: str, path: Path = SWE_ATLAS_MAPPING) -> None:
+    """Record a SWE Atlas name as skipped because the source reports closed weights."""
+    add_swe_atlas_mapping(swe_atlas_name, CLOSED_WEIGHTS, path)

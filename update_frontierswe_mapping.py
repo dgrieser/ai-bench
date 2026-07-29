@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Review and update FrontierSWE to Artificial Analysis name mappings."""
+"""Review and update FrontierSWE to Artificial Analysis name mappings.
+
+llm.json tracks open-weight models only, so names the source reports as
+closed-weight are recorded as __closed_weights__ without prompting. Pass
+--recheck-closed to put those back in the review (sources do get it wrong).
+"""
 
 from __future__ import annotations
 
@@ -9,9 +14,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import is_closed_weights, open_index
 from add import prompt_select_or_new
 from _frontierswe_mapping import (
     FRONTIERSWE_MAPPING,
+    add_frontierswe_closed_weights,
     add_frontierswe_mapping,
     add_frontierswe_unmappable,
     fetch_frontierswe_model_names,
@@ -42,6 +49,17 @@ def parse_args() -> argparse.Namespace:
         "-w",
         action="store_true",
         help=f"Write selected mappings back to {FRONTIERSWE_MAPPING.name}.",
+    )
+    parser.add_argument(
+        "--recheck-closed",
+        action="store_true",
+        help="Prompt for names previously skipped as closed-weight models, "
+        "instead of skipping them again.",
+    )
+    parser.add_argument(
+        "--refresh-openness",
+        action="store_true",
+        help="Rebuild the cached open-weight index before reviewing.",
     )
     return parser.parse_args()
 
@@ -123,7 +141,10 @@ def main() -> int:
     llm_names = unique_names(doc["models"])
 
     frontierswe_names = fetch_frontierswe_model_names()
-    reviewed_names = load_reviewed_frontierswe_names()
+    reviewed_names = load_reviewed_frontierswe_names(
+        include_closed=not args.recheck_closed
+    )
+    open_index(refresh=args.refresh_openness)
     unreviewed_frontierswe_names = [name for name in frontierswe_names if name not in reviewed_names]
 
     print(f"models in {llm_path}: {len(llm_names)}")
@@ -136,6 +157,7 @@ def main() -> int:
     without_candidates = 0
     written = 0
     skipped = 0
+    closed = 0
     interactive = sys.stdin.isatty()
 
     for frontierswe_name in unreviewed_frontierswe_names:
@@ -148,6 +170,15 @@ def main() -> int:
         else:
             without_candidates += 1
             print("  no candidate matches")
+
+        if not args.recheck_closed and is_closed_weights(
+            frontierswe_name, guard_names=llm_names
+        ):
+            closed += 1
+            print("  -> closed weights per source, skipped without prompting")
+            if args.write:
+                add_frontierswe_closed_weights(frontierswe_name)
+            continue
 
         if not (interactive and args.write):
             continue
@@ -168,6 +199,7 @@ def main() -> int:
     print(f"frontierswe names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
     print(f"recorded as unmappable: {skipped}")
+    print(f"skipped as closed weights: {closed}")
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     return 0

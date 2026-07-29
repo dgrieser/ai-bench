@@ -11,6 +11,11 @@ accept with Enter, type another value, or skip. Ids and labels left blank are
 recorded as __unmappable__ so add.py stops prompting for them. Each answer is
 written immediately. On a non-interactive terminal, -w auto-applies every
 confident match (and marks leftover ids and labels unmappable).
+
+Model ids with no confident match whose licence is proprietary are recorded as
+__closed_weights__ without prompting: llm.json tracks open-weight models only,
+so a closed model can never map to one. Pass --recheck-closed to review those
+again (llm-stats does get the odd licence wrong).
 """
 
 from __future__ import annotations
@@ -22,14 +27,17 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import is_closed_weights, open_index
 from add import prompt_key_for_label, prompt_select_or_new
 from _llmstats_mapping import (
     add_llmstats_benchmark_mapping,
     add_llmstats_benchmark_unmappable,
+    add_llmstats_closed_weights,
     add_llmstats_mapping,
     add_llmstats_unmappable,
     fetch_llmstats_benchmark_names,
     fetch_llmstats_model_names,
+    fetch_llmstats_model_openness,
     load_reviewed_llmstats_benchmarks,
     load_reviewed_llmstats_names,
 )
@@ -92,15 +100,29 @@ def auto_match_benchmark(label: str, keys: list[str]) -> str | None:
     return target if target in keys else None
 
 
-def review_models(doc: dict[str, Any], model_ids: list[str], interactive: bool) -> int:
+def review_models(
+    doc: dict[str, Any],
+    model_ids: list[str],
+    interactive: bool,
+    openness: dict[str, bool | None],
+    recheck_closed: bool = False,
+) -> int:
     slugs = model_slugs(doc)
-    reviewed_ids = load_reviewed_llmstats_names()
+    reviewed_ids = load_reviewed_llmstats_names(include_closed=not recheck_closed)
     changed = 0
 
     for model_id in model_ids:
         if model_id in reviewed_ids:
             continue
         default = auto_match_slug(model_id, slugs)
+
+        if default is None and not recheck_closed and is_closed_weights(
+            model_id, open_weights=openness.get(model_id), guard_names=slugs
+        ):
+            add_llmstats_closed_weights(model_id)
+            changed += 1
+            print(f"Skipped llm-stats model '{model_id}': closed weights per source")
+            continue
 
         if interactive:
             slug = prompt_select_or_new(
@@ -146,10 +168,16 @@ def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool)
     return changed
 
 
-def preview_models(doc: dict[str, Any], model_ids: list[str]) -> None:
+def preview_models(
+    doc: dict[str, Any],
+    model_ids: list[str],
+    openness: dict[str, bool | None],
+    recheck_closed: bool = False,
+) -> None:
     slugs = model_slugs(doc)
-    reviewed_ids = load_reviewed_llmstats_names()
+    reviewed_ids = load_reviewed_llmstats_names(include_closed=not recheck_closed)
     matched: list[tuple[str, str]] = []
+    closed: list[str] = []
     unmappable: list[str] = []
     for model_id in model_ids:
         if model_id in reviewed_ids:
@@ -157,6 +185,10 @@ def preview_models(doc: dict[str, Any], model_ids: list[str]) -> None:
         slug = auto_match_slug(model_id, slugs)
         if slug:
             matched.append((model_id, slug))
+        elif not recheck_closed and is_closed_weights(
+            model_id, open_weights=openness.get(model_id), guard_names=slugs
+        ):
+            closed.append(model_id)
         else:
             unmappable.append(model_id)
     print(f"model mappings ({len(matched)} proposed):")
@@ -165,6 +197,9 @@ def preview_models(doc: dict[str, Any], model_ids: list[str]) -> None:
         print(f"  {model_id} {arrow} {slug}")
     if not matched:
         print("  (none)")
+    print(f"llm-stats model ids to mark __closed_weights__: {len(closed)}")
+    for model_id in closed:
+        print(f"  - {model_id}")
     print(f"llm-stats model ids to mark __unmappable__: {len(unmappable)}")
     for model_id in unmappable:
         print(f"  - {model_id}")
@@ -221,6 +256,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip the benchmark-name mapping review.",
     )
+    parser.add_argument(
+        "--recheck-closed",
+        action="store_true",
+        help="Prompt for model ids previously skipped as closed-weight models, "
+        "instead of skipping them again.",
+    )
+    parser.add_argument(
+        "--refresh-openness",
+        action="store_true",
+        help="Rebuild the cached open-weight index before reviewing.",
+    )
     return parser.parse_args()
 
 
@@ -229,12 +275,15 @@ def main() -> int:
     doc = load_doc(Path(args.json_file))
 
     model_ids: list[str] = []
+    openness: dict[str, bool | None] = {}
     if not args.skip_models:
         try:
             model_ids = fetch_llmstats_model_names()
+            openness = fetch_llmstats_model_openness()
         except RuntimeError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return 1
+        open_index(refresh=args.refresh_openness)
 
     labels: list[str] = []
     if not args.skip_benchmarks:
@@ -246,7 +295,7 @@ def main() -> int:
 
     if not args.write:
         if not args.skip_models:
-            preview_models(doc, model_ids)
+            preview_models(doc, model_ids, openness, args.recheck_closed)
         if not args.skip_benchmarks:
             preview_benchmarks(doc, labels)
         print("dry-run only, pass -w/--write to apply")
@@ -258,7 +307,9 @@ def main() -> int:
 
     added = 0
     if not args.skip_models:
-        added += review_models(doc, model_ids, interactive)
+        added += review_models(
+            doc, model_ids, interactive, openness, args.recheck_closed
+        )
     if not args.skip_benchmarks:
         added += review_benchmarks(doc, labels, interactive)
 
