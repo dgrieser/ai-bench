@@ -3059,10 +3059,13 @@
         state.gpu.selected = gpu;
         state.gpu.custom = false;
         ui.gpuModel.value = gpu.model;
-        if (state.gpu.vendor === "custom") {
-          state.gpu.vendor = "all";
-          ui.gpuVendor.value = "all";
-        }
+        // Follow the pick: point the vendor select at the card's own maker so the
+        // two fields never disagree (falls back to "any" for unlisted vendors).
+        const vendor = [...ui.gpuVendor.options].some((option) => option.value === gpu.manufacturer)
+          ? gpu.manufacturer
+          : "all";
+        state.gpu.vendor = vendor;
+        ui.gpuVendor.value = vendor;
         setGpuCountDisabled(false);
         closeGpuList();
         gpuUpdateBudgetFromSelection();
