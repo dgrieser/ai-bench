@@ -236,6 +236,12 @@
       flex: 0 0 auto;
     }
 
+    /* The VRAM readout takes whatever the fixed-width steppers leave over */
+    .field-cluster > .field-grow {
+      flex: 1 1 110px;
+      min-width: 110px;
+    }
+
     .field label {
       color: var(--subtle);
       font-size: 0.7rem;
@@ -620,7 +626,7 @@
       display: flex;
       align-items: stretch;
       height: 42px;
-      width: 92px;
+      width: 74px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--surface);
@@ -639,7 +645,7 @@
     }
 
     .gpu-stepper button {
-      width: 26px;
+      width: 22px;
       min-height: unset;
       padding: 0;
       border: none;
@@ -657,7 +663,7 @@
     }
 
     .gpu-stepper input {
-      width: 36px;
+      width: 30px;
       height: auto;
       border: none;
       border-radius: 0;
@@ -680,6 +686,8 @@
       align-items: center;
       gap: 8px;
       height: 42px;
+      width: 100%;
+      min-width: 0;
     }
 
     .gpu-eq {
@@ -689,7 +697,10 @@
     }
 
     .gpu-total input {
-      width: 5ch;
+      /* Grows into the slot the steppers leave free */
+      flex: 1 1 auto;
+      width: auto;
+      min-width: 0;
       height: 42px;
       border: none;
       border-bottom: 2px solid var(--line);
@@ -1715,7 +1726,7 @@
               <button id="gpuCountUp" type="button" aria-label="More cards">+</button>
             </div>
           </div>
-          <div class="field">
+          <div class="field field-grow">
             <label for="gpuVram">Total VRAM</label>
             <div class="gpu-total" id="gpuTotal">
               <span class="gpu-eq" aria-hidden="true">=</span>
@@ -2002,8 +2013,12 @@
         }
         const clusterGap = parseFloat(getComputedStyle(ui.vramCluster).columnGap) || 0;
         const gridGap = parseFloat(getComputedStyle(ui.controls).columnGap) || 0;
-        const needed = members.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
-          + clusterGap * (members.length - 1);
+        // Members that grow are counted at their min-width, not their current
+        // width — otherwise the span decision would feed back on itself.
+        const needed = members.reduce((sum, el) => {
+          const min = parseFloat(getComputedStyle(el).minWidth);
+          return sum + (Number.isFinite(min) && min > 0 ? min : el.getBoundingClientRect().width);
+        }, 0) + clusterGap * (members.length - 1);
         const track = reference.getBoundingClientRect().width;
         if (track <= 0) {
           return;
