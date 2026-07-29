@@ -280,6 +280,11 @@
       position: relative;
     }
 
+    /* Reserve the field height for widgets that leave the flow when open */
+    .select-wrap:has(.model-compare-widget) {
+      min-height: 42px;
+    }
+
     /* ── Model compare custom widget ──────────────────── */
 
     .model-compare-widget {
@@ -300,11 +305,21 @@
 
     .model-compare-widget::-webkit-scrollbar { display: none; }
 
+    /* Open list floats over the layout and sizes to its content, so long
+       labels aren't clipped by the field's column width (same trick as the
+       GPU combo list). The wrap keeps the closed height so nothing jumps. */
     .model-compare-widget.open {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      width: max-content;
+      max-width: 420px;
+      z-index: 30;
       height: auto;
       max-height: 260px;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+      box-shadow: var(--shadow), 0 0 0 3px rgba(29, 78, 216, 0.1);
       scrollbar-width: thin;
       scrollbar-color: var(--line) transparent;
     }
@@ -399,7 +414,8 @@
       justify-content: center;
       font-family: var(--font-ui);
       transition: color 120ms ease;
-      z-index: 10;
+      /* Above the open list (z-index 30) so it stays clickable */
+      z-index: 40;
     }
 
     .clear-compare:hover {
@@ -2144,9 +2160,10 @@
       function populateBenchmarkPicker() {
         ui.benchmarkPick.innerHTML = state.benchmarkKeys.map((key) => {
           const sel = isBenchmarkVisible(key);
-          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(key)}" role="option" aria-selected="${sel}">
+          const name = getBenchmarkFullName(key);
+          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(key)}" role="option" aria-selected="${sel}" title="${escapeHtml(name)}">
             <span class="model-compare-check"></span>
-            <span>${escapeHtml(getBenchmarkLabel(key))}</span>
+            <span>${escapeHtml(name)}</span>
           </div>`;
         }).join("");
 
@@ -2172,7 +2189,7 @@
         } else if (!visible.length) {
           summary.textContent = "No benchmark columns";
         } else {
-          summary.textContent = visible.map((key) => getBenchmarkLabel(key)).join(", ");
+          summary.textContent = visible.map((key) => getBenchmarkFullName(key)).join(", ");
         }
         summary.classList.toggle("is-hint", allShown);
       }
@@ -3354,6 +3371,12 @@
 
       function getBenchmarkLabel(key) {
         return state.data?.benchmarks?.[key]?.short_name || state.data?.benchmarks?.[key]?.name || key;
+      }
+
+      // Column headers use short_name to stay narrow; lists with room (the
+      // benchmark picker) use the full name.
+      function getBenchmarkFullName(key) {
+        return state.data?.benchmarks?.[key]?.name || getBenchmarkLabel(key);
       }
 
       function getBenchmarkIcon(key) {
