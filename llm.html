@@ -243,8 +243,11 @@
 
     /* The VRAM readout absorbs the slack the steppers don't need */
     .field-cluster > .field-grow {
-      flex: 1 1 90px;
-      min-width: 70px;
+      /* Basis equals the floor, not a preferred width: flex decides line
+         breaks from the basis, so a larger one would wrap Reserve off the
+         line before this field ever got a chance to shrink. */
+      flex: 1 1 36px;
+      min-width: 36px;
     }
 
     .field-cluster label {
@@ -699,13 +702,14 @@
     .gpu-total {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       height: 42px;
       width: 100%;
       min-width: 0;
     }
 
     .gpu-eq {
+      flex: 0 0 auto;
       color: var(--subtle);
       font-family: var(--font-mono);
       font-size: 1.1rem;
@@ -743,6 +747,7 @@
     }
 
     .gpu-unit {
+      flex: 0 0 auto;
       align-self: flex-end;
       padding-bottom: 5px;
       font-family: var(--font-mono);
