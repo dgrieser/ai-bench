@@ -2000,8 +2000,10 @@
         }
       }
 
-      // Narrowest a filter slot may get before dropping a column.
-      const FILTER_SLOT_MIN = 215;
+      // Width a filter slot wants before another column is worth having. It is
+      // a comfort target, not a hard floor: 3 columns need ~1010px of viewport,
+      // 2 need ~650px, and below that the panel goes single-column.
+      const FILTER_SLOT_TARGET = 300;
 
       // Rows are always evenly filled: the column count is the largest divisor
       // of the slot count that still fits the width, and never the whole set on
@@ -2024,7 +2026,7 @@
         const available = ui.controls.getBoundingClientRect().width
           - (parseFloat(styles.paddingLeft) || 0)
           - (parseFloat(styles.paddingRight) || 0);
-        const fits = Math.max(1, Math.floor((available + gap) / (FILTER_SLOT_MIN + gap)));
+        const fits = Math.max(1, Math.floor((available + gap) / (FILTER_SLOT_TARGET + gap)));
         const limit = Math.min(fits, Math.ceil(inlineSlots.length / 2));
 
         let columns = 1;
