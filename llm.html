@@ -1439,12 +1439,10 @@
       }
     }
 
-    /* ── Theme toggle ──────────────────────────────── */
+    /* ── Hero icon buttons (theme toggle, export) ──── */
 
-    .theme-toggle {
-      position: absolute;
-      top: 28px;
-      right: 36px;
+    .theme-toggle,
+    .export-toggle {
       width: 36px;
       height: 36px;
       min-width: unset;
@@ -1461,14 +1459,16 @@
       transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease;
     }
 
-    .theme-toggle:hover {
+    .theme-toggle:hover,
+    .export-toggle:hover {
       background: var(--surface-alt);
       color: var(--text);
       border-color: var(--subtle);
       transform: scale(1.08);
     }
 
-    .theme-toggle svg {
+    .theme-toggle svg,
+    .export-toggle svg {
       width: 16px;
       height: 16px;
       fill: none;
@@ -1479,15 +1479,73 @@
       flex-shrink: 0;
     }
 
+    .theme-toggle {
+      position: absolute;
+      top: 28px;
+      right: 36px;
+    }
+
     .theme-toggle .icon-sun { display: block; }
     .theme-toggle .icon-moon { display: none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
     [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
+    /* ── Export menu ───────────────────────────────── */
+
+    .export-menu {
+      position: absolute;
+      top: 28px;
+      right: 82px;
+    }
+
+    .export-toggle.is-error {
+      border-color: #d13b3b;
+      color: #d13b3b;
+    }
+
+    .export-list {
+      position: absolute;
+      top: 44px;
+      right: 0;
+      min-width: 112px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 20;
+    }
+
+    /* display:flex above outranks the [hidden] attribute's display:none. */
+    .export-list[hidden] {
+      display: none;
+    }
+
+    .export-list button {
+      text-align: left;
+      padding: 0 10px;
+      border-color: transparent;
+      background: transparent;
+    }
+
+    .export-list button:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+      border-color: transparent;
+    }
+
     @media (max-width: 860px) {
       .theme-toggle {
         top: 20px;
         right: 16px;
+      }
+
+      .export-menu {
+        top: 20px;
+        right: 62px;
       }
     }
 
@@ -1697,6 +1755,20 @@
   </svg>
   <main class="page" id="app" aria-live="polite">
     <section class="hero">
+      <div class="export-menu" id="exportMenu">
+        <button id="exportBtn" class="export-toggle" type="button" title="Export data" aria-label="Export data" aria-haspopup="true" aria-expanded="false" aria-controls="exportList">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 3v12"/>
+            <path d="M7 11l5 5 5-5"/>
+            <path d="M4 20h16"/>
+          </svg>
+        </button>
+        <div class="export-list" id="exportList" role="menu" hidden>
+          <button type="button" role="menuitem" data-format="json">JSON</button>
+          <button type="button" role="menuitem" data-format="yaml">YAML</button>
+          <button type="button" role="menuitem" data-format="csv">CSV</button>
+        </div>
+      </div>
       <button id="themeToggle" class="theme-toggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
         <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle cx="12" cy="12" r="4"/>
@@ -1848,6 +1920,9 @@
         }
       };
 
+      // Upstream data source, shared by the initial load and by exports.
+      const DATA_URL = "https://dgrieser.github.io/ai-bench/llm.json";
+
       // Fixed (non-benchmark) table columns. Only layout lives here — labels,
       // sort-option labels and tooltips come from data.columns in llm.json.
       // Order must match the cell order in renderRow.
@@ -1933,11 +2008,21 @@
         gpuTotal: document.getElementById("gpuTotal"),
         gpuReserve: document.getElementById("gpuReserve"),
         gpuReserveDown: document.getElementById("gpuReserveDown"),
-        gpuReserveUp: document.getElementById("gpuReserveUp")
+        gpuReserveUp: document.getElementById("gpuReserveUp"),
+        exportMenu: document.getElementById("exportMenu"),
+        exportBtn: document.getElementById("exportBtn"),
+        exportList: document.getElementById("exportList")
       };
 
       bindImportEvents();
+      bindExportEvents();
       loadData();
+
+      // Exports always re-fetch llm.json, so this runs independently of loadData().
+      const requestedExport = new URLSearchParams(location.search).get("export");
+      if (requestedExport) {
+        exportData(requestedExport);
+      }
 
       // Theme toggle
       document.getElementById("themeToggle").addEventListener("click", () => {
@@ -1955,17 +2040,25 @@
 
       async function loadData() {
         try {
-          const cacheBustedUrl = `https://dgrieser.github.io/ai-bench/llm.json?t=${Date.now()}`;
-          const response = await fetch(cacheBustedUrl, { cache: "no-store" });
-          if (!response.ok) {
-            throw new Error(`Request failed (${response.status})`);
-          }
-          const data = await response.json();
+          const data = await fetchRemoteData();
           validateData(data);
           init(data);
         } catch (err) {
           showImportOnly(`Unable to load llm.json automatically. ${err.message}`);
         }
+      }
+
+      async function fetchRemoteText() {
+        const cacheBustedUrl = `${DATA_URL}?t=${Date.now()}`;
+        const response = await fetch(cacheBustedUrl, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Request failed (${response.status})`);
+        }
+        return response.text();
+      }
+
+      async function fetchRemoteData() {
+        return JSON.parse(await fetchRemoteText());
       }
 
       function showImportOnly(message) {
@@ -3705,6 +3798,200 @@
         const key = parts[0] || defaultSortKey();
         const direction = parts[1] === "asc" ? "asc" : "desc";
         return { key, direction };
+      }
+
+      /* ── Export ─────────────────────────────────────────
+         Exports always re-fetch llm.json from DATA_URL, so the downloaded file
+         is the full upstream data — never the on-screen filter/sort state, and
+         never a locally imported file. JSON/YAML carry the whole document; CSV
+         can only hold a table, so it flattens models[]. */
+
+      // Each serializer takes the raw response body: JSON passes it through
+      // byte-for-byte rather than round-tripping through JSON.stringify, which
+      // would drop upstream formatting (and turn 68.0 into 68).
+      //
+      // A hoisted function, not a const map: ?export= runs while this block is
+      // still in the temporal dead zone, so a const here would throw.
+      function exportFormatSpec(format) {
+        switch (String(format || "").trim().toLowerCase()) {
+          case "json":
+            return { filename: "llm.json", mime: "application/json", serialize: (text) => text };
+          case "yaml":
+          case "yml":
+            return { filename: "llm.yaml", mime: "application/yaml", serialize: (text) => toYaml(JSON.parse(text)) };
+          case "csv":
+            return { filename: "llm.csv", mime: "text/csv;charset=utf-8", serialize: (text) => toCsv(JSON.parse(text)) };
+          default:
+            return null;
+        }
+      }
+
+      function bindExportEvents() {
+        ui.exportBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setExportMenuOpen(ui.exportList.hidden);
+        });
+
+        ui.exportList.addEventListener("click", (event) => {
+          const item = event.target.closest("button[data-format]");
+          if (!item) return;
+          setExportMenuOpen(false);
+          exportData(item.dataset.format);
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!ui.exportList.hidden && !ui.exportMenu.contains(event.target)) {
+            setExportMenuOpen(false);
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !ui.exportList.hidden) {
+            setExportMenuOpen(false);
+            ui.exportBtn.focus();
+          }
+        });
+      }
+
+      function setExportMenuOpen(open) {
+        ui.exportList.hidden = !open;
+        ui.exportBtn.setAttribute("aria-expanded", String(open));
+      }
+
+      async function exportData(format) {
+        const spec = exportFormatSpec(format);
+        if (!spec) return;
+        try {
+          const text = await fetchRemoteText();
+          triggerDownload(spec.serialize(text), spec.filename, spec.mime);
+        } catch (err) {
+          console.error("Export failed.", err);
+          flashExportError(err.message);
+        }
+      }
+
+      // Timer id hangs off the function so this stays hoisting-safe too.
+      function flashExportError(message) {
+        clearTimeout(flashExportError.timer);
+        ui.exportBtn.classList.add("is-error");
+        ui.exportBtn.title = `Export failed. ${message}`;
+        flashExportError.timer = setTimeout(() => {
+          ui.exportBtn.classList.remove("is-error");
+          ui.exportBtn.title = "Export data";
+        }, 2500);
+      }
+
+      function triggerDownload(text, filename, mime) {
+        const url = URL.createObjectURL(new Blob([text], { type: mime }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+      }
+
+      // Minimal YAML emitter, enough for llm.json's shape (nested objects and
+      // arrays of objects/strings/numbers/null). Hand-rolled so the page keeps
+      // its zero-dependency, single-file property.
+      function toYaml(value, indent) {
+        const depth = indent || 0;
+        const pad = "  ".repeat(depth);
+
+        if (Array.isArray(value)) {
+          if (!value.length) return `${pad}[]\n`;
+          return value
+            .map((item) => (isYamlContainer(item)
+              // A bare dash plus an indented block avoids splicing the dash
+              // into the nested output's first line.
+              ? `${pad}-\n${toYaml(item, depth + 1)}`
+              : `${pad}- ${yamlScalar(item)}\n`))
+            .join("");
+        }
+
+        if (isYamlContainer(value)) {
+          const keys = Object.keys(value);
+          if (!keys.length) return `${pad}{}\n`;
+          return keys
+            .map((key) => {
+              const child = value[key];
+              const label = `${pad}${yamlScalar(key)}:`;
+              if (!isYamlContainer(child)) return `${label} ${yamlScalar(child)}\n`;
+              // Empty containers go inline so the key never dangles.
+              if (Array.isArray(child)) {
+                return child.length ? `${label}\n${toYaml(child, depth + 1)}` : `${label} []\n`;
+              }
+              return Object.keys(child).length ? `${label}\n${toYaml(child, depth + 1)}` : `${label} {}\n`;
+            })
+            .join("");
+        }
+
+        return `${pad}${yamlScalar(value)}\n`;
+      }
+
+      function isYamlContainer(value) {
+        return Array.isArray(value) || (value !== null && typeof value === "object");
+      }
+
+      function yamlScalar(value) {
+        if (value === null || value === undefined) return "null";
+        if (typeof value === "boolean") return String(value);
+        if (typeof value === "number") return Number.isFinite(value) ? String(value) : "null";
+        return yamlString(String(value));
+      }
+
+      const YAML_RESERVED = /^(?:true|false|null|yes|no|on|off|y|n|~)$/i;
+      // Deliberately narrow: a plain scalar must start with a letter and hold no
+      // ":" — that alone rules out every implicitly typed form (numbers, dates,
+      // "12:30" sexagesimals, URLs), so anything else falls through to quoting.
+      const YAML_PLAIN_SAFE = /^[A-Za-z][A-Za-z0-9 ._+()'&,%/=?-]*$/;
+
+      function yamlString(text) {
+        const plainOk = YAML_PLAIN_SAFE.test(text)
+          && !/\s#/.test(text)
+          && !text.endsWith(" ")
+          && !YAML_RESERVED.test(text);
+        if (plainOk) return text;
+        return `"${text
+          .replace(/\\/g, "\\\\")
+          .replace(/"/g, '\\"')
+          .replace(/\n/g, "\\n")
+          .replace(/\r/g, "\\r")
+          .replace(/\t/g, "\\t")}"`;
+      }
+
+      const CSV_MODEL_COLUMNS = [
+        ["name", (model) => model.name],
+        ["date_added", (model) => model.date_added],
+        ["url", (model) => model.url],
+        ["params", (model) => model.params],
+        ["context", (model) => model.context],
+        ["creator_name", (model) => model.creator?.name],
+        ["creator_url", (model) => model.creator?.url],
+        ["vram_fp16", (model) => model.vram?.fp16],
+        ["vram_int8", (model) => model.vram?.int8],
+        ["vram_int4", (model) => model.vram?.int4]
+      ];
+
+      // One row per model: the fixed fields above plus one raw score column per
+      // benchmark, in llm.json's benchmark order. Values stay unformatted, so
+      // params/context remain the source strings ("123B", "256k").
+      function toCsv(data) {
+        const benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
+        const header = CSV_MODEL_COLUMNS.map(([label]) => label).concat(benchmarkKeys);
+        const models = Array.isArray(data.models) ? data.models : [];
+        const rows = models.map((model) => CSV_MODEL_COLUMNS
+          .map(([, read]) => read(model))
+          .concat(benchmarkKeys.map((key) => model.scores?.[key])));
+        // Leading BOM keeps Excel from mangling non-ASCII creator names.
+        return `\uFEFF${[header].concat(rows).map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;
+      }
+
+      function csvCell(value) {
+        if (value === null || value === undefined) return "";
+        const text = String(value);
+        return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
       }
 
       function escapeHtml(value) {
