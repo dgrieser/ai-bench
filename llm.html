@@ -500,7 +500,7 @@
       grid-template-columns:
         minmax(150px, 1fr) minmax(145px, 0.95fr) minmax(125px, 0.8fr) minmax(115px, 0.75fr)
         minmax(125px, 0.85fr) minmax(100px, 0.65fr) minmax(150px, 1.1fr) auto
-        minmax(105px, 0.7fr) minmax(108px, auto);
+        minmax(108px, auto) auto;
     }
 
     @media (max-width: 1500px) {
@@ -768,6 +768,25 @@
       animation: filterFlowSelect 7s linear infinite;
     }
 
+    /* The reserve stepper gets the same active treatment as a text field; its
+       inner input stays flat so the gradient shows only on the outer border. */
+    .field.filter-on .gpu-stepper {
+      border-color: transparent;
+      background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(120deg, var(--accent), #8b5cf6, #ec4899, #8b5cf6, var(--accent)) border-box;
+      background-size: 100% 100%, 300% 100%;
+      box-shadow: 0 0 14px rgba(29, 78, 216, 0.22);
+      animation: filterFlowInput 7s linear infinite;
+    }
+
+    .field.filter-on .gpu-stepper input {
+      background: transparent;
+      box-shadow: none;
+      animation: none;
+      color: var(--accent);
+    }
+
     @keyframes filterFlowInput {
       from { background-position: 0 0, 0% 50%; }
       to   { background-position: 0 0, 300% 50%; }
@@ -780,6 +799,7 @@
 
     [data-theme="dark"] .field.filter-on input[type="text"],
     [data-theme="dark"] .field.filter-on .model-compare-widget,
+    [data-theme="dark"] .field.filter-on .gpu-stepper,
     [data-theme="dark"] .field.filter-on select {
       box-shadow: 0 0 18px rgba(91, 138, 247, 0.30);
     }
@@ -816,6 +836,7 @@
     @media (prefers-reduced-motion: reduce) {
       .field.filter-on input[type="text"],
       .field.filter-on .model-compare-widget,
+      .field.filter-on .gpu-stepper,
       .field.filter-on select {
         animation: none;
       }
@@ -1701,20 +1722,19 @@
           </div>
         </div>
         <div class="field">
-          <label for="gpuHeadroom">Headroom</label>
-          <select id="gpuHeadroom">
-            <option value="0">None</option>
-            <option value="0.1">10% free</option>
-            <option value="0.2">20% free</option>
-            <option value="0.3">30% free</option>
-          </select>
-        </div>
-        <div class="field">
           <label for="gpuVram">Total VRAM</label>
           <div class="gpu-total" id="gpuTotal">
             <span class="gpu-eq" aria-hidden="true">=</span>
             <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
             <span class="gpu-unit">GB</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="gpuReserve">Reserve</label>
+          <div class="gpu-stepper" id="gpuReserveStepper">
+            <button id="gpuReserveDown" type="button" aria-label="Reserve less VRAM">−</button>
+            <input id="gpuReserve" type="text" inputmode="numeric" value="0%" aria-label="Percent of VRAM to keep free">
+            <button id="gpuReserveUp" type="button" aria-label="Reserve more VRAM">+</button>
           </div>
         </div>
       </div>
@@ -1768,7 +1788,7 @@
           custom: false,
           budget: null,
           // Fraction of total VRAM to keep free (KV cache, activations, desktop)
-          headroom: 0,
+          reserve: 0,
           activeIndex: -1,
           eventsBound: false
         }
@@ -1874,7 +1894,9 @@
         gpuCountUp: document.getElementById("gpuCountUp"),
         gpuVram: document.getElementById("gpuVram"),
         gpuTotal: document.getElementById("gpuTotal"),
-        gpuHeadroom: document.getElementById("gpuHeadroom")
+        gpuReserve: document.getElementById("gpuReserve"),
+        gpuReserveDown: document.getElementById("gpuReserveDown"),
+        gpuReserveUp: document.getElementById("gpuReserveUp")
       };
 
       bindImportEvents();
@@ -2375,7 +2397,7 @@
         const gpuOn = Boolean(state.gpu.budget);
         const sortOn = state.sort.key !== defaultSortKey() || state.sort.direction !== "desc";
         const vendorOn = state.gpu.vendor !== "all";
-        const headroomOn = state.gpu.headroom > 0;
+        const reserveOn = state.gpu.reserve > 0;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
@@ -2385,12 +2407,12 @@
         ui.gpuVendor.closest(".field")?.classList.toggle("filter-on", vendorOn);
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
-        ui.gpuHeadroom?.closest(".field")?.classList.toggle("filter-on", headroomOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || headroomOn);
-        updateHeadroomHint();
+        ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || reserveOn);
+        updateReserveHint();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || headroomOn].filter(Boolean).length;
+        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
       }
@@ -3169,11 +3191,9 @@
         ui.gpuCountUp.addEventListener("click", () => gpuSetCount(state.gpu.count + 1));
         ui.gpuCount.addEventListener("change", () => gpuSetCount(parseInt(ui.gpuCount.value, 10)));
 
-        ui.gpuHeadroom.addEventListener("change", (event) => {
-          const value = parseFloat(event.target.value);
-          state.gpu.headroom = Number.isFinite(value) ? Math.max(0, Math.min(0.9, value)) : 0;
-          applyAndRender();
-        });
+        ui.gpuReserveDown.addEventListener("click", () => gpuSetReserve(reservePercent() - RESERVE_STEP));
+        ui.gpuReserveUp.addEventListener("click", () => gpuSetReserve(reservePercent() + RESERVE_STEP));
+        ui.gpuReserve.addEventListener("change", () => gpuSetReserve(parseInt(ui.gpuReserve.value, 10)));
 
         ui.gpuVram.addEventListener("input", () => {
           const value = parseFloat(ui.gpuVram.value.replace(",", "."));
@@ -3262,6 +3282,22 @@
         }
       }
 
+      // Reserve is stored as a fraction but edited in whole percent steps.
+      const RESERVE_STEP = 5;
+      const RESERVE_MAX = 90;
+
+      function reservePercent() {
+        return Math.round(state.gpu.reserve * 100);
+      }
+
+      function gpuSetReserve(nextPercent) {
+        const rounded = Math.round(Number(nextPercent) / RESERVE_STEP) * RESERVE_STEP;
+        const clamped = Math.max(0, Math.min(RESERVE_MAX, Number.isFinite(rounded) ? rounded : 0));
+        state.gpu.reserve = clamped / 100;
+        ui.gpuReserve.value = `${clamped}%`;
+        applyAndRender();
+      }
+
       function gpuUpdateBudgetFromSelection() {
         const gpu = state.gpu.selected;
         const total = gpu ? gpu.vram_gb * state.gpu.count : null;
@@ -3274,14 +3310,14 @@
         applyAndRender();
       }
 
-      // Usable VRAM: total minus the reserved headroom. Everything that judges
+      // Usable VRAM: total minus the reserved share. Everything that judges
       // whether a model fits works off this, not the raw total.
       function gpuUsableBudget() {
         const budget = state.gpu.budget;
         if (!budget) {
           return null;
         }
-        const usable = budget * (1 - state.gpu.headroom);
+        const usable = budget * (1 - state.gpu.reserve);
         return usable > 0 ? usable : null;
       }
 
@@ -3289,17 +3325,17 @@
         return Number.isFinite(value) ? String(Math.round(value * 10) / 10) : "—";
       }
 
-      function updateHeadroomHint() {
+      function updateReserveHint() {
         if (!ui.gpuTotal) {
           return;
         }
         const budget = state.gpu.budget;
-        if (!budget || !state.gpu.headroom) {
+        if (!budget || !state.gpu.reserve) {
           ui.gpuTotal.removeAttribute("title");
           return;
         }
-        const pct = Math.round(state.gpu.headroom * 100);
-        ui.gpuTotal.title = `${formatGb(gpuUsableBudget())} GB usable — ${pct}% of ${formatGb(budget)} GB kept free`;
+        const pct = Math.round(state.gpu.reserve * 100);
+        ui.gpuTotal.title = `${formatGb(gpuUsableBudget())} GB usable — ${pct}% of ${formatGb(budget)} GB reserved`;
       }
 
       function setGpuCountDisabled(disabled) {
@@ -3315,11 +3351,11 @@
         state.gpu.count = 1;
         state.gpu.custom = false;
         state.gpu.budget = null;
-        state.gpu.headroom = 0;
+        state.gpu.reserve = 0;
         if (!ui.gpuBar || ui.gpuBar.hidden) {
           return;
         }
-        ui.gpuHeadroom.value = "0";
+        ui.gpuReserve.value = "0%";
         ui.gpuVendor.value = "all";
         ui.gpuModel.value = "";
         ui.gpuCount.value = "1";
@@ -3352,10 +3388,10 @@
         if (!budget || !Number.isFinite(num)) {
           return `<td class="mono">${html}</td>`;
         }
-        // With headroom reserved, the tooltip names the usable budget so the
+        // With a reserve set, the tooltip names the usable budget so the
         // shading and the total in the filter bar don't look contradictory.
-        const budgetLabel = state.gpu.headroom
-          ? `${formatGb(budget)} GB usable (${Math.round(state.gpu.headroom * 100)}% of ${formatGb(state.gpu.budget)} GB kept free)`
+        const budgetLabel = state.gpu.reserve
+          ? `${formatGb(budget)} GB usable (${Math.round(state.gpu.reserve * 100)}% of ${formatGb(state.gpu.budget)} GB reserved)`
           : `${formatGb(budget)} GB budget`;
         const ratio = num / budget;
         if (ratio > 1) {
