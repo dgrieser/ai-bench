@@ -538,6 +538,11 @@
       display: none;
     }
 
+    /* Search owns the final row on its own, stretched across every track */
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
     /* --filter-cols is set from the visible field count (ceil(n / 2)) so the
        panel lands on two rows whatever fields exist; below the breakpoint the
        tracks fall back to auto-fit and wrap into as many rows as needed. */
@@ -1765,6 +1770,10 @@
         </div>
       </div>
       <div class="field">
+        <label for="sortMode">Sort</label>
+        <select id="sortMode"></select>
+      </div>
+      <div class="field">
         <label for="modelCompare">Compare Models</label>
         <div class="select-wrap">
           <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
@@ -1778,16 +1787,12 @@
           <button id="clearBenchmarks" class="clear-compare" type="button" title="Show all benchmarks">×</button>
         </div>
       </div>
-      <div class="field">
+      <div class="field field-full">
         <label for="search">Search</label>
         <div class="select-wrap">
           <input id="search" type="text" placeholder="Model or creator">
           <button id="clearSearch" class="clear-compare" type="button" title="Clear search">×</button>
         </div>
-      </div>
-      <div class="field">
-        <label for="sortMode">Sort</label>
-        <select id="sortMode"></select>
       </div>
         </div>
         <section class="toolbar" id="toolbar">
@@ -2009,10 +2014,13 @@
         // per member.
         const slots = [...ui.controls.querySelectorAll(".field, .field-cluster")]
           .filter((el) => !el.closest("[hidden]") && !el.parentElement.closest(".field-cluster"));
-        if (!slots.length) {
+        // Full-width fields bring their own row, so they don't count toward the
+        // two-row split of the regular slots.
+        const inlineSlots = slots.filter((el) => !el.classList.contains("field-full"));
+        if (!inlineSlots.length) {
           return;
         }
-        ui.controls.style.setProperty("--filter-cols", String(Math.ceil(slots.length / 2)));
+        ui.controls.style.setProperty("--filter-cols", String(Math.ceil(inlineSlots.length / 2)));
       }
 
       function prefersReducedMotion() {
