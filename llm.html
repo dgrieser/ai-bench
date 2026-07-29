@@ -2810,29 +2810,49 @@
         initColumnResize();
       }
 
-      function renderBenchmarkDirectory() {
-        const items = visibleBenchmarkKeys().map((key) => {
-          const benchmark = state.data?.benchmarks?.[key] || {};
-          const name = benchmark.name || getBenchmarkLabel(key);
-          const category = benchmark.category || "";
-          const description = benchmark.description || "";
-          const links = benchmarkLinks(benchmark);
+      // Reference cards: entries from data.columnCards (table columns that need
+      // provenance, e.g. the Spheron VRAM estimates) followed by one card per
+      // visible benchmark. Both come from llm.json — nothing is hardcoded here.
+      function referenceCards() {
+        const columnCards = (Array.isArray(state.data?.columnCards) ? state.data.columnCards : [])
+          .filter((card) => card && card.name)
+          .map((card) => ({
+            name: card.name,
+            category: card.category || "",
+            description: card.description || "",
+            links: benchmarkLinks(card),
+            icon: ""
+          }));
 
-          return `
+        const benchmarkCards = visibleBenchmarkKeys().map((key) => {
+          const benchmark = state.data?.benchmarks?.[key] || {};
+          return {
+            name: benchmark.name || getBenchmarkLabel(key),
+            category: benchmark.category || "",
+            description: benchmark.description || "",
+            links: benchmarkLinks(benchmark),
+            icon: renderBenchmarkIcon(key)
+          };
+        });
+
+        return [...columnCards, ...benchmarkCards];
+      }
+
+      function renderBenchmarkDirectory() {
+        const items = referenceCards().map((card) => `
             <article class="benchmark-item">
               <div class="benchmark-head">
-                <span class="benchmark-name">${renderBenchmarkIcon(key)}${escapeHtml(name)}</span>
-                ${category ? `<span class="benchmark-category">${escapeHtml(category)}</span>` : ""}
+                <span class="benchmark-name">${card.icon}${escapeHtml(card.name)}</span>
+                ${card.category ? `<span class="benchmark-category">${escapeHtml(card.category)}</span>` : ""}
               </div>
-              ${description ? `<p class="benchmark-desc">${escapeHtml(description)}</p>` : ""}
-              ${links.length ? `<div class="benchmark-links">${links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
+              ${card.description ? `<p class="benchmark-desc">${escapeHtml(card.description)}</p>` : ""}
+              ${card.links.length ? `<div class="benchmark-links">${card.links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
             </article>
-          `;
-        }).join("");
+          `).join("");
 
         return `
-          <section class="benchmarks-panel" aria-label="Benchmark details">
-            <h2>Benchmarks</h2>
+          <section class="benchmarks-panel" aria-label="Benchmark and column reference">
+            <h2>Reference</h2>
             <div class="benchmarks-list">${items}</div>
           </section>
         `;

@@ -32,6 +32,17 @@
       "description": "Estimated VRAM at INT4 quantization (GB)"
     }
   },
+  "columnCards": [
+    {
+      "key": "vram",
+      "name": "VRAM Requirements",
+      "category": "Hardware estimate",
+      "description": "Single-model inference VRAM at FP16, INT8 and INT4 precision, estimated by Spheron's per-model GPU recommender. The GPU filter keeps a model when its smallest variant fits the selected budget after the reserve.",
+      "urls": [
+        "https://www.spheron.network/tools/gpu-recommender/"
+      ]
+    }
+  ],
   "paramBuckets": [
     {
       "value": "all",
