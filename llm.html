@@ -209,7 +209,7 @@
       background: var(--surface);
       display: grid;
       gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(315px, 1fr));
       align-items: start;
     }
 
@@ -542,12 +542,12 @@
        panel lands on two rows whatever fields exist; below the breakpoint the
        tracks fall back to auto-fit and wrap into as many rows as needed. */
     .controls.has-gpu {
-      grid-template-columns: repeat(var(--filter-cols, 5), minmax(165px, 1fr));
+      grid-template-columns: repeat(var(--filter-cols, 5), minmax(315px, 1fr));
     }
 
     @media (max-width: 1500px) {
       .controls.has-gpu {
-        grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(315px, 1fr));
       }
     }
 
