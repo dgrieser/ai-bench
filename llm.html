@@ -482,8 +482,8 @@
     /* One-line layout once the GPU fields are visible */
     .controls.has-gpu {
       grid-template-columns:
-        minmax(170px, 1.1fr) minmax(140px, 0.9fr) minmax(130px, 0.85fr) minmax(140px, 0.95fr)
-        minmax(105px, 0.7fr) minmax(170px, 1.2fr) auto minmax(112px, auto);
+        minmax(160px, 1.05fr) minmax(150px, 1fr) minmax(130px, 0.85fr) minmax(120px, 0.8fr)
+        minmax(130px, 0.9fr) minmax(105px, 0.7fr) minmax(160px, 1.15fr) auto minmax(112px, auto);
     }
 
     @media (max-width: 1500px) {
@@ -1636,6 +1636,13 @@
         </div>
       </div>
       <div class="field">
+        <label for="benchmarkPick">Benchmarks</label>
+        <div class="select-wrap">
+          <div id="benchmarkPick" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Visible benchmarks"></div>
+          <button id="clearBenchmarks" class="clear-compare" type="button" title="Show all benchmarks">×</button>
+        </div>
+      </div>
+      <div class="field">
         <label for="search">Search</label>
         <div class="select-wrap">
           <input id="search" type="text" placeholder="Model or creator">
@@ -1715,7 +1722,10 @@
         filters: {
           search: "",
           params: "all",
-          selectedModels: []
+          selectedModels: [],
+          // Benchmarks are opt-out: an empty list means every column shows, so
+          // benchmarks added to llm.json later appear without extra bookkeeping.
+          hiddenBenchmarks: []
         },
         sort: {
           key: null,
@@ -1814,6 +1824,7 @@
         search: document.getElementById("search"),
         params: document.getElementById("params"),
         modelCompare: document.getElementById("modelCompare"),
+        benchmarkPick: document.getElementById("benchmarkPick"),
         sortMode: document.getElementById("sortMode"),
         resultCount: document.getElementById("resultCount"),
         creatorCount: document.getElementById("creatorCount"),
@@ -1822,6 +1833,7 @@
         importFile: document.getElementById("importFile"),
         resetBtn: document.getElementById("resetBtn"),
         clearCompare: document.getElementById("clearCompare"),
+        clearBenchmarks: document.getElementById("clearBenchmarks"),
         clearSearch: document.getElementById("clearSearch"),
         gpuBar: document.getElementById("gpuBar"),
         gpuVendor: document.getElementById("gpuVendor"),
@@ -1923,8 +1935,12 @@
         state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
         state.sortGroups = Array.isArray(data.sortGroups) ? data.sortGroups : [];
         state.paramBuckets = normalizeParamBuckets(data.paramBuckets);
+        // Drop hidden keys that no longer exist in the freshly loaded data.
+        state.filters.hiddenBenchmarks = state.filters.hiddenBenchmarks
+          .filter((key) => state.benchmarkKeys.includes(key));
         state.sort.key = defaultSortKey();
         state.sort.direction = "desc";
+        ensureSortVisible();
 
         const title = data.title || "OpenBench Index";
         ui.title.textContent = title;
@@ -1950,69 +1966,80 @@
         loadGpuData();
       }
 
-      function bindImportEvents() {
+      // Open/close plumbing shared by the checkbox-list widgets (model compare,
+      // benchmark visibility). onToggle gets the clicked item's data-value.
+      function bindMultiSelectWidget(el, onToggle) {
         let widgetWasOpen = false;
-        ui.modelCompare.addEventListener("mousedown", () => {
-          widgetWasOpen = ui.modelCompare.classList.contains("open");
+        el.addEventListener("mousedown", () => {
+          widgetWasOpen = el.classList.contains("open");
         });
 
-        ui.modelCompare.addEventListener("click", (e) => {
+        el.addEventListener("click", (e) => {
           e.stopPropagation();
           const item = e.target.closest(".model-compare-item");
           if (item) {
-            const name = item.dataset.value;
-            const idx = state.filters.selectedModels.indexOf(name);
-            if (idx >= 0) {
-              state.filters.selectedModels.splice(idx, 1);
-            } else {
-              state.filters.selectedModels.push(name);
-            }
-            updateCompareWidget();
-            applyAndRender();
+            onToggle(item.dataset.value);
             return;
           }
           // Opening is handled by the focus event; only close here if it was already open
           if (widgetWasOpen) {
-            ui.modelCompare.classList.remove("open");
+            el.classList.remove("open");
           }
         });
 
-        ui.modelCompare.addEventListener("focus", () => {
-          ui.modelCompare.classList.add("open");
+        el.addEventListener("focus", () => {
+          el.classList.add("open");
         });
 
-        ui.modelCompare.addEventListener("blur", (e) => {
-          if (!ui.modelCompare.contains(e.relatedTarget)) {
-            ui.modelCompare.classList.remove("open");
+        el.addEventListener("blur", (e) => {
+          if (!el.contains(e.relatedTarget)) {
+            el.classList.remove("open");
           }
         });
 
-        ui.modelCompare.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") ui.modelCompare.classList.remove("open");
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") el.classList.remove("open");
         });
 
         let hoverOpenTimer = null;
-        ui.modelCompare.addEventListener("mouseenter", () => {
-          if (!ui.modelCompare.classList.contains("open")) {
+        el.addEventListener("mouseenter", () => {
+          if (!el.classList.contains("open")) {
             hoverOpenTimer = setTimeout(() => {
-              ui.modelCompare.classList.add("open");
+              el.classList.add("open");
             }, 1000);
           }
         });
-        ui.modelCompare.addEventListener("mouseleave", () => {
+        el.addEventListener("mouseleave", () => {
           clearTimeout(hoverOpenTimer);
         });
 
-        ui.modelCompare.addEventListener("wheel", (e) => {
-          if (!ui.modelCompare.classList.contains("open")) {
+        el.addEventListener("wheel", (e) => {
+          if (!el.classList.contains("open")) {
             e.preventDefault();
-            ui.modelCompare.classList.add("open");
-            ui.modelCompare.focus();
+            el.classList.add("open");
+            el.focus();
           }
         }, { passive: false });
 
         document.addEventListener("click", () => {
-          ui.modelCompare.classList.remove("open");
+          el.classList.remove("open");
+        });
+      }
+
+      function bindImportEvents() {
+        bindMultiSelectWidget(ui.modelCompare, (name) => {
+          const idx = state.filters.selectedModels.indexOf(name);
+          if (idx >= 0) {
+            state.filters.selectedModels.splice(idx, 1);
+          } else {
+            state.filters.selectedModels.push(name);
+          }
+          updateCompareWidget();
+          applyAndRender();
+        });
+
+        bindMultiSelectWidget(ui.benchmarkPick, (key) => {
+          toggleBenchmark(key);
         });
 
         ui.importBtn.addEventListener("click", () => {
@@ -2032,6 +2059,7 @@
             state.filters.search = "";
             state.filters.params = "all";
             state.filters.selectedModels = [];
+            state.filters.hiddenBenchmarks = [];
             state.sort.key = defaultSortKey();
             state.sort.direction = "desc";
             ui.search.value = "";
@@ -2061,11 +2089,20 @@
         ui.modelCompare.insertBefore(summaryEl, ui.modelCompare.firstChild);
         updateCompareSummary();
 
+        populateBenchmarkPicker();
+
         ui.params.innerHTML = state.paramBuckets
           .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
           .join("");
         ui.params.value = state.filters.params;
 
+        populateSortOptions();
+      }
+
+      // Sort options cover the fixed columns, the sort groups and every
+      // *visible* benchmark — hidden benchmarks drop out so the dropdown can't
+      // sort on a column that isn't on screen.
+      function populateSortOptions() {
         const fixedSortOptions = FIXED_COLUMNS.map((column) => ({
           key: column.key,
           label: columnSortLabel(column.key)
@@ -2076,7 +2113,7 @@
           label: group.label || group.key
         }));
 
-        const benchmarkSortOptions = state.benchmarkKeys.map((key) => ({
+        const benchmarkSortOptions = visibleBenchmarkKeys().map((key) => ({
           key,
           label: getBenchmarkLabel(key)
         }));
@@ -2092,6 +2129,97 @@
         }).join("");
 
         ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
+      }
+
+      /* ── Benchmark visibility ─────────────────────── */
+
+      function isBenchmarkVisible(key) {
+        return !state.filters.hiddenBenchmarks.includes(key);
+      }
+
+      function visibleBenchmarkKeys() {
+        return state.benchmarkKeys.filter(isBenchmarkVisible);
+      }
+
+      function populateBenchmarkPicker() {
+        ui.benchmarkPick.innerHTML = state.benchmarkKeys.map((key) => {
+          const sel = isBenchmarkVisible(key);
+          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(key)}" role="option" aria-selected="${sel}">
+            <span class="model-compare-check"></span>
+            <span>${escapeHtml(getBenchmarkLabel(key))}</span>
+          </div>`;
+        }).join("");
+
+        const summaryEl = document.createElement("div");
+        summaryEl.className = "model-compare-summary";
+        ui.benchmarkPick.insertBefore(summaryEl, ui.benchmarkPick.firstChild);
+        updateBenchmarkWidget();
+      }
+
+      function updateBenchmarkWidget() {
+        ui.benchmarkPick.querySelectorAll(".model-compare-item").forEach((item) => {
+          const selected = isBenchmarkVisible(item.dataset.value);
+          item.classList.toggle("selected", selected);
+          item.setAttribute("aria-selected", String(selected));
+        });
+
+        const summary = ui.benchmarkPick.querySelector(".model-compare-summary");
+        if (!summary) return;
+        const visible = visibleBenchmarkKeys();
+        const allShown = visible.length === state.benchmarkKeys.length;
+        if (allShown) {
+          summary.textContent = `All ${state.benchmarkKeys.length} benchmarks`;
+        } else if (!visible.length) {
+          summary.textContent = "No benchmark columns";
+        } else {
+          summary.textContent = visible.map((key) => getBenchmarkLabel(key)).join(", ");
+        }
+        summary.classList.toggle("is-hint", allShown);
+      }
+
+      function toggleBenchmark(key) {
+        if (!state.benchmarkKeys.includes(key)) {
+          return;
+        }
+        const hidden = state.filters.hiddenBenchmarks;
+        const idx = hidden.indexOf(key);
+        if (idx >= 0) {
+          hidden.splice(idx, 1);
+        } else {
+          hidden.push(key);
+        }
+        onBenchmarkVisibilityChanged();
+      }
+
+      function showAllBenchmarks() {
+        if (!state.filters.hiddenBenchmarks.length) {
+          return;
+        }
+        state.filters.hiddenBenchmarks = [];
+        onBenchmarkVisibilityChanged();
+      }
+
+      function onBenchmarkVisibilityChanged() {
+        // Stored benchmark column widths are dropped so the remaining columns
+        // re-measure and re-share the freed space instead of compounding.
+        state.benchmarkKeys.forEach((key) => delete state.columnWidths[key]);
+        ensureSortVisible();
+        updateBenchmarkWidget();
+        populateSortOptions();
+        applyAndRender();
+      }
+
+      // A hidden column can't stay the sort key: fall back to the default sort,
+      // and if that is hidden too, to the first visible benchmark.
+      function ensureSortVisible() {
+        if (!state.benchmarkKeys.includes(state.sort.key) || isBenchmarkVisible(state.sort.key)) {
+          return;
+        }
+        state.sort.key = defaultSortKey();
+        state.sort.direction = "desc";
+        if (state.benchmarkKeys.includes(state.sort.key) && !isBenchmarkVisible(state.sort.key)) {
+          state.sort.key = visibleBenchmarkKeys()[0] || "name";
+        }
       }
 
       function updateCompareWidget() {
@@ -2138,6 +2266,12 @@
           applyAndRender();
         });
 
+        ui.clearBenchmarks.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // prevents blur on benchmarkPick, keeping it open
+          e.stopPropagation();
+          showAllBenchmarks();
+        });
+
         ui.clearSearch.addEventListener("click", () => {
           ui.search.value = "";
           state.filters.search = "";
@@ -2159,6 +2293,8 @@
           state.filters.search = "";
           state.filters.params = "all";
           state.filters.selectedModels = [];
+          state.filters.hiddenBenchmarks = [];
+          state.benchmarkKeys.forEach((key) => delete state.columnWidths[key]);
           state.sort.key = defaultSortKey();
           state.sort.direction = "desc";
 
@@ -2166,8 +2302,10 @@
           ui.params.value = "all";
 
           ui.modelCompare.classList.remove("open");
+          ui.benchmarkPick.classList.remove("open");
           updateCompareWidget();
-          ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
+          updateBenchmarkWidget();
+          populateSortOptions();
 
           gpuResetBar();
           applyAndRender();
@@ -2202,6 +2340,7 @@
         const searchOn = Boolean(state.filters.search);
         const paramsOn = state.filters.params !== "all";
         const compareOn = state.filters.selectedModels.length > 0;
+        const benchmarksOn = state.filters.hiddenBenchmarks.length > 0;
         const gpuOn = Boolean(state.gpu.budget);
         const sortOn = state.sort.key !== defaultSortKey() || state.sort.direction !== "desc";
         const vendorOn = state.gpu.vendor !== "all";
@@ -2209,14 +2348,15 @@
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
         ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
+        ui.benchmarkPick.closest(".field")?.classList.toggle("filter-on", benchmarksOn);
         ui.sortMode.closest(".field")?.classList.toggle("filter-on", sortOn);
         ui.gpuVendor.closest(".field")?.classList.toggle("filter-on", vendorOn);
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || gpuOn || sortOn || vendorOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn);
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, paramsOn, compareOn, sortOn, gpuOn || vendorOn].filter(Boolean).length;
+        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
       }
@@ -2494,6 +2634,7 @@
           return;
         }
 
+        const benchKeys = visibleBenchmarkKeys();
         const headers = [
           ...FIXED_COLUMNS.map((column) => ({
             ...column,
@@ -2503,7 +2644,7 @@
               ? measureModelColumnInitialWidth(state.filteredModels)
               : column.initialWidth
           })),
-          ...state.benchmarkKeys.map((key) => {
+          ...benchKeys.map((key) => {
             const bench = state.data.benchmarks[key] || {};
             const fullName = bench.name || getBenchmarkLabel(key);
             const description = bench.description || "";
@@ -2536,7 +2677,7 @@
                 </tr>
               </thead>
               <tbody>
-                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set(), scoreRanges)).join("")}
+                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set(), scoreRanges, benchKeys)).join("")}
               </tbody>
             </table>
           </div>
@@ -2569,7 +2710,7 @@
       }
 
       function renderBenchmarkDirectory() {
-        const items = state.benchmarkKeys.map((key) => {
+        const items = visibleBenchmarkKeys().map((key) => {
           const benchmark = state.data?.benchmarks?.[key] || {};
           const name = benchmark.name || getBenchmarkLabel(key);
           const category = benchmark.category || "";
@@ -2808,7 +2949,7 @@
         );
       }
 
-      function renderRow(model, bestInTable, scoreRanges) {
+      function renderRow(model, bestInTable, scoreRanges, benchKeys) {
         const modelName = escapeHtml(model.name || "Unknown");
         const modelUrl = model.url || "";
         const creatorName = escapeHtml(model.creatorName);
@@ -2816,7 +2957,7 @@
         const isNew = isRecentModel(model);
         const newLabel = isNew ? (model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Recently added") : "";
         const addedLabel = model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Unknown";
-        const scoreCells = state.benchmarkKeys.map((key) => {
+        const scoreCells = benchKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const updated = model.scores_updated?.[key];
           const titleAttr = updated ? ` title="Updated ${escapeHtml(updated)}"` : "";
@@ -3156,12 +3297,16 @@
         const shownCreators = new Set(state.filteredModels.map((m) => m.creatorName)).size;
         const totalCreators = new Set(state.data.models.map((m) => m.creator?.name || "Unknown")).size;
         ui.creatorCount.textContent = `${shownCreators} of ${totalCreators} creators`;
-        ui.benchmarkCount.textContent = `${state.benchmarkKeys.length} benchmarks`;
+        const shownBenchmarks = visibleBenchmarkKeys().length;
+        const totalBenchmarks = state.benchmarkKeys.length;
+        ui.benchmarkCount.textContent = shownBenchmarks === totalBenchmarks
+          ? `${totalBenchmarks} benchmarks`
+          : `${shownBenchmarks} of ${totalBenchmarks} benchmarks`;
       }
 
       function getTopScoresByBenchmark(models) {
         const topScores = {};
-        state.benchmarkKeys.forEach((key) => {
+        visibleBenchmarkKeys().forEach((key) => {
           const values = models
             .map((model) => toNumber(model.scores?.[key]))
             .filter((value) => Number.isFinite(value));
@@ -3172,7 +3317,7 @@
 
       function getScoreRangesByBenchmark(models) {
         const ranges = {};
-        state.benchmarkKeys.forEach((key) => {
+        visibleBenchmarkKeys().forEach((key) => {
           const values = models
             .map((m) => toNumber(m.scores?.[key]))
             .filter((v) => Number.isFinite(v));
@@ -3255,7 +3400,7 @@
             flags.add("context");
           }
 
-          state.benchmarkKeys.forEach((key) => {
+          Object.keys(topByBenchmark).forEach((key) => {
             const value = toNumber(model.scores?.[key]);
             const top = topByBenchmark[key];
             if (Number.isFinite(value) && Number.isFinite(top) && nearlyEqual(value, top)) {
