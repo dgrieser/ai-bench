@@ -498,8 +498,9 @@
     /* One-line layout once the GPU fields are visible */
     .controls.has-gpu {
       grid-template-columns:
-        minmax(160px, 1.05fr) minmax(150px, 1fr) minmax(130px, 0.85fr) minmax(120px, 0.8fr)
-        minmax(130px, 0.9fr) minmax(105px, 0.7fr) minmax(160px, 1.15fr) auto minmax(112px, auto);
+        minmax(150px, 1fr) minmax(145px, 0.95fr) minmax(125px, 0.8fr) minmax(115px, 0.75fr)
+        minmax(125px, 0.85fr) minmax(100px, 0.65fr) minmax(150px, 1.1fr) auto
+        minmax(105px, 0.7fr) minmax(108px, auto);
     }
 
     @media (max-width: 1500px) {
@@ -1700,8 +1701,17 @@
           </div>
         </div>
         <div class="field">
+          <label for="gpuHeadroom">Headroom</label>
+          <select id="gpuHeadroom">
+            <option value="0">None</option>
+            <option value="0.1">10% free</option>
+            <option value="0.2">20% free</option>
+            <option value="0.3">30% free</option>
+          </select>
+        </div>
+        <div class="field">
           <label for="gpuVram">Total VRAM</label>
-          <div class="gpu-total">
+          <div class="gpu-total" id="gpuTotal">
             <span class="gpu-eq" aria-hidden="true">=</span>
             <input id="gpuVram" type="text" inputmode="decimal" placeholder="—" aria-label="Total VRAM in gigabytes">
             <span class="gpu-unit">GB</span>
@@ -1757,6 +1767,8 @@
           count: 1,
           custom: false,
           budget: null,
+          // Fraction of total VRAM to keep free (KV cache, activations, desktop)
+          headroom: 0,
           activeIndex: -1,
           eventsBound: false
         }
@@ -1860,7 +1872,9 @@
         gpuCount: document.getElementById("gpuCount"),
         gpuCountDown: document.getElementById("gpuCountDown"),
         gpuCountUp: document.getElementById("gpuCountUp"),
-        gpuVram: document.getElementById("gpuVram")
+        gpuVram: document.getElementById("gpuVram"),
+        gpuTotal: document.getElementById("gpuTotal"),
+        gpuHeadroom: document.getElementById("gpuHeadroom")
       };
 
       bindImportEvents();
@@ -2361,6 +2375,7 @@
         const gpuOn = Boolean(state.gpu.budget);
         const sortOn = state.sort.key !== defaultSortKey() || state.sort.direction !== "desc";
         const vendorOn = state.gpu.vendor !== "all";
+        const headroomOn = state.gpu.headroom > 0;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.params.closest(".field")?.classList.toggle("filter-on", paramsOn);
@@ -2370,10 +2385,12 @@
         ui.gpuVendor.closest(".field")?.classList.toggle("filter-on", vendorOn);
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn);
+        ui.gpuHeadroom?.closest(".field")?.classList.toggle("filter-on", headroomOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || paramsOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || headroomOn);
+        updateHeadroomHint();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn].filter(Boolean).length;
+        const activeCount = [searchOn, paramsOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || headroomOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
       }
@@ -2404,12 +2421,13 @@
 
         // GPU VRAM budget: keep a model only if it fits at some quantization
         // level (int4 is the smallest, so min of the present values decides).
-        if (state.gpu.budget) {
+        const usableVram = gpuUsableBudget();
+        if (usableVram) {
           const vram = model.vram || {};
           const requirements = [vram.int4, vram.int8, vram.fp16]
             .map(toNumber)
             .filter((value) => Number.isFinite(value));
-          if (!requirements.length || Math.min(...requirements) > state.gpu.budget) {
+          if (!requirements.length || Math.min(...requirements) > usableVram) {
             return false;
           }
         }
@@ -3151,6 +3169,12 @@
         ui.gpuCountUp.addEventListener("click", () => gpuSetCount(state.gpu.count + 1));
         ui.gpuCount.addEventListener("change", () => gpuSetCount(parseInt(ui.gpuCount.value, 10)));
 
+        ui.gpuHeadroom.addEventListener("change", (event) => {
+          const value = parseFloat(event.target.value);
+          state.gpu.headroom = Number.isFinite(value) ? Math.max(0, Math.min(0.9, value)) : 0;
+          applyAndRender();
+        });
+
         ui.gpuVram.addEventListener("input", () => {
           const value = parseFloat(ui.gpuVram.value.replace(",", "."));
           state.gpu.custom = true;
@@ -3250,6 +3274,34 @@
         applyAndRender();
       }
 
+      // Usable VRAM: total minus the reserved headroom. Everything that judges
+      // whether a model fits works off this, not the raw total.
+      function gpuUsableBudget() {
+        const budget = state.gpu.budget;
+        if (!budget) {
+          return null;
+        }
+        const usable = budget * (1 - state.gpu.headroom);
+        return usable > 0 ? usable : null;
+      }
+
+      function formatGb(value) {
+        return Number.isFinite(value) ? String(Math.round(value * 10) / 10) : "—";
+      }
+
+      function updateHeadroomHint() {
+        if (!ui.gpuTotal) {
+          return;
+        }
+        const budget = state.gpu.budget;
+        if (!budget || !state.gpu.headroom) {
+          ui.gpuTotal.removeAttribute("title");
+          return;
+        }
+        const pct = Math.round(state.gpu.headroom * 100);
+        ui.gpuTotal.title = `${formatGb(gpuUsableBudget())} GB usable — ${pct}% of ${formatGb(budget)} GB kept free`;
+      }
+
       function setGpuCountDisabled(disabled) {
         ui.gpuStepper.classList.toggle("disabled", disabled);
         ui.gpuCount.disabled = disabled;
@@ -3263,9 +3315,11 @@
         state.gpu.count = 1;
         state.gpu.custom = false;
         state.gpu.budget = null;
+        state.gpu.headroom = 0;
         if (!ui.gpuBar || ui.gpuBar.hidden) {
           return;
         }
+        ui.gpuHeadroom.value = "0";
         ui.gpuVendor.value = "all";
         ui.gpuModel.value = "";
         ui.gpuCount.value = "1";
@@ -3293,18 +3347,23 @@
       // struck through when it exceeds the budget.
       function renderVramCell(raw) {
         const html = formatVram(raw);
-        const budget = state.gpu.budget;
+        const budget = gpuUsableBudget();
         const num = typeof raw === "number" ? raw : parseFloat(raw);
         if (!budget || !Number.isFinite(num)) {
           return `<td class="mono">${html}</td>`;
         }
+        // With headroom reserved, the tooltip names the usable budget so the
+        // shading and the total in the filter bar don't look contradictory.
+        const budgetLabel = state.gpu.headroom
+          ? `${formatGb(budget)} GB usable (${Math.round(state.gpu.headroom * 100)}% of ${formatGb(state.gpu.budget)} GB kept free)`
+          : `${formatGb(budget)} GB budget`;
         const ratio = num / budget;
         if (ratio > 1) {
-          return `<td class="mono vram-over" title="Needs ${num} GB — over the ${budget} GB budget">${html}</td>`;
+          return `<td class="mono vram-over" title="Needs ${num} GB — over the ${budgetLabel}">${html}</td>`;
         }
         const t = Math.max(0, Math.min(1, (ratio - 0.55) / 0.45));
         const hue = Math.round(150 - t * 130);
-        return `<td class="mono vram-fit" style="--fit-h:${hue}" title="${Math.round(ratio * 100)}% of ${budget} GB budget">${html}</td>`;
+        return `<td class="mono vram-fit" style="--fit-h:${hue}" title="${Math.round(ratio * 100)}% of ${budgetLabel}">${html}</td>`;
       }
 
       function updateMeta() {
