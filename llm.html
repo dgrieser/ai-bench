@@ -238,7 +238,7 @@
       flex: 0 1 auto;
       /* Floor keeps the stepper digits legible; below it the members wrap
          onto a second line inside the same slot rather than squashing. */
-      min-width: 74px;
+      min-width: 50px;
     }
 
     /* The VRAM readout absorbs the slack the steppers don't need */
@@ -256,7 +256,7 @@
     /* Steppers follow their field's width instead of a fixed box */
     .field-cluster .gpu-stepper {
       width: 100%;
-      max-width: 74px;
+      max-width: 50px;
     }
 
     .field label {
@@ -656,14 +656,14 @@
     }
 
     .gpu-stepper button {
-      flex: 0 0 20px;
-      width: 20px;
+      flex: 0 0 13px;
+      width: 13px;
       min-height: unset;
       padding: 0;
       border: none;
       border-radius: 0;
       background: transparent;
-      font-size: 1rem;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--muted);
     }
@@ -676,7 +676,7 @@
 
     .gpu-stepper input {
       flex: 1 1 auto;
-      width: 30px;
+      width: 24px;
       min-width: 0;
       height: auto;
       border: none;
@@ -686,7 +686,8 @@
       text-align: center;
       font-family: var(--font-mono);
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.78rem;
+      letter-spacing: -0.02em;
       color: var(--text);
     }
 
