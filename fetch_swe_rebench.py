@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 
 
 URL = "https://swe-rebench.com/"
+# rangeStats language bucket to read; "all" aggregates every language.
+DEFAULT_LANGUAGE = "all"
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -66,7 +68,43 @@ def extract_items(html: str) -> list[dict]:
     return json.loads(decoded[arr_start : end + 1])
 
 
-def find_current_window(items: list[dict]) -> str:
+def parse_range_key(key: str) -> tuple[int, int] | None:
+    """
+    Parse a rangeStats key of the form "from_ms:to_ms".
+
+    The leaderboard also emits unbounded keys such as "all", which carry no
+    time range; those return None so callers can skip them.
+    """
+    parts = key.split(":")
+    if len(parts) != 2:
+        return None
+    try:
+        return int(parts[0]), int(parts[1])
+    except ValueError:
+        return None
+
+
+def range_stats(item: dict, language: str = DEFAULT_LANGUAGE) -> dict:
+    """
+    Return the {"from_ms:to_ms": stats} mapping for one model.
+
+    The leaderboard buckets rangeStats by language ("all", "python", "go", ...).
+    Older payloads stored the window keys directly, so a flat mapping is passed
+    through unchanged.
+    """
+    stats_by_key = item["rangeStats"]
+    if any(isinstance(v, dict) and "resolvedRate" in v for v in stats_by_key.values()):
+        return stats_by_key
+
+    if language not in stats_by_key:
+        raise ValueError(
+            f"Unknown language {language!r} for model {item.get('modelName')!r}; "
+            f"available: {', '.join(sorted(stats_by_key))}"
+        )
+    return stats_by_key[language]
+
+
+def find_current_window(items: list[dict], language: str = DEFAULT_LANGUAGE) -> str:
     """
     Find the rangeStats key for the most recent 1-month window.
     Keys have the format "from_ms:to_ms". We pick the key where
@@ -74,14 +112,17 @@ def find_current_window(items: list[dict]) -> str:
     """
     all_keys: set[str] = set()
     for item in items:
-        all_keys.update(item["rangeStats"].keys())
+        all_keys.update(range_stats(item, language).keys())
 
     month_ms_min = 25 * 24 * 3600 * 1000   # 25 days in ms
     month_ms_max = 35 * 24 * 3600 * 1000   # 35 days in ms
 
     monthly_keys = []
     for k in all_keys:
-        f, t = map(int, k.split(":"))
+        parsed = parse_range_key(k)
+        if parsed is None:
+            continue
+        f, t = parsed
         duration = t - f
         if month_ms_min <= duration <= month_ms_max:
             monthly_keys.append((t, k))
@@ -93,14 +134,17 @@ def find_current_window(items: list[dict]) -> str:
     return best_key
 
 
-def find_latest_monthly_window(item: dict) -> str | None:
+def find_latest_monthly_window(item: dict, language: str = DEFAULT_LANGUAGE) -> str | None:
     """Return the most recent 1-month rangeStats key with a non-zero score for a model."""
     month_ms_min = 25 * 24 * 3600 * 1000
     month_ms_max = 35 * 24 * 3600 * 1000
 
     candidates = []
-    for k, stats in item["rangeStats"].items():
-        f, t = map(int, k.split(":"))
+    for k, stats in range_stats(item, language).items():
+        parsed = parse_range_key(k)
+        if parsed is None:
+            continue
+        f, t = parsed
         duration = t - f
         if month_ms_min <= duration <= month_ms_max and stats["resolvedRate"] > 0:
             candidates.append((t, k))
@@ -111,13 +155,18 @@ def find_latest_monthly_window(item: dict) -> str | None:
     return best_key
 
 
-def get_scores(window: str | None = None, all_models: bool = False) -> list[dict]:
+def get_scores(
+    window: str | None = None,
+    all_models: bool = False,
+    language: str = DEFAULT_LANGUAGE,
+) -> list[dict]:
     """
     Returns a sorted list of dicts with keys: rank, model, resolved_rate, sem.
 
     window=None uses the most recent 1-month window (only models evaluated then).
     all_models=True picks each model's most recent monthly window individually,
     returning all models but from potentially different task sets.
+    language selects the leaderboard's per-language bucket ("all" = aggregate).
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     html = fetch_html(URL)
@@ -128,11 +177,11 @@ def get_scores(window: str | None = None, all_models: bool = False) -> list[dict
     if all_models:
         results = []
         for item in items:
-            key = find_latest_monthly_window(item)
+            key = find_latest_monthly_window(item, language)
             if key is None:
                 continue
-            stats = item["rangeStats"][key]
-            f_ts, t_ts = map(int, key.split(":"))
+            stats = range_stats(item, language)[key]
+            f_ts, t_ts = parse_range_key(key)
             results.append(
                 {
                     "model": item["modelName"],
@@ -149,16 +198,19 @@ def get_scores(window: str | None = None, all_models: bool = False) -> list[dict
         return results
 
     if window is None:
-        window = find_current_window(items)
+        window = find_current_window(items, language)
 
-    f_ts, t_ts = map(int, window.split(":"))
-    from_date = datetime.fromtimestamp(f_ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+    parsed = parse_range_key(window)
+    if parsed is None:
+        raise ValueError(f"Window must have the format 'from_ms:to_ms', got {window!r}")
+    f_ts, t_ts = parsed
+    from_date =datetime.fromtimestamp(f_ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
     to_date = datetime.fromtimestamp(t_ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
     print(f"Window: {from_date} → {to_date}", file=sys.stderr)
 
     results = []
     for item in items:
-        stats = item["rangeStats"].get(window)
+        stats = range_stats(item, language).get(window)
         if stats is None:
             continue
         resolved_rate = stats["resolvedRate"]
@@ -196,6 +248,12 @@ def main():
         help="Include all models using each one's most recent monthly window (different task sets)",
     )
     parser.add_argument(
+        "--language",
+        default=DEFAULT_LANGUAGE,
+        help="Language bucket to read, e.g. python/go/java/rust/typescript "
+        f"(default: {DEFAULT_LANGUAGE}, the cross-language aggregate)",
+    )
+    parser.add_argument(
         "--format",
         choices=["table", "json", "csv", "names"],
         default="table",
@@ -203,7 +261,9 @@ def main():
     )
     args = parser.parse_args()
 
-    scores = get_scores(window=args.window, all_models=args.all_models)
+    scores = get_scores(
+        window=args.window, all_models=args.all_models, language=args.language
+    )
 
     if args.format == "json":
         print(json.dumps(scores, indent=2))
