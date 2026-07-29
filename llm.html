@@ -238,7 +238,7 @@
       flex: 0 1 auto;
       /* Floor keeps the stepper digits legible; below it the members wrap
          onto a second line inside the same slot rather than squashing. */
-      min-width: 58px;
+      min-width: 60px;
     }
 
     /* The VRAM readout absorbs the slack the steppers don't need */
@@ -259,7 +259,7 @@
     /* Steppers follow their field's width instead of a fixed box */
     .field-cluster .gpu-stepper {
       width: 100%;
-      max-width: 58px;
+      max-width: 60px;
     }
 
     .field label {
@@ -832,13 +832,6 @@
       animation: filterFlowInput 7s linear infinite;
     }
 
-    .field.filter-on .gpu-stepper input {
-      background: transparent;
-      box-shadow: none;
-      animation: none;
-      color: var(--accent);
-    }
-
     @keyframes filterFlowInput {
       from { background-position: 0 0, 0% 50%; }
       to   { background-position: 0 0, 300% 50%; }
@@ -854,6 +847,19 @@
     [data-theme="dark"] .field.filter-on .gpu-stepper,
     [data-theme="dark"] .field.filter-on select {
       box-shadow: 0 0 18px rgba(91, 138, 247, 0.30);
+    }
+
+    /* The stepper's own frame carries the active-filter treatment; its inner
+       input must stay flat. Both variants sit after the dark-mode glow rule so
+       they outrank the generic input[type="text"] selectors. */
+    .field.filter-on .gpu-stepper input,
+    [data-theme="dark"] .field.filter-on .gpu-stepper input {
+      background: none;
+      border: none;
+      box-shadow: none;
+      text-shadow: none;
+      animation: none;
+      color: var(--accent);
     }
 
     [data-theme="dark"] .field.filter-on select {
