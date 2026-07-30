@@ -1513,15 +1513,29 @@
       border-radius: 10px;
       background: var(--surface);
       box-shadow: var(--shadow);
+      z-index: 20;
+    }
+
+    .export-list,
+    .export-list [role="group"] {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      z-index: 20;
     }
 
     /* display:flex above outranks the [hidden] attribute's display:none. */
     .export-list[hidden] {
       display: none;
+    }
+
+    .export-group {
+      margin: 0;
+      padding: 6px 10px 2px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--subtle);
     }
 
     .export-list button {
@@ -1764,9 +1778,18 @@
           </svg>
         </button>
         <div class="export-list" id="exportList" role="menu" hidden>
-          <button type="button" role="menuitem" data-format="json">JSON</button>
-          <button type="button" role="menuitem" data-format="yaml">YAML</button>
-          <button type="button" role="menuitem" data-format="csv">CSV</button>
+          <div role="group" aria-labelledby="exportGroupModels">
+            <p class="export-group" id="exportGroupModels">Models</p>
+            <button type="button" role="menuitem" data-export="llm.json">JSON</button>
+            <button type="button" role="menuitem" data-export="llm.yaml">YAML</button>
+            <button type="button" role="menuitem" data-export="llm.csv">CSV</button>
+          </div>
+          <div role="group" aria-labelledby="exportGroupGpus">
+            <p class="export-group" id="exportGroupGpus">GPUs</p>
+            <button type="button" role="menuitem" data-export="gpu.json">JSON</button>
+            <button type="button" role="menuitem" data-export="gpu.yaml">YAML</button>
+            <button type="button" role="menuitem" data-export="gpu.csv">CSV</button>
+          </div>
         </div>
       </div>
       <button id="themeToggle" class="theme-toggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
@@ -1920,8 +1943,9 @@
         }
       };
 
-      // Upstream data source, shared by the initial load and by exports.
+      // Upstream data sources, shared by the initial load and by exports.
       const DATA_URL = "https://dgrieser.github.io/ai-bench/llm.json";
+      const GPU_DATA_URL = "https://dgrieser.github.io/ai-bench/gpu.json";
 
       // Fixed (non-benchmark) table columns. Only layout lives here — labels,
       // sort-option labels and tooltips come from data.columns in llm.json.
@@ -2048,8 +2072,8 @@
         }
       }
 
-      async function fetchRemoteText() {
-        const cacheBustedUrl = `${DATA_URL}?t=${Date.now()}`;
+      async function fetchRemoteText(url) {
+        const cacheBustedUrl = `${url}?t=${Date.now()}`;
         const response = await fetch(cacheBustedUrl, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`Request failed (${response.status})`);
@@ -2058,7 +2082,7 @@
       }
 
       async function fetchRemoteData() {
-        return JSON.parse(await fetchRemoteText());
+        return JSON.parse(await fetchRemoteText(DATA_URL));
       }
 
       function showImportOnly(message) {
@@ -3801,26 +3825,48 @@
       }
 
       /* ── Export ─────────────────────────────────────────
-         Exports always re-fetch llm.json from DATA_URL, so the downloaded file
-         is the full upstream data — never the on-screen filter/sort state, and
-         never a locally imported file. JSON/YAML carry the whole document; CSV
-         can only hold a table, so it flattens models[]. */
+         Exports always re-fetch upstream, so a downloaded file is the full
+         published data — never the on-screen filter/sort state, and never a
+         locally imported file. JSON/YAML carry the whole document; CSV can only
+         hold a table, so it flattens models[] / the GPU list. */
 
-      // Each serializer takes the raw response body: JSON passes it through
-      // byte-for-byte rather than round-tripping through JSON.stringify, which
-      // would drop upstream formatting (and turn 68.0 into 68).
+      // Takes "csv" (models data) or "<dataset>.<format>" such as "gpu.csv", so
+      // the ?export= value reads like the file it produces. Each serializer gets
+      // the raw response body: JSON passes it through byte-for-byte rather than
+      // round-tripping through JSON.stringify, which would drop upstream
+      // formatting (and turn 68.0 into 68).
       //
       // A hoisted function, not a const map: ?export= runs while this block is
       // still in the temporal dead zone, so a const here would throw.
-      function exportFormatSpec(format) {
-        switch (String(format || "").trim().toLowerCase()) {
+      function exportSpec(value) {
+        const parts = String(value || "").trim().toLowerCase().split(".");
+        if (parts.length > 2) return null;
+        const dataset = parts.length === 2 ? parts[0] : "llm";
+        const format = parts[parts.length - 1];
+
+        let url;
+        let tabulate;
+        switch (dataset) {
+          case "llm":
+            url = DATA_URL;
+            tabulate = modelsToCsv;
+            break;
+          case "gpu":
+            url = GPU_DATA_URL;
+            tabulate = gpusToCsv;
+            break;
+          default:
+            return null;
+        }
+
+        switch (format) {
           case "json":
-            return { filename: "llm.json", mime: "application/json", serialize: (text) => text };
+            return { url, filename: `${dataset}.json`, mime: "application/json", serialize: (text) => text };
           case "yaml":
           case "yml":
-            return { filename: "llm.yaml", mime: "application/yaml", serialize: (text) => toYaml(JSON.parse(text)) };
+            return { url, filename: `${dataset}.yaml`, mime: "application/yaml", serialize: (text) => toYaml(JSON.parse(text)) };
           case "csv":
-            return { filename: "llm.csv", mime: "text/csv;charset=utf-8", serialize: (text) => toCsv(JSON.parse(text)) };
+            return { url, filename: `${dataset}.csv`, mime: "text/csv;charset=utf-8", serialize: (text) => tabulate(JSON.parse(text)) };
           default:
             return null;
         }
@@ -3833,10 +3879,10 @@
         });
 
         ui.exportList.addEventListener("click", (event) => {
-          const item = event.target.closest("button[data-format]");
+          const item = event.target.closest("button[data-export]");
           if (!item) return;
           setExportMenuOpen(false);
-          exportData(item.dataset.format);
+          exportData(item.dataset.export);
         });
 
         document.addEventListener("click", (event) => {
@@ -3858,11 +3904,11 @@
         ui.exportBtn.setAttribute("aria-expanded", String(open));
       }
 
-      async function exportData(format) {
-        const spec = exportFormatSpec(format);
+      async function exportData(target) {
+        const spec = exportSpec(target);
         if (!spec) return;
         try {
-          const text = await fetchRemoteText();
+          const text = await fetchRemoteText(spec.url);
           triggerDownload(spec.serialize(text), spec.filename, spec.mime);
         } catch (err) {
           console.error("Export failed.", err);
@@ -3974,17 +4020,38 @@
         ["vram_int4", (model) => model.vram?.int4]
       ];
 
+      const CSV_GPU_COLUMNS = [
+        ["manufacturer", (gpu) => gpu.manufacturer],
+        ["model", (gpu) => gpu.model],
+        ["vram_gb", (gpu) => gpu.vram_gb],
+        ["release", (gpu) => gpu.release]
+      ];
+
       // One row per model: the fixed fields above plus one raw score column per
       // benchmark, in llm.json's benchmark order. Values stay unformatted, so
       // params/context remain the source strings ("123B", "256k").
-      function toCsv(data) {
+      function modelsToCsv(data) {
         const benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
-        const header = CSV_MODEL_COLUMNS.map(([label]) => label).concat(benchmarkKeys);
         const models = Array.isArray(data.models) ? data.models : [];
-        const rows = models.map((model) => CSV_MODEL_COLUMNS
-          .map(([, read]) => read(model))
-          .concat(benchmarkKeys.map((key) => model.scores?.[key])));
-        // Leading BOM keeps Excel from mangling non-ASCII creator names.
+        return csvDocument(
+          CSV_MODEL_COLUMNS.map(([label]) => label).concat(benchmarkKeys),
+          models.map((model) => CSV_MODEL_COLUMNS
+            .map(([, read]) => read(model))
+            .concat(benchmarkKeys.map((key) => model.scores?.[key])))
+        );
+      }
+
+      // gpu.json is already a flat list, so its CSV is the file one-to-one.
+      function gpusToCsv(data) {
+        const gpus = Array.isArray(data) ? data : [];
+        return csvDocument(
+          CSV_GPU_COLUMNS.map(([label]) => label),
+          gpus.map((gpu) => CSV_GPU_COLUMNS.map(([, read]) => read(gpu)))
+        );
+      }
+
+      function csvDocument(header, rows) {
+        // Leading BOM keeps Excel from mangling non-ASCII names.
         return `\uFEFF${[header].concat(rows).map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;
       }
 
