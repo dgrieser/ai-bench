@@ -209,7 +209,10 @@ def main() -> int:
     print(f"{label}: {skipped}")
     print(f"skipped as closed weights: {closed}")
     if not args.write:
-        print("dry-run only, pass --write to persist changes")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist changes")
     return 0
 
 

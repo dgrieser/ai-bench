@@ -39,8 +39,16 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # The openness index is rebuilt from three sources on a 12h TTL; caching it
-      # keeps a scheduled run from re-fetching all three every day.
+      # Fails fast, before any network work: a broken freeze guard would let the
+      # run bury source names as __unmappable__ with nobody ever prompted.
+      - name: Check collect mode records nothing
+        run: ./test_prompts.py
+
+      # The openness index has a 12h TTL, so the daily run always rebuilds it
+      # from its three sources; this only spares re-fetching when a run is
+      # repeated or dispatched inside that window. The run_id in the key is
+      # deliberate: an exact key hit skips the save, which would freeze the
+      # cache at its first contents forever. restore-keys does the restoring.
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ai-bench
@@ -99,16 +107,17 @@ jobs:
             fi
             exit 0
           fi
-          if [ -z "$num" ]; then
+          # Body edits do not notify, so only comment when the queue really moved.
+          # Normalised first: the API round-trip changes line endings and the
+          # trailing newline, neither of which means the queue changed.
+          # A failed read (issue deleted or transferred since the list above)
+          # falls through to creating a fresh one rather than failing the run.
+          norm() { printf '%s\n' "$(tr -d '\r' < "$1")"; }
+          if [ -z "$num" ] || ! gh issue view "$num" --json body --jq .body > "$live.raw"; then
             gh issue create --title "Pending benchmark review" \
               --label pending-prompts --assignee dgrieser --body-file "$pending"
             exit 0
           fi
-          # Body edits do not notify, so only comment when the queue really moved.
-          # Normalised first: the API round-trip changes line endings and the
-          # trailing newline, neither of which means the queue changed.
-          norm() { printf '%s\n' "$(tr -d '\r' < "$1")"; }
-          gh issue view "$num" --json body --jq .body > "$live.raw"
           norm "$live.raw" > "$live"
           norm "$pending" > "$pending.cmp"
           if diff -q "$live" "$pending.cmp" >/dev/null; then

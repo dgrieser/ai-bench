@@ -130,7 +130,10 @@ def main() -> int:
     label = "queued for review" if _prompts.collecting() else "recorded as unmappable"
     print(f"{label}: {skipped}")
     if not args.write:
-        print("dry-run only, pass --write to persist changes")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist changes")
     return 0
 
 

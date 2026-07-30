@@ -326,7 +326,10 @@ def main() -> int:
             preview_models(doc, model_ids, openness, args.recheck_closed)
         if not args.skip_benchmarks:
             preview_benchmarks(doc, labels)
-        print("dry-run only, pass -w/--write to apply")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass -w/--write to apply")
         return 0
 
     interactive = sys.stdin.isatty()

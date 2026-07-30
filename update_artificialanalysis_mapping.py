@@ -444,7 +444,10 @@ def main() -> int:
     print(f"new mappings written: {written}")
     print(f"ignored suggestion sets written: {ignored_written}")
     if not args.write:
-        print("dry-run only, pass --write to persist choices")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist choices")
     elif not interactive:
         print("--write needs an interactive terminal to prompt")
     return 0
