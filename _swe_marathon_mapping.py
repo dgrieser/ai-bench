@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+from _prompts import freeze_decisions
 
 SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py")
 SWE_MARATHON_MAPPING = Path(__file__).resolve().with_name(
@@ -61,6 +62,10 @@ def load_reviewed_swe_marathon_names(
 def write_swe_marathon_to_slug_mapping(
     mapping: dict[str, str], path: Path = SWE_MARATHON_MAPPING
 ) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     path.write_text(
         json.dumps(mapping, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",

@@ -1,0 +1,6 @@
+# Third-party imports across the tree; everything else is stdlib.
+requests        # every fetch_*.py and artificialanalysis.py
+tabulate        # artificialanalysis.py table output
+PyYAML          # artificialanalysis.py
+argcomplete     # artificialanalysis.py shell completion
+openpyxl        # fetch_osworld.py reads the OSWorld xlsx

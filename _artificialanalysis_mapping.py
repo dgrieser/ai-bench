@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _prompts import freeze_decisions
+
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 AA_MODEL_MAPPING = Path(__file__).resolve().with_name(
     "model-name-mapping-llm-to-artificialanalysis.json"
@@ -47,6 +49,10 @@ def load_llm_to_aa_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str]:
 def write_llm_to_aa_mapping(
     mapping: dict[str, str], path: Path = AA_MODEL_MAPPING
 ) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     path.write_text(
         json.dumps(mapping, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -90,6 +96,10 @@ def load_ignored_aa_suggestions(
 def write_ignored_aa_suggestions(
     ignored: dict[str, set[str] | list[str]], path: Path = AA_MODEL_IGNORES
 ) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     payload = {
         key: sorted(set(slugs))
         for key, slugs in ignored.items()

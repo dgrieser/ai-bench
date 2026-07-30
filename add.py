@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import termios
@@ -14,6 +15,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import _prompts
 from _swe_rebench_mapping import (
     add_rebench_mapping,
     fetch_swe_rebench_model_names,
@@ -170,7 +172,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip the llm-stats.com model and benchmark-label mapping prompts.",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def load_doc(path: Path) -> dict[str, Any]:
@@ -744,6 +749,12 @@ def prompt_live_select_or_new(
         termios.tcsetattr(fd, termios.TCSADRAIN, previous)
 
 
+def subject_from_label(label: str) -> str:
+    """The source name a prompt label is about, e.g. Map X 'foo' to Y -> foo."""
+    quoted = re.search(r"'([^']+)'", label)
+    return quoted.group(1) if quoted else label
+
+
 def prompt_select_or_new(
     label: str,
     options: list[str],
@@ -751,6 +762,20 @@ def prompt_select_or_new(
     default: str | None = None,
     sources: dict[str, str] | None = None,
 ) -> str | None:
+    # Collect mode: queue the question and answer "no answer". Callers treat None
+    # as "not a match", and their persist calls are frozen, so it is asked again.
+    if _prompts.collecting():
+        subject = subject_from_label(label)
+        candidates = ([default] if default else []) + find_matches(subject, options, limit=5)
+        _prompts.record(
+            kind="mapping",
+            subject=subject,
+            question=label,
+            candidates=list(dict.fromkeys(candidates)),
+            default=default,
+        )
+        return None
+
     if not options:
         if default is not None:
             return prompt_value_with_default(label, default)
@@ -903,6 +928,20 @@ def write_doc(path: Path, doc: dict[str, Any]) -> None:
 def main() -> int:
     args = parse_args()
     path = Path(args.json_file)
+
+    # Adding a model needs the name/url/params/context answered, so there is
+    # nothing useful to do unattended. Queue it and leave llm.json alone.
+    if _prompts.collecting():
+        name = parse_nullable(args.name) or "(unnamed)"
+        _prompts.record(
+            kind="new-model",
+            subject=name,
+            question=f"Add model '{name}' to llm.json (needs metadata and mappings)",
+            command="./add.py --name " + name,
+        )
+        print(f"collect mode: queued '{name}' for a manual ./add.py run")
+        return 0
+
     doc = load_doc(path)
 
     interactive = sys.stdin.isatty()

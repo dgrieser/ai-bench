@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+import _prompts
 from _artificialanalysis_mapping import (
     AA_MODEL_MAPPING,
     add_aa_mapping,
@@ -84,7 +85,10 @@ def parse_args() -> argparse.Namespace:
         default=8,
         help="Maximum suggestions per model (default: 8).",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def load_doc(path: Path) -> dict[str, Any]:
@@ -311,6 +315,17 @@ def exact_aa_slug(model: dict[str, Any], aa_by_norm: dict[str, str]) -> str | No
 
 
 def prompt_candidate(model_name: str, candidates: list[Candidate], aa_slugs: list[str]) -> str | None:
+    # Collect mode: queue the question and answer "none". The caller's
+    # add_ignored_aa_suggestions() is skipped, so it is asked again next time.
+    if _prompts.collecting():
+        _prompts.record(
+            kind="aa-mapping",
+            subject=model_name,
+            question=f"Which Artificial Analysis slug is llm.json model '{model_name}'?",
+            candidates=[candidate.slug for candidate in candidates],
+        )
+        return None
+
     aa_by_lower = {slug.lower(): slug for slug in aa_slugs}
     while True:
         try:
@@ -401,7 +416,7 @@ def main() -> int:
         else:
             without_candidates += 1
 
-        if not (args.write and interactive and candidates):
+        if not (args.write and (interactive or _prompts.collecting()) and candidates):
             continue
 
         selected = prompt_candidate(model_name, candidates, aa_slugs)
@@ -409,6 +424,10 @@ def main() -> int:
             add_aa_mapping(model_name, selected)
             written += 1
             print(f"  -> wrote mapping to {selected}")
+            continue
+
+        if _prompts.collecting():
+            print("  -> queued for manual review, nothing recorded")
             continue
 
         ignored_slugs = [candidate.slug for candidate in candidates]

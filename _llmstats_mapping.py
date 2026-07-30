@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+from _prompts import freeze_decisions
 
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 LLMSTATS_MODEL_MAPPING = Path(__file__).resolve().with_name(
@@ -35,6 +36,10 @@ def _load_raw_mapping(path: Path) -> dict[str, str]:
 
 
 def _write_mapping(mapping: dict[str, str], path: Path) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     path.write_text(
         json.dumps(mapping, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",

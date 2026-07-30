@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+from _prompts import freeze_decisions
 
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 OSWORLD_MAPPING = Path(__file__).resolve().with_name(
@@ -61,6 +62,10 @@ def load_reviewed_osworld_names(
 def write_osworld_to_slug_mapping(
     mapping: dict[str, str], path: Path = OSWORLD_MAPPING
 ) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     path.write_text(
         json.dumps(mapping, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",

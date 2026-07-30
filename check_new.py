@@ -15,7 +15,8 @@ addition:
   [q] quit       -> stop asking.
 
 With no tty (e.g. inside a batch script), it only prints the candidates and
-makes no changes.
+makes no changes. Under --collect-prompts each candidate is queued for review
+instead of being offered, and nothing is dismissed.
 """
 
 from __future__ import annotations
@@ -26,6 +27,8 @@ import subprocess
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+import _prompts
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_LLM_JSON = HERE / "llm.json"
@@ -57,6 +60,10 @@ def load_dismissed() -> set[str]:
 
 
 def dismiss(slug: str) -> None:
+    # Collect mode queues the candidate instead of offering it; dismissing it
+    # here would stop it ever being offered again.
+    if _prompts.freeze_decisions():
+        return
     slugs = load_dismissed()
     slugs.add(slug)
     DISMISSED_FILE.write_text(
@@ -96,8 +103,28 @@ def add_model(slug: str, json_file: str) -> bool:
     return proc.returncode == 0
 
 
-def prompt_choice(slug: str) -> str:
-    """Return 'add', 'skip', or 'quit' for one candidate."""
+def prompt_choice(model: dict) -> str:
+    """Return 'add', 'skip', 'quit' or 'defer' for one candidate."""
+    slug = model["slug"]
+    if _prompts.collecting():
+        note = " - ".join(
+            part
+            for part in (
+                f"released {model.get('release_date') or '?'}",
+                creator_name(model),
+                model.get("url") or "",
+            )
+            if part
+        )
+        _prompts.record(
+            kind="new-model",
+            subject=slug,
+            question=f"Add newly released model '{slug}' to llm.json?",
+            note=note,
+            command="./check_new.py",
+        )
+        return "defer"
+
     while True:
         try:
             ans = input(f"Add '{slug}'?  [y] add  [n] never ask again  [q] quit: ").strip().lower()
@@ -140,7 +167,9 @@ def main() -> int:
         action="store_true",
         help="Only print candidates; never prompt to add (report only).",
     )
+    _prompts.add_cli_flag(parser)
     args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
 
     if args.date:
         try:
@@ -169,16 +198,21 @@ def main() -> int:
             f"{creator_name(m):22s}  {m.get('url') or ''}"
         )
 
-    if args.no_add or not (sys.stdin.isatty() and sys.stdout.isatty()):
+    if args.no_add:
+        return 0
+    if not _prompts.collecting() and not (sys.stdin.isatty() and sys.stdout.isatty()):
         return 0
 
     print()
-    added = dismissed = 0
+    added = dismissed = deferred = 0
     for m in new:
         slug = m["slug"]
-        choice = prompt_choice(slug)
+        choice = prompt_choice(m)
         if choice == "quit":
             break
+        if choice == "defer":
+            deferred += 1
+            continue
         if choice == "skip":
             dismiss(slug)
             dismissed += 1
@@ -188,6 +222,9 @@ def main() -> int:
         else:
             print(f"  add.py failed for '{slug}'; leaving it for next time.", file=sys.stderr)
 
+    if deferred:
+        print(f"\nQueued {deferred} for manual review; nothing dismissed.")
+        return 0
     print(f"\nAdded {added}, dismissed {dismissed}.")
     if added:
         print("Run ./update.py -w (or ./update-all) to fill in scores.")
