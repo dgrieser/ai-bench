@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import _prompts
 from _openness import is_closed_weights, open_index
 from add import prompt_select_or_new
 from _swe_atlas_mapping import (
@@ -61,7 +62,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Rebuild the cached open-weight index before reviewing.",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def load_doc(path: Path) -> dict[str, Any]:
@@ -180,14 +184,17 @@ def main() -> int:
                 add_swe_atlas_closed_weights(swe_atlas_name)
             continue
 
-        if not (interactive and args.write):
+        if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
         slug = prompt_slug_for_swe_atlas_name(swe_atlas_name, llm_names)
         if not slug:
-            add_swe_atlas_unmappable(swe_atlas_name)
             skipped += 1
-            print("  -> recorded as unmappable (won't ask again)")
+            if _prompts.collecting():
+                print("  -> queued for manual review, nothing recorded")
+            else:
+                add_swe_atlas_unmappable(swe_atlas_name)
+                print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_swe_atlas_mapping(swe_atlas_name, slug)
@@ -198,10 +205,14 @@ def main() -> int:
     print(f"swe atlas names with candidate matches: {matched}")
     print(f"swe atlas names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
-    print(f"recorded as unmappable: {skipped}")
+    label = "queued for review" if _prompts.collecting() else "recorded as unmappable"
+    print(f"{label}: {skipped}")
     print(f"skipped as closed weights: {closed}")
     if not args.write:
-        print("dry-run only, pass --write to persist changes")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist changes")
     return 0
 
 

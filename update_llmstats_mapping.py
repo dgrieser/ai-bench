@@ -10,7 +10,9 @@ auto-match (exact / date-suffix stripped / normalized) as the default so you can
 accept with Enter, type another value, or skip. Ids and labels left blank are
 recorded as __unmappable__ so add.py stops prompting for them. Each answer is
 written immediately. On a non-interactive terminal, -w auto-applies every
-confident match (and marks leftover ids and labels unmappable).
+confident match (and marks leftover ids and labels unmappable); pass
+--collect-prompts instead to queue every id and label for review and record
+nothing.
 
 Model ids with no confident match whose licence is proprietary are recorded as
 __closed_weights__ without prompting: llm.json tracks open-weight models only,
@@ -27,8 +29,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import _prompts
 from _openness import is_closed_weights, open_index
-from add import prompt_key_for_label, prompt_select_or_new
+from add import find_matches, prompt_key_for_label, prompt_select_or_new
 from _llmstats_mapping import (
     add_llmstats_benchmark_mapping,
     add_llmstats_benchmark_unmappable,
@@ -124,6 +127,18 @@ def review_models(
             print(f"Skipped llm-stats model '{model_id}': closed weights per source")
             continue
 
+        if _prompts.collecting():
+            # Never auto-apply unattended: queue the id and record nothing, so
+            # the same question comes back on the next local run.
+            _prompts.record(
+                kind="llmstats-model",
+                subject=model_id,
+                question=f"Which llm.json model is llm-stats id '{model_id}'?",
+                candidates=[default] if default else find_matches(model_id, slugs, limit=5),
+                default=default,
+            )
+            continue
+
         if interactive:
             slug = prompt_select_or_new(
                 f"llm.json slug for '{model_id}'", slugs, default=default
@@ -151,6 +166,16 @@ def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool)
         if label in reviewed:
             continue
         default = auto_match_benchmark(label, keys)
+
+        if _prompts.collecting():
+            _prompts.record(
+                kind="llmstats-benchmark",
+                subject=label,
+                question=f"Which llm.json benchmark is llm-stats label '{label}'?",
+                candidates=[default] if default else find_matches(label, keys, limit=5),
+                default=default,
+            )
+            continue
 
         if interactive:
             key = prompt_key_for_label("llm-stats benchmark", label, keys, default=default)
@@ -267,7 +292,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Rebuild the cached open-weight index before reviewing.",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def main() -> int:
@@ -298,11 +326,16 @@ def main() -> int:
             preview_models(doc, model_ids, openness, args.recheck_closed)
         if not args.skip_benchmarks:
             preview_benchmarks(doc, labels)
-        print("dry-run only, pass -w/--write to apply")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass -w/--write to apply")
         return 0
 
     interactive = sys.stdin.isatty()
-    if not interactive:
+    if _prompts.collecting():
+        print("collect mode: queueing every id and label, recording nothing")
+    elif not interactive:
         print("non-interactive: auto-applying confident matches")
 
     added = 0

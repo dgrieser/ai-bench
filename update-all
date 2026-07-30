@@ -1,20 +1,109 @@
 #!/bin/bash
+#
+# Refresh every benchmark score in llm.json.
+#
+#   ./update-all                        interactive: prompts for new models and
+#                                       unrecognised source names as it goes
+#   ./update-all --collect-prompts [F]  unattended (cron, CI): asks nothing,
+#                                       queues every question in F, and records
+#                                       no answers, so the questions come back
+#                                       on the next interactive run
+#
+# Deliberately does not set -e: one dead scraper must not stop the rest. Exit
+# codes are collected and reported at the end instead.
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Record the pages the scrapers above read; independent of the scores, so last.
-echo "+ Running fill_source_urls.py" 1>&2
-"${SCRIPT_DIR}/fill_source_urls.py" -w
+COLLECT_ARGS=()
+REPORT=""
+
+usage() {
+    cat <<'EOF'
+usage: update-all [--collect-prompts [FILE]]
+
+  (no flags)                 interactive: prompts for new models and
+                             unrecognised source names as it goes
+  --collect-prompts [FILE]   unattended (cron, CI): asks nothing, queues every
+                             question in FILE (default pending-prompts.jsonl)
+                             and records no answers, so the questions come back
+                             on the next interactive run
+EOF
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --collect-prompts)
+            REPORT="${SCRIPT_DIR}/pending-prompts.jsonl"
+            if [ -n "$2" ] && [ "${2#-}" = "$2" ]; then
+                REPORT="$2"
+                shift
+            fi
+            shift
+            ;;
+        --collect-prompts=*)
+            REPORT="${1#*=}"
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "unknown argument: $1" 1>&2
+            usage 1>&2
+            exit 2
+            ;;
+    esac
+done
+
+if [ -n "$REPORT" ]; then
+    # Exported so nested subprocesses (check_new.py -> add.py) collect too, and
+    # truncated once here so the sub-commands append to one fresh report.
+    export AI_BENCH_PENDING_PROMPTS="$REPORT"
+    : > "$REPORT" || exit 1
+    COLLECT_ARGS=(--collect-prompts "$REPORT")
+    echo "+ collect mode: queueing prompts in ${REPORT}, recording no answers" 1>&2
+fi
+
+FAILED=()
+
+run() {
+    local label="$1"
+    shift
+    echo "+ Running ${label}" 1>&2
+    "$@"
+    local status=$?
+    if [ $status -ne 0 ]; then
+        FAILED+=("${label} (exit ${status})")
+    fi
+    return 0
+}
+
+# Record the pages the scrapers below read; independent of the scores, so first
+# and non-interactive either way.
+run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
 
 # Offer newly released open-weights models for addition first, so the update
 # pass below fills in their scores. Interactive when run from a terminal;
 # report-only otherwise.
-echo "+ Running check_new.py" 1>&2
-"${SCRIPT_DIR}/check_new.py"
+run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
 
 for s in "${SCRIPT_DIR}"/update_*.py; do
-    echo "+ Running ${s}" 1>&2
-    "${s}" -w
+    run "$(basename "$s")" "$s" -w "${COLLECT_ARGS[@]}"
 done
 
-"${SCRIPT_DIR}/update.py" -w
+run "update.py" "${SCRIPT_DIR}/update.py" -w
+
+if [ -n "$REPORT" ]; then
+    echo 1>&2
+    "${SCRIPT_DIR}/pending_prompts.py" "$REPORT" --format text 1>&2
+fi
+
+if [ ${#FAILED[@]} -gt 0 ]; then
+    echo 1>&2
+    echo "${#FAILED[@]} step(s) failed:" 1>&2
+    for f in "${FAILED[@]}"; do
+        echo "  - ${f}" 1>&2
+    done
+    exit 1
+fi

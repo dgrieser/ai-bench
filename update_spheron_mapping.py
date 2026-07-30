@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import _prompts
 from add import prompt_select_or_new
 from _spheron_mapping import (
     SPHERON_MAPPING,
@@ -51,7 +52,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help=f"Write selected mappings back to {SPHERON_MAPPING.name}.",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def load_doc(path: Path) -> dict[str, Any]:
@@ -177,14 +181,17 @@ def main() -> int:
             without_candidates += 1
             print("  no candidate matches")
 
-        if not (interactive and args.write):
+        if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
         slug = prompt_slug_for_spheron_path(spheron_path, llm_names, default)
         if not slug:
-            add_spheron_unmappable(spheron_path)
             skipped += 1
-            print("  -> recorded as unmappable (won't ask again)")
+            if _prompts.collecting():
+                print("  -> queued for manual review, nothing recorded")
+            else:
+                add_spheron_unmappable(spheron_path)
+                print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_spheron_mapping(spheron_path, slug)
@@ -195,9 +202,13 @@ def main() -> int:
     print(f"spheron paths with candidate matches: {matched}")
     print(f"spheron paths without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
-    print(f"recorded as unmappable: {skipped}")
+    label = "queued for review" if _prompts.collecting() else "recorded as unmappable"
+    print(f"{label}: {skipped}")
     if not args.write:
-        print("dry-run only, pass --write to persist changes")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist changes")
     return 0
 
 

@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import _prompts
 from _openness import is_closed_weights, open_index
 from add import prompt_select_or_new
 from _evals_report_mapping import (
@@ -62,7 +63,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Rebuild the cached open-weight index before reviewing.",
     )
-    return parser.parse_args()
+    _prompts.add_cli_flag(parser)
+    args = parser.parse_args()
+    _prompts.apply_cli_flag(args)
+    return args
 
 
 def load_doc(path: Path) -> dict[str, Any]:
@@ -186,14 +190,17 @@ def main() -> int:
                 add_evals_report_closed_weights(evals_report_name)
             continue
 
-        if not (interactive and args.write):
+        if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
         slug = prompt_slug_for_evals_report_name(evals_report_name, llm_names)
         if not slug:
-            add_evals_report_unmappable(evals_report_name)
             skipped += 1
-            print("  -> recorded as unmappable (won't ask again)")
+            if _prompts.collecting():
+                print("  -> queued for manual review, nothing recorded")
+            else:
+                add_evals_report_unmappable(evals_report_name)
+                print("  -> recorded as unmappable (won't ask again)")
             continue
 
         add_evals_report_mapping(evals_report_name, slug)
@@ -204,10 +211,14 @@ def main() -> int:
     print(f"evals.report names with candidate matches: {matched}")
     print(f"evals.report names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
-    print(f"recorded as unmappable: {skipped}")
+    label = "queued for review" if _prompts.collecting() else "recorded as unmappable"
+    print(f"{label}: {skipped}")
     print(f"skipped as closed weights: {closed}")
     if not args.write:
-        print("dry-run only, pass --write to persist changes")
+        if _prompts.collecting():
+            print("collect mode needs -w/--write to reach the prompts; nothing queued")
+        else:
+            print("dry-run only, pass --write to persist changes")
     return 0
 
 

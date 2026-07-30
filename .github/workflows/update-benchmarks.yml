@@ -1,0 +1,134 @@
+name: update benchmarks
+
+# Daily unattended `update-all`. Scores land in llm.json and are committed to
+# main (which republishes the GitHub Pages site). Anything that needs a human --
+# a newly released model, an unrecognised source name -- is queued instead of
+# guessed, and collected into a rolling `pending-prompts` issue. Nothing is ever
+# recorded as answered, so the questions survive until you answer them locally.
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run everything but do not commit or touch the issue"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: update-benchmarks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      # Fails fast, before any network work: a broken freeze guard would let the
+      # run bury source names as __unmappable__ with nobody ever prompted.
+      - name: Check collect mode records nothing
+        run: ./test_prompts.py
+
+      # The openness index has a 12h TTL, so the daily run always rebuilds it
+      # from its three sources; this only spares re-fetching when a run is
+      # repeated or dispatched inside that window. The run_id in the key is
+      # deliberate: an exact key hit skips the save, which would freeze the
+      # cache at its first contents forever. restore-keys does the restoring.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ai-bench
+          key: ai-bench-openness-${{ github.run_id }}
+          restore-keys: ai-bench-openness-
+
+      - name: Refresh benchmarks
+        id: refresh
+        continue-on-error: true
+        env:
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: ./update-all --collect-prompts pending-prompts.jsonl
+
+      # Rendered outside the working tree so the commit step cannot pick it up.
+      - name: Render the pending queue
+        id: pending
+        run: |
+          ./pending_prompts.py pending-prompts.jsonl --format markdown > "$RUNNER_TEMP/pending.md"
+          echo "count=$(./pending_prompts.py pending-prompts.jsonl --count)" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Pending review"
+            echo
+            cat "$RUNNER_TEMP/pending.md"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit and push
+        if: ${{ !inputs.dry_run }}
+        env:
+          COUNT: ${{ steps.pending.outputs.count }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No data changed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(data): daily benchmark refresh" \
+                     -m "${COUNT} prompt(s) queued for manual review."
+          git push
+
+      - name: Update the pending-prompts issue
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COUNT: ${{ steps.pending.outputs.count }}
+        run: |
+          pending="$RUNNER_TEMP/pending.md"
+          live="$RUNNER_TEMP/live.md"
+          num=$(gh issue list --label pending-prompts --state open --limit 1 \
+                  --json number --jq '.[0].number // empty')
+          if [ "$COUNT" -eq 0 ]; then
+            if [ -n "$num" ]; then
+              gh issue close "$num" --comment "Queue empty: everything is mapped."
+            fi
+            exit 0
+          fi
+          # Body edits do not notify, so only comment when the queue really moved.
+          # Normalised first: the API round-trip changes line endings and the
+          # trailing newline, neither of which means the queue changed.
+          # A failed read (issue deleted or transferred since the list above)
+          # falls through to creating a fresh one rather than failing the run.
+          norm() { printf '%s\n' "$(tr -d '\r' < "$1")"; }
+          if [ -z "$num" ] || ! gh issue view "$num" --json body --jq .body > "$live.raw"; then
+            gh issue create --title "Pending benchmark review" \
+              --label pending-prompts --assignee dgrieser --body-file "$pending"
+            exit 0
+          fi
+          norm "$live.raw" > "$live"
+          norm "$pending" > "$pending.cmp"
+          if diff -q "$live" "$pending.cmp" >/dev/null; then
+            echo "Queue unchanged, issue #$num left alone." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          gh issue edit "$num" --body-file "$pending"
+          gh issue comment "$num" --body "Queue changed: **$COUNT** question(s) pending."
+
+      - name: Fail if a step of update-all failed
+        if: ${{ steps.refresh.outcome != 'success' }}
+        run: |
+          echo "update-all reported a failed step; see its log above." >&2
+          exit 1

@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _prompts import freeze_decisions
+
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapping.json")
 
@@ -50,6 +52,10 @@ def load_reviewed_hf_labels(path: Path = HF_MAPPING) -> set[str]:
 
 
 def write_hf_to_key_mapping(mapping: dict[str, str], path: Path = HF_MAPPING) -> None:
+    # Collect mode queues the question instead of asking it; recording an answer
+    # here would stop it ever being asked again.
+    if freeze_decisions():
+        return
     path.write_text(
         json.dumps(mapping, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",
