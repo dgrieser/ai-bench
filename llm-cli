@@ -112,16 +112,21 @@ def percentile_map(models, key, doc):
     return result
 
 
+def finite_number(value, fallback):
+    """llm.html guards every weight it reads with Number.isFinite, which rejects
+    booleans, null and NaN alike; isinstance() would let a bool through."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return fallback
+    return value if math.isfinite(value) else fallback
+
+
 def group_benchmark_entries(group):
     raw = group.get("benchmarks") or []
-    decay = group.get("decay", 0.6)
+    decay = finite_number(group.get("decay"), 0.6)
     entries = []
     for i, entry in enumerate(raw):
         obj = {"key": entry} if isinstance(entry, str) else (entry or {})
-        weight = obj.get("weight")
-        if not isinstance(weight, (int, float)):
-            weight = decay ** i
-        entries.append((obj.get("key"), weight))
+        entries.append((obj.get("key"), finite_number(obj.get("weight"), decay ** i)))
     return entries
 
 
@@ -130,9 +135,7 @@ def compute_group_composite(models, group, doc):
     pct_maps = [percentile_map(models, key, doc) for key, _ in entries]
     weights = [w if pm is not None else 0.0 for (_, w), pm in zip(entries, pct_maps)]
     total_weight = sum(weights)
-    min_scored_fraction = group.get("minScoredFraction")
-    if not isinstance(min_scored_fraction, (int, float)):
-        min_scored_fraction = 0.0
+    min_scored_fraction = finite_number(group.get("minScoredFraction"), 0.0)
     min_scored_weight = min_scored_fraction * total_weight
 
     result = {}
