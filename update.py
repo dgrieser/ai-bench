@@ -18,6 +18,7 @@ from _swe_rebench_mapping import load_rebench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
+from _toolathlon_mapping import load_toolathlon_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
@@ -34,6 +35,7 @@ SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
+TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
@@ -58,6 +60,18 @@ def to_percent(value: Any) -> int | float | None:
     if rounded.is_integer():
         return int(rounded)
     return rounded
+
+
+def to_index(value: Any) -> int | float | None:
+    """Pass an Artificial Analysis index/Elo through unscaled, rounded to 0.1.
+
+    AA-Omniscience (-100..100) and GDPval-AA Elo (human baseline = 1000) are not
+    fractions, so to_percent() would multiply them by 100.
+    """
+    if value is None:
+        return None
+    rounded = round(float(value), 1)
+    return int(rounded) if rounded.is_integer() else rounded
 
 
 def fmt_change_value(value: Any) -> str:
@@ -160,7 +174,14 @@ def print_changes_table(changes: list[tuple[str, str, Any, Any]]) -> None:
 SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "terminal_bench_hard": (("terminalbench_hard",), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
+    # AA reports the τ³ Banking domain under the version-less key "tau_banking".
+    "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
+    "gdpval_aa": (("gdpval",), to_index),
+    "aa_omniscience": (("omniscience",), to_index),
+    "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
+    "aa_lcr": (("lcr",), to_percent),
+    "critpt": (("critpt",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     "mmmu_pro": (("mmmu_pro",), to_percent),
     "gpqa_diamond": (("gpqa",), to_percent),
@@ -207,6 +228,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-huggingface",
         action="store_true",
         help="Skip fetching scores from huggingface.",
+    )
+    parser.add_argument(
+        "--skip-toolathlon",
+        action="store_true",
+        help="Skip fetching scores from toolathlon.",
     )
     parser.add_argument(
         "--skip-deepswe",
@@ -567,6 +593,76 @@ def update_huggingface_scores(
             stamp_score_updated(model, benchmark_key)
             updated += 1
             changes.append((slug, benchmark_key, old_value, new_value))
+
+    return matched, updated, changes
+
+
+def build_fetch_toolathlon_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_toolathlon_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_toolathlon_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_toolathlon.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected toolathlon JSON format: expected a list")
+
+    toolathlon_to_slug = load_toolathlon_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        toolathlon_name = row.get("model")
+        if not isinstance(toolathlon_name, str) or not toolathlon_name:
+            continue
+        slug = toolathlon_to_slug.get(toolathlon_name)
+        if not slug:
+            continue
+        by_slug.setdefault(slug, row)
+    return by_slug
+
+
+def update_toolathlon_scores(
+    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        toolathlon_model = by_slug.get(slug)
+        if toolathlon_model is None:
+            continue
+
+        matched += 1
+        scores = model.setdefault("scores", {})
+        if not isinstance(scores, dict):
+            continue
+
+        old_value = scores.get("toolathlon")
+        new_value = toolathlon_model.get("score")
+
+        # Never overwrite an existing non-null value with null.
+        if old_value is not None and new_value is None:
+            continue
+
+        if old_value != new_value:
+            scores["toolathlon"] = new_value
+            stamp_score_updated(model, "toolathlon")
+            updated += 1
+            changes.append((slug, "toolathlon", old_value, new_value))
 
     return matched, updated, changes
 
@@ -1090,6 +1186,7 @@ def main() -> int:
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
+    toolathlon_path = TOOLATHLON_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
     evals_report_path = EVALS_REPORT_SCRIPT
@@ -1107,6 +1204,9 @@ def main() -> int:
     )
     deepswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-deepswe-to-artificialanalysis.json"
+    )
+    toolathlon_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-toolathlon-to-artificialanalysis.json"
     )
     frontierswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontierswe-to-artificialanalysis.json"
@@ -1151,6 +1251,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_llmstats_cmd(llmstats_path))}")
     if not args.skip_huggingface:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
+    if not args.skip_toolathlon:
+        print(f"  - {shlex.join(build_fetch_toolathlon_cmd(toolathlon_path))}")
     if not args.skip_deepswe:
         print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
     if not args.skip_frontierswe:
@@ -1224,6 +1326,16 @@ def main() -> int:
         hf_matched, hf_updated, hf_changes = update_huggingface_scores(doc, huggingface_by_slug)
         changes.extend(hf_changes)
 
+    toolathlon_by_slug: dict[str, dict[str, Any]] = {}
+    toolathlon_matched = 0
+    toolathlon_updated = 0
+    if not args.skip_toolathlon:
+        toolathlon_by_slug = fetch_toolathlon_data(toolathlon_path, toolathlon_mapping_path)
+        toolathlon_matched, toolathlon_updated, toolathlon_changes = update_toolathlon_scores(
+            doc, toolathlon_by_slug
+        )
+        changes.extend(toolathlon_changes)
+
     deepswe_by_slug: dict[str, dict[str, Any]] = {}
     deepswe_matched = 0
     deepswe_updated = 0
@@ -1289,6 +1401,8 @@ def main() -> int:
         print(f"models returned by llmstats: {len(llmstats_by_slug)}")
     if not args.skip_huggingface:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
+    if not args.skip_toolathlon:
+        print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {len(deepswe_by_slug)}")
     if not args.skip_frontierswe:
@@ -1325,6 +1439,8 @@ def main() -> int:
         print(f"models matched on llmstats: {llmstats_matched}")
     if not args.skip_huggingface:
         print(f"models matched on huggingface: {hf_matched}")
+    if not args.skip_toolathlon:
+        print(f"models matched on toolathlon: {toolathlon_matched}")
     if not args.skip_deepswe:
         print(f"models matched on deepswe: {deepswe_matched}")
     if not args.skip_frontierswe:
@@ -1347,6 +1463,8 @@ def main() -> int:
         print(f"score values updated from llmstats: {llmstats_updated}")
     if not args.skip_huggingface:
         print(f"score values updated from huggingface: {hf_updated}")
+    if not args.skip_toolathlon:
+        print(f"score values updated from toolathlon: {toolathlon_updated}")
     if not args.skip_deepswe:
         print(f"score values updated from deepswe: {deepswe_updated}")
     if not args.skip_frontierswe:

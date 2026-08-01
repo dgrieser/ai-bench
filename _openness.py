@@ -95,15 +95,19 @@ def license_open(value: Any) -> bool | None:
 
 
 def source_type_open(value: Any) -> bool | None:
-    """Read benchlm.ai's ``sourceType`` field ("Open Weight" / "Proprietary").
+    """Read a source's weights-availability label.
+
+    Covers benchlm.ai's ``sourceType`` ("Open Weight" / "Proprietary") and
+    Toolathlon's model type ("Open-Weights" / "Open-Source" / "Proprietary");
+    separators are normalised so both spellings land on the same verdict.
 
     The field is also left null or "Pending" for models awaiting review, which
     carries no verdict.
     """
     if not isinstance(value, str):
         return None
-    text = value.strip().lower()
-    if text in {"open weight", "open weights", "open"}:
+    text = re.sub(r"[-_]+", " ", value).strip().lower()
+    if text in {"open weight", "open weights", "open source", "open"}:
         return True
     if text in {"proprietary", "closed", "closed weight", "closed weights"}:
         return False

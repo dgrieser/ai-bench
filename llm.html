@@ -2701,6 +2701,7 @@
         }
         entries.sort((a, b) => a.value - b.value);
         const n = entries.length;
+        const lower = isLowerBetter(key);
         const map = new Map();
         let i = 0;
         while (i < n) {
@@ -2710,7 +2711,9 @@
           }
           const pct = ((i + j) / 2) / (n - 1); // average rank of the tie group
           for (let k = i; k <= j; k += 1) {
-            map.set(entries[k].model, pct);
+            // A percentile is "how good", so a lower-is-better benchmark flips:
+            // the smallest value is the 1.0 end.
+            map.set(entries[k].model, lower ? 1 - pct : pct);
           }
           i = j + 1;
         }
@@ -2922,7 +2925,8 @@
             } else {
               state.sort.key = key;
               state.sort.direction = (key === "name" || key === "creator" ||
-                key === "vram_fp16" || key === "vram_int8" || key === "vram_int4") ? "asc" : "desc";
+                key === "vram_fp16" || key === "vram_int8" || key === "vram_int4" ||
+                isLowerBetter(key)) ? "asc" : "desc";
             }
 
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
@@ -3610,7 +3614,11 @@
           const values = models
             .map((model) => toNumber(model.scores?.[key]))
             .filter((value) => Number.isFinite(value));
-          topScores[key] = values.length ? Math.max(...values) : Number.NaN;
+          if (!values.length) {
+            topScores[key] = Number.NaN;
+            return;
+          }
+          topScores[key] = isLowerBetter(key) ? Math.min(...values) : Math.max(...values);
         });
         return topScores;
       }
@@ -3622,12 +3630,19 @@
             .map((m) => toNumber(m.scores?.[key]))
             .filter((v) => Number.isFinite(v));
           if (!values.length) { ranges[key] = null; return; }
-          const top = Math.max(...values);
+          // Named by rank, not by magnitude: `top` is the best score, `second`
+          // the runner-up, `min` the worst. On a lower-is-better benchmark that
+          // means top/min are the numeric min/max, which keeps scoreToGrey's
+          // "muted at min, prominent at second" ramp pointing the right way.
+          const lower = isLowerBetter(key);
+          const best = (vals) => (lower ? Math.min(...vals) : Math.max(...vals));
+          const worst = (vals) => (lower ? Math.max(...vals) : Math.min(...vals));
+          const top = best(values);
           const nonTop = values.filter((v) => !nearlyEqual(v, top));
           ranges[key] = {
             top,
-            second: nonTop.length ? Math.max(...nonTop) : null,
-            min: nonTop.length ? Math.min(...nonTop) : null
+            second: nonTop.length ? best(nonTop) : null,
+            min: nonTop.length ? worst(nonTop) : null
           };
         });
         return ranges;
@@ -3654,6 +3669,14 @@
 
       function getBenchmarkLabel(key) {
         return state.data?.benchmarks?.[key]?.short_name || state.data?.benchmarks?.[key]?.name || key;
+      }
+
+      // Benchmarks where a smaller number is the better result (e.g. a
+      // hallucination rate). Everything that ranks — the top-score mark, the
+      // grey ramp, the default click direction, group percentiles — asks this
+      // instead of assuming "bigger is better".
+      function isLowerBetter(key) {
+        return state.data?.benchmarks?.[key]?.lower_is_better === true;
       }
 
       // Column headers use short_name to stay narrow; lists with room (the

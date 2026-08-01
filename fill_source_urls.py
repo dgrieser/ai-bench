@@ -37,6 +37,7 @@ import fetch_spheron
 import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_swe_rebench
+import fetch_toolathlon
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -107,6 +108,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_frontierswe.URL, ("frontierswe",)),
         (fetch_swe_rebench.URL, ("swe_rebench",)),
         (fetch_swe_marathon.URL, ("swe_marathon",)),
+        (fetch_toolathlon.URL, ("toolathlon",)),
         (TBENCH_2_1_LEADERBOARD, ("terminal_bench_2_1",)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         (spheron_root(), ()),
