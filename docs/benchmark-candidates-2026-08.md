@@ -7,34 +7,147 @@ get a proposed weight for the `coding` sort group.
 All coverage figures were measured, not estimated from documentation. Method and caveats
 are in [Appendix A](#appendix-a--how-coverage-was-measured). Snapshot: 2026-08-01.
 
+> **Revision 2** — redone against the live Artificial Analysis API (v2) rather than
+> page-scraping alone. Four conclusions changed; see
+> [§8 Corrections](#8-corrections-from-revision-1). The AA index audit in
+> [§0](#0-are-we-using-the-current-aa-indices) is new.
+
+---
+
+## 0. Are we using the current AA indices?
+
+Short answer: **the Intelligence Index is current and correct. The Coding Index is a
+legacy metric that is being wound down and now mixes two definitions. The Agentic Index we
+don't use at all, and shouldn't.**
+
+The API is *not* returning stale values. Spot-checked 12 models three ways — API,
+live model page, `llm.json` — and they agree to rounding:
+
+```
+slug                  API intel  PAGE intel  json intel |  API code  PAGE code  json code
+glm-5-2                   51.10       51.09       51.10 |     68.80      68.76      68.80
+kimi-k3                   57.10       57.11       57.10 |     76.20      76.24      76.20
+deepseek-v4-pro           44.30       44.27       44.30 |     59.40      59.36      59.40
+qwen3-5-397b-a17b         33.70       33.68       33.70 |     48.20      48.21      48.20
+```
+
+Only one value drifts anywhere in the dataset: `qwen3-5-0-8b` has `aa_coding_index=15` in
+`llm.json` against `0` in the API.
+
+### `aa_intelligence_index` → current, v4.1 ✅
+
+**Intelligence Index v4.1**, released **2026-06-15**. All 115 of our values are stamped
+`2026-06` or later, so there is **no pre/post-v4.1 mixing** in that column. Composition:
+
+| category | weight | evaluations | in `llm.json` as its own column? |
+|---|---|---|---|
+| Agents | 34% | GDPval-AA v2 (20%), **τ³-Banking (14%)** | ❌ neither |
+| Coding | 24% | Terminal-Bench v2.1 (16%), SciCode (8%) | ✅ both |
+| General | 18% | AA-LCR (6%), AA-Omniscience (12%) | ❌ neither |
+| Sci. reasoning | 24% | HLE (12%), GPQA Diamond (6%), CritPt (6%) | ✅ HLE, GPQA-D · ❌ CritPt |
+
+We already carry **42%** of the index as separate columns *and* the composite on top. The
+missing 58% is exactly `GDPval-AA v2` (20) + `τ³-Banking` (14) + `AA-Omniscience` (12) +
+`AA-LCR` (6) + `CritPt` (6) — which is, independently, the recommendation list in §1. Worth
+noting the implication: **once those five are added, `aa_intelligence_index` is fully
+redundant** and should be weighted near zero in any composite, or dropped.
+
+What v4.1 changed on 2026-06-15, verbatim from AA:
+
+- Terminal-Bench Hard → **Terminal-Bench 2.1**
+- τ²-Bench Telecom → **τ³-Bench Banking** — "move to newer, more robust task sets with
+  harder, more realistic agentic scenarios"
+- GDPval-AA → **GDPval-AA v2** — "re-baselines Elo to human performance at 1000, introduces
+  a rotating panel of frontier-model judges, and raises the turn limit from 100 to 250"
+- **Removed: IFBench** — "The benchmark no longer distinguishes frontier models
+  sufficiently"
+
+### `aa_coding_index` → legacy, and mixing two definitions ⚠️
+
+This is the one real problem found. It is **absent from the v4.1 methodology entirely**,
+and AA has stopped serving it for 11 of our models that `llm.json` still holds values for:
+
+```
+glm-4-7-flash        25.9  (2026-02-13)   sarvam-30b            7.9  (2026-03-27)
+minimax-m2-5         37.4  (2026-02-13)   sarvam-105b           9.8  (2026-03-27)
+qwen3-coder-30b      19.4  (2026-02-13)   step-3-5-flash       34.6  (2026-04-14)
+qwen3-5-27b          34.9  (2026-03-03)   lfm2-5-8b-a1b         5.6  (2026-06-19)
+qwen3-5-35b-a3b      30.3  (2026-03-03)   lfm2-5-1-2b-thinking  1.4  (2026-06-19)
+longcat-flash-lite   16.5  (2026-03-11)
+```
+
+**9 of those 11 carry pre-v4.1 dates.** So the column percentile-ranks old-definition
+scores against post-v4.1 ones inside the `coding` sort group at weight 0.2. Its `llm.json`
+description also still says "including Terminal-Bench Hard, and SciCodeBench" — Terminal-Bench
+**Hard** is what v4.1 retired.
+
+*Suggested fix:* either null out the 11 orphaned values and let the column mean
+"post-v4.1 only", or freeze the column and drop it from the coding group. Do not leave it
+as is.
+
+### The *current* AA coding metric — do not add it
+
+AA's live coding metric is the **Coding Agent Index v1.3** (July 2026), a different object:
+`DeepSWE + Terminal-Bench v2 + SWE-Atlas-QnA`, **equal weights**, 321 tasks × 3 attempts.
+
+**All three components are already in the repo's coding group** at weights 1.0, 0.85/0.35
+and 0.17. Adding it would be a 100% double-count of benchmarks we run individually, at
+lower resolution. It is also reported **per harness+model pair** (the same model appears
+under Cursor, Claude Code, OpenCode…), which does not fit the one-row-per-model schema.
+Skip it.
+
+### Agentic Index → not used, and shouldn't be
+
+`agenticIndex` is page-only (not in the API). But per v4.1, "Agents (34%)" is a *category
+inside* the Intelligence Index — GDPval-AA v2 + τ³-Banking. So `agenticIndex` is a
+sub-score of a composite we already carry, built from two benchmarks §1 recommends adding
+individually. **Add the two components, not the sub-index.**
+
+### Also unused, also in the API
+
+`artificial_analysis_math_index` (55 models), `math_500` (28), `aime` (28). `update.py`
+already prints an "ignored keys" report listing exactly these — that report was the fastest
+path to this whole finding and is worth reading after each run.
+
 ---
 
 ## 1. Executive summary
 
-**Add now (5).** Ordered by value per unit of work:
+**Add now (6).** Ordered by value per unit of work. Coverage is exact (AA API) except where
+noted.
 
 | # | Benchmark | Coverage of our 122 | Work | Why |
 |---|---|---|---|---|
-| 1 | **τ³-Banking (AA implementation)** | ~85 (69% sampled) | 3 lines | Replaces `tau2_bench_telecom`, which is **saturated** (GLM-5.2 = 99.1%). AA already dropped τ² from its index in favour of this. |
-| 2 | **GDPval-AA v2 (normalized)** | ~85 (69% sampled) | 2 lines | Already fetched by `artificialanalysis.py`; just not stored. Real-work tasks, AA-graded. |
-| 3 | **HMMT Feb 2026 (MathArena)** | 15 direct + new source | new fetcher | Post-cutoff exam, independently run, per-question data + CIs. Unlocks MathArena as a source (APEX 2025: 18 models, USAMO 2026, AIME backfill). |
-| 4 | **Toolathlon** | 22 (18 lab-independent) | new fetcher, easy | Execution-verified (final system state, no LLM judge). Better coverage than `deepswe`/`frontierswe`/`swe_marathon`/`osworld`. |
-| 5 | **MCP-Atlas** | ~8–10 | ~10 lines | `fetch_swe_atlas.py` works on `labs.scale.com/leaderboard/mcp_atlas` **unmodified** (verified). |
+| 1 | **AA-Omniscience** (+ hallucination rate) | **105 (86%)** / **111 (91%)** | 1 line ea. | Already fetched. v4.1 component (12%). **Hallucination rate is measured nowhere in `llm.json`** and has the best coverage of any unused field. ⚠️ inverted + signed, see §6. |
+| 2 | **AA-LCR** (long-context reasoning) | **95 (78%)** | 1 line | API field `lcr`. Long context is also measured **at zero** today. v4.1 component. |
+| 3 | **τ³-Banking** | **61 (50%)** | 1 line | API field `tau_banking` — *no page scraping*. **Zero** models ≥0.90 and an 18.1pp top-10 spread, against τ²'s 20-model pileup at ≥0.90 and 3.8pp. v4.1 component (14%). |
+| 4 | **Toolathlon** | **22** (18 lab-independent) | new fetcher, easy | Execution-verified (final system state, no LLM judge). Better coverage than `deepswe`/`frontierswe`/`swe_marathon`/`osworld`. |
+| 5 | **HMMT Feb 2026** (MathArena) | 15 + new source | new fetcher | Post-cutoff exam, independently run, per-question data + CIs. Unlocks MathArena (APEX 2025: 18 models, USAMO 2026, AIME backfill). |
+| 6 | **GDPval-AA v2** | 59 raw / **40 normalized** | 1 line | Already fetched. Largest v4.1 component (20%). Thinner than rev 1 claimed — pick raw Elo (59) or normalized 0–1 (40). |
 
-**Add with low weight / eyes open (3).** `SWE-bench Multilingual` (coding, w≈0.3),
-`APEX-Agents-AA` (~25 models, free — already fetched), `MMLU-Pro` (43 models but
-saturated; only worth it for the small-model tail).
+**Add with low weight / eyes open (4).** `MMLU-Pro` (**75 (61%) union** — upgraded, see §8),
+`MCP-Atlas` (~8–10; `fetch_swe_atlas.py` handles the URL unmodified), `AA Math Index`
+(54, API, unused), `SWE-bench Multilingual` (coding, w≈0.3).
 
-**Skip (11).** `BFCL V4`, `CursorBench`, `ProgramBench`, `Codeforces`, `Aider Polyglot`,
-`IMO-AnswerBench` (marginal), and the whole 2023–24 tool-use cohort: `ToolBench`,
-`ToolLLM`, `APIBench`, `WildToolBench`, `HammerBench` — **zero** coverage in every
-channel checked.
+**Skip (14).** `BFCL V4`, `CursorBench`, `ProgramBench`, `Codeforces`, `Aider Polyglot`,
+`IMO-AnswerBench` (marginal), plus three that revision 1 got wrong or that the API settles:
 
-**Bonus finding: four AA fields are already being fetched and thrown away.** `lcr`
-(AA-LCR, 97% coverage), `critpt` (91%), `ifbench` (83%), `agenticIndex` (66%). Each is a
-1-line `SCORE_MAPPINGS` entry plus a `benchmarks` entry. AA-LCR in particular covers a
-capability the index currently measures **not at all** (long-context reasoning) at higher
-coverage than any benchmark we track except `gpqa_diamond`/`hle`. See [§6](#6-bonus--four-benchmarks-you-are-already-fetching-and-discarding).
+- **`IFBench`** — 83% coverage, but AA removed it from v4.1 for saturation (§8).
+- **`CritPt`** — 44 models, **median 1.4%**, max 23%. Floor-compressed to uselessness on
+  open-weight models. Revision 1 recommended it on a bad sample (§8).
+- **`APEX-Agents`** — good benchmark, **12 models (10%)**. Not enough to rank.
+
+And the whole 2023–24 tool-use cohort: `ToolBench`, `ToolLLM`, `APIBench`, `WildToolBench`,
+`HammerBench` — **zero** coverage in every channel checked.
+
+**`llm.json` is fully in sync with AA.** A dry `./update.py` against the live API reports
+`score values updated from artificialanalysis.py: 0` across all 115 matched models. Nothing
+mapped is missing. (An earlier draft claimed ~26 missing ingests; that was an artefact of
+counting AA's literal `0` as a score — `normalize_aa_value()` correctly treats `0` as unset.
+See §8.)
+
+**Also: fix `aa_coding_index`.** It holds 11 values AA no longer serves, 9 of them
+pre-v4.1. See [§0](#aa_coding_index--legacy-and-mixing-two-definitions-).
 
 ---
 
@@ -62,84 +175,90 @@ evals.report nor Scale Labs lists τ³ at all.
 
 **Conclusion: do not add τ³-Bench from the public aggregators. It is not measurable yet.**
 
-### Which variant is provided by a fetch tool we have? — τ³-Banking, via AA
+### Which variant is provided by a fetch tool we have? — τ³-Banking, straight from the API
 
-This is the useful answer. `artificialanalysis.py` already scrapes AA model pages; those
-pages carry a **`tauBanking`** field that `_PAGE_FLOAT_FIELDS` does not list. AA runs
-τ³-Banking themselves — 18 models on their leaderboard, and in a 35-model sample of our
-own slugs, **24 had a `tauBanking` score**.
-
-Sampled values (AA, 0–1 scale):
-
-```
-kimi-k3            0.334      glm-5-2      0.268      deepseek-v4-pro   0.258
-inkling            0.237      gemma-4-31b  0.151      qwen3-5-397b      0.134
-minimax-m3         0.130
-```
-
-Compare the same models on τ²-Telecom, which we *do* track:
-
-```
-glm-5-2  0.991    deepseek-v4-pro  0.962    qwen3-5-397b  0.956    minimax-m3  0.889
-```
-
-**τ²-Bench Telecom is saturated for frontier open-weight models.** It contributes ~zero
-discrimination at the top of the table while still occupying a column at 82% coverage.
-τ³-Banking spreads the same models across 13–33%.
-
-Corroborating evidence that AA made the same call: the `intelligenceIndex` cost breakdown
-on an AA model page enumerates its component evaluations as
-
-```
-gdpval-aa, tau3-banking, terminalbench-v2-1, scicode, humanitys-last-exam,
-gpqa-diamond, critpt, omniscience, artificial-analysis-long-context-reasoning
-```
-
-τ²-Bench is gone. So are LiveCodeBench, AIME-2025 and MMMU-Pro — consistent with
-`livecodebench: null`, `aime25: null`, `mmmuPro: null` on GLM-5.2's page. **Our
-`livecodebench` (74%), `aime_2025` (61%), `mmmu_pro` (34%) and `tau2_bench_telecom` (82%)
-columns will quietly stop gaining new models**, which is worth planning for independently
-of anything on this list.
-
-**Recommendation:** add `tau3_banking`. Keep `tau2_bench_telecom` as a historical column
-but consider dropping it out of any composite you build later.
-
-Implementation (verified against the live payload):
+This is the useful answer, and it is cheaper than the first draft assumed. **The AA v2 API
+returns `tau_banking` inside `evaluations`** — no page scraping involved. `update.py`
+already sees it: its own "ignored keys" report lists `tau_banking` among 19 AA fields it
+fetches and then discards. So the whole change is one line:
 
 ```python
-# artificialanalysis.py
-_PAGE_FLOAT_FIELDS = [..., ("tauBanking", "tau3_banking")]
-_PAGE_ONLY_EVALS   = [..., "tau3_banking"]
-
-# update.py
-SCORE_MAPPINGS = {..., "tau3_banking": (("tau3_banking",), to_percent)}
+# update.py — that's it. No artificialanalysis.py change needed.
+SCORE_MAPPINGS = {..., "tau3_banking": (("tau_banking",), to_percent)}
 ```
 
----
+**Coverage: 61 of 122 models (50%)**, counted the way the repo counts — AA's literal `0`
+treated as unset, per `normalize_aa_value()`.
+
+### The case for adding it: τ² has run out of headroom, τ³ has not
+
+Distributions over our own models, from the live API:
+
+| | n | min | p25 | median | p75 | max | **n ≥ 0.90** | **top-10 spread** | n ≤ 0.05 |
+|---|---|---|---|---|---|---|---|---|---|
+| `tau2` (tracked) | 95 | 0.041 | 0.246 | 0.436 | 0.874 | 0.991 | **20** | **0.038** | 2 |
+| `tau_banking` | 61 | 0.004 | 0.052 | 0.082 | 0.135 | 0.334 | **0** | **0.181** | 14 |
+
+τ²-Telecom has **20 models bunched at ≥0.90** and separates its top ten by **3.8 percentage
+points** — inside run-to-run noise. τ³-Banking has nothing at the ceiling and **4.8× the
+top-10 spread**. For a table whose job is ranking, that is the whole argument.
+
+**But do not replace τ² with τ³ — add it.** They fail at opposite ends. τ³ is
+*floor*-compressed: 14 of 61 models score ≤0.05, so it cannot separate the small-model tail,
+which is exactly where τ² still resolves cleanly (2 of 95 at ≤0.05). Their coverage is
+complementary too:
+
+```
+tau2 only: 42    both: 53    tau3 only: 8    union: 103 of 122 (84%)
+```
+
+Keep both columns. If you build an agentic composite later, weight τ³ high and τ² low — the
+same logic that put `swe_bench_verified` at 0.15 in the coding group.
+
+### Corroboration that AA reached the same conclusion
+
+Intelligence Index **v4.1** (2026-06-15) swapped τ²-Bench Telecom → τ³-Bench Banking, stated
+reason: "move to newer, more robust task sets with harder, more realistic agentic
+scenarios." Full v4.1 composition is in [§0](#0-are-we-using-the-current-aa-indices).
+
+Note the other implication: v4.1 also dropped LiveCodeBench, AIME-2025 and MMMU-Pro as index
+components — consistent with `livecodebench: null`, `aime25: null`, `mmmuPro: null` on
+GLM-5.2. **Our `livecodebench` (90 models), `aime_2025` (75), `mmmu_pro` (42) and
+`tau2_bench_telecom` (100) columns will gain new models from AA more slowly than they used
+to**, worth planning for independently of anything on this list.
 
 ## 3. Coverage / scrapeability / trust — full table
 
 Coverage = number of the 122 models in `llm.json` obtainable from the **best single
-channel**. `AA(s)` = sampled estimate, see Appendix A.
+channel**. All AA figures are exact full-population counts using the repo convention
+(`0` == unset). Non-AA figures come from the channel named; see Appendix A.
 
 | Candidate | Coverage | Best channel | Scrapeable? | Trust | Verdict |
 |---|---|---|---|---|---|
-| **τ³-Banking (AA)** | **~85** `AA(s) 24/35` | AA model page `tauBanking` | ✅ already wired | **High** — AA runs it, no self-report | **Add** |
-| **GDPval-AA v2 norm.** | **~85** `AA(s) 24/35` | AA `gdpvalNormalized` | ✅ already fetched | **High** — AA-run, automated grading | **Add** |
+| **AA-Omniscience** (+ halluc. rate) | **105 (86%)** / **111 (91%)** | AA page `omniscience` | ✅ already fetched | **High** — AA-run, v4.1 component (12%) | **Add** |
+| **AA-LCR** | **95 (78%)** | AA API `lcr` | ✅ already fetched | **High** — AA-run, v4.1 component | **Add** |
+| **τ³-Banking** | **61 (50%)** | AA API `tau_banking` | ✅ already fetched | **High** — AA-run, no self-report | **Add** |
+| **GDPval-AA v2** | 59 raw / **40 norm.** | AA page `gdpval` / `gdpval_normalized` | ✅ already fetched | **High** — AA-run, human-baselined Elo | **Add** |
+| CritPt | **44 (36%)** | AA page `critpt` | ✅ already fetched | High provenance, but **median 1.4%** — floor-compressed | **Skip**, see §6 |
+| **Toolathlon** | **22** (18 verified) | `toolathlon.xyz/docs/leaderboard` | ✅ plain HTML, open-weight + verified flags | **High** — execution-based state verification | **Add** |
 | **HMMT Feb 2026** | **15** + 3 HF | MathArena `/competition_tables/hmmt--hmmt_feb_2026` | ✅ JSON endpoint, `Open` column | **High** — independent, post-cutoff, CIs | **Add** |
-| **Toolathlon** | **22** (18 verified) | `toolathlon.xyz/docs/leaderboard` | ✅ plain HTML, has open-weight + verified flags | **High** — execution-based state verification | **Add** |
-| **MCP-Atlas** | ~8–10 | Scale Labs `mcp_atlas` (6) + llm-stats (8) | ✅ **existing code works unmodified** | Med-High — Scale AI, 1000 human-verified tasks; LLM judge, changed Apr 2026 | **Add** |
-| SWE-bench Multilingual | 17 HF / 6 evals.report / 3 official | swebench.com embedded JSON (`os_model` flag) | ✅ | **Medium** — official leaderboard has only 4 open models; the 17 are self-reports | Add, w≈0.3 |
-| APEX-Agents-AA | ~25 `AA(s) 7/35` | AA `apexAgents` | ✅ already fetched | **High** — AA-run, 452 pro-services tasks | Add (free) |
-| MMLU-Pro | **43** HF / 127 listed | HF cards, llm-stats | ✅ | **Low-Med** — saturated 83–90%, documented label errors, **AA dropped it (0/35)** | Add only for small-model tail |
+| MMLU-Pro | **75 (61%) union**: 38 AA API + 43 HF, overlap 6 | AA API `mmlu_pro` + HF cards | ✅ | **Medium** — half the coverage is AA-run; saturated 83–90%, documented label errors | Add, low weight |
+| AA Agentic Index | 57 (47%) | AA page `agentic_index` | ✅ already fetched | n/a — sub-score of `aa_intelligence_index` | **Skip**, see §0 |
+| MCP-Atlas | ~8–10 | Scale Labs `mcp_atlas` (6) + llm-stats (8) | ✅ **existing code works unmodified** | Med-High — Scale AI, 1000 human-verified tasks; LLM judge changed Apr 2026 | Add |
+| AA Math Index | 54 (44%) | AA API `artificial_analysis_math_index` | ✅ already fetched | Medium — composite, overlaps AIME | Add, low weight |
+| SWE-bench Multilingual | 17 HF / 6 evals.report / 3 official | swebench.com embedded JSON (`os_model` flag) | ✅ | **Medium** — official board has only 4 open models; the 17 are self-reports | Add, w≈0.3 |
+| APEX-Agents-AA | **12 (10%)** | AA page `apex_agents` | ✅ already fetched | **High** — AA-run, 452 pro-services tasks | **Skip** — too thin to rank |
+| APEX (MathArena math) | **18** | MathArena `apex--apex_2025` | ✅ | High — independent | Add if you take MathArena |
+| **IFBench** | 101 (83%) | AA API `ifbench` | ✅ already fetched | **Low** — AA *removed* it from v4.1: "no longer distinguishes frontier models sufficiently" | **Skip** despite coverage |
 | IMO-AnswerBench | 11 HF / 19 listed | HF, llm-stats | ⚠️ no canonical leaderboard | Medium — DeepMind, 400 problems; top open models 90–92% → saturating | Skip / defer |
 | BFCL V4 | 14 official + 11 HF, **not poolable** | `gorilla.cs.berkeley.edu/data_overall.csv` | ✅ CSV, has `License` col | **Low-Med** — see §5 | **Skip** |
 | Codeforces | 9 HF | none standardized | ⚠️ | **Low** — Elo units, every lab a different harness/pass@k | **Skip** |
 | Aider Polyglot | 3 HF / 4 open | evals.report (1 line) | ✅ trivial | **Low** — saturated, effectively frozen | **Skip** |
 | CursorBench | 2 open | cursor.com HTML | ⚠️ | Med — contamination-proof by construction, but vendor-run, no method paper | **Skip** (coverage) |
 | ProgramBench | 3 HF / 0 open on evals.report | vals.ai, evals.report | ✅ | Med-High — novel construction, Meta/Stanford/Harvard | **Skip** (coverage), revisit |
+| AA Coding Agent Index | n/a | AA | ✅ | n/a — **100% double-count** of `deepswe` + `terminal_bench_2_0` + `swe_atlas_qna`; per-harness rows | **Skip**, see §0 |
+| τ³-Bench (aggregate) | 5 listed, 1–2 open | llm-stats only | ⚠️ | n/a — too thin to rank | **Skip**, see §2 |
 | GDPval (raw OpenAI) | 1 HF / 3 listed | — | — | — | Use AA variant instead |
-| APEX (MathArena math) | **18** | MathArena `apex--apex_2025` | ✅ | High — independent | Add if you take MathArena |
 | ToolBench | **0** | — | — | — | **Skip** |
 | ToolLLM | **0** | — | — | — | **Skip** |
 | APIBench (Gorilla) | **0** (3 listed on llm-stats) | — | — | — | **Skip** |
@@ -184,6 +303,16 @@ task realism × non-redundancy**:
 
 Current group total weight **7.71**; `minScoredFraction` 0.2 ⇒ a model needs **1.542**
 scored weight to be ranked at all. **72 of 122 models clear that bar.**
+
+**Before adding anything, `aa_coding_index` needs attention.** It sits in this group at
+weight 0.2 with 75 values, but 11 of those are orphaned (AA no longer serves them) and 9
+predate Intelligence Index v4.1 — so the column percentile-ranks two different definitions
+against each other. It is also the *legacy* AA coding metric; the live one is the Coding
+Agent Index, which would be a 100% double-count of `deepswe` + `terminal_bench_2_0` +
+`swe_atlas_qna`. See [§0](#aa_coding_index--legacy-and-mixing-two-definitions-). Nulling the
+11 orphans leaves group total weight at 7.71 and the ranked-model count at 72 (checked) —
+it changes no model's eligibility, only the 11 cross-definition comparisons inside the
+percentile map. Cheap fix, no side effects.
 
 An important structural fact: the four 0.9–1.0 benchmarks carry **47.9% of the group
 weight but cover only 5–9 models each**. For the other ~113 models the composite is
@@ -262,57 +391,172 @@ official board lacks, so the two channels are disjoint, and V3 and V4 numbers ar
 comparable.
 
 You would be building a column that is precise about 2025 models and silent about 2026
-ones. For the same capability, τ³-Banking gives ~85 models and Toolathlon gives 22
-execution-verified ones. Secondary concerns (AST-matching brittleness, format sensitivity
+ones. For the same capability, τ³-Banking gives 61 models from a source we already query,
+and Toolathlon gives 22 execution-verified ones. Secondary concerns (AST-matching brittleness, format sensitivity
 being a sub-track rather than the headline number, `IFEval-FC` and `MCP-AgentBench`
 critiques) only reinforce it.
 
 ---
 
-## 6. Bonus — four benchmarks you are already fetching and discarding
+## 6. Bonus — 19 AA fields you already fetch and discard
 
-`_PAGE_ONLY_EVALS` in `artificialanalysis.py` already pulls these on every run. They are
-absent from `SCORE_MAPPINGS` and from `llm.json`, so they are fetched and dropped. Coverage
-from the same 35-model sample:
+`update.py`'s own report, run against the live API, lists exactly what is being thrown away:
 
-| AA field | benchmark | sampled coverage | note |
-|---|---|---|---|
-| `lcr` | AA Long Context Reasoning | **34/35 (97%)** | Index component. **No benchmark in `llm.json` measures long context at all.** |
-| `critpt` | CritPt (physics research) | 32/35 (91%) | Index component, unsaturated (~20%) |
-| `ifbench` | IFBench (instruction following) | 29/35 (83%) | No IF benchmark currently tracked |
-| `agenticIndex` | AA Agentic Index | 23/35 (66%) | Composite; would want low weight like `aa_coding_index` |
+```
+ignored keys:
+  agentic_index                     gdpval_normalized
+  aime                              harvey_lab_criteria_pass
+  apex_agents                       ifbench
+  artificial_analysis_math_index    it_bench_sre
+  automation_bench_partial_score    lcr
+  critpt                            math_500
+  enterprise_ops_gym                mmlu_pro
+  gdpval                            omniscience
+                                    omniscience_accuracy
+                                    omniscience_hallucination_rate
+```
 
-Also present but thin: `harveyLabCriteriaPass` 12/35, `automationBenchPartialScore` 10/35,
-`enterpriseOpsGym` 9/35, `omniscience` 9/35, `itBenchSre` 6/35.
+Exact coverage over our 122 models, from a full `./artificialanalysis.py --open` run
+(111 of our slugs matched; `step-3-5-flash`, `north-mini-code`, `glm-4-6` and
+`nvidia-nemotron-3-ultra-550b-a55b` are dropped by the `--open` filter, so these are lower
+bounds), plus the value range so you can judge discrimination:
 
-**AA-LCR is, by coverage × novelty, the single best available addition** — better coverage
-than everything in `llm.json` except `gpqa_diamond` (97%) and `hle` (96%), in a capability
-dimension currently at zero. It just was not on the candidate list.
+| AA field | n | %122 | source | range (median) | verdict |
+|---|---|---|---|---|---|
+| `omniscience_hallucination_rate` | **111** | **91%** | page | 0.121 – 0.988 (0.844) | **Add.** Best coverage of anything unused. Hallucination is measured *nowhere* in `llm.json`. ⚠️ **lower = better** — inverts the sort/percentile assumption. |
+| `omniscience` | **105** | **86%** | page | −84.7 – 18.4 (−48.1) | **Add.** v4.1 component (12%). ⚠️ **signed** — use an identity transform, not `to_percent`. |
+| `ifbench` | 101 | 83% | API | — | **Skip** — AA retired it from v4.1 for saturation. |
+| `lcr` | **91** | **75%** | API | — | **Add.** Long-context reasoning, measured nowhere in `llm.json`. |
+| `tau_banking` | 59 | 48% | API | 0.004 – 0.334 (0.082) | **Add.** See §2. |
+| `gdpval` (raw Elo) | 59 | 48% | page | −120 – 1687 (718) | Add *or* use normalized. Elo, can be negative. |
+| `agentic_index` | 57 | 47% | page | 0.3 – 50.1 (10.5) | Skip — sub-score of `aa_intelligence_index`. |
+| `artificial_analysis_math_index` | 54 | 44% | API | — | Add, low weight (overlaps AIME). |
+| `critpt` | 44 | 36% | page | 0.003 – **0.234** (**0.014**) | **Skip.** Median 1.4% — floor-compressed to uselessness on open-weight models. |
+| `gdpval_normalized` | 40 | 33% | page | 0.021 – 0.594 (0.236) | Add — cleanest scale, but 19 fewer models than raw `gdpval`. |
+| `mmlu_pro` | 37 | 30% | API | — | Add, low weight; union with HF self-reports = 75 (61%). |
+| `math_500` | 28 | 23% | API | — | Skip — saturated. |
+| `aime` | 27 | 22% | API | — | Skip — `aime_2025`/`aime_2026` already cover this better. |
+| `it_bench_sre` | 14 | 11% | page | — | Skip — too thin. |
+| `harvey_lab_criteria_pass` | 13 | 11% | page | — | Skip — too thin, legal-domain-specific. |
+| `apex_agents` | **12** | **10%** | page | — | **Skip** — this is the APEX-Agents on your candidate list. High-quality benchmark, 12 models. |
+| `enterprise_ops_gym` | 12 | 10% | page | — | Skip — too thin. |
+| `automation_bench_partial_score` | 11 | 9% | page | — | Skip — too thin. |
+| `omniscience_accuracy` | 111 | 91% | page | — | Redundant with `omniscience`; pick one. |
+
+**The headline is AA-Omniscience, not CritPt.** Revision 1's 35-model sample had CritPt at
+91% and Omniscience at 26%; the exact figures are the reverse (36% and 86%). AA's per-benchmark
+backfill is not monotone in model recency, so a recency-skewed sample is unreliable in
+*both* directions — see §8.
+
+Two of the three best-covered unused fields (`omniscience_hallucination_rate`, `omniscience`)
+need transform care: one is inverted, one is signed. Neither is a `to_percent` field.
 
 ---
 
 ## 7. Suggested order of work
 
-1. **`tau3_banking`** — 3 lines (`artificialanalysis.py` ×2, `update.py` ×1) + `llm.json`
-   `benchmarks` entry. ~85 models. Fixes the saturated-τ² problem.
-2. **`aa_lcr`, `critpt`, `ifbench`, `gdpval_aa`** — 1 `SCORE_MAPPINGS` line each, already
-   fetched. Adds 4 columns at 69–97% coverage for near-zero work.
-3. **`mcp_atlas`** — add `"mcp_atlas"` to `TRACKS` in `fetch_swe_atlas.py` (the flight-payload
-   parser already works on that URL, verified) + mapping wiring.
-4. **`toolathlon`** — new `fetch_toolathlon.py`. Plain HTML table; the page exposes
+Steps 1–2 are one line of code each and cover 4–6 new columns.
+
+1. **`tau3_banking` + `aa_lcr` + `mmlu_pro` + `aa_math_index`** — one `SCORE_MAPPINGS` entry
+   each in `update.py`, plus a `benchmarks` entry in `llm.json`. All four come from the AA
+   **API**, already fetched, already listed in `update.py`'s own "ignored keys" report:
+
+   ```python
+   SCORE_MAPPINGS = {
+       ...,
+       "tau3_banking":   (("tau_banking",),                     to_percent),
+       "aa_lcr":         (("lcr",),                             to_percent),
+       "mmlu_pro":       (("mmlu_pro",),                        to_percent),
+       "aa_math_index":  (("artificial_analysis_math_index",),  lambda v: v),
+   }
+   ```
+
+2. **`omniscience` (105), `omniscience_hallucination_rate` (111), `gdpval` (59)** — same
+   one-liner each, but page-only (`_PAGE_ONLY_EVALS`), so they cost a model-page fetch per
+   model on every run — already paid for today, just not stored. Mind the transforms:
+   `omniscience` is **signed** (−84.7 … 18.4) so it needs identity, not `to_percent`; and
+   `omniscience_hallucination_rate` is **inverted** (lower is better), which the sort and
+   `computeGroupComposite()` do not expect.
+
+3. **Fix `aa_coding_index`** — null the 11 orphaned values (9 pre-v4.1) or drop the column
+   from the coding group. See [§0](#aa_coding_index--legacy-and-mixing-two-definitions-).
+   This is a correctness fix, not an addition.
+
+4. **`mcp_atlas`** — add `"mcp_atlas"` to `TRACKS` in `fetch_swe_atlas.py`; the
+   flight-payload parser already handles that URL unmodified (verified). Plus mapping wiring.
+
+5. **`toolathlon`** — new `fetch_toolathlon.py`. Plain HTML table; the page exposes
    open-weight and "evaluated by us" flags, so provenance filtering is free.
-5. **`hmmt_feb_2026`** — new `fetch_matharena.py` against
+
+6. **`hmmt_feb_2026`** — new `fetch_matharena.py` against
    `/competition_tables/<competition-id>`. Also unlocks APEX 2025 (18 models), USAMO 2026,
    and a backfill for `aime_2025`/`aime_2026`.
-6. **`swe_bench_multilingual` @ w=0.30** — swebench.com embedded
-   `<script id="leaderboard-data">` carries an `os_model` flag. Decide first whether you
-   want HF self-reports pooled with official runs; I would take official-only and accept
-   3–4 models until the board fills in.
-7. **`mmlu_pro`** — only if you want better resolution at the small end of the table
-   (`gemma-4-e2b`, `qwen3-5-0-8b`, `lfm2-*`), where `gpqa_diamond` and `hle` are
-   floor-saturated and therefore noise. It is genuinely the best-covered candidate (43
-   models) and genuinely the least informative at the top. That trade is a judgement call,
-   not a technical one.
+
+7. **`swe_bench_multilingual` @ w=0.30** — swebench.com embeds
+   `<script type="application/json" id="leaderboard-data">` with an `os_model` flag. Decide
+   first whether to pool HF self-reports with official runs; I would take official-only and
+   accept 3–4 models until the board fills in.
+
+Deliberately **not** in this list: `IFBench` (86% coverage but AA dropped it for
+saturation), the `AA Coding Agent Index` (pure double-count), `agenticIndex` (sub-score of a
+composite we carry).
+
+---
+
+## 8. Corrections from revision 1
+
+Revision 1 relied on scraping AA model pages. With the API key, four things changed. Each is
+a case where the earlier number was measured but measured wrongly.
+
+**1. τ³-Banking coverage: ~85 → 61 (50%).** Rev 1 sampled 28 newest + 12 oldest models, which
+over-weighted exactly the models AA has run τ³ on. The exact count over all 122 is 61. Also
+the implementation is cheaper than stated: it is in the **API** as `tau_banking`, so no
+`artificialanalysis.py` change is needed at all — one `SCORE_MAPPINGS` line.
+
+**2. "AA dropped MMLU-Pro" — wrong, and MMLU-Pro is upgraded.** Rev 1 reported 0/35 from AA.
+That was an artefact of probing a page key (`mmluPro`) that **does not exist**; the model
+page only carries `mmmuPro` (MMMU-Pro, a different benchmark). The API does serve `mmlu_pro`,
+for **38** of our models. Those 38 are AA-run, i.e. trustworthy, and they skew *older* while
+the 43 HF self-reports skew *newer* (Qwen3.5/3.6, gemma-4, granite-4.1) — overlap is only 6.
+**Union: 75 of 122 (61%)**, the best-covered candidate on the list. It is still saturated at
+the top; the argument for it remains resolution at the small-model tail, but the channel is
+better than rev 1 claimed.
+
+**3. "IFBench: add it" — retracted.** 105 of 122 (86%) coverage, which is why rev 1 liked it.
+But AA **removed IFBench from Intelligence Index v4.1** on 2026-06-15, stated reason: "The
+benchmark no longer distinguishes frontier models sufficiently." Adding a column its own
+maintainer just retired for saturation is the mistake this report exists to avoid.
+
+**4. "~26 missing ingests" — retracted entirely.** Rev 1 claimed the API held scores
+`llm.json` lacked (`terminal_bench_hard` +14, `tau2` +7, …). Those API values are literal
+`0`, and `normalize_aa_value()` in `update.py` correctly treats `0` as unset. A dry
+`./update.py` against the live API confirms: **`score values updated from
+artificialanalysis.py: 0`** across all 115 matched models. `llm.json` is fully in sync.
+
+That last one also means every "0-as-null" coverage count in rev 1 was inflated. Corrected
+figures: `lcr` 112→**95**, `tau2` 102→**95**, `terminalbench_hard` 102→**88**,
+`terminalbench_v2_1` 64→**60**, `tau_banking` 63→**61**. `ifbench` (101) and `mmlu_pro` (38)
+contain no zeros and are unchanged.
+
+**5. CritPt and AA-Omniscience swapped places, and CritPt is now a skip.** Rev 1's 35-model
+sample put CritPt at 91% and Omniscience at 26%. The exact figures from a full
+`./artificialanalysis.py --open` run are the reverse: **CritPt 44 (36%)**, **Omniscience 105
+(86%)**. Worse for CritPt, its distribution on open-weight models is 0.003 – 0.234 with
+**median 0.014** — one and a half percent. It cannot separate models in this index at all.
+AA-Omniscience is now a top-two recommendation, and its companion field
+`omniscience_hallucination_rate` (111, 91%) has the best coverage of any unused field, in a
+dimension `llm.json` does not measure.
+
+**Methodological lesson.** The rev-1 sample was 28 newest + 12 oldest models by `date_added`,
+on the assumption that AA coverage decreases with model age. It does not, uniformly: AA
+backfills some benchmarks onto old models and not others, so a recency-skewed sample errs in
+*both* directions — CritPt was overestimated 2.5×, Omniscience underestimated 3.3×. Every
+coverage figure sourced from AA in this revision is an exact full-population count. The
+remaining sampled or fuzzy-matched figures are flagged in Appendix A.
+
+**Unchanged from rev 1:** the Toolathlon (22), MCP-Atlas (~8–10), HMMT Feb 2026 (15),
+MathArena APEX (18), SWE-bench Multilingual (17/6/3) and BFCL V4 (14 official + 11 HF)
+figures, all the skip verdicts on the 2023–24 tool-use cohort, and every coding weight in §4.
 
 ---
 
@@ -327,13 +571,24 @@ appears as 19 different strings). *Caveat: self-reported. Labs pick the harness,
 pass@k, and whether to publish at all. High coverage, low trust — the two are inversely
 correlated across this whole table.*
 
-**2. Artificial Analysis model pages.** Fetched the RSC flight payload for a 35-model
-sample (the 28 most recently added + 12 oldest by `date_added`; 5 of 40 requests failed)
-and read fields out of the `currentModel` object. Percentages are of 35 and carry roughly
-±8pp; extrapolations to 122 are stated as `~N`. *Method validated against `llm.json`:
-33/35 agreement on `tau2` presence and 34/35 on `terminalbenchV21`.* Note `ARTIFICIAL_ANALYSIS_API_KEY`
-is not set in this environment, so `artificialanalysis.py` itself could not be run — the
-page-scraping path it uses was reproduced directly.
+**2. Artificial Analysis — exact, via the v2 API and a full page run.** Two paths:
+
+- `GET /api/v2/data/llms/models` with a key → 590 records, 115 of our 122 slugs matched
+  exactly. Serves 17 evaluation fields including `tau_banking`, `lcr`, `ifbench`, `mmlu_pro`,
+  `artificial_analysis_math_index`, `math_500`, `aime`.
+- A full `./artificialanalysis.py --open --output json` run → 332 open-weight models, 111 of
+  ours (the `--open` filter drops `step-3-5-flash`, `north-mini-code`, `glm-4-6`,
+  `nvidia-nemotron-3-ultra-550b-a55b`), which adds the page-only fields: `gdpval`,
+  `gdpval_normalized`, `critpt`, `omniscience*`, `apex_agents`, `agentic_index`,
+  `it_bench_sre`, `harvey_lab_criteria_pass`, `automation_bench_partial_score`,
+  `enterprise_ops_gym`.
+
+**All AA counts use the repo's own convention: a literal `0` counts as unset**, matching
+`normalize_aa_value()` in `update.py`. Ignoring that inflates every count — see §8. Cross-checks:
+`./update.py` dry-run reports 0 score changes across 115 matched models, and llm.json's own
+per-benchmark counts are ≥ the API counts everywhere (it also ingests from HF/llm-stats).
+The 7 models AA does not carry at all: `longcat-flash-chat`, `longcat-flash-thinking`,
+`ornith-1-0-{9b,35b,397B}`, `agents-a1`, `laguna-xs-2`.
 
 **3. Aggregators.** llm-stats.com (626 benchmark slugs; per-benchmark model counts via the
 Next.js flight payload), evals.report (82 benchmarks; scraped 18 candidate pages through
@@ -350,7 +605,9 @@ counts are ±1–2 at the margins (e.g. Toolathlon's "Qwen-3-Coder" is ambiguous
 `qwen3-coder-next` and `qwen3-coder-480b-a35b-instruct`). Where a candidate's verdict
 hinged on the number, the matches are listed in full above.
 
-**Not measured.** AA coverage for models outside the 35-model sample; whether Toolathlon
-and MCP-Atlas will keep adding open-weight models at their current rate; the size of the
-disagreement between HF-self-reported and officially-run scores for the same
-model/benchmark pair (worth checking before pooling them in `swe_bench_multilingual`).
+**Still not measured.** Whether Toolathlon and MCP-Atlas keep adding open-weight models at
+their current rate; the size of the disagreement between HF-self-reported and officially-run
+scores for the same model/benchmark pair (worth checking before pooling them in
+`swe_bench_multilingual`, and now checkable for MMLU-Pro on the 6 models that appear in both
+the AA API and HF cards); and whether AA's `omniscience` sign convention is stable enough to
+build a column on.
