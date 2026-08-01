@@ -413,6 +413,7 @@
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
       "icon_svg": "icons/artificial-analysis.svg",
       "lower_is_better": true,
+      "flip_sort": true,
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"

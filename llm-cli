@@ -8,7 +8,9 @@ key from llm.json, e.g. the coding group composite). Sorting math mirrors
 llm.html exactly: tie-averaged percentile ranks, missing benchmarks imputed
 between percentile 0.5 and the model's own measured level (trusted in
 proportion to its coverage), division by the group's total weight, and models
-measured on less than "minScoredFraction" of that weight left unranked.
+measured on less than "minScoredFraction" of that weight left unranked. A
+benchmark marked "lower_is_better" in llm.json has its percentile inverted, and
+one marked "flip_sort" sorts smallest-value-first so it still reads best-first.
 
 On a terminal the table is fitted to the window: benchmark columns that don't
 fit are dropped, least important first (importance = weight in the default
@@ -16,7 +18,8 @@ sort group, then llm.json order). Pass --all to see every column instead,
 paged through `less -RS` so you can scroll horizontally with the arrow keys.
 Piped output always contains every column.
 
-Best-in-table scores are shown in bold (TTY only, or force with --color).
+Best-in-table scores are shown in bold (TTY only, or force with --color) — the
+smallest value for a "lower_is_better" benchmark, the largest otherwise.
 Models added within the last 7 days are marked with *.
 """
 
@@ -73,7 +76,29 @@ def parse_unit_number(raw):
     return value * multipliers.get(match.group(2)[0], 1)
 
 
-def percentile_map(models, key):
+def benchmark_flag(doc, key, flag):
+    benchmark = (doc.get("benchmarks") or {}).get(key) or {}
+    return benchmark.get(flag) is True
+
+
+def is_lower_better(doc, key):
+    """Benchmarks where a smaller number is the better result (e.g. a
+    hallucination rate): the best-in-table mark and group percentiles ask this
+    instead of assuming "bigger is better"."""
+    return benchmark_flag(doc, key, "lower_is_better")
+
+
+def is_sort_flipped(doc, key):
+    """Benchmarks whose column sorts against the numbers: "flip_sort" in
+    llm.json makes the descending sort put the smallest value on top, so a
+    hallucination rate still reads best-first like every other column. Declared
+    per benchmark rather than derived from lower_is_better — which way a column
+    should sort is a display choice, independent of which end of the scale
+    counts as good."""
+    return benchmark_flag(doc, key, "flip_sort")
+
+
+def percentile_map(models, key, doc):
     entries = []
     for model in models:
         value = to_number((model.get("scores") or {}).get(key))
@@ -83,6 +108,7 @@ def percentile_map(models, key):
         return None
     entries.sort(key=lambda e: e[1])
     n = len(entries)
+    lower = is_lower_better(doc, key)
     result = {}
     i = 0
     while i < n:
@@ -91,7 +117,9 @@ def percentile_map(models, key):
             j += 1
         pct = ((i + j) / 2) / (n - 1)
         for k in range(i, j + 1):
-            result[entries[k][0]] = pct
+            # A percentile is "how good", so a lower-is-better benchmark flips:
+            # the smallest value is the 1.0 end.
+            result[entries[k][0]] = 1 - pct if lower else pct
         i = j + 1
     return result
 
@@ -109,9 +137,9 @@ def group_benchmark_entries(group):
     return entries
 
 
-def compute_group_composite(models, group):
+def compute_group_composite(models, group, doc):
     entries = group_benchmark_entries(group)
-    pct_maps = [percentile_map(models, key) for key, _ in entries]
+    pct_maps = [percentile_map(models, key, doc) for key, _ in entries]
     weights = [w if pm is not None else 0.0 for (_, w), pm in zip(entries, pct_maps)]
     total_weight = sum(weights)
     min_scored_fraction = group.get("minScoredFraction")
@@ -172,16 +200,22 @@ def sort_models(models, doc):
     group = default_sort_group(doc)
     configured = doc.get("defaultSort")
 
+    flipped = False
     if group is not None:
-        composite = compute_group_composite(models, group)
+        composite = compute_group_composite(models, group, doc)
         sort_label = group.get("label") or group.get("key")
         keyed = [(composite.get(m["name"]), m) for m in models]
     else:
         key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
         sort_label = key
         keyed = [(value_for_sort(m, key), m) for m in models]
+        # A "flip_sort" benchmark compares its numbers the other way round, so
+        # the descending default still puts the best value on top. Group
+        # composites are already "how good" scores and never flip.
+        flipped = is_sort_flipped(doc, key)
 
     ascending = group is None and configured in ("name", "creator", "vram_fp16", "vram_int8", "vram_int4")
+    direction = (1 if ascending else -1) * (-1 if flipped else 1)
 
     def sort_key(item):
         value, model = item
@@ -190,7 +224,7 @@ def sort_models(models, doc):
             return (1, 0, model.get("name") or "")
         if isinstance(value, str):
             return (0, 0, value if ascending else "", model.get("name") or "")
-        return (0, value if ascending else -value, model.get("name") or "")
+        return (0, value * direction, model.get("name") or "")
 
     keyed.sort(key=sort_key)
     return [m for _, m in keyed], sort_label
@@ -228,13 +262,13 @@ def format_vram(raw):
     return f"{num:g} GB"
 
 
-def best_scores(models, benchmark_keys):
+def best_scores(models, benchmark_keys, doc):
     best = {}
     for key in benchmark_keys:
         values = [to_number((m.get("scores") or {}).get(key)) for m in models]
         values = [v for v in values if math.isfinite(v)]
         if values:
-            best[key] = max(values)
+            best[key] = min(values) if is_lower_better(doc, key) else max(values)
     return best
 
 
@@ -283,7 +317,7 @@ def truncate(text, cap):
 def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color, caps=None, fixed_keys=None):
     benchmarks = doc.get("benchmarks") or {}
     columns_meta = doc.get("columns") or {}
-    best = best_scores(models, benchmark_keys)
+    best = best_scores(models, benchmark_keys, doc)
     today = date.today()
     caps = caps or {}
     fixed_keys = fixed_keys if fixed_keys is not None else FIXED_COLUMNS
