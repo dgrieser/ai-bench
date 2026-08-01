@@ -178,7 +178,7 @@
       "name": "AA Intelligence Index",
       "short_name": "Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis Intelligence Index v4.1 (since 2026-06-15): weighted composite of nine evaluations, grouped as Agents 34% (GDPval-AA v2 20%, τ³-Banking 14%), Coding 24% (Terminal-Bench 2.1 16%, SciCode 8%), Scientific Reasoning 24% (HLE 12%, GPQA Diamond 6%, CritPt 6%) and General 18% (AA-Omniscience 12%, AA-LCR 6%). v4.1 replaced Terminal-Bench Hard with 2.1 and τ²-Bench Telecom with τ³-Banking, upgraded GDPval-AA to v2, and dropped IFBench as saturated. Reported on Artificial Analysis' index scale, not as a percentage. Every component is tracked here as its own column.",
+      "description": "Artificial Analysis composite index of overall model capability; v4.1 since 2026-06-15. Weighted average of nine evaluations in four categories: Agents 34% (GDPval-AA v2 20%, τ³-Bench Banking 14%), Coding 24% (Terminal-Bench 2.1 16%, SciCode 8%), Scientific Reasoning 24% (Humanity's Last Exam 12%, GPQA Diamond 6%, CritPt 6%) and General 18% (AA-Omniscience 12%, AA-LCR 6%). v4.1 upgraded Terminal-Bench Hard to 2.1, τ²-Bench Telecom to τ³-Bench Banking and GDPval-AA to v2, and dropped IFBench as saturated. Scored on Artificial Analysis' index scale rather than as a percentage.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
@@ -189,7 +189,7 @@
       "name": "AA Coding Index",
       "short_name": "Coding",
       "category": "Composite Index",
-      "description": "Artificial Analysis Coding Index: an equal-weighted average of Terminal-Bench 2.1 and SciCode, reported on the same scale as the AA Intelligence Index rather than as a percentage. Both components are tracked here as their own columns, and the index reconstructs from them at R² = 0.99, so it adds nothing beyond the two. Distinct from Artificial Analysis' agent-level Coding Agent Index, a separate composite of DeepSWE, Terminal-Bench 2 and SWE-Atlas-QnA that is reported per agent harness rather than per model.",
+      "description": "Artificial Analysis composite index for coding: an equal-weighted average of Terminal-Bench 2.1 and SciCode, on the same index scale as the Artificial Analysis Intelligence Index rather than as a percentage. Distinct from Artificial Analysis' agent-level Coding Agent Index, a separate composite of DeepSWE, Terminal-Bench 2 and SWE-Atlas-QnA scored per agent harness rather than per model.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/models/capabilities/coding",
@@ -348,7 +348,7 @@
       "name": "τ³-Bench Banking",
       "short_name": "τ³ Bank",
       "category": "Agentic Tool Use",
-      "description": "Banking domain of τ³-Bench, as run independently by Artificial Analysis (their τ³-Banking leaderboard) — not the τ³ cross-domain average and not the Retail, Telecom or Airline domains, which have almost no public coverage. τ³ extends the dual-control τ² setup, where agent and simulated user both act in a shared environment, with a knowledge-retrieval layer: the action tools are hidden inside knowledge-base prose, so the agent has to find them by searching the KB, unlock them with meta-tools and only then call them. Metric is task success rate. Replaced τ²-Bench Telecom in Artificial Analysis' Intelligence Index v4.1 (14% of it) because τ² had saturated.",
+      "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ extends the dual-control τ² setup, where agent and simulated user both act with tools in a shared environment, with a knowledge-retrieval layer: the action tools are hidden inside knowledge-base documents, so the agent has to find them by searching the knowledge base, unlock them with meta-tools and only then call them. Banking is the knowledge-retrieval domain and the hardest of the four (Airline, Banking, Retail, Telecom). Metric is task success rate.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/tau3-banking",
         "https://github.com/sierra-research/tau2-bench",
@@ -368,7 +368,7 @@
       "name": "GDPval-AA v2",
       "short_name": "GDPval",
       "category": "Real-world Professional Work",
-      "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, diagrams, spreadsheets — for 44 occupations across 9 industries that make up a large share of US GDP, written with professionals averaging 14 years of experience. Submissions are anonymised and scored by pairwise LLM-judge comparisons aggregated into an Elo. v2 re-baselines that Elo so 1000 is human expert performance, rotates the panel of frontier-model judges, and raises the agent turn limit from 100 to 250. Reported as the raw Elo, so scores below 1000 are below the human baseline and weak models can go negative. Largest single component of Artificial Analysis' Intelligence Index v4.1 at 20%.",
+      "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, diagrams, spreadsheets — for 44 occupations across 9 industries that make up a large share of US GDP, authored with professionals averaging 14 years of experience. Submissions are anonymised and scored by pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance, so weaker models fall far below it. v2 re-baselined the Elo to that human anchor, rotates the panel of frontier-model judges, and raised the agent turn limit from 100 to 250.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/gdpval-aa",
         "https://openai.com/index/gdpval/"
@@ -387,7 +387,7 @@
       "name": "AA-Omniscience",
       "short_name": "Omnisci",
       "category": "Reasoning & Knowledge",
-      "description": "Artificial Analysis' knowledge-and-hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains (business, humanities and social sciences, science/engineering/maths, health, law, software engineering). The Omniscience Index is a bounded -100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention when the model does not know, so 0 means it is right about as often as it is wrong. Higher is better, and most open-weight models land below zero. Not a percentage. Component of Artificial Analysis' Intelligence Index v4.1 (12%).",
+      "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains (business, humanities and social sciences, science/engineering/maths, health, law, software engineering). The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention when the model does not know, so 0 means a model is right about as often as it is wrong and models that hallucinate more than they recall score negative.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
@@ -397,7 +397,7 @@
       "name": "AA-Omniscience Hallucination Rate",
       "short_name": "Halluc",
       "category": "Reasoning & Knowledge",
-      "description": "Companion metric to AA-Omniscience: of every response that was not correct, the share that was a confident wrong answer rather than a partial answer or an abstention — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so it is the one column here where LOWER IS BETTER, and the table sorts and shades it accordingly. Stored exactly as Artificial Analysis publishes it, not inverted.",
+      "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
       "lower_is_better": true,
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
@@ -408,7 +408,7 @@
       "name": "AA-LCR",
       "short_name": "AA-LCR",
       "category": "Long Context Reasoning",
-      "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens — academic papers, company financials, government consultations, legal documents, industry reports, marketing material. Each question needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup, and is graded pass/fail by an LLM judge against the official answer. Component of Artificial Analysis' Intelligence Index v4.1 (6%).",
+      "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens — academic papers, company financials, government consultations, legal documents, industry reports, marketing material. Each question needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup. Graded pass/fail by an LLM judge against the official answer; metric is the average pass rate.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
@@ -418,7 +418,7 @@
       "name": "CritPt",
       "short_name": "CritPt",
       "category": "Scientific Reasoning",
-      "description": "Complex Research using Integrated Thinking - Physics Test: 70 research-level physics challenges newly written by 50+ working researchers across 11 subfields from their own work, each hand-curated to have a guess-resistant, machine-checkable answer (float arrays, symbolic expressions, Python functions) and peer-reviewed for 40+ hours. Deeply unsaturated — open-weight models cluster in the low single digits and Artificial Analysis records an exact zero for most models it has run, which this dataset leaves blank rather than 0. Component of Artificial Analysis' Intelligence Index v4.1 (6%).",
+      "description": "Complex Research using Integrated Thinking - Physics Test (\"critical point\"): 70 research-level physics challenges newly written by 50+ active researchers across 11 subfields from their own work, decomposed into 190 checkpoint tasks. Each admits a guess-resistant, machine-verifiable answer (floating-point arrays, symbolic expressions, Python functions) and was peer-reviewed for 40+ hours. Deeply unsaturated: the best base models score in the low single digits, rising to roughly 10% with coding tools.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/critpt",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
