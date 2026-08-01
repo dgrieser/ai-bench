@@ -369,6 +369,7 @@
       "short_name": "GDPval",
       "category": "Real-world Professional Work",
       "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, diagrams, spreadsheets — for 44 occupations across 9 industries that make up a large share of US GDP, authored with professionals averaging 14 years of experience. Submissions are anonymised and scored by pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance, so weaker models fall far below it. v2 re-baselined the Elo to that human anchor, rotates the panel of frontier-model judges, and raised the agent turn limit from 100 to 250.",
+      "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/gdpval-aa",
         "https://openai.com/index/gdpval/"
@@ -385,9 +386,10 @@
     },
     "aa_omniscience": {
       "name": "AA-Omniscience",
-      "short_name": "Omnisci",
+      "short_name": "Omni",
       "category": "Reasoning & Knowledge",
       "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains (business, humanities and social sciences, science/engineering/maths, health, law, software engineering). The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention when the model does not know, so 0 means a model is right about as often as it is wrong and models that hallucinate more than they recall score negative.",
+      "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
@@ -395,9 +397,10 @@
     },
     "aa_omniscience_hallucination": {
       "name": "AA-Omniscience Hallucination Rate",
-      "short_name": "Halluc",
+      "short_name": "HallRate",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
+      "icon_svg": "icons/artificial-analysis.svg",
       "lower_is_better": true,
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
@@ -406,9 +409,10 @@
     },
     "aa_lcr": {
       "name": "AA-LCR",
-      "short_name": "AA-LCR",
+      "short_name": "LCR",
       "category": "Long Context Reasoning",
       "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens — academic papers, company financials, government consultations, legal documents, industry reports, marketing material. Each question needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup. Graded pass/fail by an LLM judge against the official answer; metric is the average pass rate.",
+      "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
