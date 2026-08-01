@@ -60,6 +60,18 @@ def to_percent(value: Any) -> int | float | None:
     return rounded
 
 
+def to_index(value: Any) -> int | float | None:
+    """Pass an Artificial Analysis index/Elo through unscaled, rounded to 0.1.
+
+    AA-Omniscience (-100..100) and GDPval-AA Elo (human baseline = 1000) are not
+    fractions, so to_percent() would multiply them by 100.
+    """
+    if value is None:
+        return None
+    rounded = round(float(value), 1)
+    return int(rounded) if rounded.is_integer() else rounded
+
+
 def fmt_change_value(value: Any) -> str:
     if value is None:
         return ""
@@ -160,7 +172,14 @@ def print_changes_table(changes: list[tuple[str, str, Any, Any]]) -> None:
 SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "terminal_bench_hard": (("terminalbench_hard",), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
+    # AA reports the τ³ Banking domain under the version-less key "tau_banking".
+    "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
+    "gdpval_aa": (("gdpval",), to_index),
+    "aa_omniscience": (("omniscience",), to_index),
+    "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
+    "aa_lcr": (("lcr",), to_percent),
+    "critpt": (("critpt",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     "mmmu_pro": (("mmmu_pro",), to_percent),
     "gpqa_diamond": (("gpqa",), to_percent),
