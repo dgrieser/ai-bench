@@ -189,7 +189,7 @@
       "name": "AA Coding Index",
       "short_name": "Coding",
       "category": "Composite Index",
-      "description": "Artificial Analysis Coding Index: an equal-weighted average of Terminal-Bench 2.1 and SciCode, on the same scale as the AA Intelligence Index (not a percentage). Both components are tracked here as their own columns, and the index reconstructs from them at R² = 0.99, so it carries no information they do not — it is kept for reference but deliberately left out of the grouped coding score, where its weight would silently double-count Terminal-Bench 2.1 and SciCode. Distinct from Artificial Analysis' agent-level Coding Agent Index (DeepSWE + Terminal-Bench 2 + SWE-Atlas-QnA), which is also not used here for the same reason.",
+      "description": "Artificial Analysis Coding Index: an equal-weighted average of Terminal-Bench 2.1 and SciCode, reported on the same scale as the AA Intelligence Index rather than as a percentage. Both components are tracked here as their own columns, and the index reconstructs from them at R² = 0.99, so it adds nothing beyond the two. Distinct from Artificial Analysis' agent-level Coding Agent Index, a separate composite of DeepSWE, Terminal-Bench 2 and SWE-Atlas-QnA that is reported per agent harness rather than per model.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/models/capabilities/coding",
