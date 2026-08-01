@@ -8,17 +8,19 @@ All coverage figures were measured, not estimated from documentation. Method and
 are in [Appendix A](#appendix-a--how-coverage-was-measured). Snapshot: 2026-08-01.
 
 > **Revision 2** — redone against the live Artificial Analysis API (v2) rather than
-> page-scraping alone. Four conclusions changed; see
+> page-scraping alone. Six conclusions changed; see
 > [§8 Corrections](#8-corrections-from-revision-1). The AA index audit in
-> [§0](#0-are-we-using-the-current-aa-indices) is new.
+> [§0](#0-are-we-using-the-current-aa-indices) is new, and it recommends **removing**
+> `aa_coding_index` from the coding sort group.
 
 ---
 
 ## 0. Are we using the current AA indices?
 
-Short answer: **the Intelligence Index is current and correct. The Coding Index is a
-legacy metric that is being wound down and now mixes two definitions. The Agentic Index we
-don't use at all, and shouldn't.**
+Short answer: **the Intelligence Index is current and correct. The Coding Index is current
+too — but it is defined as the average of two benchmarks already in the coding group, so it
+should be dropped from that group as a double-count. The Agentic Index we don't use at all,
+and shouldn't.**
 
 The API is *not* returning stale values. Spot-checked 12 models three ways — API,
 live model page, `llm.json` — and they agree to rounding:
@@ -62,10 +64,42 @@ What v4.1 changed on 2026-06-15, verbatim from AA:
 - **Removed: IFBench** — "The benchmark no longer distinguishes frontier models
   sufficiently"
 
-### `aa_coding_index` → legacy, and mixing two definitions ⚠️
+### `aa_coding_index` → **drop it from the coding group. It is a duplicate, not a benchmark** ⚠️
 
-This is the one real problem found. It is **absent from the v4.1 methodology entirely**,
-and AA has stopped serving it for 11 of our models that `llm.json` still holds values for:
+Not a staleness problem — a redundancy problem. AA is **actively maintaining** it: 92% of
+models added in 2026-H2 carry it (75% in 2026-H1), including `kimi-k3` and `inkling-small`.
+An earlier draft called it "legacy, being wound down"; that was wrong.
+
+The actual defect is its definition. Per AA's coding-capability page, the Coding Index is
+**an equal-weighted average of Terminal-Bench v2.1 and SciCode** — both already in
+`sortGroups[coding]`. Fitting it over the 60 of our models that have all three:
+
+```
+aa_coding_index = 1.131 * mean(terminal_bench_2_1, scicode) - 4.86
+R² = 0.9926        mean |residual| = 1.3 points        max = 5.0
+```
+
+It is a linear function of two group members. Keeping it at weight 0.2 therefore does not
+add a signal, it silently reweights two existing ones:
+
+| | nominal | effective | change |
+|---|---|---|---|
+| `terminal_bench_2_1` | 0.85 | **0.95** | +12% |
+| `scicode` | 0.35 | **0.45** | **+29%** |
+
+SciCode is the narrowest benchmark in the group and was deliberately parked at 0.35. It
+takes the largest silent boost. That inverts what the weight ladder is trying to express.
+
+**Information content of its 75 values:**
+
+| | n | |
+|---|---|---|
+| both components present | **60** | pure duplication |
+| one component missing | 15 | *looks* unique — but **11 of the 15 are pre-v4.1 withdrawn values**, whose index was computed from Terminal-Bench **Hard**, not v2.1. Obsolete definition. |
+| — of which current | 4 | `minicpm-v4-6-1-3b`, `gemma-3-12b`, `ministral-3-3b`, `qwen3-5-0-8b`; AA has no TB2.1 for any of them either, so no backfill exists |
+| only coding signal for a model | **0** | |
+
+The 11 orphans (AA no longer serves them; 9 carry pre-v4.1 dates):
 
 ```
 glm-4-7-flash        25.9  (2026-02-13)   sarvam-30b            7.9  (2026-03-27)
@@ -76,19 +110,32 @@ qwen3-5-35b-a3b      30.3  (2026-03-03)   lfm2-5-1-2b-thinking  1.4  (2026-06-19
 longcat-flash-lite   16.5  (2026-03-11)
 ```
 
-**9 of those 11 carry pre-v4.1 dates.** So the column percentile-ranks old-definition
-scores against post-v4.1 ones inside the `coding` sort group at weight 0.2. Its `llm.json`
-description also still says "including Terminal-Bench Hard, and SciCodeBench" — Terminal-Bench
-**Hard** is what v4.1 retired.
+**Cost of dropping it, measured.** Three models leave the coding ranking:
+`mistral-medium-3-5`, `nvidia-nemotron-3-ultra-550b-a55b`, `trinity-large-thinking`. Each
+holds exactly `terminal_bench_2_1` + `scicode` + `swe_bench_verified` = **1.35** scored
+weight against a **1.502** bar; with the duplicate column they cleared 1.542 by 0.008. They
+were passing the evidence threshold on *duplicated* evidence, which is the exact failure
+`minScoredFraction` exists to prevent. If you want them shown, lower `minScoredFraction` —
+do not buy it with a duplicate column.
 
-*Suggested fix:* either null out the 11 orphaned values and let the column mean
-"post-v4.1 only", or freeze the column and drop it from the coding group. Do not leave it
-as is.
+Overall rank impact of removal: mean **2.1** places, **28 of 69** models move ≥3, top-15
+order shifts from position 7 down. That is the double-count unwinding, not information lost.
 
-### The *current* AA coding metric — do not add it
+**Recommendation.** Remove it from `sortGroups[coding]`. Whether to keep the display column
+is a softer call — it adds nothing beside two columns already shown, and 11 of 75 values are
+from a retired definition; if you keep it for familiarity, null those 11.
 
-AA's live coding metric is the **Coding Agent Index v1.3** (July 2026), a different object:
+**The same trap is queued for `aa_intelligence_index`**, which is a weighted average of 9
+evaluations, 4 of them already displayed (42%). Harmless today because it is in no sort
+group — but if the five recommended components are added it becomes 100% redundant. It must
+never share a group with them.
+
+### AA's *other* coding metric, the agent-level one — also do not add it
+
+AA maintains two coding metrics in parallel. The model-level Coding Index above
+(TB2.1 + SciCode), and the agent-level **Coding Agent Index v1.3** (July 2026):
 `DeepSWE + Terminal-Bench v2 + SWE-Atlas-QnA`, **equal weights**, 321 tasks × 3 attempts.
+Both are live; both are averages of benchmarks you already run.
 
 **All three components are already in the repo's coding group** at weights 1.0, 0.85/0.35
 and 0.17. Adding it would be a 100% double-count of benchmarks we run individually, at
@@ -297,22 +344,20 @@ task realism × non-redundancy**:
 | 0.80 | `swe_rebench` | continuously refreshed + decontaminated, standardized harness |
 | 0.40 | `swe_bench_pro`, `livecodebench` | contamination-resistant-ish, but LLM-judged or algorithm-only |
 | 0.35 | `terminal_bench_2_0`, `scicode` | superseded version / narrow domain |
-| 0.20 | `aa_coding_index` | composite, overlaps everything else in the group |
+| 0.20 | `aa_coding_index` | **remove** — it *is* `mean(terminal_bench_2_1, scicode)`, R²=0.993 |
 | 0.17 | `swe_atlas_{rf,tw,qna}` | small n (70–124), rubric-graded, narrow slice; 3 × 0.17 ≈ 0.5 combined |
 | 0.15 | `swe_bench_verified` | saturated, contaminated, harness-confounded |
 
 Current group total weight **7.71**; `minScoredFraction` 0.2 ⇒ a model needs **1.542**
 scored weight to be ranked at all. **72 of 122 models clear that bar.**
 
-**Before adding anything, `aa_coding_index` needs attention.** It sits in this group at
-weight 0.2 with 75 values, but 11 of those are orphaned (AA no longer serves them) and 9
-predate Intelligence Index v4.1 — so the column percentile-ranks two different definitions
-against each other. It is also the *legacy* AA coding metric; the live one is the Coding
-Agent Index, which would be a 100% double-count of `deepswe` + `terminal_bench_2_0` +
-`swe_atlas_qna`. See [§0](#aa_coding_index--legacy-and-mixing-two-definitions-). Nulling the
-11 orphans leaves group total weight at 7.71 and the ranked-model count at 72 (checked) —
-it changes no model's eligibility, only the 11 cross-definition comparisons inside the
-percentile map. Cheap fix, no side effects.
+**Before adding anything, remove `aa_coding_index` from this group.** AA defines it as the
+equal-weighted average of Terminal-Bench v2.1 and SciCode — both already here — and that
+reconstructs at **R² = 0.9926** on our own models. Its 0.2 weight is therefore not a signal;
+it silently lifts `terminal_bench_2_1` to 0.95 effective (+12%) and `scicode` to 0.45
+(+29%), handing the largest boost to the narrowest benchmark in the group. Removal costs
+3 models their ranking, all of which were clearing the evidence bar on duplicated evidence.
+Full working in [§0](#aa_coding_index--drop-it-from-the-coding-group-it-is-a-duplicate-not-a-benchmark-).
 
 An important structural fact: the four 0.9–1.0 benchmarks carry **47.9% of the group
 weight but cover only 5–9 models each**. For the other ~113 models the composite is
@@ -478,8 +523,10 @@ Steps 1–2 are one line of code each and cover 4–6 new columns.
    `omniscience_hallucination_rate` is **inverted** (lower is better), which the sort and
    `computeGroupComposite()` do not expect.
 
-3. **Fix `aa_coding_index`** — null the 11 orphaned values (9 pre-v4.1) or drop the column
-   from the coding group. See [§0](#aa_coding_index--legacy-and-mixing-two-definitions-).
+3. **Remove `aa_coding_index` from `sortGroups[coding]`** — it is `mean(terminal_bench_2_1,
+   scicode)` at R²=0.993, so it double-counts two group members. Optionally drop the display
+   column too, or at least null its 11 orphaned values. See
+   [§0](#aa_coding_index--drop-it-from-the-coding-group-it-is-a-duplicate-not-a-benchmark-).
    This is a correctness fix, not an addition.
 
 4. **`mcp_atlas`** — add `"mcp_atlas"` to `TRACKS` in `fetch_swe_atlas.py`; the
@@ -554,9 +601,18 @@ backfills some benchmarks onto old models and not others, so a recency-skewed sa
 coverage figure sourced from AA in this revision is an exact full-population count. The
 remaining sampled or fuzzy-matched figures are flagged in Appendix A.
 
+**6. `aa_coding_index` is not "legacy, being wound down" — it is current, and a duplicate.**
+Rev 1 read its absence from the v4.1 intelligence-benchmarking page as deprecation. In fact
+AA documents it separately and still produces it for 92% of models added in 2026-H2. The real
+defect is that AA defines it as `mean(Terminal-Bench v2.1, SciCode)`, which reconstructs at
+**R² = 0.9926** on our models — both components are already in the coding group. The verdict
+changes from "clean up its 11 stale values" to "remove it from the group": see
+[§0](#aa_coding_index--drop-it-from-the-coding-group-it-is-a-duplicate-not-a-benchmark-).
+
 **Unchanged from rev 1:** the Toolathlon (22), MCP-Atlas (~8–10), HMMT Feb 2026 (15),
 MathArena APEX (18), SWE-bench Multilingual (17/6/3) and BFCL V4 (14 official + 11 HF)
-figures, all the skip verdicts on the 2023–24 tool-use cohort, and every coding weight in §4.
+figures, all the skip verdicts on the 2023–24 tool-use cohort, and every coding weight in §4
+for benchmarks being *added*.
 
 ---
 
