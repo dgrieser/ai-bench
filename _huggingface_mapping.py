@@ -16,6 +16,24 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 # Sentinel value stored for HF labels reviewed but deliberately not mapped.
 # Kept in the mapping file so they are not prompted again, but never used as a
 # real llm.json benchmark key.
+#
+# Some of those labels look like they should obviously be mapped now that the
+# benchmark has a column -- "AA-LCR", "CritPt", "τ³-Banking", "GDPval-AA v2
+# (Elo)", "Toolathlon-Verified". They stay unmappable on purpose:
+#
+#   * Those columns are defined as Artificial Analysis' own runs, and AA already
+#     covers every model whose card quotes them, so a mapping adds no model.
+#   * Only 4 of 17 such self-reported values match AA's published number.
+#     AA-LCR is the worst: 13 of 14 cards differ, by up to 5 points, because the
+#     labs ran it themselves rather than citing AA.
+#   * Hugging Face is applied after Artificial Analysis in update.py, so a
+#     mapping would let a stale or differently-harnessed self-report overwrite
+#     the live AA value rather than fill a gap.
+#
+# Two more are wrong for their own reasons: "TAU3-Bench" is the cross-domain
+# aggregate (one card reports 67.2 where AA's Banking domain gives 8.7), and
+# "Long Context" is not AA-LCR at all (values up to 99.3 against AA-LCR's 74.7
+# ceiling). "Toolathlon" is the pre-Verified series -- see fetch_toolathlon.py.
 UNMAPPABLE = "__unmappable__"
 
 
