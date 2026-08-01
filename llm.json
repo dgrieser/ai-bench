@@ -377,7 +377,7 @@
     },
     "gdpval_aa": {
       "name": "GDPval-AA v2",
-      "short_name": "GDPval",
+      "short_name": "GDPval2",
       "category": "Real-world Professional Work",
       "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, diagrams, spreadsheets — for 44 occupations across 9 industries that make up a large share of US GDP, authored with professionals averaging 14 years of experience. Submissions are anonymised and scored by pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance, so weaker models fall far below it. v2 re-baselined the Elo to that human anchor, rotates the panel of frontier-model judges, and raised the agent turn limit from 100 to 250.",
       "icon_svg": "icons/artificial-analysis.svg",

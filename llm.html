@@ -2625,13 +2625,18 @@
       }
 
       function sortModels(models) {
-        const directionFactor = state.sort.direction === "asc" ? 1 : -1;
-
         // Grouped sort: collapse several benchmarks into one priority-weighted
         // composite computed over the current (filtered) model set, then sort
         // on that single number. Computed once per sort, not per comparison.
         const group = getSortGroup(state.sort.key);
         const composite = group ? computeGroupComposite(models, group) : null;
+
+        // "desc" always means best-first, so a lower-is-better benchmark
+        // compares its numbers the other way round: ▼ puts the smallest value
+        // on top and ▲ the largest. Group composites are already "how good"
+        // scores, so they never flip.
+        const flipped = !composite && isLowerBetter(state.sort.key);
+        const directionFactor = (state.sort.direction === "asc" ? 1 : -1) * (flipped ? -1 : 1);
 
         models.sort((a, b) => {
           const left = composite ? composite.get(a) : valueForSort(a, state.sort.key);
@@ -2924,9 +2929,11 @@
               state.sort.direction = state.sort.direction === "desc" ? "asc" : "desc";
             } else {
               state.sort.key = key;
+              // Lower-is-better columns are not listed here: "desc" already
+              // sorts them best-first (see sortModels), so the first click
+              // behaves like every other benchmark column.
               state.sort.direction = (key === "name" || key === "creator" ||
-                key === "vram_fp16" || key === "vram_int8" || key === "vram_int4" ||
-                isLowerBetter(key)) ? "asc" : "desc";
+                key === "vram_fp16" || key === "vram_int8" || key === "vram_int4") ? "asc" : "desc";
             }
 
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
@@ -3672,9 +3679,10 @@
       }
 
       // Benchmarks where a smaller number is the better result (e.g. a
-      // hallucination rate). Everything that ranks — the top-score mark, the
-      // grey ramp, the default click direction, group percentiles — asks this
-      // instead of assuming "bigger is better".
+      // hallucination rate). Everything that ranks asks this instead of
+      // assuming "bigger is better": the top-score mark, the grey ramp, group
+      // percentiles, and the sort direction — ▼ still means best-first, so
+      // such a column compares against its numbers (see sortModels).
       function isLowerBetter(key) {
         return state.data?.benchmarks?.[key]?.lower_is_better === true;
       }
