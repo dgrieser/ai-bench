@@ -17,23 +17,24 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 # Kept in the mapping file so they are not prompted again, but never used as a
 # real llm.json benchmark key.
 #
-# Some of those labels look like they should obviously be mapped now that the
-# benchmark has a column -- "AA-LCR", "CritPt", "τ³-Banking", "GDPval-AA v2
-# (Elo)", "Toolathlon-Verified". They stay unmappable on purpose:
+# Only two labels near the Artificial Analysis columns are unmappable because
+# they name a *different* benchmark, and those two are permanent:
 #
-#   * Those columns are defined as Artificial Analysis' own runs, and AA already
-#     covers every model whose card quotes them, so a mapping adds no model.
-#   * Only 4 of 17 such self-reported values match AA's published number.
-#     AA-LCR is the worst: 13 of 14 cards differ, by up to 5 points, because the
-#     labs ran it themselves rather than citing AA.
-#   * Hugging Face is applied after Artificial Analysis in update.py, so a
-#     mapping would let a stale or differently-harnessed self-report overwrite
-#     the live AA value rather than fill a gap.
+#   * "TAU3-Bench" is the τ³ cross-domain aggregate, not the Banking domain that
+#     tau3_bench_banking tracks -- one card reports 67.2 where AA's Banking
+#     number for the same model is 8.7.
+#   * "Long Context" is not AA-LCR; its values reach 99.3 against AA-LCR's 74.7
+#     ceiling, so it is some other long-context test.
 #
-# Two more are wrong for their own reasons: "TAU3-Bench" is the cross-domain
-# aggregate (one card reports 67.2 where AA's Banking domain gives 8.7), and
-# "Long Context" is not AA-LCR at all (values up to 99.3 against AA-LCR's 74.7
-# ceiling). "Toolathlon" is the pre-Verified series -- see fetch_toolathlon.py.
+# The rest ("AA-LCR", "CritPt", "τ³-Banking", "GDPval-AA v2 (Elo)", "Toolathlon",
+# "Toolathlon-Verified") are mapped, and can only ever fill a gap:
+# update_huggingface_scores() writes into nulls and never overwrites, and every
+# one of those columns has a first-party source that runs before or after it and
+# does overwrite. Worth knowing when reading a filled-in value, though: these
+# self-reports agree with the first-party number in only 4 of 17 cases -- AA-LCR
+# is the worst, with 13 of 14 cards off by up to 5 points because the labs ran it
+# themselves -- and "Toolathlon" without the suffix is the pre-Verified series,
+# which is a different score series (see fetch_toolathlon.py).
 UNMAPPABLE = "__unmappable__"
 
 
