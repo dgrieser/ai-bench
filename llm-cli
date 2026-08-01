@@ -9,8 +9,8 @@ llm.html exactly: tie-averaged percentile ranks, missing benchmarks imputed
 between percentile 0.5 and the model's own measured level (trusted in
 proportion to its coverage), division by the group's total weight, and models
 measured on less than "minScoredFraction" of that weight left unranked. A
-benchmark marked "lower_is_better" in llm.json has its percentile inverted, and
-one marked "flip_sort" sorts smallest-value-first so it still reads best-first.
+benchmark marked "lower_is_better" in llm.json has its percentile inverted and
+sorts smallest-value-first, so it still reads best-first.
 
 On a terminal the table is fitted to the window: benchmark columns that don't
 fit are dropped, least important first (importance = weight in the default
@@ -76,26 +76,14 @@ def parse_unit_number(raw):
     return value * multipliers.get(match.group(2)[0], 1)
 
 
-def benchmark_flag(doc, key, flag):
-    benchmark = (doc.get("benchmarks") or {}).get(key) or {}
-    return benchmark.get(flag) is True
-
-
 def is_lower_better(doc, key):
     """Benchmarks where a smaller number is the better result (e.g. a
-    hallucination rate): the best-in-table mark and group percentiles ask this
-    instead of assuming "bigger is better"."""
-    return benchmark_flag(doc, key, "lower_is_better")
-
-
-def is_sort_flipped(doc, key):
-    """Benchmarks whose column sorts against the numbers: "flip_sort" in
-    llm.json makes the descending sort put the smallest value on top, so a
-    hallucination rate still reads best-first like every other column. Declared
-    per benchmark rather than derived from lower_is_better — which way a column
-    should sort is a display choice, independent of which end of the scale
-    counts as good."""
-    return benchmark_flag(doc, key, "flip_sort")
+    hallucination rate). Everything that ranks asks this instead of assuming
+    "bigger is better": the best-in-table mark, group percentiles, and the sort
+    direction — the descending default still means best-first, so such a column
+    compares against its numbers."""
+    benchmark = (doc.get("benchmarks") or {}).get(key) or {}
+    return benchmark.get("lower_is_better") is True
 
 
 def percentile_map(models, key, doc):
@@ -209,10 +197,10 @@ def sort_models(models, doc):
         key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
         sort_label = key
         keyed = [(value_for_sort(m, key), m) for m in models]
-        # A "flip_sort" benchmark compares its numbers the other way round, so
-        # the descending default still puts the best value on top. Group
+        # A lower-is-better benchmark compares its numbers the other way round,
+        # so the descending default still puts the best value on top. Group
         # composites are already "how good" scores and never flip.
-        flipped = is_sort_flipped(doc, key)
+        flipped = is_lower_better(doc, key)
 
     ascending = group is None and configured in ("name", "creator", "vram_fp16", "vram_int8", "vram_int4")
     direction = (1 if ascending else -1) * (-1 if flipped else 1)

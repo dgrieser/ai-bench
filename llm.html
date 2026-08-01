@@ -2631,10 +2631,11 @@
         const group = getSortGroup(state.sort.key);
         const composite = group ? computeGroupComposite(models, group) : null;
 
-        // A "flip_sort" benchmark compares its numbers the other way round: ▼
-        // puts the smallest value on top and ▲ the largest. Group composites
-        // are already "how good" scores, so they never flip.
-        const flipped = !composite && isSortFlipped(state.sort.key);
+        // "desc" always means best-first, so a lower-is-better benchmark
+        // compares its numbers the other way round: ▼ puts the smallest value
+        // on top and ▲ the largest. Group composites are already "how good"
+        // scores, so they never flip.
+        const flipped = !composite && isLowerBetter(state.sort.key);
         const directionFactor = (state.sort.direction === "asc" ? 1 : -1) * (flipped ? -1 : 1);
 
         models.sort((a, b) => {
@@ -2928,9 +2929,9 @@
               state.sort.direction = state.sort.direction === "desc" ? "asc" : "desc";
             } else {
               state.sort.key = key;
-              // Flipped columns are not listed here: "desc" already sorts them
-              // best-first (see sortModels), so the first click behaves like
-              // every other benchmark column.
+              // Lower-is-better columns are not listed here: "desc" already
+              // sorts them best-first (see sortModels), so the first click
+              // behaves like every other benchmark column.
               state.sort.direction = (key === "name" || key === "creator" ||
                 key === "vram_fp16" || key === "vram_int8" || key === "vram_int4") ? "asc" : "desc";
             }
@@ -3678,21 +3679,12 @@
       }
 
       // Benchmarks where a smaller number is the better result (e.g. a
-      // hallucination rate). Everything that ranks — the top-score mark, the
-      // grey ramp, group percentiles — asks this instead of assuming "bigger
-      // is better".
+      // hallucination rate). Everything that ranks asks this instead of
+      // assuming "bigger is better": the top-score mark, the grey ramp, group
+      // percentiles, and the sort direction — ▼ still means best-first, so
+      // such a column compares against its numbers (see sortModels).
       function isLowerBetter(key) {
         return state.data?.benchmarks?.[key]?.lower_is_better === true;
-      }
-
-      // Benchmarks whose column sorts against the numbers: "flip_sort" in
-      // llm.json turns ▼ into smallest-first and ▲ into largest-first, so a
-      // hallucination rate still reads best-on-top like every other column.
-      // Declared per benchmark rather than derived from lower_is_better —
-      // which way a column should sort is a display choice, independent of
-      // which end of the scale counts as good.
-      function isSortFlipped(key) {
-        return state.data?.benchmarks?.[key]?.flip_sort === true;
       }
 
       // Column headers use short_name to stay narrow; lists with room (the
