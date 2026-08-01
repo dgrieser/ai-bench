@@ -2353,7 +2353,7 @@
 
         const benchmarkSortOptions = visibleBenchmarkKeys().map((key) => ({
           key,
-          label: getBenchmarkLabel(key)
+          label: getBenchmarkFullName(key)
         }));
 
         const sortOptions = [...fixedSortOptions, ...groupSortOptions, ...benchmarkSortOptions];
@@ -3688,7 +3688,7 @@
       }
 
       // Column headers use short_name to stay narrow; lists with room (the
-      // benchmark picker) use the full name.
+      // benchmark picker, the sort dropdown) use the full name.
       function getBenchmarkFullName(key) {
         return state.data?.benchmarks?.[key]?.name || getBenchmarkLabel(key);
       }
