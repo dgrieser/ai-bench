@@ -8,8 +8,7 @@ name: update benchmarks
 
 on:
   schedule:
-    - cron: "17 4 * * *"
-    - cron: "17 16 * * *"
+    - cron: "17 */3 * * *"
 
   # A merged mapping change earns an immediate refresh rather than waiting for
   # the next cron: the new mappings pull in scores for models that were unmapped
