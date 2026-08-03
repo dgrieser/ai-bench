@@ -116,7 +116,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite: not fetched from a source but derived from the coding benchmarks in this table by derive_coding_index.py. Each contributing benchmark is first turned into a tie-averaged percentile rank across the models scored on it, which removes the scale differences between a pass rate and an index score, and those ranks are then averaged with per-benchmark reliability weights: DeepSWE 1.0, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-ReBench 0.8, SWE-bench Pro 0.4, LiveCodeBench 0.4, Terminal-Bench 2.0 0.35, SciCode 0.35, SWE-Atlas Refactoring / Test-Writing / QnA 0.17 each, SWE-bench Verified 0.15. A missing score is imputed rather than counted as zero: the blank is filled between the median and the level the model has actually demonstrated, trusting the latter in proportion to the weight it was measured on, so the penalty grows with the square of the missing share — a model measured on almost everything is barely docked, while one measured on almost nothing stays pinned to the median and cannot ride a single lucky score to the top. Benchmarks with fewer than two scored models carry no rank and are dropped from the total weight; a model measured on less than 20% of that weight is left unranked. The result is reported as whole index points (100,000 per full percentile, so the median model sits near 50,000) rather than as a percentage: these are ranks, not a share of tasks solved, and the wide scale keeps models that sit thousandths of a percentile apart in a strict order. Ranks are relative to the models currently in the table, so values shift as models and scores are added.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table by derive_coding_index.py. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -126,7 +126,7 @@
       "name": "AA Intelligence Index",
       "short_name": "Index",
       "category": "Composite Index",
-      "description": "Artificial Analysis composite index of overall model capability; v4.1 since 2026-06-15. Weighted average of nine evaluations in four categories: Agents 34% (GDPval-AA v2 20%, τ³-Bench Banking 14%), Coding 24% (Terminal-Bench 2.1 16%, SciCode 8%), Scientific Reasoning 24% (Humanity's Last Exam 12%, GPQA Diamond 6%, CritPt 6%) and General 18% (AA-Omniscience 12%, AA-LCR 6%). v4.1 upgraded Terminal-Bench Hard to 2.1, τ²-Bench Telecom to τ³-Bench Banking and GDPval-AA to v2, and dropped IFBench as saturated. Scored on Artificial Analysis' index scale rather than as a percentage.",
+      "description": "Artificial Analysis composite index of overall model capability; v4.1 since 2026-06-15. Weighted average of nine evaluations in four categories: Agents 34%, Coding 24%, Scientific Reasoning 24% and General 18%. Scored on Artificial Analysis' index scale rather than as a percentage.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
@@ -296,7 +296,7 @@
       "name": "Toolathlon-Verified",
       "short_name": "Toolath",
       "category": "Agentic Tool Use",
-      "description": "The Tool Decathlon: long-horizon agentic tool use across 32 real MCP servers (604 tools) plus 7 local toolkits (16 tools), with 108 tasks averaging around 20 interaction steps. Tasks make real changes to the environment — sending mail, updating records, editing files — so grading is execution-based: scripts check the final state of the applications rather than the transcript. Scores are Toolathlon-Verified, the official series since 2026-06-30, which realigned task specifications, ground truth, evaluators and initial states across 83 of the 108 tasks and is not comparable with earlier Toolathlon numbers. Metric is Pass@1.",
+      "description": "The Tool Decathlon: long-horizon agentic tool use across 32 real MCP servers plus 7 local toolkits, with 108 tasks averaging around 20 interaction steps. Grading is execution-based on the final state of the applications. Scores are the Toolathlon-Verified series, not comparable with earlier Toolathlon numbers. Metric is Pass@1.",
       "urls": [
         "https://toolathlon.xyz/docs/leaderboard",
         "https://github.com/hkust-nlp/Toolathlon",
@@ -307,7 +307,7 @@
       "name": "τ³-Bench Banking",
       "short_name": "τ³ Bank",
       "category": "Agentic Tool Use",
-      "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ extends the dual-control τ² setup, where agent and simulated user both act with tools in a shared environment, with a knowledge-retrieval layer: the action tools are hidden inside knowledge-base documents, so the agent has to find them by searching the knowledge base, unlock them with meta-tools and only then call them. Banking is the knowledge-retrieval domain and the hardest of the four (Airline, Banking, Retail, Telecom). Metric is task success rate.",
+      "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ adds a knowledge-retrieval layer to the dual-control τ² setup: action tools are hidden in knowledge-base documents, so the agent must search for them and unlock them with meta-tools before calling. Metric is task success rate.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/tau3-banking",
         "https://github.com/sierra-research/tau2-bench",
@@ -327,7 +327,7 @@
       "name": "GDPval-AA v2",
       "short_name": "GDPval2",
       "category": "Real-world Professional Work",
-      "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, diagrams, spreadsheets — for 44 occupations across 9 industries that make up a large share of US GDP, authored with professionals averaging 14 years of experience. Submissions are anonymised and scored by pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance, so weaker models fall far below it. v2 re-baselined the Elo to that human anchor, rotates the panel of frontier-model judges, and raised the agent turn limit from 100 to 250.",
+      "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: real work deliverables — documents, slides, spreadsheets — for 44 occupations across 9 industries, authored with experienced professionals. Scored by pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/gdpval-aa",
@@ -347,7 +347,7 @@
       "name": "AA-Omniscience",
       "short_name": "Omni",
       "category": "Reasoning & Knowledge",
-      "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains (business, humanities and social sciences, science/engineering/maths, health, law, software engineering). The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention when the model does not know, so 0 means a model is right about as often as it is wrong and models that hallucinate more than they recall score negative.",
+      "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains. The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention; 0 means as often right as wrong.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/omniscience",
@@ -370,7 +370,7 @@
       "name": "AA-LCR",
       "short_name": "LCR",
       "category": "Long Context Reasoning",
-      "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens — academic papers, company financials, government consultations, legal documents, industry reports, marketing material. Each question needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup. Graded pass/fail by an LLM judge against the official answer; metric is the average pass rate.",
+      "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens. Each needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup. Graded pass/fail by an LLM judge; metric is the average pass rate.",
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning",
@@ -381,7 +381,7 @@
       "name": "CritPt",
       "short_name": "CritPt",
       "category": "Scientific Reasoning",
-      "description": "Complex Research using Integrated Thinking - Physics Test (\"critical point\"): 70 research-level physics challenges newly written by 50+ active researchers across 11 subfields from their own work, decomposed into 190 checkpoint tasks. Each admits a guess-resistant, machine-verifiable answer (floating-point arrays, symbolic expressions, Python functions) and was peer-reviewed for 40+ hours. Deeply unsaturated: the best base models score in the low single digits, rising to roughly 10% with coding tools.",
+      "description": "Complex Research using Integrated Thinking - Physics Test (\"critical point\"): 70 research-level physics challenges written by 50+ active researchers across 11 subfields, decomposed into 190 machine-verifiable checkpoint tasks. Deeply unsaturated: the best base models score in the low single digits.",
       "urls": [
         "https://artificialanalysis.ai/evaluations/critpt",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
