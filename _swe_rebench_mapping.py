@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
 
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
@@ -65,7 +65,7 @@ def load_reviewed_rebench_names(
     return {
         name
         for name, value in _load_raw_mapping(mapping_path).items()
-        if include_closed or value != CLOSED_WEIGHTS
+        if value != PENDING and (include_closed or value != CLOSED_WEIGHTS)
     }
 
 

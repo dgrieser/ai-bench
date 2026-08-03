@@ -15,6 +15,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from _openness import PENDING
 from _prompts import freeze_decisions
 
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
@@ -61,12 +62,16 @@ def _load_raw_mapping(path: Path = SPHERON_MAPPING) -> dict[str, str]:
 
 def load_spheron_to_slug_mapping(path: Path = SPHERON_MAPPING) -> dict[str, str]:
     """Real Spheron path -> llm.json model slug mappings."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in (UNMAPPABLE, PENDING)}
 
 
 def load_reviewed_spheron_names(path: Path = SPHERON_MAPPING) -> set[str]:
-    """All Spheron paths already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+    """All Spheron paths already reviewed, excluding ones still marked __pending__."""
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if value != PENDING
+    }
 
 
 def write_spheron_to_slug_mapping(
