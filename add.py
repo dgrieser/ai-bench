@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 import _prompts
+from _params import fetch_hf_params, normalize_params
 from _swe_rebench_mapping import (
     add_rebench_mapping,
     fetch_swe_rebench_model_names,
@@ -291,7 +292,7 @@ def fetch_aa_model_defaults(model_name: str) -> dict[str, str]:
         return {}
 
     defaults: dict[str, str] = {}
-    for source_key, dest_key in (("url", "url"), ("context", "context")):
+    for source_key, dest_key in (("url", "url"), ("params", "params"), ("context", "context")):
         value = row.get(source_key)
         if isinstance(value, str) and value.strip():
             defaults[dest_key] = value.strip()
@@ -863,10 +864,19 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
 
     url = get_value(args.url, "URL", interactive, aa_defaults.get("url"))
 
+    # AA's model page carries total + active counts; Hugging Face knows only the
+    # total, so it fills in when AA has no page for the model.
+    params_default = normalize_params(aa_defaults.get("params")) or fetch_hf_params(url)
     if interactive and args.params is None:
-        params = prompt_select_or_new("Params", get_unique_values(models, "params"))
+        if not params_default and url:
+            print(f"  params not auto-filled; see {url}")
+        params = prompt_select_or_new(
+            "Params",
+            get_unique_values(models, "params"),
+            default=params_default,
+        )
     else:
-        params = get_value(args.params, "Params", interactive)
+        params = get_value(args.params, "Params", interactive, params_default)
 
     if interactive and args.context is None:
         if not aa_defaults.get("context") and url:

@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 import derive_coding_index
+from _context import format_context_tokens, snap_context_tokens
+from _params import fetch_hf_params, normalize_params
 from _scores import stamp_score_updated
 
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
@@ -88,16 +90,6 @@ def normalize_aa_value(value: Any) -> Any:
     return value
 
 
-def _format_context_tokens(tokens: int) -> str:
-    if tokens % 1_000_000_000 == 0:
-        return f"{tokens // 1_000_000_000}b"
-    if tokens % 1_000_000 == 0:
-        return f"{tokens // 1_000_000}m"
-    if tokens % 1_000 == 0:
-        return f"{tokens // 1_000}k"
-    return str(tokens)
-
-
 def normalize_context(value: Any) -> str | None:
     if value is None:
         return None
@@ -129,28 +121,10 @@ def normalize_context(value: Any) -> str | None:
         tokens = amount if amount >= 10_000 else amount * 1_000
 
     # Snap close binary-window aliases from AA pages (e.g. 262k -> 256k).
-    should_snap = unit in {"", "k"}
-    if should_snap:
-        canonical = [
-            1_000,
-            2_000,
-            4_000,
-            8_000,
-            16_000,
-            32_000,
-            64_000,
-            128_000,
-            256_000,
-            512_000,
-            1_024_000,
-            2_048_000,
-        ]
-        for target in canonical:
-            if abs(tokens - target) / target <= 0.03:
-                tokens = target
-                break
+    if unit in {"", "k"}:
+        tokens = snap_context_tokens(tokens)
 
-    return _format_context_tokens(tokens)
+    return format_context_tokens(tokens)
 
 
 def print_changes_table(changes: list[tuple[str, str, Any, Any]]) -> None:
@@ -228,7 +202,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-huggingface",
         action="store_true",
-        help="Skip fetching scores from huggingface.",
+        help="Skip fetching scores and fallback parameter counts from huggingface.",
     )
     parser.add_argument(
         "--skip-toolathlon",
@@ -394,6 +368,16 @@ def update_scores(
             model["context"] = new_context
             updated += 1
             changes.append((slug, "context", old_context, new_context))
+
+        # Params are filled, never refreshed: AA reports measured counts, so a
+        # refresh would overwrite curated advertised sizes (E2B -> 5.1B-A2.3B).
+        old_params = model.get("params")
+        if not old_params:
+            new_params = normalize_params(aa_model.get("params"))
+            if new_params:
+                model["params"] = new_params
+                updated += 1
+                changes.append((slug, "params", old_params, new_params))
 
         scores = model.setdefault("scores", {})
         if not isinstance(scores, dict):
@@ -596,6 +580,35 @@ def update_huggingface_scores(
             changes.append((slug, benchmark_key, old_value, new_value))
 
     return matched, updated, changes
+
+
+def fill_missing_params_from_huggingface(
+    doc: dict[str, Any]
+) -> tuple[int, list[tuple[str, str, Any, Any]]]:
+    """Last resort for params: models AA has no page for (or no count on it).
+
+    Hugging Face carries no active-parameter count, so MoE models land here as a
+    total only ("117B") and the "-A..." half stays a manual edit.
+    """
+    models = doc.get("models", [])
+    filled = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        old_params = model.get("params")
+        if not isinstance(slug, str) or not slug or old_params:
+            continue
+
+        new_params = fetch_hf_params(model.get("url"))
+        if not new_params:
+            continue
+
+        model["params"] = new_params
+        filled += 1
+        changes.append((slug, "params", old_params, new_params))
+
+    return filled, changes
 
 
 def build_fetch_toolathlon_cmd(script: Path) -> list[str]:
@@ -1322,10 +1335,14 @@ def main() -> int:
     huggingface_by_slug: dict[str, dict[str, Any]] = {}
     hf_matched = 0
     hf_updated = 0
+    hf_params_filled = 0
     if not args.skip_huggingface:
         huggingface_by_slug = fetch_huggingface_data(huggingface_path, huggingface_mapping_path)
         hf_matched, hf_updated, hf_changes = update_huggingface_scores(doc, huggingface_by_slug)
         changes.extend(hf_changes)
+        # Runs after the AA pass above so AA's total+active pair wins.
+        hf_params_filled, hf_params_changes = fill_missing_params_from_huggingface(doc)
+        changes.extend(hf_params_changes)
 
     toolathlon_by_slug: dict[str, dict[str, Any]] = {}
     toolathlon_matched = 0
@@ -1469,6 +1486,7 @@ def main() -> int:
         print(f"score values updated from llmstats: {llmstats_updated}")
     if not args.skip_huggingface:
         print(f"score values updated from huggingface: {hf_updated}")
+        print(f"params values filled from huggingface: {hf_params_filled}")
     if not args.skip_toolathlon:
         print(f"score values updated from toolathlon: {toolathlon_updated}")
     if not args.skip_deepswe:
