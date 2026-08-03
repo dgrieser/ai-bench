@@ -278,11 +278,24 @@ Two consequences worth knowing:
   score moves other models' values**. That is also why `derive_coding_index.py`
   clears a value back to `null` when a model stops qualifying, unlike the scrapers,
   which never overwrite a value with `null`.
-- The column has to be recomputed after every score change, and both writers do it
-  for you: `update-all` runs the script last, after `update.py`, and `edit.py` calls
-  `derive_coding_index.refresh()` before saving whenever a *score* changed (a
-  params/context edit cannot move the ranks). A rerun by hand is only needed after
-  something else edits `scores` directly.
+- The column has to be recomputed after every change to `scores` **or** to the set of
+  models, and every writer that can cause one does it for you, in the same write, via
+  `derive_coding_index.refresh_and_report()`:
+  - `update.py -w` — after the scrapers have merged their scores (so a direct run is
+    self-sufficient; `update-all` additionally runs the script as its last step).
+  - `edit.py` — after a hand-edited score. Skipped for a params/context-only edit,
+    which cannot move a rank.
+  - `prune.py -w` — after dropping models, because removing one that carried a coding
+    score re-ranks the survivors even though none of their own scores moved.
+
+  `add.py` needs no refresh: a new model arrives with all-null scores, and a model
+  with no score in a benchmark is not part of that benchmark's population, so nothing
+  is re-ranked. `fill_source_urls.py` and `sync_score_dates.py` touch neither scores
+  nor models.
+- Derived columns are never a mapping target. The interactive prompts
+  (`add.py`, `edit.py`, `update_*_mapping.py`) and the unattended proposal builder
+  (`propose.py`, via `editable_benchmarks()`) all exclude them, so a fetched source
+  score cannot be routed into a column the next derivation would overwrite.
 
 The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
 in `llm.json`), which is what this column replaced — that machinery is still in

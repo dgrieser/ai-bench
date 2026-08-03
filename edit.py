@@ -543,25 +543,8 @@ def refresh_derived_scores(doc: dict[str, Any]) -> None:
     here leaves it stale -- and because the Coding index ranks models against
     each other, changing one model's score can move other models' values.
     Recomputed into the same write so llm.json is never saved half-updated.
-
-    A misconfigured llm.json is reported but not fatal: the edit the user asked
-    for still gets written, and ./derive_coding_index.py can fix the column once
-    the configuration is sound.
     """
-    try:
-        changes = derive_coding_index.refresh(doc)
-    except ValueError as exc:
-        print(
-            f"Warning: could not recompute {derive_coding_index.INDEX_KEY} ({exc}); "
-            "run ./derive_coding_index.py once llm.json is fixed",
-            file=sys.stderr,
-        )
-        return
-    if changes:
-        print(
-            f"Recomputed {derive_coding_index.INDEX_KEY} "
-            f"for {len(changes)} model(s)"
-        )
+    derive_coding_index.refresh_and_report(doc)
 
 
 def write_doc(path: Path, doc: dict[str, Any]) -> None:

@@ -11,6 +11,8 @@ import json
 import sys
 from pathlib import Path
 
+import derive_coding_index
+
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -66,6 +68,10 @@ def main() -> int:
         return 0
 
     doc["models"] = keep
+    # Percentile ranks are computed over the models in the file, so dropping one
+    # that carried a coding score re-ranks the survivors even though none of
+    # their own scores moved. Refreshed after the drop, before the write.
+    derive_coding_index.refresh_and_report(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     print(f"\nWrote {path}")
     return 0

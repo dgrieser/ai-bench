@@ -280,6 +280,32 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, int | None, int | None]]:
     return apply_index(doc, compute_index(models, doc))
 
 
+def refresh_and_report(doc: dict[str, Any]) -> list[tuple[str, int | None, int | None]]:
+    """refresh() for the tools that write llm.json for their own reasons, with
+    the reporting they all want: a line naming how many models moved, and a
+    warning instead of an exception when llm.json is shaped wrong.
+
+    Every writer of "scores" or "models" has to call this before saving --
+    update.py after a fetch, edit.py after a hand edit, prune.py after dropping
+    a model -- because the index is a function of the whole table: a score that
+    changes, or a model that leaves, re-ranks everyone else. Not reporting a
+    problem loudly here is deliberate: the caller's own write is what the user
+    asked for, and ./derive_coding_index.py can repair the column afterwards.
+    """
+    try:
+        changes = refresh(doc)
+    except ValueError as exc:
+        print(
+            f"Warning: could not recompute {INDEX_KEY} ({exc}); "
+            "run ./derive_coding_index.py once llm.json is fixed",
+            file=sys.stderr,
+        )
+        return []
+    if changes:
+        print(f"Recomputed {INDEX_KEY} for {len(changes)} model(s)")
+    return changes
+
+
 def fmt(value: int | None) -> str:
     # Grouped only in this script's output; llm.json keeps a plain integer.
     return "—" if value is None else f"{value:,}"

@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
+import derive_coding_index
 from _scores import stamp_score_updated
 
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
@@ -1387,6 +1388,11 @@ def main() -> int:
 
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if not args.skip_aa else []
     if args.write:
+        # The derived Coding index is a function of the scores just fetched, so
+        # it goes stale the moment any of them moves. Refreshed in memory here
+        # so a direct `update.py -w` leaves llm.json consistent on its own,
+        # without depending on update-all's later derive step.
+        derive_coding_index.refresh_and_report(doc)
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
     print(f"models in {llm_path}: {len(slugs)}")

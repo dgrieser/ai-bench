@@ -33,6 +33,7 @@ from typing import Any
 import _matching
 import _prompts
 from _openness import PENDING
+from _scores import editable_benchmarks
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_LLM_JSON = HERE / "llm.json"
@@ -150,7 +151,10 @@ def build_universes(llm_path: Path, skip_aa: bool) -> dict[str, list[str]]:
     doc = json.loads(llm_path.read_text(encoding="utf-8"))
     universes = {
         MODELS: [m["name"] for m in doc.get("models", []) if isinstance(m, dict) and m.get("name")],
-        BENCHMARKS: sorted(doc.get("benchmarks", {})),
+        # Derived columns are excluded, like the interactive mapping prompts do:
+        # a source score mapped onto one would be overwritten by the next
+        # derivation, so it must never be proposed as a mapping target.
+        BENCHMARKS: sorted(editable_benchmarks(doc)),
         AA_SLUGS: [],
     }
     if not skip_aa:
