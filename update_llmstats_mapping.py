@@ -32,6 +32,7 @@ from typing import Any
 import _prompts
 from _openness import is_closed_weights, open_index
 from add import find_matches, prompt_key_for_label, prompt_select_or_new
+from _scores import editable_benchmarks
 from _llmstats_mapping import (
     add_llmstats_benchmark_mapping,
     add_llmstats_benchmark_unmappable,
@@ -82,8 +83,7 @@ def model_slugs(doc: dict[str, Any]) -> list[str]:
 
 
 def benchmark_keys(doc: dict[str, Any]) -> list[str]:
-    benchmarks = doc.get("benchmarks", {})
-    return sorted(benchmarks.keys()) if isinstance(benchmarks, dict) else []
+    return sorted(editable_benchmarks(doc).keys())
 
 
 def auto_match_slug(model_id: str, slugs: list[str]) -> str | None:

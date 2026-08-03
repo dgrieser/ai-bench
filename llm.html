@@ -3218,11 +3218,11 @@
           const titleAttr = updated ? ` title="Updated ${escapeHtml(updated)}"` : "";
           const isTop = bestInTable.has(key);
           if (isTop) {
-            return `<td class="num top-score"${titleAttr}><span class="top-score-mark">${formatScore(value)}</span></td>`;
+            return `<td class="num top-score"${titleAttr}><span class="top-score-mark">${formatScore(value, key)}</span></td>`;
           }
           const grey = Number.isFinite(value) ? scoreToGrey(value, scoreRanges[key]) : null;
           const style = grey ? ` style="color:${grey}"` : "";
-          return `<td class="num"${style}${titleAttr}>${formatScore(value)}</td>`;
+          return `<td class="num"${style}${titleAttr}>${formatScore(value, key)}</td>`;
         }).join("");
 
         return `
@@ -3789,11 +3789,19 @@
         return escapeHtml(str);
       }
 
-      function formatScore(value) {
+      // Benchmarks are printed with one decimal unless llm.json says otherwise
+      // ("decimals": 0 for a whole-number index like the Coding column, whose
+      // values are points rather than a percentage).
+      function scoreDecimals(key) {
+        const decimals = state.data?.benchmarks?.[key]?.decimals;
+        return Number.isFinite(decimals) ? decimals : 1;
+      }
+
+      function formatScore(value, key) {
         if (!Number.isFinite(value)) {
           return '<span class="num na">&mdash;&nbsp;</span>';
         }
-        return value.toFixed(1);
+        return value.toFixed(scoreDecimals(key));
       }
 
       function toNumber(value) {

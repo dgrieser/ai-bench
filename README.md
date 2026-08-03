@@ -149,6 +149,10 @@ Output: llm.json (unified dataset)
 ### Utilities
 
 ```bash
+# Recompute the derived Coding index column (dry-run; -w to persist)
+./derive_coding_index.py llm.json
+./derive_coding_index.py llm.json -w
+
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
 
@@ -230,6 +234,60 @@ update_*_mapping.py (syncs mapping files with fresh API data)
 llm.json (unified, deduplicated dataset)
 ```
 
+## Coding Index
+
+The first benchmark column, **Coding**, is the only score in `llm.json` that is not
+scraped: `derive_coding_index.py` computes it from the coding benchmarks already in
+the file and writes it to each model's `scores.coding_index`. It is also the table's
+default sort.
+
+How a value is produced:
+
+1. **Rank, don't average raw numbers.** Every contributing benchmark is turned into
+   a tie-averaged percentile rank across the models scored on it, so a pass rate and
+   an index score can be compared at all. A `lower_is_better` benchmark is inverted,
+   so a percentile always means "how good".
+2. **Weight by reliability.** The ranks are averaged with the per-benchmark weights
+   in `CONTRIBUTING` (DeepSWE 1.0 down to SWE-bench Verified 0.15), so the
+   benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
+   Weights are relative — scaling them all leaves the ranking unchanged.
+3. **Impute blanks instead of zeroing them.** A missing score is filled between the
+   median (50) and the level the model has actually demonstrated, trusting the
+   latter in proportion to the weight it was measured on. The penalty for a blank
+   grows with the *square* of the missing share: a model measured on almost
+   everything is barely docked, while one measured on almost nothing stays pinned
+   near 50 and cannot ride a single lucky score to the top.
+4. **Refuse to guess.** A benchmark with fewer than two scored models carries no
+   rank and is dropped from the total weight. A model measured on less than
+   `MIN_SCORED_FRACTION` (20%) of that weight is left unranked (`null`) rather than
+   reported as a mostly-imputed number.
+
+The result is reported as **whole index points**, `SCALE` (100,000) per full
+percentile, so the median model sits near 50,000 and the current field spans roughly
+29,000–89,000. Points rather than a percentage for two reasons: these are ranks, not
+a share of tasks solved, so a number approaching 100 would read as a saturated score
+it isn't; and the wide scale is what keeps the ranking strict — neighbouring models
+can sit thousandths of a percentile apart (the closest pair in the current field is
+15 points), which a 0–100 value would round into a tie. The column carries
+`"decimals": 0` in `llm.json`, which is how `llm.html` and `llm-cli` know to print it
+without the decimal every other benchmark gets.
+
+Two consequences worth knowing:
+
+- Ranks are relative to the models currently in the file, so **adding a model or a
+  score moves other models' values**. That is also why `derive_coding_index.py`
+  clears a value back to `null` when a model stops qualifying, unlike the scrapers,
+  which never overwrite a value with `null`.
+- The column has to be recomputed after every score change, and both writers do it
+  for you: `update-all` runs the script last, after `update.py`, and `edit.py` calls
+  `derive_coding_index.refresh()` before saving whenever a *score* changed (a
+  params/context edit cannot move the ranks). A rerun by hand is only needed after
+  something else edits `scores` directly.
+
+The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
+in `llm.json`), which is what this column replaced — that machinery is still in
+place, just with no group configured.
+
 ## Openness Classification
 
 The `_openness.py` module classifies models as:
@@ -243,6 +301,9 @@ This information is stored in each model's `weights` metadata and affects aggreg
 
 - **Model deduplication**: Same model across multiple benchmarks merged under one slug
 - **Timestamp tracking**: Score update date stored for cache validation
+- **Derived columns**: benchmarks flagged `"derived": true` in `llm.json` are computed
+  from other columns, so `add.py`/`edit.py` neither prompt for them nor offer them as
+  a mapping target (see [Coding Index](#coding-index))
 - **Source attribution**: Each score records its origin benchmark
 - **Ignore lists**: Models or mappings can be explicitly ignored (`*-ignored.json` files)
 - **Pruning**: Remove invalid or duplicate entries
@@ -294,7 +355,9 @@ ai-bench/
 ├── update_*_mapping.py         # Mapping sync scripts (8 files)
 ├── _*_mapping.py               # Mapping application modules (11 files)
 │
-├── _scores.py                  # Score update timestamp logic
+├── derive_coding_index.py      # Derived Coding index column (see above)
+│
+├── _scores.py                  # Score timestamps, derived-column helper
 ├── _openness.py                # Model openness classification
 ├── check_new.py                # Detect new/dismissed models
 ├── fill_source_urls.py         # Utility for URLs

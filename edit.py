@@ -14,7 +14,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from _scores import stamp_score_updated
+import derive_coding_index
+from _scores import editable_benchmarks, stamp_score_updated
 
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
@@ -88,7 +89,7 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         "-b",
         "--benchmark",
         action="append",
-        choices=sorted(doc["benchmarks"].keys()),
+        choices=sorted(editable_benchmarks(doc).keys()),
         help="Benchmark key to scope --missing to. Repeat to include multiple benchmarks.",
     )
     parser.add_argument(
@@ -107,7 +108,7 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
     parser.add_argument("--params", help="Model size, e.g. 123B or 230B-A10B. Use 'null' to clear.")
 
     metadata_flags = {f"--{key}" for key in METADATA_FIELDS}
-    for key, benchmark in doc["benchmarks"].items():
+    for key, benchmark in editable_benchmarks(doc).items():
         flag = f"--{key.replace('_', '-')}"
         if flag in metadata_flags:
             raise ValueError(f"Benchmark key '{key}' collides with the metadata flag {flag}.")
@@ -420,7 +421,7 @@ def get_missing_score_keys(doc: dict[str, Any], model: dict[str, Any]) -> list[s
     scores = model.setdefault("scores", {})
     if not isinstance(scores, dict):
         raise ValueError(f"Model '{model.get('name')}' has a non-object scores field.")
-    return [key for key in doc["benchmarks"] if scores.get(key) is None]
+    return [key for key in editable_benchmarks(doc) if scores.get(key) is None]
 
 
 def get_missing_metadata_keys(model: dict[str, Any]) -> list[str]:
@@ -449,7 +450,7 @@ def collect_updates(
         raise ValueError(f"Model '{model_name}' has a non-object scores field.")
 
     score_updates: dict[str, int | float | None] = {}
-    for key, benchmark in doc["benchmarks"].items():
+    for key, benchmark in editable_benchmarks(doc).items():
         raw_value = getattr(args, key)
         current = scores.get(key)
 
@@ -535,6 +536,34 @@ def collect_missing_updates(
     return planned
 
 
+def refresh_derived_scores(doc: dict[str, Any]) -> None:
+    """Recompute the derived columns after a hand-edited score, before the write.
+
+    A derived column is a function of the other scores in llm.json, so an edit
+    here leaves it stale -- and because the Coding index ranks models against
+    each other, changing one model's score can move other models' values.
+    Recomputed into the same write so llm.json is never saved half-updated.
+
+    A misconfigured llm.json is reported but not fatal: the edit the user asked
+    for still gets written, and ./derive_coding_index.py can fix the column once
+    the configuration is sound.
+    """
+    try:
+        changes = derive_coding_index.refresh(doc)
+    except ValueError as exc:
+        print(
+            f"Warning: could not recompute {derive_coding_index.INDEX_KEY} ({exc}); "
+            "run ./derive_coding_index.py once llm.json is fixed",
+            file=sys.stderr,
+        )
+        return
+    if changes:
+        print(
+            f"Recomputed {derive_coding_index.INDEX_KEY} "
+            f"for {len(changes)} model(s)"
+        )
+
+
 def write_doc(path: Path, doc: dict[str, Any]) -> None:
     path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -556,7 +585,7 @@ def main() -> int:
         raise ValueError("--field can only be used with --missing.")
 
     if args.missing:
-        score_flags = [key for key in doc["benchmarks"] if getattr(args, key) is not None]
+        score_flags = [key for key in editable_benchmarks(doc) if getattr(args, key) is not None]
         if score_flags:
             raise ValueError("--missing cannot be combined with benchmark score flags.")
         metadata_flags = [key for key in METADATA_FIELDS if getattr(args, key) is not None]
@@ -594,6 +623,7 @@ def main() -> int:
 
         changed = 0
         models_changed = 0
+        scores_changed = False
         for model, score_updates, metadata_updates in planned:
             model_changed = False
             scores = model["scores"]
@@ -603,6 +633,7 @@ def main() -> int:
                     stamp_score_updated(model, key)
                     changed += 1
                     model_changed = True
+                    scores_changed = True
             for key, value in metadata_updates.items():
                 if model.get(key) != value:
                     model[key] = value
@@ -610,6 +641,11 @@ def main() -> int:
                     model_changed = True
             if model_changed:
                 models_changed += 1
+
+        # Only scores feed the derived columns; a params/context edit cannot
+        # move them.
+        if scores_changed:
+            refresh_derived_scores(doc)
 
         write_doc(path, doc)
         print(f"Updated {changed} field(s) across {models_changed} model(s) in {path}")
@@ -620,16 +656,21 @@ def main() -> int:
         raise ValueError("No score or metadata updates provided.")
 
     changed = 0
+    scores_changed = False
     scores = model["scores"]
     for key, value in score_updates.items():
         if scores.get(key) != value:
             scores[key] = value
             stamp_score_updated(model, key)
             changed += 1
+            scores_changed = True
     for key, value in metadata_updates.items():
         if model.get(key) != value:
             model[key] = value
             changed += 1
+
+    if scores_changed:
+        refresh_derived_scores(doc)
 
     write_doc(path, doc)
     print(f"Updated {changed} field(s) for '{model['name']}' in {path}")

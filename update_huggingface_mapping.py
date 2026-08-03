@@ -11,6 +11,7 @@ from typing import Any
 
 import _prompts
 from add import find_matches, prompt_select_or_new
+from _scores import editable_benchmarks
 from _huggingface_mapping import (
     HF_MAPPING,
     add_hf_mapping,
@@ -77,7 +78,7 @@ def main() -> int:
     args = parse_args()
     llm_path = Path(args.json_file)
     doc = load_doc(llm_path)
-    benchmark_keys = sorted(doc["benchmarks"].keys())
+    benchmark_keys = sorted(editable_benchmarks(doc).keys())
 
     hf_labels = fetch_huggingface_benchmark_names()
     reviewed_labels = load_reviewed_hf_labels()

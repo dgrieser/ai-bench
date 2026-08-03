@@ -198,7 +198,7 @@ def sort_models(models, doc):
         keyed = [(composite.get(m["name"]), m) for m in models]
     else:
         key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
-        sort_label = key
+        sort_label = ((doc.get("benchmarks") or {}).get(key) or {}).get("name") or key
         keyed = [(value_for_sort(m, key), m) for m in models]
         # A lower-is-better benchmark compares its numbers the other way round,
         # so the descending default still puts the best value on top. Group
@@ -242,8 +242,18 @@ def is_recent(model, today):
     return timedelta(0) <= today - added_date < timedelta(days=7)
 
 
-def format_score(value):
-    return f"{value:.1f}" if math.isfinite(value) else "—"
+def score_decimals(doc, key):
+    """Decimals a benchmark is printed with: one unless llm.json says otherwise
+    ("decimals": 0 for a whole-number index like the Coding column, whose values
+    are points rather than a percentage)."""
+    decimals = ((doc.get("benchmarks") or {}).get(key) or {}).get("decimals")
+    if isinstance(decimals, bool) or not isinstance(decimals, int):
+        return 1
+    return decimals
+
+
+def format_score(value, decimals=1):
+    return f"{value:.{decimals}f}" if math.isfinite(value) else "—"
 
 
 def format_vram(raw):
@@ -347,7 +357,7 @@ def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color,
         bold_flags = [False] * len(cells)
         for key in shown_keys:
             value = to_number((model.get("scores") or {}).get(key))
-            cells.append(format_score(value))
+            cells.append(format_score(value, score_decimals(doc, key)))
             bold_flags.append(math.isfinite(value) and key in best and nearly_equal(value, best[key]))
         rows.append((cells, bold_flags))
 
