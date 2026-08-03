@@ -1,0 +1,20 @@
+<!-- OpenBench's own Coding index: code brackets around a rising bar chart.
+     Square viewBox because llm.html renders benchmark icons in a fixed 12x12
+     box, which would squash a wider drawing. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" aria-hidden="true">
+  <defs>
+    <linearGradient id="coding-index-bars" gradientUnits="userSpaceOnUse" x1="0" y1="36" x2="0" y2="90">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="#3b82f6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="32,38 12,64 32,90"/>
+    <polyline points="96,38 116,64 96,90"/>
+  </g>
+  <g fill="url(#coding-index-bars)">
+    <rect x="40" y="64" width="12" height="26" rx="3"/>
+    <rect x="58" y="50" width="12" height="40" rx="3"/>
+    <rect x="76" y="36" width="12" height="54" rx="3"/>
+  </g>
+</svg>

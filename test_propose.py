@@ -126,6 +126,24 @@ class TestRoutes(unittest.TestCase):
         self.assertIsNone(propose.route_for({"command": "./who_knows.py -w", "kind": "mapping"}))
 
 
+class TestUniverses(unittest.TestCase):
+    def test_derived_benchmarks_are_not_proposable_targets(self) -> None:
+        # A source score mapped onto a derived column would be overwritten by the
+        # next derivation, so it must never reach a proposal -- the interactive
+        # prompts already refuse it, and the unattended path has to agree.
+        universe = propose.build_universes(HERE / "llm.json", skip_aa=True)[propose.BENCHMARKS]
+        derived = [
+            key
+            for key, benchmark in DOC["benchmarks"].items()
+            if isinstance(benchmark, dict) and benchmark.get("derived") is True
+        ]
+        self.assertTrue(derived, "llm.json declares no derived benchmark; test is vacuous")
+        for key in derived:
+            with self.subTest(key):
+                self.assertNotIn(key, universe)
+        self.assertEqual(len(universe), len(DOC["benchmarks"]) - len(derived))
+
+
 class TestPlanning(unittest.TestCase):
     def setUp(self) -> None:
         self.universes = {

@@ -1,7 +1,7 @@
 {
   "title": "OpenBench Index",
   "subtitle": "Aggregated benchmark scores of open-weight LLMs across many benchmark suites.",
-  "defaultSort": "coding",
+  "defaultSort": "coding_index",
   "columns": {
     "name": {
       "label": "Model",
@@ -108,72 +108,20 @@
       "min": 500000000000
     }
   ],
-  "sortGroups": [
-    {
-      "key": "coding",
-      "label": "Coding (grouped)",
-      "benchmarks": [
-        {
-          "key": "deepswe",
-          "weight": 1.0
-        },
-        {
-          "key": "swe_rebench",
-          "weight": 0.8
-        },
-        {
-          "key": "swe_bench_pro",
-          "weight": 0.4
-        },
-        {
-          "key": "swe_atlas_rf",
-          "weight": 0.17
-        },
-        {
-          "key": "swe_atlas_tw",
-          "weight": 0.17
-        },
-        {
-          "key": "swe_atlas_qna",
-          "weight": 0.17
-        },
-        {
-          "key": "frontierswe",
-          "weight": 0.9
-        },
-        {
-          "key": "terminal_bench_2_1",
-          "weight": 0.85
-        },
-        {
-          "key": "frontiercode",
-          "weight": 0.9
-        },
-        {
-          "key": "swe_marathon",
-          "weight": 0.9
-        },
-        {
-          "key": "livecodebench",
-          "weight": 0.4
-        },
-        {
-          "key": "terminal_bench_2_0",
-          "weight": 0.35
-        },
-        {
-          "key": "scicode",
-          "weight": 0.35
-        },
-        {
-          "key": "swe_bench_verified",
-          "weight": 0.15
-        }
-      ],
-      "minScoredFraction": 0.2
-    }
-  ],
+  "sortGroups": [],
   "benchmarks": {
+    "coding_index": {
+      "name": "OpenBench Coding Index",
+      "short_name": "Coding",
+      "category": "Composite Index",
+      "derived": true,
+      "decimals": 0,
+      "description": "This site's own coding composite: not fetched from a source but derived from the coding benchmarks in this table by derive_coding_index.py. Each contributing benchmark is first turned into a tie-averaged percentile rank across the models scored on it, which removes the scale differences between a pass rate and an index score, and those ranks are then averaged with per-benchmark reliability weights: DeepSWE 1.0, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-ReBench 0.8, SWE-bench Pro 0.4, LiveCodeBench 0.4, Terminal-Bench 2.0 0.35, SciCode 0.35, SWE-Atlas Refactoring / Test-Writing / QnA 0.17 each, SWE-bench Verified 0.15. A missing score is imputed rather than counted as zero: the blank is filled between the median and the level the model has actually demonstrated, trusting the latter in proportion to the weight it was measured on, so the penalty grows with the square of the missing share — a model measured on almost everything is barely docked, while one measured on almost nothing stays pinned to the median and cannot ride a single lucky score to the top. Benchmarks with fewer than two scored models carry no rank and are dropped from the total weight; a model measured on less than 20% of that weight is left unranked. The result is reported as whole index points (100,000 per full percentile, so the median model sits near 50,000) rather than as a percentage: these are ranks, not a share of tasks solved, and the wide scale keeps models that sit thousandths of a percentile apart in a strict order. Ranks are relative to the models currently in the table, so values shift as models and scores are added.",
+      "icon_svg": "icons/coding-index.svg",
+      "urls": [
+        "https://github.com/dgrieser/ai-bench#coding-index"
+      ]
+    },
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "short_name": "Index",
@@ -512,6 +460,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "coding_index": 50336,
         "aa_intelligence_index": 19.2,
         "aa_coding_index": 31.3,
         "swe_bench_verified": 72.2,
@@ -546,6 +495,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": "2026-02-13",
@@ -596,6 +546,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "coding_index": 44938,
         "aa_intelligence_index": 17.4,
         "aa_coding_index": 29.3,
         "swe_bench_verified": 68.0,
@@ -630,6 +581,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-01",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": "2026-02-13",
@@ -680,6 +632,7 @@
         "url": "https://docs.z.ai/guides/llm/glm-4.7"
       },
       "scores": {
+        "coding_index": 45199,
         "aa_intelligence_index": 22.9,
         "aa_coding_index": 25.9,
         "swe_bench_verified": 59.2,
@@ -714,6 +667,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-02-13",
         "swe_bench_verified": "2026-02-13",
@@ -764,6 +718,7 @@
         "url": "https://static.stepfun.com/blog/step-3.5-flash"
       },
       "scores": {
+        "coding_index": 64848,
         "aa_intelligence_index": 26,
         "aa_coding_index": 34.6,
         "swe_bench_verified": 74.4,
@@ -798,6 +753,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-04-14",
         "swe_bench_verified": "2026-03-18",
@@ -848,6 +804,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
+        "coding_index": 49245,
         "aa_intelligence_index": 33.7,
         "aa_coding_index": 37.4,
         "swe_bench_verified": 80.2,
@@ -882,6 +839,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-02-13",
         "swe_bench_verified": "2026-02-13",
@@ -932,6 +890,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 38341,
         "aa_intelligence_index": 13.6,
         "aa_coding_index": 19.4,
         "swe_bench_verified": 51.6,
@@ -966,6 +925,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-02-13",
         "swe_bench_verified": "2026-02-13",
@@ -1016,6 +976,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 50086,
         "aa_intelligence_index": 21.1,
         "aa_coding_index": 36.2,
         "swe_bench_verified": 70.6,
@@ -1050,6 +1011,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-07",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": "2026-02-13",
@@ -1100,6 +1062,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 34860,
         "aa_intelligence_index": 14.4,
         "aa_coding_index": 12.1,
         "swe_bench_verified": 22.0,
@@ -1134,6 +1097,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": "2026-02-13",
@@ -1184,6 +1148,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 43751,
         "aa_intelligence_index": 16.7,
         "aa_coding_index": 17.4,
         "swe_bench_verified": 74.5,
@@ -1218,6 +1183,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": "2026-02-13",
@@ -1268,6 +1234,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 73133,
         "aa_intelligence_index": 33.7,
         "aa_coding_index": 48.2,
         "swe_bench_verified": 76.4,
@@ -1302,6 +1269,7 @@
         "osworld_verified": 62.2
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-02-23",
@@ -1352,6 +1320,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 58678,
         "aa_intelligence_index": 32.3,
         "aa_coding_index": 45.7,
         "swe_bench_verified": 72.0,
@@ -1386,6 +1355,7 @@
         "osworld_verified": 58.0
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-02-25",
@@ -1436,6 +1406,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 60999,
         "aa_intelligence_index": 33.8,
         "aa_coding_index": 34.9,
         "swe_bench_verified": 72.4,
@@ -1470,6 +1441,7 @@
         "osworld_verified": 56.2
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-03-03",
         "swe_bench_verified": "2026-02-25",
@@ -1520,6 +1492,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 45296,
         "aa_intelligence_index": 29.3,
         "aa_coding_index": 30.3,
         "swe_bench_verified": 69.2,
@@ -1554,6 +1527,7 @@
         "osworld_verified": 54.5
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-03-03",
         "swe_bench_verified": "2026-02-25",
@@ -1604,6 +1578,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 49135,
         "aa_intelligence_index": 21.4,
         "aa_coding_index": 28.7,
         "swe_bench_verified": null,
@@ -1638,6 +1613,7 @@
         "osworld_verified": 41.8
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-01",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -1688,6 +1664,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 44631,
         "aa_intelligence_index": 20.1,
         "aa_coding_index": 22.6,
         "swe_bench_verified": null,
@@ -1722,6 +1699,7 @@
         "osworld_verified": 35.6
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -1772,6 +1750,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 7.6,
         "aa_coding_index": 2.9,
         "swe_bench_verified": null,
@@ -1806,6 +1785,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": null,
@@ -1856,6 +1836,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 5.5,
         "aa_coding_index": 15,
         "swe_bench_verified": null,
@@ -1890,6 +1871,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -1940,6 +1922,7 @@
       },
       "context": "1m",
       "scores": {
+        "coding_index": 51349,
         "aa_intelligence_index": 25.4,
         "aa_coding_index": 37.7,
         "swe_bench_verified": 60.5,
@@ -1974,6 +1957,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-03-11",
@@ -2024,6 +2008,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 17.2,
         "aa_coding_index": 16.5,
         "swe_bench_verified": 54.4,
@@ -2058,6 +2043,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-03-11",
         "swe_bench_verified": "2026-02-23",
@@ -2109,6 +2095,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
+        "coding_index": 37029,
         "aa_intelligence_index": 14.9,
         "aa_coding_index": 20.7,
         "swe_bench_verified": 34.0,
@@ -2143,6 +2130,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-02-13",
@@ -2194,6 +2182,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
+        "coding_index": 45942,
         "aa_intelligence_index": 23.8,
         "aa_coding_index": 30.4,
         "swe_bench_verified": 62.4,
@@ -2228,6 +2217,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-02-13",
@@ -2278,6 +2268,7 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
+        "coding_index": 44707,
         "aa_intelligence_index": 14.2,
         "aa_coding_index": 14.4,
         "swe_bench_verified": 38.8,
@@ -2312,6 +2303,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": "2026-03-12",
@@ -2362,6 +2354,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "coding_index": 49489,
         "aa_intelligence_index": 19.6,
         "aa_coding_index": 26.6,
         "swe_bench_verified": null,
@@ -2396,6 +2389,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": null,
@@ -2446,6 +2440,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
+        "coding_index": 44986,
         "aa_intelligence_index": 38.1,
         "aa_coding_index": 52.6,
         "swe_bench_verified": null,
@@ -2480,6 +2475,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -2530,6 +2526,7 @@
         "url": "https://www.sarvam.ai/models"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.6,
         "aa_coding_index": 7.9,
         "swe_bench_verified": 34.0,
@@ -2564,6 +2561,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-03-27",
         "swe_bench_verified": "2026-03-27",
@@ -2614,6 +2612,7 @@
         "url": "https://www.sarvam.ai/models"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 11.9,
         "aa_coding_index": 9.8,
         "swe_bench_verified": 45.0,
@@ -2648,6 +2647,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-03-27",
         "swe_bench_verified": "2026-03-27",
@@ -2698,6 +2698,7 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
+        "coding_index": 39261,
         "aa_intelligence_index": 11.1,
         "aa_coding_index": 9.6,
         "swe_bench_verified": null,
@@ -2732,6 +2733,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-14",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": null,
@@ -2782,6 +2784,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "coding_index": 49878,
         "aa_intelligence_index": 29.4,
         "aa_coding_index": 43.4,
         "swe_bench_verified": 80.9,
@@ -2816,6 +2819,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-07-28",
@@ -2866,6 +2870,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "coding_index": 56316,
         "aa_intelligence_index": 25.7,
         "aa_coding_index": 39.3,
         "swe_bench_verified": null,
@@ -2900,6 +2905,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -2950,6 +2956,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "coding_index": 38819,
         "aa_intelligence_index": 12.2,
         "aa_coding_index": 9.4,
         "swe_bench_verified": null,
@@ -2984,6 +2991,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
@@ -3034,6 +3042,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "coding_index": 36280,
         "aa_intelligence_index": 9.7,
         "aa_coding_index": 7.2,
         "swe_bench_verified": null,
@@ -3068,6 +3077,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
@@ -3118,6 +3128,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 50768,
         "aa_intelligence_index": 31.6,
         "aa_coding_index": 41.9,
         "swe_bench_verified": 73.4,
@@ -3152,6 +3163,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-04-22",
@@ -3202,6 +3214,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "coding_index": 59866,
         "aa_intelligence_index": 37.1,
         "aa_coding_index": 53.7,
         "swe_bench_verified": 77.2,
@@ -3236,6 +3249,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-04-23",
@@ -3286,6 +3300,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
+        "coding_index": 73872,
         "aa_intelligence_index": 49.9,
         "aa_coding_index": 69.1,
         "swe_bench_verified": 79.0,
@@ -3320,6 +3335,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-07-31",
         "swe_bench_verified": "2026-04-24",
@@ -3370,6 +3386,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
+        "coding_index": 62391,
         "aa_intelligence_index": 41.2,
         "aa_coding_index": 58.8,
         "swe_bench_verified": 74.4,
@@ -3404,6 +3421,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-14",
         "aa_coding_index": "2026-07-14",
         "swe_bench_verified": "2026-04-28",
@@ -3454,6 +3472,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.7,
         "aa_coding_index": 9.5,
         "swe_bench_verified": null,
@@ -3488,6 +3507,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -3538,6 +3558,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 4.7,
         "aa_coding_index": 4.7,
         "swe_bench_verified": null,
@@ -3572,6 +3593,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-06",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": null,
@@ -3622,6 +3644,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8.9,
         "aa_coding_index": 10.4,
         "swe_bench_verified": null,
@@ -3656,6 +3679,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -3706,6 +3730,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 29.9,
         "aa_coding_index": 46.9,
         "swe_bench_verified": 77.6,
@@ -3740,6 +3765,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-05-03",
@@ -3790,6 +3816,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
+        "coding_index": 40934,
         "aa_intelligence_index": 11.1,
         "aa_coding_index": 14.4,
         "swe_bench_verified": null,
@@ -3824,6 +3851,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": null,
@@ -3874,6 +3902,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 14.9,
         "aa_coding_index": 13.8,
         "swe_bench_verified": null,
@@ -3908,6 +3937,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-07-22",
         "swe_bench_verified": null,
@@ -3958,6 +3988,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 4.2,
         "aa_coding_index": 0.7,
         "swe_bench_verified": null,
@@ -3992,6 +4023,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-19",
         "aa_coding_index": "2026-05-13",
         "swe_bench_verified": null,
@@ -4042,6 +4074,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 22.5,
         "aa_coding_index": 27.8,
         "swe_bench_verified": null,
@@ -4076,6 +4109,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": null,
@@ -4126,6 +4160,7 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
+        "coding_index": 58828,
         "aa_intelligence_index": 30.3,
         "aa_coding_index": 39.6,
         "swe_bench_verified": 76.5,
@@ -4160,6 +4195,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-14",
         "aa_coding_index": "2026-07-14",
         "swe_bench_verified": "2026-06-01",
@@ -4210,6 +4246,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 5.5,
         "aa_coding_index": 5.8,
         "swe_bench_verified": null,
@@ -4244,6 +4281,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-06",
         "aa_coding_index": "2026-07-01",
         "swe_bench_verified": null,
@@ -4294,6 +4332,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
+        "coding_index": 46984,
         "aa_intelligence_index": 19.8,
         "aa_coding_index": 36.5,
         "swe_bench_verified": 67.6,
@@ -4328,6 +4367,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-16",
         "aa_coding_index": "2026-07-06",
         "swe_bench_verified": "2026-06-10",
@@ -4378,6 +4418,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
+        "coding_index": 86806,
         "aa_intelligence_index": 51.1,
         "aa_coding_index": 68.8,
         "swe_bench_verified": null,
@@ -4412,6 +4453,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-19",
         "aa_coding_index": "2026-06-19",
         "swe_bench_verified": null,
@@ -4462,6 +4504,7 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
+        "coding_index": 65864,
         "aa_intelligence_index": 44.4,
         "aa_coding_index": 58.6,
         "swe_bench_verified": 80.5,
@@ -4496,6 +4539,7 @@
         "osworld_verified": 75.2
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-18",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": "2026-06-18",
@@ -4546,6 +4590,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8.3,
         "aa_coding_index": 5.6,
         "swe_bench_verified": null,
@@ -4580,6 +4625,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-19",
         "aa_coding_index": "2026-06-19",
         "swe_bench_verified": null,
@@ -4625,6 +4671,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 2.7,
         "aa_coding_index": 1.4,
         "swe_bench_verified": null,
@@ -4659,6 +4706,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-19",
         "aa_coding_index": "2026-06-19",
         "swe_bench_verified": null,
@@ -4708,6 +4756,7 @@
       },
       "context": "10m",
       "scores": {
+        "coding_index": 28982,
         "aa_intelligence_index": 10,
         "aa_coding_index": 8.2,
         "swe_bench_verified": null,
@@ -4742,6 +4791,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -4792,6 +4842,7 @@
       },
       "context": "1m",
       "scores": {
+        "coding_index": 34953,
         "aa_intelligence_index": 14.3,
         "aa_coding_index": 16.3,
         "swe_bench_verified": null,
@@ -4826,6 +4877,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -4876,6 +4928,7 @@
       },
       "context": "16k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 4.9,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -4910,6 +4963,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -4959,6 +5013,7 @@
         "url": "https://allenai.org/olmo"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.4,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -4993,6 +5048,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5044,6 +5100,7 @@
       },
       "context": "64k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.5,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5078,6 +5135,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5128,6 +5186,7 @@
       },
       "context": "64k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 4,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5162,6 +5221,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5212,6 +5272,7 @@
       },
       "context": "64k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 2.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5246,6 +5307,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5296,6 +5358,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 5.3,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5330,6 +5393,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5380,6 +5444,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 2.7,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5414,6 +5479,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5464,6 +5530,7 @@
       },
       "context": "512k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 18.2,
         "aa_coding_index": 25.8,
         "swe_bench_verified": 63.2,
@@ -5498,6 +5565,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-22",
         "aa_coding_index": "2026-07-22",
         "swe_bench_verified": "2026-06-25",
@@ -5548,6 +5616,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5582,6 +5651,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5632,6 +5702,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.9,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5666,6 +5737,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5716,6 +5788,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 4.1,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5750,6 +5823,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -5800,6 +5874,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 20.5,
         "aa_coding_index": null,
         "swe_bench_verified": 16.0,
@@ -5834,6 +5909,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -5884,6 +5960,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 61633,
         "aa_intelligence_index": 21.3,
         "aa_coding_index": null,
         "swe_bench_verified": 73.1,
@@ -5918,6 +5995,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -5968,6 +6046,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 49739,
         "aa_intelligence_index": 20.1,
         "aa_coding_index": null,
         "swe_bench_verified": 44.6,
@@ -6002,6 +6081,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -6052,6 +6132,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 54815,
         "aa_intelligence_index": 19.5,
         "aa_coding_index": null,
         "swe_bench_verified": 64.2,
@@ -6086,6 +6167,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -6136,6 +6218,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 51072,
         "aa_intelligence_index": 16.5,
         "aa_coding_index": null,
         "swe_bench_verified": 57.6,
@@ -6170,6 +6253,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -6220,6 +6304,7 @@
       },
       "context": "200k",
       "scores": {
+        "coding_index": 49682,
         "aa_intelligence_index": 23,
         "aa_coding_index": null,
         "swe_bench_verified": 68,
@@ -6254,6 +6339,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -6304,6 +6390,7 @@
       },
       "context": "200k",
       "scores": {
+        "coding_index": 56881,
         "aa_intelligence_index": 33.7,
         "aa_coding_index": 45.3,
         "swe_bench_verified": 73.8,
@@ -6338,6 +6425,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": "2026-06-25",
@@ -6388,6 +6476,7 @@
       },
       "context": "1m",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8.5,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6422,6 +6511,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6472,6 +6562,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 9,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6506,6 +6597,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6556,6 +6648,7 @@
       },
       "context": "512k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 18.3,
         "aa_coding_index": null,
         "swe_bench_verified": 56.0,
@@ -6590,6 +6683,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -6640,6 +6734,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 9.7,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6674,6 +6769,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6724,6 +6820,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8.2,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6758,6 +6855,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6808,6 +6906,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 3.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6842,6 +6941,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -6892,6 +6992,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 51558,
         "aa_intelligence_index": 24.7,
         "aa_coding_index": 49.8,
         "swe_bench_verified": 73.4,
@@ -6926,6 +7027,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": "2026-06-25",
@@ -6975,6 +7077,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 60.4,
@@ -7009,6 +7112,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -7059,6 +7163,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 59.4,
@@ -7093,6 +7198,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -7144,6 +7250,7 @@
       },
       "context": "1m",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 17.7,
         "aa_coding_index": null,
         "swe_bench_verified": 56,
@@ -7178,6 +7285,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -7228,6 +7336,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": 37935,
         "aa_intelligence_index": 8.6,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7262,6 +7371,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7312,6 +7422,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 7,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7346,6 +7457,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7396,6 +7508,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 5.1,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7430,6 +7543,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7480,6 +7594,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7514,6 +7629,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7564,6 +7680,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 47531,
         "aa_intelligence_index": 18.2,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7598,6 +7715,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7648,6 +7766,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 46307,
         "aa_intelligence_index": 19.6,
         "aa_coding_index": 22.1,
         "swe_bench_verified": null,
@@ -7682,6 +7801,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-02",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": null,
@@ -7732,6 +7852,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 53988,
         "aa_intelligence_index": 18,
         "aa_coding_index": null,
         "swe_bench_verified": 69.6,
@@ -7766,6 +7887,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-25",
@@ -7816,6 +7938,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 13.4,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7850,6 +7973,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7900,6 +8024,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7934,6 +8059,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -7984,6 +8110,7 @@
       },
       "context": "64k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 2.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8018,6 +8145,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8068,6 +8196,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 15.1,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8102,6 +8231,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8152,6 +8282,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 9.8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8186,6 +8317,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8236,6 +8368,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 45646,
         "aa_intelligence_index": 15.9,
         "aa_coding_index": 20.1,
         "swe_bench_verified": null,
@@ -8270,6 +8403,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -8320,6 +8454,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": 38032,
         "aa_intelligence_index": 9,
         "aa_coding_index": 9.7,
         "swe_bench_verified": null,
@@ -8354,6 +8489,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": null,
@@ -8404,6 +8540,7 @@
       },
       "context": "256k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 6.8,
         "aa_coding_index": 4.8,
         "swe_bench_verified": null,
@@ -8438,6 +8575,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-31",
         "aa_coding_index": "2026-06-25",
         "swe_bench_verified": null,
@@ -8488,6 +8626,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 17,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8522,6 +8661,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8572,6 +8712,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 36982,
         "aa_intelligence_index": 7.4,
         "aa_coding_index": 10.1,
         "swe_bench_verified": null,
@@ -8606,6 +8747,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": null,
@@ -8656,6 +8798,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": 31845,
         "aa_intelligence_index": 1.1,
         "aa_coding_index": 2.7,
         "swe_bench_verified": null,
@@ -8690,6 +8833,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": "2026-07-02",
         "swe_bench_verified": null,
@@ -8740,6 +8884,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 1,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8774,6 +8919,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8824,6 +8970,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 2.4,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8858,6 +9005,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8908,6 +9056,7 @@
       },
       "context": "32k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 3,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8942,6 +9091,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -8988,6 +9138,7 @@
       },
       "context": "128k",
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 8,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -9022,6 +9173,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-25",
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -9069,6 +9221,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "coding_index": 52618,
         "aa_intelligence_index": 21.8,
         "aa_coding_index": 31,
         "swe_bench_verified": null,
@@ -9103,6 +9256,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-27",
         "aa_coding_index": "2026-07-27",
         "swe_bench_verified": null,
@@ -9153,6 +9307,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
+        "coding_index": 43176,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 69.4,
@@ -9187,6 +9342,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-29",
@@ -9237,6 +9393,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
+        "coding_index": 57836,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 75.6,
@@ -9271,6 +9428,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-29",
@@ -9321,6 +9479,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
+        "coding_index": 69642,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 82.4,
@@ -9355,6 +9514,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-06-29",
@@ -9405,6 +9565,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 37.8,
         "aa_coding_index": 49.3,
         "swe_bench_verified": 70.7,
@@ -9439,6 +9600,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-06-29",
         "aa_coding_index": "2026-06-29",
         "swe_bench_verified": "2026-06-29",
@@ -9494,6 +9656,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "coding_index": 47769,
         "aa_intelligence_index": 13.5,
         "aa_coding_index": 19.7,
         "swe_bench_verified": null,
@@ -9528,6 +9691,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-03",
         "aa_coding_index": "2026-07-03",
         "swe_bench_verified": null,
@@ -9578,6 +9742,7 @@
         "url": "https://github.com/InternScience"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -9612,6 +9777,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": null,
@@ -9662,6 +9828,7 @@
         "url": "https://poolside.ai/"
       },
       "scores": {
+        "coding_index": 43347,
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": 69.9,
@@ -9696,6 +9863,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": null,
         "aa_coding_index": null,
         "swe_bench_verified": "2026-07-14",
@@ -9746,6 +9914,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
+        "coding_index": 62205,
         "aa_intelligence_index": 40.7,
         "aa_coding_index": 52.1,
         "swe_bench_verified": 77.6,
@@ -9780,6 +9949,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-16",
         "aa_coding_index": "2026-07-16",
         "swe_bench_verified": "2026-07-16",
@@ -9830,6 +10000,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
+        "coding_index": 61107,
         "aa_intelligence_index": 44.3,
         "aa_coding_index": 59.4,
         "swe_bench_verified": 80.6,
@@ -9864,6 +10035,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": "2026-07-20",
@@ -9914,6 +10086,7 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
+        "coding_index": 58120,
         "aa_intelligence_index": 33.5,
         "aa_coding_index": 45.3,
         "swe_bench_verified": null,
@@ -9948,6 +10121,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": null,
@@ -9998,6 +10172,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "coding_index": 63281,
         "aa_intelligence_index": 32.7,
         "aa_coding_index": null,
         "swe_bench_verified": 71.3,
@@ -10032,6 +10207,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": null,
         "swe_bench_verified": "2026-07-20",
@@ -10082,6 +10258,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "coding_index": 45631,
         "aa_intelligence_index": 35.4,
         "aa_coding_index": 46.8,
         "swe_bench_verified": 76.8,
@@ -10116,6 +10293,7 @@
         "osworld_verified": 63.3
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": "2026-07-20",
@@ -10166,6 +10344,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "coding_index": 58299,
         "aa_intelligence_index": 44.2,
         "aa_coding_index": 61.8,
         "swe_bench_verified": 80.2,
@@ -10200,6 +10379,7 @@
         "osworld_verified": 73.1
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": "2026-07-20",
@@ -10250,6 +10430,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "coding_index": 64638,
         "aa_intelligence_index": 41.9,
         "aa_coding_index": 60.8,
         "swe_bench_verified": null,
@@ -10284,6 +10465,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": null,
@@ -10334,6 +10516,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "coding_index": 89136,
         "aa_intelligence_index": 57.1,
         "aa_coding_index": 76.2,
         "swe_bench_verified": 93.4,
@@ -10368,6 +10551,7 @@
         "osworld_verified": 84.8
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": "2026-07-20",
@@ -10418,6 +10602,7 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
+        "coding_index": null,
         "aa_intelligence_index": 16.1,
         "aa_coding_index": 9.9,
         "swe_bench_verified": null,
@@ -10452,6 +10637,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": null,
         "aa_intelligence_index": "2026-07-27",
         "aa_coding_index": "2026-07-27",
         "swe_bench_verified": null,
@@ -10502,6 +10688,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "coding_index": 63613,
         "aa_intelligence_index": 37.2,
         "aa_coding_index": 56.8,
         "swe_bench_verified": null,
@@ -10536,6 +10723,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-07-28",
         "swe_bench_verified": null,
@@ -10586,6 +10774,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "coding_index": 57639,
         "aa_intelligence_index": 42.2,
         "aa_coding_index": 60.2,
         "swe_bench_verified": 78.9,
@@ -10620,6 +10809,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-28",
         "aa_coding_index": "2026-07-28",
         "swe_bench_verified": "2026-07-28",
@@ -10670,6 +10860,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
+        "coding_index": 63480,
         "aa_intelligence_index": 40.2,
         "aa_coding_index": 52.9,
         "swe_bench_verified": 80.2,
@@ -10704,6 +10895,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
+        "coding_index": "2026-08-03",
         "aa_intelligence_index": "2026-07-30",
         "aa_coding_index": "2026-07-30",
         "swe_bench_verified": "2026-07-30",

@@ -62,6 +62,7 @@ from _huggingface_mapping import (
     fetch_huggingface_benchmark_names,
     load_reviewed_hf_labels,
 )
+from _scores import editable_benchmarks
 from _llmstats_mapping import (
     add_llmstats_mapping,
     fetch_llmstats_model_names,
@@ -536,7 +537,7 @@ def maybe_add_llmstats_benchmark_mapping(doc: dict[str, Any], interactive: bool)
     if not interactive:
         return
 
-    benchmark_keys = sorted(doc["benchmarks"].keys())
+    benchmark_keys = sorted(editable_benchmarks(doc).keys())
 
     try:
         llmstats_labels = fetch_llmstats_benchmark_names()
@@ -579,7 +580,7 @@ def maybe_add_huggingface_mapping(doc: dict[str, Any], interactive: bool) -> Non
     if not interactive:
         return
 
-    benchmark_keys = sorted(doc["benchmarks"].keys())
+    benchmark_keys = sorted(editable_benchmarks(doc).keys())
 
     try:
         hf_labels = fetch_huggingface_benchmark_names()
