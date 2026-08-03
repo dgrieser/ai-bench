@@ -76,6 +76,7 @@ Each model object contains:
 │  update_*_mapping.py: sync mappings from sources        │
 │  _scores.py: score update logic & timestamps            │
 │  _openness.py: model openness classification            │
+│  _params.py / _context.py: model size & window fields   │
 └────────────────┬────────────────────────────────────────┘
                  │
 ┌────────────────▼────────────────────────────────────────┐
@@ -310,6 +311,27 @@ The `_openness.py` module classifies models as:
 
 This information is stored in each model's `weights` metadata and affects aggregation logic (some analyses exclude closed models).
 
+## Model Size and Context Fields
+
+`params` and `context` come from Artificial Analysis' model pages, parsed out of the
+`currentModel` payload (`parameters`, `inferenceParametersActiveBillions`,
+`contextWindowTokens`) by `artificialanalysis.py`. They are handled differently on
+purpose:
+
+- **`context` is refreshed** on every `update.py` run. Sources report raw token counts,
+  so `_context.py` snaps them to the advertised size (`262144` → `256k`, `131072` →
+  `128k`, `1048576` → `1m`) before comparing.
+- **`params` is only filled when missing**, never refreshed. AA reports *measured*
+  counts, which sit just off the size a creator advertises (Qwen3-32B measures 32.8B,
+  Gemma 4 E2B measures 5.1B/A2.3B). Refreshing would overwrite the advertised names
+  the site displays, so a filled value is a starting point for `edit.py`, not a
+  maintained one.
+- **Hugging Face is the `params` fallback** (`_params.py`), used for models AA has no
+  page for. Its API carries only `safetensors.total`, so those models get a total
+  ("562B") and the `-A…` active half stays a manual edit.
+
+As with scores, neither field is ever overwritten with `null`.
+
 ## Data Quality Features
 
 - **Model deduplication**: Same model across multiple benchmarks merged under one slug
@@ -372,6 +394,8 @@ ai-bench/
 │
 ├── _scores.py                  # Score timestamps, derived-column helper
 ├── _openness.py                # Model openness classification
+├── _params.py                  # params field: AA counts, HF fallback (see below)
+├── _context.py                 # context field: token counts → advertised sizes
 ├── check_new.py                # Detect new/dismissed models
 ├── fill_source_urls.py         # Utility for URLs
 ├── sync_score_dates.py         # Timestamp synchronization

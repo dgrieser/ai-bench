@@ -14,11 +14,15 @@ import requests
 from tabulate import tabulate
 import yaml
 
+from _context import format_context_tokens, snap_context_tokens
+from _params import format_params
+
 API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models"
 FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
 _PAGE_METRICS_CACHE = {}
 _CONTEXT_ENABLED = True
+_PARAMS_ENABLED = True
 _MMMU_PRO_ENABLED = True
 _VERBOSE = False
 CACHE_PATH = os.path.expanduser("~/.cache/artificialanalysis/models.json")
@@ -66,22 +70,56 @@ def _normalize_page_text(text: str):
     return normalized
 
 
-def _parse_context_window(text: str):
+def _current_model_chunk(text: str, slug: str):
+    # The page's own record lives in the "currentModel" payload; the rest of the
+    # page carries comparison models with the same keys, so anchor on that
+    # payload and confirm the slug before reading anything out of it.
+    anchor = text.find('"currentModel":')
+    if anchor == -1 or f'"slug":"{slug}"' not in text[anchor : anchor + 2000]:
+        anchor = text.find(f'"slug":"{slug}"')
+    if anchor == -1:
+        return ""
+    return text[anchor : anchor + 2000]
+
+
+def _parse_context_window(text: str, slug: str = ""):
     m = re.search(r"Context window.+?<span[^>]*>([0-9]+[kmb])", text, re.IGNORECASE)
     if m:
         return m.group(1)
-    # RSC payloads expose raw token counts instead of the rendered label.
-    m = re.search(r'"context_window_tokens"\s*:\s*([0-9]+)', text, re.IGNORECASE)
-    if m:
-        tokens = int(m.group(1))
-        if tokens >= 1_000_000_000:
-            return f"{tokens // 1_000_000_000}b"
-        if tokens >= 1_000_000:
-            return f"{tokens // 1_000_000}m"
-        if tokens >= 1_000:
-            return f"{tokens // 1_000}k"
-        return str(tokens)
-    return ""
+
+    # RSC payloads expose raw token counts instead of the rendered label, as
+    # "contextWindowTokens" on the model record and "context_window_tokens"
+    # elsewhere. Snap them back to the advertised size (131072 -> 128k).
+    tokens = None
+    chunk = _current_model_chunk(text, slug) if slug else ""
+    if chunk:
+        m = re.search(r'"contextWindowTokens":([0-9]+)', chunk)
+        if m:
+            tokens = int(m.group(1))
+    if tokens is None:
+        m = re.search(r'"context_window_tokens"\s*:\s*([0-9]+)', text, re.IGNORECASE)
+        if m:
+            tokens = int(m.group(1))
+    if tokens is None or tokens <= 0:
+        return ""
+
+    return format_context_tokens(snap_context_tokens(tokens))
+
+
+def _parse_params(text: str, slug: str):
+    chunk = _current_model_chunk(text, slug)
+    if not chunk:
+        return ""
+
+    match = re.search(
+        r'"parameters":(null|[0-9.]+),"inferenceParametersActiveBillions":(null|[0-9.]+)',
+        chunk,
+    )
+    if not match:
+        return ""
+
+    total, active = (None if g == "null" else g for g in match.groups())
+    return format_params(total, active)
 
 
 def _canonical_hf_url(url: str) -> str:
@@ -243,11 +281,11 @@ def _parse_metrics_block(text: str, slug: str):
 
 def _fetch_page_metrics(slug: str, creator_name: str = ""):
     if not slug:
-        return {"context_window": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+        return {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
     if slug in _PAGE_METRICS_CACHE:
         return _PAGE_METRICS_CACHE[slug]
 
-    result = {"context_window": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+    result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
     url = MODEL_PAGE_URL.format(slug)
     try:
         if _VERBOSE:
@@ -258,7 +296,8 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
         if resp.status_code != 200:
             _PAGE_METRICS_CACHE[slug] = result
             return result
-        result["context_window"] = _parse_context_window(resp.text)
+        result["context_window"] = _parse_context_window(resp.text, slug)
+        result["params"] = _parse_params(resp.text, slug)
         result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
         result["creator"] = _parse_creator(resp.text, creator_name)
         metrics = _parse_metrics_block(resp.text, slug)
@@ -276,6 +315,12 @@ def _extract_context_window(m: dict):
     if not _CONTEXT_ENABLED:
         return ""
     return _fetch_page_metrics(m.get("slug", "")).get("context_window", "")
+
+
+def _extract_params(m: dict):
+    if not _PARAMS_ENABLED:
+        return ""
+    return _fetch_page_metrics(m.get("slug", "")).get("params", "")
 
 
 def _extract_creator_name(m: dict):
@@ -387,6 +432,7 @@ def _enrich_structured_metrics(models):
                 m[key] = val
 
         context = _extract_context_window(m)
+        params = _extract_params(m)
         hugging_face_url = _extract_hugging_face_url(m)
         page_creator = _extract_page_creator(m)
         if isinstance(m.get("model_creator"), dict):
@@ -398,13 +444,12 @@ def _enrich_structured_metrics(models):
         if "evaluations" in m:
             reordered = {}
             for key, value in m.items():
-                if key == "url":
-                    continue
-                if key == "context":
+                if key in {"url", "params", "context"}:
                     continue
                 if key == "evaluations":
                     if model_url:
                         reordered["url"] = model_url
+                    reordered["params"] = params
                     reordered["context"] = context
                 reordered[key] = value
             m.clear()
@@ -412,6 +457,7 @@ def _enrich_structured_metrics(models):
         else:
             if model_url:
                 m["url"] = model_url
+            m["params"] = params
             m["context"] = context
 
 
@@ -503,6 +549,7 @@ def _print_table(models, output):
         ("Name", lambda m: m.get("slug", "")),
         ("Creator", _extract_creator_name),
         ("Creator URL", _extract_creator_url),
+        ("Parameters", _extract_params),
         ("Context Window", _extract_context_window),
         ("Hugging Face", _extract_hugging_face_url),
         ("Intelligence Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
@@ -586,6 +633,11 @@ def main():
         help="skip context window retrieval from model pages",
     )
     parser.add_argument(
+        "--no-params",
+        action="store_true",
+        help="skip parameter count retrieval from model pages",
+    )
+    parser.add_argument(
         "--no-mmmu-pro",
         action="store_true",
         help="skip MMMU Pro retrieval from model pages",
@@ -612,12 +664,15 @@ def main():
     args = parser.parse_args()
     
     global _CONTEXT_ENABLED
+    global _PARAMS_ENABLED
     global _MMMU_PRO_ENABLED
     global _VERBOSE
     if args.verbose:
         _VERBOSE = True
     if args.no_context_window:
         _CONTEXT_ENABLED = False
+    if args.no_params:
+        _PARAMS_ENABLED = False
     if args.no_mmmu_pro:
         _MMMU_PRO_ENABLED = False
 
