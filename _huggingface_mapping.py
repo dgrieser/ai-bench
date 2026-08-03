@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import PENDING
 from _prompts import freeze_decisions
 
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
@@ -62,12 +63,16 @@ def _load_raw_mapping(path: Path = HF_MAPPING) -> dict[str, str]:
 
 def load_hf_to_key_mapping(path: Path = HF_MAPPING) -> dict[str, str]:
     """Real HF label -> llm.json key mappings (excludes unmappable entries)."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in (UNMAPPABLE, PENDING)}
 
 
 def load_reviewed_hf_labels(path: Path = HF_MAPPING) -> set[str]:
-    """All HF labels already reviewed, including ones recorded as unmappable."""
-    return set(_load_raw_mapping(path))
+    """All HF labels already reviewed, excluding ones still marked __pending__."""
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if value != PENDING
+    }
 
 
 def write_hf_to_key_mapping(mapping: dict[str, str], path: Path = HF_MAPPING) -> None:

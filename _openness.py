@@ -45,8 +45,15 @@ UNMAPPABLE = "__unmappable__"
 # machine-made decisions can be re-reviewed.
 CLOSED_WEIGHTS = "__closed_weights__"
 
+# Sentinel written by propose.py for a source name it could not resolve with
+# confidence. Unlike the two above it is NOT a decision: the reviewed-set loaders
+# skip it, so a proposal PR that gets merged with one still in place leaves the
+# name to be asked again. That is what makes the suggestion buttons in the PR
+# safe -- ignoring one costs nothing.
+PENDING = "__pending__"
+
 # Mapping values that are markers rather than llm.json model slugs.
-SENTINELS = frozenset({UNMAPPABLE, CLOSED_WEIGHTS})
+SENTINELS = frozenset({UNMAPPABLE, CLOSED_WEIGHTS, PENDING})
 
 CACHE_PATH = os.path.expanduser("~/.cache/ai-bench/openness.json")
 CACHE_TTL_SECONDS = 12 * 3600

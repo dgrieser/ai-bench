@@ -20,6 +20,7 @@ on:
 permissions:
   contents: write
   issues: write
+  pull-requests: write
 
 concurrency:
   group: update-benchmarks
@@ -40,10 +41,13 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # Fails fast, before any network work: a broken freeze guard would let the
-      # run bury source names as __unmappable__ with nobody ever prompted.
-      - name: Check collect mode records nothing
-        run: ./test_prompts.py
+      # Fails fast, before any network work. A broken freeze guard would let the
+      # run bury source names as __unmappable__ with nobody ever prompted, and a
+      # loosened match tier would commit wrong mappings into the proposal PR.
+      - name: Check collect mode and the matcher
+        run: |
+          ./test_prompts.py
+          ./test_propose.py
 
       # The openness index has a 12h TTL, so the daily run always rebuilds it
       # from its three sources; this only spares re-fetching when a run is
@@ -92,41 +96,81 @@ jobs:
                      -m "${COUNT} prompt(s) queued for manual review."
           git push
 
-      - name: Update the pending-prompts issue
+      # A proposal PR, not an issue: the mapping questions become a reviewable
+      # diff with clickable suggestions. Skipped entirely while one is already
+      # open, so a force-push can never discard review work in progress.
+      - name: Propose the pending mappings
+        id: propose
+        if: ${{ !inputs.dry_run && steps.pending.outputs.count != '0' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+          BRANCH: chore/mapping-proposals
+        run: |
+          open_pr=$(gh pr list --head "$BRANCH" --state open --limit 1 \
+                      --json number --jq '.[0].number // empty')
+          if [ -n "$open_pr" ]; then
+            echo "PR #$open_pr is still open; not proposing again." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+
+          ./propose.py pending-prompts.jsonl --apply \
+            --plan "$RUNNER_TEMP/plan.json" --body "$RUNNER_TEMP/body.md"
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing proposable in the queue." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git add -A
+          git commit -m "chore(mappings): propose mappings for the pending queue"
+          git push --force origin "$BRANCH"
+
+          gh pr create --base main --head "$BRANCH" \
+            --title "Proposed benchmark mappings" \
+            --body-file "$RUNNER_TEMP/body.md" --assignee dgrieser \
+            --label pending-prompts
+          # Queried rather than scraped out of the create output.
+          num=$(gh pr list --head "$BRANCH" --state open --limit 1 \
+                  --json number --jq '.[0].number')
+          echo "pr=$num" >> "$GITHUB_OUTPUT"
+          echo "Opened PR #$num." >> "$GITHUB_STEP_SUMMARY"
+
+      # One review carrying every suggestion, so it is a single notification.
+      - name: Attach the mapping suggestions
+        if: ${{ steps.propose.outputs.pr != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          count=$(jq '.comments | length' "$RUNNER_TEMP/plan.json")
+          if [ "$count" -eq 0 ]; then
+            echo "No suggestions to attach." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          jq '{event: "COMMENT",
+               body: "Each parked line below has a suggestion you can commit directly. Ignoring one is safe: `__pending__` records nothing and the name is queued again next run.",
+               comments: .comments}' \
+            "$RUNNER_TEMP/plan.json" > "$RUNNER_TEMP/review.json"
+          gh api -X POST \
+            "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.propose.outputs.pr }}/reviews" \
+            --input "$RUNNER_TEMP/review.json" >/dev/null
+          echo "Attached $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
+
+      # The queue now lives in the proposal PR; retire the old issue channel.
+      - name: Close the superseded pending-prompts issue
         if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COUNT: ${{ steps.pending.outputs.count }}
         run: |
-          pending="$RUNNER_TEMP/pending.md"
-          live="$RUNNER_TEMP/live.md"
           num=$(gh issue list --label pending-prompts --state open --limit 1 \
                   --json number --jq '.[0].number // empty')
-          if [ "$COUNT" -eq 0 ]; then
-            if [ -n "$num" ]; then
-              gh issue close "$num" --comment "Queue empty: everything is mapped."
-            fi
-            exit 0
+          if [ -n "$num" ]; then
+            gh issue close "$num" --comment \
+              "Superseded: pending mappings now arrive as a proposal PR with commitable suggestions."
           fi
-          # Body edits do not notify, so only comment when the queue really moved.
-          # Normalised first: the API round-trip changes line endings and the
-          # trailing newline, neither of which means the queue changed.
-          # A failed read (issue deleted or transferred since the list above)
-          # falls through to creating a fresh one rather than failing the run.
-          norm() { printf '%s\n' "$(tr -d '\r' < "$1")"; }
-          if [ -z "$num" ] || ! gh issue view "$num" --json body --jq .body > "$live.raw"; then
-            gh issue create --title "Pending benchmark review" \
-              --label pending-prompts --assignee dgrieser --body-file "$pending"
-            exit 0
-          fi
-          norm "$live.raw" > "$live"
-          norm "$pending" > "$pending.cmp"
-          if diff -q "$live" "$pending.cmp" >/dev/null; then
-            echo "Queue unchanged, issue #$num left alone." >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          gh issue edit "$num" --body-file "$pending"
-          gh issue comment "$num" --body "Queue changed: **$COUNT** question(s) pending."
 
       - name: Fail if a step of update-all failed
         if: ${{ steps.refresh.outcome != 'success' }}

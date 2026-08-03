@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _openness import CLOSED_WEIGHTS, SENTINELS, UNMAPPABLE
+from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
 
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
@@ -107,7 +107,7 @@ def load_reviewed_llmstats_names(
     return {
         name
         for name, value in _load_raw_mapping(path).items()
-        if include_closed or value != CLOSED_WEIGHTS
+        if value != PENDING and (include_closed or value != CLOSED_WEIGHTS)
     }
 
 
@@ -157,14 +157,18 @@ def load_llmstats_benchmark_to_key_mapping(
     path: Path = LLMSTATS_BENCHMARK_MAPPING,
 ) -> dict[str, str]:
     """Real llm-stats benchmark label -> llm.json key mappings (excludes unmappable)."""
-    return {k: v for k, v in _load_raw_mapping(path).items() if v != UNMAPPABLE}
+    return {k: v for k, v in _load_raw_mapping(path).items() if v not in (UNMAPPABLE, PENDING)}
 
 
 def load_reviewed_llmstats_benchmarks(
     path: Path = LLMSTATS_BENCHMARK_MAPPING,
 ) -> set[str]:
-    """All llm-stats benchmark labels already reviewed, including unmappable entries."""
-    return set(_load_raw_mapping(path))
+    """All llm-stats benchmark labels already reviewed, excluding ones still marked __pending__."""
+    return {
+        name
+        for name, value in _load_raw_mapping(path).items()
+        if value != PENDING
+    }
 
 
 def write_llmstats_benchmark_mapping(

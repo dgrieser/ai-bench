@@ -20,26 +20,37 @@ from pathlib import Path
 
 import _prompts
 
-# (module, add_mapping, add_unmappable, add_closed_weights or None)
-SOURCES = [
-    ("_swe_rebench_mapping", "add_rebench_mapping", "add_rebench_unmappable", "add_rebench_closed_weights"),
-    ("_osworld_mapping", "add_osworld_mapping", "add_osworld_unmappable", "add_osworld_closed_weights"),
-    ("_deepswe_mapping", "add_deepswe_mapping", "add_deepswe_unmappable", "add_deepswe_closed_weights"),
-    ("_frontierswe_mapping", "add_frontierswe_mapping", "add_frontierswe_unmappable", "add_frontierswe_closed_weights"),
-    ("_swe_atlas_mapping", "add_swe_atlas_mapping", "add_swe_atlas_unmappable", "add_swe_atlas_closed_weights"),
-    ("_evals_report_mapping", "add_evals_report_mapping", "add_evals_report_unmappable", "add_evals_report_closed_weights"),
-    ("_swe_marathon_mapping", "add_swe_marathon_mapping", "add_swe_marathon_unmappable", "add_swe_marathon_closed_weights"),
-    ("_spheron_mapping", "add_spheron_mapping", "add_spheron_unmappable", None),
-    ("_huggingface_mapping", "add_hf_mapping", "add_hf_unmappable", None),
-    ("_llmstats_mapping", "add_llmstats_mapping", "add_llmstats_unmappable", "add_llmstats_closed_weights"),
-    ("_llmstats_mapping", "add_llmstats_benchmark_mapping", "add_llmstats_benchmark_unmappable", None),
-    ("_artificialanalysis_mapping", "add_aa_mapping", None, None),
-]
+HERE = Path(__file__).resolve().parent
+
+# Discovered, not listed. A hand-maintained table silently missed
+# _toolathlon_mapping.py when that source was added, which defeated the point of
+# the freeze test -- so the modules and their writers are found on disk instead.
+IGNORED_WRITERS = {
+    # Takes a list of slugs rather than one value; covered separately.
+    "add_ignored_aa_suggestions",
+}
 
 
-def path_kwarg(func) -> str:
-    """The keyword these writers take their mapping path under (path/mapping_path)."""
-    return list(inspect.signature(func).parameters)[-1]
+def mapping_modules() -> list[str]:
+    return sorted(p.stem for p in HERE.glob("_*_mapping.py"))
+
+
+def mapping_writers():
+    """(label, func, arity, path_kwarg) for every add_* writer in every module."""
+    for module_name in mapping_modules():
+        module = importlib.import_module(module_name)
+        for attr in sorted(vars(module)):
+            if not attr.startswith("add_") or attr in IGNORED_WRITERS:
+                continue
+            func = getattr(module, attr)
+            if not callable(func) or getattr(func, "__module__", None) != module_name:
+                continue
+            params = list(inspect.signature(func).parameters)
+            # add_x_mapping(key, value, path=...) vs add_x_unmappable(key, path=...)
+            arity = len(params) - 1
+            if arity not in (1, 2):
+                continue
+            yield f"{module_name}.{attr}", func, arity, params[-1]
 
 
 class CollectModeBase(unittest.TestCase):
@@ -138,13 +149,14 @@ class TestLoad(CollectModeBase):
 
 class TestFreezeInvariant(CollectModeBase):
     def writers(self):
-        for module_name, add_map, add_unmap, add_closed in SOURCES:
-            module = importlib.import_module(module_name)
-            for attr, arity in ((add_map, 2), (add_unmap, 1), (add_closed, 1)):
-                if attr is None:
-                    continue
-                func = getattr(module, attr)
-                yield f"{module_name}.{attr}", func, arity, path_kwarg(func)
+        return mapping_writers()
+
+    def test_every_module_contributes_a_writer(self) -> None:
+        # Guards the discovery itself: if a module stops matching the add_* shape
+        # its writers would silently drop out of both tests below.
+        covered = {label.split(".")[0] for label, *_ in self.writers()}
+        self.assertEqual(covered, set(mapping_modules()))
+        self.assertGreaterEqual(len(list(self.writers())), 2 * len(mapping_modules()))
 
     def test_writers_persist_outside_collect_mode(self) -> None:
         for label, func, arity, kw in self.writers():
