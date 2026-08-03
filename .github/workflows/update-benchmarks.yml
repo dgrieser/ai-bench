@@ -1,26 +1,43 @@
 name: update benchmarks
 
-# Daily unattended `update-all`. Scores land in llm.json and are committed to
-# main (which republishes the GitHub Pages site). Anything that needs a human --
-# a newly released model, an unrecognised source name -- is queued instead of
-# guessed, and collected into a rolling `pending-prompts` issue. Nothing is ever
-# recorded as answered, so the questions survive until you answer them locally.
+# Unattended `update-all`. Scores land in llm.json and are committed to main
+# (which republishes the GitHub Pages site). Anything that needs a human -- a
+# newly released model, an unrecognised source name -- is queued instead of
+# guessed, and arrives as a proposal PR with commitable suggestions. Nothing is
+# ever recorded as answered, so the questions survive until you answer them.
 
 on:
   schedule:
     - cron: "17 4 * * *"
     - cron: "17 16 * * *"
+
+  # A merged mapping change earns an immediate refresh rather than waiting for
+  # the next cron: the new mappings pull in scores for models that were unmapped
+  # until now, and the run re-collects the queue, so closing one proposal PR
+  # opens the next batch straight away. Covers hand-written mapping PRs too.
+  #
+  # This cannot run away: the workflow's own commits and PRs are made with
+  # GITHUB_TOKEN, and those never trigger workflow events. One human merge is
+  # one run.
+  pull_request:
+    types: [closed]
+    paths:
+      - "*mapping*.json"
+      - "llm.json"
+
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Run everything but do not commit or touch the issue"
+        description: "Run everything but do not commit, propose, or push"
         type: boolean
         default: false
 
 permissions:
   contents: write
-  issues: write
   pull-requests: write
+  # Kept even though the issue channel is retired: --label and --assignee on a
+  # PR go through the issues API, and losing them would break the propose step.
+  issues: write
 
 concurrency:
   group: update-benchmarks
@@ -28,10 +45,23 @@ concurrency:
 
 jobs:
   update:
+    # For a pull_request event: merges only, and only from this repo -- a fork
+    # PR's GITHUB_TOKEN is read-only and could not push the refreshed scores.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.merged == true &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
+      # A pull_request event would otherwise check out the PR's merge ref; this
+      # run wants the base branch it was just merged into.
       - uses: actions/checkout@v4
+        with:
+          ref: >-
+            ${{ github.event_name == 'pull_request'
+                && github.event.pull_request.base.ref
+                || github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:
@@ -84,6 +114,11 @@ jobs:
         if: ${{ !inputs.dry_run }}
         env:
           COUNT: ${{ steps.pending.outputs.count }}
+          # A merge-triggered run labelled "daily" would be a lie in the log.
+          REASON: >-
+            ${{ github.event_name == 'pull_request'
+                && format('Refreshed after merging #{0}.', github.event.pull_request.number)
+                || 'Scheduled refresh.' }}
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "No data changed." >> "$GITHUB_STEP_SUMMARY"
@@ -92,8 +127,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "chore(data): daily benchmark refresh" \
-                     -m "${COUNT} prompt(s) queued for manual review."
+          git commit -m "chore(data): benchmark refresh" \
+                     -m "${REASON} ${COUNT} prompt(s) queued for manual review."
           git push
 
       # A proposal PR, not an issue: the mapping questions become a reviewable
@@ -158,19 +193,6 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.propose.outputs.pr }}/reviews" \
             --input "$RUNNER_TEMP/review.json" >/dev/null
           echo "Attached $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
-
-      # The queue now lives in the proposal PR; retire the old issue channel.
-      - name: Close the superseded pending-prompts issue
-        if: ${{ !inputs.dry_run }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          num=$(gh issue list --label pending-prompts --state open --limit 1 \
-                  --json number --jq '.[0].number // empty')
-          if [ -n "$num" ]; then
-            gh issue close "$num" --comment \
-              "Superseded: pending mappings now arrive as a proposal PR with commitable suggestions."
-          fi
 
       - name: Fail if a step of update-all failed
         if: ${{ steps.refresh.outcome != 'success' }}
