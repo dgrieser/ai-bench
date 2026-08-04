@@ -43,3 +43,23 @@ def stamp_score_updated(model: dict[str, Any], key: str) -> None:
             f"({type(updated).__name__}); cannot stamp {key!r}"
         )
     updated[key] = date.today().isoformat()
+
+
+def stamp_score_source(model: dict[str, Any], key: str, url: str | None) -> None:
+    """Record the page one benchmark score was read from.
+
+    None is a valid value: a hand edit (edit.py) has no source page, so it
+    clears whatever attribution the previous automated write left behind.
+
+    Raises TypeError if the model carries a non-dict "scores_source" so
+    corrupt data surfaces loudly instead of scores being written with the
+    source silently dropped.
+    """
+    sources = model.setdefault("scores_source", {})
+    if not isinstance(sources, dict):
+        name = model.get("name", "<unknown>")
+        raise TypeError(
+            f"model {name!r} has a non-dict 'scores_source' "
+            f"({type(sources).__name__}); cannot stamp {key!r}"
+        )
+    sources[key] = url

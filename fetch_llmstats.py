@@ -21,6 +21,9 @@ import urllib.request
 from _openness import license_open
 
 URL = "https://api.zeroeval.com/leaderboard/models/full"
+# Human-facing page publishing the same data; stored as the per-score source
+# URL because the API host is not a page a reader can open.
+LEADERBOARD_URL = "https://llm-stats.com/leaderboards/open-llm-leaderboard"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) ai-bench-fetcher/1.0"
 
 _SCORE_SUFFIX = "_score"

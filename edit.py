@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 import derive_coding_index
-from _scores import editable_benchmarks, stamp_score_updated
+from _scores import editable_benchmarks, stamp_score_source, stamp_score_updated
 
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
@@ -614,6 +614,9 @@ def main() -> int:
                 if scores.get(key) != value:
                     scores[key] = value
                     stamp_score_updated(model, key)
+                    # A hand edit has no source page; whatever attribution the
+                    # previous automated write left behind is now stale.
+                    stamp_score_source(model, key, None)
                     changed += 1
                     model_changed = True
                     scores_changed = True
@@ -645,6 +648,9 @@ def main() -> int:
         if scores.get(key) != value:
             scores[key] = value
             stamp_score_updated(model, key)
+            # A hand edit has no source page; whatever attribution the
+            # previous automated write left behind is now stale.
+            stamp_score_source(model, key, None)
             changed += 1
             scores_changed = True
     for key, value in metadata_updates.items():

@@ -54,7 +54,7 @@ TBENCH_2_1_LEADERBOARD = "https://www.tbench.ai/leaderboard/terminal-bench/2.1"
 COVERED_BY = [
     (
         fetch_llmstats.URL,
-        "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        fetch_llmstats.LEADERBOARD_URL,
     ),
     (
         artificialanalysis.API_URL,
