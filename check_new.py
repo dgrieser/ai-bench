@@ -2,8 +2,9 @@
 """Find open-weights models on Artificial Analysis not yet in llm.json.
 
 "New" is decided by AA release_date: by default, models released within the
-last 30 days (--days). Slugs already in llm.json, slugs listed in the
-ignored-mapping file, and slugs previously dismissed here are filtered out.
+last 30 days (--days). Slugs already in llm.json, slugs an llm.json model
+already reads on AA, slugs listed in the ignored-mapping file, and slugs
+previously dismissed here are filtered out.
 
 The candidates are printed, then (when run interactively) each is offered for
 addition:
@@ -29,6 +30,7 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import _prompts
+from _artificialanalysis_mapping import mapped_aa_slugs
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_LLM_JSON = HERE / "llm.json"
@@ -179,7 +181,12 @@ def main() -> int:
     else:
         cutoff = date.today() - timedelta(days=args.days)
 
-    known = existing_slugs(Path(args.json_file)) | ignored_slugs() | load_dismissed()
+    known = (
+        existing_slugs(Path(args.json_file))
+        | mapped_aa_slugs()
+        | ignored_slugs()
+        | load_dismissed()
+    )
     models = fetch_aa_models(cutoff, args.include_closed)
 
     new = [m for m in models if m.get("slug") and m["slug"] not in known]
