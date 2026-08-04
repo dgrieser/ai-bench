@@ -31,7 +31,7 @@ from _llmstats_mapping import (
     load_llmstats_to_slug_mapping,
     load_llmstats_benchmark_to_key_mapping,
 )
-from _artificialanalysis_mapping import load_llm_to_aa_mapping
+from _artificialanalysis_mapping import load_llm_to_aa_slugs
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
@@ -299,17 +299,85 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
 
 def resolve_aa_slugs(
     slugs: list[str], available_slugs: set[str], mapping_path: Path
-) -> dict[str, str]:
-    llm_to_aa = load_llm_to_aa_mapping(mapping_path)
-    resolved: dict[str, str] = {}
+) -> dict[str, list[str]]:
+    """AA slugs to read per llm.json model, highest priority first.
+
+    Usually one slug. A mapping entry may name several: Artificial Analysis
+    sometimes tracks the same model under more than one slug, each carrying a
+    different slice of the benchmarks, and every slug listed is read. A model's
+    own slug leads unless the entry places it somewhere else.
+    """
+    llm_to_aa = load_llm_to_aa_slugs(mapping_path)
+    resolved: dict[str, list[str]] = {}
     for slug in slugs:
-        if slug in available_slugs:
-            resolved[slug] = slug
-            continue
-        mapped_slug = llm_to_aa.get(slug)
-        if mapped_slug in available_slugs:
-            resolved[slug] = mapped_slug
+        candidates = [
+            mapped for mapped in llm_to_aa.get(slug, []) if mapped in available_slugs
+        ]
+        if slug in available_slugs and slug not in candidates:
+            candidates.insert(0, slug)
+        if candidates:
+            resolved[slug] = candidates
     return resolved
+
+
+def aa_value_missing(value: Any) -> bool:
+    # AA reports an untested benchmark as null, and on some rows as 0 -- the
+    # same reading normalize_aa_value() applies when the score is written.
+    if isinstance(value, bool):
+        return False
+    return value is None or value == "" or value == 0
+
+
+def merge_aa_models(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Fold the AA records of one model into one, earlier records winning.
+
+    The leading record decides every value it measured; the rest only fill the
+    gaps it leaves, per benchmark rather than per record.
+    """
+    merged = dict(records[0])
+    evaluations = dict(merged.get("evaluations") or {})
+    for record in records[1:]:
+        for key, value in record.items():
+            if key == "evaluations":
+                continue
+            if aa_value_missing(merged.get(key)) and not aa_value_missing(value):
+                merged[key] = value
+        for key, value in (record.get("evaluations") or {}).items():
+            if aa_value_missing(evaluations.get(key)) and not aa_value_missing(value):
+                evaluations[key] = value
+    if evaluations:
+        merged["evaluations"] = evaluations
+    return merged
+
+
+def is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def keep_best_row(
+    by_slug: dict[str, dict[str, Any]],
+    slug: str,
+    row: dict[str, Any],
+    score_key: str,
+) -> None:
+    """Keep the higher-scoring row when several source rows fold onto one slug.
+
+    The mapping files fold a model's variants -- a base row and its "[high]"
+    sibling, or one label spelled two ways -- onto a single llm.json slug. Which
+    row is read must not depend on the leaderboard's own ordering, so the best
+    reported run wins, the rule the swe-atlas, evals.report and SWE-Marathon
+    ingests already apply.
+    """
+    current = by_slug.get(slug)
+    if current is None:
+        by_slug[slug] = row
+        return
+    new_score = row.get(score_key)
+    if not is_number(new_score):
+        return
+    old_score = current.get(score_key)
+    if not is_number(old_score) or new_score > old_score:
+        by_slug[slug] = row
 
 
 def fetch_swe_rebench_data(
@@ -335,7 +403,7 @@ def fetch_swe_rebench_data(
         slug = rebench_to_slug.get(rebench_name)
         if not slug:
             continue
-        by_slug.setdefault(slug, row)
+        keep_best_row(by_slug, slug, row, "resolved_rate")
     return by_slug
 
 
@@ -469,7 +537,7 @@ def fetch_osworld_data(
         slug = osworld_to_slug.get(osworld_name)
         if not slug:
             continue
-        by_slug.setdefault(slug, row)
+        keep_best_row(by_slug, slug, row, "success_rate")
     return by_slug
 
 
@@ -540,9 +608,18 @@ def fetch_huggingface_data(
             key = hf_to_key.get(label)
             if not key or value is None:
                 continue
-            mapped.setdefault(key, value)
-        if mapped:
-            by_slug[slug] = mapped
+            # Several leaderboard labels can alias one llm.json benchmark; the
+            # best reported run wins rather than whichever label came first.
+            old = mapped.get(key)
+            if not is_number(old) or (is_number(value) and value > old):
+                mapped[key] = value
+        if not mapped:
+            continue
+        merged = by_slug.setdefault(slug, {})
+        for key, value in mapped.items():
+            old = merged.get(key)
+            if not is_number(old) or (is_number(value) and value > old):
+                merged[key] = value
     return by_slug
 
 
@@ -640,7 +717,7 @@ def fetch_toolathlon_data(
         slug = toolathlon_to_slug.get(toolathlon_name)
         if not slug:
             continue
-        by_slug.setdefault(slug, row)
+        keep_best_row(by_slug, slug, row, "score")
     return by_slug
 
 
@@ -708,7 +785,7 @@ def fetch_deepswe_data(
         slug = deepswe_to_slug.get(deepswe_name)
         if not slug:
             continue
-        by_slug.setdefault(slug, row)
+        keep_best_row(by_slug, slug, row, "score")
     return by_slug
 
 
@@ -776,7 +853,7 @@ def fetch_frontierswe_data(
         slug = frontierswe_to_slug.get(frontierswe_name)
         if not slug:
             continue
-        by_slug.setdefault(slug, row)
+        keep_best_row(by_slug, slug, row, "score")
     return by_slug
 
 
@@ -1071,11 +1148,19 @@ def fetch_spheron_data(
         slug = spheron_to_slug.get(name)
         if not slug:
             continue
-        by_slug[slug] = {
-            "fp16": row.get("vram_fp16"),
-            "int8": row.get("vram_int8"),
-            "int4": row.get("vram_int4"),
-        }
+        vram = by_slug.setdefault(slug, {"fp16": None, "int8": None, "int4": None})
+        for quant, source_key in (
+            ("fp16", "vram_fp16"),
+            ("int8", "vram_int8"),
+            ("int4", "vram_int4"),
+        ):
+            value = row.get(source_key)
+            old = vram.get(quant)
+            # Two spheron paths can fold onto one slug (a repo and its dated
+            # revision). VRAM is a requirement rather than a score, so the
+            # larger estimate wins: it is the one the model actually fits in.
+            if not is_number(old) or (is_number(value) and value > old):
+                vram[quant] = value
     return by_slug
 
 
@@ -1149,9 +1234,21 @@ def fetch_llmstats_data(
             if not key or value is None:
                 continue
             # llm-stats reports 0-1 scores; store as percentages like other sources.
-            mapped.setdefault(key, to_percent(value))
-        if mapped:
-            by_slug.setdefault(slug, {}).update(mapped)
+            # Several labels can alias one benchmark; the best run wins.
+            percent = to_percent(value)
+            old = mapped.get(key)
+            if not is_number(old) or (is_number(percent) and percent > old):
+                mapped[key] = percent
+        if not mapped:
+            continue
+        # Several llm-stats ids fold onto one slug (a base id and its "-high"
+        # sibling, a dated re-release). Merge them per benchmark, best run wins,
+        # so the payload's ordering cannot decide the number.
+        merged = by_slug.setdefault(slug, {})
+        for key, value in mapped.items():
+            old = merged.get(key)
+            if not is_number(old) or (is_number(value) and value > old):
+                merged[key] = value
     return by_slug
 
 
@@ -1283,7 +1380,7 @@ def main() -> int:
     changes: list[tuple[str, str, Any, Any]] = []
     available_slugs: set[str] = set()
     existing_slugs: list[str] = []
-    aa_slug_by_model: dict[str, str] = {}
+    aa_slug_by_model: dict[str, list[str]] = {}
     by_slug: dict[str, dict[str, Any]] = {}
     matched = 0
     aa_updated = 0
@@ -1292,17 +1389,23 @@ def main() -> int:
     if not args.skip_aa:
         available_slugs = fetch_available_slugs(aa_path)
         aa_slug_by_model = resolve_aa_slugs(slugs, available_slugs, aa_model_mapping_path)
-        existing_slugs = list(dict.fromkeys(aa_slug_by_model.values()))
+        existing_slugs = list(
+            dict.fromkeys(
+                aa_slug
+                for aa_slugs in aa_slug_by_model.values()
+                for aa_slug in aa_slugs
+            )
+        )
         print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
     print()
 
     if not args.skip_aa:
         by_aa_slug = fetch_aa_data(aa_path, existing_slugs)
-        by_slug = {
-            slug: by_aa_slug[aa_slug]
-            for slug, aa_slug in aa_slug_by_model.items()
-            if aa_slug in by_aa_slug
-        }
+        by_slug = {}
+        for slug, aa_slugs in aa_slug_by_model.items():
+            records = [by_aa_slug[aa_slug] for aa_slug in aa_slugs if aa_slug in by_aa_slug]
+            if records:
+                by_slug[slug] = merge_aa_models(records)
         matched, aa_updated, seen_eval_keys, aa_changes = update_scores(doc, by_slug)
         changes.extend(aa_changes)
 

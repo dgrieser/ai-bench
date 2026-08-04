@@ -32,22 +32,52 @@ def fetch_aa_model_names(aa_script: Path = AA_SCRIPT) -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
-def _load_raw_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str]:
+def _slug_list(value: Any) -> list[str]:
+    """The AA slugs in a mapping value, highest priority first.
+
+    A value is either a single slug or a list of them: Artificial Analysis
+    sometimes tracks one model under several slugs, each carrying a different
+    slice of the benchmarks, and a list reads them all.
+    """
+    if isinstance(value, str):
+        return [value] if value else []
+    if not isinstance(value, list):
+        return []
+    slugs: list[str] = []
+    for item in value:
+        if isinstance(item, str) and item and item not in slugs:
+            slugs.append(item)
+    return slugs
+
+
+def _load_raw_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str | list[str]]:
     if not path.exists():
         return {}
     raw: Any = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError(f"Expected a JSON object in {path}")
-    return {k: v for k, v in raw.items() if isinstance(k, str) and isinstance(v, str)}
+    return {
+        k: v for k, v in raw.items() if isinstance(k, str) and _slug_list(v)
+    }
+
+
+def load_llm_to_aa_slugs(path: Path = AA_MODEL_MAPPING) -> dict[str, list[str]]:
+    """Real llm.json model slug -> Artificial Analysis slugs, best first."""
+    return {k: _slug_list(v) for k, v in _load_raw_mapping(path).items()}
 
 
 def load_llm_to_aa_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str]:
-    """Real llm.json model slug -> Artificial Analysis slug mappings."""
-    return _load_raw_mapping(path)
+    """Real llm.json model slug -> leading Artificial Analysis slug."""
+    return {k: slugs[0] for k, slugs in load_llm_to_aa_slugs(path).items()}
+
+
+def mapped_aa_slugs(path: Path = AA_MODEL_MAPPING) -> set[str]:
+    """Every AA slug the mapping claims, leading or not."""
+    return {slug for slugs in load_llm_to_aa_slugs(path).values() for slug in slugs}
 
 
 def write_llm_to_aa_mapping(
-    mapping: dict[str, str], path: Path = AA_MODEL_MAPPING
+    mapping: dict[str, str | list[str]], path: Path = AA_MODEL_MAPPING
 ) -> None:
     # Collect mode queues the question instead of asking it; recording an answer
     # here would stop it ever being asked again.
@@ -63,9 +93,15 @@ def add_aa_mapping(
     llm_name: str, aa_slug: str, path: Path = AA_MODEL_MAPPING
 ) -> None:
     mapping = _load_raw_mapping(path)
-    if mapping.get(llm_name) == aa_slug:
+    existing = _slug_list(mapping.get(llm_name))
+    if aa_slug in existing:
         return
-    mapping[llm_name] = aa_slug
+    if len(existing) > 1:
+        # A multi-slug entry is a curated priority order; a fresh pick leads it
+        # instead of replacing it.
+        mapping[llm_name] = [aa_slug, *existing]
+    else:
+        mapping[llm_name] = aa_slug
     write_llm_to_aa_mapping(mapping, path)
 
 

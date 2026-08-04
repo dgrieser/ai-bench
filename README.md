@@ -215,6 +215,41 @@ Each benchmark has a mapping file:
 
 Maps benchmark-specific names → canonical model slugs.
 
+### Layer 2b: Several Artificial Analysis Slugs per Model
+
+Artificial Analysis sometimes tracks one model under more than one slug, each
+carrying a different slice of the benchmarks. A value in
+`model-name-mapping-llm-to-artificialanalysis.json` may therefore be a list
+instead of a single slug:
+
+```json
+{
+  "some-model": "some-model-on-aa",
+  "other-model": ["other-model-v2", "other-model-v1"]
+}
+```
+
+`update.py` reads every slug in the list and merges their evaluations per
+benchmark: the first slug decides every value it measured, later ones only fill
+the gaps it leaves. The model's own slug leads unless the list places it
+somewhere else. The extra slugs are an ingestion detail — they never reach
+`llm.json`, `llm.html` or `llm-cli`, and `check_new.py` does not offer them as
+new models.
+
+### Many Source Rows, One Slug
+
+Mapping files fold a model's variants onto a single slug on purpose: a base row
+and its `[high]` sibling, one label spelled two ways, a dated re-release. Every
+ingest resolves such a collision the same way — **best reported run wins**, per
+benchmark. Source row ordering never decides a published number.
+
+Two deliberate exceptions:
+- **VRAM** (spheron): the *largest* estimate wins. It is a requirement, not a
+  score, so the conservative direction is the safe one.
+- **Artificial Analysis**: several slugs per model merge by the priority order in
+  the mapping list, not by score (see above) — the leading slug is the model's
+  current release, and a higher number from an older one must not displace it.
+
 ### Layer 3: Benchmark Name Aliases
 
 Some benchmarks have internal name variations:
