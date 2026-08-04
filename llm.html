@@ -1498,6 +1498,11 @@
       right: 82px;
     }
 
+    /* Anchors the "filtered" dot badge. */
+    .export-toggle {
+      position: relative;
+    }
+
     .export-toggle.is-error {
       border-color: #d13b3b;
       color: #d13b3b;
@@ -1549,6 +1554,75 @@
       background: var(--surface-alt);
       color: var(--text);
       border-color: transparent;
+    }
+
+    /* ── Filtered-export hints ─────────────────────── */
+
+    /* The model exports carry the current filters, so they say so: an accent
+       dot on the closed toggle, an accent chip plus bar on the entries that
+       are affected, and a muted chip on the GPU group, which never filters.
+       A failed export outranks the hint, hence the :not(.is-error). */
+    .export-toggle.is-filtered:not(.is-error) {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    }
+
+    .export-toggle.is-filtered:not(.is-error)::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--surface);
+    }
+
+    .export-flag {
+      margin-left: 6px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      font-size: 0.92em;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+    }
+
+    .export-flag.is-off {
+      color: var(--subtle);
+      background: var(--surface-alt);
+    }
+
+    /* The bar sits in the list's own 4px gutter, so marking an entry never
+       shifts its label. */
+    .export-list button.is-filtered {
+      position: relative;
+      color: var(--accent);
+    }
+
+    .export-list button.is-filtered::before {
+      content: "";
+      position: absolute;
+      left: 1px;
+      top: 26%;
+      bottom: 26%;
+      width: 2px;
+      border-radius: 1px;
+      background: var(--accent);
+    }
+
+    .export-list button.is-filtered:hover {
+      color: var(--accent-hover);
+    }
+
+    .export-note {
+      margin: 0;
+      padding: 5px 10px 2px;
+      font-size: 0.66rem;
+      line-height: 1.4;
+      white-space: pre-line;
+      color: var(--muted);
     }
 
     @media (max-width: 860px) {
@@ -1779,13 +1853,14 @@
         </button>
         <div class="export-list" id="exportList" role="menu" hidden>
           <div role="group" aria-labelledby="exportGroupModels">
-            <p class="export-group" id="exportGroupModels">Models</p>
+            <p class="export-group" id="exportGroupModels">Models<span class="export-flag" id="exportModelsFlag" hidden>filtered</span></p>
             <button type="button" role="menuitem" data-export="llm.json">JSON</button>
             <button type="button" role="menuitem" data-export="llm.yaml">YAML</button>
             <button type="button" role="menuitem" data-export="llm.csv">CSV</button>
+            <p class="export-note" id="exportModelsNote" hidden></p>
           </div>
           <div role="group" aria-labelledby="exportGroupGpus">
-            <p class="export-group" id="exportGroupGpus">GPUs</p>
+            <p class="export-group" id="exportGroupGpus">GPUs<span class="export-flag is-off" id="exportGpuFlag" hidden>all</span></p>
             <button type="button" role="menuitem" data-export="gpu.json">JSON</button>
             <button type="button" role="menuitem" data-export="gpu.yaml">YAML</button>
             <button type="button" role="menuitem" data-export="gpu.csv">CSV</button>
@@ -2035,7 +2110,10 @@
         gpuReserveUp: document.getElementById("gpuReserveUp"),
         exportMenu: document.getElementById("exportMenu"),
         exportBtn: document.getElementById("exportBtn"),
-        exportList: document.getElementById("exportList")
+        exportList: document.getElementById("exportList"),
+        exportModelsFlag: document.getElementById("exportModelsFlag"),
+        exportModelsNote: document.getElementById("exportModelsNote"),
+        exportGpuFlag: document.getElementById("exportGpuFlag")
       };
 
       bindImportEvents();
@@ -2555,7 +2633,7 @@
           .map((model) => {
             return {
               ...model,
-              creatorName: model.creator?.name || "Unknown"
+              creatorName: creatorNameOf(model)
             };
           })
           .filter((model) => modelPassesFilters(model));
@@ -2594,11 +2672,20 @@
         const activeCount = [searchOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
+
+        updateExportHints();
       }
 
+      function creatorNameOf(model) {
+        return model.creator?.name || "Unknown";
+      }
+
+      // Runs both over the decorated on-screen rows and over raw upstream
+      // models (see filterModelsDocument), so it must not rely on creatorName
+      // having been attached already.
       function modelPassesFilters(model) {
         if (state.filters.search) {
-          const haystack = `${model.name || ""} ${model.creatorName}`.toLowerCase();
+          const haystack = `${model.name || ""} ${creatorNameOf(model)}`.toLowerCase();
           if (!haystack.includes(state.filters.search)) {
             return false;
           }
@@ -3606,7 +3693,7 @@
         const total = state.data.models.length;
         ui.resultCount.textContent = `${shown} of ${total} models`;
         const shownCreators = new Set(state.filteredModels.map((m) => m.creatorName)).size;
-        const totalCreators = new Set(state.data.models.map((m) => m.creator?.name || "Unknown")).size;
+        const totalCreators = new Set(state.data.models.map(creatorNameOf)).size;
         ui.creatorCount.textContent = `${shownCreators} of ${totalCreators} creators`;
         const shownBenchmarks = visibleBenchmarkKeys().length;
         const totalBenchmarks = state.benchmarkKeys.length;
@@ -3864,16 +3951,21 @@
       }
 
       /* ── Export ─────────────────────────────────────────
-         Exports always re-fetch upstream, so a downloaded file is the full
-         published data — never the on-screen filter/sort state, and never a
-         locally imported file. JSON/YAML carry the whole document; CSV can only
-         hold a table, so it flattens models[] / the GPU list. */
+         Exports always re-fetch upstream, so the values in a downloaded file
+         are the published ones — never a locally imported file. The model
+         exports do honour the on-screen filters though: only the models that
+         pass them, and only the benchmarks that are shown, make it into the
+         file, and it is then named llm-filtered.* so it can't be mistaken for
+         the published llm.json. Sort order is not carried over (upstream order
+         is kept), and the GPU exports are never filtered. JSON/YAML carry the
+         whole document; CSV can only hold a table, so it flattens models[] /
+         the GPU list. */
 
       // Takes "csv" (models data) or "<dataset>.<format>" such as "gpu.csv", so
       // the ?export= value reads like the file it produces. Each serializer gets
-      // the raw response body: JSON passes it through byte-for-byte rather than
-      // round-tripping through JSON.stringify, which would drop upstream
-      // formatting (and turn 68.0 into 68).
+      // the raw response body: an unfiltered JSON export passes it through
+      // byte-for-byte rather than round-tripping through JSON.stringify, which
+      // would drop upstream formatting (and turn 68.0 into 68).
       //
       // A hoisted function, not a const map: ?export= runs while this block is
       // still in the temporal dead zone, so a const here would throw.
@@ -3898,17 +3990,79 @@
             return null;
         }
 
+        // ?export= can run before the data has loaded; exportFilters() reports
+        // nothing active until then, so such an export is the full document.
+        const filtered = dataset === "llm" && exportFilters().active;
+        const stem = filtered ? `${dataset}-filtered` : dataset;
+        const refine = filtered ? filterModelsDocument : (data) => data;
+
         switch (format) {
           case "json":
-            return { url, filename: `${dataset}.json`, mime: "application/json", serialize: (text) => text };
+            return {
+              url,
+              filename: `${stem}.json`,
+              mime: "application/json",
+              serialize: (text) => (filtered ? `${JSON.stringify(refine(JSON.parse(text)), null, 2)}\n` : text)
+            };
           case "yaml":
           case "yml":
-            return { url, filename: `${dataset}.yaml`, mime: "application/yaml", serialize: (text) => toYaml(JSON.parse(text)) };
+            return { url, filename: `${stem}.yaml`, mime: "application/yaml", serialize: (text) => toYaml(refine(JSON.parse(text))) };
           case "csv":
-            return { url, filename: `${dataset}.csv`, mime: "text/csv;charset=utf-8", serialize: (text) => tabulate(JSON.parse(text)) };
+            return { url, filename: `${stem}.csv`, mime: "text/csv;charset=utf-8", serialize: (text) => tabulate(refine(JSON.parse(text))) };
           default:
             return null;
         }
+      }
+
+      // What an export would drop, measured against the loaded data. Sort is
+      // deliberately not part of this: exports keep upstream order, so
+      // re-sorting the table must not advertise a filtered download. Neither is
+      // the GPU vendor picker, which only narrows the GPU list, not the models.
+      function exportFilters() {
+        const totalModels = state.data?.models?.length || 0;
+        const totalBenchmarks = state.benchmarkKeys.length;
+        const loaded = Boolean(state.data);
+        const hiddenBenchmarks = loaded ? state.filters.hiddenBenchmarks.length : 0;
+        const modelsOn = loaded && (
+          Boolean(state.filters.search)
+          || state.filters.selectedModels.length > 0
+          || Boolean(gpuUsableBudget())
+        );
+        return {
+          active: modelsOn || hiddenBenchmarks > 0,
+          models: modelsOn ? state.filteredModels.length : totalModels,
+          totalModels,
+          benchmarks: totalBenchmarks - hiddenBenchmarks,
+          totalBenchmarks
+        };
+      }
+
+      // Narrows a freshly fetched upstream document to the current filters.
+      // Benchmarks are pruned by the hidden set rather than kept by the visible
+      // one, so a benchmark upstream gained since the page loaded still comes
+      // along instead of being silently dropped.
+      function filterModelsDocument(data) {
+        const hidden = new Set(state.filters.hiddenBenchmarks);
+        const models = (Array.isArray(data.models) ? data.models : [])
+          .filter((model) => modelPassesFilters(model))
+          .map((model) => {
+            if (!hidden.size) return model;
+            const pruned = { ...model };
+            if (pruned.scores) pruned.scores = withoutKeys(pruned.scores, hidden);
+            if (pruned.scores_updated) pruned.scores_updated = withoutKeys(pruned.scores_updated, hidden);
+            return pruned;
+          });
+
+        return {
+          ...data,
+          benchmarks: hidden.size ? withoutKeys(data.benchmarks, hidden) : data.benchmarks,
+          models
+        };
+      }
+
+      function withoutKeys(map, drop) {
+        if (!map || typeof map !== "object") return map;
+        return Object.fromEntries(Object.entries(map).filter(([key]) => !drop.has(key)));
       }
 
       function bindExportEvents() {
@@ -3943,6 +4097,39 @@
         ui.exportBtn.setAttribute("aria-expanded", String(open));
       }
 
+      // Keeps the menu honest about what a download will hold: the model
+      // entries are marked when they would be filtered, the GPU group is marked
+      // as unaffected so the difference is explicit. Driven from
+      // updateFilterGlow, alongside the other active-filter cues.
+      function updateExportHints() {
+        const filters = exportFilters();
+
+        ui.exportBtn.classList.toggle("is-filtered", filters.active);
+        ui.exportModelsFlag.hidden = !filters.active;
+        ui.exportGpuFlag.hidden = !filters.active;
+        ui.exportModelsNote.hidden = !filters.active;
+        ui.exportModelsNote.textContent = filters.active
+          ? `${filters.models} of ${filters.totalModels} models\n${filters.benchmarks} of ${filters.totalBenchmarks} benchmarks`
+          : "";
+        ui.exportList.querySelectorAll('button[data-export^="llm."]').forEach((button) => {
+          button.classList.toggle("is-filtered", filters.active);
+        });
+
+        // The error flash owns the title while it is showing; it restores this.
+        if (!ui.exportBtn.classList.contains("is-error")) {
+          setExportButtonLabel();
+        }
+      }
+
+      function setExportButtonLabel() {
+        const filters = exportFilters();
+        const label = filters.active
+          ? `Export data — model exports follow the active filters (${filters.models} of ${filters.totalModels} models, ${filters.benchmarks} of ${filters.totalBenchmarks} benchmarks); GPU exports are never filtered`
+          : "Export data";
+        ui.exportBtn.title = label;
+        ui.exportBtn.setAttribute("aria-label", label);
+      }
+
       async function exportData(target) {
         const spec = exportSpec(target);
         if (!spec) return;
@@ -3960,9 +4147,10 @@
         clearTimeout(flashExportError.timer);
         ui.exportBtn.classList.add("is-error");
         ui.exportBtn.title = `Export failed. ${message}`;
+        ui.exportBtn.setAttribute("aria-label", `Export failed. ${message}`);
         flashExportError.timer = setTimeout(() => {
           ui.exportBtn.classList.remove("is-error");
-          ui.exportBtn.title = "Export data";
+          setExportButtonLabel();
         }, 2500);
       }
 
