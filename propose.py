@@ -16,7 +16,9 @@ Only normalized equality is ever written as a real mapping -- see _matching.py
 for why substring and subset matches are not safe to commit unreviewed.
 
 The emitted plan drives the workflow's review comments, which carry the
-alternatives as clickable GitHub suggestions.
+alternatives as clickable GitHub suggestions. Every parked line's comment also
+carries a clickable `__unmappable__` suggestion, so declining a name is as
+cheap as accepting one.
 """
 
 from __future__ import annotations
@@ -32,7 +34,7 @@ from typing import Any
 
 import _matching
 import _prompts
-from _openness import PENDING
+from _openness import PENDING, UNMAPPABLE
 from _scores import editable_benchmarks
 
 HERE = Path(__file__).resolve().parent
@@ -231,33 +233,40 @@ def find_line(path: Path, key: str) -> int | None:
 
 
 def suggestion_body(proposal: Proposal, line_text: str) -> str:
-    """A GitHub review comment whose ```suggestion block is one click to apply."""
-    top = proposal.alternatives[0]
-    replacement = line_text.replace(json.dumps(PENDING), json.dumps(top))
-    rest = proposal.alternatives[1:]
-
+    """A GitHub review comment whose ```suggestion blocks are one click to apply."""
     out = [
         "No confident match, so this is parked as `__pending__`.",
         "",
-        "Best guess -- commit this suggestion to accept it:",
+    ]
+    if proposal.alternatives:
+        top = proposal.alternatives[0]
+        out += [
+            "Best guess -- commit this suggestion to accept it:",
+            "",
+            "```suggestion",
+            line_text.replace(json.dumps(PENDING), json.dumps(top)),
+            "```",
+            "",
+        ]
+        rest = proposal.alternatives[1:]
+        if rest:
+            out.append("Other candidates: " + ", ".join(f"`{c}`" for c in rest))
+            out.append("")
+    out += [
+        "Not a name this project should track? Commit this suggestion to stop being asked:",
         "",
         "```suggestion",
-        replacement,
+        line_text.replace(json.dumps(PENDING), json.dumps(UNMAPPABLE)),
         "```",
         "",
+        "Leave `__pending__` and it is queued again next run.",
     ]
-    if rest:
-        out.append("Other candidates: " + ", ".join(f"`{c}`" for c in rest))
-    out.append(
-        "Leave `__pending__` and it is queued again next run; "
-        "set `__unmappable__` to stop being asked."
-    )
     return "\n".join(out)
 
 
 def plan_suggestions(proposals: list[Proposal], limit: int) -> tuple[list[dict], int]:
     """Review comments for the pending lines, most useful first."""
-    candidates = [p for p in proposals if p.pending and p.alternatives and p.line]
+    candidates = [p for p in proposals if p.pending and p.line]
     candidates.sort(key=lambda p: (-len(p.alternatives), p.key))
 
     comments = []
