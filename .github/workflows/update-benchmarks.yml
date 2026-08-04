@@ -18,8 +18,12 @@ on:
   # This cannot run away: the workflow's own commits and PRs are made with
   # GITHUB_TOKEN, and those never trigger workflow events. One human merge is
   # one run.
+  # `branches` filters the PR's *base*, so only merges into main qualify. Without
+  # it a stacked PR merged into a feature branch would refresh that branch and
+  # push the data commit there, off the published site.
   pull_request:
     types: [closed]
+    branches: [main]
     paths:
       - "*mapping*.json"
       - "llm.json"

@@ -32,7 +32,7 @@ candidates doc.
 
 | `llm.json` slug | CyberGym label | Score | Agent / scaffold | `focus` | Reported by |
 |---|---|---|---|---|---|
-| `deepseek-v4-flash` | DeepSeek-V4-Flash | 76.7% | DeepSeek Agent | model | DeepSeek (vendor) |
+| `deepseek-v4-flash-0731` | DeepSeek-V4-Flash | 76.7% | DeepSeek Agent | model | DeepSeek (vendor) |
 | `deepseek-v4-pro` | DeepSeek-V4-Pro | 57.7% | Claude Code | model | XDxAI (third party) |
 | `kimi-k2-5` | Kimi K2.5 | 41.3% | Kimi Agent | model | Kimi (vendor) |
 | `glm-4-7` | GLM-4.7 | 23.5% | Claude Code | model | Zhipu AI (vendor) |
@@ -103,10 +103,11 @@ A naive `score_10` scrape therefore produces a column where a vendor's pass@1 si
 research team's pass@10 next to a security firm's tuned multi-stage pipeline. That is a
 different failure mode from thin coverage, and worse: it looks fine.
 
-Secondary label risk: benchlm calls our 76.7% row `DeepSeek V4 Flash (Max)`, the official
-`source_url` points at `deepseek-ai/DeepSeek-V4-Flash-0731`, and llm-stats carries
-`deepseek-v4-flash-max` as a separate model id — while `llm.json`'s `deepseek-v4-flash` points
-at the base `deepseek-ai/DeepSeek-V4-Flash`. Confirm the variant before assigning that score.
+Secondary label risk (resolved): benchlm calls our 76.7% row `DeepSeek V4 Flash (Max)`, the
+official `source_url` points at `deepseek-ai/DeepSeek-V4-Flash-0731`, and llm-stats carries
+`deepseek-v4-flash-max` as a separate model id. `llm.json` now keeps only the final variant,
+`deepseek-v4-flash-0731`, and every mapping file folds those labels into it — so that score can
+be assigned to the single row without picking a variant.
 
 ## 5. If we add it anyway
 
