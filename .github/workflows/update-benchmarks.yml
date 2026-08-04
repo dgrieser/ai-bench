@@ -15,9 +15,12 @@ on:
   # until now, and the run re-collects the queue, so closing one proposal PR
   # opens the next batch straight away. Covers hand-written mapping PRs too.
   #
-  # This cannot run away: the workflow's own commits and PRs are made with
-  # GITHUB_TOKEN, and those never trigger workflow events. One human merge is
-  # one run.
+  # This cannot run away: the only trigger a write of this workflow could hit is
+  # a pull request being merged, and the workflow never merges anything -- it
+  # pushes a data commit to main and force-pushes its proposal branch. One human
+  # merge is one run. Note that the data commit is pushed with a deploy key,
+  # which unlike GITHUB_TOKEN *does* trigger workflow events, so a `push`
+  # trigger must never be added to this file.
   # `branches` filters the PR's *base*, so only merges into main qualify. Without
   # it a stacked PR merged into a feature branch would refresh that branch and
   # push the data commit there, off the published site.
@@ -36,7 +39,10 @@ on:
         default: false
 
 permissions:
-  contents: write
+  # Read-only for contents: nothing is written with GITHUB_TOKEN any more. Both
+  # pushes ride on the deploy key configured by checkout, which is the only
+  # identity besides a repository admin that the ruleset lets through.
+  contents: read
   pull-requests: write
   # Kept even though the issue channel is retired: --label and --assignee on a
   # PR go through the issues API, and losing them would break the propose step.
@@ -59,8 +65,17 @@ jobs:
     steps:
       # A pull_request event would otherwise check out the PR's merge ref; this
       # run wants the base branch it was just merged into.
+      #
+      # main is covered by a branch ruleset that requires a pull request, and
+      # GITHUB_TOKEN cannot be exempted from it: GitHub Actions is not an app
+      # that can be installed on a user-owned repository, so it cannot appear in
+      # the ruleset's bypass list. A write deploy key can, and does. Handing the
+      # key to checkout makes it the credential git keeps for every later push,
+      # so the data commit lands on main while the rule still applies to
+      # everyone else.
       - uses: actions/checkout@v4
         with:
+          ssh-key: ${{ secrets.PUSH_SSH_KEY }}
           ref: >-
             ${{ github.event_name == 'pull_request'
                 && github.event.pull_request.base.ref
