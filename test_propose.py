@@ -266,11 +266,27 @@ class TestSuggestions(unittest.TestCase):
         self.assertEqual(dropped, 5)
         self.assertTrue(all(c["side"] == "RIGHT" and c["line"] == 2 for c in comments))
 
-    def test_pending_without_candidates_gets_no_comment(self) -> None:
+    def test_unmappable_suggestion_is_always_present(self) -> None:
+        proposal = self.proposal()
+        real = self.path.read_text(encoding="utf-8").splitlines()[proposal.line - 1]
+        body = propose.suggestion_body(proposal, real)
+        blocks = [part.split("\n```")[0] for part in body.split("```suggestion\n")[1:]]
+
+        self.assertEqual(len(blocks), 2, "best guess plus __unmappable__")
+        self.assertEqual(blocks[1], '  "GLM 5.1": "__unmappable__",')
+        patched = self.path.read_text(encoding="utf-8").replace(real, blocks[1])
+        self.assertEqual(json.loads(patched)["GLM 5.1"], "__unmappable__")
+
+    def test_pending_without_candidates_still_gets_unmappable_comment(self) -> None:
         proposal = self.proposal(alts=())
         comments, dropped = propose.plan_suggestions([proposal], 10)
-        self.assertEqual(comments, [])
+        self.assertEqual(len(comments), 1)
         self.assertEqual(dropped, 0)
+
+        body = comments[0]["body"]
+        blocks = [part.split("\n```")[0] for part in body.split("```suggestion\n")[1:]]
+        self.assertEqual(blocks, ['  "GLM 5.1": "__unmappable__",'])
+        self.assertNotIn("Best guess", body)
 
     def test_confident_proposals_get_no_comment(self) -> None:
         proposal = self.proposal(line_value="glm-5-air", alts=("glm-5-2",))
