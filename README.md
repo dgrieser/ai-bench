@@ -236,6 +236,20 @@ somewhere else. The extra slugs are an ingestion detail — they never reach
 `llm.json`, `llm.html` or `llm-cli`, and `check_new.py` does not offer them as
 new models.
 
+### Many Source Rows, One Slug
+
+Mapping files fold a model's variants onto a single slug on purpose: a base row
+and its `[high]` sibling, one label spelled two ways, a dated re-release. Every
+ingest resolves such a collision the same way — **best reported run wins**, per
+benchmark. Source row ordering never decides a published number.
+
+Two deliberate exceptions:
+- **VRAM** (spheron): the *largest* estimate wins. It is a requirement, not a
+  score, so the conservative direction is the safe one.
+- **Artificial Analysis**: several slugs per model merge by the priority order in
+  the mapping list, not by score (see above) — the leading slug is the model's
+  current release, and a higher number from an older one must not displace it.
+
 ### Layer 3: Benchmark Name Aliases
 
 Some benchmarks have internal name variations:
