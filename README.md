@@ -33,32 +33,35 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 
 ```json
 {
+  "benchmarks": { "deepswe": { "name": "DeepSWE", "urls": [ ... ], ... }, ... },
   "models": [
     {
-      "slug": "gpt-4-turbo",
-      "names": ["gpt-4-turbo-preview", "GPT-4 Turbo"],
-      "created": "2024-01-15",
-      "openness": "closed",
-      "weights": { ... },
-      "scores": {
-        "artificial-analysis": { "score": 95.2, "date": "2024-07-29" },
-        "huggingface": { "score": 94.1, "date": "2024-07-28" },
-        "deepswe": { "score": 92.3, "date": "2024-07-25" },
-        ...
-      }
-    },
-    ...
-  ]
+      "name": "devstral-2",
+      "date_added": "2026-02-03",
+      "url": "https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512",
+      "params": "123B",
+      "context": "256k",
+      "creator": { "name": "Mistral", "url": "https://mistral.ai/..." },
+      "scores":         { "deepswe": 92.3, "swe_bench_verified": 72.2, ... },
+      "scores_updated": { "deepswe": "2026-07-25", "swe_bench_verified": "2026-02-13", ... },
+      "scores_source":  { "deepswe": "https://benchlm.ai/benchmarks/deepSwe", ... },
+      "vram": { "fp16": 273, "int8": 136, "int4": 68 }
+    }
+  ],
+  "sources": [ "https://...", ... ]
 }
 ```
 
 Each model object contains:
-- **`slug`**: Canonical identifier (used across system)
-- **`names`**: Aliases this model is known by
-- **`created`**: Initial entry date
-- **`openness`**: "open" or "closed" (weights/licensing information)
-- **`weights`**: Model size, quantization, and licensing details
-- **`scores`**: Nested dict mapping benchmark source → score record
+- **`name`**: Canonical slug (used across the system)
+- **`scores`**: Flat map, benchmark key → score (null until a source reports one)
+- **`scores_updated`**: Same key set → ISO date the score last changed
+- **`scores_source`**: Same key set → URL of the page the score was read from
+  (null for hand edits and the derived Coding index)
+- **`params`** / **`context`** / **`vram`** / **`creator`**: model metadata
+
+The three score maps carry the full benchmark key set with null placeholders;
+`update.py` stamps date and source URL together whenever it writes a score.
 
 ## System Architecture
 
@@ -109,6 +112,12 @@ Output: llm.json (unified dataset)
 # Update all scores from all configured sources
 ./update.py llm.json
 
+# One-time backfill of models[].scores_source: attribute stored scores to the
+# first source (in the usual update order) whose current value matches, where
+# no URL is stored yet. Dry-run first, then persist with -w.
+./update.py --fill-source-urls
+./update.py --fill-source-urls -w
+
 # Fetch from specific benchmarks
 ./fetch_huggingface.py --repo owner/model-name
 ./fetch_deepswe.py
@@ -143,7 +152,7 @@ Output: llm.json (unified dataset)
 # Remove models or prune invalid entries
 ./prune.py llm.json
 
-# Synchronize score update timestamps
+# Synchronize score update timestamps and per-score source URLs
 ./sync_score_dates.py llm.json
 ```
 

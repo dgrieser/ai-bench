@@ -14,6 +14,9 @@ from pathlib import Path
 from typing import Any
 
 OSWORLD_XLSX_URL = "https://os-world.github.io/static/data/osworld_verified_results.xlsx"
+# Human-facing site the workbook belongs to; stored as the per-score source
+# URL because the .xlsx identifies a download, not a page a reader can open.
+OSWORLD_SITE_URL = "https://os-world.github.io"
 SHEET_NAME = "Eval Results"
 
 # Foundation E2E GUI: no extra a11y tree, no extra coding actions, no multiple rollout, 100 steps

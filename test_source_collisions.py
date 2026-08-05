@@ -135,13 +135,17 @@ class TestHuggingfaceMerge(unittest.TestCase):
     def test_repeated_rows_take_the_best_run(self) -> None:
         mapping = write_json({"IFEval": "ifeval"})
         rows = [
-            {"model": "m", "scores": {"IFEval": 30.0}},
-            {"model": "m", "scores": {"IFEval": 45.0}},
+            {"model": "m", "repo": "org/m-base", "scores": {"IFEval": 30.0}},
+            {"model": "m", "repo": "org/m-high", "scores": {"IFEval": 45.0}},
         ]
         for order in (rows, list(reversed(rows))):
             with stub_run(order):
                 by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
-            self.assertEqual(by_slug["m"]["ifeval"], 45.0)
+            # The winning run carries the model card it was read from.
+            self.assertEqual(
+                by_slug["m"]["ifeval"],
+                (45.0, "https://huggingface.co/org/m-high"),
+            )
 
 
 class TestSpheronMerge(unittest.TestCase):

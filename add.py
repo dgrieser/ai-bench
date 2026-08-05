@@ -923,6 +923,9 @@ def build_model(doc: dict[str, Any], args: argparse.Namespace, interactive: bool
         # when update.py/edit.py write that score. Consumers read by key and
         # tolerate absent keys (llm.html uses optional chaining).
         "scores_updated": {key: None for key in benchmark_keys},
+        # scores_source mirrors the same key set; update.py stamps the page a
+        # score was read from, hand edits and derived keys stay null.
+        "scores_source": {key: None for key in benchmark_keys},
     }
 
 

@@ -253,6 +253,12 @@ def apply_index(
             updated = {}
         model["scores_updated"] = put_first(updated, INDEX_KEY, updated.get(INDEX_KEY))
 
+        # The index is computed, not read off a page: its source is always null.
+        sources = model.get("scores_source")
+        if not isinstance(sources, dict):
+            sources = {}
+        model["scores_source"] = put_first(sources, INDEX_KEY, None)
+
         if old != new:
             changes.append((name, old, new))
             if new is None:
