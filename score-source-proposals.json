@@ -1,0 +1,844 @@
+{
+  "_comment": "Hand-researched scores_source candidates for scores that carry none. Each entry was checked against the model's own card and the leaderboard that owns the benchmark; 'evidence' quotes what was found. Apply with apply_score_sources.py. 'unresolved' entries are values no candidate publisher reproduces — review the score itself, not just its URL.",
+  "generated_from": "llm.json",
+  "confidence_levels": {
+    "confirmed": "the exact stored value was read off that page",
+    "confirmed-by-provenance": "the metric is computed by that site and published nowhere else",
+    "probable": "that site owns the benchmark and every other candidate was checked and ruled out",
+    "weak": "host of record for the benchmark, but the live page no longer shows this value"
+  },
+  "proposals": [
+    {
+      "model": "agents-a1",
+      "benchmark": "browsecomp",
+      "value": 75.51,
+      "url": "https://huggingface.co/InternScience/Agents-A1",
+      "confidence": "confirmed",
+      "evidence": "card: \"BrowseComp: 75.51\""
+    },
+    {
+      "model": "agents-a1",
+      "benchmark": "hle",
+      "value": 47.6,
+      "url": "https://huggingface.co/InternScience/Agents-A1",
+      "confidence": "confirmed",
+      "evidence": "card: \"HLE w/ tools: 47.6\""
+    },
+    {
+      "model": "agents-a1",
+      "benchmark": "scicode",
+      "value": 44.33,
+      "url": "https://huggingface.co/InternScience/Agents-A1",
+      "confidence": "confirmed",
+      "evidence": "card: \"SciCode: 44.33\""
+    },
+    {
+      "model": "agents-a1",
+      "benchmark": "tau2_bench_telecom",
+      "value": 79.81,
+      "url": "https://huggingface.co/InternScience/Agents-A1",
+      "confidence": "confirmed",
+      "evidence": "card: \"τ2-Bench: 79.81\" — value matches but the card reports τ²-Bench overall, not the Telecom split"
+    },
+    {
+      "model": "deepseek-v3-2-0925",
+      "benchmark": "swe_rebench",
+      "value": 60.9,
+      "url": "https://swe-rebench.com",
+      "confidence": "weak",
+      "evidence": "all 37 other swe_rebench sources are swe-rebench.com, but the live leaderboard now shows N/A for DeepSeek-V3.2 — stored value is a stale snapshot"
+    },
+    {
+      "model": "deepseek-v4-flash",
+      "benchmark": "livecodebench",
+      "value": 91.6,
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash",
+      "confidence": "probable",
+      "evidence": "not on the card (card has TB 2.1 82.7, no LCB)"
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "benchmark": "livecodebench",
+      "value": 93.5,
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+      "confidence": "confirmed",
+      "evidence": "card: \"LiveCodeBench: 93.5\""
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "benchmark": "terminal_bench_2_0",
+      "value": 67.9,
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal Bench 2.0: 67.9\""
+    },
+    {
+      "model": "gemma-4-12b",
+      "benchmark": "aime_2026",
+      "value": 77.5,
+      "url": "https://huggingface.co/google/gemma-4-12B-it",
+      "confidence": "confirmed",
+      "evidence": "card: \"AIME 2026 no tools: 77.5%\""
+    },
+    {
+      "model": "gemma-4-12b",
+      "benchmark": "livecodebench",
+      "value": 72.0,
+      "url": "https://huggingface.co/google/gemma-4-12B-it",
+      "confidence": "confirmed",
+      "evidence": "card: \"LiveCodeBench v6: 72.0%\""
+    },
+    {
+      "model": "gemma-4-31b",
+      "benchmark": "swe_bench_pro",
+      "value": 35.7,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "no SWE-bench on the Gemma card"
+    },
+    {
+      "model": "gemma-4-31b",
+      "benchmark": "swe_bench_verified",
+      "value": 80.9,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "no SWE-bench on the Gemma card; llm-stats owns 33 of 43 sources for this key"
+    },
+    {
+      "model": "glm-4-7-flash",
+      "benchmark": "aa_coding_index",
+      "value": 25.9,
+      "url": "https://artificialanalysis.ai/models/glm-4-7-flash",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index; no other publisher exists"
+    },
+    {
+      "model": "glm-4-7-flash",
+      "benchmark": "mmmu_pro",
+      "value": 54.0,
+      "url": "https://artificialanalysis.ai/models/glm-4-7-flash",
+      "confidence": "probable",
+      "evidence": "39 of 41 mmmu_pro sources are AA; not on the card"
+    },
+    {
+      "model": "glm-4-7-flash",
+      "benchmark": "swe_bench_pro",
+      "value": 40.6,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "card reports SWE-bench Verified 59.2 only"
+    },
+    {
+      "model": "glm-5-2",
+      "benchmark": "terminal_bench_2_0",
+      "value": 81,
+      "url": "https://huggingface.co/zai-org/GLM-5.2",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal Bench 2.1 (Terminus-2): 81.0\" — card labels this 2.1, AA reports terminal_bench_2_1=77.9 for the same model"
+    },
+    {
+      "model": "gpt-oss-120b",
+      "benchmark": "browsecomp",
+      "value": 28.7,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "card names BrowseComp but prints no number"
+    },
+    {
+      "model": "gpt-oss-120b",
+      "benchmark": "gdpval_aa",
+      "value": 798.7,
+      "url": "https://artificialanalysis.ai/models/gpt-oss-120b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "GDPval-AA Elo is AA-computed; not on the gpt-oss card"
+    },
+    {
+      "model": "gpt-oss-120b",
+      "benchmark": "swe_bench_pro",
+      "value": 16.2,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "not on the gpt-oss card"
+    },
+    {
+      "model": "gpt-oss-120b",
+      "benchmark": "swe_bench_verified",
+      "value": 62.4,
+      "url": "https://huggingface.co/openai/gpt-oss-120b",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWE-bench Verified, reasoning high: 62.4\""
+    },
+    {
+      "model": "gpt-oss-120b",
+      "benchmark": "terminal_bench_2_0",
+      "value": 18.7,
+      "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0",
+      "confidence": "confirmed",
+      "evidence": "tbench.ai 2.0 leaderboard row: GPT-OSS-120B 18.7%"
+    },
+    {
+      "model": "gpt-oss-20b",
+      "benchmark": "browsecomp",
+      "value": 28.3,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "card names BrowseComp but prints no number"
+    },
+    {
+      "model": "gpt-oss-20b",
+      "benchmark": "swe_bench_verified",
+      "value": 34.0,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "weak",
+      "evidence": "card reports 37.4/53.2/60.7 by reasoning effort — 34.0 matches none of them"
+    },
+    {
+      "model": "gpt-oss-20b",
+      "benchmark": "terminal_bench_2_0",
+      "value": 3.1,
+      "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0",
+      "confidence": "confirmed",
+      "evidence": "tbench.ai 2.0 leaderboard row: GPT-OSS-20B 3.1%"
+    },
+    {
+      "model": "hy3",
+      "benchmark": "browsecomp",
+      "value": 67.1,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "hy3",
+      "benchmark": "livecodebench",
+      "value": 34.86,
+      "url": "https://huggingface.co/tencent/Hy3-preview",
+      "confidence": "confirmed",
+      "evidence": "card: \"LiveCodeBench-v6: 34.86\""
+    },
+    {
+      "model": "hy3",
+      "benchmark": "swe_bench_verified",
+      "value": 74.4,
+      "url": "https://huggingface.co/tencent/Hy3-preview",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWE-bench Verified: 74.4\""
+    },
+    {
+      "model": "hy3",
+      "benchmark": "tau2_bench_telecom",
+      "value": 92.7,
+      "url": "https://artificialanalysis.ai/models/hy3",
+      "confidence": "probable",
+      "evidence": "96 of 98 other tau2_bench_telecom sources are AA model pages; not on the card"
+    },
+    {
+      "model": "hy3",
+      "benchmark": "terminal_bench_2_0",
+      "value": 54.4,
+      "url": "https://huggingface.co/tencent/Hy3-preview",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench 2.0: 54.4\""
+    },
+    {
+      "model": "hy3",
+      "benchmark": "terminal_bench_hard",
+      "value": 34.1,
+      "url": "https://artificialanalysis.ai/models/hy3",
+      "confidence": "probable",
+      "evidence": "all 89 other terminal_bench_hard sources are AA model pages; not on the card"
+    },
+    {
+      "model": "inkling",
+      "benchmark": "aime_2026",
+      "value": 97.1,
+      "url": "https://huggingface.co/thinkingmachines/Inkling",
+      "confidence": "confirmed",
+      "evidence": "card: \"AIME 2026: 97.1%\""
+    },
+    {
+      "model": "inkling",
+      "benchmark": "browsecomp",
+      "value": 77.1,
+      "url": "https://huggingface.co/thinkingmachines/Inkling",
+      "confidence": "confirmed",
+      "evidence": "card: \"BrowseComp (w/ Ctx): 77.1%\""
+    },
+    {
+      "model": "inkling",
+      "benchmark": "swe_bench_pro",
+      "value": 54.3,
+      "url": "https://huggingface.co/thinkingmachines/Inkling",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWEBench Pro (Public): 54.3%\""
+    },
+    {
+      "model": "inkling",
+      "benchmark": "swe_bench_verified",
+      "value": 77.6,
+      "url": "https://huggingface.co/thinkingmachines/Inkling",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWEBench Verified: 77.6%\""
+    },
+    {
+      "model": "inkling",
+      "benchmark": "terminal_bench_2_0",
+      "value": 63.8,
+      "url": "https://huggingface.co/thinkingmachines/Inkling",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal Bench 2.1 (Best Harness): 63.8\" — card labels this 2.1, llm.json files it under terminal_bench_2_0"
+    },
+    {
+      "model": "inkling-small",
+      "benchmark": "aime_2026",
+      "value": 95.5,
+      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
+      "confidence": "confirmed",
+      "evidence": "card: \"AIME 2026: 95.5\""
+    },
+    {
+      "model": "inkling-small",
+      "benchmark": "browsecomp",
+      "value": 77.4,
+      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
+      "confidence": "confirmed",
+      "evidence": "card: \"BrowseComp (with context management): 77.4\""
+    },
+    {
+      "model": "inkling-small",
+      "benchmark": "swe_bench_pro",
+      "value": 55.9,
+      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWEBench Pro (public): 55.9\""
+    },
+    {
+      "model": "inkling-small",
+      "benchmark": "swe_bench_verified",
+      "value": 80.2,
+      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWEBench Verified: 80.2\""
+    },
+    {
+      "model": "inkling-small",
+      "benchmark": "terminal_bench_2_0",
+      "value": 64.7,
+      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal Bench 2.1 (best harness): 64.7\" — card labels this 2.1"
+    },
+    {
+      "model": "kimi-k2-5",
+      "benchmark": "aime_2026",
+      "value": 95.8,
+      "url": "https://artificialanalysis.ai/models/kimi-k2-5",
+      "confidence": "probable",
+      "evidence": "card reports AIME 2025 96.1, no 2026 row"
+    },
+    {
+      "model": "kimi-k2-6",
+      "benchmark": "frontiercode",
+      "value": 3.8,
+      "url": "https://cognition.com/blog/frontier-code",
+      "confidence": "confirmed",
+      "evidence": "Cognition post, FrontierCode Diamond table: Kimi K2.6 3.8%"
+    },
+    {
+      "model": "kimi-k3",
+      "benchmark": "swe_bench_verified",
+      "value": 93.4,
+      "url": "https://www.vals.ai/benchmarks/swebench",
+      "confidence": "confirmed",
+      "evidence": "vals.ai SWE-bench Verified leaderboard: Kimi K3 93.40% (not on the HF card)"
+    },
+    {
+      "model": "laguna-xs-2",
+      "benchmark": "gpqa_diamond",
+      "value": 42.6,
+      "url": "https://artificialanalysis.ai/models/laguna-xs-2",
+      "confidence": "probable",
+      "evidence": "116 of 119 gpqa_diamond sources are AA model pages; not on the card"
+    },
+    {
+      "model": "laguna-xs-2",
+      "benchmark": "terminal_bench_2_1",
+      "value": 25.843,
+      "url": "https://artificialanalysis.ai/models/laguna-xs-2",
+      "confidence": "probable",
+      "evidence": "3-decimal value (25.843) matches the AA API shape; 61 of 63 other terminal_bench_2_1 sources are AA model pages; card has 2.0 only"
+    },
+    {
+      "model": "lfm2-5-1-2b-thinking",
+      "benchmark": "aa_coding_index",
+      "value": 1.4,
+      "url": "https://artificialanalysis.ai/models/lfm2-5-1-2b-thinking",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "lfm2-5-8b-a1b",
+      "benchmark": "aa_coding_index",
+      "value": 5.6,
+      "url": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "lfm2-5-8b-a1b",
+      "benchmark": "aime_2025",
+      "value": 42.53,
+      "url": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
+      "confidence": "probable",
+      "evidence": "2-decimal value (42.53) matches the AA API shape; no AIME on the card"
+    },
+    {
+      "model": "lfm2-5-8b-a1b",
+      "benchmark": "aime_2026",
+      "value": 50,
+      "url": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
+      "confidence": "probable",
+      "evidence": "no AIME on the card"
+    },
+    {
+      "model": "longcat-flash-lite",
+      "benchmark": "aa_coding_index",
+      "value": 16.5,
+      "url": "https://artificialanalysis.ai/models/longcat-flash-lite",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "mimo-v2-5-0424",
+      "benchmark": "terminal_bench_2_0",
+      "value": 65.8,
+      "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench 2.0: 65.8\""
+    },
+    {
+      "model": "mimo-v2-5-pro",
+      "benchmark": "aime_2025",
+      "value": 37.3,
+      "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro",
+      "confidence": "confirmed",
+      "evidence": "card: \"AIME 24&25: 37.3\" — value matches but the card reports a combined 2024+2025 figure"
+    },
+    {
+      "model": "mimo-v2-5-pro",
+      "benchmark": "livecodebench",
+      "value": 39.6,
+      "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro",
+      "confidence": "confirmed",
+      "evidence": "card: \"LiveCodeBench v6: 39.6\""
+    },
+    {
+      "model": "mimo-v2-5-pro",
+      "benchmark": "mmmu_pro",
+      "value": 77.9,
+      "url": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
+      "confidence": "probable",
+      "evidence": "AA is the dominant publisher; not on the card"
+    },
+    {
+      "model": "minimax-m2-5",
+      "benchmark": "aa_coding_index",
+      "value": 37.4,
+      "url": "https://artificialanalysis.ai/models/minimax-m2-5",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "minimax-m2-7",
+      "benchmark": "terminal_bench_2_0",
+      "value": 57.0,
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-M2.7",
+      "confidence": "confirmed",
+      "evidence": "card body text: \"Terminal-Bench (57.0%)\""
+    },
+    {
+      "model": "mistral-small-4",
+      "benchmark": "aime_2025",
+      "value": 84,
+      "url": "https://artificialanalysis.ai/models/mistral-small-4",
+      "confidence": "probable",
+      "evidence": "card names AIME25 but prints no number"
+    },
+    {
+      "model": "mistral-small-4",
+      "benchmark": "livecodebench",
+      "value": 64,
+      "url": "https://artificialanalysis.ai/models/mistral-small-4",
+      "confidence": "probable",
+      "evidence": "card names LiveCodeBench but prints no number"
+    },
+    {
+      "model": "nanbeige4-1-3b",
+      "benchmark": "aime_2026",
+      "value": 81.5,
+      "url": "https://artificialanalysis.ai/models/nanbeige4-1-3b",
+      "confidence": "probable",
+      "evidence": "card reports \"AIME 2026 I: 87.40\", not 81.5"
+    },
+    {
+      "model": "nanbeige4-1-3b",
+      "benchmark": "livecodebench",
+      "value": 57.4,
+      "url": "https://artificialanalysis.ai/models/nanbeige4-1-3b",
+      "confidence": "probable",
+      "evidence": "card reports LCB-v6 76.9, not 57.4"
+    },
+    {
+      "model": "nemotron-3-nano-omni-30b-a3b",
+      "benchmark": "aime_2025",
+      "value": 82.1,
+      "url": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
+      "confidence": "probable",
+      "evidence": "no AIME on the card"
+    },
+    {
+      "model": "north-mini-code",
+      "benchmark": "livecodebench",
+      "value": 70.3,
+      "url": "https://artificialanalysis.ai/models/north-mini-code",
+      "confidence": "probable",
+      "evidence": "card names LCB v6 in methodology but prints no number"
+    },
+    {
+      "model": "north-mini-code",
+      "benchmark": "terminal_bench_2_0",
+      "value": 36,
+      "url": "https://huggingface.co/CohereLabs/North-Mini-Code-1.0",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench v2: 36\""
+    },
+    {
+      "model": "nvidia-nemotron-3-super-120b-a12b",
+      "benchmark": "livecodebench",
+      "value": 81.2,
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+      "confidence": "confirmed",
+      "evidence": "card: \"LiveCodeBench: 81.19\" (stored rounded)"
+    },
+    {
+      "model": "nvidia-nemotron-3-super-120b-a12b",
+      "benchmark": "swe_bench_verified",
+      "value": 60.5,
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWE-Bench Verified (OpenHands): 60.47\" (stored rounded)"
+    },
+    {
+      "model": "nvidia-nemotron-3-ultra-550b-a55b",
+      "benchmark": "gdpval_aa",
+      "value": 1161.4,
+      "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "GDPval-AA Elo is AA-computed"
+    },
+    {
+      "model": "ornith-1-0-397B",
+      "benchmark": "terminal_bench_2_1",
+      "value": 77.5,
+      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench 2.1 (Terminus-2): 77.5\""
+    },
+    {
+      "model": "ornith-1-0-9b",
+      "benchmark": "terminal_bench_2_0",
+      "value": 43.1,
+      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench 2.1 (Terminus-2): 43.1\" — card has no 2.0 row at all"
+    },
+    {
+      "model": "qwen3-30b-a3b-2507-reasoning",
+      "benchmark": "browsecomp",
+      "value": 22.9,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "qwen3-30b-a3b-2507-reasoning",
+      "benchmark": "swe_bench_verified",
+      "value": 22.0,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "no SWE-bench on the card"
+    },
+    {
+      "model": "qwen3-5-0-8b",
+      "benchmark": "aa_coding_index",
+      "value": 15,
+      "url": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "qwen3-5-0-8b",
+      "benchmark": "terminal_bench_2_1",
+      "value": 22.5,
+      "url": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
+      "confidence": "probable",
+      "evidence": "AA is the dominant publisher for this key"
+    },
+    {
+      "model": "qwen3-5-27b",
+      "benchmark": "aa_coding_index",
+      "value": 34.9,
+      "url": "https://artificialanalysis.ai/models/qwen3-5-27b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "qwen3-5-27b",
+      "benchmark": "aime_2026",
+      "value": 92.6,
+      "url": "https://artificialanalysis.ai/models/qwen3-5-27b",
+      "confidence": "probable",
+      "evidence": "card reports HMMT only, no AIME 2026 row"
+    },
+    {
+      "model": "qwen3-5-27b",
+      "benchmark": "swe_bench_pro",
+      "value": 51.2,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "qwen3-5-35b-a3b",
+      "benchmark": "aa_coding_index",
+      "value": 30.3,
+      "url": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "qwen3-5-397b-a17b",
+      "benchmark": "browsecomp",
+      "value": 78.6,
+      "url": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
+      "confidence": "confirmed",
+      "evidence": "card: \"BrowseComp: 69.0/78.6\" (context-managed figure)"
+    },
+    {
+      "model": "qwen3-5-397b-a17b",
+      "benchmark": "swe_bench_pro",
+      "value": 80.3,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "card reports SWE-bench Verified 76.4 only"
+    },
+    {
+      "model": "qwen3-coder-30b-a3b-instruct",
+      "benchmark": "aa_coding_index",
+      "value": 19.4,
+      "url": "https://artificialanalysis.ai/models/qwen3-coder-30b-a3b-instruct",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "qwen3-coder-30b-a3b-instruct",
+      "benchmark": "swe_bench_verified",
+      "value": 51.6,
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/discussions/30",
+      "confidence": "probable",
+      "evidence": "HF discussion \"SWE-bench Verified Repro\" reports 51.6 with OpenHands (100 turns); the model card carries no eval table"
+    },
+    {
+      "model": "qwen3-coder-next",
+      "benchmark": "aime_2025",
+      "value": 80,
+      "url": "https://artificialanalysis.ai/models/qwen3-coder-next",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "qwen3-coder-next",
+      "benchmark": "livecodebench",
+      "value": 47.5,
+      "url": "https://artificialanalysis.ai/models/qwen3-coder-next",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "qwen3-coder-next",
+      "benchmark": "swe_bench_pro",
+      "value": 44.3,
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+      "confidence": "confirmed",
+      "evidence": "card: \"ScaleAI/SWE-bench_Pro: 44.3\""
+    },
+    {
+      "model": "qwen3-coder-next",
+      "benchmark": "swe_bench_verified",
+      "value": 70.6,
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWE-bench/SWE-bench_Verified: 70.6\""
+    },
+    {
+      "model": "qwen3-coder-next",
+      "benchmark": "terminal_bench_2_0",
+      "value": 36.2,
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+      "confidence": "confirmed",
+      "evidence": "card: \"harborframework/terminal-bench-2.0: 36.2\""
+    },
+    {
+      "model": "qwen3-next-80b-a3b-reasoning",
+      "benchmark": "swe_bench_verified",
+      "value": 74.5,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "no SWE-bench on the card"
+    },
+    {
+      "model": "sarvam-105b",
+      "benchmark": "aa_coding_index",
+      "value": 9.8,
+      "url": "https://artificialanalysis.ai/models/sarvam-105b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "sarvam-30b",
+      "benchmark": "aa_coding_index",
+      "value": 7.9,
+      "url": "https://artificialanalysis.ai/models/sarvam-30b",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "step-3-5-flash",
+      "benchmark": "aa_coding_index",
+      "value": 34.6,
+      "url": "https://artificialanalysis.ai/models/step-3-5-flash",
+      "confidence": "confirmed-by-provenance",
+      "evidence": "AA-computed index"
+    },
+    {
+      "model": "step-3-5-flash",
+      "benchmark": "aime_2026",
+      "value": 96.67,
+      "url": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
+      "confidence": "confirmed",
+      "evidence": "card: \"MathArena Aime 2026: 96.67\""
+    },
+    {
+      "model": "step-3-7-flash",
+      "benchmark": "browsecomp",
+      "value": 75.8,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "not on the card"
+    },
+    {
+      "model": "step-3-7-flash",
+      "benchmark": "swe_bench_pro",
+      "value": 56.3,
+      "url": "https://huggingface.co/stepfun-ai/Step-3.7-Flash",
+      "confidence": "confirmed",
+      "evidence": "card: \"SWE Bench Pro: 56.3\""
+    },
+    {
+      "model": "step-3-7-flash",
+      "benchmark": "swe_bench_verified",
+      "value": 76.5,
+      "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+      "confidence": "probable",
+      "evidence": "card reports SWE-bench Pro only"
+    },
+    {
+      "model": "step-3-7-flash",
+      "benchmark": "terminal_bench_2_0",
+      "value": 59.5,
+      "url": "https://huggingface.co/stepfun-ai/Step-3.7-Flash",
+      "confidence": "confirmed",
+      "evidence": "card: \"Terminal-Bench 2.1: 59.5\" — card labels this 2.1"
+    }
+  ],
+  "unresolved": [
+    {
+      "model": "deepseek-v4-flash",
+      "benchmark": "terminal_bench_2_0",
+      "value": 56.9,
+      "reason": "not on the tbench.ai 2.0 leaderboard; card reports Terminal Bench 2.1 82.7 only"
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "benchmark": "deepswe",
+      "value": 8.0,
+      "reason": "absent from benchlm.ai/benchmarks/deepSwe and deepswe.datacurve.ai (neither lists the model); card has no DeepSWE row"
+    },
+    {
+      "model": "kimi-k2-5",
+      "benchmark": "frontiercode",
+      "value": 1.0,
+      "reason": "absent from evals.report/benchmarks/frontiercode and from cognition.com/blog/frontier-code"
+    },
+    {
+      "model": "kimi-k2-6",
+      "benchmark": "deepswe",
+      "value": 24.0,
+      "reason": "absent from both DeepSWE leaderboards and from the card"
+    },
+    {
+      "model": "kimi-k3",
+      "benchmark": "swe_atlas_qna",
+      "value": 23.0,
+      "reason": "absent from labs.scale.com/leaderboard/sweatlas-qna (lists Kimi K2.5 13.10, no K3) and from the card"
+    },
+    {
+      "model": "mimo-v2-5-pro",
+      "benchmark": "deepswe",
+      "value": 19.0,
+      "reason": "absent from both DeepSWE leaderboards and from the card"
+    },
+    {
+      "model": "mimo-v2-5-pro",
+      "benchmark": "terminal_bench_2_0",
+      "value": 68.4,
+      "reason": "not on the tbench.ai 2.0 leaderboard; card has no TB row"
+    },
+    {
+      "model": "minimax-m2-5",
+      "benchmark": "frontiercode",
+      "value": 1.1,
+      "reason": "absent from evals.report and the Cognition post"
+    },
+    {
+      "model": "minimax-m2-5",
+      "benchmark": "terminal_bench_2_0",
+      "value": 51.7,
+      "reason": "tbench.ai 2.0 lists minimax-m2.5 at 42.7/42.2, not 51.7; card has no TB row"
+    },
+    {
+      "model": "minimax-m2-7",
+      "benchmark": "deepswe",
+      "value": 0.2,
+      "reason": "absent from both DeepSWE leaderboards and from the card"
+    },
+    {
+      "model": "minimax-m2-7",
+      "benchmark": "frontiercode",
+      "value": 2.4,
+      "reason": "absent from evals.report and the Cognition post"
+    },
+    {
+      "model": "minimax-m3",
+      "benchmark": "deepswe",
+      "value": 20.4,
+      "reason": "absent from both DeepSWE leaderboards and from the card"
+    },
+    {
+      "model": "qwen3-coder-30b-a3b-instruct",
+      "benchmark": "terminal_bench_2_0",
+      "value": 31.3,
+      "reason": "not on the tbench.ai 2.0 leaderboard; card carries no eval table"
+    }
+  ]
+}
