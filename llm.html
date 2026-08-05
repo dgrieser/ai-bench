@@ -38,6 +38,10 @@
       --font-mono: "JetBrains Mono", "Consolas", monospace;
       --radius: 10px;
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 6px 24px rgba(0, 0, 0, 0.06);
+      /* Tooltip paper sits a shade brighter than --surface so the slip reads
+         as lifted off the page rather than flush with it. */
+      --tip-bg: #fffdf8;
+      --tip-shadow: 0 2px 6px rgba(17, 17, 17, 0.07), 0 14px 40px rgba(17, 17, 17, 0.14);
     }
 
     * {
@@ -1637,6 +1641,197 @@
       }
     }
 
+    /* ── Tooltip slip ──────────────────────────────── */
+
+    /* A catalog slip lifted off the page, not a floating pill: same paper and
+       the same 3px accent rule as .page, except the rule moves to whichever
+       edge faces the thing it describes, so the colour always points back at
+       its source. That rule stands in for the usual arrow — an arrow tip lands
+       on the table's 1px grid lines and reads as a rendering artefact at this
+       density. */
+    .tip {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 90;
+      width: max-content;
+      max-width: min(340px, calc(100vw - 24px));
+      padding: 11px 14px 12px;
+      background: var(--tip-bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      text-align: left;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 110ms ease,
+        transform 110ms cubic-bezier(0.2, 0.8, 0.3, 1),
+        visibility 0s linear 110ms;
+    }
+
+    /* Resting offset doubles as the enter animation: the slip travels the last
+       5px out of its anchor. */
+    .tip[data-placement="bottom"] {
+      padding-top: 13px;
+      transform: translate3d(0, -5px, 0);
+      box-shadow: inset 0 3px 0 var(--accent), var(--tip-shadow);
+    }
+
+    .tip[data-placement="top"] {
+      padding-bottom: 14px;
+      transform: translate3d(0, 5px, 0);
+      box-shadow: inset 0 -3px 0 var(--accent), var(--tip-shadow);
+    }
+
+    /* Placement rules and .is-open have equal specificity, so the open state
+       has to stay below them to win the transform. */
+    .tip.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 0s;
+    }
+
+    .tip-eyebrow {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.4;
+      text-transform: uppercase;
+      color: var(--subtle);
+    }
+
+    /* Model ids are written lowercase everywhere else on the page and in the
+       data — uppercasing one would quietly change the name. */
+    .tip-eyebrow.verbatim {
+      text-transform: none;
+      letter-spacing: 0.06em;
+    }
+
+    .tip-title {
+      display: block;
+      margin-top: 2px;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--text);
+    }
+
+    .tip-body {
+      margin-top: 7px;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .tip-eyebrow + .tip-body,
+    .tip-title + .tip-body {
+      margin-top: 6px;
+    }
+
+    .tip-body + .tip-body {
+      margin-top: 5px;
+    }
+
+    /* A slip that is only one line of body text should sit evenly in its box. */
+    .tip-body:first-child,
+    .tip-meta:first-child {
+      margin-top: 0;
+    }
+
+    .tip-meta {
+      display: block;
+      margin-top: 9px;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      line-height: 1.55;
+      color: var(--subtle);
+    }
+
+    .tip-source {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .tip-meta + .tip-source {
+      margin-top: 7px;
+      padding-top: 8px;
+    }
+
+    .tip-link {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      line-height: 1.5;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .tip-link-mark {
+      flex: none;
+      font-size: 0.72rem;
+    }
+
+    .tip-link-plain {
+      display: block;
+      color: var(--subtle);
+      overflow-wrap: anywhere;
+    }
+
+    /* Host in accent, path in --subtle: which domain a number came from is the
+       fastest read on this page, the rest of the URL is only there to confirm. */
+    .tip-link-url {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .tip-link-host {
+      font-weight: 700;
+    }
+
+    .tip-link-path {
+      color: var(--subtle);
+    }
+
+    .tip-link:hover .tip-link-host {
+      text-decoration: underline;
+    }
+
+    .tip-link:hover .tip-link-path {
+      color: var(--muted);
+    }
+
+    .tip-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .tip-link:focus-visible .tip-link-host {
+      text-decoration: underline;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tip,
+      .tip[data-placement="top"],
+      .tip[data-placement="bottom"] {
+        transform: none;
+        transition: opacity 90ms ease, visibility 0s linear 90ms;
+      }
+    }
+
     /* ── Dark mode ─────────────────────────────────── */
 
     [data-theme="dark"] {
@@ -1652,6 +1847,8 @@
       --accent: #5b8af7;
       --accent-hover: #7aa3f8;
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.4);
+      --tip-bg: #211f1c;
+      --tip-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 44px rgba(0, 0, 0, 0.55);
       background-image: radial-gradient(circle, #252320 1px, transparent 1px);
     }
 
@@ -1844,7 +2041,7 @@
   <main class="page" id="app" aria-live="polite">
     <section class="hero">
       <div class="export-menu" id="exportMenu">
-        <button id="exportBtn" class="export-toggle" type="button" title="Export data" aria-label="Export data" aria-haspopup="true" aria-expanded="false" aria-controls="exportList">
+        <button id="exportBtn" class="export-toggle" type="button" data-tip="Download the models or the GPU list as JSON, YAML or CSV." data-tip-title="Export data" aria-label="Export data" aria-haspopup="true" aria-expanded="false" aria-controls="exportList">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M12 3v12"/>
             <path d="M7 11l5 5 5-5"/>
@@ -1867,7 +2064,7 @@
           </div>
         </div>
       </div>
-      <button id="themeToggle" class="theme-toggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
+      <button id="themeToggle" class="theme-toggle" type="button" data-tip="Switch between the light and dark theme." data-tip-title="Toggle dark mode" aria-label="Toggle dark mode">
         <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle cx="12" cy="12" r="4"/>
           <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
@@ -1908,7 +2105,7 @@
           <label for="gpuModel">GPU Model</label>
           <div class="select-wrap gpu-combo">
             <input id="gpuModel" type="text" placeholder="Type or pick a GPU" autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-expanded="false" aria-controls="gpuModelList">
-            <button id="gpuClear" class="clear-compare" type="button" title="Clear GPU filter">×</button>
+            <button id="gpuClear" class="clear-compare" type="button" data-tip="Clear the GPU filter and stop shading the VRAM columns." aria-label="Clear GPU filter">×</button>
             <div id="gpuModelList" class="gpu-combo-list" role="listbox" hidden></div>
           </div>
         </div>
@@ -1947,21 +2144,21 @@
         <label for="modelCompare">Compare Models</label>
         <div class="select-wrap">
           <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
-          <button id="clearCompare" class="clear-compare" type="button" title="Unselect all">×</button>
+          <button id="clearCompare" class="clear-compare" type="button" data-tip="Unselect every model and show the full table." aria-label="Unselect all models">×</button>
         </div>
       </div>
       <div class="field">
         <label for="benchmarkPick">Benchmarks</label>
         <div class="select-wrap">
           <div id="benchmarkPick" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Visible benchmarks"></div>
-          <button id="clearBenchmarks" class="clear-compare" type="button" title="Show all benchmarks">×</button>
+          <button id="clearBenchmarks" class="clear-compare" type="button" data-tip="Bring every benchmark column back into the table." aria-label="Show all benchmarks">×</button>
         </div>
       </div>
       <div class="field field-full">
         <label for="search">Search</label>
         <div class="select-wrap">
           <input id="search" type="text" placeholder="Model or creator">
-          <button id="clearSearch" class="clear-compare" type="button" title="Clear search">×</button>
+          <button id="clearSearch" class="clear-compare" type="button" data-tip="Clear the search box." aria-label="Clear search">×</button>
         </div>
       </div>
         </div>
@@ -1981,6 +2178,8 @@
       <div class="status" id="status">Loading benchmark data...</div>
     </section>
   </main>
+
+  <div class="tip" id="tooltip" role="tooltip" aria-hidden="true" data-placement="bottom"></div>
 
   <script>
     (function () {
@@ -2116,8 +2315,44 @@
         exportGpuFlag: document.getElementById("exportGpuFlag")
       };
 
+      /* ── Tooltip ────────────────────────────────────────
+         Replaces the native title= tooltips. Opens on hover after a short
+         delay, lingers on the way out, and never closes while the pointer is
+         inside the slip — that grace period is what makes the links in it
+         reachable. Touch pins it open until the next touch lands elsewhere.
+
+         An anchor declares its content with data attributes:
+           data-tip          body text; "\n" starts a new paragraph
+           data-tip-eyebrow  mono label above the title
+           data-tip-title    display-face headline
+           data-tip-meta     mono footnotes; "\n" separates lines
+           data-tip-url      source link, rendered as host + path
+         Anchors that would repeat a lot of text across the table instead carry
+         data-tip-kind and are resolved from state on hover — see TIP_RESOLVERS.
+         Behaviour lives further down, from tipFields() on. */
+
+      const TIP_SHOW_DELAY = 340;   // cold open, near the native title delay
+      const TIP_WARM_DELAY = 60;    // moving between neighbours feels instant
+      const TIP_WARM_WINDOW = 500;  // how long "warm" outlasts a close
+      const TIP_HIDE_DELAY = 480;   // the linger: time to reach the slip itself
+      const TIP_SELECTOR = "[data-tip],[data-tip-kind]";
+      const TIP_TAP_SLOP = 10;      // a touch that travels further is a pan
+      const TIP_GAP = 10;
+      const TIP_EDGE = 12;
+
+      const tooltip = {
+        el: null,
+        anchor: null,
+        pinned: false,
+        over: false,
+        showTimer: 0,
+        hideTimer: 0,
+        closedAt: 0
+      };
+
       bindImportEvents();
       bindExportEvents();
+      initTooltips();
       loadData();
 
       // Exports always re-fetch llm.json, so this runs independently of loadData().
@@ -2461,7 +2696,8 @@
         ui.benchmarkPick.innerHTML = state.benchmarkKeys.map((key) => {
           const sel = isBenchmarkVisible(key);
           const name = getBenchmarkFullName(key);
-          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(key)}" role="option" aria-selected="${sel}" title="${escapeHtml(name)}">
+          const tip = tipAttrs(benchmarkTipFields(key));
+          return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(key)}" role="option" aria-selected="${sel}"${tip}>
             <span class="model-compare-check"></span>
             <span>${escapeHtml(name)}</span>
           </div>`;
@@ -2944,6 +3180,9 @@
       }
 
       function renderTable() {
+        // Every anchor in here is about to be replaced.
+        closeTip();
+
         if (!state.filteredModels.length) {
           ui.content.innerHTML = `
             <div class="empty">No models match your filters.</div>
@@ -2958,25 +3197,25 @@
           ...FIXED_COLUMNS.map((column) => ({
             ...column,
             label: columnLabel(column.key),
-            title: columnMeta(column.key).description,
+            tip: {
+              eyebrow: "Column",
+              title: columnMeta(column.key).sortLabel || columnLabel(column.key),
+              body: columnMeta(column.key).description || ""
+            },
             initialWidth: column.key === "name"
               ? measureModelColumnInitialWidth(state.filteredModels)
               : column.initialWidth
           })),
-          ...benchKeys.map((key) => {
-            const bench = state.data.benchmarks[key] || {};
-            const fullName = bench.name || getBenchmarkLabel(key);
-            const description = bench.description || "";
-            // Tooltip: full benchmark name on the first line, description below.
-            return {
-              key,
-              label: getBenchmarkLabel(key),
-              title: description ? `${fullName}\n${description}` : fullName,
-              className: "num bench-head head-right",
-              minWidth: 95,
-              initialWidth: 95
-            };
-          })
+          ...benchKeys.map((key) => ({
+            key,
+            label: getBenchmarkLabel(key),
+            // Headers show short_name to stay narrow, so the slip carries the
+            // full name, what the benchmark measures, and a link to it.
+            tip: benchmarkTipFields(key),
+            className: "num bench-head head-right",
+            minWidth: 95,
+            initialWidth: 95
+          }))
         ];
         state.headerWidthsByKey = Object.fromEntries(headers.map((header) => [header.key, {
           minWidth: header.minWidth,
@@ -3252,12 +3491,14 @@
         }
 
         const className = header.className ? ` ${header.className}` : "";
-        const titleParts = [];
-        if (header.title) titleParts.push(header.title);
-        if (inGroup) {
-          titleParts.push(`Sorted in “${group.label || group.key}” · weight ${groupEntry.weight}`);
+        const metaLines = [];
+        if (isSorted) {
+          metaLines.push(state.sort.direction === "desc" ? "Sorted best first" : "Sorted worst first");
         }
-        const title = titleParts.length ? ` title="${escapeHtml(titleParts.join("\n"))}"` : "";
+        if (inGroup) {
+          metaLines.push(`Counts toward “${group.label || group.key}” · weight ${groupEntry.weight}`);
+        }
+        const tip = tipAttrs({ ...(header.tip || {}), meta: metaLines.join("\n") });
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
         const icon = renderBenchmarkIcon(header.key);
@@ -3265,7 +3506,7 @@
         const minWidthAttr = header.minWidth != null ? ` data-min-width="${header.minWidth}"` : "";
         const maxWidthAttr = header.maxWidth != null ? ` data-max-width="${header.maxWidth}"` : "";
         const initialWidthAttr = header.initialWidth != null ? ` data-initial-width="${header.initialWidth}"` : "";
-        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${title}${minWidthAttr}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
+        return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${tip}${minWidthAttr}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
       }
 
       function isRecentModel(model) {
@@ -3278,9 +3519,13 @@
 
       function renderNewBadge(dateAdded) {
         const pts = "100,10 118.1,32.4 145,22 149.5,50.5 177.9,55 167.6,81.9 190,100 167.6,118.1 177.9,145 149.5,149.5 145,177.9 118.1,167.6 100,190 81.9,167.6 55,177.9 50.5,149.5 22.1,145 32.4,118.1 10,100 32.4,81.9 22.1,55 50.5,50.5 55,22 81.9,32.4";
-        const label = dateAdded ? `Added ${escapeHtml(dateAdded)}` : "Recently added";
+        const tip = tipAttrs({
+          eyebrow: "New",
+          body: "Added to the index in the last seven days.",
+          meta: dateAdded ? `Added ${dateAdded}` : ""
+        });
         return (
-          `<span class="new-badge" title="${label}">` +
+          `<span class="new-badge"${tip}>` +
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="22" height="22" aria-label="New model">` +
           `<g transform="rotate(-12 100 100)">` +
           `<polygon points="${pts}" fill="url(#new-badge-grad)" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round" filter="url(#new-badge-shadow)"/>` +
@@ -3297,24 +3542,30 @@
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
-        const newLabel = isNew ? (model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Recently added") : "";
-        const addedLabel = model.date_added ? `Added ${escapeHtml(model.date_added)}` : "Unknown";
+        const modelTip = tipAttrs({
+          eyebrow: model.creatorName || "",
+          eyebrowVerbatim: true,
+          title: model.name || "Unknown",
+          meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
+          url: modelUrl
+        });
         const scoreCells = benchKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
-          const updated = model.scores_updated?.[key];
-          const titleAttr = updated ? ` title="Updated ${escapeHtml(updated)}"` : "";
+          // Only cells that hold a number get a slip, and they carry a kind
+          // rather than their text — see TIP_RESOLVERS.score.
+          const tipAttr = Number.isFinite(value) ? ` data-tip-kind="score"` : "";
           const isTop = bestInTable.has(key);
           if (isTop) {
-            return `<td class="num top-score"${titleAttr}><span class="top-score-mark">${formatScore(value, key)}</span></td>`;
+            return `<td class="num top-score"${tipAttr}><span class="top-score-mark">${formatScore(value, key)}</span></td>`;
           }
           const grey = Number.isFinite(value) ? scoreToGrey(value, scoreRanges[key]) : null;
           const style = grey ? ` style="color:${grey}"` : "";
-          return `<td class="num"${style}${titleAttr}>${formatScore(value, key)}</td>`;
+          return `<td class="num"${style}${tipAttr}>${formatScore(value, key)}</td>`;
         }).join("");
 
         return `
           <tr>
-            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer" title="${addedLabel}" class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a>` : `<span class="model-name-label${isNew ? ' model-new' : ""}" title="${addedLabel}">${modelName}</span>`}</span></td>
+            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a>` : `<span class="model-name-label${isNew ? ' model-new' : ""}"${modelTip}>${modelName}</span>`}</span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
@@ -3677,15 +3928,23 @@
         // With a reserve set, the tooltip names the usable budget so the
         // shading and the total in the filter bar don't look contradictory.
         const budgetLabel = state.gpu.reserve
-          ? `${formatGb(budget)} GB usable (${Math.round(state.gpu.reserve * 100)}% of ${formatGb(state.gpu.budget)} GB reserved)`
+          ? `${formatGb(budget)} GB usable budget (${Math.round(state.gpu.reserve * 100)}% of ${formatGb(state.gpu.budget)} GB reserved)`
           : `${formatGb(budget)} GB budget`;
         const ratio = num / budget;
         if (ratio > 1) {
-          return `<td class="mono vram-over" title="Needs ${num} GB — over the ${budgetLabel}">${html}</td>`;
+          const overTip = tipAttrs({
+            eyebrow: "Does not fit",
+            body: `Needs ${num} GB, over the ${budgetLabel}.`
+          });
+          return `<td class="mono vram-over"${overTip}>${html}</td>`;
         }
         const t = Math.max(0, Math.min(1, (ratio - 0.55) / 0.45));
         const hue = Math.round(150 - t * 130);
-        return `<td class="mono vram-fit" style="--fit-h:${hue}" title="${Math.round(ratio * 100)}% of ${budgetLabel}">${html}</td>`;
+        const fitTip = tipAttrs({
+          eyebrow: "Fits",
+          body: `Takes ${Math.round(ratio * 100)}% of the ${budgetLabel}.`
+        });
+        return `<td class="mono vram-fit" style="--fit-h:${hue}"${fitTip}>${html}</td>`;
       }
 
       function updateMeta() {
@@ -3778,6 +4037,31 @@
       // benchmark picker, the sort dropdown) use the full name.
       function getBenchmarkFullName(key) {
         return state.data?.benchmarks?.[key]?.name || getBenchmarkLabel(key);
+      }
+
+      // Serializes tooltip fields into the data-tip* attributes an anchor needs.
+      // data-tip is always written, even when empty: it is what marks the
+      // element as an anchor.
+      function tipAttrs(fields) {
+        const attrs = [` data-tip="${escapeAttr(fields.body || "")}"`];
+        if (fields.eyebrow) attrs.push(` data-tip-eyebrow="${escapeAttr(fields.eyebrow)}"`);
+        if (fields.eyebrowVerbatim) attrs.push(` data-tip-eyebrow-verbatim`);
+        if (fields.title) attrs.push(` data-tip-title="${escapeAttr(fields.title)}"`);
+        if (fields.meta) attrs.push(` data-tip-meta="${escapeAttr(fields.meta)}"`);
+        if (fields.url) attrs.push(` data-tip-url="${escapeAttr(fields.url)}"`);
+        return attrs.join("");
+      }
+
+      // One tooltip contract for a benchmark, shared by the column header and
+      // the visibility picker: what it is, what it measures, where to read it up.
+      function benchmarkTipFields(key, eyebrow) {
+        const bench = state.data?.benchmarks?.[key] || {};
+        return {
+          eyebrow: eyebrow || bench.category || "Benchmark",
+          title: bench.name || getBenchmarkLabel(key),
+          body: bench.description || "",
+          url: benchmarkLinks(bench)[0] || ""
+        };
       }
 
       function getBenchmarkIcon(key) {
@@ -4286,6 +4570,314 @@
         if (value === null || value === undefined) return "";
         const text = String(value);
         return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+      }
+
+      // Table cells carry a kind instead of their full tooltip text: 123 models
+      // against 33 benchmarks is a lot of markup to repeat for content only one
+      // cell at a time ever shows.
+      const TIP_RESOLVERS = {
+        score(el) {
+          const cell = el.closest("td");
+          const row = cell && cell.parentElement;
+          if (!cell || !row) return null;
+
+          const model = state.filteredModels[row.sectionRowIndex];
+          const key = visibleBenchmarkKeys()[cell.cellIndex - FIXED_COLUMNS.length];
+          if (!model || !key) return null;
+
+          const bench = state.data?.benchmarks?.[key] || {};
+          const updated = model.scores_updated?.[key];
+          const source = model.scores_source?.[key];
+          return {
+            eyebrow: model.name || "",
+            eyebrowVerbatim: true,
+            title: bench.name || getBenchmarkLabel(key),
+            meta: [
+              updated ? `Updated ${updated}` : "",
+              source ? "" : "No source recorded for this score."
+            ].filter(Boolean).join("\n"),
+            url: source || ""
+          };
+        }
+      };
+
+      function tipFields(el) {
+        const kind = el.getAttribute("data-tip-kind");
+        if (kind) {
+          return TIP_RESOLVERS[kind] ? TIP_RESOLVERS[kind](el) : null;
+        }
+        return {
+          eyebrow: el.getAttribute("data-tip-eyebrow") || "",
+          eyebrowVerbatim: el.hasAttribute("data-tip-eyebrow-verbatim"),
+          title: el.getAttribute("data-tip-title") || "",
+          body: el.getAttribute("data-tip") || "",
+          meta: el.getAttribute("data-tip-meta") || "",
+          url: el.getAttribute("data-tip-url") || ""
+        };
+      }
+
+      function tipMarkup(el) {
+        const fields = tipFields(el);
+        if (!fields) return "";
+
+        const parts = [];
+        if (fields.eyebrow) {
+          const verbatim = fields.eyebrowVerbatim ? " verbatim" : "";
+          parts.push(`<span class="tip-eyebrow${verbatim}">${escapeHtml(fields.eyebrow)}</span>`);
+        }
+        if (fields.title) {
+          parts.push(`<span class="tip-title">${escapeHtml(fields.title)}</span>`);
+        }
+        splitTipLines(fields.body).forEach((line) => {
+          parts.push(`<p class="tip-body">${escapeHtml(line)}</p>`);
+        });
+        const metaLines = splitTipLines(fields.meta);
+        if (metaLines.length) {
+          parts.push(`<span class="tip-meta">${metaLines.map(escapeHtml).join("<br>")}</span>`);
+        }
+        if (fields.url) {
+          parts.push(`<div class="tip-source">${tipLinkMarkup(fields.url)}</div>`);
+        }
+        return parts.join("");
+      }
+
+      function splitTipLines(value) {
+        return String(value || "").split("\n").map((line) => line.trim()).filter(Boolean);
+      }
+
+      // Host and path are styled apart because provenance is the point: a score
+      // from the vendor's own model card means something different from one on
+      // an independent leaderboard, and the domain is the whole tell.
+      function tipLinkMarkup(url) {
+        let parsed = null;
+        try {
+          parsed = new URL(url);
+        } catch (err) {
+          parsed = null;
+        }
+        // An imported llm.json is not trusted input, so anything that is not a
+        // plain web address is shown as text instead of made clickable.
+        if (!parsed || (parsed.protocol !== "http:" && parsed.protocol !== "https:")) {
+          return `<span class="tip-link tip-link-plain">${escapeHtml(url)}</span>`;
+        }
+
+        const host = parsed.host.replace(/^www\./, "");
+        const path = `${parsed.pathname === "/" ? "" : parsed.pathname}${parsed.search}${parsed.hash}`;
+        return (
+          `<a class="tip-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">` +
+          `<span class="tip-link-mark" aria-hidden="true">&#8599;</span>` +
+          `<span class="tip-link-url"><span class="tip-link-host">${escapeHtml(host)}</span>` +
+          (path ? `<span class="tip-link-path">${escapeHtml(path)}</span>` : "") +
+          `</span></a>`
+        );
+      }
+
+      function placeTip() {
+        const anchor = tooltip.anchor;
+        if (!anchor || !document.contains(anchor)) {
+          closeTip();
+          return;
+        }
+
+        const rect = anchor.getBoundingClientRect();
+        const vw = document.documentElement.clientWidth;
+        const vh = document.documentElement.clientHeight;
+        // A re-render or a scrolled-away row leaves the slip pointing at
+        // nothing, so it goes with its anchor.
+        if ((!rect.width && !rect.height) || rect.bottom < 0 || rect.top > vh || rect.right < 0 || rect.left > vw) {
+          closeTip();
+          return;
+        }
+
+        const el = tooltip.el;
+        // offsetWidth/Height ignore the resting transform, so the measurement
+        // holds whether the slip is open or still animating in.
+        const width = el.offsetWidth;
+        const height = el.offsetHeight;
+
+        const roomBelow = vh - rect.bottom;
+        const roomAbove = rect.top;
+        let placement = "bottom";
+        let top = rect.bottom + TIP_GAP;
+        if (roomBelow < height + TIP_GAP + TIP_EDGE && roomAbove > roomBelow) {
+          placement = "top";
+          top = rect.top - TIP_GAP - height;
+        }
+
+        let left = rect.left + rect.width / 2 - width / 2;
+        left = Math.max(TIP_EDGE, Math.min(left, vw - width - TIP_EDGE));
+        top = Math.max(TIP_EDGE, Math.min(top, vh - height - TIP_EDGE));
+
+        el.dataset.placement = placement;
+        el.style.left = `${Math.round(left)}px`;
+        el.style.top = `${Math.round(top)}px`;
+      }
+
+      function openTip(anchor, pinned) {
+        window.clearTimeout(tooltip.showTimer);
+        window.clearTimeout(tooltip.hideTimer);
+
+        const markup = tipMarkup(anchor);
+        if (!markup) return;
+
+        if (tooltip.anchor && tooltip.anchor !== anchor) {
+          tooltip.anchor.removeAttribute("aria-describedby");
+        }
+        tooltip.anchor = anchor;
+        tooltip.pinned = Boolean(pinned);
+        tooltip.over = false;
+        tooltip.el.innerHTML = markup;
+        tooltip.el.setAttribute("aria-hidden", "false");
+        anchor.setAttribute("aria-describedby", "tooltip");
+        placeTip();
+        if (tooltip.anchor) {
+          tooltip.el.classList.add("is-open");
+        }
+      }
+
+      function queueTip(anchor) {
+        window.clearTimeout(tooltip.showTimer);
+        window.clearTimeout(tooltip.hideTimer);
+        const warm = tooltip.el.classList.contains("is-open")
+          || Date.now() - tooltip.closedAt < TIP_WARM_WINDOW;
+        tooltip.showTimer = window.setTimeout(
+          () => openTip(anchor, false),
+          warm ? TIP_WARM_DELAY : TIP_SHOW_DELAY
+        );
+      }
+
+      // Deferred close. Anything that re-engages the slip — the pointer landing
+      // on it, or going back to the anchor — cancels the pending timer.
+      function queueTipClose() {
+        window.clearTimeout(tooltip.hideTimer);
+        tooltip.hideTimer = window.setTimeout(() => {
+          if (tooltip.over || tooltip.pinned) return;
+          closeTip();
+        }, TIP_HIDE_DELAY);
+      }
+
+      function closeTip() {
+        window.clearTimeout(tooltip.showTimer);
+        window.clearTimeout(tooltip.hideTimer);
+        if (tooltip.anchor) {
+          tooltip.anchor.removeAttribute("aria-describedby");
+        }
+        tooltip.anchor = null;
+        tooltip.pinned = false;
+        tooltip.over = false;
+        tooltip.closedAt = Date.now();
+        tooltip.el.classList.remove("is-open");
+        tooltip.el.setAttribute("aria-hidden", "true");
+      }
+
+      function tipAnchorFrom(target) {
+        if (!(target instanceof Element)) return null;
+        if (tooltip.el.contains(target)) return null;
+        return target.closest(TIP_SELECTOR);
+      }
+
+      function initTooltips() {
+        tooltip.el = document.getElementById("tooltip");
+        if (!tooltip.el) return;
+
+        // Delegated, so rows rendered later need no rebinding.
+        document.addEventListener("pointerover", (event) => {
+          if (event.pointerType === "touch") return;
+          const anchor = tipAnchorFrom(event.target);
+          if (!anchor) return;
+          if (anchor === tooltip.anchor) {
+            window.clearTimeout(tooltip.hideTimer);
+            return;
+          }
+          queueTip(anchor);
+        });
+
+        document.addEventListener("pointerout", (event) => {
+          if (event.pointerType === "touch") return;
+          const anchor = tipAnchorFrom(event.target);
+          if (!anchor) return;
+          // Moving within the same anchor is not a leave.
+          if (event.relatedTarget instanceof Node && anchor.contains(event.relatedTarget)) return;
+          if (anchor !== tooltip.anchor) {
+            window.clearTimeout(tooltip.showTimer);
+            return;
+          }
+          queueTipClose();
+        });
+
+        tooltip.el.addEventListener("pointerenter", () => {
+          tooltip.over = true;
+          window.clearTimeout(tooltip.hideTimer);
+        });
+
+        tooltip.el.addEventListener("pointerleave", () => {
+          tooltip.over = false;
+          if (!tooltip.pinned) queueTipClose();
+        });
+
+        // Touch opens on release, not on press: the table pans horizontally on
+        // small screens, and a pan that happens to start on a score cell has to
+        // scroll rather than leave a slip behind.
+        let tapStart = null;
+
+        document.addEventListener("pointerdown", (event) => {
+          if (tooltip.el.contains(event.target)) return;
+          const anchor = tipAnchorFrom(event.target);
+          if (event.pointerType === "touch" || event.pointerType === "pen") {
+            tapStart = anchor ? { anchor, x: event.clientX, y: event.clientY } : null;
+            if (anchor !== tooltip.anchor) closeTip();
+            return;
+          }
+          if (!anchor) closeTip();
+        });
+
+        document.addEventListener("pointerup", (event) => {
+          const start = tapStart;
+          tapStart = null;
+          if (!start || !document.contains(start.anchor)) return;
+          if (Math.abs(event.clientX - start.x) > TIP_TAP_SLOP) return;
+          if (Math.abs(event.clientY - start.y) > TIP_TAP_SLOP) return;
+          // No hover on touch, so the slip pins open until the next touch lands
+          // somewhere else. The anchor's own link or button still fires —
+          // nothing is swallowed here.
+          openTip(start.anchor, true);
+        });
+
+        document.addEventListener("pointercancel", () => {
+          tapStart = null;
+        });
+
+        document.addEventListener("focusin", (event) => {
+          if (tooltip.el.contains(event.target)) {
+            window.clearTimeout(tooltip.hideTimer);
+            return;
+          }
+          const anchor = tipAnchorFrom(event.target);
+          // :focus-visible keeps this to keyboard focus. Clicking a button
+          // focuses it too, and a slip popping up under your own click reads
+          // as a glitch.
+          if (anchor && event.target.matches(":focus-visible")) {
+            openTip(anchor, false);
+          } else if (!tooltip.pinned) {
+            closeTip();
+          }
+        });
+
+        document.addEventListener("focusout", (event) => {
+          const anchor = tipAnchorFrom(event.target);
+          if (anchor && anchor === tooltip.anchor && !tooltip.over) queueTipClose();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && tooltip.anchor) closeTip();
+        });
+
+        // Capture, so scrolling the table shell moves the slip too.
+        window.addEventListener("scroll", () => {
+          if (tooltip.anchor) placeTip();
+        }, true);
+
+        window.addEventListener("resize", () => closeTip());
       }
 
       function escapeHtml(value) {
