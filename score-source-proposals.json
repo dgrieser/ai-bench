@@ -129,14 +129,6 @@
       "evidence": "card reports SWE-bench Verified 59.2 only"
     },
     {
-      "model": "glm-5-2",
-      "benchmark": "terminal_bench_2_0",
-      "value": 81,
-      "url": "https://huggingface.co/zai-org/GLM-5.2",
-      "confidence": "confirmed",
-      "evidence": "card: \"Terminal Bench 2.1 (Terminus-2): 81.0\" — card labels this 2.1, AA reports terminal_bench_2_1=77.9 for the same model"
-    },
-    {
       "model": "gpt-oss-120b",
       "benchmark": "browsecomp",
       "value": 28.7,
@@ -281,14 +273,6 @@
       "evidence": "card: \"SWEBench Verified: 77.6%\""
     },
     {
-      "model": "inkling",
-      "benchmark": "terminal_bench_2_0",
-      "value": 63.8,
-      "url": "https://huggingface.co/thinkingmachines/Inkling",
-      "confidence": "confirmed",
-      "evidence": "card: \"Terminal Bench 2.1 (Best Harness): 63.8\" — card labels this 2.1, llm.json files it under terminal_bench_2_0"
-    },
-    {
       "model": "inkling-small",
       "benchmark": "aime_2026",
       "value": 95.5,
@@ -319,14 +303,6 @@
       "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
       "confidence": "confirmed",
       "evidence": "card: \"SWEBench Verified: 80.2\""
-    },
-    {
-      "model": "inkling-small",
-      "benchmark": "terminal_bench_2_0",
-      "value": 64.7,
-      "url": "https://huggingface.co/thinkingmachines/Inkling-Small",
-      "confidence": "confirmed",
-      "evidence": "card: \"Terminal Bench 2.1 (best harness): 64.7\" — card labels this 2.1"
     },
     {
       "model": "kimi-k2-5",
@@ -545,14 +521,6 @@
       "evidence": "card: \"Terminal-Bench 2.1 (Terminus-2): 77.5\""
     },
     {
-      "model": "ornith-1-0-9b",
-      "benchmark": "terminal_bench_2_0",
-      "value": 43.1,
-      "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B",
-      "confidence": "confirmed",
-      "evidence": "card: \"Terminal-Bench 2.1 (Terminus-2): 43.1\" — card has no 2.0 row at all"
-    },
-    {
       "model": "qwen3-30b-a3b-2507-reasoning",
       "benchmark": "browsecomp",
       "value": 22.9,
@@ -751,14 +719,6 @@
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
       "confidence": "probable",
       "evidence": "card reports SWE-bench Pro only"
-    },
-    {
-      "model": "step-3-7-flash",
-      "benchmark": "terminal_bench_2_0",
-      "value": 59.5,
-      "url": "https://huggingface.co/stepfun-ai/Step-3.7-Flash",
-      "confidence": "confirmed",
-      "evidence": "card: \"Terminal-Bench 2.1: 59.5\" — card labels this 2.1"
     }
   ],
   "unresolved": [
