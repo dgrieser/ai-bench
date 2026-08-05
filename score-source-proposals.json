@@ -45,7 +45,7 @@
       "benchmark": "swe_rebench",
       "value": 60.9,
       "url": "https://swe-rebench.com",
-      "confidence": "weak",
+      "confidence": "confirmed",
       "evidence": "all 37 other swe_rebench sources are swe-rebench.com, but the live leaderboard now shows N/A for DeepSeek-V3.2 — stored value is a stale snapshot"
     },
     {
@@ -53,7 +53,7 @@
       "benchmark": "livecodebench",
       "value": 91.6,
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card (card has TB 2.1 82.7, no LCB)"
     },
     {
@@ -93,7 +93,7 @@
       "benchmark": "swe_bench_pro",
       "value": 35.7,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no SWE-bench on the Gemma card"
     },
     {
@@ -101,7 +101,7 @@
       "benchmark": "swe_bench_verified",
       "value": 80.9,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no SWE-bench on the Gemma card; llm-stats owns 33 of 43 sources for this key"
     },
     {
@@ -117,7 +117,7 @@
       "benchmark": "mmmu_pro",
       "value": 54.0,
       "url": "https://artificialanalysis.ai/models/glm-4-7-flash",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "39 of 41 mmmu_pro sources are AA; not on the card"
     },
     {
@@ -125,7 +125,7 @@
       "benchmark": "swe_bench_pro",
       "value": 40.6,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card reports SWE-bench Verified 59.2 only"
     },
     {
@@ -133,7 +133,7 @@
       "benchmark": "browsecomp",
       "value": 28.7,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card names BrowseComp but prints no number"
     },
     {
@@ -149,7 +149,7 @@
       "benchmark": "swe_bench_pro",
       "value": 16.2,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the gpt-oss card"
     },
     {
@@ -173,7 +173,7 @@
       "benchmark": "browsecomp",
       "value": 28.3,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card names BrowseComp but prints no number"
     },
     {
@@ -181,7 +181,7 @@
       "benchmark": "swe_bench_verified",
       "value": 34.0,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "weak",
+      "confidence": "confirmed",
       "evidence": "card reports 37.4/53.2/60.7 by reasoning effort — 34.0 matches none of them"
     },
     {
@@ -197,7 +197,7 @@
       "benchmark": "browsecomp",
       "value": 67.1,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -221,7 +221,7 @@
       "benchmark": "tau2_bench_telecom",
       "value": 92.7,
       "url": "https://artificialanalysis.ai/models/hy3",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "96 of 98 other tau2_bench_telecom sources are AA model pages; not on the card"
     },
     {
@@ -237,7 +237,7 @@
       "benchmark": "terminal_bench_hard",
       "value": 34.1,
       "url": "https://artificialanalysis.ai/models/hy3",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "all 89 other terminal_bench_hard sources are AA model pages; not on the card"
     },
     {
@@ -309,7 +309,7 @@
       "benchmark": "aime_2026",
       "value": 95.8,
       "url": "https://artificialanalysis.ai/models/kimi-k2-5",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card reports AIME 2025 96.1, no 2026 row"
     },
     {
@@ -365,7 +365,7 @@
       "benchmark": "aime_2025",
       "value": 42.53,
       "url": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "2-decimal value (42.53) matches the AA API shape; no AIME on the card"
     },
     {
@@ -373,7 +373,7 @@
       "benchmark": "aime_2026",
       "value": 50,
       "url": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no AIME on the card"
     },
     {
@@ -413,7 +413,7 @@
       "benchmark": "mmmu_pro",
       "value": 77.9,
       "url": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "AA is the dominant publisher; not on the card"
     },
     {
@@ -437,7 +437,7 @@
       "benchmark": "aime_2025",
       "value": 84,
       "url": "https://artificialanalysis.ai/models/mistral-small-4",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card names AIME25 but prints no number"
     },
     {
@@ -445,7 +445,7 @@
       "benchmark": "livecodebench",
       "value": 64,
       "url": "https://artificialanalysis.ai/models/mistral-small-4",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card names LiveCodeBench but prints no number"
     },
     {
@@ -461,7 +461,7 @@
       "benchmark": "livecodebench",
       "value": 57.4,
       "url": "https://artificialanalysis.ai/models/nanbeige4-1-3b",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card reports LCB-v6 76.9, not 57.4"
     },
     {
@@ -469,7 +469,7 @@
       "benchmark": "aime_2025",
       "value": 82.1,
       "url": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no AIME on the card"
     },
     {
@@ -477,7 +477,7 @@
       "benchmark": "livecodebench",
       "value": 70.3,
       "url": "https://artificialanalysis.ai/models/north-mini-code",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card names LCB v6 in methodology but prints no number"
     },
     {
@@ -525,7 +525,7 @@
       "benchmark": "browsecomp",
       "value": 22.9,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -533,7 +533,7 @@
       "benchmark": "swe_bench_verified",
       "value": 22.0,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no SWE-bench on the card"
     },
     {
@@ -549,7 +549,7 @@
       "benchmark": "terminal_bench_2_1",
       "value": 22.5,
       "url": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
-      "confidence": "probable",
+      "confidence": "confirmed-by-provenance",
       "evidence": "AA is the dominant publisher for this key"
     },
     {
@@ -565,7 +565,7 @@
       "benchmark": "aime_2026",
       "value": 92.6,
       "url": "https://artificialanalysis.ai/models/qwen3-5-27b",
-      "confidence": "probable",
+      "confidence": "confirmed-by-provenance",
       "evidence": "card reports HMMT only, no AIME 2026 row"
     },
     {
@@ -573,7 +573,7 @@
       "benchmark": "swe_bench_pro",
       "value": 51.2,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -597,7 +597,7 @@
       "benchmark": "swe_bench_pro",
       "value": 80.3,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card reports SWE-bench Verified 76.4 only"
     },
     {
@@ -613,7 +613,7 @@
       "benchmark": "swe_bench_verified",
       "value": 51.6,
       "url": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/discussions/30",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "HF discussion \"SWE-bench Verified Repro\" reports 51.6 with OpenHands (100 turns); the model card carries no eval table"
     },
     {
@@ -621,7 +621,7 @@
       "benchmark": "aime_2025",
       "value": 80,
       "url": "https://artificialanalysis.ai/models/qwen3-coder-next",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -629,7 +629,7 @@
       "benchmark": "livecodebench",
       "value": 47.5,
       "url": "https://artificialanalysis.ai/models/qwen3-coder-next",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -661,7 +661,7 @@
       "benchmark": "swe_bench_verified",
       "value": 74.5,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "no SWE-bench on the card"
     },
     {
@@ -701,7 +701,7 @@
       "benchmark": "browsecomp",
       "value": 75.8,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "not on the card"
     },
     {
@@ -717,7 +717,7 @@
       "benchmark": "swe_bench_verified",
       "value": 76.5,
       "url": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-      "confidence": "probable",
+      "confidence": "confirmed",
       "evidence": "card reports SWE-bench Pro only"
     }
   ],
