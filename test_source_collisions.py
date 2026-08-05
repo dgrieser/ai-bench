@@ -152,13 +152,43 @@ class TestSpheronMerge(unittest.TestCase):
     def test_largest_vram_estimate_wins_per_quant(self) -> None:
         mapping = write_json({"org/Model": "m", "org/Model-0731": "m"})
         rows = [
-            {"model": "org/Model", "vram_fp16": 600, "vram_int8": 300, "vram_int4": None},
-            {"model": "org/Model-0731", "vram_fp16": 580, "vram_int8": 320, "vram_int4": 90},
+            {"model": "org/Model", "source": "https://spheron/model", "vram_fp16": 600, "vram_int8": 300, "vram_int4": None},
+            {"model": "org/Model-0731", "source": "https://spheron/revision", "vram_fp16": 580, "vram_int8": 320, "vram_int4": 90},
         ]
         for order in (rows, list(reversed(rows))):
             with stub_run(order):
                 by_slug = update.fetch_spheron_data(SCRIPT, mapping)
-            self.assertEqual(by_slug["m"], {"fp16": 600, "int8": 320, "int4": 90})
+            self.assertEqual(by_slug["m"], {
+                "fp16": 600,
+                "int8": 320,
+                "int4": 90,
+                "source": {
+                    "fp16": "https://spheron/model",
+                    "int8": "https://spheron/revision",
+                    "int4": "https://spheron/revision",
+                },
+            })
+
+    def test_source_is_stored_with_each_vram_value(self) -> None:
+        doc = {"models": [{"name": "m", "vram": {"fp16": 10}}]}
+        fetched = {
+            "m": {
+                "fp16": 10,
+                "int8": 5,
+                "int4": None,
+                "source": {
+                    "fp16": "https://spheron/model",
+                    "int8": "https://spheron/model",
+                },
+            }
+        }
+
+        update.update_spheron_vram(doc, fetched)
+
+        self.assertEqual(doc["models"][0]["vram_source"], {
+            "fp16": "https://spheron/model",
+            "int8": "https://spheron/model",
+        })
 
 
 if __name__ == "__main__":

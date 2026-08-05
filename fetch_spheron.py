@@ -90,7 +90,10 @@ def parse_model(html: str, fallback_id: str) -> dict:
         if precision in PRECISIONS:
             by_precision[precision] = round_gb(pick.get("vramGb"))
 
-    row = {"model": model_id}
+    row = {
+        "model": model_id,
+        "source": BASE_URL.format(model=model_id),
+    }
     for precision, key in PRECISIONS.items():
         row[key] = by_precision.get(precision)
     return row
