@@ -3946,8 +3946,12 @@
         const html = formatVram(raw);
         const budget = gpuUsableBudget();
         const num = typeof raw === "number" ? raw : parseFloat(raw);
-        if (!budget || !Number.isFinite(num)) {
+        if (!Number.isFinite(num)) {
           return `<td class="mono">${html}</td>`;
+        }
+        const tip = ` data-tip-kind="vram"`;
+        if (!budget) {
+          return `<td class="mono"${tip}>${html}</td>`;
         }
         // With a reserve set, the tooltip names the usable budget so the
         // shading and the total in the filter bar don't look contradictory.
@@ -3956,19 +3960,11 @@
           : `${formatGb(budget)} GB budget`;
         const ratio = num / budget;
         if (ratio > 1) {
-          const overTip = tipAttrs({
-            eyebrow: "Does not fit",
-            body: `Needs ${num} GB, over the ${budgetLabel}.`
-          });
-          return `<td class="mono vram-over"${overTip}>${html}</td>`;
+          return `<td class="mono vram-over"${tip}>${html}</td>`;
         }
         const t = Math.max(0, Math.min(1, (ratio - 0.55) / 0.45));
         const hue = Math.round(150 - t * 130);
-        const fitTip = tipAttrs({
-          eyebrow: "Fits",
-          body: `Takes ${Math.round(ratio * 100)}% of the ${budgetLabel}.`
-        });
-        return `<td class="mono vram-fit" style="--fit-h:${hue}"${fitTip}>${html}</td>`;
+        return `<td class="mono vram-fit" style="--fit-h:${hue}"${tip}>${html}</td>`;
       }
 
       function updateMeta() {
@@ -4601,6 +4597,39 @@
       // against 33 benchmarks is a lot of markup to repeat for content only one
       // cell at a time ever shows.
       const TIP_RESOLVERS = {
+        vram(el) {
+          const cell = el.closest("td");
+          const row = cell && cell.parentElement;
+          const column = cell && FIXED_COLUMNS[cell.cellIndex];
+          if (!cell || !row || !column?.key.startsWith("vram_")) return null;
+
+          const model = state.filteredModels[row.sectionRowIndex];
+          const quant = column.key.slice("vram_".length);
+          const value = model?.vram?.[quant];
+          const num = typeof value === "number" ? value : parseFloat(value);
+          if (!model || !Number.isFinite(num)) return null;
+
+          const budget = gpuUsableBudget();
+          let fit = "";
+          if (budget) {
+            const budgetLabel = state.gpu.reserve
+              ? `${formatGb(budget)} GB usable budget (${Math.round(state.gpu.reserve * 100)}% of ${formatGb(state.gpu.budget)} GB reserved)`
+              : `${formatGb(budget)} GB budget`;
+            fit = num > budget
+              ? `Does not fit: needs ${num} GB, over the ${budgetLabel}.`
+              : `Fits: takes ${Math.round(num / budget * 100)}% of the ${budgetLabel}.`;
+          }
+
+          const source = model.vram_source?.[quant];
+          return {
+            eyebrow: model.name || "",
+            eyebrowVerbatim: true,
+            title: `${quant.toUpperCase()} VRAM · ${num} GB`,
+            body: fit,
+            meta: source ? "Estimated by Spheron GPU Recommender." : "No source recorded for this estimate.",
+            url: source || ""
+          };
+        },
         score(el) {
           const cell = el.closest("td");
           const row = cell && cell.parentElement;

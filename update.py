@@ -1194,7 +1194,7 @@ def fetch_spheron_data(
     if not isinstance(payload, list):
         raise RuntimeError("Unexpected spheron JSON format: expected a list")
 
-    # slug -> {quant -> vram GB}
+    # slug -> {quant -> vram GB, source -> {quant -> per-model page}}
     by_slug: dict[str, dict[str, Any]] = {}
     for row in payload:
         if not isinstance(row, dict):
@@ -1205,7 +1205,11 @@ def fetch_spheron_data(
         slug = spheron_to_slug.get(name)
         if not slug:
             continue
-        vram = by_slug.setdefault(slug, {"fp16": None, "int8": None, "int4": None})
+        vram = by_slug.setdefault(
+            slug,
+            {"fp16": None, "int8": None, "int4": None, "source": {}},
+        )
+        source = row.get("source")
         for quant, source_key in (
             ("fp16", "vram_fp16"),
             ("int8", "vram_int8"),
@@ -1218,6 +1222,8 @@ def fetch_spheron_data(
             # larger estimate wins: it is the one the model actually fits in.
             if not is_number(old) or (is_number(value) and value > old):
                 vram[quant] = value
+                if isinstance(source, str) and source:
+                    vram["source"][quant] = source
     return by_slug
 
 
@@ -1241,6 +1247,9 @@ def update_spheron_vram(
         vram = model.setdefault("vram", {})
         if not isinstance(vram, dict):
             continue
+        vram_source = model.get("vram_source")
+        if not isinstance(vram_source, dict):
+            vram_source = None
 
         for quant in ("fp16", "int8", "int4"):
             new_value = vram_data.get(quant)
@@ -1252,6 +1261,12 @@ def update_spheron_vram(
                 vram[quant] = new_value
                 updated += 1
                 changes.append((slug, f"vram_{quant}", old_value, new_value))
+            source = vram_data.get("source", {}).get(quant)
+            if new_value is not None and isinstance(source, str) and source:
+                if vram_source is None:
+                    vram_source = {}
+                    model["vram_source"] = vram_source
+                vram_source[quant] = source
 
     return matched, updated, changes
 
