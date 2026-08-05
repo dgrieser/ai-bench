@@ -1715,6 +1715,28 @@
       letter-spacing: 0.06em;
     }
 
+    /* A creator eyebrow keeps the table's quiet link voice (see .creator a):
+       nothing at rest, the accent and a rule only once you are on it. The
+       inline-block keeps the hit area on the words instead of the whole line. */
+    a.tip-eyebrow {
+      display: inline-block;
+      color: var(--subtle);
+      text-decoration: none;
+    }
+
+    a.tip-eyebrow:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    a.tip-eyebrow:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 3px;
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
     .tip-title {
       display: block;
       margin-top: 2px;
@@ -2324,6 +2346,7 @@
          An anchor declares its content with data attributes:
            data-tip          body text; "\n" starts a new paragraph
            data-tip-eyebrow  mono label above the title
+           data-tip-eyebrow-url  makes that label a link (creator homepage)
            data-tip-title    display-face headline
            data-tip-meta     mono footnotes; "\n" separates lines
            data-tip-url      source link, rendered as host + path
@@ -3545,6 +3568,7 @@
         const modelTip = tipAttrs({
           eyebrow: model.creatorName || "",
           eyebrowVerbatim: true,
+          eyebrowUrl: creatorUrl,
           title: model.name || "Unknown",
           meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
           url: modelUrl
@@ -4046,6 +4070,7 @@
         const attrs = [` data-tip="${escapeAttr(fields.body || "")}"`];
         if (fields.eyebrow) attrs.push(` data-tip-eyebrow="${escapeAttr(fields.eyebrow)}"`);
         if (fields.eyebrowVerbatim) attrs.push(` data-tip-eyebrow-verbatim`);
+        if (fields.eyebrowUrl) attrs.push(` data-tip-eyebrow-url="${escapeAttr(fields.eyebrowUrl)}"`);
         if (fields.title) attrs.push(` data-tip-title="${escapeAttr(fields.title)}"`);
         if (fields.meta) attrs.push(` data-tip-meta="${escapeAttr(fields.meta)}"`);
         if (fields.url) attrs.push(` data-tip-url="${escapeAttr(fields.url)}"`);
@@ -4609,6 +4634,7 @@
         return {
           eyebrow: el.getAttribute("data-tip-eyebrow") || "",
           eyebrowVerbatim: el.hasAttribute("data-tip-eyebrow-verbatim"),
+          eyebrowUrl: el.getAttribute("data-tip-eyebrow-url") || "",
           title: el.getAttribute("data-tip-title") || "",
           body: el.getAttribute("data-tip") || "",
           meta: el.getAttribute("data-tip-meta") || "",
@@ -4622,8 +4648,11 @@
 
         const parts = [];
         if (fields.eyebrow) {
-          const verbatim = fields.eyebrowVerbatim ? " verbatim" : "";
-          parts.push(`<span class="tip-eyebrow${verbatim}">${escapeHtml(fields.eyebrow)}</span>`);
+          const className = `tip-eyebrow${fields.eyebrowVerbatim ? " verbatim" : ""}`;
+          const text = escapeHtml(fields.eyebrow);
+          parts.push(tipSafeUrl(fields.eyebrowUrl)
+            ? `<a class="${className}" href="${escapeAttr(fields.eyebrowUrl)}" target="_blank" rel="noopener noreferrer">${text}</a>`
+            : `<span class="${className}">${text}</span>`);
         }
         if (fields.title) {
           parts.push(`<span class="tip-title">${escapeHtml(fields.title)}</span>`);
@@ -4645,19 +4674,26 @@
         return String(value || "").split("\n").map((line) => line.trim()).filter(Boolean);
       }
 
-      // Host and path are styled apart because provenance is the point: a score
-      // from the vendor's own model card means something different from one on
-      // an independent leaderboard, and the domain is the whole tell.
-      function tipLinkMarkup(url) {
+      // Gate for every link a slip renders. An imported llm.json is not trusted
+      // input, so anything that is not a plain web address never becomes an
+      // href — callers fall back to plain text.
+      function tipSafeUrl(url) {
+        if (!url) return null;
         let parsed = null;
         try {
           parsed = new URL(url);
         } catch (err) {
-          parsed = null;
+          return null;
         }
-        // An imported llm.json is not trusted input, so anything that is not a
-        // plain web address is shown as text instead of made clickable.
-        if (!parsed || (parsed.protocol !== "http:" && parsed.protocol !== "https:")) {
+        return (parsed.protocol === "http:" || parsed.protocol === "https:") ? parsed : null;
+      }
+
+      // Host and path are styled apart because provenance is the point: a score
+      // from the vendor's own model card means something different from one on
+      // an independent leaderboard, and the domain is the whole tell.
+      function tipLinkMarkup(url) {
+        const parsed = tipSafeUrl(url);
+        if (!parsed) {
           return `<span class="tip-link tip-link-plain">${escapeHtml(url)}</span>`;
         }
 
