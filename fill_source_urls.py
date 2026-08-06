@@ -27,8 +27,10 @@ from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 import artificialanalysis
+import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
+import fetch_frontiercode
 import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
@@ -63,6 +65,14 @@ COVERED_BY = [
     (
         f"{fetch_huggingface.HF_BASE}/<org>/<repo> (per-model cards)",
         "models[].url — llm.html merges those into the Sources panel",
+    ),
+    (
+        fetch_frontiercode.URL,
+        fetch_frontiercode.LEADERBOARD_URL,
+    ),
+    (
+        f"{fetch_datacurve.URL} (versioned artifact)",
+        fetch_datacurve.SITE_URL,
     ),
 ]
 
@@ -105,7 +115,9 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
     """
     items: list[tuple[str, tuple[str, ...]]] = [
         (fetch_deepswe.URL, ("deepswe",)),
+        (fetch_datacurve.SITE_URL, ("deepswe",)),
         (fetch_frontierswe.URL, ("frontierswe",)),
+        (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode",)),
         (fetch_swe_rebench.URL, ("swe_rebench",)),
         (fetch_swe_marathon.URL, ("swe_marathon",)),
         (fetch_toolathlon.URL, ("toolathlon",)),

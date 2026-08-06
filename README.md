@@ -26,6 +26,8 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Spheron** | Infrastructure | JSON API |
 | **LLMStats** | Community Aggregator | JSON API |
 | **Evals Report** | Research | JSON API |
+| **FrontierCode** | Research (Cognition) | Static leaderboard JSON |
+| **DeepSWE (Datacurve)** | Research (benchmark's own site) | Versioned JSON artifact |
 
 ## Core Data Structure
 
@@ -93,6 +95,7 @@ date or source; `fill_missing_source_urls.py` asks for those, plus a missing
 │  fetch_swe_atlas.py       │ fetch_swe_marathon.py       │
 │  fetch_swe_rebench.py     │ fetch_spheron.py            │
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
+│  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -132,11 +135,16 @@ Output: llm.json (unified dataset)
 ./fetch_swe_rebench.py
 ./fetch_llmstats.py
 ./fetch_evals_report.py
+./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
+./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
+./fetch_frontiercode.py                 # every revision, newest wins per model
+./fetch_frontiercode.py --revision 1.0  # or pin one revision
 
 # Update model name mappings from source APIs
 ./update_artificialanalysis_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
+./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
 ./update_osworld_mapping.py
@@ -216,6 +224,14 @@ This orchestrates:
 3. Merges results into `llm.json`
 4. Updates timestamps
 
+Sources are applied in a fixed order and a later one overwrites an earlier
+value, so the order encodes precedence: a benchmark's own site runs *after* the
+aggregator that republishes it. `fetch_swe_marathon.py` and
+`fetch_frontiercode.py` (Cognition's leaderboard) therefore run after
+`fetch_evals_report.py`, and evals.report only supplies models the benchmark's
+own leaderboard does not list. `fetch_datacurve.py` (DeepSWE's own leaderboard)
+stands in the same relation to `fetch_deepswe.py`, which reads benchlm.ai.
+
 ## Mapping System
 
 The project uses a **multi-layer mapping strategy** to handle model name fragmentation:
@@ -228,7 +244,9 @@ Every model has a `slug` (e.g., `gpt-4-turbo`) used throughout the system.
 
 Each benchmark has a mapping file:
 - `model-name-mapping-artificialanalysis.json`
-- `model-name-mapping-deepswe-to-artificialanalysis.json`
+- `model-name-mapping-deepswe-to-artificialanalysis.json` (shared by both
+  DeepSWE readers: `fetch_deepswe.py` and `fetch_datacurve.py` label a run the
+  same way, `glm-5-2[max]`, so one review covers both)
 - `model-name-mapping-huggingface-to-artificialanalysis.json`
 - etc.
 
@@ -440,9 +458,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (11 files)
-├── update_*_mapping.py         # Mapping sync scripts (8 files)
-├── _*_mapping.py               # Mapping application modules (11 files)
+├── fetch_*.py                  # Benchmark data fetchers (13 files)
+├── update_*_mapping.py         # Mapping sync scripts (13 files)
+├── _*_mapping.py               # Mapping application modules (13 files)
 │
 ├── derive_coding_index.py      # Derived Coding index column (see above)
 │

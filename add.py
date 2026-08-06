@@ -35,8 +35,13 @@ from _osworld_mapping import (
 )
 from _deepswe_mapping import (
     add_deepswe_mapping,
-    fetch_deepswe_model_names,
+    fetch_all_deepswe_names,
     load_deepswe_to_slug_mapping,
+)
+from _frontiercode_mapping import (
+    add_frontiercode_mapping,
+    fetch_frontiercode_model_names,
+    load_frontiercode_to_slug_mapping,
 )
 from _frontierswe_mapping import (
     add_frontierswe_mapping,
@@ -154,6 +159,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip the FrontierSWE mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-frontiercode",
+        action="store_true",
+        help="Skip the FrontierCode mapping prompt.",
     )
     parser.add_argument(
         "--skip-swe-atlas",
@@ -374,7 +384,7 @@ def maybe_add_deepswe_mapping(model_name: str, interactive: bool) -> None:
         return
 
     try:
-        deepswe_names = fetch_deepswe_model_names()
+        deepswe_names = fetch_all_deepswe_names()
     except RuntimeError as exc:
         print(f"Skipping DeepSWE mapping prompt: {exc}")
         return
@@ -413,6 +423,31 @@ def maybe_add_frontierswe_mapping(model_name: str, interactive: bool) -> None:
 
     add_frontierswe_mapping(frontierswe_name, model_name)
     print(f"Added FrontierSWE mapping '{frontierswe_name}' -> '{model_name}'")
+
+
+def maybe_add_frontiercode_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_frontiercode_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        frontiercode_names = fetch_frontiercode_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping FrontierCode mapping prompt: {exc}")
+        return
+
+    if not frontiercode_names:
+        return
+
+    frontiercode_name = prompt_select_or_new("FrontierCode model", frontiercode_names)
+    if not frontiercode_name:
+        return
+
+    add_frontiercode_mapping(frontiercode_name, model_name)
+    print(f"Added FrontierCode mapping '{frontiercode_name}' -> '{model_name}'")
 
 
 def maybe_add_swe_atlas_mapping(model_name: str, interactive: bool) -> None:
@@ -897,6 +932,8 @@ def main() -> int:
         maybe_add_deepswe_mapping(model["name"], interactive)
     if not args.skip_frontierswe:
         maybe_add_frontierswe_mapping(model["name"], interactive)
+    if not args.skip_frontiercode:
+        maybe_add_frontiercode_mapping(model["name"], interactive)
     if not args.skip_swe_atlas:
         maybe_add_swe_atlas_mapping(model["name"], interactive)
     if not args.skip_evals_report:

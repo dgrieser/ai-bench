@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Review and update DeepSWE to Artificial Analysis name mappings.
+"""Review and update FrontierCode to Artificial Analysis name mappings.
 
 llm.json tracks open-weight models only, so names the source reports as
 closed-weight are recorded as __closed_weights__ without prompting. Pass
@@ -16,15 +16,15 @@ from typing import Any
 
 import _prompts
 from _openness import is_closed_weights, open_index
+from _selector import find_matches
 from add import prompt_select_or_new
-from _deepswe_mapping import (
-    DEEPSWE_MAPPING,
-    add_deepswe_closed_weights,
-    add_deepswe_mapping,
-    add_deepswe_unmappable,
-    fetch_all_deepswe_names,
-    fetch_deepswe_model_openness,
-    load_reviewed_deepswe_names,
+from _frontiercode_mapping import (
+    FRONTIERCODE_MAPPING,
+    add_frontiercode_closed_weights,
+    add_frontiercode_mapping,
+    add_frontiercode_unmappable,
+    fetch_frontiercode_model_names,
+    load_reviewed_frontiercode_names,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -38,7 +38,7 @@ class HelpOnErrorArgumentParser(argparse.ArgumentParser):
 
 def parse_args() -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(
-        description="Check for current DeepSWE names that may map to existing llm.json models."
+        description="Check for current FrontierCode names that may map to existing llm.json models."
     )
     parser.add_argument(
         "json_file",
@@ -50,7 +50,7 @@ def parse_args() -> argparse.Namespace:
         "--write",
         "-w",
         action="store_true",
-        help=f"Write selected mappings back to {DEEPSWE_MAPPING.name}.",
+        help=f"Write selected mappings back to {FRONTIERCODE_MAPPING.name}.",
     )
     parser.add_argument(
         "--recheck-closed",
@@ -91,43 +91,11 @@ def unique_names(models: list[dict[str, Any]]) -> list[str]:
     return ordered
 
 
-def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
-    haystack = option.lower()
-    needle = query.lower()
-
-    if needle in haystack:
-        return (0, haystack.index(needle))
-
-    pos = 0
-    gap_score = 0
-    for char in needle:
-        idx = haystack.find(char, pos)
-        if idx == -1:
-            return None
-        gap_score += idx - pos
-        pos = idx + 1
-    return (1, gap_score)
-
-
-def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
-    if not query:
-        return options[:limit]
-
-    scored: list[tuple[tuple[int, int, int], str]] = []
-    for option in options:
-        match = fuzzy_match(query, option)
-        if match is None:
-            continue
-        scored.append(((match[0], match[1], len(option)), option))
-    scored.sort(key=lambda item: item[0])
-    return [option for _, option in scored[:limit]]
-
-
-def prompt_slug_for_deepswe_name(deepswe_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_frontiercode_name(frontiercode_name: str, slugs: list[str]) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
-        label = f"Map DeepSWE model '{deepswe_name}' to llm.json model"
+        label = f"Map FrontierCode model '{frontiercode_name}' to llm.json model"
         raw = prompt_select_or_new(label, slugs)
         if raw is None:
             return None
@@ -145,18 +113,17 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    deepswe_names = fetch_all_deepswe_names()
-    source_openness = fetch_deepswe_model_openness()
-    reviewed_names = load_reviewed_deepswe_names(
+    frontiercode_names = fetch_frontiercode_model_names()
+    reviewed_names = load_reviewed_frontiercode_names(
         include_closed=not args.recheck_closed
     )
     open_index(refresh=args.refresh_openness)
-    unreviewed_deepswe_names = [name for name in deepswe_names if name not in reviewed_names]
+    unreviewed_frontiercode_names = [name for name in frontiercode_names if name not in reviewed_names]
 
     print(f"models in {llm_path}: {len(llm_names)}")
-    print(f"models on deepswe: {len(deepswe_names)}")
-    print(f"already reviewed deepswe names: {len(reviewed_names)}")
-    print(f"unreviewed deepswe names: {len(unreviewed_deepswe_names)}")
+    print(f"models on frontiercode: {len(frontiercode_names)}")
+    print(f"already reviewed frontiercode names: {len(reviewed_names)}")
+    print(f"unreviewed frontiercode names: {len(unreviewed_frontiercode_names)}")
     print()
 
     matched = 0
@@ -166,9 +133,9 @@ def main() -> int:
     closed = 0
     interactive = sys.stdin.isatty()
 
-    for deepswe_name in unreviewed_deepswe_names:
-        candidates = find_matches(deepswe_name, llm_names, limit=5)
-        print(f"{deepswe_name}")
+    for frontiercode_name in unreviewed_frontiercode_names:
+        candidates = find_matches(frontiercode_name, llm_names, limit=5)
+        print(f"{frontiercode_name}")
         if candidates:
             matched += 1
             for idx, candidate in enumerate(candidates, start=1):
@@ -178,36 +145,34 @@ def main() -> int:
             print("  no candidate matches")
 
         if not args.recheck_closed and is_closed_weights(
-            deepswe_name,
-            open_weights=source_openness.get(deepswe_name),
-            guard_names=llm_names,
+            frontiercode_name, guard_names=llm_names
         ):
             closed += 1
             print("  -> closed weights per source, skipped without prompting")
             if args.write:
-                add_deepswe_closed_weights(deepswe_name)
+                add_frontiercode_closed_weights(frontiercode_name)
             continue
 
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_deepswe_name(deepswe_name, llm_names)
+        slug = prompt_slug_for_frontiercode_name(frontiercode_name, llm_names)
         if not slug:
             skipped += 1
             if _prompts.collecting():
                 print("  -> queued for manual review, nothing recorded")
             else:
-                add_deepswe_unmappable(deepswe_name)
+                add_frontiercode_unmappable(frontiercode_name)
                 print("  -> recorded as unmappable (won't ask again)")
             continue
 
-        add_deepswe_mapping(deepswe_name, slug)
+        add_frontiercode_mapping(frontiercode_name, slug)
         written += 1
         print(f"  -> wrote mapping to {slug}")
 
     print()
-    print(f"deepswe names with candidate matches: {matched}")
-    print(f"deepswe names without candidate matches: {without_candidates}")
+    print(f"frontiercode names with candidate matches: {matched}")
+    print(f"frontiercode names without candidate matches: {without_candidates}")
     print(f"new mappings written: {written}")
     label = "queued for review" if _prompts.collecting() else "recorded as unmappable"
     print(f"{label}: {skipped}")

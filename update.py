@@ -14,8 +14,10 @@ from typing import Any, Callable
 
 import artificialanalysis
 import derive_coding_index
+import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
+import fetch_frontiercode
 import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
@@ -35,6 +37,7 @@ from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _toolathlon_mapping import load_toolathlon_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
+from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
@@ -50,8 +53,10 @@ SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
+DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
+FRONTIERCODE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontiercode.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
 SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py")
@@ -189,7 +194,11 @@ OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
+# The leaderboard page, not the JSON artifact it hydrates from.
+DATACURVE_SOURCE_URL = canonical(fetch_datacurve.SITE_URL)
 FRONTIERSWE_SOURCE_URL = canonical(fetch_frontierswe.URL)
+# The leaderboard page, not the JSON it loads: the page is what a reader opens.
+FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
 SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)
 SWE_ATLAS_KEY_URLS = {
     key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
@@ -263,9 +272,19 @@ def parse_args() -> argparse.Namespace:
         help="Skip fetching scores from deepswe.",
     )
     parser.add_argument(
+        "--skip-datacurve",
+        action="store_true",
+        help="Skip fetching DeepSWE scores from deepswe.datacurve.ai.",
+    )
+    parser.add_argument(
         "--skip-frontierswe",
         action="store_true",
         help="Skip fetching scores from frontierswe.",
+    )
+    parser.add_argument(
+        "--skip-frontiercode",
+        action="store_true",
+        help="Skip fetching scores from cognition.com/frontiercode.",
     )
     parser.add_argument(
         "--skip-swe-atlas",
@@ -969,6 +988,154 @@ def update_frontierswe_scores(
     return matched, updated, changes
 
 
+def keep_newest_frontiercode_row(
+    by_slug: dict[str, dict[str, Any]], slug: str, row: dict[str, Any]
+) -> None:
+    """Newer benchmark revision wins; within one revision, the better score wins.
+
+    fetch_frontiercode.py already resolves a model listed in several revisions,
+    but two *different* leaderboard names can fold onto one llm.json slug across
+    revisions (a renamed release, a variant label). The revision has to decide
+    there too -- keep_best_row's best-run rule would otherwise let a retired
+    revision's higher number outrank the current re-run.
+    """
+    current = by_slug.get(slug)
+    if current is None:
+        by_slug[slug] = row
+        return
+
+    new_rank = fetch_frontiercode.revision_rank(row.get("revision") or "")
+    old_rank = fetch_frontiercode.revision_rank(current.get("revision") or "")
+    if new_rank == old_rank:
+        keep_best_row(by_slug, slug, row, "score")
+        return
+    if new_rank > old_rank and is_number(row.get("score")):
+        by_slug[slug] = row
+
+
+def build_fetch_datacurve_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json", "--all-configs"]
+
+
+def fetch_datacurve_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    """DeepSWE scores from the benchmark's own leaderboard.
+
+    Shares the benchlm mapping file: both sources label a run
+    "<model>[<effort>]", so a configuration reviewed once is mapped for both.
+    Every configuration is fetched (--all-configs) and the best one that maps to
+    a slug wins, the same rule keep_best_row applies to harness variants.
+    """
+    cmd = build_fetch_datacurve_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_datacurve.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected datacurve JSON format: expected a list")
+
+    deepswe_to_slug = load_deepswe_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        datacurve_name = row.get("model")
+        if not isinstance(datacurve_name, str) or not datacurve_name:
+            continue
+        slug = deepswe_to_slug.get(datacurve_name)
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_datacurve_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        datacurve_model = by_slug.get(slug)
+        if datacurve_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            model, slug, "deepswe", datacurve_model.get("score"),
+            DATACURVE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_frontiercode_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_frontiercode_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_frontiercode_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_frontiercode.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected frontiercode JSON format: expected a list")
+
+    frontiercode_to_slug = load_frontiercode_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        frontiercode_name = row.get("model")
+        if not isinstance(frontiercode_name, str) or not frontiercode_name:
+            continue
+        slug = frontiercode_to_slug.get(frontiercode_name)
+        if not slug:
+            continue
+        keep_newest_frontiercode_row(by_slug, slug, row)
+    return by_slug
+
+
+def update_frontiercode_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        frontiercode_model = by_slug.get(slug)
+        if frontiercode_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            model, slug, "frontiercode", frontiercode_model.get("score"),
+            FRONTIERCODE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
 def build_fetch_swe_atlas_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--track", "all", "--format", "json"]
 
@@ -1367,8 +1534,10 @@ def main() -> int:
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
+    datacurve_path = DATACURVE_SCRIPT
     toolathlon_path = TOOLATHLON_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
+    frontiercode_path = FRONTIERCODE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
     evals_report_path = EVALS_REPORT_SCRIPT
     swe_marathon_path = SWE_MARATHON_SCRIPT
@@ -1391,6 +1560,9 @@ def main() -> int:
     )
     frontierswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontierswe-to-artificialanalysis.json"
+    )
+    frontiercode_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-frontiercode-to-artificialanalysis.json"
     )
     swe_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-swe-atlas-to-artificialanalysis.json"
@@ -1444,8 +1616,12 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_toolathlon_cmd(toolathlon_path))}")
     if not args.skip_deepswe:
         print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
+    if not args.skip_datacurve:
+        print(f"  - {shlex.join(build_fetch_datacurve_cmd(datacurve_path))}")
     if not args.skip_frontierswe:
         print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
+    if not args.skip_frontiercode:
+        print(f"  - {shlex.join(build_fetch_frontiercode_cmd(frontiercode_path))}")
     if not args.skip_swe_atlas:
         print(f"  - {shlex.join(build_fetch_swe_atlas_cmd(swe_atlas_path))}")
     if not args.skip_evals_report:
@@ -1557,6 +1733,17 @@ def main() -> int:
         )
         changes.extend(deepswe_changes)
 
+    # Runs after benchlm.ai so DeepSWE's own leaderboard wins on disagreement.
+    datacurve_by_slug: dict[str, dict[str, Any]] = {}
+    datacurve_matched = 0
+    datacurve_updated = 0
+    if not args.skip_datacurve:
+        datacurve_by_slug = fetch_datacurve_data(datacurve_path, deepswe_mapping_path)
+        datacurve_matched, datacurve_updated, datacurve_changes = update_datacurve_scores(
+            doc, datacurve_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(datacurve_changes)
+
     frontierswe_by_slug: dict[str, dict[str, Any]] = {}
     frontierswe_matched = 0
     frontierswe_updated = 0
@@ -1588,6 +1775,17 @@ def main() -> int:
         changes.extend(evals_report_changes)
 
     # Runs after evals.report so the benchmark's own site wins on disagreement.
+    frontiercode_by_slug: dict[str, dict[str, Any]] = {}
+    frontiercode_matched = 0
+    frontiercode_updated = 0
+    if not args.skip_frontiercode:
+        frontiercode_by_slug = fetch_frontiercode_data(frontiercode_path, frontiercode_mapping_path)
+        frontiercode_matched, frontiercode_updated, frontiercode_changes = update_frontiercode_scores(
+            doc, frontiercode_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(frontiercode_changes)
+
+    # Same reason as frontiercode above.
     swe_marathon_by_slug: dict[str, Any] = {}
     swe_marathon_matched = 0
     swe_marathon_updated = 0
@@ -1633,8 +1831,12 @@ def main() -> int:
         print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {len(deepswe_by_slug)}")
+    if not args.skip_datacurve:
+        print(f"models returned by datacurve: {len(datacurve_by_slug)}")
     if not args.skip_frontierswe:
         print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
+    if not args.skip_frontiercode:
+        print(f"models returned by frontiercode: {len(frontiercode_by_slug)}")
     if not args.skip_swe_atlas:
         print(f"models returned by swe_atlas: {len(swe_atlas_by_slug)}")
     if not args.skip_evals_report:
@@ -1671,8 +1873,12 @@ def main() -> int:
         print(f"models matched on toolathlon: {toolathlon_matched}")
     if not args.skip_deepswe:
         print(f"models matched on deepswe: {deepswe_matched}")
+    if not args.skip_datacurve:
+        print(f"models matched on datacurve: {datacurve_matched}")
     if not args.skip_frontierswe:
         print(f"models matched on frontierswe: {frontierswe_matched}")
+    if not args.skip_frontiercode:
+        print(f"models matched on frontiercode: {frontiercode_matched}")
     if not args.skip_swe_atlas:
         print(f"models matched on swe_atlas: {swe_atlas_matched}")
     if not args.skip_evals_report:
@@ -1698,8 +1904,12 @@ def main() -> int:
         print(f"{action} from toolathlon: {toolathlon_updated}")
     if not args.skip_deepswe:
         print(f"{action} from deepswe: {deepswe_updated}")
+    if not args.skip_datacurve:
+        print(f"{action} from datacurve: {datacurve_updated}")
     if not args.skip_frontierswe:
         print(f"{action} from frontierswe: {frontierswe_updated}")
+    if not args.skip_frontiercode:
+        print(f"{action} from frontiercode: {frontiercode_updated}")
     if not args.skip_swe_atlas:
         print(f"{action} from swe_atlas: {swe_atlas_updated}")
     if not args.skip_evals_report:
