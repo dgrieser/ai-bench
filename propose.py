@@ -72,6 +72,11 @@ ROUTES: dict[str, dict[str, Route]] = {
     "update_frontierswe_mapping.py": {
         "*": Route("_frontierswe_mapping", "FRONTIERSWE_MAPPING", "add_frontierswe_mapping", MODELS)
     },
+    "update_frontiercode_mapping.py": {
+        "*": Route(
+            "_frontiercode_mapping", "FRONTIERCODE_MAPPING", "add_frontiercode_mapping", MODELS
+        )
+    },
     "update_swe_atlas_mapping.py": {
         "*": Route("_swe_atlas_mapping", "SWE_ATLAS_MAPPING", "add_swe_atlas_mapping", MODELS)
     },

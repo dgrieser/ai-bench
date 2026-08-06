@@ -224,7 +224,8 @@
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated (top models score below 30%).",
       "urls": [
         "https://cognition.ai/blog/frontier-code",
-        "https://evals.report/benchmarks/frontiercode"
+        "https://evals.report/benchmarks/frontiercode",
+        "https://cognition.com/frontiercode"
       ]
     },
     "swe_marathon": {
@@ -964,7 +965,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 49323,
+        "coding_index": 46687,
         "aa_intelligence_index": 33.7,
         "aa_coding_index": 37.4,
         "swe_bench_verified": 80.2,
@@ -974,7 +975,7 @@
         "swe_atlas_qna": 10.3,
         "deepswe": null,
         "frontierswe": null,
-        "frontiercode": 5.3,
+        "frontiercode": 5.34,
         "swe_marathon": null,
         "swe_rebench": 54.59,
         "livecodebench": null,
@@ -1009,7 +1010,7 @@
         "swe_atlas_qna": "2026-06-29",
         "deepswe": null,
         "frontierswe": null,
-        "frontiercode": "2026-07-03",
+        "frontiercode": "2026-08-06",
         "swe_marathon": null,
         "swe_rebench": "2026-07-29",
         "livecodebench": null,
@@ -3360,7 +3361,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 45046,
+        "coding_index": 42408,
         "aa_intelligence_index": 38.1,
         "aa_coding_index": 52.6,
         "swe_bench_verified": null,
@@ -4620,7 +4621,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 73829,
+        "coding_index": 71981,
         "aa_intelligence_index": 49.9,
         "aa_coding_index": 69.1,
         "swe_bench_verified": 79.0,
@@ -4628,7 +4629,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": 54.4,
+        "deepswe": 53.32,
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -4663,7 +4664,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": "2026-08-01",
+        "deepswe": "2026-08-06",
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -4698,7 +4699,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731",
+        "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -6258,7 +6259,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 85341,
+        "coding_index": 81116,
         "aa_intelligence_index": 51.1,
         "aa_coding_index": 68.8,
         "swe_bench_verified": null,
@@ -6266,7 +6267,7 @@
         "swe_atlas_rf": 42.38,
         "swe_atlas_tw": 41.48,
         "swe_atlas_qna": 48.12,
-        "deepswe": 43.8,
+        "deepswe": 43.78,
         "frontierswe": 72.5,
         "frontiercode": 24.5,
         "swe_marathon": 13.0,
@@ -6301,7 +6302,7 @@
         "swe_atlas_rf": "2026-06-29",
         "swe_atlas_tw": "2026-06-29",
         "swe_atlas_qna": "2026-06-29",
-        "deepswe": "2026-07-06",
+        "deepswe": "2026-08-06",
         "frontierswe": "2026-07-14",
         "frontiercode": "2026-07-27",
         "swe_marathon": "2026-07-27",
@@ -6336,7 +6337,7 @@
         "swe_atlas_rf": "https://labs.scale.com/leaderboard/sweatlas-refactoring",
         "swe_atlas_tw": "https://labs.scale.com/leaderboard/sweatlas-tw",
         "swe_atlas_qna": "https://labs.scale.com/leaderboard/sweatlas-qna",
-        "deepswe": "https://benchlm.ai/benchmarks/deepSwe",
+        "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": "https://www.frontierswe.com",
         "frontiercode": "https://evals.report/benchmarks/frontiercode",
         "swe_marathon": "https://evals.report/benchmarks/swe-marathon",
@@ -6384,7 +6385,7 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "coding_index": 65318,
+        "coding_index": 59985,
         "aa_intelligence_index": 44.4,
         "aa_coding_index": 58.6,
         "swe_bench_verified": 80.5,
@@ -14178,7 +14179,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 59554,
+        "coding_index": 54854,
         "aa_intelligence_index": 40.7,
         "aa_coding_index": 52.1,
         "swe_bench_verified": 77.6,
@@ -14304,7 +14305,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 60829,
+        "coding_index": 58306,
         "aa_intelligence_index": 44.3,
         "aa_coding_index": 59.4,
         "swe_bench_verified": 80.6,
@@ -14682,7 +14683,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 51844,
+        "coding_index": 48745,
         "aa_intelligence_index": 35.4,
         "aa_coding_index": 46.8,
         "swe_bench_verified": 76.8,
@@ -14692,7 +14693,7 @@
         "swe_atlas_qna": 13.1,
         "deepswe": null,
         "frontierswe": 25.0,
-        "frontiercode": 7.5,
+        "frontiercode": 6.9,
         "swe_marathon": null,
         "swe_rebench": 58.45,
         "livecodebench": 85.0,
@@ -14727,7 +14728,7 @@
         "swe_atlas_qna": "2026-07-20",
         "deepswe": null,
         "frontierswe": "2026-07-20",
-        "frontiercode": "2026-07-20",
+        "frontiercode": "2026-08-06",
         "swe_marathon": null,
         "swe_rebench": "2026-07-29",
         "livecodebench": "2026-07-20",
@@ -14808,7 +14809,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 52512,
+        "coding_index": 58832,
         "aa_intelligence_index": 44.2,
         "aa_coding_index": 61.8,
         "swe_bench_verified": 80.2,
@@ -14818,7 +14819,7 @@
         "swe_atlas_qna": null,
         "deepswe": 24.0,
         "frontierswe": 25.4,
-        "frontiercode": 3.8,
+        "frontiercode": 16.04,
         "swe_marathon": 0.0,
         "swe_rebench": 46.15,
         "livecodebench": 89.6,
@@ -14853,7 +14854,7 @@
         "swe_atlas_qna": null,
         "deepswe": "2026-07-28",
         "frontierswe": "2026-07-20",
-        "frontiercode": "2026-07-20",
+        "frontiercode": "2026-08-06",
         "swe_marathon": "2026-07-27",
         "swe_rebench": "2026-07-20",
         "livecodebench": "2026-07-20",
@@ -14888,7 +14889,7 @@
         "swe_atlas_qna": null,
         "deepswe": "https://deepswe.datacurve.ai/",
         "frontierswe": "https://www.frontierswe.com",
-        "frontiercode": "https://cognition.com/blog/frontier-code",
+        "frontiercode": "https://cognition.com/frontiercode",
         "swe_marathon": "https://www.swe-marathon.org",
         "swe_rebench": "https://swe-rebench.com",
         "livecodebench": "https://huggingface.co/moonshotai/Kimi-K2.6",
@@ -14934,7 +14935,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 64302,
+        "coding_index": 69227,
         "aa_intelligence_index": 41.9,
         "aa_coding_index": 60.8,
         "swe_bench_verified": null,
@@ -14942,9 +14943,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": 30.5,
+        "deepswe": 30.53,
         "frontierswe": null,
-        "frontiercode": null,
+        "frontiercode": 30.1,
         "swe_marathon": null,
         "swe_rebench": null,
         "livecodebench": null,
@@ -14977,9 +14978,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": "2026-07-20",
+        "deepswe": "2026-08-06",
         "frontierswe": null,
-        "frontiercode": null,
+        "frontiercode": "2026-08-06",
         "swe_marathon": null,
         "swe_rebench": null,
         "livecodebench": null,
@@ -15012,9 +15013,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": "https://benchlm.ai/benchmarks/deepSwe",
+        "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": null,
-        "frontiercode": null,
+        "frontiercode": "https://cognition.com/frontiercode",
         "swe_marathon": null,
         "swe_rebench": null,
         "livecodebench": null,
@@ -15060,7 +15061,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 89136,
+        "coding_index": 93663,
         "aa_intelligence_index": 57.1,
         "aa_coding_index": 76.2,
         "swe_bench_verified": 93.4,
@@ -15068,9 +15069,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 23.0,
-        "deepswe": 68.5,
+        "deepswe": 68.51,
         "frontierswe": 81.2,
-        "frontiercode": null,
+        "frontiercode": 44.2,
         "swe_marathon": 42.0,
         "swe_rebench": null,
         "livecodebench": null,
@@ -15095,7 +15096,7 @@
         "osworld_verified": 84.8
       },
       "scores_updated": {
-        "coding_index": "2026-08-03",
+        "coding_index": "2026-08-06",
         "aa_intelligence_index": "2026-07-20",
         "aa_coding_index": "2026-07-20",
         "swe_bench_verified": "2026-07-20",
@@ -15103,9 +15104,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-08-01",
-        "deepswe": "2026-07-20",
+        "deepswe": "2026-08-06",
         "frontierswe": "2026-07-20",
-        "frontiercode": null,
+        "frontiercode": "2026-08-06",
         "swe_marathon": "2026-07-27",
         "swe_rebench": null,
         "livecodebench": null,
@@ -15138,9 +15139,9 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://x.com/ArtificialAnlys/status/2078230240766345330",
-        "deepswe": "https://benchlm.ai/benchmarks/deepSwe",
+        "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": "https://huggingface.co/moonshotai/Kimi-K3",
-        "frontiercode": null,
+        "frontiercode": "https://cognition.com/frontiercode",
         "swe_marathon": "https://evals.report/benchmarks/swe-marathon",
         "swe_rebench": null,
         "livecodebench": null,
@@ -15438,7 +15439,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 57278,
+        "coding_index": 56750,
         "aa_intelligence_index": 42.2,
         "aa_coding_index": 60.2,
         "swe_bench_verified": 78.9,
@@ -15811,7 +15812,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 68227,
+        "coding_index": 75433,
         "aa_intelligence_index": 56.2,
         "aa_coding_index": 71.8,
         "swe_bench_verified": null,
@@ -15819,7 +15820,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": null,
+        "deepswe": 57.46,
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -15854,7 +15855,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": null,
+        "deepswe": "2026-08-06",
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -15889,7 +15890,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe": null,
+        "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": null,
         "frontiercode": null,
         "swe_marathon": null,
@@ -15950,6 +15951,8 @@
     "https://rankedagi.com/models/gemma-4-31b",
     "https://rankedagi.com/models/kimi-k2-6",
     "https://rankedagi.com/models/qwen-3-5-27b",
-    "https://toolathlon.xyz/docs/leaderboard"
+    "https://toolathlon.xyz/docs/leaderboard",
+    "https://cognition.com/frontiercode",
+    "https://deepswe.datacurve.ai"
   ]
 }

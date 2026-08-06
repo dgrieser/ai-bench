@@ -74,7 +74,7 @@ class TestKeepBestRow(unittest.TestCase):
 
 
 class TestRowFetchers(unittest.TestCase):
-    """The five ingests that read one score field off a whole source row."""
+    """The ingests that read one score field off a whole source row."""
 
     CASES = [
         ("swe_rebench", "resolved_rate", "fetch_swe_rebench_data"),
@@ -82,6 +82,8 @@ class TestRowFetchers(unittest.TestCase):
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("deepswe", "score", "fetch_deepswe_data"),
         ("frontierswe", "score", "fetch_frontierswe_data"),
+        ("frontiercode", "score", "fetch_frontiercode_data"),
+        ("datacurve", "score", "fetch_datacurve_data"),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:
@@ -96,6 +98,53 @@ class TestRowFetchers(unittest.TestCase):
                     with stub_run(order):
                         by_slug = getattr(update, func_name)(SCRIPT, mapping)
                     self.assertEqual(by_slug["m"][score_key], 45.0)
+
+
+class TestFrontiercodeRevisions(unittest.TestCase):
+    """FrontierCode folds names across benchmark revisions, so the revision decides."""
+
+    def rows(self, *rows: dict) -> dict:
+        by_slug: dict = {}
+        for row in rows:
+            update.keep_newest_frontiercode_row(by_slug, "m", row)
+        return by_slug
+
+    def test_newer_revision_wins_even_with_a_lower_score(self) -> None:
+        old = {"model": "Model", "revision": "1.0", "score": 45.0}
+        new = {"model": "Model Redux", "revision": "1.1", "score": 30.0}
+        for order in ((old, new), (new, old)):
+            with self.subTest(first=order[0]["revision"]):
+                self.assertEqual(self.rows(*order)["m"]["score"], 30.0)
+
+    def test_within_one_revision_the_best_run_still_wins(self) -> None:
+        low = {"model": "Model", "revision": "1.1", "score": 30.0}
+        high = {"model": "Model [high]", "revision": "1.1", "score": 45.0}
+        for order in ((low, high), (high, low)):
+            with self.subTest(first=order[0]["model"]):
+                self.assertEqual(self.rows(*order)["m"]["score"], 45.0)
+
+    def test_scoreless_newer_row_never_displaces_a_scored_one(self) -> None:
+        scored = {"model": "Model", "revision": "1.0", "score": 45.0}
+        blank = {"model": "Model Redux", "revision": "1.1", "score": None}
+        self.assertEqual(self.rows(scored, blank)["m"]["score"], 45.0)
+
+    def test_revisionless_rows_fall_back_to_best_run(self) -> None:
+        self.assertEqual(
+            self.rows({"model": "a", "score": 30.0}, {"model": "b", "score": 45.0})["m"]["score"],
+            45.0,
+        )
+
+    def test_fetch_resolves_the_collision_in_either_payload_order(self) -> None:
+        mapping = write_json({"Model": "m", "Model Redux": "m"})
+        rows = [
+            {"model": "Model", "revision": "1.0", "score": 45.0},
+            {"model": "Model Redux", "revision": "1.1", "score": 30.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_slug = update.fetch_frontiercode_data(SCRIPT, mapping)
+                self.assertEqual(by_slug["m"]["revision"], "1.1")
 
 
 class TestLlmstatsMerge(unittest.TestCase):
