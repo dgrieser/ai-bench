@@ -25,11 +25,13 @@ def editable_benchmarks(doc: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def stamp_score_updated(model: dict[str, Any], key: str) -> None:
-    """Record today's date as the last-updated date for one benchmark score.
+def stamp_score_updated(model: dict[str, Any], key: str, when: str | None = None) -> None:
+    """Record the last-updated date for one benchmark score, today by default.
 
-    The date is computed at call time so a long-running process does not stamp
-    a stale date after crossing a midnight boundary.
+    The default is computed at call time so a long-running process does not
+    stamp a stale date after crossing a midnight boundary. `when` (an ISO date
+    string) is for backfilling the date a score was actually published, which is
+    not today -- see fill_missing_source_urls.py.
 
     Raises TypeError if the model carries a non-dict "scores_updated" so
     corrupt data surfaces loudly instead of scores being written with the
@@ -42,7 +44,7 @@ def stamp_score_updated(model: dict[str, Any], key: str) -> None:
             f"model {name!r} has a non-dict 'scores_updated' "
             f"({type(updated).__name__}); cannot stamp {key!r}"
         )
-    updated[key] = date.today().isoformat()
+    updated[key] = when if when is not None else date.today().isoformat()
 
 
 def stamp_score_source(model: dict[str, Any], key: str, url: str | None) -> None:
