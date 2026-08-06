@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sys
 import termios
@@ -16,6 +15,13 @@ from typing import Any
 
 import derive_coding_index
 from _scores import editable_benchmarks, stamp_score_source, stamp_score_updated
+from _selector import (
+    clear_selector,
+    find_matches,
+    render_selector,
+    supports_live_selector,
+    tab_completion,
+)
 
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
@@ -178,75 +184,6 @@ def is_missing_text(value: Any) -> bool:
     return value is None or (isinstance(value, str) and not value.strip())
 
 
-def supports_live_selector() -> bool:
-    term = os.getenv("TERM", "")
-    return sys.stdin.isatty() and sys.stdout.isatty() and term and term.lower() != "dumb"
-
-
-def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
-    haystack = option.lower()
-    needle = query.lower()
-
-    if needle in haystack:
-        return (0, haystack.index(needle))
-
-    pos = 0
-    gap_score = 0
-    for char in needle:
-        idx = haystack.find(char, pos)
-        if idx == -1:
-            return None
-        gap_score += idx - pos
-        pos = idx + 1
-    return (1, gap_score)
-
-
-def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
-    if not query:
-        return options[:limit]
-
-    scored: list[tuple[tuple[int, int, int], str]] = []
-    for option in options:
-        match = fuzzy_match(query, option)
-        if match is None:
-            continue
-        scored.append(((match[0], match[1], len(option)), option))
-    scored.sort(key=lambda item: item[0])
-    return [option for _, option in scored[:limit]]
-
-
-def _render_live_selector(label: str, buffer: str, matches: list[str], lines_drawn: int) -> int:
-    if lines_drawn:
-        sys.stdout.write(f"\x1b[{lines_drawn}F")
-
-    sys.stdout.write("\r\x1b[2K")
-    sys.stdout.write(f"{label}: {buffer}")
-
-    for match in matches:
-        sys.stdout.write("\r\n\x1b[2K")
-        sys.stdout.write(f"  {match}")
-
-    sys.stdout.write("\x1b[J")
-    if matches:
-        sys.stdout.write(f"\x1b[{len(matches)}F")
-        sys.stdout.write(f"\r{label}: {buffer}")
-    sys.stdout.flush()
-    return 1 + len(matches)
-
-
-def _clear_live_selector(lines_drawn: int) -> None:
-    if not lines_drawn:
-        return
-
-    sys.stdout.write("\r\x1b[2K")
-    for _ in range(lines_drawn - 1):
-        sys.stdout.write("\r\n\x1b[2K")
-    if lines_drawn > 1:
-        sys.stdout.write(f"\x1b[{lines_drawn - 1}F")
-    sys.stdout.write("\r")
-    sys.stdout.flush()
-
-
 def prompt_existing_value(label: str, options: list[str]) -> str:
     options_lower = {option.lower(): option for option in options}
 
@@ -254,7 +191,6 @@ def prompt_existing_value(label: str, options: list[str]) -> str:
         fd = sys.stdin.fileno()
         previous = termios.tcgetattr(fd)
         buffer = ""
-        tab_index = -1
         lines_drawn = 0
         error_message: str | None = None
         last_invalid_value: str | None = None
@@ -264,23 +200,22 @@ def prompt_existing_value(label: str, options: list[str]) -> str:
             while True:
                 matches = find_matches(buffer, options)
                 if error_message is not None:
-                    _clear_live_selector(lines_drawn)
+                    clear_selector(lines_drawn)
                     print(error_message)
                     lines_drawn = 0
                     error_message = None
-                lines_drawn = _render_live_selector(label, buffer, matches, lines_drawn)
+                lines_drawn = render_selector(label, buffer, matches)
                 char = sys.stdin.read(1)
 
                 if char in {"\r", "\n"}:
                     value = parse_nullable(buffer) or ""
                     canonical = options_lower.get(value.lower())
-                    _clear_live_selector(lines_drawn)
+                    clear_selector(lines_drawn)
                     if canonical is None:
                         if last_invalid_value != value:
                             error_message = f"{label} must match an existing model."
                         last_invalid_value = value
                         buffer = ""
-                        tab_index = -1
                         lines_drawn = 0
                         continue
                     last_invalid_value = None
@@ -289,21 +224,20 @@ def prompt_existing_value(label: str, options: list[str]) -> str:
                     return canonical
 
                 if char == "\t":
-                    if matches:
-                        tab_index = (tab_index + 1) % len(matches)
-                        buffer = matches[tab_index]
+                    completion = tab_completion(buffer, matches)
+                    if completion is not None:
+                        buffer = completion
                     continue
 
                 if char == "\x03":
                     raise KeyboardInterrupt
 
                 if char == "\x04":
-                    _clear_live_selector(lines_drawn)
+                    clear_selector(lines_drawn)
                     raise EOFError
 
                 if char in {"\x7f", "\b"}:
                     buffer = buffer[:-1]
-                    tab_index = -1
                     last_invalid_value = None
                     continue
 
@@ -311,12 +245,10 @@ def prompt_existing_value(label: str, options: list[str]) -> str:
                     next_char = sys.stdin.read(1)
                     if next_char == "[":
                         sys.stdin.read(1)
-                    tab_index = -1
                     continue
 
                 if char.isprintable():
                     buffer += char
-                    tab_index = -1
                     last_invalid_value = None
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, previous)
@@ -349,8 +281,8 @@ def prompt_score(label: str, current: Any) -> int | float | None:
 def prompt_metadata_value(label: str, current: Any, options: list[str]) -> str | None:
     """Prompt for a free-text metadata value, offering existing values as completions.
 
-    Empty input keeps the current value; 'null' clears it. Tab cycles through the
-    fuzzy matches, but any value is accepted, not only existing ones.
+    Empty input keeps the current value; 'null' clears it. Tab completes as far
+    as the matches agree, but any value is accepted, not only existing ones.
     """
     current_text = current if isinstance(current, str) and current.strip() else None
     label_text = f"{label} ({current_text})" if current_text else label
@@ -359,51 +291,47 @@ def prompt_metadata_value(label: str, current: Any, options: list[str]) -> str |
         fd = sys.stdin.fileno()
         previous = termios.tcgetattr(fd)
         buffer = ""
-        tab_index = -1
         lines_drawn = 0
 
         try:
             tty.setraw(fd)
             while True:
                 matches = find_matches(buffer, options)
-                lines_drawn = _render_live_selector(label_text, buffer, matches, lines_drawn)
+                lines_drawn = render_selector(label_text, buffer, matches)
                 char = sys.stdin.read(1)
 
                 if char in {"\r", "\n"}:
                     value = current_text if not buffer.strip() else parse_metadata_value(buffer)
-                    _clear_live_selector(lines_drawn)
+                    clear_selector(lines_drawn)
                     sys.stdout.write(f"{label}: {value if value is not None else 'null'}\r\n")
                     sys.stdout.flush()
                     return value
 
                 if char == "\t":
-                    if matches:
-                        tab_index = (tab_index + 1) % len(matches)
-                        buffer = matches[tab_index]
+                    completion = tab_completion(buffer, matches)
+                    if completion is not None:
+                        buffer = completion
                     continue
 
                 if char == "\x03":
                     raise KeyboardInterrupt
 
                 if char == "\x04":
-                    _clear_live_selector(lines_drawn)
+                    clear_selector(lines_drawn)
                     return current_text
 
                 if char in {"\x7f", "\b"}:
                     buffer = buffer[:-1]
-                    tab_index = -1
                     continue
 
                 if char == "\x1b":
                     next_char = sys.stdin.read(1)
                     if next_char == "[":
                         sys.stdin.read(1)
-                    tab_index = -1
                     continue
 
                 if char.isprintable():
                     buffer += char
-                    tab_index = -1
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, previous)
 

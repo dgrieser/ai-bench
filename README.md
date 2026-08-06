@@ -62,6 +62,9 @@ Each model object contains:
 
 The three score maps carry the full benchmark key set with null placeholders;
 `update.py` stamps date and source URL together whenever it writes a score.
+Values no scraper wrote (hand edits, rows that have since moved) keep a null
+date or source; `fill_missing_source_urls.py` asks for those, plus a missing
+`vram_source`, model or creator URL.
 
 ## System Architecture
 
@@ -165,6 +168,13 @@ Output: llm.json (unified dataset)
 
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
+
+# Ask for the dates and source URLs nothing can derive (dry-run; -w to persist)
+./fill_missing_source_urls.py llm.json
+./fill_missing_source_urls.py llm.json -w
+./fill_missing_source_urls.py llm.json --list                  # report the gaps, ask nothing
+./fill_missing_source_urls.py llm.json -m kimi-k3 -w           # one model only
+./fill_missing_source_urls.py llm.json --only vram-source -w   # one kind of gap only
 
 # Check for newly added/dismissed models
 ./check_new.py
@@ -335,8 +345,8 @@ Two consequences worth knowing:
 
   `add.py` needs no refresh: a new model arrives with all-null scores, and a model
   with no score in a benchmark is not part of that benchmark's population, so nothing
-  is re-ranked. `fill_source_urls.py` and `sync_score_dates.py` touch neither scores
-  nor models.
+  is re-ranked. `fill_source_urls.py`, `fill_missing_source_urls.py` and `sync_score_dates.py`
+  touch neither scores nor models.
 - Derived columns are never a mapping target. The interactive prompts
   (`add.py`, `edit.py`, `update_*_mapping.py`) and the unattended proposal builder
   (`propose.py`, via `editable_benchmarks()`) all exclude them, so a fetched source
@@ -437,11 +447,13 @@ ai-bench/
 ├── derive_coding_index.py      # Derived Coding index column (see above)
 │
 ├── _scores.py                  # Score timestamps, derived-column helper
+├── _selector.py                # Type-to-search prompt: drawing + Tab completion
 ├── _openness.py                # Model openness classification
 ├── _params.py                  # params field: AA counts, HF fallback (see below)
 ├── _context.py                 # context field: token counts → advertised sizes
 ├── check_new.py                # Detect new/dismissed models
 ├── fill_source_urls.py         # Utility for URLs
+├── fill_missing_source_urls.py  # Interactive backfill of missing dates/source URLs
 ├── sync_score_dates.py         # Timestamp synchronization
 │
 ├── model-name-mapping-*.json   # Benchmark → canonical slug mappings

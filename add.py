@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import subprocess
 import sys
@@ -17,6 +16,13 @@ from typing import Any
 
 import _prompts
 from _params import fetch_hf_params, normalize_params
+from _selector import (
+    clear_selector,
+    find_matches,
+    render_selector,
+    supports_live_selector,
+    tab_completion,
+)
 from _swe_rebench_mapping import (
     add_rebench_mapping,
     fetch_swe_rebench_model_names,
@@ -604,82 +610,6 @@ def maybe_add_huggingface_mapping(doc: dict[str, Any], interactive: bool) -> Non
         print(f"Added HF mapping '{label}' -> '{key}'")
 
 
-def fuzzy_match(query: str, option: str) -> tuple[int, int] | None:
-    haystack = option.lower()
-    needle = query.lower()
-
-    if needle in haystack:
-        return (0, haystack.index(needle))
-
-    pos = 0
-    gap_score = 0
-    for char in needle:
-        idx = haystack.find(char, pos)
-        if idx == -1:
-            return None
-        gap_score += idx - pos
-        pos = idx + 1
-    return (1, gap_score)
-
-
-def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
-    if not query:
-        return options[:limit]
-
-    scored: list[tuple[tuple[int, int, int], str]] = []
-    for option in options:
-        match = fuzzy_match(query, option)
-        if match is None:
-            continue
-        scored.append(((match[0], match[1], len(option)), option))
-    scored.sort(key=lambda item: item[0])
-    return [option for _, option in scored[:limit]]
-
-
-def supports_live_selector() -> bool:
-    term = os.getenv("TERM", "")
-    return sys.stdin.isatty() and sys.stdout.isatty() and term and term.lower() != "dumb"
-
-
-def _render_live_selector(
-    label: str,
-    buffer: str,
-    matches: list[str],
-    lines_drawn: int,
-    sources: dict[str, str] | None = None,
-) -> int:
-    if lines_drawn:
-        sys.stdout.write(f"\x1b[{lines_drawn}F")
-
-    sys.stdout.write("\r\x1b[2K")
-    sys.stdout.write(f"{label}: {buffer}")
-
-    for match in matches:
-        sys.stdout.write("\r\n\x1b[2K")
-        source = sources.get(match) if sources else None
-        sys.stdout.write(f"  {match}  ({source})" if source else f"  {match}")
-
-    sys.stdout.write("\x1b[J")
-    if matches:
-        sys.stdout.write(f"\x1b[{len(matches)}F")
-        sys.stdout.write(f"\r{label}: {buffer}")
-    sys.stdout.flush()
-    return 1 + len(matches)
-
-
-def _clear_live_selector(lines_drawn: int) -> None:
-    if not lines_drawn:
-        return
-
-    sys.stdout.write("\r\x1b[2K")
-    for _ in range(lines_drawn - 1):
-        sys.stdout.write("\r\n\x1b[2K")
-    if lines_drawn > 1:
-        sys.stdout.write(f"\x1b[{lines_drawn - 1}F")
-    sys.stdout.write("\r")
-    sys.stdout.flush()
-
-
 def prompt_live_select_or_new(
     label: str,
     options: list[str],
@@ -690,19 +620,18 @@ def prompt_live_select_or_new(
     fd = sys.stdin.fileno()
     previous = termios.tcgetattr(fd)
     buffer = default or ""
-    tab_index = -1
     lines_drawn = 0
 
     try:
         tty.setraw(fd)
         while True:
             matches = find_matches(buffer, options)
-            lines_drawn = _render_live_selector(label, buffer, matches, lines_drawn, sources)
+            lines_drawn = render_selector(label, buffer, matches, sources)
             char = sys.stdin.read(1)
 
             if char in {"\r", "\n"}:
                 value = parse_nullable(buffer)
-                _clear_live_selector(lines_drawn)
+                clear_selector(lines_drawn)
                 if value is None:
                     if allow_empty:
                         sys.stdout.write("\r\n")
@@ -710,7 +639,6 @@ def prompt_live_select_or_new(
                         return None
                     print(f"{label} is required.")
                     buffer = ""
-                    tab_index = -1
                     lines_drawn = 0
                     continue
                 sys.stdout.write(f"{label}: {buffer}\r\n")
@@ -718,35 +646,32 @@ def prompt_live_select_or_new(
                 return value
 
             if char == "\t":
-                if matches:
-                    tab_index = (tab_index + 1) % len(matches)
-                    buffer = matches[tab_index]
+                completion = tab_completion(buffer, matches)
+                if completion is not None:
+                    buffer = completion
                 continue
 
             if char == "\x03":
                 raise KeyboardInterrupt
 
             if char == "\x04":
-                _clear_live_selector(lines_drawn)
+                clear_selector(lines_drawn)
                 sys.stdout.write("\r\n")
                 sys.stdout.flush()
                 return None
 
             if char in {"\x7f", "\b"}:
                 buffer = buffer[:-1]
-                tab_index = -1
                 continue
 
             if char == "\x1b":
                 next_char = sys.stdin.read(1)
                 if next_char == "[":
                     sys.stdin.read(1)
-                tab_index = -1
                 continue
 
             if char.isprintable():
                 buffer += char
-                tab_index = -1
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, previous)
 
