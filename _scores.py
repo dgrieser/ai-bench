@@ -3,7 +3,67 @@
 from __future__ import annotations
 
 from datetime import date
+from decimal import Decimal, ROUND_HALF_UP
 from typing import Any
+
+# Digits llm.html and llm-cli print for a benchmark without its own "decimals".
+DEFAULT_SCORE_DECIMALS = 1
+
+
+def score_decimals(doc: dict[str, Any], key: str) -> int:
+    """Printed digits for one benchmark: benchmarks[key]["decimals"], else 1.
+
+    The same rule llm.html and llm-cli apply, kept here so the writers can round
+    a score to the precision the readers will show.
+    """
+    benchmark = (doc.get("benchmarks") or {}).get(key)
+    if not isinstance(benchmark, dict):
+        return DEFAULT_SCORE_DECIMALS
+    decimals = benchmark.get("decimals")
+    if isinstance(decimals, bool) or not isinstance(decimals, int) or decimals < 0:
+        return DEFAULT_SCORE_DECIMALS
+    return decimals
+
+
+def score_step(doc: dict[str, Any], key: str) -> Decimal:
+    """The grid a stored score is rounded onto.
+
+    One printed digit by default, so a stored value never carries precision the
+    site does not show. A benchmark whose numbers move by more than that on
+    their own -- an Elo that re-anchors as the pool grows, say -- sets
+    "round_to" in llm.json to the smallest step worth recording, and its scores
+    land on multiples of that instead.
+    """
+    benchmark = (doc.get("benchmarks") or {}).get(key)
+    if isinstance(benchmark, dict):
+        round_to = benchmark.get("round_to")
+        if not isinstance(round_to, bool) and isinstance(round_to, (int, float)) and round_to > 0:
+            return Decimal(str(round_to))
+    return Decimal(1).scaleb(-score_decimals(doc, key))
+
+
+def round_score(doc: dict[str, Any], key: str, value: Any) -> int | float | None:
+    """Quantize one benchmark score onto its grid; None passes through.
+
+    Every writer rounds here so a score means the same thing whichever source
+    produced it: without it the scrapers that hand back a raw leaderboard number
+    keep rewriting a value the site rounds to the very same digits, restamping
+    its date for a change no reader can see. Halves round away from zero rather
+    than to even, so the same input always yields the same output regardless of
+    which side of the grid it fell on. An integral result is stored as an int,
+    the shape the rest of llm.json already uses.
+    """
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"score {key!r} is {type(value).__name__}, not a number")
+
+    step = score_step(doc, key)
+    steps = (Decimal(str(value)) / step).quantize(Decimal(1), rounding=ROUND_HALF_UP)
+    rounded = steps * step
+    if rounded == rounded.to_integral_value():
+        return int(rounded)
+    return float(rounded)
 
 
 def editable_benchmarks(doc: dict[str, Any]) -> dict[str, Any]:
