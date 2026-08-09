@@ -68,6 +68,41 @@ Values no scraper wrote (hand edits, rows that have since moved) keep a null
 date or source; `fill_missing_source_urls.py` asks for those, plus a missing
 `vram_source`, model or creator URL.
 
+### Score Precision
+
+Every score is rounded onto a per-benchmark grid before it is stored, by
+`_scores.round_score()`, called from the one place each writer funnels through:
+`apply_score()` in `update.py` for the scrapers, `collect_updates()` in
+`edit.py` for hand edits. Two fields on the benchmark set the grid:
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `decimals` | `1` | Digits `llm.html` and `llm-cli` print |
+| `round_to` | `10 ** -decimals` | Step a stored value is snapped to |
+
+The default exists because sources disagree about precision: swe-rebench
+reports `48.77` where Artificial Analysis reports `48.8`, and the site prints
+both as `48.8`. Stored raw, that disagreement rewrites the score and restamps
+its date on every refresh for a change no reader can see. Rounding in one place
+means a score means the same thing whichever source produced it, and a refresh
+is a no-op unless the printed number actually moved.
+
+`round_to` is the escape hatch for a benchmark that moves on its own.
+**GDPval-AA** is the one that needs it: it is an Elo (1000 = human expert)
+spanning roughly -120 to 1740, and Artificial Analysis re-anchors the whole
+field by a point or two whenever it re-runs the pairwise judging — in the
+history of this file, refreshes that moved all 62 scored models by a mean
+-1.5 Elo and then straight back by +1.5. At `"decimals": 0, "round_to": 5` a
+value is recorded in 5-Elo steps, below the movement the metric shows on its
+own and far below the 21-Elo median gap between neighbouring models, which
+takes about three quarters of that churn out of the file.
+
+Rounding is quantization, not a filter on how much a score has to move to be
+worth writing: it is idempotent and has no memory, so re-running the pipeline
+over any starting file yields the same numbers. Halves round away from zero
+rather than to even, and an integral result is stored as an int (`34`, not
+`34.0`) — the shape the rest of `llm.json` already uses.
+
 ## System Architecture
 
 ```
@@ -82,7 +117,7 @@ date or source; `fill_missing_source_urls.py` asks for those, plus a missing
 ├─────────────────────────────────────────────────────────┤
 │  _*_mapping.py files: normalize model names             │
 │  update_*_mapping.py: sync mappings from sources        │
-│  _scores.py: score update logic & timestamps            │
+│  _scores.py: score rounding, timestamps, write logic    │
 │  _openness.py: model openness classification            │
 │  _params.py / _context.py: model size & window fields   │
 └────────────────┬────────────────────────────────────────┘
@@ -408,6 +443,9 @@ As with scores, neither field is ever overwritten with `null`.
 
 - **Model deduplication**: Same model across multiple benchmarks merged under one slug
 - **Timestamp tracking**: Score update date stored for cache validation
+- **Score precision**: every writer rounds onto the benchmark's grid, so a source
+  reporting more digits than the site prints cannot restamp a score's date for an
+  invisible change (see [Score Precision](#score-precision))
 - **Derived columns**: benchmarks flagged `"derived": true` in `llm.json` are computed
   from other columns, so `add.py`/`edit.py` neither prompt for them nor offer them as
   a mapping target (see [Coding Index](#coding-index))
@@ -464,7 +502,7 @@ ai-bench/
 │
 ├── derive_coding_index.py      # Derived Coding index column (see above)
 │
-├── _scores.py                  # Score timestamps, derived-column helper
+├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
 ├── _selector.py                # Type-to-search prompt: drawing + Tab completion
 ├── _openness.py                # Model openness classification
 ├── _params.py                  # params field: AA counts, HF fallback (see below)

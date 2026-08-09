@@ -17,6 +17,9 @@ from unittest import mock
 import update
 from _scores import stamp_score_source
 
+# apply_score() reads the benchmark grid off the document; a key llm.json
+# does not describe rounds to the default one printed digit.
+DOC: dict = {"benchmarks": {}}
 URL_A = "https://example.com/leaderboard-a"
 URL_B = "https://example.com/leaderboard-b"
 
@@ -34,7 +37,7 @@ class TestApplyScoreNormalMode(unittest.TestCase):
     def test_write_stamps_value_date_and_source(self) -> None:
         model = model_with()
         changes: list = []
-        n = update.apply_score(model, "m", "bench", 45.0, URL_A, changes)
+        n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_A, changes)
         self.assertEqual(n, 1)
         self.assertEqual(model["scores"]["bench"], 45.0)
         self.assertIsNotNone(model["scores_updated"]["bench"])
@@ -43,34 +46,34 @@ class TestApplyScoreNormalMode(unittest.TestCase):
 
     def test_overwrite_moves_the_source_with_the_score(self) -> None:
         model = model_with(score=30.0, source=URL_A)
-        n = update.apply_score(model, "m", "bench", 45.0, URL_B, [])
+        n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_B, [])
         self.assertEqual(n, 1)
         self.assertEqual(model["scores"]["bench"], 45.0)
         self.assertEqual(model["scores_source"]["bench"], URL_B)
 
     def test_null_never_clobbers_value_or_source(self) -> None:
         model = model_with(score=30.0, source=URL_A)
-        n = update.apply_score(model, "m", "bench", None, URL_B, [])
+        n = update.apply_score(DOC, model, "m", "bench", None, URL_B, [])
         self.assertEqual(n, 0)
         self.assertEqual(model["scores"]["bench"], 30.0)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
     def test_equal_value_touches_nothing(self) -> None:
         model = model_with(score=45.0, source=URL_A)
-        n = update.apply_score(model, "m", "bench", 45.0, URL_B, [])
+        n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_B, [])
         self.assertEqual(n, 0)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
     def test_fill_only_never_overwrites(self) -> None:
         model = model_with(score=30.0, source=URL_A)
-        n = update.apply_score(model, "m", "bench", 45.0, URL_B, [], fill_only=True)
+        n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_B, [], fill_only=True)
         self.assertEqual(n, 0)
         self.assertEqual(model["scores"]["bench"], 30.0)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
     def test_fill_only_fills_a_null(self) -> None:
         model = model_with()
-        n = update.apply_score(model, "m", "bench", 45.0, URL_B, [], fill_only=True)
+        n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_B, [], fill_only=True)
         self.assertEqual(n, 1)
         self.assertEqual(model["scores"]["bench"], 45.0)
         self.assertEqual(model["scores_source"]["bench"], URL_B)
@@ -81,7 +84,7 @@ class TestApplyScoreFillUrlsOnly(unittest.TestCase):
         model = model_with(score=45.0)
         changes: list = []
         n = update.apply_score(
-            model, "m", "bench", 45.0, URL_A, changes, fill_urls_only=True
+            DOC, model, "m", "bench", 45.0, URL_A, changes, fill_urls_only=True
         )
         self.assertEqual(n, 1)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
@@ -92,30 +95,30 @@ class TestApplyScoreFillUrlsOnly(unittest.TestCase):
 
     def test_int_float_drift_still_matches(self) -> None:
         model = model_with(score=80)
-        n = update.apply_score(model, "m", "bench", 80.0, URL_A, [], fill_urls_only=True)
+        n = update.apply_score(DOC, model, "m", "bench", 80.0, URL_A, [], fill_urls_only=True)
         self.assertEqual(n, 1)
 
     def test_mismatching_value_fills_nothing(self) -> None:
         model = model_with(score=45.0)
-        n = update.apply_score(model, "m", "bench", 30.0, URL_A, [], fill_urls_only=True)
+        n = update.apply_score(DOC, model, "m", "bench", 30.0, URL_A, [], fill_urls_only=True)
         self.assertEqual(n, 0)
         self.assertIsNone(model["scores_source"]["bench"])
 
     def test_null_fetch_fills_nothing(self) -> None:
         model = model_with(score=None)
-        n = update.apply_score(model, "m", "bench", None, URL_A, [], fill_urls_only=True)
+        n = update.apply_score(DOC, model, "m", "bench", None, URL_A, [], fill_urls_only=True)
         self.assertEqual(n, 0)
         self.assertIsNone(model["scores_source"]["bench"])
 
     def test_existing_url_is_never_replaced_so_the_first_source_wins(self) -> None:
         model = model_with(score=45.0)
         for url in (URL_A, URL_B):  # sources in update order
-            update.apply_score(model, "m", "bench", 45.0, url, [], fill_urls_only=True)
+            update.apply_score(DOC, model, "m", "bench", 45.0, url, [], fill_urls_only=True)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
     def test_scores_and_dates_never_move_even_on_new_values(self) -> None:
         model = model_with(score=45.0)
-        update.apply_score(model, "m", "bench", 99.0, URL_A, [], fill_urls_only=True)
+        update.apply_score(DOC, model, "m", "bench", 99.0, URL_A, [], fill_urls_only=True)
         self.assertEqual(model["scores"]["bench"], 45.0)
         self.assertIsNone(model["scores_updated"]["bench"])
 

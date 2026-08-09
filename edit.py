@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import derive_coding_index
-from _scores import editable_benchmarks, stamp_score_source, stamp_score_updated
+from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
 from _selector import (
     clear_selector,
     find_matches,
@@ -383,11 +383,13 @@ def collect_updates(
         current = scores.get(key)
 
         if raw_value is not None:
-            score_updates[key] = parse_score_value(raw_value)
+            score_updates[key] = round_score(doc, key, parse_score_value(raw_value))
             continue
 
         if interactive:
-            score_updates[key] = prompt_score(benchmark.get("name", key), current)
+            score_updates[key] = round_score(
+                doc, key, prompt_score(benchmark.get("name", key), current)
+            )
 
     metadata_updates: dict[str, str | None] = {}
     for key, label in METADATA_FIELDS.items():
@@ -454,7 +456,9 @@ def collect_missing_updates(
         scores = model["scores"]
         for key in missing_keys:
             benchmark = doc["benchmarks"][key]
-            score_updates[key] = prompt_score(benchmark.get("name", key), scores.get(key))
+            score_updates[key] = round_score(
+                doc, key, prompt_score(benchmark.get("name", key), scores.get(key))
+            )
         for key in missing_metadata_keys:
             metadata_updates[key] = prompt_metadata_value(
                 METADATA_FIELDS[key], model.get(key), get_existing_values(doc["models"], key)

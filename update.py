@@ -28,7 +28,7 @@ import fetch_swe_rebench
 import fetch_toolathlon
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
-from _scores import stamp_score_source, stamp_score_updated
+from _scores import round_score, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
 from _swe_rebench_mapping import load_rebench_to_slug_mapping
@@ -72,26 +72,26 @@ class HelpOnErrorArgumentParser(argparse.ArgumentParser):
         self.exit(2, f"\nError: {message}\n")
 
 
-def to_percent(value: Any) -> int | float | None:
+def to_percent(value: Any) -> float | None:
+    """Scale an Artificial Analysis 0-1 fraction to a percentage.
+
+    Scaling only: apply_score() rounds every score, from every source, onto the
+    benchmark's grid, so nothing rounds on the way in.
+    """
     if value is None:
         return None
-    pct = float(value) * 100.0
-    rounded = round(pct, 1)
-    if rounded.is_integer():
-        return int(rounded)
-    return rounded
+    return float(value) * 100.0
 
 
-def to_index(value: Any) -> int | float | None:
-    """Pass an Artificial Analysis index/Elo through unscaled, rounded to 0.1.
+def to_index(value: Any) -> float | None:
+    """Pass an Artificial Analysis index/Elo through unscaled.
 
     AA-Omniscience (-100..100) and GDPval-AA Elo (human baseline = 1000) are not
     fractions, so to_percent() would multiply them by 100.
     """
     if value is None:
         return None
-    rounded = round(float(value), 1)
-    return int(rounded) if rounded.is_integer() else rounded
+    return float(value)
 
 
 def fmt_change_value(value: Any) -> str:
@@ -453,6 +453,7 @@ def keep_best_row(
 
 
 def apply_score(
+    doc: dict[str, Any],
     model: dict[str, Any],
     slug: str,
     key: str,
@@ -468,17 +469,23 @@ def apply_score(
     Returns the number of updates made (0 or 1). Shared by every source so the
     write rules live in one place:
 
+      * round onto the benchmark's grid first, so a leaderboard that reports
+        two decimals and one that reports one cannot disagree about a score the
+        site prints identically either way;
       * never overwrite an existing non-null value with null;
       * fill_only: only fill nulls, never overwrite (the low-trust rule the
         Hugging Face and llm-stats aggregates follow);
       * fill_urls_only (--fill-source-urls): scores and dates stay untouched;
         the URL is stamped only where none is stored yet and this source's
         fetched value equals the stored score, so the first source in the
-        usual update order claims a score it could have produced.
+        usual update order claims a score it could have produced. Rounding
+        comes first here too, or a stored score could never match the raw
+        number the source that wrote it hands back today.
     """
     scores = model.setdefault("scores", {})
     if not isinstance(scores, dict):
         return 0
+    new_value = round_score(doc, key, new_value)
     old_value = scores.get(key)
 
     if fill_urls_only:
@@ -612,7 +619,7 @@ def update_scores(
             origin_slug = origins.get(aa_key_used) or aa_model.get("slug")
             url = aa_model_page_url(origin_slug)
             updated += apply_score(
-                model, slug, llm_key, new_value, url, changes,
+                doc, model, slug, llm_key, new_value, url, changes,
                 fill_urls_only=fill_urls_only,
             )
 
@@ -639,7 +646,7 @@ def update_swe_rebench_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "swe_rebench", rebench_model.get("resolved_rate"),
+            doc, model, slug, "swe_rebench", rebench_model.get("resolved_rate"),
             SWE_REBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -697,7 +704,7 @@ def update_osworld_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "osworld_verified", osworld_model.get("success_rate"),
+            doc, model, slug, "osworld_verified", osworld_model.get("success_rate"),
             OSWORLD_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -776,7 +783,7 @@ def update_huggingface_scores(
         for benchmark_key, (new_value, url) in hf_scores.items():
             # HF self-reports are lowest-trust: only fill nulls, never overwrite.
             updated += apply_score(
-                model, slug, benchmark_key, new_value, url, changes,
+                doc, model, slug, benchmark_key, new_value, url, changes,
                 fill_only=True, fill_urls_only=fill_urls_only,
             )
 
@@ -865,7 +872,7 @@ def update_toolathlon_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "toolathlon", toolathlon_model.get("score"),
+            doc, model, slug, "toolathlon", toolathlon_model.get("score"),
             TOOLATHLON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -923,7 +930,7 @@ def update_deepswe_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "deepswe", deepswe_model.get("score"),
+            doc, model, slug, "deepswe", deepswe_model.get("score"),
             DEEPSWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -981,7 +988,7 @@ def update_frontierswe_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "frontierswe", frontierswe_model.get("score"),
+            doc, model, slug, "frontierswe", frontierswe_model.get("score"),
             FRONTIERSWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -1071,7 +1078,7 @@ def update_datacurve_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "deepswe", datacurve_model.get("score"),
+            doc, model, slug, "deepswe", datacurve_model.get("score"),
             DATACURVE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -1129,7 +1136,7 @@ def update_frontiercode_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "frontiercode", frontiercode_model.get("score"),
+            doc, model, slug, "frontiercode", frontiercode_model.get("score"),
             FRONTIERCODE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -1196,7 +1203,7 @@ def update_swe_atlas_scores(
         matched += 1
         for benchmark_key, new_value in swe_atlas_scores.items():
             updated += apply_score(
-                model, slug, benchmark_key, new_value,
+                doc, model, slug, benchmark_key, new_value,
                 SWE_ATLAS_KEY_URLS[benchmark_key], changes,
                 fill_urls_only=fill_urls_only,
             )
@@ -1264,7 +1271,7 @@ def update_evals_report_scores(
         matched += 1
         for benchmark_key, new_value in evals_report_scores.items():
             updated += apply_score(
-                model, slug, benchmark_key, new_value,
+                doc, model, slug, benchmark_key, new_value,
                 EVALS_REPORT_KEY_URLS[benchmark_key], changes,
                 fill_urls_only=fill_urls_only,
             )
@@ -1330,7 +1337,7 @@ def update_swe_marathon_scores(
 
         matched += 1
         updated += apply_score(
-            model, slug, "swe_marathon", by_slug[slug],
+            doc, model, slug, "swe_marathon", by_slug[slug],
             SWE_MARATHON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -1514,7 +1521,7 @@ def update_llmstats_scores(
             # General aggregator: keep aa (and every named source) leading.
             # Only fill nulls, never overwrite an existing value.
             updated += apply_score(
-                model, slug, benchmark_key, new_value,
+                doc, model, slug, benchmark_key, new_value,
                 LLMSTATS_SOURCE_URL, changes,
                 fill_only=True, fill_urls_only=fill_urls_only,
             )
