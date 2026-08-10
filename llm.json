@@ -16052,9 +16052,9 @@
       "params": "7.9B-A1.3B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 17,
+        "int8": 8.6,
+        "int4": 4.3
       },
       "creator": {
         "name": "InclusionAI",
@@ -16164,6 +16164,11 @@
         "hle": "https://artificialanalysis.ai/models/ling-3-0-tiny",
         "mmmu_pro": null,
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-tiny/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-tiny/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-tiny/"
       }
     },
     {
