@@ -41,6 +41,10 @@ result here, so -- unlike the scrapers, which never overwrite a value with null
 because a source can drop out for a day -- this script does clear a value (and
 its date) when a model no longer qualifies.
 
+No leaderboard publishes this column, so a value is attributed to the page that
+documents how it is derived: the first URL the column declares in llm.json (this
+repository's README). An unranked model cites nothing, like it carries no date.
+
 Default is a dry-run; pass -w/--write to persist changes (same convention as
 update.py and prune.py).
 """
@@ -62,6 +66,11 @@ JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 # The derived column this script fills. Its label, description and icon live in
 # llm.json like every other benchmark's.
 INDEX_KEY = "coding_index"
+
+# The page a derived value cites when llm.json declares no URL for the column.
+# There is no leaderboard behind this score, so the source is the repository
+# that computes it -- the README section documenting the method below.
+FALLBACK_SOURCE_URL = "https://github.com/dgrieser/ai-bench#coding-index"
 
 # Contributing benchmarks and their reliability weights. Weights are relative,
 # so only their ratios matter; scale them all and the ranking does not move.
@@ -109,6 +118,18 @@ def to_number(value: Any) -> float:
 
 def nearly_equal(a: float, b: float) -> bool:
     return abs(a - b) < 1e-9
+
+
+def source_url(doc: dict[str, Any]) -> str:
+    """The page every derived value is attributed to: the column's first URL in
+    llm.json, so the link is spelled in one place and the benchmark card, the
+    score tooltip and the Sources panel all point at the same page."""
+    urls = ((doc.get("benchmarks") or {}).get(INDEX_KEY) or {}).get("urls")
+    if isinstance(urls, list):
+        for url in urls:
+            if isinstance(url, str) and url.strip():
+                return url.strip()
+    return FALLBACK_SOURCE_URL
 
 
 def is_lower_better(doc: dict[str, Any], key: str) -> bool:
@@ -235,6 +256,7 @@ def apply_index(
     saves only with -w) and a rewritten score plus its refreshed index land in
     one write instead of two.
     """
+    url = source_url(doc)
     changes: list[tuple[str, int | None, int | None]] = []
     for model in doc.get("models") or []:
         name = model.get("name")
@@ -253,11 +275,16 @@ def apply_index(
             updated = {}
         model["scores_updated"] = put_first(updated, INDEX_KEY, updated.get(INDEX_KEY))
 
-        # The index is computed, not read off a page: its source is always null.
+        # The index is computed, not read off a leaderboard, so it cites the
+        # page that documents how it is computed rather than nothing at all --
+        # a reader who clicks the value gets the method. An unranked model
+        # reports no source, the same way it reports no date.
         sources = model.get("scores_source")
         if not isinstance(sources, dict):
             sources = {}
-        model["scores_source"] = put_first(sources, INDEX_KEY, None)
+        model["scores_source"] = put_first(
+            sources, INDEX_KEY, url if new is not None else None
+        )
 
         if old != new:
             changes.append((name, old, new))
@@ -363,6 +390,21 @@ def main() -> int:
         f"{len(CONTRIBUTING)} coding benchmarks)"
     )
 
+    by_name = {
+        model["name"]: model for model in models if isinstance(model.get("name"), str)
+    }
+    # Counted before the write, because apply_index leaves nothing to compare
+    # against afterwards. A run whose values all hold still can carry a source
+    # restamp -- the column's URL changed in llm.json, or the value predates
+    # the source being recorded at all -- and that is worth writing.
+    url = source_url(doc)
+    restamped = sum(
+        1
+        for name, value in index.items()
+        if (by_name[name].get("scores_source") or {}).get(INDEX_KEY)
+        != (url if value is not None else None)
+    )
+
     # In memory only; the file is written further down, and only with -w.
     changes = apply_index(doc, index)
 
@@ -373,11 +415,6 @@ def main() -> int:
         )[: args.top]
         if best:
             print(f"\nTop {len(best)}:")
-            by_name = {
-                model["name"]: model
-                for model in models
-                if isinstance(model.get("name"), str)
-            }
             for rank, (value, name) in enumerate(best, start=1):
                 measured = scored_count(by_name[name])
                 print(
@@ -385,13 +422,16 @@ def main() -> int:
                     f"{measured}/{len(CONTRIBUTING)} measured"
                 )
 
-    if not changes:
+    if not changes and not restamped:
         print(f"\n{INDEX_KEY} is up to date. Nothing to do.")
         return 0
 
-    print(f"\n{len(changes)} value(s) change:")
-    for name, old, new in sorted(changes, key=lambda c: c[0]):
-        print(f"  {name:40s} {fmt(old):>9s} -> {fmt(new):>9s}")
+    if changes:
+        print(f"\n{len(changes)} value(s) change:")
+        for name, old, new in sorted(changes, key=lambda c: c[0]):
+            print(f"  {name:40s} {fmt(old):>9s} -> {fmt(new):>9s}")
+    if restamped:
+        print(f"\n{restamped} source URL(s) restamped to {url}")
 
     if not args.write:
         print("\ndry-run only, pass --write to persist changes")

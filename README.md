@@ -59,7 +59,8 @@ Each model object contains:
 - **`scores`**: Flat map, benchmark key → score (null until a source reports one)
 - **`scores_updated`**: Same key set → ISO date the score last changed
 - **`scores_source`**: Same key set → URL of the page the score was read from
-  (null for hand edits and the derived Coding index)
+  (null for hand edits; the derived Coding index cites this repository, which is
+  where it is computed)
 - **`params`** / **`context`** / **`vram`** / **`creator`**: model metadata
 
 The three score maps carry the full benchmark key set with null placeholders;
@@ -379,6 +380,14 @@ can sit thousandths of a percentile apart (the closest pair in the current field
 15 points), which a 0–100 value would round into a tie. The column carries
 `"decimals": 0` in `llm.json`, which is how `llm.html` and `llm-cli` know to print it
 without the decimal every other benchmark gets.
+
+No leaderboard publishes this column, so every ranked value is attributed to this
+repository instead of to a scraped page: `derive_coding_index.py` stamps
+`scores_source.coding_index` with the first URL the column declares in
+`llm.json` (`https://github.com/dgrieser/ai-bench#coding-index`, this section), so
+clicking the score in `llm.html` opens the method rather than nothing. Change that
+URL in `llm.json` and the next run restamps every value. An unranked model reports
+no source, the same way it reports no date.
 
 Two consequences worth knowing:
 
