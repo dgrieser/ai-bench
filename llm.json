@@ -16304,9 +16304,9 @@
       "params": "30B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 65,
+        "int8": 32,
+        "int4": 16
       },
       "creator": {
         "name": "Meta",
@@ -16416,6 +16416,11 @@
         "hle": "https://artificialanalysis.ai/models/muse-glimmer",
         "mmmu_pro": "https://artificialanalysis.ai/models/muse-glimmer",
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Glimmer-30B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Glimmer-30B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Glimmer-30B/"
       }
     }
   ],
