@@ -16,7 +16,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | Source | Type | Data Format |
 |--------|------|-------------|
 | **Artificial Analysis** | Commercial API | HTTP endpoint |
-| **Hugging Face** | Community | Model card READMEs |
+| **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research | JSON API |
 | **FrontierSWE** | Research | JSON API |
 | **SWE ReBench** | Research | JSON API |

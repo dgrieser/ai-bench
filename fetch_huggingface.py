@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""Fetch benchmark scores from Hugging Face model card READMEs (lenient parse)."""
+"""Fetch benchmark scores from Hugging Face model cards.
+
+Two sources per repo, merged with structured data taking precedence:
+
+  * the Hub's structured eval metadata (/api/models/<repo>?expand[]=evalResults
+    &expand[]=model-index), which is what the model page renders as its
+    'Evaluation results' section — evalResults covers .eval_results/*.yaml
+    files (including ones still pending on open Hub PRs), model-index the
+    classic card frontmatter;
+  * markdown/HTML tables in the README body (lenient parse).
+"""
 
 from __future__ import annotations
 
@@ -89,6 +99,8 @@ def clean_cell(text: str) -> str:
     for ch in _INVISIBLE_SPACES:
         s = s.replace(ch, " ")
     s = re.sub(r"\s+", " ", s).strip()
+    # Markdown backslash escapes ("𝛕3\-Banking", "Avg\*") from doc exports.
+    s = re.sub(r"\\([\\`*_{}\[\]()#+.!|~-])", r"\1", s)
     s = _strip_emphasis(s)
     s = s.rstrip(_FOOTNOTE_CHARS).rstrip()
     # Drop trailing footnote refs like " (1)" or " (12,3)" but preserve informative parens.
@@ -102,6 +114,10 @@ _PLACEHOLDERS = {"", "-", "—", "–", "n/a", "na", "/", "?", "—%", "tbd"}
 
 def parse_score(text: str) -> float | None:
     """Extract first numeric value from cell. Returns None for placeholders."""
+    # Lower-is-better markers ("Violation (↓): 26.4 <br> Coverage: 64.8") flag
+    # cells whose first number is not a benchmark score in the usual sense.
+    if "↓" in text:
+        return None
     cleaned = clean_cell(text)
     if cleaned.lower() in _PLACEHOLDERS:
         return None
@@ -112,6 +128,17 @@ def parse_score(text: str) -> float | None:
         return float(match.group(0))
     except ValueError:
         return None
+
+
+# Soft line breaks that word-processor exports leave inside table cells;
+# str.splitlines() treats them as row boundaries, which shreds the table.
+_SOFT_LINE_BREAKS = ("\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
+
+
+def _logical_lines(md: str) -> list[str]:
+    for ch in _SOFT_LINE_BREAKS:
+        md = md.replace(ch, " ")
+    return md.splitlines()
 
 
 _PIPE_LINE_RE = re.compile(r"^\s*\|.*\|\s*$")
@@ -130,7 +157,7 @@ def _split_row(line: str) -> list[str]:
 def parse_markdown_tables(md: str) -> list[Table]:
     """Find pipe-delimited tables in a markdown document."""
     tables: list[Table] = []
-    lines = md.splitlines()
+    lines = _logical_lines(md)
     in_code = False
     i = 0
     while i < len(lines):
@@ -201,7 +228,7 @@ _LABEL_DENY_EXACT = {
     "type", "link", "precision", "model", "modelname", "metric", "size",
     "license", "date", "releasedate", "quantization", "description", "download",
     "contextlength", "blackwell", "hopper", "huggingface", "modelscope",
-    "gitcode", "github", "gitee", "weights", "checkpoint",
+    "gitcode", "github", "gitee", "weights", "checkpoint", "activatedtotal",
 }
 _LABEL_DENY_SUB = (
     "parameter", "totalparam", "activatedparam", "activeparam", "contextlength",
@@ -272,10 +299,30 @@ def _select_size_variant_column(table: Table, model_name: str) -> int | None:
     return matches[0] if len(matches) == 1 else None
 
 
-def select_column(table: Table, repo: str) -> int | None:
-    """Pick the column matching the HF repo's model name (last path segment)."""
+_LABEL_COLUMN_HEADERS = {
+    "benchmark", "benchmarks", "task", "tasks", "dataset", "datasets",
+    "eval", "evals", "evaluation", "evaluations",
+}
+
+
+def _find_label_column(table: Table) -> int:
+    """Column holding benchmark names. Usually 0, but tables like
+    `| Category | Benchmark | Model-X | ... |` put a grouping column first."""
+    for idx, header in enumerate(table.headers):
+        if _norm_for_match(clean_cell(header)) in _LABEL_COLUMN_HEADERS:
+            return idx
+    return 0
+
+
+# Match score assigned to the size-variant fallback: weaker than any direct
+# name match so exact-name tables win when scores are merged across tables.
+_SIZE_VARIANT_SCORE = 400
+
+
+def _select_column_scored(table: Table, repo: str) -> tuple[int, int] | None:
+    """(match_score, col_idx) for the column naming this model; lower is better."""
     model_name = repo.split("/")[-1]
-    best: tuple[int, int] | None = None  # (score, col_idx); lower score wins
+    best: tuple[int, int] | None = None
     for idx, header in enumerate(table.headers):
         score = _name_match_score(clean_cell(header), model_name)
         if score is None:
@@ -283,14 +330,23 @@ def select_column(table: Table, repo: str) -> int | None:
         if best is None or score < best[0]:
             best = (score, idx)
     if best is not None:
-        return best[1]
-    return _select_size_variant_column(table, model_name)
+        return best
+    size_col = _select_size_variant_column(table, model_name)
+    if size_col is not None:
+        return (_SIZE_VARIANT_SCORE, size_col)
+    return None
 
 
-def select_row(table: Table, repo: str) -> int | None:
-    """For transposed tables (models in rows): pick the row whose first cell names the model."""
+def select_column(table: Table, repo: str) -> int | None:
+    """Pick the column matching the HF repo's model name (last path segment)."""
+    scored = _select_column_scored(table, repo)
+    return scored[1] if scored else None
+
+
+def _select_row_scored(table: Table, repo: str) -> tuple[int, int] | None:
+    """(match_score, row_idx) for transposed tables (models in rows)."""
     model_name = repo.split("/")[-1]
-    best: tuple[int, int] | None = None  # (score, row_idx)
+    best: tuple[int, int] | None = None
     for idx, row in enumerate(table.rows):
         if not row:
             continue
@@ -299,35 +355,55 @@ def select_row(table: Table, repo: str) -> int | None:
             continue
         if best is None or score < best[0]:
             best = (score, idx)
-    return best[1] if best else None
+    return best
+
+
+def select_row(table: Table, repo: str) -> int | None:
+    """For transposed tables (models in rows): pick the row whose first cell names the model."""
+    scored = _select_row_scored(table, repo)
+    return scored[1] if scored else None
 
 
 def extract_scores_from_tables(tables: list[Table], repo: str) -> dict[str, float]:
-    out: dict[str, float] = {}
+    # Each table is extracted independently, then merged best-name-match first:
+    # a table naming the model exactly must beat one that only matched loosely
+    # (e.g. the "MiMo-V2-Flash Base" pretrain column when the repo is the
+    # post-trained MiMo-V2-Flash), regardless of document order.
+    extracts: list[tuple[int, dict[str, float]]] = []  # (match_score, scores)
     for table in tables:
         if not table.headers or not table.rows:
             continue
-        col = select_column(table, repo)
-        if col is not None and col < len(table.headers):
-            # Column orientation: benchmarks in column 0, this model in `col`.
+        scored_col = _select_column_scored(table, repo)
+        label_col = _find_label_column(table)
+        if scored_col is not None and scored_col[1] != label_col and scored_col[1] < len(table.headers):
+            # Column orientation: benchmarks in `label_col`, this model in `col`.
+            match_score, col = scored_col
+            found: dict[str, float] = {}
             for row in table.rows:
+                if label_col > 0 and len(row) == len(table.headers) - 1:
+                    # Category tables often omit the leading category cell on
+                    # continuation rows, shifting everything left by one.
+                    row = [""] + row
                 if not row or _is_category_row(row, len(table.headers)):
                     continue
-                if col >= len(row):
+                if col >= len(row) or label_col >= len(row):
                     continue
-                label = clean_cell(row[0])
+                label = clean_cell(row[label_col])
                 if not label or _is_metadata_label(label):
                     continue
                 value = parse_score(row[col])
                 if value is None:
                     continue
-                out.setdefault(label, value)
+                found.setdefault(label, value)
+            extracts.append((match_score, found))
             continue
         # Transposed orientation: this model is a row, benchmarks are the headers.
-        row_idx = select_row(table, repo)
-        if row_idx is None:
+        scored_row = _select_row_scored(table, repo)
+        if scored_row is None:
             continue
+        match_score, row_idx = scored_row
         row = table.rows[row_idx]
+        found = {}
         for j in range(1, len(table.headers)):
             if j >= len(row):
                 break
@@ -337,13 +413,137 @@ def extract_scores_from_tables(tables: list[Table], repo: str) -> dict[str, floa
             value = parse_score(row[j])
             if value is None:
                 continue
-            out.setdefault(label, value)
+            found.setdefault(label, value)
+        extracts.append((match_score, found))
+    # Better-matching tables win outright; between equally-matched tables the
+    # best reported run wins (same policy update.py applies to label aliases).
+    out: dict[str, float] = {}
+    tier: dict[str, int] = {}
+    for match_score, found in sorted(extracts, key=lambda pair: pair[0]):
+        for label, value in found.items():
+            if label not in out:
+                out[label] = value
+                tier[label] = match_score
+            elif tier[label] == match_score and value > out[label]:
+                out[label] = value
+    return out
+
+
+def _coerce_score(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        return parse_score(value)
+    return None
+
+
+def fetch_api_eval_data(repo: str, timeout: int = 30) -> dict[str, Any]:
+    """Structured eval metadata from the Hub API: the 'Evaluation results'
+    widget (.eval_results/*.yaml files, including ones pending on open PRs)
+    plus the classic model-index card metadata."""
+    url = f"{HF_BASE}/api/models/{repo}?expand[]=evalResults&expand[]=model-index"
+    req = urllib.request.Request(url, headers=_auth_headers())
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        payload = json.loads(resp.read().decode("utf-8", errors="replace"))
+    return payload if isinstance(payload, dict) else {}
+
+
+def _eval_results_label(dataset: dict[str, Any]) -> str | None:
+    """'Idavidrein/gpqa (diamond)'; the task suffix is dropped when it just
+    repeats the dataset name ('cais/hle' + task 'hle')."""
+    dataset_id = dataset.get("id")
+    if not isinstance(dataset_id, str) or not dataset_id:
+        return None
+    task_id = dataset.get("task_id")
+    if isinstance(task_id, str) and task_id:
+        task_norm = _norm_for_match(task_id)
+        if task_norm not in (
+            _norm_for_match(dataset_id),
+            _norm_for_match(dataset_id.split("/")[-1]),
+        ):
+            return f"{dataset_id} ({task_id})"
+    return dataset_id
+
+
+def extract_eval_results(payload: dict[str, Any]) -> dict[str, float]:
+    """Scores from the Hub's 'Evaluation results' widget (evalResults)."""
+    out: dict[str, float] = {}
+    entries = payload.get("evalResults")
+    if not isinstance(entries, list):
+        return out
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        data = entry.get("data")
+        if not isinstance(data, dict):
+            continue
+        dataset = data.get("dataset")
+        if not isinstance(dataset, dict):
+            continue
+        label = _eval_results_label(dataset)
+        value = _coerce_score(data.get("value"))
+        if label is None or value is None:
+            continue
+        out.setdefault(label, value)
+    return out
+
+
+def extract_model_index(payload: dict[str, Any]) -> dict[str, float]:
+    """Scores from classic model-index card metadata (the pre-evalResults
+    source of the 'Evaluation results' widget)."""
+    out: dict[str, float] = {}
+    index = payload.get("model-index")
+    if not isinstance(index, list):
+        return out
+    for model_entry in index:
+        if not isinstance(model_entry, dict):
+            continue
+        for result in model_entry.get("results") or []:
+            if not isinstance(result, dict):
+                continue
+            dataset = result.get("dataset")
+            if not isinstance(dataset, dict):
+                continue
+            base = dataset.get("name") or dataset.get("type")
+            if not isinstance(base, str) or not base:
+                continue
+            metrics = [m for m in result.get("metrics") or [] if isinstance(m, dict)]
+            scored = [
+                (m, v) for m in metrics if (v := _coerce_score(m.get("value"))) is not None
+            ]
+            for metric, value in scored:
+                metric_name = metric.get("name") or metric.get("type")
+                label = base
+                if len(scored) > 1 and isinstance(metric_name, str) and metric_name:
+                    label = f"{base} ({metric_name})"
+                out.setdefault(label, value)
     return out
 
 
 def extract_scores(repo: str) -> dict[str, float]:
-    md = fetch_readme(repo)
-    return extract_scores_from_tables(parse_markdown_tables(md) + parse_html_tables(md), repo)
+    # Structured metadata first: it is what the Hub renders as 'Evaluation
+    # results' and is unambiguous. README tables then fill remaining labels.
+    out: dict[str, float] = {}
+    try:
+        payload = fetch_api_eval_data(repo)
+    except Exception as exc:
+        print(f"warning: {repo}: eval metadata fetch failed: {exc}", file=sys.stderr)
+        payload = {}
+    out.update(extract_eval_results(payload))
+    for label, value in extract_model_index(payload).items():
+        out.setdefault(label, value)
+    try:
+        md = fetch_readme(repo)
+    except FileNotFoundError:
+        if not out:
+            raise
+        return out
+    tables = parse_markdown_tables(md) + parse_html_tables(md)
+    for label, value in extract_scores_from_tables(tables, repo).items():
+        out.setdefault(label, value)
+    return out
 
 
 def iter_hf_models(doc: dict[str, Any]) -> list[tuple[str, str]]:
