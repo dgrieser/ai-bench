@@ -33,11 +33,12 @@
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
       --top-score-text: var(--accent);
-      /* Freshly updated score: warm amber, the one hue the table's blues and
-         greys leave unused, so a new number is unmistakable without competing
-         with the top-score wash it can share a cell with. */
-      --fresh-ink: #d97706;
-      --fresh-glow: rgba(217, 119, 6, 0.35);
+      /* Freshly updated score: the same red .model-new gives a new model's name,
+         so red means "new" wherever it appears, and nothing in the table's blues
+         and greys competes with it — including the top-score wash a fresh score
+         can share a cell with. */
+      --fresh-ink: #991b1b;
+      --fresh-glow: rgba(153, 27, 27, 0.3);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
@@ -1188,8 +1189,8 @@
     }
 
     /* ── New score mark ─────────────────────────────
-       A score updated within the last week is underscored in amber, like a
-       figure just pencilled in. The stroke is right-aligned under the digits
+       A score updated within the last week is underscored in red, like a figure
+       just pencilled in. The stroke is right-aligned under the digits
        and fades away to the left, so it sits with its own number rather than
        drawing a line across the column, and it layers over the top-score wash
        without muddying it. --fresh, set per cell by renderRow, is 1 the day the
@@ -1901,10 +1902,10 @@
       --line-soft: #222120;
       --accent: #5b8af7;
       --accent-hover: #7aa3f8;
-      /* Amber carries further on near-black than on cream, so the dark stroke is
-         mixed a shade softer to land at the same weight as its light twin. */
-      --fresh-ink: #dda437;
-      --fresh-glow: rgba(221, 164, 55, 0.28);
+      /* Brick red disappears into near-black, so the stroke lightens with the
+         rest of the palette — the same red .model-new switches to here. */
+      --fresh-ink: #f87171;
+      --fresh-glow: rgba(248, 113, 113, 0.28);
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.4);
       --tip-bg: #211f1c;
       --tip-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 44px rgba(0, 0, 0, 0.55);
@@ -3601,6 +3602,11 @@
         // the NEW badge beside its name already says the whole row is new —
         // marking each cell as well would be the same news thirty times over.
         if (isRecentModel(model)) return 0;
+        // A derived column (the Coding index) is recomputed from the others, so
+        // its date moves whenever any input moves. That is arithmetic catching
+        // up, not a new measurement, and the inputs that did change are marked
+        // in their own cells.
+        if (isDerivedBenchmark(key)) return 0;
         const age = daysSince(model.scores_updated?.[key]);
         if (age === null || age < 0 || age >= NEW_DAYS) return 0;
         return (NEW_DAYS - age) / NEW_DAYS;
@@ -4126,6 +4132,12 @@
       // such a column compares against its numbers (see sortModels).
       function isLowerBetter(key) {
         return state.data?.benchmarks?.[key]?.lower_is_better === true;
+      }
+
+      // Benchmarks computed from other columns rather than read from a
+      // leaderboard — derive_coding_index.py writes the one there is today.
+      function isDerivedBenchmark(key) {
+        return state.data?.benchmarks?.[key]?.derived === true;
       }
 
       // Column headers use short_name to stay narrow; lists with room (the
