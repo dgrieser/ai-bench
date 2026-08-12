@@ -57,7 +57,10 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 Each model object contains:
 - **`name`**: Canonical slug (used across the system)
 - **`scores`**: Flat map, benchmark key → score (null until a source reports one)
-- **`scores_updated`**: Same key set → ISO date the score last changed
+- **`scores_updated`**: Same key set → ISO date the score last changed. `llm.html`
+  underscores a score stamped within the last seven days in amber, the stroke fading
+  as the score ages; a model added inside the same window carries the `NEW` badge
+  instead, since every one of its scores arrived with it
 - **`scores_source`**: Same key set → URL of the page the score was read from
   (null for hand edits; the derived Coding index cites this repository, which is
   where it is computed)
