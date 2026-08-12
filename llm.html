@@ -1330,6 +1330,229 @@
       color: #991b1b;
     }
 
+    /* ── Recently added panel ─────────────────────────
+       The week the table marks, written out: every model wearing a NEW badge
+       and every score carrying a red stroke, gathered under the day it was
+       stamped. The table says which cells are new; this says what arrived, and
+       when, without hunting for red across thirty columns. Laid out as a
+       timeline — dates down the left, what landed on each to the right — so the
+       run of a week reads top to bottom. --fresh, set per day by the renderer,
+       fades the marker exactly as it fades the stroke in the table. */
+
+    .recent-panel {
+      margin: 0;
+      padding: 26px 20px 30px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .recent-panel h2 {
+      margin: 0 0 8px;
+      color: var(--subtle);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .recent-lead {
+      margin: 0 0 18px;
+      max-width: 82ch;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    .recent-count {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .recent-days {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recent-day {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr);
+      gap: 0 16px;
+      padding: 12px 0;
+    }
+
+    .recent-day + .recent-day {
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .recent-date {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      padding-left: 14px;
+      font-family: var(--font-mono);
+    }
+
+    /* The day's dot, in the same red as the stroke under a fresh score, at the
+       same strength that stroke would carry today. */
+    .recent-date::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--fresh-ink);
+      box-shadow: 0 0 4px var(--fresh-glow);
+      opacity: calc(0.26 + 0.74 * var(--fresh, 1));
+    }
+
+    .recent-date-day {
+      color: var(--text);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .recent-date-age {
+      color: var(--subtle);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .recent-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .recent-entry {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 10px;
+      min-width: 0;
+    }
+
+    .recent-entry-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .recent-model {
+      color: var(--text);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* A model added this week wears .model-new here as well, so its name is the
+       same red it is in the table. That rule carries !important, which is what
+       keeps this hover from tinting a new model blue, and it follows the palette
+       into dark mode on its own. */
+    a.recent-model:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .recent-creator {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .recent-note {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 500;
+    }
+
+    .recent-scores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .recent-score {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 2px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-alt);
+      text-decoration: none;
+      transition: border-color 150ms ease;
+    }
+
+    a.recent-score:hover {
+      border-color: var(--fresh-ink);
+    }
+
+    .recent-score-name {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .recent-score-value {
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* The tail of a long day. Styled as a link rather than a control: it opens
+       more of the same list, it does not act on the table. */
+    .recent-more > summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 0;
+      list-style: none;
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .recent-more > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .recent-more > summary::before {
+      content: "▸";
+      font-size: 0.7rem;
+    }
+
+    .recent-more[open] > summary::before {
+      content: "▾";
+    }
+
+    .recent-more > summary:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .recent-more > .recent-entries {
+      padding-top: 8px;
+    }
+
     /* ── Benchmarks panel ─────────────────────────── */
 
     .benchmarks-panel {
@@ -2062,6 +2285,24 @@
         padding-left: 16px;
         padding-right: 16px;
         padding-bottom: 24px;
+      }
+
+      .recent-panel {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      /* Too narrow for a date gutter: the day becomes a heading over its own
+         entries, dot and all, and the timeline reads as one column. */
+      .recent-day {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      .recent-date {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 8px;
       }
 
       .table-shell {
@@ -3300,6 +3541,7 @@
               </tbody>
             </table>
           </div>
+          ${renderRecentPanel()}
           ${renderBenchmarkDirectory()}
           ${renderSourcesDirectory()}
         `;
@@ -3329,6 +3571,187 @@
         });
 
         initColumnResize();
+      }
+
+      /* ── Recently added ──────────────────────────────
+         The week the table marks, written out underneath it: every model
+         wearing a NEW badge and every score carrying a red stroke, filed under
+         the day it was stamped. */
+
+      // How many of a day's models are listed before the rest fold away.
+      const RECENT_DAY_PREVIEW = 12;
+
+      // "5 models", "1 score" — the counts in the lead and beside a new model.
+      function countLabel(count, noun) {
+        return `${count} ${noun}${count === 1 ? "" : "s"}`;
+      }
+
+      // Everything the table is currently marking, gathered by the day it was
+      // stamped: models added inside the window, and single scores stamped
+      // inside it on models older than that. Membership is decided by the very
+      // tests the marks use — isRecentModel and scoreFreshness — so the list
+      // and the table cannot disagree about what is new, down to the cases they
+      // skip (a derived column; the scores of a model that is itself new).
+      // Reads state.filteredModels and the visible benchmark keys, so it
+      // describes the table on screen rather than the whole file.
+      function recentAdditions() {
+        const benchKeys = visibleBenchmarkKeys();
+        const byDate = new Map();
+        const dayFor = (date) => {
+          if (!byDate.has(date)) {
+            byDate.set(date, { date, age: daysSince(date), models: [], scores: [] });
+          }
+          return byDate.get(date);
+        };
+
+        state.filteredModels.forEach((model) => {
+          if (isRecentModel(model)) {
+            dayFor(model.date_added).models.push(model);
+            return;
+          }
+          // A model can hold scores from several days at once, so its cells are
+          // split by their own stamp rather than filed under the newest of them.
+          const byStamp = new Map();
+          benchKeys.forEach((key) => {
+            const value = toNumber(model.scores?.[key]);
+            if (!Number.isFinite(value) || !scoreFreshness(model, key)) {
+              return;
+            }
+            const stamp = model.scores_updated[key];
+            if (!byStamp.has(stamp)) {
+              byStamp.set(stamp, []);
+            }
+            byStamp.get(stamp).push({ key, value });
+          });
+          byStamp.forEach((entries, stamp) => dayFor(stamp).scores.push({ model, entries }));
+        });
+
+        // Newest day first; within a day, table order, since these were
+        // collected by walking the rows.
+        return [...byDate.values()].sort((a, b) => a.age - b.age);
+      }
+
+      // Links in this panel pass through the same gate a slip's link does, so an
+      // imported llm.json cannot put anything but a web address behind one; a
+      // rejected URL simply leaves plain text.
+      function recentLinkUrl(url) {
+        return tipSafeUrl(url) ? url : "";
+      }
+
+      // A model's name as it appears in this panel: the same slip the table row
+      // carries, and the same red when the model itself is the new thing.
+      function renderRecentModelName(model, isNew) {
+        const name = escapeHtml(model.name || "Unknown");
+        const url = recentLinkUrl(model.url);
+        const tip = tipAttrs({
+          eyebrow: model.creatorName || "",
+          eyebrowVerbatim: true,
+          eyebrowUrl: model.creator?.url || "",
+          title: model.name || "Unknown",
+          meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
+          url: model.url || ""
+        });
+        const className = `recent-model${isNew ? " model-new" : ""}`;
+        return url
+          ? `<a class="${className}" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"${tip}>${name}</a>`
+          : `<span class="${className}"${tip}>${name}</span>`;
+      }
+
+      function renderRecentModelEntry(model) {
+        // Its scores are not listed one by one: they all arrived with the model
+        // and are unmarked in the table for that reason, so the count is the
+        // whole of what there is to say about them here. Counted over the
+        // visible columns, like everything else in the panel — and dropped when
+        // that leaves nothing, since the badge already says why the model is
+        // listed.
+        const scored = visibleBenchmarkKeys()
+          .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
+        return `
+          <div class="recent-entry">
+            <span class="recent-entry-head">${renderNewBadge(model.date_added)}${renderRecentModelName(model, true)}</span>
+            ${model.creatorName ? `<span class="recent-creator">${escapeHtml(model.creatorName)}</span>` : ""}
+            ${scored ? `<span class="recent-note">arrived with ${countLabel(scored, "score")}</span>` : ""}
+          </div>
+        `;
+      }
+
+      function renderRecentScoreEntry(row, day) {
+        const model = row.model;
+        const chips = row.entries.map(({ key, value }) => {
+          const source = recentLinkUrl(model.scores_source?.[key]);
+          // Column headers are short by design, so the slip carries the full
+          // benchmark name and the same provenance the table cell's slip does.
+          const tip = tipAttrs({
+            eyebrow: model.name || "",
+            eyebrowVerbatim: true,
+            title: getBenchmarkFullName(key),
+            meta: [
+              `Added ${day.date} · ${describeAge(day.age)}`,
+              source ? "" : "No source recorded for this score."
+            ].filter(Boolean).join("\n"),
+            url: source
+          });
+          const label = `<span class="recent-score-name">${escapeHtml(getBenchmarkLabel(key))}</span><span class="recent-score-value">${formatScore(value, key)}</span>`;
+          return source
+            ? `<a class="recent-score" href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tip}>${label}</a>`
+            : `<span class="recent-score"${tip}>${label}</span>`;
+        }).join("");
+
+        return `
+          <div class="recent-entry">
+            <span class="recent-entry-head">${renderRecentModelName(model, false)}</span>
+            <span class="recent-scores">${chips}</span>
+          </div>
+        `;
+      }
+
+      function renderRecentPanel() {
+        const days = recentAdditions();
+        const modelCount = days.reduce((total, day) => total + day.models.length, 0);
+        const scoreCount = days.reduce((total, day) =>
+          total + day.scores.reduce((sum, row) => sum + row.entries.length, 0), 0);
+
+        const lead = modelCount || scoreCount
+          ? `<span class="recent-count">${countLabel(modelCount, "model")}</span> and <span class="recent-count">${countLabel(scoreCount, "score")}</span> arrived in the last ${NEW_DAYS} days — the window the table marks, across the models and columns it is showing now. A date records only the last write, so a score measured again is listed like a first one. A new model's scores are counted with the model, and a derived column is left out, exactly as in the table.`
+          : `Nothing has been added in the last ${NEW_DAYS} days.`;
+
+        const items = days.map((day) => {
+          // The dot fades with the day exactly as the stroke under a score
+          // fades with it in the table — same window, same arithmetic.
+          const fresh = ((NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
+          const entries = [
+            ...day.models.map((model) => renderRecentModelEntry(model)),
+            ...day.scores.map((row) => renderRecentScoreEntry(row, day))
+          ];
+          // One fetch can restamp a hundred models at once, and a day that long
+          // buries every other day under it. The head of the list stands for the
+          // day — in table order, so it is the day's best-ranked models — and
+          // the tail waits behind a disclosure. Nothing is dropped, and <details>
+          // needs no wiring, which matters where the panel is rebuilt from a
+          // string on every filter change.
+          const head = entries.slice(0, RECENT_DAY_PREVIEW).join("");
+          const tail = entries.slice(RECENT_DAY_PREVIEW);
+          const more = tail.length
+            ? `<details class="recent-more"><summary>${countLabel(tail.length, "more model")}</summary><div class="recent-entries">${tail.join("")}</div></details>`
+            : "";
+          return `
+            <li class="recent-day" style="--fresh:${fresh}">
+              <div class="recent-date">
+                <span class="recent-date-day">${escapeHtml(day.date)}</span>
+                <span class="recent-date-age">${escapeHtml(describeAge(day.age))}</span>
+              </div>
+              <div class="recent-entries">${head}${more}</div>
+            </li>
+          `;
+        }).join("");
+
+        return `
+          <section class="recent-panel" aria-label="Recently added models and scores">
+            <h2>Recently Added</h2>
+            <p class="recent-lead">${lead}</p>
+            ${items ? `<ol class="recent-days">${items}</ol>` : ""}
+          </section>
+        `;
       }
 
       // Reference cards: entries from data.columnCards (table columns that need
@@ -3585,6 +4008,14 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return Math.round((today.getTime() - stamped.getTime()) / 86400000);
+      }
+
+      // A whole-day age in words, so a reader is never left counting from a
+      // bare date. Shared by the score slip and the Recently Added panel.
+      function describeAge(days) {
+        if (days === 0) return "today";
+        if (days === 1) return "yesterday";
+        return `${days} days ago`;
       }
 
       function isRecentModel(model) {
@@ -4732,9 +5163,7 @@
           // The stroke under the number says a score is new; the slip says how
           // new, since a bare date leaves the reader counting days.
           const age = scoreFreshness(model, key) ? daysSince(updated) : null;
-          const newness = age === null
-            ? ""
-            : age === 0 ? " · new today" : age === 1 ? " · new yesterday" : ` · new, ${age} days ago`;
+          const newness = age === null ? "" : ` · new ${describeAge(age)}`;
           return {
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
