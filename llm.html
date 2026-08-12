@@ -33,6 +33,12 @@
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
       --top-score-text: var(--accent);
+      /* Freshly updated score: the same red .model-new gives a new model's name,
+         so red means "new" wherever it appears, and nothing in the table's blues
+         and greys competes with it — including the top-score wash a fresh score
+         can share a cell with. */
+      --fresh-ink: #991b1b;
+      --fresh-glow: rgba(153, 27, 27, 0.3);
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
@@ -1182,6 +1188,34 @@
       border-radius: 0 6px 6px 0;
     }
 
+    /* ── New score mark ─────────────────────────────
+       A score updated within the last week is underscored in red, like a figure
+       just pencilled in. The stroke is right-aligned under the digits
+       and fades away to the left, so it sits with its own number rather than
+       drawing a line across the column, and it layers over the top-score wash
+       without muddying it. --fresh, set per cell by renderRow, is 1 the day the
+       score lands and falls toward 0 across the week, dimming the stroke as the
+       number ages instead of every recent score shouting equally loudly. */
+    td.num.fresh-score {
+      position: relative;
+    }
+
+    td.num.fresh-score::after {
+      content: "";
+      position: absolute;
+      bottom: 6px;
+      right: 12px;
+      width: 28px;
+      height: 2px;
+      border-radius: 1px;
+      background: linear-gradient(to right, transparent, var(--fresh-ink) 85%);
+      box-shadow: 0 0 3px var(--fresh-glow);
+      /* Never quite fades out: a week-old score is barely there, but it is
+         still there, so the stroke leaves rather than blinks off. */
+      opacity: calc(0.26 + 0.74 * var(--fresh, 1));
+      pointer-events: none;
+    }
+
     /* ── New model badge ───────────────────────────── */
 
     .model-new {
@@ -1868,6 +1902,10 @@
       --line-soft: #222120;
       --accent: #5b8af7;
       --accent-hover: #7aa3f8;
+      /* Brick red disappears into near-black, so the stroke lightens with the
+         rest of the palette — the same red .model-new switches to here. */
+      --fresh-ink: #f87171;
+      --fresh-glow: rgba(248, 113, 113, 0.28);
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.4);
       --tip-bg: #211f1c;
       --tip-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 44px rgba(0, 0, 0, 0.55);
@@ -3532,12 +3570,46 @@
         return `<th class="${className.trim()}" data-sort-key="${escapeHtml(header.key)}"${tip}${minWidthAttr}${maxWidthAttr}${initialWidthAttr}><span class="th-label">${labelContent}</span>${indicator}${resizeHandle}</th>`;
       }
 
+      // How long a stamp counts as new. One window for both date_added and
+      // scores_updated, so "new" means the same span of time whether it is a
+      // whole model or a single score of a model that has been here a while.
+      const NEW_DAYS = 7;
+
+      // Whole days between an ISO date stamp and today, null if unparseable.
+      // Both ends are local midnight, so the count is calendar days — the unit
+      // the stamps are written in — and a clock change cannot shift it.
+      function daysSince(isoDate) {
+        if (!isoDate) return null;
+        const stamped = new Date(isoDate + "T00:00:00");
+        if (Number.isNaN(stamped.getTime())) return null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return Math.round((today.getTime() - stamped.getTime()) / 86400000);
+      }
+
       function isRecentModel(model) {
-        if (!model.date_added) return false;
-        const added = new Date(model.date_added + "T00:00:00");
-        const now = new Date();
-        const diffMs = now.getTime() - added.getTime();
-        return diffMs >= 0 && diffMs < 7 * 24 * 60 * 60 * 1000;
+        const age = daysSince(model.date_added);
+        return age !== null && age >= 0 && age < NEW_DAYS;
+      }
+
+      // How new one score is: 1 stamped today, fading toward 0 as it nears
+      // NEW_DAYS old, and 0 once it is older than that (or undated, or stamped
+      // in the future). renderRow passes the number to CSS as --fresh, which
+      // fades the mark on the cell with it, so a table refreshed in batches
+      // reads as a gradient of recency rather than a wall of flags.
+      function scoreFreshness(model, key) {
+        // A model added this week has every score stamped with its arrival, so
+        // the NEW badge beside its name already says the whole row is new —
+        // marking each cell as well would be the same news thirty times over.
+        if (isRecentModel(model)) return 0;
+        // A derived column (the Coding index) is recomputed from the others, so
+        // its date moves whenever any input moves. That is arithmetic catching
+        // up, not a new measurement, and the inputs that did change are marked
+        // in their own cells.
+        if (isDerivedBenchmark(key)) return 0;
+        const age = daysSince(model.scores_updated?.[key]);
+        if (age === null || age < 0 || age >= NEW_DAYS) return 0;
+        return (NEW_DAYS - age) / NEW_DAYS;
       }
 
       function renderNewBadge(dateAdded) {
@@ -3575,16 +3647,25 @@
         });
         const scoreCells = benchKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
+          const hasValue = Number.isFinite(value);
           // Only cells that hold a number get a slip, and they carry a kind
           // rather than their text — see TIP_RESOLVERS.score.
-          const tipAttr = Number.isFinite(value) ? ` data-tip-kind="score"` : "";
+          const tipAttr = hasValue ? ` data-tip-kind="score"` : "";
           const isTop = bestInTable.has(key);
-          if (isTop) {
-            return `<td class="num top-score"${tipAttr}><span class="top-score-mark">${formatScore(value, key)}</span></td>`;
+          // An empty cell has no score, so nothing about it can be new.
+          const fresh = hasValue ? scoreFreshness(model, key) : 0;
+          const declarations = [];
+          if (!isTop) {
+            const grey = hasValue ? scoreToGrey(value, scoreRanges[key]) : null;
+            if (grey) declarations.push(`color:${grey}`);
           }
-          const grey = Number.isFinite(value) ? scoreToGrey(value, scoreRanges[key]) : null;
-          const style = grey ? ` style="color:${grey}"` : "";
-          return `<td class="num"${style}${tipAttr}>${formatScore(value, key)}</td>`;
+          if (fresh) declarations.push(`--fresh:${fresh.toFixed(3)}`);
+          const style = declarations.length ? ` style="${declarations.join(";")}"` : "";
+          const className = `num${isTop ? " top-score" : ""}${fresh ? " fresh-score" : ""}`;
+          const content = isTop
+            ? `<span class="top-score-mark">${formatScore(value, key)}</span>`
+            : formatScore(value, key);
+          return `<td class="${className}"${style}${tipAttr}>${content}</td>`;
         }).join("");
 
         return `
@@ -4051,6 +4132,12 @@
       // such a column compares against its numbers (see sortModels).
       function isLowerBetter(key) {
         return state.data?.benchmarks?.[key]?.lower_is_better === true;
+      }
+
+      // Benchmarks computed from other columns rather than read from a
+      // leaderboard — derive_coding_index.py writes the one there is today.
+      function isDerivedBenchmark(key) {
+        return state.data?.benchmarks?.[key]?.derived === true;
       }
 
       // Column headers use short_name to stay narrow; lists with room (the
@@ -4642,12 +4729,18 @@
           const bench = state.data?.benchmarks?.[key] || {};
           const updated = model.scores_updated?.[key];
           const source = model.scores_source?.[key];
+          // The stroke under the number says a score is new; the slip says how
+          // new, since a bare date leaves the reader counting days.
+          const age = scoreFreshness(model, key) ? daysSince(updated) : null;
+          const newness = age === null
+            ? ""
+            : age === 0 ? " · new today" : age === 1 ? " · new yesterday" : ` · new, ${age} days ago`;
           return {
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: bench.name || getBenchmarkLabel(key),
             meta: [
-              updated ? `Updated ${updated}` : "",
+              updated ? `Updated ${updated}${newness}` : "",
               source ? "" : "No source recorded for this score."
             ].filter(Boolean).join("\n"),
             url: source || ""
