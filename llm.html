@@ -3679,8 +3679,7 @@
         const model = row.model;
         const chips = row.entries.map(({ key, value }) => {
           const source = recentLinkUrl(model.scores_source?.[key]);
-          // Column headers are short by design, so the slip carries the full
-          // benchmark name and the same provenance the table cell's slip does.
+          // The slip carries the same provenance the table cell's slip does.
           const tip = tipAttrs({
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
@@ -3691,7 +3690,10 @@
             ].filter(Boolean).join("\n"),
             url: source
           });
-          const label = `<span class="recent-score-name">${escapeHtml(getBenchmarkLabel(key))}</span><span class="recent-score-value">${formatScore(value, key)}</span>`;
+          // Column headers wear short_name because a table column has a fixed
+          // width to live in; a chip here has none, so it can say which
+          // benchmark it is outright instead of asking for a hover.
+          const label = `<span class="recent-score-name">${escapeHtml(getBenchmarkFullName(key))}</span><span class="recent-score-value">${formatScore(value, key)}</span>`;
           return source
             ? `<a class="recent-score" href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tip}>${label}</a>`
             : `<span class="recent-score"${tip}>${label}</span>`;
