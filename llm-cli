@@ -6,8 +6,8 @@ Reads llm.json and prints the same table the web page shows: fixed columns
 benchmark, sorted the same way as the page's default sort (the "defaultSort"
 key from llm.json, e.g. the coding group composite). Sorting math mirrors
 llm.html exactly: tie-averaged percentile ranks, missing benchmarks imputed
-between percentile 0.5 and the model's own measured level (trusted in
-proportion to its coverage), division by the group's total weight, and models
+at or below percentile 0.5 (a gap can drag a model down, never lift it),
+division by the group's total weight, and models
 measured on less than "minScoredFraction" of that weight left unranked. A
 benchmark marked "lower_is_better" in llm.json has its percentile inverted and
 sorts smallest-value-first, so it still reads best-first.
@@ -156,10 +156,10 @@ def compute_group_composite(models, group, doc):
             continue
         missing_weight = total_weight - sum_weight
         # Blanks are filled between the median (0.5) and the level the model has
-        # actually shown, trusting the latter in proportion to coverage. Equals
-        # own*(1 - m^2) + 0.5*m^2 for missing share m.
+        # actually shown, trusting the latter in proportion to coverage, but
+        # never above the median: a gap can hurt, it cannot lift.
         own = sum_weighted / sum_weight
-        fill = 0.5 + (own - 0.5) * (sum_weight / total_weight)
+        fill = min(0.5 + (own - 0.5) * (sum_weight / total_weight), 0.5)
         result[model["name"]] = (sum_weighted + fill * missing_weight) / total_weight
     return result
 
