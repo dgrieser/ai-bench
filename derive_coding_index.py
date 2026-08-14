@@ -17,10 +17,11 @@ ranks models the way the old "Coding (grouped)" sort did:
   * A missing score is imputed, not counted as zero: absence is ignorance, not
     evidence of a bottom rank. The fill starts at the median (percentile 0.5)
     and slides toward the level the model has actually demonstrated in
-    proportion to its coverage, so the penalty for a blank grows with the
-    square of the missing weight share. A model measured on almost everything
-    is barely docked; one measured on almost nothing stays pinned near the
-    median, so a single lucky score cannot top a well-tested model.
+    proportion to its coverage, but is capped at the median: a gap counts as
+    an unknown opponent, and an unknown opponent is never assumed better than
+    the median model. A blank can hold a strong model back or drag a weak one
+    down, yet it can never lift anyone, so a sparsely measured model cannot
+    outrank a well-tested one on imputed strength alone.
   * A benchmark nobody can be ranked on (fewer than two scored models) is left
     out of the total weight so it dilutes nobody.
   * A model measured on less than MIN_SCORED_FRACTION of the total weight is
@@ -202,7 +203,7 @@ def compute_index(
 
         missing_weight = total_weight - sum_weight
         own = sum_weighted / sum_weight
-        fill = 0.5 + (own - 0.5) * (sum_weight / total_weight)
+        fill = min(0.5 + (own - 0.5) * (sum_weight / total_weight), 0.5)
         composite = (sum_weighted + fill * missing_weight) / total_weight
         result[name] = round(composite * SCALE)
     return result

@@ -379,10 +379,11 @@ How a value is produced:
    Weights are relative — scaling them all leaves the ranking unchanged.
 3. **Impute blanks instead of zeroing them.** A missing score is filled between the
    median (50) and the level the model has actually demonstrated, trusting the
-   latter in proportion to the weight it was measured on. The penalty for a blank
-   grows with the *square* of the missing share: a model measured on almost
-   everything is barely docked, while one measured on almost nothing stays pinned
-   near 50 and cannot ride a single lucky score to the top.
+   latter in proportion to the weight it was measured on — but never *above* the
+   median. A gap counts as an unknown opponent, and an unknown opponent is never
+   assumed better than the median model: a blank can hold a strong model back or
+   drag a weak one down, yet it can never lift anyone, so a sparsely measured
+   model cannot outrank a well-tested one on imputed strength alone.
 4. **Refuse to guess.** A benchmark with fewer than two scored models carries no
    rank and is dropped from the total weight. A model measured on less than
    `MIN_SCORED_FRACTION` (20%) of that weight is left unranked (`null`) rather than
