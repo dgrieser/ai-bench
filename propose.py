@@ -18,7 +18,12 @@ for why substring and subset matches are not safe to commit unreviewed.
 The emitted plan drives the workflow's review comments, which carry the
 alternatives as clickable GitHub suggestions. Every parked line's comment also
 carries a clickable `__unmappable__` suggestion, so declining a name is as
-cheap as accepting one.
+cheap as accepting one -- but only lines this run actually changed get one at
+all, because GitHub rejects a review that points at a line outside the diff and
+takes every other suggestion in it down with it.
+
+A key the mapping file has already decided is never re-proposed: overwriting a
+recorded answer with __pending__ would undo it and re-queue the name for good.
 """
 
 from __future__ import annotations
@@ -127,10 +132,34 @@ class Proposal:
     reason: str
     alternatives: list[str] = field(default_factory=list)
     line: int | None = None
+    # What the mapping file already said about this key before this run, or None
+    # when the key is new. Both flags below are read off it.
+    previous: str | None = None
 
     @property
     def pending(self) -> bool:
         return self.value == PENDING
+
+    @property
+    def answered(self) -> bool:
+        """A person already decided this key; the queue asking again is stale.
+
+        Writing __pending__ over a decision would undo it and put the question
+        back in the loop forever, so an answered key is reported and left alone.
+        """
+        return self.previous is not None and self.previous != PENDING
+
+    @property
+    def in_diff(self) -> bool:
+        """True when this run changes the line, which is the only thing GitHub
+        will hang a review comment on.
+
+        A key already parked as __pending__ on main is re-proposed as the same
+        __pending__, so it produces no hunk. Asking for a comment on it makes
+        GitHub reject the *whole* review with a 422, taking the commitable
+        suggestions for every other line down with it.
+        """
+        return self.previous != self.value
 
 
 def script_of(entry: dict[str, Any]) -> str:
@@ -174,6 +203,18 @@ def build_universes(llm_path: Path, skip_aa: bool) -> dict[str, list[str]]:
     return universes
 
 
+def recorded_value(path: Path, key: str) -> str | None:
+    """What a mapping file already says about a key, or None if it says nothing."""
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(raw, dict):
+        return None
+    value = raw.get(key)
+    return value if isinstance(value, str) else None
+
+
 def plan_mappings(
     entries: list[dict[str, Any]], universes: dict[str, list[str]]
 ) -> tuple[list[Proposal], list[dict[str, Any]]]:
@@ -196,15 +237,17 @@ def plan_mappings(
         if not options and entry.get("candidates"):
             options = list(entry["candidates"])
 
+        key = entry.get("subject") or ""
         match, alternatives = _matching.propose(match_subject(entry, route), options)
         proposals.append(
             Proposal(
                 path=path,
-                key=entry.get("subject") or "",
+                key=key,
                 value=match.option if match else PENDING,
                 confidence=match.confidence if match else "none",
                 reason=match.reason if match else "no confident match",
                 alternatives=[a.option for a in alternatives[:4]],
+                previous=recorded_value(path, key),
             )
         )
     return proposals, unroutable
@@ -224,6 +267,8 @@ def apply_mappings(proposals: list[Proposal]) -> None:
     """Write every proposal through the source's own writer, then locate its line."""
     writers = writers_by_path()
     for proposal in proposals:
+        if proposal.answered:
+            continue  # a decision is already recorded; this run must not undo it
         writers[proposal.path](proposal.key, proposal.value)
     for proposal in proposals:
         proposal.line = find_line(proposal.path, proposal.key)
@@ -270,8 +315,8 @@ def suggestion_body(proposal: Proposal, line_text: str) -> str:
 
 
 def plan_suggestions(proposals: list[Proposal], limit: int) -> tuple[list[dict], int]:
-    """Review comments for the pending lines, most useful first."""
-    candidates = [p for p in proposals if p.pending and p.line]
+    """Review comments for the pending lines this run actually changed, most useful first."""
+    candidates = [p for p in proposals if p.pending and p.line and p.in_diff and not p.answered]
     candidates.sort(key=lambda p: (-len(p.alternatives), p.key))
 
     comments = []
@@ -344,13 +389,20 @@ def render_body(plan: dict[str, Any]) -> str:
 
     if parked:
         with_suggestion = len(plan["comments"])
+        # Only ever claim the suggestions that are actually going up: a promise of
+        # review comments that are not there is what sends people hunting.
+        carried = (
+            f"{with_suggestion} of these carry a clickable suggestion in the review "
+            "comments below."
+            if with_suggestion
+            else "None of these carry a review comment this time; see below."
+        )
         out += [
             f"## Parked as `__pending__` &mdash; {len(parked)}",
             "",
             "No confident match. `__pending__` is **not** a decision: the reviewed-set "
             "loaders skip it, so merging one unanswered records nothing and the name is "
-            f"queued again next run. {with_suggestion} of these carry a clickable "
-            "suggestion in the review comments below.",
+            f"queued again next run. {carried}",
             "",
             "| file | source name | candidates |",
             "| --- | --- | --- |",
@@ -373,15 +425,30 @@ def render_body(plan: dict[str, Any]) -> str:
             out.append(f"- `{model['name']}`{note}")
         out.append("")
 
-    if dropped["suggestions"] or dropped["models"] or plan["unroutable"]:
+    answered = plan.get("answered") or []
+    unchanged = dropped.get("unchanged") or 0
+    if dropped["suggestions"] or dropped["models"] or unchanged or answered or plan["unroutable"]:
         out += ["## Left for a later run", ""]
         if dropped["suggestions"]:
             out.append(
                 f"- {dropped['suggestions']} parked line(s) got no review comment "
                 "(suggestion cap reached); their candidates are in the table above."
             )
+        if unchanged:
+            out.append(
+                f"- {unchanged} parked line(s) were already `__pending__` on `main`, so this "
+                "branch does not change them and GitHub has no diff line to hang a suggestion "
+                "on. Edit the line in the file to answer one."
+            )
         if dropped["models"]:
             out.append(f"- {dropped['models']} new model(s) not added yet (per-PR cap).")
+        for entry in sorted(answered, key=lambda a: (a["file"], a["key"])):
+            out.append(
+                f"- already answered, left alone: `{entry['file']}` &rarr; "
+                f"`{entry['key']}` is `{entry['value']}`. The queue asked about a name the "
+                "mapping file has already decided, which means whatever recorded the question "
+                "and the mapping file disagree about the name."
+            )
         for entry in plan["unroutable"]:
             out.append(f"- unroutable: `{entry['command']}` &rarr; `{entry['subject']}`")
         out.append("")
@@ -437,16 +504,30 @@ def main() -> int:
     universes = build_universes(llm_path, args.skip_aa)
     proposals, unroutable = plan_mappings(entries, universes)
 
-    exact = [p for p in proposals if not p.pending]
-    pending = [p for p in proposals if p.pending]
+    answered = [p for p in proposals if p.answered]
+    open_proposals = [p for p in proposals if not p.answered]
+    exact = [p for p in open_proposals if not p.pending]
+    pending = [p for p in open_proposals if p.pending]
 
     print(f"queued questions: {len(entries)}")
-    print(f"mapping proposals: {len(proposals)} ({len(exact)} confident, {len(pending)} parked)")
+    print(
+        f"mapping proposals: {len(open_proposals)} ({len(exact)} confident, "
+        f"{len(pending)} parked), {len(answered)} already answered"
+    )
     for proposal in exact:
         print(f"  {proposal.path.name}: {proposal.key!r} -> {proposal.value!r} ({proposal.reason})")
     for proposal in pending:
         alts = ", ".join(proposal.alternatives) or "no candidates"
         print(f"  {proposal.path.name}: {proposal.key!r} -> __pending__  [{alts}]")
+    # A queued name that already has a decision means the queue and the mapping
+    # file disagree about what the name *is* -- worth saying out loud, because
+    # the fix is upstream in whatever recorded the question.
+    for proposal in answered:
+        print(
+            f"  already answered, left alone: {proposal.path.name}: "
+            f"{proposal.key!r} = {proposal.previous!r}",
+            file=sys.stderr,
+        )
     for entry in unroutable:
         print(f"  unroutable: {entry.get('command')} {entry.get('subject')!r}", file=sys.stderr)
 
@@ -457,9 +538,12 @@ def main() -> int:
     apply_mappings(proposals)
     comments, dropped_suggestions = plan_suggestions(proposals, args.max_suggestions)
     models, dropped_models = add_models(entries, llm_path, args.max_models)
+    unchanged = [p for p in pending if not p.in_diff]
 
     if dropped_suggestions:
         print(f"note: {dropped_suggestions} pending line(s) got no review comment (cap reached)")
+    if unchanged:
+        print(f"note: {len(unchanged)} pending line(s) unchanged from main; not commentable")
     if dropped_models:
         print(f"note: {dropped_models} new model(s) left for a later run (cap reached)")
 
@@ -468,10 +552,15 @@ def main() -> int:
             "total": len(entries),
             "confident": len(exact),
             "pending": len(pending),
+            "answered": len(answered),
             "models": len(models),
             "unroutable": len(unroutable),
         },
-        "dropped": {"suggestions": dropped_suggestions, "models": dropped_models},
+        "dropped": {
+            "suggestions": dropped_suggestions,
+            "models": dropped_models,
+            "unchanged": len(unchanged),
+        },
         "mappings": [
             {
                 "file": p.path.name,
@@ -482,7 +571,10 @@ def main() -> int:
                 "alternatives": p.alternatives,
                 "line": p.line,
             }
-            for p in proposals
+            for p in open_proposals
+        ],
+        "answered": [
+            {"file": p.path.name, "key": p.key, "value": p.previous} for p in answered
         ],
         "models": models,
         "unroutable": [{"command": e.get("command"), "subject": e.get("subject")} for e in unroutable],
@@ -492,7 +584,10 @@ def main() -> int:
         Path(args.plan).write_text(json.dumps(plan, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if args.body:
         Path(args.body).write_text(render_body(plan), encoding="utf-8")
-    print(f"\napplied: {len(exact)} confident, {len(pending)} parked, {len(models)} new model(s)")
+    print(
+        f"\napplied: {len(exact)} confident, {len(pending)} parked, {len(models)} new model(s), "
+        f"{len(answered)} left alone"
+    )
     print(f"review comments planned: {len(comments)}")
     return 0
 

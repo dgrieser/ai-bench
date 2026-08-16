@@ -193,24 +193,49 @@ jobs:
           echo "Opened PR #$num." >> "$GITHUB_STEP_SUMMARY"
 
       # One review carrying every suggestion, so it is a single notification.
+      #
+      # GitHub rejects the whole review (422) if any one comment points at a line
+      # outside the diff, which used to mean a single bad line silently cost the
+      # PR every suggestion it advertised. propose.py now only asks for lines it
+      # changed; the per-comment retry below is the belt to that braces, so one
+      # rejected line costs one suggestion instead of all of them.
       - name: Attach the mapping suggestions
         if: ${{ steps.propose.outputs.pr != '' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.propose.outputs.pr }}
+          INTRO: "Each parked line below has a suggestion you can commit directly. Ignoring one is safe: `__pending__` records nothing and the name is queued again next run."
         run: |
           count=$(jq '.comments | length' "$RUNNER_TEMP/plan.json")
           if [ "$count" -eq 0 ]; then
             echo "No suggestions to attach." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          jq '{event: "COMMENT",
-               body: "Each parked line below has a suggestion you can commit directly. Ignoring one is safe: `__pending__` records nothing and the name is queued again next run.",
-               comments: .comments}' \
+          api="repos/${GITHUB_REPOSITORY}/pulls/${PR}/reviews"
+
+          jq --arg body "$INTRO" '{event: "COMMENT", body: $body, comments: .comments}' \
             "$RUNNER_TEMP/plan.json" > "$RUNNER_TEMP/review.json"
-          gh api -X POST \
-            "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.propose.outputs.pr }}/reviews" \
-            --input "$RUNNER_TEMP/review.json" >/dev/null
-          echo "Attached $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
+          if gh api -X POST "$api" --input "$RUNNER_TEMP/review.json" >/dev/null 2>"$RUNNER_TEMP/err"; then
+            echo "Attached $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "Batch review rejected: $(cat "$RUNNER_TEMP/err")" >&2
+          echo "Batch review rejected; retrying one comment at a time." >> "$GITHUB_STEP_SUMMARY"
+          attached=0
+          for index in $(seq 0 $((count - 1))); do
+            jq --argjson i "$index" --arg body "$INTRO" \
+              '{event: "COMMENT", body: $body, comments: [.comments[$i]]}' \
+              "$RUNNER_TEMP/plan.json" > "$RUNNER_TEMP/one.json"
+            if gh api -X POST "$api" --input "$RUNNER_TEMP/one.json" >/dev/null 2>"$RUNNER_TEMP/err"; then
+              attached=$((attached + 1))
+            else
+              line=$(jq -r --argjson i "$index" '.comments[$i] | "\(.path):\(.line)"' "$RUNNER_TEMP/plan.json")
+              echo "- suggestion for \`$line\` rejected: $(cat "$RUNNER_TEMP/err")" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+          echo "Attached $attached of $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
+          [ "$attached" -gt 0 ]
 
       - name: Fail if a step of update-all failed
         if: ${{ steps.refresh.outcome != 'success' }}

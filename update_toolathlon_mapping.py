@@ -128,7 +128,7 @@ def prompt_slug_for_toolathlon_name(toolathlon_name: str, slugs: list[str]) -> s
 
     while True:
         label = f"Map Toolathlon model '{toolathlon_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=toolathlon_name)
         if raw is None:
             return None
 

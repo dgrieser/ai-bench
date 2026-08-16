@@ -130,7 +130,7 @@ def prompt_slug_for_spheron_path(
 
     while True:
         label = f"Map Spheron path '{spheron_path}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, default=default)
+        raw = prompt_select_or_new(label, slugs, default=default, subject=spheron_path)
         if raw is None:
             return None
 

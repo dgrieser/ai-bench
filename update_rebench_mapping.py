@@ -127,7 +127,7 @@ def prompt_slug_for_rebench_name(rebench_name: str, slugs: list[str]) -> str | N
 
     while True:
         label = f"Map SWE-Rebench model '{rebench_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=rebench_name)
         if raw is None:
             return None
 

@@ -127,7 +127,7 @@ def prompt_slug_for_frontierswe_name(frontierswe_name: str, slugs: list[str]) ->
 
     while True:
         label = f"Map FrontierSWE model '{frontierswe_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=frontierswe_name)
         if raw is None:
             return None
 

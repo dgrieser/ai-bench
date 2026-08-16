@@ -128,7 +128,7 @@ def prompt_slug_for_deepswe_name(deepswe_name: str, slugs: list[str]) -> str | N
 
     while True:
         label = f"Map DeepSWE model '{deepswe_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=deepswe_name)
         if raw is None:
             return None
 
