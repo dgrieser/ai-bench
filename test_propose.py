@@ -183,6 +183,22 @@ class TestPlanning(unittest.TestCase):
         self.assertEqual(proposals, [])
         self.assertEqual(len(unroutable), 1)
 
+    def test_plan_reads_the_existing_decision_off_the_file(self) -> None:
+        # Real ground truth: a label a person already declined. Re-proposing it
+        # would revert that answer and put the name back in the queue for good.
+        proposals, _ = propose.plan_mappings(
+            [
+                self.entry("Agents' Last Exam", script="./update_huggingface_mapping.py -w"),
+                self.entry("No Such Label 9000", script="./update_huggingface_mapping.py -w"),
+            ],
+            self.universes,
+        )
+        by_key = {p.key: p for p in proposals}
+        self.assertEqual(by_key["Agents' Last Exam"].previous, UNMAPPABLE)
+        self.assertTrue(by_key["Agents' Last Exam"].answered)
+        self.assertIsNone(by_key["No Such Label 9000"].previous)
+        self.assertFalse(by_key["No Such Label 9000"].answered)
+
     def test_aa_falls_back_to_recorded_candidates(self) -> None:
         # With no AA slug list (offline), the prompt's own candidates are the universe.
         entry = self.entry(
@@ -293,6 +309,82 @@ class TestSuggestions(unittest.TestCase):
         comments, _ = propose.plan_suggestions([proposal], 10)
         self.assertEqual(comments, [])
 
+    def test_line_unchanged_from_main_gets_no_comment(self) -> None:
+        # Already __pending__ on main means no hunk, and GitHub 422s a review
+        # that points outside the diff -- taking every other suggestion with it.
+        proposal = self.proposal()
+        proposal.previous = PENDING
+        self.assertFalse(proposal.in_diff)
+        comments, dropped = propose.plan_suggestions([proposal], 10)
+        self.assertEqual(comments, [])
+        self.assertEqual(dropped, 0)
+
+    def test_newly_parked_line_still_gets_its_comment(self) -> None:
+        proposal = self.proposal()
+        proposal.previous = None
+        self.assertTrue(proposal.in_diff)
+        comments, _ = propose.plan_suggestions([proposal], 10)
+        self.assertEqual(len(comments), 1)
+
+
+class TestAnsweredKeys(unittest.TestCase):
+    """A queued name the mapping file already decided must be left alone.
+
+    Parking it again as __pending__ reverts the decision, and since __pending__
+    is not a decision the name is queued once more on the next run: the question
+    comes back forever and no answer can ever stick.
+    """
+
+    def setUp(self) -> None:
+        self.tmp = Path(tempfile.mkdtemp())
+        self.path = self.tmp / "m.json"
+        self.path.write_text(
+            json.dumps({"Decided": UNMAPPABLE, "Parked": PENDING}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    def proposal(self, key: str) -> propose.Proposal:
+        return propose.Proposal(
+            path=self.path,
+            key=key,
+            value=PENDING,
+            confidence="none",
+            reason="no confident match",
+            previous=propose.recorded_value(self.path, key),
+        )
+
+    def test_recorded_value_reads_the_file(self) -> None:
+        self.assertEqual(propose.recorded_value(self.path, "Decided"), UNMAPPABLE)
+        self.assertEqual(propose.recorded_value(self.path, "Parked"), PENDING)
+        self.assertIsNone(propose.recorded_value(self.path, "Absent"))
+        self.assertIsNone(propose.recorded_value(self.tmp / "gone.json", "Decided"))
+
+    def test_answered_only_for_a_real_decision(self) -> None:
+        self.assertTrue(self.proposal("Decided").answered)
+        self.assertFalse(self.proposal("Parked").answered)
+        self.assertFalse(self.proposal("Absent").answered)
+
+    def test_apply_writes_the_open_questions_but_not_the_decided_one(self) -> None:
+        written: list[tuple[str, str]] = []
+        saved = propose.writers_by_path
+        propose.writers_by_path = lambda: {self.path: lambda k, v: written.append((k, v))}
+        try:
+            propose.apply_mappings([self.proposal("Decided"), self.proposal("Parked")])
+        finally:
+            propose.writers_by_path = saved
+
+        self.assertEqual(written, [("Parked", PENDING)])
+        self.assertEqual(
+            json.loads(self.path.read_text(encoding="utf-8"))["Decided"], UNMAPPABLE
+        )
+
+    def test_answered_keys_get_no_comment(self) -> None:
+        answered = self.proposal("Decided")
+        answered.line = 2
+        comments, dropped = propose.plan_suggestions([answered], 10)
+        self.assertEqual(comments, [])
+        self.assertEqual(dropped, 0)
+
 
 class TestBody(unittest.TestCase):
     def plan(self, **over):
@@ -351,6 +443,34 @@ class TestBody(unittest.TestCase):
         self.assertIn("4 parked line(s) got no review comment", body)
         self.assertIn("2 new model(s) not added yet", body)
         self.assertIn("mystery.py", body)
+
+    def test_body_reports_lines_no_suggestion_can_reach(self) -> None:
+        body = propose.render_body(
+            self.plan(dropped={"suggestions": 0, "models": 0, "unchanged": 2})
+        )
+        self.assertIn("Left for a later run", body)
+        self.assertIn("2 parked line(s) were already `__pending__` on `main`", body)
+
+    def test_body_reports_a_key_it_refused_to_touch(self) -> None:
+        body = propose.render_body(
+            self.plan(
+                answered=[{"file": "a.json", "key": "Agents' Last Exam", "value": UNMAPPABLE}]
+            )
+        )
+        self.assertIn("already answered, left alone", body)
+        self.assertIn("Agents' Last Exam", body)
+        self.assertIn(UNMAPPABLE, body)
+
+    def test_body_counts_only_the_suggestions_it_will_attach(self) -> None:
+        # The count came from the plan's comment list, so it has to move with it:
+        # promising a suggestion that was never posted is what sent people
+        # looking for review comments that are not there.
+        self.assertIn(
+            "1 of these carry a clickable suggestion", propose.render_body(self.plan())
+        )
+        body = propose.render_body(self.plan(comments=[]))
+        self.assertNotIn("carry a clickable suggestion", body)
+        self.assertIn("None of these carry a review comment", body)
 
     def test_body_omits_empty_sections(self) -> None:
         body = propose.render_body(self.plan(mappings=[], models=[], comments=[]))

@@ -127,7 +127,7 @@ def prompt_slug_for_swe_marathon_name(swe_marathon_name: str, slugs: list[str]) 
 
     while True:
         label = f"Map SWE-Marathon model '{swe_marathon_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=swe_marathon_name)
         if raw is None:
             return None
 

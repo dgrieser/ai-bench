@@ -233,6 +233,55 @@ class TestPromptHooks(CollectModeBase):
         self.assertEqual(subject_from_label("Map X 'foo' to Y"), "foo")
         self.assertEqual(subject_from_label("OSWorld model"), "OSWorld model")
 
+    def test_subject_keeps_an_apostrophe_in_the_name(self) -> None:
+        # Truncating here queues a name no source reports: the answer is recorded
+        # against the stub, the real name stays unreviewed, and it comes back
+        # every run for good.
+        from add import subject_from_label
+
+        self.assertEqual(
+            subject_from_label("Map HF label 'Frontier agentic tasks Agents' Last Exam' to X"),
+            "Frontier agentic tasks Agents' Last Exam",
+        )
+
+    def test_caller_supplied_subject_wins_over_the_label(self) -> None:
+        from add import prompt_select_or_new, subject_from_label
+
+        self.collect()
+        name = "Agents' Last Exam"
+        # A label the fallback cannot read back correctly, so this only passes if
+        # the caller's name is the one recorded.
+        label = f"Map HF label '{name}' to llm.json benchmark 'hle'"
+        self.assertNotEqual(subject_from_label(label), name)
+        self.assertIsNone(prompt_select_or_new(label, ["hle"], subject=name))
+        self.assertEqual(_prompts.load(self.report)[0]["subject"], name)
+
+    def test_every_mapping_script_queues_the_whole_name(self) -> None:
+        """Each source's own prompt, replayed with an apostrophe in the name."""
+        import importlib
+
+        name = "Qwen's Own Model"
+        cases = [
+            ("update_huggingface_mapping", "prompt_key_for_label", (name, ["hle"])),
+            ("update_rebench_mapping", "prompt_slug_for_rebench_name", (name, [])),
+            ("update_osworld_mapping", "prompt_slug_for_osworld_name", (name, [])),
+            ("update_deepswe_mapping", "prompt_slug_for_deepswe_name", (name, [])),
+            ("update_frontierswe_mapping", "prompt_slug_for_frontierswe_name", (name, [])),
+            ("update_frontiercode_mapping", "prompt_slug_for_frontiercode_name", (name, [])),
+            ("update_swe_atlas_mapping", "prompt_slug_for_swe_atlas_name", (name, [])),
+            ("update_evals_report_mapping", "prompt_slug_for_evals_report_name", (name, [])),
+            ("update_swe_marathon_mapping", "prompt_slug_for_swe_marathon_name", (name, [])),
+            ("update_toolathlon_mapping", "prompt_slug_for_toolathlon_name", (name, [])),
+            ("update_spheron_mapping", "prompt_slug_for_spheron_path", (name, [], None)),
+        ]
+        for module_name, func_name, args in cases:
+            with self.subTest(module_name):
+                self.collect()
+                prompt = getattr(importlib.import_module(module_name), func_name)
+                self.assertIsNone(prompt(*args))
+                entries = _prompts.load(self.report)
+                self.assertEqual([e["subject"] for e in entries], [name])
+
 
 class TestRendering(CollectModeBase):
     def entries(self) -> list[dict]:

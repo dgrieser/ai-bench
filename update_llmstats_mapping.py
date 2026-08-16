@@ -141,7 +141,7 @@ def review_models(
 
         if interactive:
             slug = prompt_select_or_new(
-                f"llm.json slug for '{model_id}'", slugs, default=default
+                f"llm.json slug for '{model_id}'", slugs, default=default, subject=model_id
             )
         else:
             slug = default

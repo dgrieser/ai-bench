@@ -65,7 +65,7 @@ def prompt_key_for_label(label: str, keys: list[str]) -> str | None:
     options_lower = {k.lower(): k for k in keys}
     while True:
         prompt_label = f"Map HF label '{label}' to llm.json benchmark"
-        raw = prompt_select_or_new(prompt_label, keys)
+        raw = prompt_select_or_new(prompt_label, keys, subject=label)
         if raw is None:
             return None
         canonical = options_lower.get(raw.lower())

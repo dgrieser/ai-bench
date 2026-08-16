@@ -608,7 +608,10 @@ def prompt_key_for_label(
     options_lower = {k.lower(): k for k in keys}
     while True:
         raw = prompt_select_or_new(
-            f"Map {source_label} '{label}' to llm.json benchmark", keys, default=default
+            f"Map {source_label} '{label}' to llm.json benchmark",
+            keys,
+            default=default,
+            subject=label,
         )
         if raw is None:
             return None
@@ -712,8 +715,17 @@ def prompt_live_select_or_new(
 
 
 def subject_from_label(label: str) -> str:
-    """The source name a prompt label is about, e.g. Map X 'foo' to Y -> foo."""
-    quoted = re.search(r"'([^']+)'", label)
+    """The source name a prompt label is about, e.g. Map X 'foo' to Y -> foo.
+
+    Last-resort guess only: pass subject= to prompt_select_or_new instead. A
+    source name may contain an apostrophe ("Agents' Last Exam"), and a name
+    recovered from the label is what propose.py writes into the mapping file, so
+    reading one character too few records a decision under a name no source ever
+    reports -- the real name stays unreviewed and is queued again every run.
+    The quantifier is greedy so the outermost pair of quotes wins, which keeps
+    the whole name for the labels this repo builds ("Map X '<name>' to Y").
+    """
+    quoted = re.search(r"'(.+)'", label)
     return quoted.group(1) if quoted else label
 
 
@@ -723,15 +735,18 @@ def prompt_select_or_new(
     allow_empty: bool = True,
     default: str | None = None,
     sources: dict[str, str] | None = None,
+    subject: str | None = None,
 ) -> str | None:
     # Collect mode: queue the question and answer "no answer". Callers treat None
     # as "not a match", and their persist calls are frozen, so it is asked again.
     if _prompts.collecting():
-        subject = subject_from_label(label)
-        candidates = ([default] if default else []) + find_matches(subject, options, limit=5)
+        # The caller knows the exact source name; only fall back to digging it
+        # back out of the label when it did not say.
+        queued = subject if subject is not None else subject_from_label(label)
+        candidates = ([default] if default else []) + find_matches(queued, options, limit=5)
         _prompts.record(
             kind="mapping",
-            subject=subject,
+            subject=queued,
             question=label,
             candidates=list(dict.fromkeys(candidates)),
             default=default,

@@ -127,7 +127,7 @@ def prompt_slug_for_swe_atlas_name(swe_atlas_name: str, slugs: list[str]) -> str
 
     while True:
         label = f"Map SWE Atlas model '{swe_atlas_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=swe_atlas_name)
         if raw is None:
             return None
 

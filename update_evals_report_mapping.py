@@ -128,7 +128,7 @@ def prompt_slug_for_evals_report_name(evals_report_name: str, slugs: list[str]) 
 
     while True:
         label = f"Map evals.report model '{evals_report_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs)
+        raw = prompt_select_or_new(label, slugs, subject=evals_report_name)
         if raw is None:
             return None
 
