@@ -17060,9 +17060,9 @@
       "params": "36B",
       "context": "512k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 79,
+        "int8": 39,
+        "int4": 20
       },
       "creator": {
         "name": "Nous Research",
@@ -17172,6 +17172,11 @@
         "hle": null,
         "mmmu_pro": null,
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/NousResearch/Hermes-4.3-36B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/NousResearch/Hermes-4.3-36B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/NousResearch/Hermes-4.3-36B/"
       }
     }
   ],
