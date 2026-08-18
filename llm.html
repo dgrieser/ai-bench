@@ -504,6 +504,60 @@
       display: none;
     }
 
+    /* Option search. Only present while the list is open, and pinned to the
+       top of the scroll box so it stays reachable in a list of 300 models.
+       It narrows what is on screen and nothing else: the selection underneath
+       is untouched, so filtering down to one name never drops the rest. */
+    .model-compare-search {
+      display: none;
+    }
+
+    .model-compare-widget.open {
+      padding-top: 0;
+    }
+
+    .model-compare-widget.open .model-compare-search {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      /* Right padding clears the absolutely positioned clear button. */
+      padding: 6px 34px 6px 8px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    input[type="text"].model-compare-search-input {
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: var(--surface-alt);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    input[type="text"].model-compare-search-input:focus {
+      box-shadow: none;
+    }
+
+    .model-compare-item.is-filtered-out {
+      display: none;
+    }
+
+    .model-compare-empty {
+      padding: 9px 12px 11px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--subtle);
+    }
+
+    .model-compare-widget:not(.open) .model-compare-empty {
+      display: none;
+    }
+
 
     input[type="text"]::placeholder {
       color: var(--subtle);
@@ -1900,6 +1954,19 @@
 
     /* ── Tooltip slip ──────────────────────────────── */
 
+    /* On touch the hold itself is the gesture that opens a slip (see
+       initTooltips), so the same press must not raise the platform callout or
+       start selecting the text under the finger. Coarse pointers only —
+       nothing here touches copy/paste on a desktop. */
+    @media (hover: none) {
+      [data-tip],
+      [data-tip-kind] {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+    }
+
     /* A catalog slip lifted off the page, not a floating pill: same paper and
        the same 3px accent rule as .page, except the rule moves to whichever
        edge faces the thing it describes, so the colour always points back at
@@ -2620,7 +2687,8 @@
          Replaces the native title= tooltips. Opens on hover after a short
          delay, lingers on the way out, and never closes while the pointer is
          inside the slip — that grace period is what makes the links in it
-         reachable. Touch pins it open until the next touch lands elsewhere.
+         reachable. On touch a long press — never a plain tap — pins it open
+         until the next touch lands elsewhere.
 
          An anchor declares its content with data attributes:
            data-tip          body text; "\n" starts a new paragraph
@@ -2639,6 +2707,7 @@
       const TIP_HIDE_DELAY = 480;   // the linger: time to reach the slip itself
       const TIP_SELECTOR = "[data-tip],[data-tip-kind]";
       const TIP_TAP_SLOP = 10;      // a touch that travels further is a pan
+      const TIP_LONG_PRESS = 450;   // hold before touch opens a slip
       const TIP_GAP = 10;
       const TIP_EDGE = 12;
 
@@ -2841,6 +2910,8 @@
             onToggle(item.dataset.value);
             return;
           }
+          // Working the search box is not a click on the list itself.
+          if (e.target.closest(".model-compare-search")) return;
           // Opening is handled by the focus event; only close here if it was already open
           if (widgetWasOpen) {
             el.classList.remove("open");
@@ -2849,16 +2920,29 @@
 
         el.addEventListener("focus", () => {
           el.classList.add("open");
+          focusOptionSearch(el);
         });
 
-        el.addEventListener("blur", (e) => {
+        // focusout rather than blur: focus lives in the search box most of the
+        // time the list is open, and blur does not bubble out of it.
+        el.addEventListener("focusout", (e) => {
           if (!el.contains(e.relatedTarget)) {
             el.classList.remove("open");
           }
         });
 
         el.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") el.classList.remove("open");
+          if (e.key === "Enter" && e.target.classList.contains("model-compare-search-input")) {
+            const first = el.querySelector(".model-compare-item:not(.is-filtered-out)");
+            if (first) {
+              e.preventDefault();
+              onToggle(first.dataset.value);
+            }
+            return;
+          }
+          if (e.key !== "Escape") return;
+          el.classList.remove("open");
+          if (el.contains(document.activeElement)) document.activeElement.blur();
         });
 
         let hoverOpenTimer = null;
@@ -2884,6 +2968,67 @@
         document.addEventListener("click", () => {
           el.classList.remove("open");
         });
+      }
+
+      // Header both checkbox widgets share: the summary line that stands in
+      // for the list while it is closed, and the search box that narrows the
+      // options while it is open. Call after the items have been written.
+      function decorateMultiSelectWidget(el, placeholder) {
+        const empty = document.createElement("div");
+        empty.className = "model-compare-empty";
+        empty.textContent = "No matches";
+        empty.hidden = true;
+        el.appendChild(empty);
+
+        const summary = document.createElement("div");
+        summary.className = "model-compare-summary";
+        el.insertBefore(summary, el.firstChild);
+
+        const search = document.createElement("div");
+        search.className = "model-compare-search";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "model-compare-search-input";
+        input.placeholder = placeholder;
+        input.setAttribute("aria-label", placeholder);
+        input.autocomplete = "off";
+        input.spellcheck = false;
+        search.appendChild(input);
+        el.insertBefore(search, el.firstChild);
+
+        input.addEventListener("input", () => filterMultiSelectOptions(el));
+        filterMultiSelectOptions(el);
+      }
+
+      // Purely a view over the options — selected values are never read or
+      // written here, so a narrowed list still carries every earlier pick.
+      function filterMultiSelectOptions(el) {
+        const input = el.querySelector(".model-compare-search-input");
+        const query = (input ? input.value : "").trim().toLowerCase();
+        let shown = 0;
+        el.querySelectorAll(".model-compare-item").forEach((item) => {
+          const hit = !query || item.textContent.toLowerCase().includes(query);
+          item.classList.toggle("is-filtered-out", !hit);
+          if (hit) shown += 1;
+        });
+        const empty = el.querySelector(".model-compare-empty");
+        if (empty) empty.hidden = shown > 0;
+      }
+
+      function clearOptionSearch(el) {
+        const input = el.querySelector(".model-compare-search-input");
+        if (!input || !input.value) return;
+        input.value = "";
+        filterMultiSelectOptions(el);
+      }
+
+      // Typing straight into the search box is the point of opening the list,
+      // but only where a keyboard is already out: focusing it on touch raises
+      // the on-screen keyboard over the options it is meant to filter.
+      function focusOptionSearch(el) {
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+        const input = el.querySelector(".model-compare-search-input");
+        if (input) input.focus();
       }
 
       function bindImportEvents() {
@@ -2942,9 +3087,7 @@
           </div>`;
         }).join("");
 
-        const summaryEl = document.createElement("div");
-        summaryEl.className = "model-compare-summary";
-        ui.modelCompare.insertBefore(summaryEl, ui.modelCompare.firstChild);
+        decorateMultiSelectWidget(ui.modelCompare, "Filter models");
         updateCompareSummary();
 
         populateBenchmarkPicker();
@@ -3005,9 +3148,7 @@
           </div>`;
         }).join("");
 
-        const summaryEl = document.createElement("div");
-        summaryEl.className = "model-compare-summary";
-        ui.benchmarkPick.insertBefore(summaryEl, ui.benchmarkPick.firstChild);
+        decorateMultiSelectWidget(ui.benchmarkPick, "Filter benchmarks");
         updateBenchmarkWidget();
       }
 
@@ -3153,6 +3294,8 @@
 
           ui.modelCompare.classList.remove("open");
           ui.benchmarkPick.classList.remove("open");
+          clearOptionSearch(ui.modelCompare);
+          clearOptionSearch(ui.benchmarkPick);
           updateCompareWidget();
           updateBenchmarkWidget();
           populateSortOptions();
@@ -5403,36 +5546,71 @@
           if (!tooltip.pinned) queueTipClose();
         });
 
-        // Touch opens on release, not on press: the table pans horizontally on
-        // small screens, and a pan that happens to start on a score cell has to
-        // scroll rather than leave a slip behind.
+        // Touch opens on a deliberate hold, not on a tap. Half the page is a
+        // tip anchor, so a tap-to-open slip lands on top of whatever the tap
+        // was actually for — a row link, a checkbox item, a pan of the table.
+        // A press that travels (TIP_TAP_SLOP) is a scroll and cancels.
         let tapStart = null;
+        let pressTimer = 0;
+        let swallowClick = false;
+
+        function cancelPress() {
+          window.clearTimeout(pressTimer);
+          pressTimer = 0;
+          tapStart = null;
+        }
 
         document.addEventListener("pointerdown", (event) => {
+          swallowClick = false;
           if (tooltip.el.contains(event.target)) return;
           const anchor = tipAnchorFrom(event.target);
           if (event.pointerType === "touch" || event.pointerType === "pen") {
-            tapStart = anchor ? { anchor, x: event.clientX, y: event.clientY } : null;
+            cancelPress();
             if (anchor !== tooltip.anchor) closeTip();
+            if (!anchor) return;
+            tapStart = { anchor, x: event.clientX, y: event.clientY };
+            pressTimer = window.setTimeout(() => {
+              const start = tapStart;
+              cancelPress();
+              if (!start || !document.contains(start.anchor)) return;
+              // The hold has become a gesture of its own, so the click it
+              // would otherwise end in is dropped: holding a benchmark to read
+              // what it measures must not also toggle its column off.
+              swallowClick = true;
+              // No hover on touch, so the slip pins open until the next touch
+              // lands somewhere else.
+              openTip(start.anchor, true);
+            }, TIP_LONG_PRESS);
             return;
           }
           if (!anchor) closeTip();
         });
 
-        document.addEventListener("pointerup", (event) => {
-          const start = tapStart;
-          tapStart = null;
-          if (!start || !document.contains(start.anchor)) return;
-          if (Math.abs(event.clientX - start.x) > TIP_TAP_SLOP) return;
-          if (Math.abs(event.clientY - start.y) > TIP_TAP_SLOP) return;
-          // No hover on touch, so the slip pins open until the next touch lands
-          // somewhere else. The anchor's own link or button still fires —
-          // nothing is swallowed here.
-          openTip(start.anchor, true);
-        });
+        document.addEventListener("pointermove", (event) => {
+          if (!tapStart) return;
+          if (Math.abs(event.clientX - tapStart.x) <= TIP_TAP_SLOP
+            && Math.abs(event.clientY - tapStart.y) <= TIP_TAP_SLOP) return;
+          cancelPress();
+        }, { passive: true });
 
-        document.addEventListener("pointercancel", () => {
-          tapStart = null;
+        document.addEventListener("pointerup", cancelPress);
+        document.addEventListener("pointercancel", cancelPress);
+
+        // Capture, so the swallowed click never reaches the row, widget or
+        // link under the finger.
+        document.addEventListener("click", (event) => {
+          if (!swallowClick) return;
+          swallowClick = false;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+
+        // The hold is ours on touch; the browser's own long-press menu would
+        // land on top of the slip. Desktop right-click is left alone.
+        document.addEventListener("contextmenu", (event) => {
+          if (window.matchMedia("(hover: hover)").matches) return;
+          if (!tipAnchorFrom(event.target)) return;
+          event.preventDefault();
         });
 
         document.addEventListener("focusin", (event) => {
