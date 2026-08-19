@@ -2712,8 +2712,8 @@
          data-tip-kind and are resolved from state on hover — see TIP_RESOLVERS.
          Behaviour lives further down, from tipFields() on. */
 
-      const TIP_SHOW_DELAY = 340;   // cold open, near the native title delay
-      const TIP_WARM_DELAY = 60;    // moving between neighbours feels instant
+      const TIP_SHOW_DELAY = 700;   // cold open: a deliberate rest, not a graze
+      const TIP_WARM_DELAY = 180;   // moving between neighbours stays quick
       const TIP_WARM_WINDOW = 500;  // how long "warm" outlasts a close
       const TIP_HIDE_DELAY = 480;   // the linger: time to reach the slip itself
       const TIP_SELECTOR = "[data-tip],[data-tip-kind]";
@@ -3903,14 +3903,7 @@
       function renderRecentModelName(model, isNew) {
         const name = escapeHtml(model.name || "Unknown");
         const url = recentLinkUrl(model.url);
-        const tip = tipAttrs({
-          eyebrow: model.creatorName || "",
-          eyebrowVerbatim: true,
-          eyebrowUrl: model.creator?.url || "",
-          title: model.name || "Unknown",
-          meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
-          url: model.url || ""
-        });
+        const tip = tipAttrs(modelTipFields(model));
         const className = `recent-model${isNew ? " model-new" : ""}`;
         return url
           ? `<a class="${className}" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"${tip}>${name}</a>`
@@ -3944,6 +3937,7 @@
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: getBenchmarkFullName(key),
+            body: scoreTipBody(key),
             meta: [
               `Added ${day.date} · ${describeAge(day.age)}`,
               source ? "" : "No source recorded for this score."
@@ -4330,14 +4324,7 @@
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
-        const modelTip = tipAttrs({
-          eyebrow: model.creatorName || "",
-          eyebrowVerbatim: true,
-          eyebrowUrl: creatorUrl,
-          title: model.name || "Unknown",
-          meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
-          url: modelUrl
-        });
+        const modelTip = tipAttrs(modelTipFields(model));
         const scoreCells = benchKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
           const hasValue = Number.isFinite(value);
@@ -4862,6 +4849,53 @@
           title: bench.name || getBenchmarkLabel(key),
           body: bench.description || "",
           url: benchmarkLinks(bench)[0] || ""
+        };
+      }
+
+      // The gist of a longer description: its first sentence, capped so one
+      // runaway opening cannot fill a slip. Lets a score cell say what its
+      // benchmark is without repeating the paragraph the column header carries.
+      function firstSentence(text) {
+        const trimmed = String(text || "").trim();
+        if (!trimmed) return "";
+        const match = trimmed.match(/^.*?[.!?](?=\s|$)/);
+        const sentence = match ? match[0] : trimmed;
+        if (sentence.length <= 180) return sentence;
+        const clipped = sentence.slice(0, 180);
+        const cut = clipped.lastIndexOf(" ");
+        // Trailing punctuation left hanging by the cut ("incorrect /", "tasks —")
+        // reads as a typo rather than an ellipsis, so it goes with the tail.
+        const kept = (cut > 0 ? clipped.slice(0, cut) : clipped).replace(/[\s,;:/(\-–—]+$/, "");
+        return `${kept}…`;
+      }
+
+      // What one score's slip says about the benchmark behind it: the gist, and
+      // which way the number reads — a pass rate and a hallucination rate look
+      // alike until you know which direction is good. The full description stays
+      // on the column header, which has the room for it.
+      function scoreTipBody(key) {
+        const bench = state.data?.benchmarks?.[key] || {};
+        return [
+          firstSentence(bench.description),
+          isLowerBetter(key) ? "Lower is better." : "Higher is better."
+        ].filter(Boolean).join(" ");
+      }
+
+      // One tooltip contract for a model, shared by the table row and the
+      // Recently Added panel: who made it, when it arrived, and the page its
+      // details are checked against.
+      function modelTipFields(model) {
+        const url = model.url || "";
+        return {
+          eyebrow: model.creatorName || "",
+          eyebrowVerbatim: true,
+          eyebrowUrl: model.creator?.url || "",
+          title: model.name || "Unknown",
+          body: url
+            ? "The creator's page for this model: the model card or release note its details are checked against."
+            : "No page is recorded for this model, so nothing here links out.",
+          meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
+          url
         };
       }
 
@@ -5392,6 +5426,7 @@
           if (!model || !Number.isFinite(num)) return null;
 
           const budget = gpuUsableBudget();
+          const estimate = `Estimated VRAM to hold this model for single-model inference at ${quant.toUpperCase()} precision.`;
           let fit = "";
           if (budget) {
             const budgetLabel = state.gpu.reserve
@@ -5407,7 +5442,11 @@
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: `${quant.toUpperCase()} VRAM · ${num} GB`,
-            body: fit,
+            // A second paragraph only once a budget exists to compare against;
+            // until then the slip says where to set one.
+            body: fit
+              ? `${estimate}\n${fit}`
+              : `${estimate} Pick a GPU in the filters to see whether it fits a budget.`,
             meta: source ? "Estimated by Spheron GPU Recommender." : "No source recorded for this estimate.",
             url: source || ""
           };
@@ -5432,10 +5471,14 @@
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: bench.name || getBenchmarkLabel(key),
+            body: scoreTipBody(key),
             meta: [
               updated ? `Updated ${updated}${newness}` : "",
               source ? "" : "No source recorded for this score."
             ].filter(Boolean).join("\n"),
+            // The page this one score was read from, not the benchmark's own
+            // home page: which leaderboard, model card or vendor post a number
+            // came from is the whole of what a single cell can be checked by.
             url: source || ""
           };
         }
