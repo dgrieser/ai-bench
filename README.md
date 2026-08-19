@@ -66,6 +66,10 @@ Each model object contains:
 - **`scores_source`**: Same key set → URL of the page the score was read from
   (null for hand edits; the derived Coding index cites this repository, which is
   where it is computed)
+- **`date_added`**: ISO date the index first listed the model. It drives the `NEW`
+  badge and the **Recently Added** panel, and it is what `llm.html`'s **Date
+  Added** filter narrows on — its relative windows count calendar days back from
+  today, so "Last 7 days" holds exactly the models the table badges as new
 - **`params`** / **`context`** / **`vram`** / **`creator`**: model metadata
 
 The three score maps carry the full benchmark key set with null placeholders;

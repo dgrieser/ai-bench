@@ -2509,6 +2509,10 @@
         <select id="sortMode"></select>
       </div>
       <div class="field">
+        <label for="addedWindow">Date Added</label>
+        <select id="addedWindow" data-tip="Keeps only models added to the index inside a window. A relative window counts back from today and includes it, so &quot;Last 7 days&quot; holds exactly the models wearing the NEW badge; a year covers that whole calendar year."></select>
+      </div>
+      <div class="field">
         <label for="modelCompare">Compare Models</label>
         <div class="select-wrap">
           <div id="modelCompare" class="model-compare-widget" tabindex="0" role="listbox" aria-multiselectable="true" aria-label="Compare models"></div>
@@ -2562,7 +2566,13 @@
           selectedModels: [],
           // Benchmarks are opt-out: an empty list means every column shows, so
           // benchmarks added to llm.json later appear without extra bookkeeping.
-          hiddenBenchmarks: []
+          hiddenBenchmarks: [],
+          // Date-added window. addedWindow is where the picker sits; addedFrom
+          // and addedTo are the inclusive ISO bounds it resolves to, "" for an
+          // open end, and they are what actually filters.
+          addedWindow: "all",
+          addedFrom: "",
+          addedTo: ""
         },
         sort: {
           key: null,
@@ -2651,6 +2661,7 @@
         search: document.getElementById("search"),
         modelCompare: document.getElementById("modelCompare"),
         benchmarkPick: document.getElementById("benchmarkPick"),
+        addedWindow: document.getElementById("addedWindow"),
         sortMode: document.getElementById("sortMode"),
         resultCount: document.getElementById("resultCount"),
         creatorCount: document.getElementById("creatorCount"),
@@ -2812,10 +2823,13 @@
       // 2 need ~650px, and below that the panel goes single-column.
       const FILTER_SLOT_TARGET = 300;
 
-      // Rows are always evenly filled: the column count is the largest divisor
-      // of the slot count that still fits the width, and never the whole set on
-      // one line. Six slots therefore go 3/3, 2/2/2 or 1×6 — never 5+1. Fields
-      // flow in DOM order; none is pinned to a row.
+      // Rows fill left to right, and the column count is the widest that both
+      // fits the width and leaves no widow — a last row less than half full.
+      // Exact divisors qualify first, so six slots still go 3/3, 2/2/2 or 1×6;
+      // a count with no useful divisor settles for a short last row instead of
+      // collapsing to a single column, so seven go 4/3. The ceil(n/2) cap keeps
+      // the whole set off one line either way, which is what rules out 5+1.
+      // Fields flow in DOM order; none is pinned to a row.
       function updateFilterColumns() {
         // One slot per top-level field; a field cluster counts once, not once
         // per member.
@@ -2838,7 +2852,8 @@
 
         let columns = 1;
         for (let candidate = limit; candidate >= 1; candidate -= 1) {
-          if (inlineSlots.length % candidate === 0) {
+          const lastRow = inlineSlots.length % candidate;
+          if (lastRow === 0 || lastRow * 2 >= candidate) {
             columns = candidate;
             break;
           }
@@ -3064,6 +3079,9 @@
             state.filters.search = "";
             state.filters.selectedModels = [];
             state.filters.hiddenBenchmarks = [];
+            state.filters.addedWindow = "all";
+            state.filters.addedFrom = "";
+            state.filters.addedTo = "";
             state.sort.key = defaultSortKey();
             state.sort.direction = "desc";
             ui.search.value = "";
@@ -3092,7 +3110,82 @@
 
         populateBenchmarkPicker();
 
+        populateAddedOptions();
+
         populateSortOptions();
+      }
+
+      /* ── Date-added window ────────────────────────── */
+
+      // `days` counts calendar days *including* today, so 7 covers the same
+      // stretch as the NEW badge (see NEW_DAYS) and the two agree on which
+      // models are recent. Calendar years are appended from the data, so a year
+      // is offered exactly while some model carries it.
+      const ADDED_WINDOWS = [
+        { value: "all", label: "Any date added" },
+        { value: "d1", label: "Today", days: 1 },
+        { value: "d3", label: "Last 3 days", days: 3 },
+        { value: "d7", label: "Last 7 days", days: 7 },
+        { value: "d30", label: "Last 30 days", days: 30 },
+        { value: "d90", label: "Last 90 days", days: 90 },
+        { value: "d180", label: "Last 6 months", days: 180 },
+        { value: "d365", label: "Last 12 months", days: 365 }
+      ];
+
+      const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+      // The stamp this filter reads, or "" when the model carries none it can
+      // use — an undated model cannot be placed in a window at all.
+      function modelAddedDate(model) {
+        const raw = model.date_added;
+        return typeof raw === "string" && ISO_DATE.test(raw) ? raw : "";
+      }
+
+      // Local midnight N days back, in the same YYYY-MM-DD shape the stamps use
+      // — which is what lets modelPassesFilters compare them as plain strings.
+      function isoDaysAgo(days) {
+        const day = new Date();
+        day.setHours(0, 0, 0, 0);
+        day.setDate(day.getDate() - days);
+        const pad = (value) => String(value).padStart(2, "0");
+        return `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+      }
+
+      function populateAddedOptions() {
+        const years = [...new Set(state.data.models
+          .map((model) => modelAddedDate(model).slice(0, 4))
+          .filter(Boolean))].sort().reverse();
+
+        ui.addedWindow.innerHTML = [
+          ...ADDED_WINDOWS.map((option) =>
+            `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`),
+          ...years.map((year) => `<option value="y${escapeHtml(year)}">${escapeHtml(year)}</option>`)
+        ].join("");
+
+        // A year offered by previously loaded data may be gone from this set.
+        const offered = [...ui.addedWindow.options].some((option) => option.value === state.filters.addedWindow);
+        setAddedWindow(offered ? state.filters.addedWindow : "all");
+      }
+
+      // Resolves the picked window into the bounds that filter. A relative
+      // window leaves the upper bound open and is re-resolved on every call, so
+      // "last 7 days" stays honest across a day boundary.
+      function setAddedWindow(value) {
+        const preset = ADDED_WINDOWS.find((entry) => entry.value === value);
+        const year = /^y(\d{4})$/.exec(value);
+
+        state.filters.addedWindow = value;
+        if (preset?.days) {
+          state.filters.addedFrom = isoDaysAgo(preset.days - 1);
+          state.filters.addedTo = "";
+        } else if (year) {
+          state.filters.addedFrom = `${year[1]}-01-01`;
+          state.filters.addedTo = `${year[1]}-12-31`;
+        } else {
+          state.filters.addedFrom = "";
+          state.filters.addedTo = "";
+        }
+        ui.addedWindow.value = value;
       }
 
       // Sort options cover the fixed columns, the sort groups and every
@@ -3263,6 +3356,11 @@
           showAllBenchmarks();
         });
 
+        ui.addedWindow.addEventListener("change", (event) => {
+          setAddedWindow(event.target.value);
+          applyAndRender();
+        });
+
         ui.clearSearch.addEventListener("click", () => {
           ui.search.value = "";
           state.filters.search = "";
@@ -3300,6 +3398,7 @@
           updateBenchmarkWidget();
           populateSortOptions();
 
+          setAddedWindow("all");
           gpuResetBar();
           applyAndRender();
         });
@@ -3337,20 +3436,22 @@
         const sortOn = state.sort.key !== defaultSortKey() || state.sort.direction !== "desc";
         const vendorOn = state.gpu.vendor !== "all";
         const reserveOn = state.gpu.reserve > 0;
+        const addedOn = Boolean(state.filters.addedFrom || state.filters.addedTo);
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
         ui.benchmarkPick.closest(".field")?.classList.toggle("filter-on", benchmarksOn);
+        ui.addedWindow.closest(".field")?.classList.toggle("filter-on", addedOn);
         ui.sortMode.closest(".field")?.classList.toggle("filter-on", sortOn);
         ui.gpuVendor.closest(".field")?.classList.toggle("filter-on", vendorOn);
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || gpuOn || sortOn || vendorOn || reserveOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn);
         updateReserveHint();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, compareOn, benchmarksOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
+        const activeCount = [searchOn, compareOn, benchmarksOn, addedOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
 
@@ -3374,6 +3475,23 @@
 
         if (state.filters.selectedModels.length && !state.filters.selectedModels.includes(model.name || "Unknown")) {
           return false;
+        }
+
+        // Date-added window, both bounds inclusive. ISO stamps sort the same as
+        // strings, so no parsing is needed. A model with no usable stamp cannot
+        // be shown to fall inside the window, so it drops out while one is set.
+        const { addedFrom, addedTo } = state.filters;
+        if (addedFrom || addedTo) {
+          const added = modelAddedDate(model);
+          if (!added) {
+            return false;
+          }
+          if (addedFrom && added < addedFrom) {
+            return false;
+          }
+          if (addedTo && added > addedTo) {
+            return false;
+          }
         }
 
         // GPU VRAM budget: keep a model only if it fits at some quantization
@@ -4993,6 +5111,8 @@
         const modelsOn = loaded && (
           Boolean(state.filters.search)
           || state.filters.selectedModels.length > 0
+          || Boolean(state.filters.addedFrom)
+          || Boolean(state.filters.addedTo)
           || Boolean(gpuUsableBudget())
         );
         return {
