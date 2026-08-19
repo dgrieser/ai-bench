@@ -5,16 +5,20 @@
   "columns": {
     "name": {
       "label": "Model",
-      "sortLabel": "Model name"
+      "sortLabel": "Model name",
+      "description": "The creator's own name for the model. It links to the model card or release page this row is checked against, and wears the NEW sticker for its first week in the index."
     },
     "creator": {
-      "label": "Creator"
+      "label": "Creator",
+      "description": "The organisation that trained and released the model. It links to that organisation's homepage."
     },
     "params": {
-      "label": "Params"
+      "label": "Params",
+      "description": "Parameter count in the size its creator advertises, with the active count after a dash for a mixture of experts (1T-A32B) and an E prefix for an effective size (E4B)."
     },
     "context": {
-      "label": "Context"
+      "label": "Context",
+      "description": "Largest context window the creator advertises, in tokens (128k, 256k, 1m)."
     },
     "vram_fp16": {
       "label": "FP16",
@@ -116,7 +120,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table by derive_coding_index.py. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
