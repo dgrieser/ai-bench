@@ -2712,8 +2712,8 @@
          data-tip-kind and are resolved from state on hover — see TIP_RESOLVERS.
          Behaviour lives further down, from tipFields() on. */
 
-      const TIP_SHOW_DELAY = 340;   // cold open, near the native title delay
-      const TIP_WARM_DELAY = 60;    // moving between neighbours feels instant
+      const TIP_SHOW_DELAY = 700;   // cold open: a deliberate rest, not a graze
+      const TIP_WARM_DELAY = 180;   // moving between neighbours stays quick
       const TIP_WARM_WINDOW = 500;  // how long "warm" outlasts a close
       const TIP_HIDE_DELAY = 480;   // the linger: time to reach the slip itself
       const TIP_SELECTOR = "[data-tip],[data-tip-kind]";
