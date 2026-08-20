@@ -99,6 +99,27 @@ class TestRowFetchers(unittest.TestCase):
                     self.assertEqual(by_slug["m"][score_key], 45.0)
 
 
+class TestAaCodingAgentsMerge(unittest.TestCase):
+    """The Coding Agent Index lists one row per (agent, effort) variant and
+    carries several benchmarks per row, so the fold is per benchmark key."""
+
+    def test_best_variant_wins_per_key_in_either_order(self) -> None:
+        mapping = write_json({"model": "m", "model [high]": "m"})
+        rows = [
+            {"model": "model", "key": "deepswe", "score": 30.0},
+            {"model": "model", "key": "terminal_bench_2_1", "score": 80.0},
+            {"model": "model [high]", "key": "deepswe", "score": 45.0},
+            {"model": "model [high]", "key": "terminal_bench_2_1", "score": 70.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_slug = update.fetch_aa_coding_agents_data(SCRIPT, mapping)
+                self.assertEqual(
+                    by_slug["m"], {"deepswe": 45.0, "terminal_bench_2_1": 80.0}
+                )
+
+
 class TestFrontiercodeRevisions(unittest.TestCase):
     """FrontierCode folds names across benchmark revisions, so the revision decides."""
 

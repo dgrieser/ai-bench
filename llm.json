@@ -186,7 +186,8 @@
       "urls": [
         "https://labs.scale.com/leaderboard/sweatlas-qna",
         "https://labs.scale.com/papers/sweatlas",
-        "https://github.com/scaleapi/SWE-Atlas"
+        "https://github.com/scaleapi/SWE-Atlas",
+        "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
     "deepswe": {
@@ -198,7 +199,8 @@
         "https://deepswe.datacurve.ai/",
         "https://github.com/datacurve-ai/deep-swe",
         "https://huggingface.co/datasets/datacurve/deep-swe",
-        "https://benchlm.ai/benchmarks/deepSwe"
+        "https://benchlm.ai/benchmarks/deepSwe",
+        "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
     "frontierswe": {
@@ -256,7 +258,8 @@
       "category": "Agentic Coding & Terminal Use",
       "description": "Terminal-Bench 2.1 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
       "urls": [
-        "https://www.tbench.ai/leaderboard/terminal-bench/2.1"
+        "https://www.tbench.ai/leaderboard/terminal-bench/2.1",
+        "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
     "terminal_bench_2_0": {
@@ -4631,13 +4634,13 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 67291,
+        "coding_index": 68034,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": 79.0,
         "swe_bench_pro": 52.6,
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": 38.7,
         "deepswe": 53.3,
         "frontierswe": null,
         "frontiercode": 18.8,
@@ -4666,13 +4669,13 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "coding_index": "2026-08-19",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-24",
         "swe_bench_pro": "2026-04-24",
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": "2026-08-20",
         "deepswe": "2026-08-06",
         "frontierswe": null,
         "frontiercode": "2026-08-07",
@@ -4707,7 +4710,7 @@
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe": "https://deepswe.datacurve.ai",
         "frontierswe": null,
         "frontiercode": "https://cognition.com/frontiercode",
@@ -13423,7 +13426,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
-        "coding_index": 42227,
+        "coding_index": 42443,
         "aa_intelligence_index": null,
         "swe_bench_verified": 69.4,
         "swe_bench_pro": 42.9,
@@ -13458,7 +13461,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "coding_index": "2026-08-17",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -13549,7 +13552,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
-        "coding_index": 54688,
+        "coding_index": 54561,
         "aa_intelligence_index": null,
         "swe_bench_verified": 75.6,
         "swe_bench_pro": 50.4,
@@ -13584,7 +13587,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "coding_index": "2026-08-17",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -13675,7 +13678,7 @@
         "url": "https://deep-reinforce.com/"
       },
       "scores": {
-        "coding_index": 62472,
+        "coding_index": 62557,
         "aa_intelligence_index": null,
         "swe_bench_verified": 82.4,
         "swe_bench_pro": 62.2,
@@ -13710,7 +13713,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "coding_index": "2026-08-17",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -14315,7 +14318,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 66374,
+        "coding_index": 66331,
         "aa_intelligence_index": 53.2,
         "swe_bench_verified": 80.6,
         "swe_bench_pro": 55.4,
@@ -14350,7 +14353,7 @@
         "osworld_verified": null
       },
       "scores_updated": {
-        "coding_index": "2026-08-19",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-13",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
@@ -14693,7 +14696,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 43545,
+        "coding_index": 43435,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 76.8,
         "swe_bench_pro": 50.7,
@@ -14728,7 +14731,7 @@
         "osworld_verified": 63.3
       },
       "scores_updated": {
-        "coding_index": "2026-08-19",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
@@ -14819,13 +14822,13 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 47992,
+        "coding_index": 47259,
         "aa_intelligence_index": 45.1,
         "swe_bench_verified": 80.2,
         "swe_bench_pro": 58.6,
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": 15.9,
         "deepswe": 24.0,
         "frontierswe": 22.2,
         "frontiercode": 16,
@@ -14854,13 +14857,13 @@
         "osworld_verified": 73.1
       },
       "scores_updated": {
-        "coding_index": "2026-08-19",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": "2026-08-20",
         "deepswe": "2026-07-28",
         "frontierswe": "2026-08-14",
         "frontiercode": "2026-08-06",
@@ -14895,7 +14898,7 @@
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
+        "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe": "https://deepswe.datacurve.ai/",
         "frontierswe": "https://www.frontierswe.com",
         "frontiercode": "https://cognition.com/frontiercode",
@@ -15071,7 +15074,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 86680,
+        "coding_index": 86723,
         "aa_intelligence_index": 59.7,
         "swe_bench_verified": 93.4,
         "swe_bench_pro": null,
@@ -15106,7 +15109,7 @@
         "osworld_verified": 84.8
       },
       "scores_updated": {
-        "coding_index": "2026-08-19",
+        "coding_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": null,
@@ -17222,6 +17225,7 @@
     "https://rankedagi.com/models/qwen-3-5-27b",
     "https://toolathlon.xyz/docs/leaderboard",
     "https://cognition.com/frontiercode",
-    "https://deepswe.datacurve.ai"
+    "https://deepswe.datacurve.ai",
+    "https://artificialanalysis.ai/agents/coding-agents"
   ]
 }

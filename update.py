@@ -14,6 +14,7 @@ from typing import Any, Callable
 
 import artificialanalysis
 import derive_coding_index
+import fetch_aa_coding_agents
 import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
@@ -30,6 +31,7 @@ from _params import fetch_hf_params, normalize_params
 from _scores import round_score, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
+from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -47,6 +49,7 @@ from _llmstats_mapping import (
 from _artificialanalysis_mapping import load_llm_to_aa_slugs
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
+AA_CODING_AGENTS_SCRIPT = Path(__file__).resolve().with_name("fetch_aa_coding_agents.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
@@ -189,6 +192,7 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
 # rule) and stored canonicalized like every URL in llm.json. AA and Hugging
 # Face pages are per-model and resolved where the score is written; SWE Atlas
 # and evals.report resolve per benchmark key below.
+AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
@@ -244,6 +248,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-aa",
         action="store_true",
         help="Skip fetching scores from artificialanalysis.py.",
+    )
+    parser.add_argument(
+        "--skip-aa-coding-agents",
+        action="store_true",
+        help="Skip fetching scores from the AA Coding Agent Index.",
     )
     parser.add_argument(
         "--skip-osworld",
@@ -587,6 +596,81 @@ def update_scores(
             )
 
     return matched, updated, seen_eval_keys, changes
+
+
+def build_fetch_aa_coding_agents_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_aa_coding_agents_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_aa_coding_agents_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_aa_coding_agents.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected aa_coding_agents JSON format: expected a list")
+
+    aa_coding_agents_to_slug = load_aa_coding_agents_to_slug_mapping(mapping_path)
+    # slug -> {benchmark_key -> best score across agent/effort variants}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        key = row.get("key")
+        score = row.get("score")
+        if not isinstance(name, str) or not isinstance(key, str):
+            continue
+        if not isinstance(score, (int, float)):
+            continue
+        slug = aa_coding_agents_to_slug.get(name)
+        if not slug:
+            continue
+        scores = by_slug.setdefault(slug, {})
+        # A model appears once per agent and effort variant; keep the best.
+        if key not in scores or score > scores[key]:
+            scores[key] = score
+    return by_slug
+
+
+def update_aa_coding_agents_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        aa_coding_agents_scores = by_slug.get(slug)
+        if not aa_coding_agents_scores:
+            continue
+
+        matched += 1
+        for benchmark_key, new_value in aa_coding_agents_scores.items():
+            # AA's own agent runs of these benchmarks disagree systematically
+            # with the benchmarks' own leaderboards (different harnesses), so
+            # overwriting would flip a score back and forth within one update
+            # run and restamp its date every time. Fill gaps only: the leading
+            # sources keep every value they report.
+            updated += apply_score(
+                doc, model, slug, benchmark_key, new_value,
+                AA_CODING_AGENTS_SOURCE_URL, changes,
+                fill_only=True, fill_urls_only=fill_urls_only,
+            )
+
+    return matched, updated, changes
 
 
 def build_fetch_osworld_cmd(script: Path) -> list[str]:
@@ -1473,6 +1557,7 @@ def main() -> int:
         args.skip_spheron = True
     llm_path = Path(args.json_file)
     aa_path = AA_SCRIPT
+    aa_coding_agents_path = AA_CODING_AGENTS_SCRIPT
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
@@ -1485,6 +1570,9 @@ def main() -> int:
     swe_marathon_path = SWE_MARATHON_SCRIPT
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
+    aa_coding_agents_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-aa-coding-agents-to-artificialanalysis.json"
+    )
     osworld_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-osworld-to-artificialanalysis.json"
     )
@@ -1543,6 +1631,8 @@ def main() -> int:
     print("commands:")
     if not args.skip_aa:
         print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
+    if not args.skip_aa_coding_agents:
+        print(f"  - {shlex.join(build_fetch_aa_coding_agents_cmd(aa_coding_agents_path))}")
     if not args.skip_osworld:
         print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
     if not args.skip_llmstats:
@@ -1601,6 +1691,25 @@ def main() -> int:
             doc, by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(aa_changes)
+
+    # Fill-only, ahead of the other gap-fillers (llm-stats, Hugging Face) so a
+    # gap AA measured directly is filled by that measurement rather than a
+    # self-report. The benchmarks' leading sources -- the AA model pages for
+    # Terminal-Bench 2.1, benchlm/datacurve for DeepSWE, Scale for SWE Atlas --
+    # are unaffected either way: they overwrite, this ingest never does.
+    aa_coding_agents_by_slug: dict[str, dict[str, Any]] = {}
+    aa_coding_agents_matched = 0
+    aa_coding_agents_updated = 0
+    if not args.skip_aa_coding_agents:
+        aa_coding_agents_by_slug = fetch_aa_coding_agents_data(
+            aa_coding_agents_path, aa_coding_agents_mapping_path
+        )
+        aa_coding_agents_matched, aa_coding_agents_updated, aa_coding_agents_changes = (
+            update_aa_coding_agents_scores(
+                doc, aa_coding_agents_by_slug, fill_urls_only=args.fill_source_urls
+            )
+        )
+        changes.extend(aa_coding_agents_changes)
 
     osworld_by_slug: dict[str, dict[str, Any]] = {}
     osworld_matched = 0
@@ -1746,6 +1855,8 @@ def main() -> int:
     if not args.skip_aa:
         print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
         print(f"models returned by artificialanalysis.py: {len(by_slug)}")
+    if not args.skip_aa_coding_agents:
+        print(f"models returned by aa_coding_agents: {len(aa_coding_agents_by_slug)}")
     if not args.skip_osworld:
         print(f"models returned by osworld: {len(osworld_by_slug)}")
     if not args.skip_llmstats:
@@ -1786,6 +1897,8 @@ def main() -> int:
     print()
     if not args.skip_aa:
         print(f"models matched on artificialanalysis.py: {matched}")
+    if not args.skip_aa_coding_agents:
+        print(f"models matched on aa_coding_agents: {aa_coding_agents_matched}")
     if not args.skip_osworld:
         print(f"models matched on osworld: {osworld_matched}")
     if not args.skip_llmstats:
@@ -1813,6 +1926,8 @@ def main() -> int:
     action = "source URLs filled" if args.fill_source_urls else "score values updated"
     if not args.skip_aa:
         print(f"{action} from artificialanalysis.py: {aa_updated}")
+    if not args.skip_aa_coding_agents:
+        print(f"{action} from aa_coding_agents: {aa_coding_agents_updated}")
     if not args.skip_osworld:
         print(f"{action} from osworld: {osworld_updated}")
     if not args.skip_llmstats:

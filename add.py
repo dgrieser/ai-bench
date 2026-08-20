@@ -43,6 +43,11 @@ from _frontierswe_mapping import (
     fetch_frontierswe_model_names,
     load_frontierswe_to_slug_mapping,
 )
+from _aa_coding_agents_mapping import (
+    add_aa_coding_agents_mapping,
+    fetch_aa_coding_agents_model_names,
+    load_aa_coding_agents_to_slug_mapping,
+)
 from _swe_atlas_mapping import (
     add_swe_atlas_mapping,
     fetch_swe_atlas_model_names,
@@ -159,6 +164,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-swe-atlas",
         action="store_true",
         help="Skip the SWE Atlas mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-aa-coding-agents",
+        action="store_true",
+        help="Skip the Coding Agent Index mapping prompt.",
     )
     parser.add_argument(
         "--skip-evals-report",
@@ -413,6 +423,33 @@ def maybe_add_frontiercode_mapping(model_name: str, interactive: bool) -> None:
 
     add_frontiercode_mapping(frontiercode_name, model_name)
     print(f"Added FrontierCode mapping '{frontiercode_name}' -> '{model_name}'")
+
+
+def maybe_add_aa_coding_agents_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_aa_coding_agents_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        aa_coding_agents_names = fetch_aa_coding_agents_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping Coding Agent Index mapping prompt: {exc}")
+        return
+
+    if not aa_coding_agents_names:
+        return
+
+    aa_coding_agents_name = prompt_select_or_new(
+        "Coding Agent Index model", aa_coding_agents_names
+    )
+    if not aa_coding_agents_name:
+        return
+
+    add_aa_coding_agents_mapping(aa_coding_agents_name, model_name)
+    print(f"Added Coding Agent Index mapping '{aa_coding_agents_name}' -> '{model_name}'")
 
 
 def maybe_add_swe_atlas_mapping(model_name: str, interactive: bool) -> None:
@@ -914,6 +951,8 @@ def main() -> int:
         maybe_add_frontiercode_mapping(model["name"], interactive)
     if not args.skip_swe_atlas:
         maybe_add_swe_atlas_mapping(model["name"], interactive)
+    if not args.skip_aa_coding_agents:
+        maybe_add_aa_coding_agents_mapping(model["name"], interactive)
     if not args.skip_evals_report:
         maybe_add_evals_report_mapping(model["name"], interactive)
     if not args.skip_swe_marathon:

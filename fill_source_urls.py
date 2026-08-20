@@ -27,6 +27,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 import artificialanalysis
+import fetch_aa_coding_agents
 import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
@@ -113,6 +114,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
     the site).
     """
     items: list[tuple[str, tuple[str, ...]]] = [
+        (fetch_aa_coding_agents.URL, ("deepswe", "swe_atlas_qna", "terminal_bench_2_1")),
         (fetch_deepswe.URL, ("deepswe",)),
         (fetch_datacurve.SITE_URL, ("deepswe",)),
         (fetch_frontierswe.URL, ("frontierswe",)),

@@ -16,6 +16,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | Source | Type | Data Format |
 |--------|------|-------------|
 | **Artificial Analysis** | Commercial API | HTTP endpoint |
+| **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research | JSON API |
 | **FrontierSWE** | Research | JSON API |
@@ -181,6 +182,7 @@ Output: llm.json (unified dataset)
 ./update.py --fill-source-urls -w
 
 # Fetch from specific benchmarks
+./fetch_aa_coding_agents.py              # DeepSWE, SWE-Atlas-QnA, Terminal-Bench 2.1 as run by AA
 ./fetch_huggingface.py --repo owner/model-name
 ./fetch_deepswe.py
 ./fetch_frontierswe.py
@@ -196,6 +198,7 @@ Output: llm.json (unified dataset)
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
 
 # Update model name mappings from source APIs
+./update_aa_coding_agents_mapping.py
 ./update_artificialanalysis_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
@@ -286,6 +289,14 @@ aggregator that republishes it. `fetch_swe_marathon.py` and
 `fetch_evals_report.py`, and evals.report only supplies models the benchmark's
 own leaderboard does not list. `fetch_datacurve.py` (DeepSWE's own leaderboard)
 stands in the same relation to `fetch_deepswe.py`, which reads benchlm.ai.
+`fetch_aa_coding_agents.py` (Artificial Analysis' Coding Agent Index, its own
+agent-harness runs of DeepSWE, SWE-Atlas-QnA and Terminal-Bench 2.1) is
+*fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs
+disagree systematically with the benchmarks' own leaderboards, so overwriting
+would flip a score within one run and restamp its date every refresh. It runs
+ahead of the other gap-fillers so a gap AA measured directly is filled by that
+measurement rather than a self-report; the leading sources overwrite either
+way.
 
 ## Mapping System
 
