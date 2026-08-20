@@ -578,6 +578,52 @@
       color: var(--text);
     }
 
+    /* Selection reset, floating in the bottom-right corner of the open list:
+       a sticky zero-height line at the end of the options that the button
+       hangs above, so it rides the scroll without costing a row. */
+    .model-compare-reset {
+      display: none;
+    }
+
+    .model-compare-widget.open .model-compare-reset {
+      display: flex;
+      justify-content: flex-end;
+      position: sticky;
+      bottom: 0;
+      height: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .model-compare-reset-btn {
+      pointer-events: auto;
+      width: 26px;
+      height: 26px;
+      min-height: unset;
+      min-width: unset;
+      padding: 0;
+      margin: 0 10px 0 0;
+      transform: translateY(calc(-100% - 8px));
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      box-shadow: var(--shadow);
+      transition: color 120ms ease, border-color 120ms ease;
+    }
+
+    .model-compare-reset-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
     .model-compare-item.is-filtered-out {
       display: none;
     }
@@ -3025,7 +3071,9 @@
       // Header both checkbox widgets share: the summary line that stands in
       // for the list while it is closed, and the search box that narrows the
       // options while it is open. Call after the items have been written.
-      function decorateMultiSelectWidget(el, placeholder) {
+      // `reset` ({label, tip, action}) becomes the floating button in the
+      // bottom-right corner of the open list that resets the selection.
+      function decorateMultiSelectWidget(el, placeholder, reset) {
         const empty = document.createElement("div");
         empty.className = "model-compare-empty";
         empty.textContent = "No matches";
@@ -3064,6 +3112,27 @@
         });
         search.appendChild(clearBtn);
         el.insertBefore(search, el.firstChild);
+
+        // The open-list twin of the selection-clear × (which hides while the
+        // list is open): rides the bottom-right corner and resets the list.
+        const resetWrap = document.createElement("div");
+        resetWrap.className = "model-compare-reset";
+        const resetBtn = document.createElement("button");
+        resetBtn.type = "button";
+        resetBtn.className = "model-compare-reset-btn";
+        resetBtn.textContent = "×";
+        resetBtn.setAttribute("aria-label", reset.label);
+        resetBtn.setAttribute("data-tip", reset.tip);
+        resetBtn.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // keeps focus inside the widget so the list stays open
+          e.stopPropagation();
+        });
+        resetBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); // the widget's own click handler would close the list
+          reset.action();
+        });
+        resetWrap.appendChild(resetBtn);
+        el.appendChild(resetWrap);
 
         input.addEventListener("input", () => filterMultiSelectOptions(el));
         filterMultiSelectOptions(el);
@@ -3159,7 +3228,15 @@
           </div>`;
         }).join("");
 
-        decorateMultiSelectWidget(ui.modelCompare, "Filter models");
+        decorateMultiSelectWidget(ui.modelCompare, "Filter models", {
+          label: "Unselect all models",
+          tip: "Unselect every model and show the full table.",
+          action: () => {
+            state.filters.selectedModels = [];
+            updateCompareWidget();
+            applyAndRender();
+          }
+        });
         updateCompareSummary();
 
         populateBenchmarkPicker();
@@ -3295,7 +3372,11 @@
           </div>`;
         }).join("");
 
-        decorateMultiSelectWidget(ui.benchmarkPick, "Filter benchmarks");
+        decorateMultiSelectWidget(ui.benchmarkPick, "Filter benchmarks", {
+          label: "Show all benchmarks",
+          tip: "Bring every benchmark column back into the table.",
+          action: showAllBenchmarks
+        });
         updateBenchmarkWidget();
       }
 
