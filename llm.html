@@ -466,12 +466,19 @@
       justify-content: center;
       font-family: var(--font-ui);
       transition: color 120ms ease;
-      /* Above the open list (z-index 30) so it stays clickable */
-      z-index: 40;
+      /* Above the sibling input, but below an open list (z-index 30): a list
+         floating over neighbouring fields must cover their buttons too. */
+      z-index: 5;
     }
 
     .clear-compare:hover {
       color: var(--text);
+    }
+
+    /* While the list is open the search row carries its own clear button,
+       so the selection-clear keeps out of that spot. */
+    .select-wrap:has(.model-compare-widget.open) .clear-compare {
+      display: none;
     }
 
     /* Collapsed summary line */
@@ -517,17 +524,20 @@
     }
 
     .model-compare-widget.open .model-compare-search {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 2px;
       position: sticky;
       top: 0;
       z-index: 1;
-      /* Right padding clears the absolutely positioned clear button. */
-      padding: 6px 34px 6px 8px;
+      padding: 6px 8px;
       background: var(--surface);
       border-bottom: 1px solid var(--line);
     }
 
     input[type="text"].model-compare-search-input {
+      flex: 1;
+      min-width: 0;
       height: 28px;
       padding: 0 8px;
       border-radius: 6px;
@@ -539,6 +549,33 @@
 
     input[type="text"].model-compare-search-input:focus {
       box-shadow: none;
+    }
+
+    /* Clears the search box only — deliberately not the × of the
+       selection-clear buttons, so the two are not mistaken for each other. */
+    .model-compare-search-clear {
+      flex: none;
+      width: 24px;
+      height: 24px;
+      min-height: unset;
+      min-width: unset;
+      padding: 0;
+      border-radius: 4px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      transition: color 120ms ease;
+    }
+
+    .model-compare-search-clear:hover {
+      color: var(--text);
     }
 
     .model-compare-item.is-filtered-out {
@@ -3009,6 +3046,23 @@
         input.autocomplete = "off";
         input.spellcheck = false;
         search.appendChild(input);
+
+        const clearBtn = document.createElement("button");
+        clearBtn.type = "button";
+        clearBtn.className = "model-compare-search-clear";
+        clearBtn.textContent = "⌫";
+        clearBtn.setAttribute("aria-label", "Clear filter text");
+        clearBtn.setAttribute("data-tip", "Empty the filter box and show every option again. The selection is kept.");
+        clearBtn.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // keeps focus inside the widget so the list stays open
+          e.stopPropagation();
+        });
+        clearBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          clearOptionSearch(el);
+          focusOptionSearch(el);
+        });
+        search.appendChild(clearBtn);
         el.insertBefore(search, el.firstChild);
 
         input.addEventListener("input", () => filterMultiSelectOptions(el));
@@ -3343,7 +3397,7 @@
         }, 100));
 
         ui.clearCompare.addEventListener("mousedown", (e) => {
-          e.preventDefault(); // prevents blur on modelCompare, keeping it open
+          e.preventDefault(); // keeps focus off modelCompare so clearing does not open it
           e.stopPropagation();
           state.filters.selectedModels = [];
           updateCompareWidget();
@@ -3351,7 +3405,7 @@
         });
 
         ui.clearBenchmarks.addEventListener("mousedown", (e) => {
-          e.preventDefault(); // prevents blur on benchmarkPick, keeping it open
+          e.preventDefault(); // keeps focus off benchmarkPick so clearing does not open it
           e.stopPropagation();
           showAllBenchmarks();
         });
