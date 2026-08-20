@@ -19,7 +19,6 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research | JSON API |
 | **FrontierSWE** | Research | JSON API |
-| **SWE ReBench** | Research | JSON API |
 | **SWE Atlas** | Research | JSON API |
 | **SWE Marathon** | Research | JSON API |
 | **OSWorld** | Research | JSON API |
@@ -102,8 +101,8 @@ Every score is rounded onto a per-benchmark grid before it is stored, by
 | `decimals` | `1` | Digits `llm.html` and `llm-cli` print |
 | `round_to` | `10 ** -decimals` | Step a stored value is snapped to |
 
-The default exists because sources disagree about precision: swe-rebench
-reports `48.77` where Artificial Analysis reports `48.8`, and the site prints
+The default exists because sources disagree about precision: one leaderboard
+reports `48.77` where another reports `48.8`, and the site prints
 both as `48.8`. Stored raw, that disagreement rewrites the score and restamps
 its date on every refresh for a change no reader can see. Rounding in one place
 means a score means the same thing whichever source produced it, and a refresh
@@ -150,7 +149,7 @@ rather than to even, and an integral result is stored as an int (`34`, not
 │  fetch_huggingface.py     │ fetch_deepswe.py            │
 │  fetch_frontierswe.py     │ fetch_osworld.py            │
 │  fetch_swe_atlas.py       │ fetch_swe_marathon.py       │
-│  fetch_swe_rebench.py     │ fetch_spheron.py            │
+│  fetch_spheron.py         │                             │
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  artificialanalysis.py                                  │
@@ -189,7 +188,6 @@ Output: llm.json (unified dataset)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
 ./fetch_swe_marathon.py
-./fetch_swe_rebench.py
 ./fetch_llmstats.py
 ./fetch_evals_report.py
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site

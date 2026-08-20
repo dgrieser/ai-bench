@@ -89,6 +89,11 @@ run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
 run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
 
 for s in "${SCRIPT_DIR}"/update_*.py; do
+    # SWE-Rebench is unwired from the score pipeline; its fetcher and mapping
+    # updater remain standalone tools, so nothing here needs their mappings.
+    case "$(basename "$s")" in
+        update_rebench_mapping.py) continue ;;
+    esac
     run "$(basename "$s")" "$s" -w "${COLLECT_ARGS[@]}"
 done
 

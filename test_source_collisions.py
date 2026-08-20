@@ -77,7 +77,6 @@ class TestRowFetchers(unittest.TestCase):
     """The ingests that read one score field off a whole source row."""
 
     CASES = [
-        ("swe_rebench", "resolved_rate", "fetch_swe_rebench_data"),
         ("osworld", "success_rate", "fetch_osworld_data"),
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("deepswe", "score", "fetch_deepswe_data"),

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update benchmark JSON scores using artificialanalysis.py and swe-rebench."""
+"""Update benchmark JSON scores using artificialanalysis.py and the benchmark leaderboard scrapers."""
 
 from __future__ import annotations
 
@@ -24,14 +24,12 @@ import fetch_llmstats
 import fetch_osworld
 import fetch_swe_atlas
 import fetch_swe_marathon
-import fetch_swe_rebench
 import fetch_toolathlon
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _scores import round_score, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
-from _swe_rebench_mapping import load_rebench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -49,7 +47,6 @@ from _llmstats_mapping import (
 from _artificialanalysis_mapping import load_llm_to_aa_slugs
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
-SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 OSWORLD_SCRIPT = Path(__file__).resolve().with_name("fetch_osworld.py")
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
@@ -86,7 +83,7 @@ def to_percent(value: Any) -> float | None:
 def to_index(value: Any) -> float | None:
     """Pass an Artificial Analysis index/Elo through unscaled.
 
-    AA-Omniscience (-100..100) and GDPval-AA Elo (human baseline = 1000) are not
+    AA-Omniscience (-100..100) and the GDPval-AA and AA-Briefcase Elos are not
     fractions, so to_percent() would multiply them by 100.
     """
     if value is None:
@@ -169,7 +166,11 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # AA reports the τ³ Banking domain under the version-less key "tau_banking".
     "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
+    # AA's independent ITBench implementation; the page reports the SRE track.
+    "itbench_aa": (("it_bench_sre",), to_percent),
     "gdpval_aa": (("gdpval",), to_index),
+    # AA-Briefcase reports a composite Elo (GPT-5.5 (medium) = 1000), not a fraction.
+    "aa_briefcase": (("briefcase",), to_index),
     "aa_omniscience": (("omniscience",), to_index),
     "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
     "aa_lcr": (("lcr",), to_percent),
@@ -181,7 +182,6 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "scicode": (("scicode",), to_percent),
     "hle": (("hle",), to_percent),
     "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
-    "aa_coding_index": (("artificial_analysis_coding_index",), lambda v: v),
 }
 
 # Per-score source pages, stamped into models[].scores_source alongside every
@@ -189,7 +189,6 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
 # rule) and stored canonicalized like every URL in llm.json. AA and Hugging
 # Face pages are per-model and resolved where the score is written; SWE Atlas
 # and evals.report resolve per benchmark key below.
-SWE_REBENCH_SOURCE_URL = canonical(fetch_swe_rebench.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
@@ -216,7 +215,7 @@ def aa_model_page_url(aa_slug: str) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = HelpOnErrorArgumentParser(
-        description="Update benchmark JSON scores by querying artificialanalysis.py and swe-rebench."
+        description="Update benchmark JSON scores by querying artificialanalysis.py and the benchmark leaderboard scrapers."
     )
     parser.add_argument(
         "json_file",
@@ -245,11 +244,6 @@ def parse_args() -> argparse.Namespace:
         "--skip-aa",
         action="store_true",
         help="Skip fetching scores from artificialanalysis.py.",
-    )
-    parser.add_argument(
-        "--skip-swe-rebench",
-        action="store_true",
-        help="Skip fetching scores from swe-rebench.",
     )
     parser.add_argument(
         "--skip-osworld",
@@ -334,10 +328,6 @@ def build_fetch_data_cmd(aa_script: Path, slugs: list[str]) -> list[str]:
     for slug in slugs:
         cmd.extend(["-m", slug])
     return cmd
-
-
-def build_fetch_swe_rebench_cmd(script: Path) -> list[str]:
-    return [sys.executable, str(script), "--all-models", "--format", "json"]
 
 
 def fetch_available_slugs(aa_script: Path) -> set[str]:
@@ -536,33 +526,6 @@ def ensure_scores_source(model: dict[str, Any], benchmark_keys: list[str]) -> No
         model["scores_source"] = filled
 
 
-def fetch_swe_rebench_data(
-    script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
-    cmd = build_fetch_swe_rebench_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    if proc.returncode != 0:
-        raise RuntimeError(f"fetch_swe_rebench.py failed ({proc.returncode}): {proc.stderr.strip()}")
-
-    payload = json.loads(proc.stdout)
-    if not isinstance(payload, list):
-        raise RuntimeError("Unexpected swe_rebench JSON format: expected a list")
-
-    rebench_to_slug = load_rebench_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
-    for row in payload:
-        if not isinstance(row, dict):
-            continue
-        rebench_name = row.get("model")
-        if not isinstance(rebench_name, str) or not rebench_name:
-            continue
-        slug = rebench_to_slug.get(rebench_name)
-        if not slug:
-            continue
-        keep_best_row(by_slug, slug, row, "resolved_rate")
-    return by_slug
-
-
 def update_scores(
     doc: dict[str, Any],
     by_slug: dict[str, dict[str, Any]],
@@ -624,33 +587,6 @@ def update_scores(
             )
 
     return matched, updated, seen_eval_keys, changes
-
-
-def update_swe_rebench_scores(
-    doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
-    fill_urls_only: bool = False,
-) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        rebench_model = by_slug.get(slug)
-        if rebench_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "swe_rebench", rebench_model.get("resolved_rate"),
-            SWE_REBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
 
 
 def build_fetch_osworld_cmd(script: Path) -> list[str]:
@@ -1537,7 +1473,6 @@ def main() -> int:
         args.skip_spheron = True
     llm_path = Path(args.json_file)
     aa_path = AA_SCRIPT
-    swe_rebench_path = SWE_REBENCH_SCRIPT
     osworld_path = OSWORLD_SCRIPT
     huggingface_path = HF_SCRIPT
     deepswe_path = DEEPSWE_SCRIPT
@@ -1550,9 +1485,6 @@ def main() -> int:
     swe_marathon_path = SWE_MARATHON_SCRIPT
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
-    swe_rebench_mapping_path = Path(__file__).resolve().with_name(
-        "model-name-mapping-rebench-to-artificialanalysis.json"
-    )
     osworld_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-osworld-to-artificialanalysis.json"
     )
@@ -1611,8 +1543,6 @@ def main() -> int:
     print("commands:")
     if not args.skip_aa:
         print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
-    if not args.skip_swe_rebench:
-        print(f"  - {shlex.join(build_fetch_swe_rebench_cmd(swe_rebench_path))}")
     if not args.skip_osworld:
         print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
     if not args.skip_llmstats:
@@ -1671,16 +1601,6 @@ def main() -> int:
             doc, by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(aa_changes)
-
-    swe_rebench_by_slug: dict[str, dict[str, Any]] = {}
-    swe_matched = 0
-    swe_updated = 0
-    if not args.skip_swe_rebench:
-        swe_rebench_by_slug = fetch_swe_rebench_data(swe_rebench_path, swe_rebench_mapping_path)
-        swe_matched, swe_updated, swe_changes = update_swe_rebench_scores(
-            doc, swe_rebench_by_slug, fill_urls_only=args.fill_source_urls
-        )
-        changes.extend(swe_changes)
 
     osworld_by_slug: dict[str, dict[str, Any]] = {}
     osworld_matched = 0
@@ -1826,8 +1746,6 @@ def main() -> int:
     if not args.skip_aa:
         print(f"models available on artificialanalysis.py: {len(existing_slugs)}")
         print(f"models returned by artificialanalysis.py: {len(by_slug)}")
-    if not args.skip_swe_rebench:
-        print(f"models returned by swe_rebench: {len(swe_rebench_by_slug)}")
     if not args.skip_osworld:
         print(f"models returned by osworld: {len(osworld_by_slug)}")
     if not args.skip_llmstats:
@@ -1868,8 +1786,6 @@ def main() -> int:
     print()
     if not args.skip_aa:
         print(f"models matched on artificialanalysis.py: {matched}")
-    if not args.skip_swe_rebench:
-        print(f"models matched on swe_rebench: {swe_matched}")
     if not args.skip_osworld:
         print(f"models matched on osworld: {osworld_matched}")
     if not args.skip_llmstats:
@@ -1897,8 +1813,6 @@ def main() -> int:
     action = "source URLs filled" if args.fill_source_urls else "score values updated"
     if not args.skip_aa:
         print(f"{action} from artificialanalysis.py: {aa_updated}")
-    if not args.skip_swe_rebench:
-        print(f"{action} from swe_rebench: {swe_updated}")
     if not args.skip_osworld:
         print(f"{action} from osworld: {osworld_updated}")
     if not args.skip_llmstats:
