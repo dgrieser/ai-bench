@@ -13,7 +13,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-import derive_coding_index
+import derive_indexes
 from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
 from _selector import (
     clear_selector,
@@ -472,11 +472,11 @@ def refresh_derived_scores(doc: dict[str, Any]) -> None:
     """Recompute the derived columns after a hand-edited score, before the write.
 
     A derived column is a function of the other scores in llm.json, so an edit
-    here leaves it stale -- and because the Coding index ranks models against
+    here leaves it stale -- and because the derived indexes rank models against
     each other, changing one model's score can move other models' values.
     Recomputed into the same write so llm.json is never saved half-updated.
     """
-    derive_coding_index.refresh_and_report(doc)
+    derive_indexes.refresh_and_report(doc)
 
 
 def write_doc(path: Path, doc: dict[str, Any]) -> None:

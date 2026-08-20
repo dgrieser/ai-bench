@@ -126,6 +126,18 @@
         "https://github.com/dgrieser/ai-bench#coding-index"
       ]
     },
+    "tooling_index": {
+      "name": "OpenBench Tooling Index",
+      "short_name": "Tooling",
+      "category": "Composite Index",
+      "derived": true,
+      "decimals": 0,
+      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "icon_svg": "icons/tooling-index.svg",
+      "urls": [
+        "https://github.com/dgrieser/ai-bench#tooling-index"
+      ]
+    },
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "short_name": "Index",
@@ -475,6 +487,7 @@
       },
       "scores": {
         "coding_index": 47505,
+        "tooling_index": 48952,
         "aa_intelligence_index": 19.2,
         "swe_bench_verified": 72.2,
         "swe_bench_pro": null,
@@ -510,6 +523,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -545,6 +559,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/devstral-2",
         "swe_bench_verified": "https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512",
         "swe_bench_pro": null,
@@ -601,6 +616,7 @@
       },
       "scores": {
         "coding_index": 44610,
+        "tooling_index": 48086,
         "aa_intelligence_index": 17.7,
         "swe_bench_verified": 68.0,
         "swe_bench_pro": null,
@@ -636,6 +652,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -671,6 +688,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/devstral-small-2",
         "swe_bench_verified": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512",
         "swe_bench_pro": null,
@@ -727,6 +745,7 @@
       },
       "scores": {
         "coding_index": 45735,
+        "tooling_index": null,
         "aa_intelligence_index": 23.3,
         "swe_bench_verified": 59.2,
         "swe_bench_pro": 40.6,
@@ -762,6 +781,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": "2026-03-19",
@@ -797,6 +817,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-7-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -853,6 +874,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 26.5,
         "swe_bench_verified": 74.4,
         "swe_bench_pro": null,
@@ -888,6 +910,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-18",
         "swe_bench_pro": null,
@@ -923,6 +946,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/step-3-5-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -979,6 +1003,7 @@
       },
       "scores": {
         "coding_index": 38038,
+        "tooling_index": null,
         "aa_intelligence_index": 34.5,
         "swe_bench_verified": 80.2,
         "swe_bench_pro": 55.4,
@@ -1014,6 +1039,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": "2026-03-19",
@@ -1049,6 +1075,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m2-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -1105,6 +1132,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 13.6,
         "swe_bench_verified": 51.6,
         "swe_bench_pro": null,
@@ -1140,6 +1168,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-06-18",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -1175,6 +1204,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-30b-a3b-instruct",
         "swe_bench_verified": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/discussions/30",
         "swe_bench_pro": null,
@@ -1231,6 +1261,7 @@
       },
       "scores": {
         "coding_index": 45290,
+        "tooling_index": 42138,
         "aa_intelligence_index": 21.3,
         "swe_bench_verified": 70.6,
         "swe_bench_pro": 44.3,
@@ -1266,6 +1297,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": "2026-03-19",
@@ -1301,6 +1333,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-next",
         "swe_bench_verified": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
         "swe_bench_pro": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
@@ -1357,6 +1390,7 @@
       },
       "scores": {
         "coding_index": 39311,
+        "tooling_index": 23174,
         "aa_intelligence_index": 14.6,
         "swe_bench_verified": 22.0,
         "swe_bench_pro": null,
@@ -1392,6 +1426,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -1427,6 +1462,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -1483,6 +1519,7 @@
       },
       "scores": {
         "coding_index": 48509,
+        "tooling_index": 33301,
         "aa_intelligence_index": 16.9,
         "swe_bench_verified": 74.5,
         "swe_bench_pro": null,
@@ -1518,6 +1555,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -1553,6 +1591,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -1609,6 +1648,7 @@
       },
       "scores": {
         "coding_index": 60119,
+        "tooling_index": 59724,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 76.4,
         "swe_bench_pro": 80.3,
@@ -1644,6 +1684,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-23",
         "swe_bench_pro": "2026-06-25",
@@ -1679,6 +1720,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -1735,6 +1777,7 @@
       },
       "scores": {
         "coding_index": 55455,
+        "tooling_index": 63202,
         "aa_intelligence_index": 32.8,
         "swe_bench_verified": 72.0,
         "swe_bench_pro": null,
@@ -1770,6 +1813,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_pro": null,
@@ -1805,6 +1849,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -1861,6 +1906,7 @@
       },
       "scores": {
         "coding_index": 52610,
+        "tooling_index": 57812,
         "aa_intelligence_index": 34.6,
         "swe_bench_verified": 72.4,
         "swe_bench_pro": 51.2,
@@ -1896,6 +1942,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_pro": "2026-07-28",
@@ -1931,6 +1978,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -1987,6 +2035,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 47062,
         "aa_intelligence_index": 29.9,
         "swe_bench_verified": 69.2,
         "swe_bench_pro": null,
@@ -2022,6 +2071,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_pro": null,
@@ -2057,6 +2107,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -2113,6 +2164,7 @@
       },
       "scores": {
         "coding_index": 47921,
+        "tooling_index": 49208,
         "aa_intelligence_index": 21.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2148,6 +2200,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2183,6 +2236,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2239,6 +2293,7 @@
       },
       "scores": {
         "coding_index": 42633,
+        "tooling_index": 46394,
         "aa_intelligence_index": 20.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2274,6 +2329,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2309,6 +2365,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2365,6 +2422,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 20665,
         "aa_intelligence_index": 7.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2400,6 +2458,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2435,6 +2494,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2491,6 +2551,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 44230,
         "aa_intelligence_index": 5.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2526,6 +2587,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2561,6 +2623,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -2617,6 +2680,7 @@
       "context": "1m",
       "scores": {
         "coding_index": 52287,
+        "tooling_index": 44690,
         "aa_intelligence_index": 25.7,
         "swe_bench_verified": 60.5,
         "swe_bench_pro": null,
@@ -2652,6 +2716,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-11",
         "swe_bench_pro": null,
@@ -2687,6 +2752,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "swe_bench_verified": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
         "swe_bench_pro": null,
@@ -2743,6 +2809,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 17.4,
         "swe_bench_verified": 54.4,
         "swe_bench_pro": null,
@@ -2778,6 +2845,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-23",
         "swe_bench_pro": null,
@@ -2813,6 +2881,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/longcat-flash-lite",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -2870,6 +2939,7 @@
       },
       "scores": {
         "coding_index": 46301,
+        "tooling_index": 40458,
         "aa_intelligence_index": 15.2,
         "swe_bench_verified": 34.0,
         "swe_bench_pro": null,
@@ -2905,6 +2975,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": null,
@@ -2940,6 +3011,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gpt-oss-20b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -2997,6 +3069,7 @@
       },
       "scores": {
         "coding_index": 48171,
+        "tooling_index": 44915,
         "aa_intelligence_index": 24.1,
         "swe_bench_verified": 62.4,
         "swe_bench_pro": 16.2,
@@ -3032,6 +3105,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_pro": "2026-03-19",
@@ -3067,6 +3141,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gpt-oss-120b",
         "swe_bench_verified": "https://huggingface.co/openai/gpt-oss-120b",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -3123,6 +3198,7 @@
       },
       "scores": {
         "coding_index": 42765,
+        "tooling_index": 33235,
         "aa_intelligence_index": 14.5,
         "swe_bench_verified": 38.8,
         "swe_bench_pro": null,
@@ -3158,6 +3234,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-12",
         "swe_bench_pro": null,
@@ -3193,6 +3270,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -3249,6 +3327,7 @@
       },
       "scores": {
         "coding_index": 47835,
+        "tooling_index": 33550,
         "aa_intelligence_index": 19.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3284,6 +3363,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3319,6 +3399,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-small-4",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3375,6 +3456,7 @@
       },
       "scores": {
         "coding_index": 33074,
+        "tooling_index": 54118,
         "aa_intelligence_index": 38.9,
         "swe_bench_verified": null,
         "swe_bench_pro": 56.2,
@@ -3410,6 +3492,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-03-19",
@@ -3445,6 +3528,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m2-7",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -3501,6 +3585,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.4,
         "swe_bench_verified": 34.0,
         "swe_bench_pro": null,
@@ -3536,6 +3621,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-27",
         "swe_bench_pro": null,
@@ -3571,6 +3657,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/sarvam-30b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -3627,6 +3714,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 11.9,
         "swe_bench_verified": 45.0,
         "swe_bench_pro": null,
@@ -3662,6 +3750,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-06-18",
         "swe_bench_verified": "2026-03-27",
         "swe_bench_pro": null,
@@ -3697,6 +3786,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/sarvam-105b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -3753,6 +3843,7 @@
       },
       "scores": {
         "coding_index": 37061,
+        "tooling_index": 29688,
         "aa_intelligence_index": 11,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3788,6 +3879,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3823,6 +3915,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nanbeige4-1-3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -3879,6 +3972,7 @@
       },
       "scores": {
         "coding_index": 53204,
+        "tooling_index": 64050,
         "aa_intelligence_index": 29.7,
         "swe_bench_verified": 80.9,
         "swe_bench_pro": 35.7,
@@ -3914,6 +4008,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-28",
         "swe_bench_pro": "2026-07-28",
@@ -3949,6 +4044,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-31b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -4005,6 +4101,7 @@
       },
       "scores": {
         "coding_index": 53387,
+        "tooling_index": 47439,
         "aa_intelligence_index": 26.1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4040,6 +4137,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4075,6 +4173,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-26b-a4b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4131,6 +4230,7 @@
       },
       "scores": {
         "coding_index": 36526,
+        "tooling_index": 22683,
         "aa_intelligence_index": 12.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4166,6 +4266,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4201,6 +4302,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-e4b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4257,6 +4359,7 @@
       },
       "scores": {
         "coding_index": 33788,
+        "tooling_index": 17257,
         "aa_intelligence_index": 9.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4292,6 +4395,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4327,6 +4431,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-e2b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4383,6 +4488,7 @@
       },
       "scores": {
         "coding_index": 52425,
+        "tooling_index": 45496,
         "aa_intelligence_index": 32.1,
         "swe_bench_verified": 73.4,
         "swe_bench_pro": 49.5,
@@ -4418,6 +4524,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-22",
         "swe_bench_pro": "2026-04-22",
@@ -4453,6 +4560,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -4509,6 +4617,7 @@
       },
       "scores": {
         "coding_index": 57719,
+        "tooling_index": 67881,
         "aa_intelligence_index": 37.7,
         "swe_bench_verified": 77.2,
         "swe_bench_pro": 53.5,
@@ -4544,6 +4653,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-23",
         "swe_bench_pro": "2026-04-23",
@@ -4579,6 +4689,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-6-27b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -4635,6 +4746,7 @@
       },
       "scores": {
         "coding_index": 68034,
+        "tooling_index": 83917,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": 79.0,
         "swe_bench_pro": 52.6,
@@ -4670,6 +4782,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-24",
         "swe_bench_pro": "2026-04-24",
@@ -4705,6 +4818,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -4761,6 +4875,7 @@
       },
       "scores": {
         "coding_index": 57077,
+        "tooling_index": 72607,
         "aa_intelligence_index": 42.2,
         "swe_bench_verified": 74.4,
         "swe_bench_pro": 57.9,
@@ -4796,6 +4911,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-28",
         "swe_bench_pro": "2026-07-16",
@@ -4831,6 +4947,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hy3",
         "swe_bench_verified": "https://huggingface.co/tencent/Hy3-preview",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -4887,6 +5004,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 20268,
         "aa_intelligence_index": 6.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4922,6 +5040,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -4957,6 +5076,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-8b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5013,6 +5133,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 12624,
         "aa_intelligence_index": 4.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5048,6 +5169,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5083,6 +5205,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5139,6 +5262,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 20841,
         "aa_intelligence_index": 8.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5174,6 +5298,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5209,6 +5334,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-30b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5265,6 +5391,7 @@
       },
       "scores": {
         "coding_index": 50726,
+        "tooling_index": 63886,
         "aa_intelligence_index": 30.4,
         "swe_bench_verified": 77.6,
         "swe_bench_pro": null,
@@ -5300,6 +5427,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-05-03",
         "swe_bench_pro": null,
@@ -5335,6 +5463,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-medium-3-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -5391,6 +5520,7 @@
       },
       "scores": {
         "coding_index": 38437,
+        "tooling_index": 32864,
         "aa_intelligence_index": 11.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5426,6 +5556,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5461,6 +5592,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-14b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5517,6 +5649,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 37371,
         "aa_intelligence_index": 15,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5552,6 +5685,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5587,6 +5721,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5643,6 +5778,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 38459,
         "aa_intelligence_index": 3.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5678,6 +5814,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5713,6 +5850,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minicpm-v4-6-1-3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5769,6 +5907,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 42631,
         "aa_intelligence_index": 22.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5804,6 +5943,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5839,6 +5979,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/command-a-plus",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -5895,6 +6036,7 @@
       },
       "scores": {
         "coding_index": 53655,
+        "tooling_index": 57920,
         "aa_intelligence_index": 30.9,
         "swe_bench_verified": 76.5,
         "swe_bench_pro": 56.3,
@@ -5930,6 +6072,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-01",
         "swe_bench_pro": "2026-06-01",
@@ -5965,6 +6108,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/step-3-7-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://huggingface.co/stepfun-ai/Step-3.7-Flash",
@@ -6021,6 +6165,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 19069,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6056,6 +6201,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-07-06",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6091,6 +6237,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-12b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6147,6 +6294,7 @@
       },
       "scores": {
         "coding_index": 47969,
+        "tooling_index": 45780,
         "aa_intelligence_index": 20.2,
         "swe_bench_verified": 67.6,
         "swe_bench_pro": 40.2,
@@ -6182,6 +6330,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-10",
         "swe_bench_pro": "2026-06-10",
@@ -6217,6 +6366,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/north-mini-code",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -6273,6 +6423,7 @@
       },
       "scores": {
         "coding_index": 71033,
+        "tooling_index": 89534,
         "aa_intelligence_index": 52.6,
         "swe_bench_verified": null,
         "swe_bench_pro": 62.1,
@@ -6308,6 +6459,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-06-18",
@@ -6343,6 +6495,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-5-2",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -6399,6 +6552,7 @@
       },
       "scores": {
         "coding_index": 54817,
+        "tooling_index": 68498,
         "aa_intelligence_index": 45.4,
         "swe_bench_verified": 80.5,
         "swe_bench_pro": 59,
@@ -6434,6 +6588,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-18",
         "swe_bench_pro": "2026-06-18",
@@ -6469,6 +6624,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m3",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -6525,6 +6681,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8.1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6560,6 +6717,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6595,6 +6753,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6641,6 +6800,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2.3,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6676,6 +6836,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6711,6 +6872,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/lfm2-5-1-2b-thinking",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6766,6 +6928,7 @@
       "context": "10m",
       "scores": {
         "coding_index": 34543,
+        "tooling_index": 16122,
         "aa_intelligence_index": 10.3,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6801,6 +6964,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6836,6 +7000,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/llama-4-scout",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6892,6 +7057,7 @@
       "context": "1m",
       "scores": {
         "coding_index": 40818,
+        "tooling_index": 22321,
         "aa_intelligence_index": 14.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6927,6 +7093,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -6962,6 +7129,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/llama-4-maverick",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7018,6 +7186,7 @@
       "context": "16k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 4.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7053,6 +7222,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7088,6 +7258,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/phi-4",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7143,6 +7314,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7178,6 +7350,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7213,6 +7386,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-32b-think",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7270,6 +7444,7 @@
       "context": "64k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7305,6 +7480,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7340,6 +7516,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-1-32b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7396,6 +7573,7 @@
       "context": "64k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 3.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7431,6 +7609,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7466,6 +7645,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-7b-think",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7522,6 +7702,7 @@
       "context": "64k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7557,6 +7738,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7592,6 +7774,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-7b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7648,6 +7831,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7683,6 +7867,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7718,6 +7903,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/jamba-1-7-large",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7774,6 +7960,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2.3,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7809,6 +7996,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7844,6 +8032,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/jamba-1-7-mini",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -7900,6 +8089,7 @@
       "context": "512k",
       "scores": {
         "coding_index": 45397,
+        "tooling_index": 41020,
         "aa_intelligence_index": 18.7,
         "swe_bench_verified": 63.2,
         "swe_bench_pro": null,
@@ -7935,6 +8125,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -7970,6 +8161,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/trinity-large-thinking",
         "swe_bench_verified": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking",
         "swe_bench_pro": null,
@@ -8026,6 +8218,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8061,6 +8254,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8096,6 +8290,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hermes-4-llama-3-1-405b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8152,6 +8347,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8187,6 +8383,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8222,6 +8419,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hermes-4-llama-3-1-70b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8278,6 +8476,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 3.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8313,6 +8512,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8348,6 +8548,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/reka-flash-3",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -8404,6 +8605,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 20.8,
         "swe_bench_verified": 16.0,
         "swe_bench_pro": null,
@@ -8439,6 +8641,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -8474,6 +8677,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "swe_bench_verified": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "swe_bench_pro": null,
@@ -8530,6 +8734,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": 38170,
         "aa_intelligence_index": 21.7,
         "swe_bench_verified": 73.1,
         "swe_bench_pro": null,
@@ -8565,6 +8770,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -8600,6 +8806,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v3-2-0925",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -8656,6 +8863,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 20.4,
         "swe_bench_verified": 44.6,
         "swe_bench_pro": null,
@@ -8691,6 +8899,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -8726,6 +8935,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-r1",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -8782,6 +8992,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 19.7,
         "swe_bench_verified": 64.2,
         "swe_bench_pro": null,
@@ -8817,6 +9028,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -8852,6 +9064,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4.5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -8908,6 +9121,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 16.7,
         "swe_bench_verified": 57.6,
         "swe_bench_pro": null,
@@ -8943,6 +9157,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -8978,6 +9193,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-5-air",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -9034,6 +9250,7 @@
       "context": "200k",
       "scores": {
         "coding_index": 43208,
+        "tooling_index": null,
         "aa_intelligence_index": 23.4,
         "swe_bench_verified": 68,
         "swe_bench_pro": 9.7,
@@ -9069,6 +9286,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": "2026-08-11",
@@ -9104,6 +9322,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-6",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://huggingface.co/zai-org/GLM-4.6",
@@ -9160,6 +9379,7 @@
       "context": "200k",
       "scores": {
         "coding_index": 56709,
+        "tooling_index": 60513,
         "aa_intelligence_index": 34.5,
         "swe_bench_verified": 73.8,
         "swe_bench_pro": null,
@@ -9195,6 +9415,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -9230,6 +9451,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-7",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -9286,6 +9508,7 @@
       "context": "1m",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9321,6 +9544,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9356,6 +9580,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-linear-48b-a3b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9412,6 +9637,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9447,6 +9673,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9482,6 +9709,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9538,6 +9766,7 @@
       "context": "512k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 18.5,
         "swe_bench_verified": 56.0,
         "swe_bench_pro": null,
@@ -9573,6 +9802,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -9608,6 +9838,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/seed-oss-36b-instruct",
         "swe_bench_verified": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct",
         "swe_bench_pro": null,
@@ -9664,6 +9895,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 9.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9699,6 +9931,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9734,6 +9967,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-flash-2-0",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9790,6 +10024,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9825,6 +10060,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9860,6 +10096,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ring-flash-2-0",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9916,6 +10153,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 3.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9951,6 +10189,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -9986,6 +10225,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-mini-2-0",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10042,6 +10282,7 @@
       "context": "256k",
       "scores": {
         "coding_index": 51680,
+        "tooling_index": 47469,
         "aa_intelligence_index": 25.1,
         "swe_bench_verified": 73.4,
         "swe_bench_pro": null,
@@ -10077,6 +10318,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -10112,6 +10354,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -10167,6 +10410,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 60.4,
         "swe_bench_pro": null,
@@ -10202,6 +10446,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -10237,6 +10482,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -10293,6 +10539,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 59.4,
         "swe_bench_pro": null,
@@ -10328,6 +10575,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -10363,6 +10611,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/meituan-longcat/LongCat-Flash-Thinking",
         "swe_bench_pro": null,
@@ -10420,6 +10669,7 @@
       "context": "1m",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 17.9,
         "swe_bench_verified": 56,
         "swe_bench_pro": null,
@@ -10455,6 +10705,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": null,
@@ -10490,6 +10741,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m1-80k",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -10546,6 +10798,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 8.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10581,6 +10834,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10616,6 +10870,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-32b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10672,6 +10927,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10707,6 +10963,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10742,6 +10999,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-14b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10798,6 +11056,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10833,6 +11092,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10868,6 +11128,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10924,6 +11185,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 6.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10959,6 +11221,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -10994,6 +11257,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-4b-instruct",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11050,6 +11314,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 18.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11085,6 +11350,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11120,6 +11386,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11176,6 +11443,7 @@
       "context": "256k",
       "scores": {
         "coding_index": 50197,
+        "tooling_index": 40621,
         "aa_intelligence_index": 19.9,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11211,6 +11479,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11246,6 +11515,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11302,6 +11572,7 @@
       "context": "256k",
       "scores": {
         "coding_index": 45653,
+        "tooling_index": null,
         "aa_intelligence_index": 18.2,
         "swe_bench_verified": 69.6,
         "swe_bench_pro": 38.7,
@@ -11337,6 +11608,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_pro": "2026-08-11",
@@ -11372,6 +11644,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-480b-a35b-instruct",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct",
@@ -11428,6 +11701,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 13.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11463,6 +11737,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11498,6 +11773,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwq-32b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11554,6 +11830,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 5.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11589,6 +11866,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11624,6 +11902,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/exaone-4-0-32b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11680,6 +11959,7 @@
       "context": "64k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11715,6 +11995,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11750,6 +12031,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/exaone-4-0-1-2b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11806,6 +12088,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 15.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11841,6 +12124,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11876,6 +12160,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11932,6 +12217,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 9.7,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -11967,6 +12253,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12002,6 +12289,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12058,6 +12346,7 @@
       "context": "256k",
       "scores": {
         "coding_index": 43620,
+        "tooling_index": 32370,
         "aa_intelligence_index": 15.9,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12093,6 +12382,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12128,6 +12418,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-large-3",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12184,6 +12475,7 @@
       "context": "256k",
       "scores": {
         "coding_index": 35450,
+        "tooling_index": 20980,
         "aa_intelligence_index": 9,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12219,6 +12511,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12254,6 +12547,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-8b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12310,6 +12604,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
+        "tooling_index": 33252,
         "aa_intelligence_index": 7.1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12345,6 +12640,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12380,6 +12676,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12436,6 +12733,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 17.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12471,6 +12769,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12506,6 +12805,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hyperclova-x-seed-think-32b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12562,6 +12862,7 @@
       "context": "128k",
       "scores": {
         "coding_index": 34252,
+        "tooling_index": 14953,
         "aa_intelligence_index": 7.4,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12597,6 +12898,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12632,6 +12934,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-27b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12688,6 +12991,7 @@
       "context": "128k",
       "scores": {
         "coding_index": 28953,
+        "tooling_index": 7877,
         "aa_intelligence_index": 1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12723,6 +13027,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12758,6 +13063,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-4b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12814,6 +13120,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 1,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12849,6 +13156,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12884,6 +13192,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-1b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12940,6 +13249,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -12975,6 +13285,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13010,6 +13321,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-270m",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13066,6 +13378,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 2.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13101,6 +13414,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13136,6 +13450,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/dbrx",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13183,6 +13498,7 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13218,6 +13534,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13253,6 +13570,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/grok-2-1212",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13301,6 +13619,7 @@
       },
       "scores": {
         "coding_index": 50660,
+        "tooling_index": 44949,
         "aa_intelligence_index": 22.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13336,6 +13655,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13371,6 +13691,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-12b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13427,6 +13748,7 @@
       },
       "scores": {
         "coding_index": 42443,
+        "tooling_index": 51264,
         "aa_intelligence_index": null,
         "swe_bench_verified": 69.4,
         "swe_bench_pro": 42.9,
@@ -13462,6 +13784,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -13497,6 +13820,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B",
         "swe_bench_pro": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B",
@@ -13553,6 +13877,7 @@
       },
       "scores": {
         "coding_index": 54561,
+        "tooling_index": 56603,
         "aa_intelligence_index": null,
         "swe_bench_verified": 75.6,
         "swe_bench_pro": 50.4,
@@ -13588,6 +13913,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -13623,6 +13949,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B",
         "swe_bench_pro": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B",
@@ -13679,6 +14006,7 @@
       },
       "scores": {
         "coding_index": 62557,
+        "tooling_index": 58289,
         "aa_intelligence_index": null,
         "swe_bench_verified": 82.4,
         "swe_bench_pro": 62.2,
@@ -13714,6 +14042,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": "2026-06-29",
@@ -13749,6 +14078,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B",
         "swe_bench_pro": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-397B",
@@ -13805,6 +14135,7 @@
       },
       "scores": {
         "coding_index": 51801,
+        "tooling_index": 54352,
         "aa_intelligence_index": 38.3,
         "swe_bench_verified": 70.7,
         "swe_bench_pro": null,
@@ -13840,6 +14171,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-29",
         "swe_bench_pro": null,
@@ -13875,6 +14207,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -13941,6 +14274,7 @@
       },
       "scores": {
         "coding_index": 46077,
+        "tooling_index": 37867,
         "aa_intelligence_index": 13.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -13976,6 +14310,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14011,6 +14346,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/diffusiongemma-26b-a4b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14067,6 +14403,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14102,6 +14439,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14137,6 +14475,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14193,6 +14532,7 @@
       },
       "scores": {
         "coding_index": 54651,
+        "tooling_index": 60318,
         "aa_intelligence_index": 42.3,
         "swe_bench_verified": 77.6,
         "swe_bench_pro": 54.3,
@@ -14228,6 +14568,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-16",
         "swe_bench_pro": "2026-07-16",
@@ -14263,6 +14604,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling",
         "swe_bench_verified": "https://huggingface.co/thinkingmachines/Inkling",
         "swe_bench_pro": "https://huggingface.co/thinkingmachines/Inkling",
@@ -14319,6 +14661,7 @@
       },
       "scores": {
         "coding_index": 66331,
+        "tooling_index": 78345,
         "aa_intelligence_index": 53.2,
         "swe_bench_verified": 80.6,
         "swe_bench_pro": 55.4,
@@ -14354,6 +14697,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-13",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
@@ -14389,6 +14733,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -14445,6 +14790,7 @@
       },
       "scores": {
         "coding_index": 54513,
+        "tooling_index": 56662,
         "aa_intelligence_index": 34,
         "swe_bench_verified": null,
         "swe_bench_pro": 59.5,
@@ -14480,6 +14826,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-07-20",
@@ -14515,6 +14862,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/longcat-2-0",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://huggingface.co/meituan-longcat/LongCat-2.0",
@@ -14571,6 +14919,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": 33.5,
         "swe_bench_verified": 71.3,
         "swe_bench_pro": null,
@@ -14606,6 +14955,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": null,
@@ -14641,6 +14991,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-thinking",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -14697,6 +15048,7 @@
       },
       "scores": {
         "coding_index": 43435,
+        "tooling_index": 52800,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 76.8,
         "swe_bench_pro": 50.7,
@@ -14732,6 +15084,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
@@ -14767,6 +15120,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -14823,6 +15177,7 @@
       },
       "scores": {
         "coding_index": 47259,
+        "tooling_index": 77389,
         "aa_intelligence_index": 45.1,
         "swe_bench_verified": 80.2,
         "swe_bench_pro": 58.6,
@@ -14858,6 +15213,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": "2026-07-20",
@@ -14893,6 +15249,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-6",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -14949,6 +15306,7 @@
       },
       "scores": {
         "coding_index": 61229,
+        "tooling_index": 75711,
         "aa_intelligence_index": 43,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -14984,6 +15342,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15019,6 +15378,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-7-code",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15075,6 +15435,7 @@
       },
       "scores": {
         "coding_index": 85293,
+        "tooling_index": 91224,
         "aa_intelligence_index": 59.7,
         "swe_bench_verified": 93.4,
         "swe_bench_pro": null,
@@ -15110,6 +15471,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_pro": null,
@@ -15145,6 +15507,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k3",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_pro": null,
@@ -15201,6 +15564,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 30797,
         "aa_intelligence_index": 16.2,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15236,6 +15600,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15271,6 +15636,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/g9v3-3b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15327,6 +15693,7 @@
       },
       "scores": {
         "coding_index": 56521,
+        "tooling_index": 58838,
         "aa_intelligence_index": 38,
         "swe_bench_verified": null,
         "swe_bench_pro": 56.1,
@@ -15362,6 +15729,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-07-28",
@@ -15397,6 +15765,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-5-0424",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -15453,6 +15822,7 @@
       },
       "scores": {
         "coding_index": 51584,
+        "tooling_index": 69339,
         "aa_intelligence_index": 42.9,
         "swe_bench_verified": 78.9,
         "swe_bench_pro": 57.2,
@@ -15488,6 +15858,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-28",
         "swe_bench_pro": "2026-07-28",
@@ -15523,6 +15894,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -15579,6 +15951,7 @@
       },
       "scores": {
         "coding_index": 56785,
+        "tooling_index": 61502,
         "aa_intelligence_index": 41.2,
         "swe_bench_verified": 80.2,
         "swe_bench_pro": 55.9,
@@ -15614,6 +15987,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-30",
         "swe_bench_pro": "2026-07-30",
@@ -15649,6 +16023,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling-small",
         "swe_bench_verified": "https://huggingface.co/thinkingmachines/Inkling-Small",
         "swe_bench_pro": "https://huggingface.co/thinkingmachines/Inkling-Small",
@@ -15705,6 +16080,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 55497,
         "aa_intelligence_index": 31.6,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15740,6 +16116,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15775,6 +16152,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/g9v3-39a5b",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -15826,6 +16204,7 @@
       },
       "scores": {
         "coding_index": 67814,
+        "tooling_index": 80977,
         "aa_intelligence_index": 57.7,
         "swe_bench_verified": null,
         "swe_bench_pro": 67.7,
@@ -15861,6 +16240,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-08-06",
@@ -15896,6 +16276,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -15952,6 +16333,7 @@
       },
       "scores": {
         "coding_index": 56201,
+        "tooling_index": 65270,
         "aa_intelligence_index": 37.8,
         "swe_bench_verified": null,
         "swe_bench_pro": 56.6,
@@ -15987,6 +16369,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-10",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-08-11",
@@ -16022,6 +16405,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-3-0-flash",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://huggingface.co/inclusionAI/Ling-3.0-flash",
@@ -16078,6 +16462,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 56299,
         "aa_intelligence_index": 24.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16113,6 +16498,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-10",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16148,6 +16534,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-3-0-tiny",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16204,6 +16591,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": 38981,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16239,6 +16627,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16274,6 +16663,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16330,6 +16720,7 @@
       },
       "scores": {
         "coding_index": 54189,
+        "tooling_index": 63645,
         "aa_intelligence_index": 35.1,
         "swe_bench_verified": 76,
         "swe_bench_pro": 51.2,
@@ -16365,6 +16756,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": "2026-08-11",
         "swe_bench_pro": "2026-08-11",
@@ -16400,6 +16792,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/muse-glimmer",
         "swe_bench_verified": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
         "swe_bench_pro": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
@@ -16456,6 +16849,7 @@
       },
       "scores": {
         "coding_index": 44570,
+        "tooling_index": 44627,
         "aa_intelligence_index": 23.6,
         "swe_bench_verified": 51.6,
         "swe_bench_pro": null,
@@ -16491,6 +16885,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-13",
         "swe_bench_verified": "2026-08-13",
         "swe_bench_pro": null,
@@ -16526,6 +16921,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": null,
@@ -16582,6 +16978,7 @@
       },
       "scores": {
         "coding_index": 78860,
+        "tooling_index": 82977,
         "aa_intelligence_index": 59.5,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16617,6 +17014,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-20",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-19",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16652,6 +17050,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-5-3",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16703,6 +17102,7 @@
       },
       "scores": {
         "coding_index": 62710,
+        "tooling_index": 71512,
         "aa_intelligence_index": 52,
         "swe_bench_verified": null,
         "swe_bench_pro": 61.7,
@@ -16738,6 +17138,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": null,
         "swe_bench_pro": "2026-08-15",
@@ -16773,6 +17174,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "swe_bench_verified": null,
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -16829,6 +17231,7 @@
       },
       "scores": {
         "coding_index": 56289,
+        "tooling_index": 60313,
         "aa_intelligence_index": 37.4,
         "swe_bench_verified": 70.4,
         "swe_bench_pro": null,
@@ -16864,6 +17267,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": "2026-08-17",
         "swe_bench_pro": null,
@@ -16899,6 +17303,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/solar-open2-250b",
         "swe_bench_verified": "https://huggingface.co/upstage/Solar-Open2-250B",
         "swe_bench_pro": null,
@@ -16955,6 +17360,7 @@
       },
       "scores": {
         "coding_index": 53864,
+        "tooling_index": 60497,
         "aa_intelligence_index": 35,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -16990,6 +17396,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-08-19",
+        "tooling_index": "2026-08-20",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -17025,6 +17432,7 @@
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/a-x-k2",
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -17081,6 +17489,7 @@
       },
       "scores": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -17116,6 +17525,7 @@
       },
       "scores_updated": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,
@@ -17151,6 +17561,7 @@
       },
       "scores_source": {
         "coding_index": null,
+        "tooling_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_pro": null,

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import artificialanalysis
-import derive_coding_index
+import derive_indexes
 import fetch_aa_coding_agents
 import fetch_datacurve
 import fetch_deepswe
@@ -1842,13 +1842,13 @@ def main() -> int:
 
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if not args.skip_aa else []
     if args.write:
-        # The derived Coding index is a function of the scores just fetched, so
-        # it goes stale the moment any of them moves. Refreshed in memory here
+        # The derived indexes are a function of the scores just fetched, so
+        # they go stale the moment any of them moves. Refreshed in memory here
         # so a direct `update.py -w` leaves llm.json consistent on its own,
         # without depending on update-all's later derive step. The URL backfill
         # moves no score, and skipping the refresh keeps its diff pure.
         if not args.fill_source_urls:
-            derive_coding_index.refresh_and_report(doc)
+            derive_indexes.refresh_and_report(doc)
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
     print(f"models in {llm_path}: {len(slugs)}")

@@ -6,7 +6,7 @@ read from, and `update.py --fill-source-urls` backfills the map for scores
 written before it existed: the first source in the usual update order whose
 fetched value equals the stored score claims it. These tests pin the write
 rules in apply_score, the map materialization, the AA per-benchmark origin
-tracking, and the repo page the derived Coding index cites instead of a
+tracking, and the repo pages the derived indexes cite instead of a
 leaderboard.
 """
 
@@ -17,7 +17,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-import derive_coding_index
+import derive_indexes
 import update
 from _scores import stamp_score_source
 
@@ -239,63 +239,83 @@ class TestPerBenchmarkUrls(unittest.TestCase):
 
 
 class TestDerivedIndexSource(unittest.TestCase):
-    """The Coding index has no leaderboard, so it cites the repo page that
+    """A derived index has no leaderboard, so it cites the repo page that
     documents how it is computed -- read off the column's own urls in llm.json,
     and null on a model the index leaves unranked."""
 
-    KEY = derive_coding_index.INDEX_KEY
-    REPO_URL = "https://github.com/dgrieser/ai-bench#coding-index"
-
-    def doc_with(self, urls: object) -> dict:
-        benchmarks = {key: {} for key, _ in derive_coding_index.CONTRIBUTING}
-        entry: dict = {"derived": True}
-        if urls is not None:
-            entry["urls"] = urls
-        return {"benchmarks": {self.KEY: entry, **benchmarks}}
+    def doc_with(self, urls_by_key: dict[str, object]) -> dict:
+        # validate() wants every index and every contributing benchmark
+        # declared, whichever index a test is exercising.
+        benchmarks: dict = {}
+        for index in derive_indexes.INDEXES:
+            entry: dict = {"derived": True}
+            if urls_by_key.get(index.key) is not None:
+                entry["urls"] = urls_by_key[index.key]
+            benchmarks[index.key] = entry
+            for key, _ in index.contributing:
+                benchmarks.setdefault(key, {})
+        return {"benchmarks": benchmarks}
 
     def test_declared_url_is_stamped_on_ranked_models(self) -> None:
-        doc = self.doc_with([self.REPO_URL])
-        doc["models"] = [
-            {"name": "a", "scores": {"deepswe": 40.0}},
-            {"name": "b", "scores": {"deepswe": 20.0}},
-        ]
-        derive_coding_index.refresh(doc)
-        for model in doc["models"]:
-            self.assertIsNotNone(model["scores"][self.KEY])
-            self.assertEqual(model["scores_source"][self.KEY], self.REPO_URL)
+        for index in derive_indexes.INDEXES:
+            with self.subTest(index=index.key):
+                url = f"https://example.com/{index.key}"
+                doc = self.doc_with({index.key: [url]})
+                # Scored on the index's leading benchmark only: the other
+                # contributors carry no rank, so their weight drops out and
+                # both models clear the coverage bar.
+                lead = index.contributing[0][0]
+                doc["models"] = [
+                    {"name": "a", "scores": {lead: 40.0}},
+                    {"name": "b", "scores": {lead: 20.0}},
+                ]
+                derive_indexes.refresh(doc)
+                for model in doc["models"]:
+                    self.assertIsNotNone(model["scores"][index.key])
+                    self.assertEqual(model["scores_source"][index.key], url)
 
     def test_unranked_model_reports_no_source(self) -> None:
-        doc = self.doc_with([self.REPO_URL])
-        # Two scored models make deepswe rankable; the third is measured on
-        # nothing, so it stays unranked and must carry neither value nor source.
-        doc["models"] = [
-            {"name": "a", "scores": {"deepswe": 40.0}},
-            {"name": "b", "scores": {"deepswe": 20.0}},
-            {"name": "c", "scores": {}, "scores_source": {self.KEY: self.REPO_URL}},
-        ]
-        derive_coding_index.refresh(doc)
-        unranked = doc["models"][2]
-        self.assertIsNone(unranked["scores"][self.KEY])
-        self.assertIsNone(unranked["scores_source"][self.KEY])
+        for index in derive_indexes.INDEXES:
+            with self.subTest(index=index.key):
+                url = f"https://example.com/{index.key}"
+                doc = self.doc_with({index.key: [url]})
+                # Two scored models make the leading benchmark rankable; the
+                # third is measured on nothing, so it stays unranked and must
+                # carry neither value nor source.
+                lead = index.contributing[0][0]
+                doc["models"] = [
+                    {"name": "a", "scores": {lead: 40.0}},
+                    {"name": "b", "scores": {lead: 20.0}},
+                    {"name": "c", "scores": {}, "scores_source": {index.key: url}},
+                ]
+                derive_indexes.refresh(doc)
+                unranked = doc["models"][2]
+                self.assertIsNone(unranked["scores"][index.key])
+                self.assertIsNone(unranked["scores_source"][index.key])
 
     def test_falls_back_when_the_column_declares_no_url(self) -> None:
-        for urls in (None, [], ["  "], "not-a-list"):
-            with self.subTest(urls=urls):
-                self.assertEqual(
-                    derive_coding_index.source_url(self.doc_with(urls)),
-                    derive_coding_index.FALLBACK_SOURCE_URL,
-                )
+        for index in derive_indexes.INDEXES:
+            for urls in (None, [], ["  "], "not-a-list"):
+                with self.subTest(index=index.key, urls=urls):
+                    self.assertEqual(
+                        derive_indexes.source_url(
+                            self.doc_with({index.key: urls}), index
+                        ),
+                        index.fallback_source_url,
+                    )
 
-    def test_llm_json_declares_the_repo_page(self) -> None:
-        """llm.json is the one place the link is spelled; the fallback in the
+    def test_llm_json_declares_the_repo_pages(self) -> None:
+        """llm.json is the one place each link is spelled; the fallback in the
         script has to agree with it or a restamp would silently repoint."""
         doc = json.loads(
             (Path(__file__).resolve().parent / "llm.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(
-            derive_coding_index.source_url(doc),
-            derive_coding_index.FALLBACK_SOURCE_URL,
-        )
+        for index in derive_indexes.INDEXES:
+            with self.subTest(index=index.key):
+                self.assertEqual(
+                    derive_indexes.source_url(doc, index),
+                    index.fallback_source_url,
+                )
 
 
 if __name__ == "__main__":
