@@ -228,9 +228,9 @@ Output: llm.json (unified dataset)
 ### Utilities
 
 ```bash
-# Recompute the derived Coding index column (dry-run; -w to persist)
-./derive_coding_index.py llm.json
-./derive_coding_index.py llm.json -w
+# Recompute the derived index columns, Coding and Tooling (dry-run; -w to persist)
+./derive_indexes.py llm.json
+./derive_indexes.py llm.json -w
 
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
@@ -375,10 +375,11 @@ llm.json (unified, deduplicated dataset)
 
 ## Coding Index
 
-The first benchmark column, **Coding**, is the only score in `llm.json` that is not
-scraped: `derive_coding_index.py` computes it from the coding benchmarks already in
-the file and writes it to each model's `scores.coding_index`. It is also the table's
-default sort.
+The first benchmark column, **Coding**, is not scraped: `derive_indexes.py` computes
+it from the coding benchmarks already in the file and writes it to each model's
+`scores.coding_index`. It is also the table's default sort. The
+[Tooling index](#tooling-index) is its sibling — same script, same math, different
+contributing benchmarks.
 
 How a value is produced:
 
@@ -387,8 +388,8 @@ How a value is produced:
    an index score can be compared at all. A `lower_is_better` benchmark is inverted,
    so a percentile always means "how good".
 2. **Weight by reliability.** The ranks are averaged with the per-benchmark weights
-   in `CONTRIBUTING` (DeepSWE 1.0 down to SWE-bench Verified 0.15), so the
-   benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
+   the index declares in `INDEXES` (DeepSWE 1.0 down to SWE-bench Verified 0.15), so
+   the benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
    Weights are relative — scaling them all leaves the ranking unchanged.
 3. **Impute blanks instead of zeroing them.** A missing score is filled between the
    median (50) and the level the model has actually demonstrated, trusting the
@@ -413,28 +414,29 @@ can sit thousandths of a percentile apart (the closest pair in the current field
 without the decimal every other benchmark gets.
 
 No leaderboard publishes this column, so every ranked value is attributed to this
-repository instead of to a scraped page: `derive_coding_index.py` stamps
+repository instead of to a scraped page: `derive_indexes.py` stamps
 `scores_source.coding_index` with the first URL the column declares in
 `llm.json` (`https://github.com/dgrieser/ai-bench#coding-index`, this section), so
 clicking the score in `llm.html` opens the method rather than nothing. Change that
 URL in `llm.json` and the next run restamps every value. An unranked model reports
 no source, the same way it reports no date.
 
-Two consequences worth knowing:
+Two consequences worth knowing (they hold for every derived index):
 
 - Ranks are relative to the models currently in the file, so **adding a model or a
-  score moves other models' values**. That is also why `derive_coding_index.py`
+  score moves other models' values**. That is also why `derive_indexes.py`
   clears a value back to `null` when a model stops qualifying, unlike the scrapers,
   which never overwrite a value with `null`.
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
-  `derive_coding_index.refresh_and_report()`:
+  `derive_indexes.refresh_and_report()`:
   - `update.py -w` — after the scrapers have merged their scores (so a direct run is
     self-sufficient; `update-all` additionally runs the script as its last step).
   - `edit.py` — after a hand-edited score. Skipped for a params/context-only edit,
     which cannot move a rank.
-  - `prune.py -w` — after dropping models, because removing one that carried a coding
-    score re-ranks the survivors even though none of their own scores moved.
+  - `prune.py -w` — after dropping models, because removing one that carried a
+    contributing score re-ranks the survivors even though none of their own scores
+    moved.
 
   `add.py` needs no refresh: a new model arrives with all-null scores, and a model
   with no score in a benchmark is not part of that benchmark's population, so nothing
@@ -448,6 +450,26 @@ Two consequences worth knowing:
 The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
 in `llm.json`), which is what this column replaced — that machinery is still in
 place, just with no group configured.
+
+## Tooling Index
+
+The second derived column, **Tooling**, is the Coding index's sibling for agentic
+tool use: same script (`derive_indexes.py`), same percentile-rank math, imputation
+and coverage rules as [above](#coding-index), computed over the tool-use benchmarks
+instead and written to each model's `scores.tooling_index`. Ranked values cite this
+section (`https://github.com/dgrieser/ai-bench#tooling-index`) the same way the
+Coding index cites its own.
+
+Contributing benchmarks and why they carry the weight they do:
+
+| Benchmark | Weight | Rationale |
+| --- | --- | --- |
+| τ³-Bench Banking | 1.0 | The most reliable measurement of the set: every score run independently by Artificial Analysis, execution-graded against backend state, far from saturation, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. |
+| Toolathlon-Verified | 0.9 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded and unsaturated. Below 1.0 because the leaderboard is run by the benchmark's own team with a mix of verified and self-reported entries, and it is young — two incompatible score series in under a year. |
+| Terminal-Bench 2.1 | 0.8 | Broad, widely trusted, mostly AA-run in this file — but the least tool-shaped of the set (terminal/CLI agency rather than structured tool calling, overlapping the Coding index), nearing its ceiling, with fully public tasks and documented harness variance. |
+| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the six and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
+| τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as the coverage backbone: it is the most widely scored benchmark of the set, so it fills gaps and breaks mid-field ties without leading anything. |
+| Terminal-Bench Hard | 0.3 | Correlates ~0.94 with Terminal-Bench 2.1, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from floating up on imputation alone. |
 
 ## Openness Classification
 
@@ -540,7 +562,7 @@ ai-bench/
 ├── update_*_mapping.py         # Mapping sync scripts (13 files)
 ├── _*_mapping.py               # Mapping application modules (13 files)
 │
-├── derive_coding_index.py      # Derived Coding index column (see above)
+├── derive_indexes.py           # Derived Coding & Tooling index columns (see above)
 │
 ├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
 ├── _selector.py                # Type-to-search prompt: drawing + Tab completion

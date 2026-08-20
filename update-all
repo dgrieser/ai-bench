@@ -99,9 +99,9 @@ done
 
 run "update.py" "${SCRIPT_DIR}/update.py" -w
 
-# Derived from the coding scores above, so it has to run last -- and outside the
+# Derived from the scores above, so it has to run last -- and outside the
 # update_*.py glob, which runs before update.py has filled those scores in.
-run "derive_coding_index.py" "${SCRIPT_DIR}/derive_coding_index.py" -w
+run "derive_indexes.py" "${SCRIPT_DIR}/derive_indexes.py" -w
 
 if [ -n "$REPORT" ]; then
     echo 1>&2
