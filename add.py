@@ -23,11 +23,6 @@ from _selector import (
     supports_live_selector,
     tab_completion,
 )
-from _swe_rebench_mapping import (
-    add_rebench_mapping,
-    fetch_swe_rebench_model_names,
-    load_rebench_to_slug_mapping,
-)
 from _osworld_mapping import (
     add_osworld_mapping,
     fetch_osworld_model_names,
@@ -134,11 +129,6 @@ def parse_args() -> argparse.Namespace:
         "--skip-aa",
         action="store_true",
         help="Skip artificialanalysis.py lookups (name autocomplete and field defaults).",
-    )
-    parser.add_argument(
-        "--skip-swe-rebench",
-        action="store_true",
-        help="Skip the SWE-Rebench mapping prompt.",
     )
     parser.add_argument(
         "--skip-osworld",
@@ -348,31 +338,6 @@ def maybe_add_osworld_mapping(model_name: str, interactive: bool) -> None:
 
     add_osworld_mapping(osworld_name, model_name)
     print(f"Added OSWorld mapping '{osworld_name}' -> '{model_name}'")
-
-
-def maybe_add_swe_rebench_mapping(model_name: str, interactive: bool) -> None:
-    if not interactive:
-        return
-
-    existing_mapping = load_rebench_to_slug_mapping()
-    if model_name in existing_mapping.values():
-        return
-
-    try:
-        rebench_names = fetch_swe_rebench_model_names()
-    except RuntimeError as exc:
-        print(f"Skipping SWE-Rebench mapping prompt: {exc}")
-        return
-
-    if not rebench_names:
-        return
-
-    rebench_name = prompt_select_or_new("SWE-Rebench model", rebench_names)
-    if not rebench_name:
-        return
-
-    add_rebench_mapping(rebench_name, model_name)
-    print(f"Added SWE-Rebench mapping '{rebench_name}' -> '{model_name}'")
 
 
 def maybe_add_deepswe_mapping(model_name: str, interactive: bool) -> None:
@@ -939,8 +904,6 @@ def main() -> int:
     ensure_unique_name(models, model["name"])
     models.append(model)
     write_doc(path, doc)
-    if not args.skip_swe_rebench:
-        maybe_add_swe_rebench_mapping(model["name"], interactive)
     if not args.skip_osworld:
         maybe_add_osworld_mapping(model["name"], interactive)
     if not args.skip_deepswe:

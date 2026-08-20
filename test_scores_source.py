@@ -182,9 +182,9 @@ class TestMergeAaModelsOrigins(unittest.TestCase):
 
 class TestUpdateSourceOrderBackfill(unittest.TestCase):
     def test_first_source_in_update_order_claims_the_score(self) -> None:
-        # deepswe runs before frontierswe in update.py's order; when both would
+        # benchlm.ai runs before datacurve in update.py's order; when both would
         # produce the stored value, running the backfill in that order must
-        # leave deepswe's page on the score it filled first.
+        # leave benchlm's page on the score it filled first.
         doc = {
             "models": [
                 {
@@ -197,8 +197,8 @@ class TestUpdateSourceOrderBackfill(unittest.TestCase):
         }
         update.update_deepswe_scores(doc, {"m": {"score": 45.0}}, fill_urls_only=True)
         # A later source reporting the same number must not re-attribute it.
-        update.update_swe_rebench_scores(
-            doc, {"m": {"resolved_rate": 45.0}}, fill_urls_only=True
+        update.update_datacurve_scores(
+            doc, {"m": {"score": 45.0}}, fill_urls_only=True
         )
         model = doc["models"][0]
         self.assertEqual(

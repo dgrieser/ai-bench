@@ -38,7 +38,6 @@ import fetch_osworld
 import fetch_spheron
 import fetch_swe_atlas
 import fetch_swe_marathon
-import fetch_swe_rebench
 import fetch_toolathlon
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -118,7 +117,6 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_datacurve.SITE_URL, ("deepswe",)),
         (fetch_frontierswe.URL, ("frontierswe",)),
         (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode",)),
-        (fetch_swe_rebench.URL, ("swe_rebench",)),
         (fetch_swe_marathon.URL, ("swe_marathon",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (TBENCH_2_1_LEADERBOARD, ("terminal_bench_2_1",)),

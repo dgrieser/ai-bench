@@ -214,6 +214,12 @@ _PAGE_OBJECT_FIELDS = {
         ("accuracy", "omniscience_accuracy", float),
         ("hallucinationRate", "omniscience_hallucination_rate", float),
     ],
+    # The capture stops at the first "}", i.e. inside the leading "overall"
+    # sub-object, so "elo" is Briefcase's composite Elo rather than the
+    # analytical-quality or presentation Elo that follow it.
+    "briefcaseBreakdown": [
+        ("elo", "briefcase", float),
+    ],
     "openness": [
         ("opennessIndex", "openness_index", float),
         ("modelAvailability", "openness_model_availability", int),
@@ -360,6 +366,7 @@ _PAGE_ONLY_EVALS = [
     "gdpval",
     "gdpval_normalized",
     "it_bench_sre",
+    "briefcase",
     "critpt",
     "apex_agents",
     "harvey_lab_criteria_pass",
@@ -569,6 +576,7 @@ def _print_table(models, output):
         ("MMMU Pro", _extract_mmmu_pro),
         ("GDPval", lambda m: _extract_page_eval(m, "gdpval_normalized")),
         ("IT-Bench SRE", lambda m: _extract_page_eval(m, "it_bench_sre")),
+        ("Briefcase", lambda m: _extract_page_eval(m, "briefcase")),
         ("Crit-Pt", lambda m: _extract_page_eval(m, "critpt")),
         ("Apex Agents", lambda m: _extract_page_eval(m, "apex_agents")),
         ("Openness", lambda m: _extract_page_eval(m, "openness_index")),
