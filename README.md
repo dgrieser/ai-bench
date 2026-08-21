@@ -60,11 +60,11 @@ Each model object contains:
 - **`name`**: Canonical slug (used across the system)
 - **`scores`**: Flat map, benchmark key → score (null until a source reports one)
 - **`scores_updated`**: Same key set → ISO date the score last changed. `llm.html`
-  underscores a score stamped within the last seven days in red, the stroke fading as
-  the score ages. Two cases are left unmarked: a model added inside the same window,
-  which carries the `NEW` badge instead because every one of its scores arrived with
-  it, and a derived column, whose date moves when its inputs are recomputed rather
-  than when anything new is measured
+  sets a score stamped within the last seven days in red, the same red a new
+  model's name gets. Two cases are left unmarked: a model added inside the same
+  window, which carries the `NEW` badge instead because every one of its scores
+  arrived with it, and a derived column, whose date moves when its inputs are
+  recomputed rather than when anything new is measured
 - **`scores_source`**: Same key set → URL of the page the score was read from
   (null for hand edits; the derived Coding index cites this repository, which is
   where it is computed)
