@@ -7,6 +7,18 @@
   viewBox="357.12 332.16 821.76 845.44"
   fill="none"
 >
+  <!-- The glyph is the page's ink, not a fixed white: on a transparent ground
+       white vanishes on the light theme. llm.html sets color-scheme per theme
+       and the browser hands that down to an SVG loaded in an <img>, so this
+       follows the site's own toggle rather than the reader's OS. The stroke
+       attributes below are the fallback for anything that ignores the style. -->
+  <style>
+    .ink { stroke: #000000; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #FFFFFF; }
+    }
+  </style>
+
   <!-- Outer ring: pink section -->
   <path
     d="M 483.10 478.51
@@ -30,7 +42,8 @@
     d="M 628 635
        L 510 754
        L 628 872"
-    stroke="#FFFFFF"
+    class="ink"
+    stroke="#000000"
     stroke-width="35"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -40,7 +53,8 @@
   <path
     d="M 821 586
        L 714 918"
-    stroke="#FFFFFF"
+    class="ink"
+    stroke="#000000"
     stroke-width="35"
     stroke-linecap="round"
   />
@@ -50,7 +64,8 @@
     d="M 897 635
        L 1014 753
        L 898 872"
-    stroke="#FFFFFF"
+    class="ink"
+    stroke="#000000"
     stroke-width="35"
     stroke-linecap="round"
     stroke-linejoin="round"
