@@ -3981,12 +3981,25 @@
         return `${count} ${noun}${count === 1 ? "" : "s"}`;
       }
 
+      // The scores a model brought with it: every visible column holding a
+      // number, in table order. Derived columns are left out, the same
+      // exclusion scoreFreshness makes for a model already here — an index
+      // recomputed from the other columns is arithmetic, not a measurement,
+      // whether it lands with a new model or a day later.
+      function arrivedScores(model) {
+        return visibleBenchmarkKeys()
+          .filter((key) => !isDerivedBenchmark(key))
+          .map((key) => ({ key, value: toNumber(model.scores?.[key]) }))
+          .filter(({ value }) => Number.isFinite(value));
+      }
+
       // Everything the table is currently marking, gathered by the day it was
       // stamped: models added inside the window, and single scores stamped
       // inside it on models older than that. Membership is decided by the very
       // tests the marks use — isRecentModel and scoreFreshness — so the list
-      // and the table cannot disagree about what is new, down to the cases they
-      // skip (a derived column; the scores of a model that is itself new).
+      // and the table cannot disagree about what is new, down to the one case
+      // they skip, a derived column. Both kinds of row carry their scores the
+      // same way, {model, entries}, so one renderer draws either.
       // Reads state.filteredModels and the visible benchmark keys, so it
       // describes the table on screen rather than the whole file.
       function recentAdditions() {
@@ -4001,7 +4014,7 @@
 
         state.filteredModels.forEach((model) => {
           if (isRecentModel(model)) {
-            dayFor(model.date_added).models.push(model);
+            dayFor(model.date_added).models.push({ model, entries: arrivedScores(model) });
             return;
           }
           // A model can hold scores from several days at once, so its cells are
@@ -4045,25 +4058,12 @@
           : `<span class="${className}"${tip}>${name}</span>`;
       }
 
-      function renderRecentModelEntry(model) {
-        // Its scores are not listed one by one: they all arrived with the model
-        // and are unmarked in the table for that reason, so the count is the
-        // whole of what there is to say about them here. Counted over the
-        // visible columns, like everything else in the panel — and dropped when
-        // that leaves nothing, since the badge already says why the model is
-        // listed.
-        const scored = visibleBenchmarkKeys()
-          .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
-        return `
-          <div class="recent-entry">
-            <span class="recent-entry-head">${renderNewBadge(model.date_added)}${renderRecentModelName(model, true)}</span>
-            ${model.creatorName ? `<span class="recent-creator">${escapeHtml(model.creatorName)}</span>` : ""}
-            ${scored ? `<span class="recent-note">arrived with ${countLabel(scored, "score")}</span>` : ""}
-          </div>
-        `;
-      }
-
-      function renderRecentScoreEntry(row, day) {
+      // The chips for one entry: each benchmark, its value, and a link to the
+      // page the value was read from. A score that arrived with a new model is
+      // drawn and hovers exactly like one restamped on a model already here —
+      // the day means the same thing in both cases, so one renderer says it
+      // once.
+      function renderRecentScoreChips(row, day) {
         const model = row.model;
         const chips = row.entries.map(({ key, value }) => {
           const source = recentLinkUrl(model.scores_source?.[key]);
@@ -4087,11 +4087,33 @@
             ? `<a class="recent-score" href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tip}>${label}</a>`
             : `<span class="recent-score"${tip}>${label}</span>`;
         }).join("");
+        return chips ? `<span class="recent-scores">${chips}</span>` : "";
+      }
 
+      function renderRecentModelEntry(row, day) {
+        // A new model is listed with the scores it arrived with, spelled out the
+        // same way a restamped score is: the count leads, so the size of the row
+        // is legible before the chips are read, and the chips follow. Both are
+        // over the visible columns, like everything else in the panel, and both
+        // vanish together when the model brought no score the table is showing —
+        // the badge already says why it is listed.
+        const model = row.model;
+        const scored = row.entries.length;
         return `
           <div class="recent-entry">
-            <span class="recent-entry-head">${renderRecentModelName(model, false)}</span>
-            <span class="recent-scores">${chips}</span>
+            <span class="recent-entry-head">${renderNewBadge(model.date_added)}${renderRecentModelName(model, true)}</span>
+            ${model.creatorName ? `<span class="recent-creator">${escapeHtml(model.creatorName)}</span>` : ""}
+            ${scored ? `<span class="recent-note">arrived with ${countLabel(scored, "score")}</span>` : ""}
+            ${renderRecentScoreChips(row, day)}
+          </div>
+        `;
+      }
+
+      function renderRecentScoreEntry(row, day) {
+        return `
+          <div class="recent-entry">
+            <span class="recent-entry-head">${renderRecentModelName(row.model, false)}</span>
+            ${renderRecentScoreChips(row, day)}
           </div>
         `;
       }
@@ -4099,11 +4121,17 @@
       function renderRecentPanel() {
         const days = recentAdditions();
         const modelCount = days.reduce((total, day) => total + day.models.length, 0);
+        // Every score the panel lists, whichever kind of row carries it: the
+        // ones restamped on models already here and the ones a new model
+        // arrived with. The lead counts what is on screen, so a reader can
+        // check it against the chips below rather than being told that a new
+        // model's scores are somewhere in the model count.
         const scoreCount = days.reduce((total, day) =>
-          total + day.scores.reduce((sum, row) => sum + row.entries.length, 0), 0);
+          total + [...day.models, ...day.scores]
+            .reduce((sum, row) => sum + row.entries.length, 0), 0);
 
         const lead = modelCount || scoreCount
-          ? `<span class="recent-count">${countLabel(modelCount, "model")}</span> and <span class="recent-count">${countLabel(scoreCount, "score")}</span> arrived in the last ${NEW_DAYS} days — the window the table marks, across the models and columns it is showing now. A date records only the last write, so a score measured again is listed like a first one. A new model's scores are counted with the model, and a derived column is left out, exactly as in the table.`
+          ? `<span class="recent-count">${countLabel(modelCount, "model")}</span> and <span class="recent-count">${countLabel(scoreCount, "score")}</span> arrived in the last ${NEW_DAYS} days — the window the table marks, across the models and columns it is showing now. A date records only the last write, so a score measured again is listed like a first one. A new model's scores are listed beside it, since they arrived with it, and a derived column is left out, exactly as in the table.`
           : `Nothing has been added in the last ${NEW_DAYS} days.`;
 
         const items = days.map((day) => {
@@ -4111,7 +4139,7 @@
           // fades with it in the table — same window, same arithmetic.
           const fresh = ((NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
           const entries = [
-            ...day.models.map((model) => renderRecentModelEntry(model)),
+            ...day.models.map((row) => renderRecentModelEntry(row, day)),
             ...day.scores.map((row) => renderRecentScoreEntry(row, day))
           ];
           // One fetch can restamp a hundred models at once, and a day that long

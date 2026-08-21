@@ -80,15 +80,18 @@ date or source; `fill_missing_source_urls.py` asks for those, plus a missing
 
 Underneath the table, `llm.html` writes those same seven days out as a
 **Recently Added** panel: a timeline of the days something landed, each holding
-the models added that day and, for models already in the index, the individual
-scores stamped that day with their value and a link to the source they were read
-from. Membership is decided by the same tests as the marks in the table, over the
-models and columns the table is currently showing, so the two cannot disagree —
-including what they leave out, a derived column and the scores a brand-new model
-arrived with (counted beside the model instead). A day longer than twelve models
-folds its tail behind a disclosure, since one fetch can restamp a hundred rows at
-once. Everything reads as *added*: a date records only the last write, so a score
-measured a second time cannot be told from a first one.
+the models added that day and the individual scores stamped that day on models
+already in the index. Either way the scores are spelled out the same, one chip
+per benchmark carrying its name, its value and a link to the source it was read
+from; a new model's chips follow its arrival count, since every one of them
+arrived with the model. Membership is decided by the same tests as the marks in
+the table, over the models and columns the table is currently showing, so the two
+cannot disagree — including the one thing they both leave out, a derived column,
+whose date moves when its inputs are recomputed rather than when anything new is
+measured. A day longer than twelve models folds its tail behind a disclosure,
+since one fetch can restamp a hundred rows at once. Everything reads as *added*:
+a date records only the last write, so a score measured a second time cannot be
+told from a first one.
 
 ### Score Precision
 
