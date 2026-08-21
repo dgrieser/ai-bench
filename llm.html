@@ -1465,9 +1465,14 @@
       justify-content: flex-end;
     }
 
+    /* The icon files are cropped to their drawing, so their shapes differ;
+       contain fits each one inside the square box the header and the reference
+       cards give it rather than stretching it to fill. The slip overrides the
+       box to size by height instead — see .tip-icon. */
     .benchmark-icon {
       width: 12px;
       height: 12px;
+      object-fit: contain;
       flex-shrink: 0;
       vertical-align: -0.1em;
     }
@@ -2169,17 +2174,21 @@
       transition-delay: 0s;
     }
 
-    /* Sized to the title beside it, not to the 12px a column header shows.
-       The wrapper carries the size so it lands whether the icon came through
-       as an <img> or as inline SVG. */
+    /* Flush with the title's own ink: the box stands exactly one cap height
+       tall and the row baseline-aligns it, so its top meets the capitals and
+       its bottom sits on the baseline. --cap-height is Newsreader's, measured
+       off a render, so another display face means measuring again. The wrapper
+       carries the sizing so it lands whether the icon came through as an <img>
+       or as inline SVG. */
     .tip-icon {
+      --cap-height: 0.723em;
       display: inline-flex;
       flex: none;
     }
 
     .tip-icon > * {
-      width: 17px;
-      height: 17px;
+      height: var(--cap-height);
+      width: auto;
     }
 
     .tip-eyebrow {
@@ -2224,10 +2233,12 @@
 
     /* A benchmark's slip leads with its own mark, where it has one. Flex rather
        than an inline image so a name long enough to wrap keeps its lines
-       aligned with each other instead of tucking under the icon. */
+       aligned with each other instead of tucking under the icon, and baseline
+       rather than centre so the mark sits on the text's baseline — on the first
+       line's, when the name does wrap. */
     .tip-title {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 7px;
       margin-top: 2px;
       font-family: var(--font-display);
