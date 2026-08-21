@@ -98,21 +98,29 @@
        right of the mark. */
     .brand {
       --title-size: clamp(1.8rem, 3vw, 2.6rem);
+      /* Where Newsreader's ink falls inside the title's line box, measured off
+         a render: capitals start --cap-inset below the box top, and the line's
+         descenders reach --line-ink below it. Both scale with the type, so
+         they are in em; swapping the display face means re-measuring them. */
+      --cap-inset: 0.039em;
+      --line-ink: 1.007em;
       display: flex;
       align-items: flex-start;
       gap: 0.48em;
       font-size: var(--title-size);
     }
 
-    /* Tall enough to read as the title's equal rather than as an icon tacked
-       on beside it. The mark is cropped tight to its ink, so the margin is the
-       whole gap between the line box top and where the capitals actually
-       start: it sets the mark's top flush with the top of the title. */
+    /* The mark is cropped tight to its ink, so its box is its artwork: the
+       margin puts its top on the title's capitals, and the height carries its
+       bottom down to the bottom of the subtitle's first line — the rest of the
+       title's line box (1.1em), the 8px above the subtitle, and the 16.8px
+       from that line box's top down to its descenders. A subtitle long enough
+       to wrap keeps the mark on its first line rather than growing to match. */
     .brand-mark {
       flex: none;
-      height: 1.45em;
       width: auto;
-      margin-top: 0.18em;
+      margin-top: var(--cap-inset);
+      height: calc(1.1em + 24.8px - var(--cap-inset));
       color: var(--text);
     }
 
@@ -2072,6 +2080,13 @@
          room reserved beside them. */
       .hero h1 {
         padding-right: 86px;
+      }
+
+      /* Narrow enough that the title wraps and the subtitle runs several lines
+         below it, so a mark reaching the subtitle would tower over the lockup.
+         It stops at the bottom of the title's first line instead. */
+      .brand-mark {
+        height: calc(var(--line-ink) - var(--cap-inset));
       }
     }
 
