@@ -108,10 +108,13 @@ INDEXES: list[IndexDef] = [
         contributing=[
             ("tau3_bench_banking", 1.0),
             ("toolathlon", 0.9),
+            ("mcp_atlas", 0.85),
             ("terminal_bench_2_1", 0.8),
             ("itbench_aa", 0.6),
+            ("bfcl_v4", 0.5),
             ("tau2_bench_telecom", 0.3),
             ("terminal_bench_hard", 0.3),
+            ("ifbench", 0.2),
         ],
     ),
 ]

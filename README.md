@@ -337,9 +337,8 @@ hoping the labels agree:
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
 
-Neither `bfcl_v4` nor `mcp_atlas` feeds the [Tooling index](#tooling-index) yet:
-adding a column to a derived index re-ranks every model on it, so the weights
-those two should carry are a separate decision from ingesting them.
+All three feed the [Tooling index](#tooling-index); the weight each carries, and
+why, is in that section's table.
 
 ## Mapping System
 
@@ -498,8 +497,9 @@ place, just with no group configured.
 
 The second derived column, **Tooling**, is the Coding index's sibling for agentic
 tool use: same script (`derive_indexes.py`), same percentile-rank math, imputation
-and coverage rules as [above](#coding-index), computed over the tool-use benchmarks
-instead and written to each model's `scores.tooling_index`. Ranked values cite this
+and coverage rules as [above](#coding-index), computed over the tool-use
+benchmarks instead — plus one instruction-following column, see below — and
+written to each model's `scores.tooling_index`. Ranked values cite this
 section (`https://github.com/dgrieser/ai-bench#tooling-index`) the same way the
 Coding index cites its own.
 
@@ -509,10 +509,13 @@ Contributing benchmarks and why they carry the weight they do:
 | --- | --- | --- |
 | τ³-Bench Banking | 1.0 | The most reliable measurement of the set: every score run independently by Artificial Analysis, execution-graded against backend state, far from saturation, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. |
 | Toolathlon-Verified | 0.9 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded and unsaturated. Below 1.0 because the leaderboard is run by the benchmark's own team with a mix of verified and self-reported entries, and it is young — two incompatible score series in under a year. |
+| MCP-Atlas | 0.85 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, and it correlates 0.72 with Toolathlon — close enough to be the same capability, far enough to still add information. Above Terminal-Bench 2.1 because it is far more tool-shaped; below Toolathlon because only 6 of its 17 stored scores are Scale's own runs and the rest are lab-reported, where the Toolathlon ingest drops self-reported rows outright. |
 | Terminal-Bench 2.1 | 0.8 | Broad, widely trusted, mostly AA-run in this file — but the least tool-shaped of the set (terminal/CLI agency rather than structured tool calling, overlapping the Coding index), nearing its ceiling, with fully public tasks and documented harness variance. |
-| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the six and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
+| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the nine and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
+| BFCL v4 | 0.5 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but it correlates 0.91 with τ³ Banking and 0.93 with Terminal-Bench Hard, so it buys coverage and stability rather than information. Its Overall Accuracy is an unweighted average dominated by AST-checked single-call categories, and the board refreshes slowly, so most frontier open-weight scores arrive as card self-reports. |
 | τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as the coverage backbone: it is the most widely scored benchmark of the set, so it fills gaps and breaks mid-field ties without leading anything. |
 | Terminal-Bench Hard | 0.3 | Correlates ~0.94 with Terminal-Bench 2.1, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from floating up on imputation alone. |
+| IFBench | 0.2 | The one member that is not a tool-use benchmark, and weighted accordingly. Precise instruction following is what makes a tool call well-formed, and IFBench correlates 0.80-0.88 with Terminal-Bench 2.1, Terminal-Bench Hard and ITBench-AA — but it is the most saturated column of the nine (2.5 points between the best model and the fifth) and it *anti*-correlates with Toolathlon, the purest tool-use member. What it brings is reach: 35 scored models, third-widest of the set. So it sits below both coverage backbones — enough weight to fill gaps and break mid-field ties, never enough to lead. |
 
 ## Openness Classification
 
