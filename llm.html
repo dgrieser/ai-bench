@@ -36,8 +36,8 @@
       --top-score-text: var(--accent);
       /* Freshly updated score: the same red .model-new gives a new model's name,
          so red means "new" wherever it appears, and nothing in the table's blues
-         and greys competes with it — including the top-score wash a fresh score
-         can share a cell with. */
+         and greys competes with it — including the top-score wash, whose blue
+         a fresh score overrides in the cell they share. */
       --fresh-ink: #991b1b;
       --fresh-glow: rgba(153, 27, 27, 0.3);
       --font-display: "Newsreader", Georgia, serif;
@@ -1371,31 +1371,13 @@
     }
 
     /* ── New score mark ─────────────────────────────
-       A score updated within the last week is underscored in red, like a figure
-       just pencilled in. The stroke is right-aligned under the digits
-       and fades away to the left, so it sits with its own number rather than
-       drawing a line across the column, and it layers over the top-score wash
-       without muddying it. --fresh, set per cell by renderRow, is 1 the day the
-       score lands and falls toward 0 across the week, dimming the stroke as the
-       number ages instead of every recent score shouting equally loudly. */
+       A score updated within the last week is set in the same red .model-new
+       gives a new model's name, so the number itself carries the news and red
+       means "new" wherever it appears. It has to outrank two things: the grey
+       ramp renderRow writes inline on the cell, and the blue a top score would
+       otherwise take — hence the !important, which .top-score also uses. */
     td.num.fresh-score {
-      position: relative;
-    }
-
-    td.num.fresh-score::after {
-      content: "";
-      position: absolute;
-      bottom: 6px;
-      right: 12px;
-      width: 28px;
-      height: 2px;
-      border-radius: 1px;
-      background: linear-gradient(to right, transparent, var(--fresh-ink) 85%);
-      box-shadow: 0 0 3px var(--fresh-glow);
-      /* Never quite fades out: a week-old score is barely there, but it is
-         still there, so the stroke leaves rather than blinks off. */
-      opacity: calc(0.26 + 0.74 * var(--fresh, 1));
-      pointer-events: none;
+      color: var(--fresh-ink) !important;
     }
 
     /* ── New model badge ───────────────────────────── */
@@ -1514,9 +1496,9 @@
 
     /* ── Recently added panel ─────────────────────────
        The week the table marks, written out: every model wearing a NEW badge
-       and every score carrying a red stroke, gathered under the day it was
-       stamped. The table says which cells are new; this says what arrived, and
-       when, without hunting for red across thirty columns. Laid out as a
+       and every score set in red, gathered under the day it was stamped. The
+       table says which cells are new; this says what arrived, and when,
+       without hunting for red across thirty columns. Laid out as a
        timeline — dates down the left, what landed on each to the right — so the
        run of a week reads top to bottom. --fresh, set per day by the renderer,
        fades the marker exactly as it fades the stroke in the table. */
@@ -1578,8 +1560,8 @@
       font-family: var(--font-mono);
     }
 
-    /* The day's dot, in the same red as the stroke under a fresh score, at the
-       same strength that stroke would carry today. */
+    /* The day's dot, in the same red a fresh score is set in, at full strength
+       for today and fading back across the week. */
     .recent-date::before {
       content: "";
       position: absolute;
@@ -4262,8 +4244,8 @@
 
       /* ── Recently added ──────────────────────────────
          The week the table marks, written out underneath it: every model
-         wearing a NEW badge and every score carrying a red stroke, filed under
-         the day it was stamped. */
+         wearing a NEW badge and every score set in red, filed under the day it
+         was stamped. */
 
       // How many of a day's models are listed before the rest fold away.
       const RECENT_DAY_PREVIEW = 12;
@@ -4427,8 +4409,8 @@
           : `Nothing has been added in the last ${NEW_DAYS} days.`;
 
         const items = days.map((day) => {
-          // The dot fades with the day exactly as the stroke under a score
-          // fades with it in the table — same window, same arithmetic.
+          // The dot fades across the same window the table marks in red, off
+          // the same arithmetic — it just still has a gradient to spend.
           const fresh = ((NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
           const entries = [
             ...day.models.map((row) => renderRecentModelEntry(row, day)),
@@ -4734,11 +4716,11 @@
         return age !== null && age >= 0 && age < NEW_DAYS;
       }
 
-      // How new one score is: 1 stamped today, fading toward 0 as it nears
+      // How new one score is: 1 stamped today, falling toward 0 as it nears
       // NEW_DAYS old, and 0 once it is older than that (or undated, or stamped
-      // in the future). renderRow passes the number to CSS as --fresh, which
-      // fades the mark on the cell with it, so a table refreshed in batches
-      // reads as a gradient of recency rather than a wall of flags.
+      // in the future). The table reads it as a yes/no — a fresh score is
+      // simply red — but the Recently Added panel still fades a day's entries
+      // by it, so the graded value stays.
       function scoreFreshness(model, key) {
         // A model added this week has every score stamped with its arrival, so
         // the NEW badge beside its name already says the whole row is new —
@@ -4794,8 +4776,9 @@
             const grey = hasValue ? scoreToGrey(value, scoreRanges[key]) : null;
             if (grey) declarations.push(`color:${grey}`);
           }
-          if (fresh) declarations.push(`--fresh:${fresh.toFixed(3)}`);
           const style = declarations.length ? ` style="${declarations.join(";")}"` : "";
+          // Only whether it is fresh reaches the cell: the red the class paints
+          // is flat, the same one a new model's name gets.
           const className = `num${isTop ? " top-score" : ""}${fresh ? " fresh-score" : ""}`;
           const content = isTop
             ? `<span class="top-score-mark">${formatScore(value, key)}</span>`
@@ -5918,8 +5901,8 @@
           const bench = state.data?.benchmarks?.[key] || {};
           const updated = model.scores_updated?.[key];
           const source = model.scores_source?.[key];
-          // The stroke under the number says a score is new; the slip says how
-          // new, since a bare date leaves the reader counting days.
+          // The red on the number says a score is new; the slip says how new,
+          // since a bare date leaves the reader counting days.
           const age = scoreFreshness(model, key) ? daysSince(updated) : null;
           const newness = age === null ? "" : ` · new ${describeAge(age)}`;
           return {
