@@ -1,6 +1,6 @@
 # AI Benchmark Aggregator (`ai-bench`)
 
-A comprehensive system for collecting, normalizing, and aggregating LLM benchmark scores across 11+ benchmark sources. This tool creates a unified dataset of AI model performance metrics from diverse evaluation platforms.
+A comprehensive system for collecting, normalizing, and aggregating LLM benchmark scores across 15+ benchmark sources. This tool creates a unified dataset of AI model performance metrics from diverse evaluation platforms.
 
 ## Project Overview
 
@@ -21,6 +21,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **DeepSWE** | Research | JSON API |
 | **FrontierSWE** | Research | JSON API |
 | **SWE Atlas** | Research | JSON API |
+| **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JSON API |
 | **OSWorld** | Research | JSON API |
 | **Spheron** | Infrastructure | JSON API |
@@ -28,6 +29,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Evals Report** | Research | JSON API |
 | **FrontierCode** | Research (Cognition) | Static leaderboard JSON |
 | **DeepSWE (Datacurve)** | Research (benchmark's own site) | Versioned JSON artifact |
+| **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 
 ## Core Data Structure
 
@@ -156,6 +158,7 @@ rather than to even, and an integral result is stored as an int (`34`, not
 │  fetch_spheron.py         │                             │
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
+│  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -193,6 +196,8 @@ Output: llm.json (unified dataset)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
 ./fetch_swe_marathon.py
+./fetch_mcp_atlas.py                    # MCP-Atlas, from Scale's own leaderboard
+./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
 ./fetch_evals_report.py
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
@@ -203,11 +208,13 @@ Output: llm.json (unified dataset)
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
 ./update_artificialanalysis_mapping.py
+./update_bfcl_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
 ./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
+./update_mcp_atlas_mapping.py
 ./update_osworld_mapping.py
 ./update_spheron_mapping.py
 ```
@@ -292,6 +299,11 @@ aggregator that republishes it. `fetch_swe_marathon.py` and
 `fetch_evals_report.py`, and evals.report only supplies models the benchmark's
 own leaderboard does not list. `fetch_datacurve.py` (DeepSWE's own leaderboard)
 stands in the same relation to `fetch_deepswe.py`, which reads benchlm.ai.
+`fetch_mcp_atlas.py` (Scale's own MCP-Atlas board) and `fetch_bfcl.py` (the
+Gorilla team's BFCL leaderboard) run last for the same reason: evals.report,
+llm-stats and the model cards all republish self-reported numbers for those two
+benchmarks, and where both a first-party run and a self-report exist they
+disagree by a point or two, so the first-party run has to be the one that lands.
 `fetch_aa_coding_agents.py` (Artificial Analysis' Coding Agent Index, its own
 agent-harness runs of DeepSWE, SWE-Atlas-QnA and Terminal-Bench 2.1) is
 *fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs
@@ -300,6 +312,33 @@ would flip a score within one run and restamp its date every refresh. It runs
 ahead of the other gap-fillers so a gap AA measured directly is filled by that
 measurement rather than a self-report; the leading sources overwrite either
 way.
+
+### Tool Use and Instruction Following
+
+Three columns cover function calling, MCP tool use and instruction following.
+None has a single publisher, so each is assembled from the sources that measure
+it, in the precedence order above:
+
+| Column | Leading source | Gap fillers |
+| --- | --- | --- |
+| **BFCL v4** (`bfcl_v4`) | `fetch_bfcl.py`, the Gorilla team's own leaderboard (`data_overall.csv`, Overall Accuracy) | evals.report's `bfcl` table, then Hugging Face model cards |
+| **MCP-Atlas** (`mcp_atlas`) | `fetch_mcp_atlas.py`, Scale's own leaderboard runs | evals.report's `mcp-atlas` table, llm-stats' `mcp_atlas` column, then Hugging Face model cards |
+| **IFBench** (`ifbench`) | Artificial Analysis, which runs Ai2's benchmark itself (`ifbench` in the API's evaluations, with the model page as fallback) | evals.report's `ifbench` table, then Hugging Face model cards |
+
+Two version traps are handled in the benchmark-name mappings rather than by
+hoping the labels agree:
+
+- **BFCL v4 is its own series.** V4 grew the benchmark from tool calls to
+  agentic evaluation, so `huggingface-benchmark-name-mapping.json` maps only the
+  v4-labelled aliases (`BFCL v4`, `BFCL-V4`, `BFCLv4`) onto `bfcl_v4` and leaves
+  `BFCL v3`, `BFCL(avg v1&v2)` and a bare `BFCL` unmapped — the same rule
+  Toolathlon-Verified gets.
+- **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
+  spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
+  different benchmark and stay unmapped.
+
+All three feed the [Tooling index](#tooling-index); the weight each carries, and
+why, is in that section's table.
 
 ## Mapping System
 
@@ -458,8 +497,9 @@ place, just with no group configured.
 
 The second derived column, **Tooling**, is the Coding index's sibling for agentic
 tool use: same script (`derive_indexes.py`), same percentile-rank math, imputation
-and coverage rules as [above](#coding-index), computed over the tool-use benchmarks
-instead and written to each model's `scores.tooling_index`. Ranked values cite this
+and coverage rules as [above](#coding-index), computed over the tool-use
+benchmarks instead — plus one instruction-following column, see below — and
+written to each model's `scores.tooling_index`. Ranked values cite this
 section (`https://github.com/dgrieser/ai-bench#tooling-index`) the same way the
 Coding index cites its own.
 
@@ -469,10 +509,13 @@ Contributing benchmarks and why they carry the weight they do:
 | --- | --- | --- |
 | τ³-Bench Banking | 1.0 | The most reliable measurement of the set: every score run independently by Artificial Analysis, execution-graded against backend state, far from saturation, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. |
 | Toolathlon-Verified | 0.9 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded and unsaturated. Below 1.0 because the leaderboard is run by the benchmark's own team with a mix of verified and self-reported entries, and it is young — two incompatible score series in under a year. |
+| MCP-Atlas | 0.85 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, and it correlates 0.72 with Toolathlon — close enough to be the same capability, far enough to still add information. Above Terminal-Bench 2.1 because it is far more tool-shaped; below Toolathlon because only 6 of its 17 stored scores are Scale's own runs and the rest are lab-reported, where the Toolathlon ingest drops self-reported rows outright. |
 | Terminal-Bench 2.1 | 0.8 | Broad, widely trusted, mostly AA-run in this file — but the least tool-shaped of the set (terminal/CLI agency rather than structured tool calling, overlapping the Coding index), nearing its ceiling, with fully public tasks and documented harness variance. |
-| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the six and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
+| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the nine and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
+| BFCL v4 | 0.5 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but it correlates 0.91 with τ³ Banking and 0.93 with Terminal-Bench Hard, so it buys coverage and stability rather than information. Its Overall Accuracy is an unweighted average dominated by AST-checked single-call categories, and the board refreshes slowly, so most frontier open-weight scores arrive as card self-reports. |
 | τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as the coverage backbone: it is the most widely scored benchmark of the set, so it fills gaps and breaks mid-field ties without leading anything. |
 | Terminal-Bench Hard | 0.3 | Correlates ~0.94 with Terminal-Bench 2.1, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from floating up on imputation alone. |
+| IFBench | 0.2 | The one member that is not a tool-use benchmark, and weighted accordingly. Precise instruction following is what makes a tool call well-formed, and IFBench correlates 0.80-0.88 with Terminal-Bench 2.1, Terminal-Bench Hard and ITBench-AA — but it is the most saturated column of the nine (2.5 points between the best model and the fifth) and it *anti*-correlates with Toolathlon, the purest tool-use member. What it brings is reach: 35 scored models, third-widest of the set. So it sits below both coverage backbones — enough weight to fill gaps and break mid-field ties, never enough to lead. |
 
 ## Openness Classification
 
@@ -561,9 +604,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (13 files)
-├── update_*_mapping.py         # Mapping sync scripts (13 files)
-├── _*_mapping.py               # Mapping application modules (13 files)
+├── fetch_*.py                  # Benchmark data fetchers (16 files)
+├── update_*_mapping.py         # Mapping sync scripts (16 files)
+├── _*_mapping.py               # Mapping application modules (16 files)
 │
 ├── derive_indexes.py           # Derived Coding & Tooling index columns (see above)
 │

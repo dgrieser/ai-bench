@@ -79,6 +79,8 @@ class TestRowFetchers(unittest.TestCase):
     CASES = [
         ("osworld", "success_rate", "fetch_osworld_data"),
         ("toolathlon", "score", "fetch_toolathlon_data"),
+        ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
+        ("bfcl", "score", "fetch_bfcl_data"),
         ("deepswe", "score", "fetch_deepswe_data"),
         ("frontierswe", "score", "fetch_frontierswe_data"),
         ("frontiercode", "score", "fetch_frontiercode_data"),
