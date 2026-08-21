@@ -28,6 +28,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 import artificialanalysis
 import fetch_aa_coding_agents
+import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
@@ -35,6 +36,7 @@ import fetch_frontiercode
 import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
+import fetch_mcp_atlas
 import fetch_osworld
 import fetch_spheron
 import fetch_swe_atlas
@@ -121,6 +123,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode",)),
         (fetch_swe_marathon.URL, ("swe_marathon",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
+        (fetch_mcp_atlas.URL, ("mcp_atlas",)),
+        (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
         (TBENCH_2_1_LEADERBOARD, ("terminal_bench_2_1",)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         (spheron_root(), ()),

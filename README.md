@@ -1,6 +1,6 @@
 # AI Benchmark Aggregator (`ai-bench`)
 
-A comprehensive system for collecting, normalizing, and aggregating LLM benchmark scores across 11+ benchmark sources. This tool creates a unified dataset of AI model performance metrics from diverse evaluation platforms.
+A comprehensive system for collecting, normalizing, and aggregating LLM benchmark scores across 15+ benchmark sources. This tool creates a unified dataset of AI model performance metrics from diverse evaluation platforms.
 
 ## Project Overview
 
@@ -21,6 +21,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **DeepSWE** | Research | JSON API |
 | **FrontierSWE** | Research | JSON API |
 | **SWE Atlas** | Research | JSON API |
+| **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JSON API |
 | **OSWorld** | Research | JSON API |
 | **Spheron** | Infrastructure | JSON API |
@@ -28,6 +29,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Evals Report** | Research | JSON API |
 | **FrontierCode** | Research (Cognition) | Static leaderboard JSON |
 | **DeepSWE (Datacurve)** | Research (benchmark's own site) | Versioned JSON artifact |
+| **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 
 ## Core Data Structure
 
@@ -156,6 +158,7 @@ rather than to even, and an integral result is stored as an int (`34`, not
 │  fetch_spheron.py         │                             │
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
+│  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -193,6 +196,8 @@ Output: llm.json (unified dataset)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
 ./fetch_swe_marathon.py
+./fetch_mcp_atlas.py                    # MCP-Atlas, from Scale's own leaderboard
+./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
 ./fetch_evals_report.py
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
@@ -203,11 +208,13 @@ Output: llm.json (unified dataset)
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
 ./update_artificialanalysis_mapping.py
+./update_bfcl_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
 ./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
+./update_mcp_atlas_mapping.py
 ./update_osworld_mapping.py
 ./update_spheron_mapping.py
 ```
@@ -292,6 +299,11 @@ aggregator that republishes it. `fetch_swe_marathon.py` and
 `fetch_evals_report.py`, and evals.report only supplies models the benchmark's
 own leaderboard does not list. `fetch_datacurve.py` (DeepSWE's own leaderboard)
 stands in the same relation to `fetch_deepswe.py`, which reads benchlm.ai.
+`fetch_mcp_atlas.py` (Scale's own MCP-Atlas board) and `fetch_bfcl.py` (the
+Gorilla team's BFCL leaderboard) run last for the same reason: evals.report,
+llm-stats and the model cards all republish self-reported numbers for those two
+benchmarks, and where both a first-party run and a self-report exist they
+disagree by a point or two, so the first-party run has to be the one that lands.
 `fetch_aa_coding_agents.py` (Artificial Analysis' Coding Agent Index, its own
 agent-harness runs of DeepSWE, SWE-Atlas-QnA and Terminal-Bench 2.1) is
 *fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs
@@ -300,6 +312,34 @@ would flip a score within one run and restamp its date every refresh. It runs
 ahead of the other gap-fillers so a gap AA measured directly is filled by that
 measurement rather than a self-report; the leading sources overwrite either
 way.
+
+### Tool Use and Instruction Following
+
+Three columns cover function calling, MCP tool use and instruction following.
+None has a single publisher, so each is assembled from the sources that measure
+it, in the precedence order above:
+
+| Column | Leading source | Gap fillers |
+| --- | --- | --- |
+| **BFCL v4** (`bfcl_v4`) | `fetch_bfcl.py`, the Gorilla team's own leaderboard (`data_overall.csv`, Overall Accuracy) | evals.report's `bfcl` table, then Hugging Face model cards |
+| **MCP-Atlas** (`mcp_atlas`) | `fetch_mcp_atlas.py`, Scale's own leaderboard runs | evals.report's `mcp-atlas` table, llm-stats' `mcp_atlas` column, then Hugging Face model cards |
+| **IFBench** (`ifbench`) | Artificial Analysis, which runs Ai2's benchmark itself (`ifbench` in the API's evaluations, with the model page as fallback) | evals.report's `ifbench` table, then Hugging Face model cards |
+
+Two version traps are handled in the benchmark-name mappings rather than by
+hoping the labels agree:
+
+- **BFCL v4 is its own series.** V4 grew the benchmark from tool calls to
+  agentic evaluation, so `huggingface-benchmark-name-mapping.json` maps only the
+  v4-labelled aliases (`BFCL v4`, `BFCL-V4`, `BFCLv4`) onto `bfcl_v4` and leaves
+  `BFCL v3`, `BFCL(avg v1&v2)` and a bare `BFCL` unmapped — the same rule
+  Toolathlon-Verified gets.
+- **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
+  spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
+  different benchmark and stay unmapped.
+
+Neither `bfcl_v4` nor `mcp_atlas` feeds the [Tooling index](#tooling-index) yet:
+adding a column to a derived index re-ranks every model on it, so the weights
+those two should carry are a separate decision from ingesting them.
 
 ## Mapping System
 
@@ -561,9 +601,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (13 files)
-├── update_*_mapping.py         # Mapping sync scripts (13 files)
-├── _*_mapping.py               # Mapping application modules (13 files)
+├── fetch_*.py                  # Benchmark data fetchers (16 files)
+├── update_*_mapping.py         # Mapping sync scripts (16 files)
+├── _*_mapping.py               # Mapping application modules (16 files)
 │
 ├── derive_indexes.py           # Derived Coding & Tooling index columns (see above)
 │

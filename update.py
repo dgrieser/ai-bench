@@ -15,6 +15,7 @@ from typing import Any, Callable
 import artificialanalysis
 import derive_indexes
 import fetch_aa_coding_agents
+import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
@@ -22,6 +23,7 @@ import fetch_frontiercode
 import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
+import fetch_mcp_atlas
 import fetch_osworld
 import fetch_swe_atlas
 import fetch_swe_marathon
@@ -32,6 +34,8 @@ from _scores import round_score, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
 from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
+from _bfcl_mapping import load_bfcl_to_slug_mapping
+from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -55,6 +59,8 @@ HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
+MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
+BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 FRONTIERCODE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontiercode.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
@@ -177,6 +183,8 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "aa_omniscience": (("omniscience",), to_index),
     "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
     "aa_lcr": (("lcr",), to_percent),
+    # Ai2's IFBench, run independently by AA; the model pages carry it too.
+    "ifbench": (("ifbench",), to_percent),
     "critpt": (("critpt",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     "mmmu_pro": (("mmmu_pro",), to_percent),
@@ -196,6 +204,9 @@ AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
+MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
+# The leaderboard page, not the CSV it hydrates its table from.
+BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
 # The leaderboard page, not the JSON artifact it hydrates from.
 DATACURVE_SOURCE_URL = canonical(fetch_datacurve.SITE_URL)
@@ -268,6 +279,16 @@ def parse_args() -> argparse.Namespace:
         "--skip-toolathlon",
         action="store_true",
         help="Skip fetching scores from toolathlon.",
+    )
+    parser.add_argument(
+        "--skip-mcp-atlas",
+        action="store_true",
+        help="Skip fetching scores from the Scale Labs MCP-Atlas leaderboard.",
+    )
+    parser.add_argument(
+        "--skip-bfcl",
+        action="store_true",
+        help="Skip fetching scores from the Berkeley Function-Calling Leaderboard.",
     )
     parser.add_argument(
         "--skip-deepswe",
@@ -894,6 +915,124 @@ def update_toolathlon_scores(
         updated += apply_score(
             doc, model, slug, "toolathlon", toolathlon_model.get("score"),
             TOOLATHLON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_mcp_atlas_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_mcp_atlas_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_mcp_atlas_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_mcp_atlas.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected mcp_atlas JSON format: expected a list")
+
+    mcp_atlas_to_slug = load_mcp_atlas_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        mcp_atlas_name = row.get("model")
+        if not isinstance(mcp_atlas_name, str) or not mcp_atlas_name:
+            continue
+        slug = mcp_atlas_to_slug.get(mcp_atlas_name)
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_mcp_atlas_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        mcp_atlas_model = by_slug.get(slug)
+        if mcp_atlas_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "mcp_atlas", mcp_atlas_model.get("score"),
+            MCP_ATLAS_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_bfcl_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_bfcl_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_bfcl_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_bfcl.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected bfcl JSON format: expected a list")
+
+    bfcl_to_slug = load_bfcl_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        bfcl_name = row.get("model")
+        if not isinstance(bfcl_name, str) or not bfcl_name:
+            continue
+        slug = bfcl_to_slug.get(bfcl_name)
+        if not slug:
+            continue
+        # One mapped name covers a model's "(FC)" and "(Prompt)" rows; the
+        # better of the two is the model's reported result.
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_bfcl_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        bfcl_model = by_slug.get(slug)
+        if bfcl_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "bfcl_v4", bfcl_model.get("score"),
+            BFCL_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
     return matched, updated, changes
@@ -1563,6 +1702,8 @@ def main() -> int:
     deepswe_path = DEEPSWE_SCRIPT
     datacurve_path = DATACURVE_SCRIPT
     toolathlon_path = TOOLATHLON_SCRIPT
+    mcp_atlas_path = MCP_ATLAS_SCRIPT
+    bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     frontiercode_path = FRONTIERCODE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
@@ -1584,6 +1725,12 @@ def main() -> int:
     )
     toolathlon_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-toolathlon-to-artificialanalysis.json"
+    )
+    mcp_atlas_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-mcp-atlas-to-artificialanalysis.json"
+    )
+    bfcl_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-bfcl-to-artificialanalysis.json"
     )
     frontierswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontierswe-to-artificialanalysis.json"
@@ -1655,6 +1802,10 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_evals_report_cmd(evals_report_path))}")
     if not args.skip_swe_marathon:
         print(f"  - {shlex.join(build_fetch_swe_marathon_cmd(swe_marathon_path))}")
+    if not args.skip_mcp_atlas:
+        print(f"  - {shlex.join(build_fetch_mcp_atlas_cmd(mcp_atlas_path))}")
+    if not args.skip_bfcl:
+        print(f"  - {shlex.join(build_fetch_bfcl_cmd(bfcl_path))}")
     if not args.skip_spheron and spheron_paths:
         print(f"  - {shlex.join(build_fetch_spheron_cmd(spheron_path, spheron_paths))}")
 
@@ -1832,6 +1983,30 @@ def main() -> int:
         )
         changes.extend(swe_marathon_changes)
 
+    # Same reason as frontiercode above: Scale's own board wins over the
+    # self-reported MCP-Atlas numbers llm-stats, evals.report and model cards
+    # republish.
+    mcp_atlas_by_slug: dict[str, dict[str, Any]] = {}
+    mcp_atlas_matched = 0
+    mcp_atlas_updated = 0
+    if not args.skip_mcp_atlas:
+        mcp_atlas_by_slug = fetch_mcp_atlas_data(mcp_atlas_path, mcp_atlas_mapping_path)
+        mcp_atlas_matched, mcp_atlas_updated, mcp_atlas_changes = update_mcp_atlas_scores(
+            doc, mcp_atlas_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(mcp_atlas_changes)
+
+    # And again: BFCL's own leaderboard over evals.report's mirror of it.
+    bfcl_by_slug: dict[str, dict[str, Any]] = {}
+    bfcl_matched = 0
+    bfcl_updated = 0
+    if not args.skip_bfcl:
+        bfcl_by_slug = fetch_bfcl_data(bfcl_path, bfcl_mapping_path)
+        bfcl_matched, bfcl_updated, bfcl_changes = update_bfcl_scores(
+            doc, bfcl_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(bfcl_changes)
+
     spheron_by_slug: dict[str, dict[str, Any]] = {}
     spheron_matched = 0
     spheron_updated = 0
@@ -1879,6 +2054,10 @@ def main() -> int:
         print(f"models returned by evals_report: {len(evals_report_by_slug)}")
     if not args.skip_swe_marathon:
         print(f"models returned by swe_marathon: {len(swe_marathon_by_slug)}")
+    if not args.skip_mcp_atlas:
+        print(f"models returned by mcp_atlas: {len(mcp_atlas_by_slug)}")
+    if not args.skip_bfcl:
+        print(f"models returned by bfcl: {len(bfcl_by_slug)}")
     if not args.skip_spheron:
         print(f"models returned by spheron: {len(spheron_by_slug)}")
     if missing:
@@ -1921,6 +2100,10 @@ def main() -> int:
         print(f"models matched on evals_report: {evals_report_matched}")
     if not args.skip_swe_marathon:
         print(f"models matched on swe_marathon: {swe_marathon_matched}")
+    if not args.skip_mcp_atlas:
+        print(f"models matched on mcp_atlas: {mcp_atlas_matched}")
+    if not args.skip_bfcl:
+        print(f"models matched on bfcl: {bfcl_matched}")
     if not args.skip_spheron:
         print(f"models matched on spheron: {spheron_matched}")
     action = "source URLs filled" if args.fill_source_urls else "score values updated"
@@ -1952,6 +2135,10 @@ def main() -> int:
         print(f"{action} from evals_report: {evals_report_updated}")
     if not args.skip_swe_marathon:
         print(f"{action} from swe_marathon: {swe_marathon_updated}")
+    if not args.skip_mcp_atlas:
+        print(f"{action} from mcp_atlas: {mcp_atlas_updated}")
+    if not args.skip_bfcl:
+        print(f"{action} from bfcl: {bfcl_updated}")
     if not args.skip_spheron:
         print(f"vram values updated from spheron: {spheron_updated}")
     print()

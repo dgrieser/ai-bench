@@ -43,6 +43,11 @@ BASE_URL = "https://evals.report/benchmarks/{slug}?tab=scores"
 BENCHMARKS: dict[str, str] = {
     "frontiercode": "frontiercode",
     "swe-marathon": "swe_marathon",
+    # evals.report's "bfcl" table is the V4 series: its leader matches the
+    # Overall Acc column of BFCL's own data_overall.csv (see fetch_bfcl.py).
+    "bfcl": "bfcl_v4",
+    "mcp-atlas": "mcp_atlas",
+    "ifbench": "ifbench",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}
