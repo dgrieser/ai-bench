@@ -1,18 +1,288 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" aria-hidden="true" stroke-linejoin="round">
-  <defs>
-    <linearGradient id="mmmu-grad-blue" spreadMethod="pad" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0" stop-color="#0072ff"/>
-      <stop offset="1" stop-color="#7700ff" stop-opacity="0.99"/>
-    </linearGradient>
-    <linearGradient id="mmmu-grad-yellow" spreadMethod="pad">
-      <stop offset="0" stop-color="#ffe100" stop-opacity="1"/>
-      <stop offset="1" stop-color="#ff7b00" stop-opacity="1"/>
-    </linearGradient>
-  </defs>
-  <g display="inline">
-    <path d="m88.17,211.73l-27.52,0a27.52,28.37 0 0 1 -27.52,-28.37l0,-113.46a27.52,28.37 0 0 1 27.52,-28.37l137.62,0a27.52,28.37 0 0 1 27.52,28.37l0,28.37" fill="#ffffff" fill-opacity="0" stroke="#000000" stroke-opacity="0.53" stroke-width="13"/>
-    <path d="m95.93,259.46l41.29,-99.28l41.28,63.82l41.29,-35.45l41.28,70.91l-165.14,0z" fill="#000000" fill-opacity="0" stroke="#6b2900" stroke-width="9"/>
-    <rect fill="#ffffff" fill-opacity="0.06" height="170.19" rx="27.52" ry="28.37" stroke="url(#mmmu-grad-blue)" stroke-width="13" transform="matrix(1 0 0 1 -5.16114 -6.39888)" width="192.67" x="87.17" y="98.27"/>
-    <circle cx="219.79" cy="149" fill="url(#mmmu-grad-yellow)" r="21"/>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1498 1536"
+  width="1498"
+  height="1536"
+  shape-rendering="geometricPrecision"
+>
+  <!-- Atomic orbit structure -->
+  <g fill="none" stroke="#02243F">
+    <ellipse
+      cx="751.88"
+      cy="760.83"
+      rx="692.70"
+      ry="257.53"
+      stroke-width="82.77"
+      transform="rotate(0.33 751.88 760.83)"
+    />
+    <ellipse
+      cx="751.88"
+      cy="760.83"
+      rx="735.09"
+      ry="269.23"
+      stroke-width="82.26"
+      transform="rotate(42.884 751.88 760.83)"
+    />
+    <ellipse
+      cx="751.88"
+      cy="760.83"
+      rx="706.46"
+      ry="265.90"
+      stroke-width="82.95"
+      transform="rotate(90.004 751.88 760.83)"
+    />
+    <ellipse
+      cx="751.88"
+      cy="760.83"
+      rx="733.79"
+      ry="270.56"
+      stroke-width="84.55"
+      transform="rotate(136.455 751.88 760.83)"
+    />
   </g>
+
+  <defs>
+    <clipPath id="clip-center" clipPathUnits="userSpaceOnUse">
+      <circle cx="752.44" cy="762.01" r="232"/>
+    </clipPath>
+
+    <clipPath id="clip-left" clipPathUnits="userSpaceOnUse">
+      <circle cx="306.94" cy="553.78" r="81.5"/>
+    </clipPath>
+
+    <clipPath id="clip-right" clipPathUnits="userSpaceOnUse">
+      <circle cx="1237.26" cy="944.95" r="115.5"/>
+    </clipPath>
+
+    <clipPath id="clip-blue" clipPathUnits="userSpaceOnUse">
+      <circle cx="1201.45" cy="339.63" r="109.98"/>
+    </clipPath>
+
+    <filter
+      id="blur3"
+      x="-30%"
+      y="-30%"
+      width="160%"
+      height="160%"
+    >
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+
+  <!-- Left orange particle -->
+  <circle
+    cx="306.94"
+    cy="553.78"
+    r="81.5"
+    fill="#FF694E"
+  />
+  <circle
+    cx="259.32"
+    cy="508.66"
+    r="103.57"
+    fill="#FFB202"
+    clip-path="url(#clip-left)"
+  />
+
+  <!-- Central particle -->
+  <circle
+    cx="752.44"
+    cy="762.01"
+    r="232"
+    fill="#FF6E4F"
+  />
+  <circle
+    cx="697.10"
+    cy="717.45"
+    r="209.89"
+    fill="#FDB900"
+    clip-path="url(#clip-center)"
+  />
+
+  <!-- White reflection -->
+  <path
+    fill="#FFFFFF"
+    d="
+      M 728 560
+      L 722 555
+      L 712 550
+      L 697 545
+      L 672 546
+      L 670 548
+      L 666 548
+      L 664 550
+      L 655 552
+      L 654 554
+      L 640 561
+      L 637 561
+      L 636 563
+      L 621 572
+      L 598 590
+      L 579 608
+      L 574 616
+      L 563 628
+      L 552 647
+      L 550 648
+      L 550 651
+      L 543 662
+      L 541 670
+      L 534 684
+      L 532 696
+      L 530 697
+      L 530 703
+      L 528 705
+      L 528 720
+      L 531 738
+      L 533 744
+      L 544 759
+      L 549 763
+      L 568 770
+      L 584 769
+      L 591 766
+      L 592 764
+      L 601 759
+      L 612 746
+      L 629 705
+      L 638 691
+      L 647 681
+      L 668 665
+      L 682 658
+      L 716 645
+      L 727 638
+      L 734 631
+      L 745 610
+      L 746 592
+      L 745 584
+      L 740 574
+      Z
+    "
+  />
+
+  <!-- Upper-right blue particle -->
+  <circle
+    cx="1201.45"
+    cy="339.63"
+    r="109.98"
+    fill="#029DF9"
+  />
+  <circle
+    cx="1153.17"
+    cy="283.73"
+    r="121.16"
+    fill="#1FD1FF"
+    clip-path="url(#clip-blue)"
+  />
+
+  <!-- Dark irregularities visible in the reference -->
+  <g
+    fill="#000000"
+    clip-path="url(#clip-blue)"
+    filter="url(#blur3)"
+  >
+    <path
+      d="
+        M 1279 416
+        L 1273 415
+        L 1269 411
+        L 1264 411
+        L 1253 404
+        L 1242 402
+        L 1241 418
+        L 1244 427
+        L 1236 444
+        L 1261 432
+        Z
+      "
+    />
+    <path
+      d="
+        M 1132 258
+        L 1129 257
+        L 1118 268
+        L 1101 296
+        L 1114 281
+        L 1129 279
+        L 1141 271
+        Z
+      "
+    />
+    <path
+      d="
+        M 1171 234
+        L 1230 234
+        L 1210 230
+        L 1193 230
+        Z
+      "
+    />
+    <path
+      d="
+        M 1310 351
+        L 1307 354
+        L 1307 370
+        Z
+      "
+    />
+  </g>
+
+  <!-- Lower-right orange particle -->
+  <circle
+    cx="1237.26"
+    cy="944.95"
+    r="115.5"
+    fill="#FF6C4E"
+  />
+  <circle
+    cx="1172.83"
+    cy="884.28"
+    r="141"
+    fill="#FFB400"
+    clip-path="url(#clip-right)"
+  />
+
+  <!-- Small white mark from the reference -->
+  <path
+    fill="#FFFFFF"
+    d="
+      M 207 802
+      L 211 803
+      L 215 809
+      L 223 811
+      L 224 813
+      L 228 813
+      L 233 818
+      L 238 818
+      L 240 822
+      L 246 822
+      L 256 833
+      L 261 833
+      L 264 836
+      L 264 838
+      L 270 838
+      L 273 842
+      L 278 832
+      L 286 822
+      L 286 820
+      L 281 820
+      L 279 816
+      L 272 815
+      L 271 812
+      L 268 811
+      L 259 800
+      L 255 798
+      L 255 792
+      L 253 792
+      L 249 796
+      L 244 796
+      L 242 800
+      L 236 800
+      L 233 804
+      L 229 804
+      L 226 800
+      L 221 800
+      L 219 796
+      L 212 796
+      Z
+    "
+  />
 </svg>
