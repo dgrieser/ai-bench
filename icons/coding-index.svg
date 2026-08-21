@@ -1,21 +1,58 @@
-<!-- OpenBench's own Coding index: code brackets around a rising bar chart.
-     viewBox cropped to the drawing, so sizing it by height lands its top and
-     bottom on the ink. llm.html's fixed 12x12 box would squash a wider drawing,
-     so .benchmark-icon contains it there rather than stretching it. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="6.4 32.43 115.2 63.15" aria-hidden="true">
-  <defs>
-    <linearGradient id="coding-index-bars" gradientUnits="userSpaceOnUse" x1="0" y1="36" x2="0" y2="90">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="1" stop-color="#059669"/>
-    </linearGradient>
-  </defs>
-  <g fill="none" stroke="#3b82f6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="32,38 12,64 32,90"/>
-    <polyline points="96,38 116,64 96,90"/>
-  </g>
-  <g fill="url(#coding-index-bars)">
-    <rect x="40" y="64" width="12" height="26" rx="3"/>
-    <rect x="58" y="50" width="12" height="40" rx="3"/>
-    <rect x="76" y="36" width="12" height="54" rx="3"/>
-  </g>
+<!-- OpenBench's own Coding index: angle brackets and a slash inside a
+     two-tone ring, sibling to the Tooling index mark. viewBox cropped to the
+     drawing so sizing it by height lands its top and bottom on the ink — see
+     .tip-icon in llm.html. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="357.12 332.16 821.76 845.44"
+  fill="none"
+>
+  <!-- Outer ring: pink section -->
+  <path
+    d="M 483.10 478.51
+       A 391.14 403.21 0 1 1 1040.78 1043.75"
+    stroke="#FD2179"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="M 1040.78 1043.75
+       A 391.14 403.21 0 0 1 483.10 478.51"
+    stroke="#0170FE"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Left angle bracket -->
+  <path
+    d="M 628 635
+       L 510 754
+       L 628 872"
+    stroke="#FFFFFF"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Center slash -->
+  <path
+    d="M 821 586
+       L 714 918"
+    stroke="#FFFFFF"
+    stroke-width="35"
+    stroke-linecap="round"
+  />
+
+  <!-- Right angle bracket -->
+  <path
+    d="M 897 635
+       L 1014 753
+       L 898 872"
+    stroke="#FFFFFF"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>

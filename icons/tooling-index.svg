@@ -1,30 +1,134 @@
-<!-- OpenBench's own Tooling index: a wrench and a screwdriver flanking the
-     same rising bar chart the Coding index carries, so the two derived
-     columns read as siblings. viewBox cropped to the drawing, so sizing it
-     by height lands its top and bottom on the ink. llm.html's fixed 12x12 box
-     would squash a wider drawing, so .benchmark-icon contains it there rather
-     than stretching it. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="3.41 16.43 111.68 79.15" aria-hidden="true">
-  <defs>
-    <linearGradient id="tooling-index-bars" gradientUnits="userSpaceOnUse" x1="0" y1="36" x2="0" y2="90">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="1" stop-color="#059669"/>
-    </linearGradient>
-  </defs>
-  <g fill="none" stroke="#3b82f6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Wrench: open-end head (arc with the jaw facing up) on a straight shaft. -->
-    <path d="M28.5,25 A13,13 0 1,1 15.5,25"/>
-    <path d="M22,48 L22,90"/>
-    <!-- Screwdriver: handle, then the blade down to the tip. -->
-    <path d="M106,22 L106,40"/>
-    <path d="M106,52 L106,90"/>
-  </g>
-  <g fill="#3b82f6">
-    <rect x="97" y="38" width="18" height="12" rx="4"/>
-  </g>
-  <g fill="url(#tooling-index-bars)">
-    <rect x="40" y="64" width="12" height="26" rx="3"/>
-    <rect x="58" y="50" width="12" height="40" rx="3"/>
-    <rect x="76" y="36" width="12" height="54" rx="3"/>
-  </g>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="293.76 261.12 948.48 947.84"
+  width="948.48"
+  height="947.84"
+>
+  <!--
+    Transparent background.
+    Reconstructed from the supplied 1536 × 1536 reference, with the viewBox
+    then cropped to the drawing so sizing it by height lands its top and bottom
+    on the ink — see .tip-icon in llm.html.
+  -->
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="
+      M 1108.3519 1030.9717
+      A 451.09 451.09 0 0 1 422.3550 445.0749
+    "
+    fill="none"
+    stroke="#2878FE"
+    stroke-width="44.33"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: pink section -->
+  <path
+    d="
+      M 422.3550 445.0749
+      A 451.09 451.09 0 1 1 1108.3519 1030.9717
+    "
+    fill="none"
+    stroke="#FD1F7B"
+    stroke-width="44.33"
+    stroke-linecap="butt"
+  />
+
+  <!-- Plug cable; sits behind the wrench and plug body -->
+  <path
+    d="
+      M 629.50 920.66
+      A 174.05 174.05 0 0 0 969.79 932.55
+    "
+    fill="none"
+    stroke="#2878FE"
+    stroke-width="35.58"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Plug body -->
+  <path
+    d="
+      M 886 815.5
+      H 1053.5
+      V 884
+
+      C 1053.5 911
+        1032 933
+        1005 933
+
+      H 934.5
+
+      C 907.5 933
+        886 911
+        886 884
+
+      Z
+    "
+    fill="#2878FE"
+  />
+
+  <!-- Plug pins -->
+  <rect
+    x="912"
+    y="735.5"
+    width="32"
+    height="65.5"
+    rx="16"
+    fill="#2878FE"
+  />
+
+  <rect
+    x="995"
+    y="735.5"
+    width="31"
+    height="65.5"
+    rx="15.5"
+    fill="#2878FE"
+  />
+
+  <!-- Wrench -->
+  <path
+    fill="#E5E5E5"
+    fill-rule="evenodd"
+    d="
+      M 892 430
+
+      A 136.36 136.36
+        0 0 0
+        727 618
+
+      L 484 861
+
+      A 62.38 62.38
+        0 0 0
+        571 950
+
+      L 805 690
+
+      A 136.36 136.36
+        0 0 0
+        979 513
+
+      L 905 590
+      L 852 590
+      L 822 560
+      L 822 505
+      Z
+
+      M 565.20 900.48
+
+      A 32.11 32.11
+        0 1 0
+        500.98 900.48
+
+      A 32.11 32.11
+        0 1 0
+        565.20 900.48
+
+      Z
+    "
+  />
 </svg>
