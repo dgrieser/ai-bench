@@ -99,11 +99,11 @@
     .brand {
       --title-size: clamp(1.8rem, 3vw, 2.6rem);
       /* Where Newsreader's ink falls inside the title's line box, measured off
-         a render: capitals start --cap-inset below the box top, and the line's
-         descenders reach --line-ink below it. Both scale with the type, so
-         they are in em; swapping the display face means re-measuring them. */
+         a render: capitals start --cap-inset below the box top, and the
+         baseline sits --baseline-drop above the bottom. Both scale with the
+         type, so they are in em; another display face means re-measuring. */
       --cap-inset: 0.039em;
-      --line-ink: 1.007em;
+      --baseline-drop: 0.325em;
       display: flex;
       align-items: flex-start;
       gap: 0.48em;
@@ -2084,9 +2084,20 @@
 
       /* Narrow enough that the title wraps and the subtitle runs several lines
          below it, so a mark reaching the subtitle would tower over the lockup.
-         It stops at the bottom of the title's first line instead. */
+         It runs to the baseline of the title's last line instead — whichever
+         line that is, which is why the count comes from syncTitleLines(). */
       .brand-mark {
-        height: calc(var(--line-ink) - var(--cap-inset));
+        height: calc(var(--title-lines, 2) * 1.1em - var(--cap-inset) - var(--baseline-drop));
+      }
+
+      /* The count syncTitleLines() measures depends on the width the mark took
+         to measure it: a taller mark is a wider one, which leaves the title
+         less room and can be what wraps it in the first place. Phone widths
+         hold either answer, so this picks the starting one, and the measured
+         count only ever overrides it downward — on a screen wide enough to
+         un-wrap the title even at the mark's full height. */
+      .brand {
+        --title-lines: 2;
       }
     }
 
@@ -2966,6 +2977,27 @@
         table.style.width = totalWidth + "px";
       }
 
+      // On narrow screens the header mark runs down to the baseline of the
+      // title's last line, so its height depends on how many lines the title
+      // wrapped to. CSS cannot count them; this publishes the count for the
+      // .brand-mark rule to work from. The wrap moves when the window resizes,
+      // when the data supplies a different title, and when the display face
+      // finishes loading, so all three call it.
+      function syncTitleLines() {
+        const brand = ui.title.closest(".brand");
+        if (!brand) return;
+        const lineHeight = Number.parseFloat(getComputedStyle(ui.title).lineHeight);
+        if (!Number.isFinite(lineHeight) || lineHeight <= 0) return;
+        // Measured from a fixed starting point, not from wherever the mark
+        // currently stands: a taller mark is a wider one, so it leaves the
+        // title less room and can be what wraps it. Reading the wrap against
+        // the mark at full height keeps the answer the same whichever width
+        // the window arrived from, instead of sticking to the last one.
+        brand.style.setProperty("--title-lines", "2");
+        const lines = Math.round(ui.title.getBoundingClientRect().height / lineHeight);
+        brand.style.setProperty("--title-lines", String(Math.max(1, lines)));
+      }
+
       const ui = {
         title: document.getElementById("title"),
         subtitle: document.getElementById("subtitle"),
@@ -3054,6 +3086,10 @@
       bindImportEvents();
       bindExportEvents();
       initTooltips();
+      syncTitleLines();
+      // Newsreader swapping in for the fallback serif can change where the
+      // title wraps, and the mark is sized off that.
+      document.fonts?.ready.then(syncTitleLines);
       loadData();
 
       // Exports always re-fetch llm.json, so this runs independently of loadData().
@@ -3206,6 +3242,7 @@
 
         const title = data.title || "OpenBench Index";
         ui.title.textContent = title;
+        syncTitleLines();
         document.title = title;
         ui.subtitle.textContent = data.subtitle || "";
         ui.subtitle.hidden = !data.subtitle;
@@ -3739,6 +3776,7 @@
         });
 
         window.addEventListener("resize", debounce(() => updateFilterColumns(), 150));
+        window.addEventListener("resize", debounce(() => syncTitleLines(), 100));
 
         ui.sortMode.addEventListener("change", (event) => {
           const nextSort = parseSortModeValue(event.target.value);
