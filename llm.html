@@ -2169,6 +2169,19 @@
       transition-delay: 0s;
     }
 
+    /* Sized to the title beside it, not to the 12px a column header shows.
+       The wrapper carries the size so it lands whether the icon came through
+       as an <img> or as inline SVG. */
+    .tip-icon {
+      display: inline-flex;
+      flex: none;
+    }
+
+    .tip-icon > * {
+      width: 17px;
+      height: 17px;
+    }
+
     .tip-eyebrow {
       display: block;
       font-family: var(--font-mono);
@@ -2209,8 +2222,13 @@
       text-decoration: underline;
     }
 
+    /* A benchmark's slip leads with its own mark, where it has one. Flex rather
+       than an inline image so a name long enough to wrap keeps its lines
+       aligned with each other instead of tucking under the icon. */
     .tip-title {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 7px;
       margin-top: 2px;
       font-family: var(--font-display);
       font-size: 1.05rem;
@@ -5274,6 +5292,9 @@
         if (fields.eyebrowUrl) attrs.push(` data-tip-eyebrow-url="${escapeAttr(fields.eyebrowUrl)}"`);
         if (fields.title) attrs.push(` data-tip-title="${escapeAttr(fields.title)}"`);
         if (fields.meta) attrs.push(` data-tip-meta="${escapeAttr(fields.meta)}"`);
+        // The benchmark key, not its icon markup: tipMarkup looks the icon up,
+        // so an attribute never has to carry HTML.
+        if (fields.iconKey) attrs.push(` data-tip-icon="${escapeAttr(fields.iconKey)}"`);
         if (fields.url) attrs.push(` data-tip-url="${escapeAttr(fields.url)}"`);
         return attrs.join("");
       }
@@ -5286,7 +5307,8 @@
           eyebrow: eyebrow || bench.category || "Benchmark",
           title: bench.name || getBenchmarkLabel(key),
           body: bench.description || "",
-          url: benchmarkLinks(bench)[0] || ""
+          url: benchmarkLinks(bench)[0] || "",
+          iconKey: key
         };
       }
 
@@ -5909,6 +5931,7 @@
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: bench.name || getBenchmarkLabel(key),
+            iconKey: key,
             body: scoreTipBody(key),
             meta: [
               updated ? `Updated ${updated}${newness}` : "",
@@ -5932,6 +5955,7 @@
           eyebrowVerbatim: el.hasAttribute("data-tip-eyebrow-verbatim"),
           eyebrowUrl: el.getAttribute("data-tip-eyebrow-url") || "",
           title: el.getAttribute("data-tip-title") || "",
+          iconKey: el.getAttribute("data-tip-icon") || "",
           body: el.getAttribute("data-tip") || "",
           meta: el.getAttribute("data-tip-meta") || "",
           url: el.getAttribute("data-tip-url") || ""
@@ -5951,7 +5975,11 @@
             : `<span class="${className}">${text}</span>`);
         }
         if (fields.title) {
-          parts.push(`<span class="tip-title">${escapeHtml(fields.title)}</span>`);
+          // Empty for a benchmark without one, and for the slips that are not
+          // about a benchmark at all, so the title simply stands alone.
+          const icon = fields.iconKey ? renderBenchmarkIcon(fields.iconKey) : "";
+          const mark = icon ? `<span class="tip-icon">${icon}</span>` : "";
+          parts.push(`<span class="tip-title">${mark}${escapeHtml(fields.title)}</span>`);
         }
         splitTipLines(fields.body).forEach((line) => {
           parts.push(`<p class="tip-body">${escapeHtml(line)}</p>`);
