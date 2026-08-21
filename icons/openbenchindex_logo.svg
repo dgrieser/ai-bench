@@ -1,0 +1,325 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1536 1536"
+     width="1536"
+     height="1536">
+
+  <defs>
+    <!-- Very subtle dark background variation visible in the reference -->
+    <radialGradient id="bg" cx="50%" cy="48%" r="72%">
+      <stop offset="0" stop-color="#101010"/>
+      <stop offset="1" stop-color="#0e0e0e"/>
+    </radialGradient>
+
+    <!-- Pink C -->
+    <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff2684"/>
+      <stop offset="1" stop-color="#fb237d"/>
+    </linearGradient>
+
+    <!-- Benchmark bars -->
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#087fff"/>
+      <stop offset="1" stop-color="#0878f5"/>
+    </linearGradient>
+
+    <!-- Main B -->
+    <linearGradient id="bWhite" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e3e3e3"/>
+      <stop offset="1" stop-color="#e5e5e5"/>
+    </linearGradient>
+
+    <!-- Reproduces the very slight softness/shadow of the raster reference -->
+    <filter id="softShadow"
+            x="-10%" y="-10%"
+            width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha"
+                      stdDeviation="2.2"
+                      result="blur"/>
+      <feOffset dy="1.2"
+                result="off"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.32"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1536"
+        height="1536"
+        fill="url(#bg)"/>
+
+  <!-- Benchmark bars; intentionally behind the pink C -->
+  <g fill="url(#blue)"
+     filter="url(#softShadow)">
+
+    <path d="
+      M511 782
+      H555
+      Q565 782 565 792
+      V906
+      H501
+      V792
+      Q501 782 511 782
+      Z
+    "/>
+
+    <path d="
+      M606 719
+      H650
+      Q660 719 660 729
+      V906
+      H596
+      V729
+      Q596 719 606 719
+      Z
+    "/>
+
+    <path d="
+      M702 645
+      H746
+      Q756 645 756 655
+      V906
+      H692
+      V655
+      Q692 645 702 645
+      Z
+    "/>
+  </g>
+
+  <!--
+    Pink C.
+    Reconstructed as a circular annulus clipped by the
+    perfectly vertical opening visible in the reference.
+  -->
+  <path
+    d="
+      M768 393.28
+
+      A307.75 307.75
+       0 1 0
+       768 943.78
+
+      L768 857.88
+
+      A234.30 234.30
+       0 1 1
+       768 479.79
+
+      Z
+    "
+    fill="url(#pink)"
+    filter="url(#softShadow)"
+  />
+
+  <!--
+    Custom B.
+    The left edge intentionally bows inward around the center,
+    matching the distinctive custom geometry in the image.
+  -->
+  <path
+    fill="url(#bWhite)"
+    fill-rule="evenodd"
+    filter="url(#softShadow)"
+    transform="translate(0 -1)"
+    d="
+      M821 364.5
+      H1055
+
+      C1138.46 366.45
+       1208.71 442.53
+       1207 526
+
+      C1206.86 576.70
+       1184.77 620.58
+       1145 653
+
+      C1192.90 689.56
+       1222.74 740.05
+       1221 800
+
+      C1223.47 887.31
+       1149.14 966.47
+       1064 973.5
+
+      H821
+
+      C813.75 972.78
+       807.33 966.96
+       806 960
+
+      V800
+
+      C829.27 760.39
+       845.04 717.68
+       844 668
+
+      C844.74 618.45
+       830.00 575.30
+       806 536
+
+      V380
+
+      C806.21 371.98
+       814.01 366.51
+       821 364.5
+
+      Z
+
+
+      M880 438.5
+      H1055
+
+      C1099.34 441.34
+       1137.33 482.70
+       1136 528
+
+      C1137.03 573.94
+       1097.15 616.28
+       1052 619.5
+
+      H880
+      Z
+
+
+      M880 692.5
+      H1060
+
+      C1109.94 698.30
+       1152.12 745.48
+       1151 797
+
+      C1151.75 848.25
+       1109.11 895.71
+       1059 901.5
+
+      H880
+      Z
+    "
+  />
+
+  <!--
+    INDEX wordmark converted to paths so the SVG has no
+    dependency on a particular installed font.
+  -->
+  <g fill="#fdfdfd">
+
+    <!-- I -->
+    <path d="
+      M346 1042
+      H360
+      Q361 1042 361 1043
+      V1160
+      Q361 1161 360 1161
+      H346
+      Q345 1161 345 1160
+      V1043
+      Q345 1042 346 1042
+      Z
+    "/>
+
+    <!-- N -->
+    <path d="
+      M486 1043
+      Q486 1042 487 1042
+      H502
+
+      L566 1134
+
+      V1043
+      Q566 1042 567 1042
+      H581
+      Q582 1042 582 1043
+
+      V1160
+      Q582 1161 581 1161
+
+      H566
+      L501 1067
+
+      V1161
+      H486
+      Z
+    "/>
+
+    <!-- D -->
+    <path
+      fill-rule="evenodd"
+      d="
+        M706 1042
+        H753
+
+        C783 1042
+         803 1066
+         803 1101
+
+        C803 1137
+         783 1161
+         753 1161
+
+        H705
+        V1043
+        Q705 1042 706 1042
+        Z
+
+
+        M719 1056
+        V1147
+        H749
+
+        C772 1147
+         787 1129
+         787 1102
+
+        C787 1075
+         772 1056
+         749 1056
+
+        Z
+      "
+    />
+
+    <!-- E -->
+    <path d="
+      M921 1042
+      H997
+      V1056
+      H935
+
+      V1094
+      H992
+      V1107
+      H935
+
+      V1147
+      H998
+      V1161
+      H921
+      Z
+    "/>
+
+    <!-- X -->
+    <path d="
+      M1110 1042
+      H1127
+      L1157 1088
+      L1188 1042
+      H1206
+
+      L1167 1100
+      L1207 1161
+      H1189
+
+      L1157 1112
+      L1125 1161
+      H1108
+
+      L1147 1100
+      Z
+    "/>
+
+  </g>
+</svg>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenBench Index</title>
   <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" type="image/svg+xml" href="icons/openbenchindex_mark.svg">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon_16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon_32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="favicon_48.png">
@@ -90,6 +91,29 @@
       border-bottom: 1px solid var(--line);
       animation: fadeIn 350ms ease;
       position: relative;
+    }
+
+    /* Logo lockup. The padding keeps a wrapping title clear of the export and
+       theme buttons, which float over the hero's top-right corner. */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-right: 104px;
+    }
+
+    .brand-mark {
+      flex: none;
+      width: clamp(42px, 4.4vw, 54px);
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* The mark's own backdrop is near-black, so on the dark theme the tile
+       melts into the page; a faint ring gives its corners back. */
+    [data-theme="dark"] .brand-mark {
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09);
     }
 
     .hero h1 {
@@ -2033,6 +2057,13 @@
         top: 20px;
         right: 62px;
       }
+
+      /* Both buttons shift inward on this breakpoint, so the title needs less
+         room reserved beside them. */
+      .brand {
+        gap: 11px;
+        padding-right: 86px;
+      }
     }
 
     /* ── Tooltip slip ──────────────────────────────── */
@@ -2527,7 +2558,13 @@
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
-      <h1 id="title">OpenBench Index</h1>
+      <div class="brand">
+        <!-- The wordmark-free crop of the logo: the <h1> beside it already
+             spells the name out, so the mark carries no text of its own and
+             stays decorative to a screen reader. -->
+        <img class="brand-mark" src="icons/openbenchindex_mark.svg" width="54" height="54" alt="" decoding="async">
+        <h1 id="title">OpenBench Index</h1>
+      </div>
       <p id="subtitle" hidden></p>
     </section>
 
