@@ -593,10 +593,14 @@ ai-bench/
 
 ### Logo and Favicons
 
-`icons/openbenchindex_logo.svg` is the only file to edit by hand. Everything
-else in the icon set — the wordmark-free crop the page header and the SVG
-favicon both point at, every `favicon_*.png`, `favicon.ico`, and the raster
-`icons/openbenchindex_logo.png` — is rendered from it:
+`icons/openbenchindex_logo.svg` is the only file to edit by hand. Three shapes
+are rendered from it:
+
+| Shape | What it is | Where it lands |
+|---|---|---|
+| **full** | the master as-is: dark tile, monogram, `INDEX` wordmark | `favicon_120/152/180/192/512.png`, `icons/openbenchindex_logo.png` |
+| **mark** | tile cropped square around the monogram, wordmark dropped | `icons/openbenchindex_mark.svg`, `favicon_16/32/48.png`, `favicon.ico` |
+| **flat** | monogram only — no tile, no shadow, B painted in `currentColor` | injected into `llm.html` between its `brand-mark` markers |
 
 ```bash
 python3 -m pip install cairosvg pillow   # build-only, not in requirements.txt
@@ -604,8 +608,12 @@ python3 -m pip install cairosvg pillow   # build-only, not in requirements.txt
 ./make_favicons.py --check               # exit 1 if a file is out of date
 ```
 
-The small sizes (≤48px) use the cropped variant because the wordmark is
-unreadable there; 120px and up carry the full logo.
+Why three: the wordmark is unreadable much below 120px, so small icons take the
+crop. And the page header needs the monogram to sit directly on the page in the
+current text colour — an `<img>` cannot follow the theme toggle, so that variant
+is inlined into the HTML instead of linked. The crops are measured off a render
+rather than hand-typed, so moving the artwork does not leave a stale bounding
+box behind.
 
 ## Example Usage Patterns
 
