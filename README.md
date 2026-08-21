@@ -576,6 +576,7 @@ ai-bench/
 ├── fill_source_urls.py         # Utility for URLs
 ├── fill_missing_source_urls.py  # Interactive backfill of missing dates/source URLs
 ├── sync_score_dates.py         # Timestamp synchronization
+├── make_favicons.py            # Render the icon set from the logo (see below)
 │
 ├── model-name-mapping-*.json   # Benchmark → canonical slug mappings
 ├── huggingface-benchmark-name-mapping.json
@@ -583,8 +584,28 @@ ai-bench/
 ├── gpu.json                    # GPU configuration reference
 ├── model-names-*.txt           # Cached model name lists
 │
+├── icons/openbenchindex_logo.svg  # Master logo (hand-edited source of truth)
+├── icons/openbenchindex_mark.svg  # Generated: logo minus the "INDEX" wordmark
+├── favicon.ico / favicon_*.png    # Generated icon set
+│
 └── index.html / site.webmanifest  # Web assets
 ```
+
+### Logo and Favicons
+
+`icons/openbenchindex_logo.svg` is the only file to edit by hand. Everything
+else in the icon set — the wordmark-free crop the page header and the SVG
+favicon both point at, every `favicon_*.png`, `favicon.ico`, and the raster
+`icons/openbenchindex_logo.png` — is rendered from it:
+
+```bash
+python3 -m pip install cairosvg pillow   # build-only, not in requirements.txt
+./make_favicons.py                       # rewrite whatever is stale
+./make_favicons.py --check               # exit 1 if a file is out of date
+```
+
+The small sizes (≤48px) use the cropped variant because the wordmark is
+unreadable there; 120px and up carry the full logo.
 
 ## Example Usage Patterns
 
