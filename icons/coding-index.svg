@@ -10,12 +10,15 @@
   <!-- The glyph is the page's ink, not a fixed white: on a transparent ground
        white vanishes on the light theme. llm.html sets color-scheme per theme
        and the browser hands that down to an SVG loaded in an <img>, so this
-       follows the site's own toggle rather than the reader's OS. The stroke
-       attributes below are the fallback for anything that ignores the style. -->
+       follows the site's own toggle rather than the reader's OS. The two
+       values are llm.html's text ink; an <img> cannot read the page's custom
+       property, so they are copied here and have to be changed alongside it.
+       The stroke attributes below are the fallback for anything that ignores
+       the style. -->
   <style>
-    .ink { stroke: #000000; }
+    .ink { stroke: #111111; }
     @media (prefers-color-scheme: dark) {
-      .ink { stroke: #FFFFFF; }
+      .ink { stroke: #e0ddd7; }
     }
   </style>
 
@@ -43,7 +46,7 @@
        L 510 754
        L 628 872"
     class="ink"
-    stroke="#000000"
+    stroke="#111111"
     stroke-width="35"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -54,7 +57,7 @@
     d="M 821 586
        L 714 918"
     class="ink"
-    stroke="#000000"
+    stroke="#111111"
     stroke-width="35"
     stroke-linecap="round"
   />
@@ -65,7 +68,7 @@
        L 1014 753
        L 898 872"
     class="ink"
-    stroke="#000000"
+    stroke="#111111"
     stroke-width="35"
     stroke-linecap="round"
     stroke-linejoin="round"

@@ -13,12 +13,14 @@
 
   <!-- llm.html sets color-scheme per theme and the browser hands that down to
        an SVG loaded in an <img>, so this follows the site's own toggle rather
-       than the reader's OS. The fill attribute is the fallback for anything
-       that ignores the style. -->
+       than the reader's OS. The two values are llm.html's text ink; an <img>
+       cannot read the page's custom property, so they are copied here and have
+       to be changed alongside it. The fill attribute is the fallback for
+       anything that ignores the style. -->
   <style>
-    .ink { fill: #000000; }
+    .ink { fill: #111111; }
     @media (prefers-color-scheme: dark) {
-      .ink { fill: #FFFFFF; }
+      .ink { fill: #e0ddd7; }
     }
   </style>
 
@@ -104,7 +106,7 @@
        the light theme's ground. See the style block above. -->
   <path
     class="ink"
-    fill="#000000"
+    fill="#111111"
     fill-rule="evenodd"
     d="
       M 892 430
