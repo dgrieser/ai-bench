@@ -1,7 +1,8 @@
 <!-- OpenBench's own Coding index: code brackets around a rising bar chart.
-     Square viewBox because llm.html renders benchmark icons in a fixed 12x12
-     box, which would squash a wider drawing. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" aria-hidden="true">
+     viewBox cropped to the drawing, so sizing it by height lands its top and
+     bottom on the ink. llm.html's fixed 12x12 box would squash a wider drawing,
+     so .benchmark-icon contains it there rather than stretching it. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6.4 32.43 115.2 63.15" aria-hidden="true">
   <defs>
     <linearGradient id="coding-index-bars" gradientUnits="userSpaceOnUse" x1="0" y1="36" x2="0" y2="90">
       <stop offset="0" stop-color="#34d399"/>
