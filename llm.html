@@ -105,13 +105,14 @@
     }
 
     /* Tall enough to read as the title's equal rather than as an icon tacked
-       on beside it. The negative margin centres the mark's ink on the cap
-       band, which sits above the middle of the line box. */
+       on beside it. The mark is cropped tight to its ink, so the margin is the
+       whole gap between the line box top and where the capitals actually
+       start: it sets the mark's top flush with the top of the title. */
     .brand-mark {
       flex: none;
       height: 1.45em;
       width: auto;
-      margin-top: -0.09em;
+      margin-top: 0.18em;
       color: var(--text);
     }
 
