@@ -36,6 +36,17 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 # is the worst, with 13 of 14 cards off by up to 5 points because the labs ran it
 # themselves -- and "Toolathlon" without the suffix is the pre-Verified series,
 # which is a different score series (see fetch_toolathlon.py).
+#
+# "Multimodal software engineering SWE-MM" is mapped on the same terms, and is
+# the loosest of them: the one card reporting it (Qwen3.8-27B) footnotes the
+# public *dev* split of SWE-bench Multimodal run on the Claude Code harness with
+# the modifications from Appendix 8.3 of the Claude Opus 4.7 system card, so it
+# is not the official test-split number the leaderboard reports. It is mapped
+# rather than parked because it names the same benchmark -- the bar for
+# __unmappable__ is a label naming a *different* one, and the harness variants
+# ("SWE-Bench Verified (OpenHands)" and friends) are mapped already -- and
+# because fetch_evals_report.py runs after this ingest and does overwrite, so an
+# official run displaces the self-report as soon as one exists.
 UNMAPPABLE = "__unmappable__"
 
 

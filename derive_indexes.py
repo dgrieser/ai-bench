@@ -100,6 +100,7 @@ INDEXES: list[IndexDef] = [
             ("swe_atlas_tw", 0.17),
             ("swe_atlas_qna", 0.17),
             ("swe_bench_verified", 0.15),
+            ("swe_bench_multimodal", 0.15),
         ],
     ),
     IndexDef(

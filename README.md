@@ -297,21 +297,23 @@ value, so the order encodes precedence: a benchmark's own site runs *after* the
 aggregator that republishes it. `fetch_swe_marathon.py` and
 `fetch_frontiercode.py` (Cognition's leaderboard) therefore run after
 `fetch_evals_report.py`, and evals.report only supplies models the benchmark's
-own leaderboard does not list. `fetch_datacurve.py` (DeepSWE's own leaderboard)
-stands in the same relation to `fetch_deepswe.py`, which reads benchlm.ai.
-`fetch_mcp_atlas.py` (Scale's own MCP-Atlas board) and `fetch_bfcl.py` (the
-Gorilla team's BFCL leaderboard) run last for the same reason: evals.report,
-llm-stats and the model cards all republish self-reported numbers for those two
-benchmarks, and where both a first-party run and a self-report exist they
-disagree by a point or two, so the first-party run has to be the one that lands.
+own leaderboard does not list. SWE-bench Multimodal is the one column where
+that is reversed: nothing scrapes swebench.com, so evals.report *is* the
+primary source and does overwrite, with the model cards filling gaps ahead of
+it. `fetch_datacurve.py` (DeepSWE's own leaderboard) stands in the same
+relation to `fetch_deepswe.py`, which reads benchlm.ai. `fetch_mcp_atlas.py`
+(Scale's own MCP-Atlas board) and `fetch_bfcl.py` (the Gorilla team's BFCL
+leaderboard) run last for the same reason: evals.report, llm-stats and the
+model cards all republish self-reported numbers for those two benchmarks, and
+where both a first-party run and a self-report exist they disagree by a point
+or two, so the first-party run has to be the one that lands.
 `fetch_aa_coding_agents.py` (Artificial Analysis' Coding Agent Index, its own
 agent-harness runs of DeepSWE, SWE-Atlas-QnA and Terminal-Bench 2.1) is
-*fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs
-disagree systematically with the benchmarks' own leaderboards, so overwriting
-would flip a score within one run and restamp its date every refresh. It runs
-ahead of the other gap-fillers so a gap AA measured directly is filled by that
-measurement rather than a self-report; the leading sources overwrite either
-way.
+*fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs disagree
+systematically with the benchmarks' own leaderboards, so overwriting would flip
+a score within one run and restamp its date every refresh. It runs ahead of the
+other gap-fillers so a gap AA measured directly is filled by that measurement
+rather than a self-report; the leading sources overwrite either way.
 
 ### Tool Use and Instruction Following
 

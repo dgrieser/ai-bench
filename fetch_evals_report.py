@@ -43,6 +43,9 @@ BASE_URL = "https://evals.report/benchmarks/{slug}?tab=scores"
 BENCHMARKS: dict[str, str] = {
     "frontiercode": "frontiercode",
     "swe-marathon": "swe_marathon",
+    # The only source we scrape for SWE-bench Multimodal: the benchmark's own
+    # leaderboard lists no open-weight system, and AA does not run it at all.
+    "swe-bench-multimodal": "swe_bench_multimodal",
     # evals.report's "bfcl" table is the V4 series: its leader matches the
     # Overall Acc column of BFCL's own data_overall.csv (see fetch_bfcl.py).
     "bfcl": "bfcl_v4",
