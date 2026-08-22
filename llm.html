@@ -184,9 +184,14 @@
       animation: fadeIn 350ms ease;
     }
 
+    /* Wordmark and product name share a baseline. The artwork is cropped tight
+       to its ink, so the svg's bottom edge is the wordmark's own baseline —
+       give or take the round letters' overshoot, 1.4% of the height, a fifth of
+       a pixel at this size — and a replaced element takes its baseline from
+       that edge. The band centres the lockup from there. */
     .presets-brand {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 10px;
       min-width: 0;
       text-decoration: none;
@@ -222,9 +227,10 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      /* Chips keep their natural width; the note beside them is what gives way
-         when the strip runs out of room. */
-      flex: none;
+      /* The row may shrink below the width of three chips — then they wrap
+         inside it rather than running past the panel's edge. The note is what
+         leaves the line first, since a full line is what pushes it away. */
+      min-width: 0;
     }
 
     .preset-chip {
