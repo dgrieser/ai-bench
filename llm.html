@@ -156,6 +156,139 @@
       letter-spacing: 0.01em;
     }
 
+    /* ── Hosting presets ─────────────────────────── */
+
+    /* A shortcut into the GPU filter below, not a filter of its own: each chip
+       stands for a hosting tier and fills that tier's card and card count into
+       the GPU fields. It sits above the filters panel so the shortcuts stay
+       reachable while that panel is collapsed. */
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 18px;
+      padding: 11px 20px;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn 350ms ease;
+    }
+
+    .presets-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    /* Sized by height: the wordmark keeps its own aspect ratio, and
+       currentColor lets it follow the theme's text colour. */
+    .presets-logo {
+      flex: none;
+      height: 14px;
+      width: auto;
+      color: var(--text);
+    }
+
+    .presets-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .presets-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      /* Chips keep their natural width; the note beside them is what gives way
+         when the strip runs out of room. */
+      flex: none;
+    }
+
+    .preset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      /* Overrides the full-width default every other button on the page wants. */
+      width: auto;
+      flex: none;
+      height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-ui);
+      transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+    }
+
+    .preset-chip:hover {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    }
+
+    .preset-tier {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+
+    .preset-spec {
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    /* An armed chip wears the same flowing gradient border the active filter
+       fields do, so "this is what is constraining the table" reads the same
+       whether it was set here or in the GPU fields. */
+    .preset-chip.is-active {
+      border-color: transparent;
+      color: var(--accent);
+      background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(120deg, var(--accent), #8b5cf6, #ec4899, #8b5cf6, var(--accent)) border-box;
+      background-size: 100% 100%, 300% 100%;
+      box-shadow: 0 0 14px rgba(29, 78, 216, 0.22);
+      animation: filterFlowInput 7s linear infinite;
+    }
+
+    .preset-chip.is-active .preset-tier {
+      color: var(--accent);
+    }
+
+    [data-theme="dark"] .preset-chip.is-active {
+      box-shadow: 0 0 18px rgba(91, 138, 247, 0.30);
+      background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        linear-gradient(120deg, var(--accent), #a78bfa, #f472b6, #a78bfa, var(--accent)) border-box;
+      background-size: 100% 100%, 300% 100%;
+    }
+
+    .presets-note {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--subtle);
+      margin-left: auto;
+      text-align: right;
+    }
+
+    @media (max-width: 860px) {
+      .presets-note {
+        margin-left: 0;
+        text-align: left;
+        flex-basis: 100%;
+      }
+    }
+
     /* ── Controls ─────────────────────────────────── */
 
     /* ── Filters panel (collapsible) ──────────────── */
@@ -1087,7 +1220,8 @@
       .field.filter-on input[type="text"],
       .field.filter-on .model-compare-widget,
       .field.filter-on .gpu-stepper,
-      .field.filter-on select {
+      .field.filter-on select,
+      .preset-chip.is-active {
         animation: none;
       }
 
@@ -2804,6 +2938,32 @@
       </div>
     </section>
 
+    <!-- Hosting presets: one click sets the GPU filter below to a hosting tier's
+         card + count. Hidden until gpu.json turns up the card the tiers run on.
+         The wordmark is inlined (not linked) so it can follow the theme through
+         currentColor, the way the brand mark above does; icons/mittwald.svg
+         keeps the same artwork as the standalone asset. -->
+    <section class="presets" id="hostingPresets" hidden>
+      <div class="presets-brand">
+        <svg class="presets-logo" viewBox="275 250.7 2081.8 386.4" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="mittwald">
+          <g fill="currentColor">
+            <path d="M602.9,358.3c-30.6,0-67.5,15.5-86.8,47.7c-13.9-30-40.2-47.7-82.6-47.7c-30.2,0-60,15.2-76.4,37l-8.9-45.1L275,364.6l8.9,45.4l0,0.7l0,221h71.8V492.9c0-35.4,18.2-66.5,54.7-66.5c38.6,0,46.6,26.3,46.6,61.6v143.7h71.8V490.2c0-35.4,19.3-63.8,54.7-63.8c38.1,0,46.6,26.3,46.6,61.6v149l71.8-14.1V478.9C702.1,410.3,678.5,358.3,602.9,358.3z"/>
+            <path d="M773.5,250.7c-24.7,0-45.4,20.7-45.4,46c0,24.7,20.7,45.4,45.4,45.4c25.3,0,46-20.7,46-45.4C819.5,271.4,798.8,250.7,773.5,250.7z"/>
+            <rect x="738.1" y="363.5" width="71.8" height="268.2"/>
+            <path d="M1132.6,574.9c-12.9,0-24.1-7.5-24.1-30.6V421.6h74.1l-18.5-57.9h-55.6v-86.6l-71.8,14.1v72.5H1017h-19.5h-54.5v-86.6l-71.8,14.1v72.5h-39.1v57.9h39.1v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1c-2.1,1.6-17.2,11.3-34.3,11.3c-12.9,0-24.1-7.5-24.1-30.6V421.6h54.5h19.5h19.6v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1C1164.8,565.3,1149.8,574.9,1132.6,574.9z"/>
+            <path d="M1505.3,363.7L1464,506.8c-5.4,18.8-8,39.5-8,39.5s-2.7-20.8-7-39l-32.7-143.7h-70.8l-32.7,143.7c-4.3,18.2-6.4,39-6.4,39s-3.2-20.8-8.6-39.5l-40.7-143.1h-70.2l85.8,268.6h65.4l35.9-144.7c4.3-18.2,7.5-37.9,7.5-37.9s2.7,19.7,7,37.9l35.9,144.7h64.9l85.8-268.6H1505.3z"/>
+            <path d="M1769.1,396.4c-19.3-25.7-52.5-38.1-83.6-38.1c-74,0-121.2,62.2-121.2,139.4s47.2,139.4,121.2,139.4c31.1,0,64.9-11.8,83.6-37.5v37.4l70.2-13.7V363.7h-70.2V396.4z M1703.7,570.6c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C1767.5,540.6,1740.7,570.6,1703.7,570.6z"/>
+            <polygon points="1875.3,631.7 1947.1,631.7 1947.1,276.9 1875.3,291.1"/>
+            <path d="M2177.4,393.2c-19.3-23.1-49.9-35.4-80.9-35.4c-74,0-122.2,62.2-122.2,139.4s47.2,139.4,121.2,139.4c32.2,0,66.5-11.8,85.8-37.5v37.7l68.1-14.1v-337h-71.8V393.2z M2113.6,570.1c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C2177.4,540.1,2150.5,570.1,2113.6,570.1z"/>
+            <rect x="2285" y="559.5" width="71.8" height="71.8"/>
+          </g>
+        </svg>
+        <span class="presets-eyebrow">Managed Dedicated AI Hosting</span>
+      </div>
+      <div class="presets-chips" id="presetChips" role="group" aria-label="mittwald hosting tier presets"></div>
+      <p class="presets-note" id="presetsNote"></p>
+    </section>
+
     <section class="filters" id="filtersPanel" hidden>
       <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
         <span class="filters-eyebrow">Filters</span>
@@ -2947,7 +3107,8 @@
           // Fraction of total VRAM to keep free (KV cache, activations, desktop)
           reserve: 0,
           activeIndex: -1,
-          eventsBound: false
+          eventsBound: false,
+          presetsBound: false
         }
       };
 
@@ -3052,6 +3213,9 @@
         clearCompare: document.getElementById("clearCompare"),
         clearBenchmarks: document.getElementById("clearBenchmarks"),
         clearSearch: document.getElementById("clearSearch"),
+        hostingPresets: document.getElementById("hostingPresets"),
+        presetChips: document.getElementById("presetChips"),
+        presetsNote: document.getElementById("presetsNote"),
         gpuBar: document.getElementById("gpuBar"),
         gpuVendor: document.getElementById("gpuVendor"),
         gpuModel: document.getElementById("gpuModel"),
@@ -3887,6 +4051,7 @@
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
         ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn);
         updateReserveHint();
+        syncHostingPresets();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
         const activeCount = [searchOn, compareOn, benchmarksOn, addedOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
@@ -4871,11 +5036,105 @@
         }
         ui.gpuBar.hidden = false;
         ui.controls.classList.add("has-gpu");
+        initHostingPresets();
         updateFilterColumns();
         if (!state.gpu.eventsBound) {
           bindGpuEvents();
           state.gpu.eventsBound = true;
         }
+      }
+
+      // ── Hosting presets ──────────────────────────────────────────────
+
+      // mittwald's Managed Dedicated AI Hosting tiers. A preset is nothing more
+      // than a shortcut into the GPU filter — it picks a card and a card count,
+      // and the budget, VRAM shading and Reserve then behave exactly as if the
+      // fields had been filled in by hand.
+      const HOSTING_PRESET_VENDOR = "NVIDIA";
+      const HOSTING_PRESET_GPU = "RTX PRO 6000 Blackwell (Server)";
+      const HOSTING_PRESETS = [
+        { tier: "M", cards: 1 },
+        { tier: "L", cards: 2 },
+        { tier: "XL", cards: 4 }
+      ];
+
+      function hostingPresetGpu() {
+        return state.gpu.list.find((gpu) =>
+          gpu.manufacturer === HOSTING_PRESET_VENDOR && gpu.model === HOSTING_PRESET_GPU) || null;
+      }
+
+      // Chips are rendered from gpu.json rather than from hard-coded totals, so
+      // a change to the card's VRAM there carries the tier labels with it. No
+      // card, no strip — the tiers would have nothing to point the filter at.
+      function initHostingPresets() {
+        if (!ui.hostingPresets || !ui.presetChips) {
+          return;
+        }
+        const gpu = hostingPresetGpu();
+        if (!gpu) {
+          ui.hostingPresets.hidden = true;
+          return;
+        }
+        ui.presetChips.innerHTML = HOSTING_PRESETS.map((preset) => {
+          const total = formatGb(gpu.vram_gb * preset.cards);
+          const tip = `Sets the GPU filter to ${preset.cards} × ${gpu.manufacturer} ${gpu.model} — a ${total} GB VRAM budget. Click again to clear it.`;
+          return `<button type="button" class="preset-chip" data-cards="${preset.cards}" aria-pressed="false" data-tip-title="Hosting tier ${escapeHtml(preset.tier)}" data-tip="${escapeHtml(tip)}">
+            <span class="preset-tier">${escapeHtml(preset.tier)}</span>
+            <span class="preset-spec">${escapeHtml(`${preset.cards}× · ${total} GB`)}</span>
+          </button>`;
+        }).join("");
+        ui.presetsNote.textContent = `${gpu.manufacturer} ${gpu.model} · ${formatGb(gpu.vram_gb)} GB per card`;
+        ui.hostingPresets.hidden = false;
+
+        if (!state.gpu.presetsBound) {
+          ui.presetChips.addEventListener("click", (event) => {
+            const chip = event.target.closest(".preset-chip");
+            if (chip) {
+              applyHostingPreset(Number(chip.dataset.cards));
+            }
+          });
+          state.gpu.presetsBound = true;
+        }
+        syncHostingPresets();
+      }
+
+      // Clicking the armed tier again clears the GPU filter, so the strip can
+      // undo itself without a trip down to the × in the fields.
+      function applyHostingPreset(cards) {
+        const gpu = hostingPresetGpu();
+        if (!gpu || !Number.isFinite(cards)) {
+          return;
+        }
+        if (hostingPresetActive(cards)) {
+          gpuResetBar();
+          applyAndRender();
+          return;
+        }
+        // Count goes in directly rather than through gpuSetCount: gpuSelect
+        // derives the budget from it and renders once, not twice.
+        state.gpu.count = clampGpuCount(cards);
+        ui.gpuCount.value = String(state.gpu.count);
+        setGpuCountDisabled(false);
+        gpuSelect(gpu);
+      }
+
+      // A tier is armed only while the filter still holds exactly what the
+      // preset put there, so editing the fields by hand unarms the chip.
+      function hostingPresetActive(cards) {
+        return Boolean(state.gpu.budget)
+          && state.gpu.selected?.model === HOSTING_PRESET_GPU
+          && state.gpu.count === cards;
+      }
+
+      function syncHostingPresets() {
+        if (!ui.presetChips) {
+          return;
+        }
+        ui.presetChips.querySelectorAll(".preset-chip").forEach((chip) => {
+          const active = hostingPresetActive(Number(chip.dataset.cards));
+          chip.classList.toggle("is-active", active);
+          chip.setAttribute("aria-pressed", active ? "true" : "false");
+        });
       }
 
       function bindGpuEvents() {
@@ -5062,8 +5321,12 @@
         gpuUpdateBudgetFromSelection();
       }
 
+      function clampGpuCount(next) {
+        return Math.max(1, Math.min(16, Math.round(next) || 1));
+      }
+
       function gpuSetCount(next) {
-        const clamped = Math.max(1, Math.min(16, Math.round(next) || 1));
+        const clamped = clampGpuCount(next);
         state.gpu.count = clamped;
         ui.gpuCount.value = String(clamped);
         if (state.gpu.selected) {
