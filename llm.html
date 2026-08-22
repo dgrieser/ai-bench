@@ -160,15 +160,21 @@
 
     /* A shortcut into the GPU filter below, not a filter of its own: each chip
        stands for a hosting tier and fills that tier's card and card count into
-       the GPU fields. It sits above the filters panel so the shortcuts stay
-       reachable while that panel is collapsed. */
+       the GPU fields. It leads the filters grid — a full-bleed band pulled out
+       to the panel's edges, above the fields it drives — so it collapses with
+       the panel like every other control. */
     .presets {
+      grid-column: 1 / -1;
+      /* Cancels the grid's own top padding and side padding, so the band meets
+         the panel edges and sits flush under the Filters row. */
+      margin: -4px -20px 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 8px 18px;
-      padding: 11px 20px;
+      padding: 10px 20px;
       background: var(--surface-alt);
+      border-top: 1px solid var(--line-soft);
       border-bottom: 1px solid var(--line);
       animation: fadeIn 350ms ease;
     }
@@ -178,6 +184,13 @@
       align-items: center;
       gap: 10px;
       min-width: 0;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .presets-brand:hover .presets-eyebrow,
+    .presets-brand:focus-visible .presets-eyebrow {
+      color: var(--accent);
     }
 
     /* Sized by height: the wordmark keeps its own aspect ratio, and
@@ -196,6 +209,7 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
+      transition: color 120ms ease;
     }
 
     .presets-chips {
@@ -2938,32 +2952,6 @@
       </div>
     </section>
 
-    <!-- Hosting presets: one click sets the GPU filter below to a hosting tier's
-         card + count. Hidden until gpu.json turns up the card the tiers run on.
-         The wordmark is inlined (not linked) so it can follow the theme through
-         currentColor, the way the brand mark above does; icons/mittwald.svg
-         keeps the same artwork as the standalone asset. -->
-    <section class="presets" id="hostingPresets" hidden>
-      <div class="presets-brand">
-        <svg class="presets-logo" viewBox="275 250.7 2081.8 386.4" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="mittwald">
-          <g fill="currentColor">
-            <path d="M602.9,358.3c-30.6,0-67.5,15.5-86.8,47.7c-13.9-30-40.2-47.7-82.6-47.7c-30.2,0-60,15.2-76.4,37l-8.9-45.1L275,364.6l8.9,45.4l0,0.7l0,221h71.8V492.9c0-35.4,18.2-66.5,54.7-66.5c38.6,0,46.6,26.3,46.6,61.6v143.7h71.8V490.2c0-35.4,19.3-63.8,54.7-63.8c38.1,0,46.6,26.3,46.6,61.6v149l71.8-14.1V478.9C702.1,410.3,678.5,358.3,602.9,358.3z"/>
-            <path d="M773.5,250.7c-24.7,0-45.4,20.7-45.4,46c0,24.7,20.7,45.4,45.4,45.4c25.3,0,46-20.7,46-45.4C819.5,271.4,798.8,250.7,773.5,250.7z"/>
-            <rect x="738.1" y="363.5" width="71.8" height="268.2"/>
-            <path d="M1132.6,574.9c-12.9,0-24.1-7.5-24.1-30.6V421.6h74.1l-18.5-57.9h-55.6v-86.6l-71.8,14.1v72.5H1017h-19.5h-54.5v-86.6l-71.8,14.1v72.5h-39.1v57.9h39.1v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1c-2.1,1.6-17.2,11.3-34.3,11.3c-12.9,0-24.1-7.5-24.1-30.6V421.6h54.5h19.5h19.6v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1C1164.8,565.3,1149.8,574.9,1132.6,574.9z"/>
-            <path d="M1505.3,363.7L1464,506.8c-5.4,18.8-8,39.5-8,39.5s-2.7-20.8-7-39l-32.7-143.7h-70.8l-32.7,143.7c-4.3,18.2-6.4,39-6.4,39s-3.2-20.8-8.6-39.5l-40.7-143.1h-70.2l85.8,268.6h65.4l35.9-144.7c4.3-18.2,7.5-37.9,7.5-37.9s2.7,19.7,7,37.9l35.9,144.7h64.9l85.8-268.6H1505.3z"/>
-            <path d="M1769.1,396.4c-19.3-25.7-52.5-38.1-83.6-38.1c-74,0-121.2,62.2-121.2,139.4s47.2,139.4,121.2,139.4c31.1,0,64.9-11.8,83.6-37.5v37.4l70.2-13.7V363.7h-70.2V396.4z M1703.7,570.6c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C1767.5,540.6,1740.7,570.6,1703.7,570.6z"/>
-            <polygon points="1875.3,631.7 1947.1,631.7 1947.1,276.9 1875.3,291.1"/>
-            <path d="M2177.4,393.2c-19.3-23.1-49.9-35.4-80.9-35.4c-74,0-122.2,62.2-122.2,139.4s47.2,139.4,121.2,139.4c32.2,0,66.5-11.8,85.8-37.5v37.7l68.1-14.1v-337h-71.8V393.2z M2113.6,570.1c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C2177.4,540.1,2150.5,570.1,2113.6,570.1z"/>
-            <rect x="2285" y="559.5" width="71.8" height="71.8"/>
-          </g>
-        </svg>
-        <span class="presets-eyebrow">Managed Dedicated AI Hosting</span>
-      </div>
-      <div class="presets-chips" id="presetChips" role="group" aria-label="mittwald hosting tier presets"></div>
-      <p class="presets-note" id="presetsNote"></p>
-    </section>
-
     <section class="filters" id="filtersPanel" hidden>
       <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
         <span class="filters-eyebrow">Filters</span>
@@ -2975,6 +2963,33 @@
       <div class="controls-collapse" id="controlsCollapse">
         <div class="controls-inner">
         <div class="controls" id="controls">
+      <!-- Hosting presets: one click sets the GPU fields below to a hosting
+           tier's card + count, so a plan's fit is one click away without
+           changing how the filter itself works. Hidden until gpu.json turns up
+           the card the tiers run on. The wordmark is inlined rather than linked
+           as an image so currentColor carries it through both themes, the way
+           the brand mark in the hero does; icons/mittwald.svg holds the same
+           artwork as a standalone asset. -->
+      <div class="presets" id="hostingPresets" hidden>
+        <a class="presets-brand" href="https://www.mittwald.de/mstudio/ai-dedicated-hosting" target="_blank" rel="noopener noreferrer" data-tip-title="Managed Dedicated AI Hosting" data-tip="Dedicated GPU hosting from mittwald — the plans these presets stand for." data-tip-url="https://www.mittwald.de/mstudio/ai-dedicated-hosting">
+          <svg class="presets-logo" viewBox="275 250.7 2081.8 386.4" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="mittwald">
+            <g fill="currentColor">
+            <path d="M602.9,358.3c-30.6,0-67.5,15.5-86.8,47.7c-13.9-30-40.2-47.7-82.6-47.7c-30.2,0-60,15.2-76.4,37l-8.9-45.1L275,364.6l8.9,45.4l0,0.7l0,221h71.8V492.9c0-35.4,18.2-66.5,54.7-66.5c38.6,0,46.6,26.3,46.6,61.6v143.7h71.8V490.2c0-35.4,19.3-63.8,54.7-63.8c38.1,0,46.6,26.3,46.6,61.6v149l71.8-14.1V478.9C702.1,410.3,678.5,358.3,602.9,358.3z"/>
+            <path d="M773.5,250.7c-24.7,0-45.4,20.7-45.4,46c0,24.7,20.7,45.4,45.4,45.4c25.3,0,46-20.7,46-45.4C819.5,271.4,798.8,250.7,773.5,250.7z"/>
+            <rect x="738.1" y="363.5" width="71.8" height="268.2"/>
+            <path d="M1132.6,574.9c-12.9,0-24.1-7.5-24.1-30.6V421.6h74.1l-18.5-57.9h-55.6v-86.6l-71.8,14.1v72.5H1017h-19.5h-54.5v-86.6l-71.8,14.1v72.5h-39.1v57.9h39.1v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1c-2.1,1.6-17.2,11.3-34.3,11.3c-12.9,0-24.1-7.5-24.1-30.6V421.6h54.5h19.5h19.6v123.8c0,60.6,28.9,91.7,82.6,91.7c28.4,0,52-9.6,68.1-20.4l-20.4-53.1C1164.8,565.3,1149.8,574.9,1132.6,574.9z"/>
+            <path d="M1505.3,363.7L1464,506.8c-5.4,18.8-8,39.5-8,39.5s-2.7-20.8-7-39l-32.7-143.7h-70.8l-32.7,143.7c-4.3,18.2-6.4,39-6.4,39s-3.2-20.8-8.6-39.5l-40.7-143.1h-70.2l85.8,268.6h65.4l35.9-144.7c4.3-18.2,7.5-37.9,7.5-37.9s2.7,19.7,7,37.9l35.9,144.7h64.9l85.8-268.6H1505.3z"/>
+            <path d="M1769.1,396.4c-19.3-25.7-52.5-38.1-83.6-38.1c-74,0-121.2,62.2-121.2,139.4s47.2,139.4,121.2,139.4c31.1,0,64.9-11.8,83.6-37.5v37.4l70.2-13.7V363.7h-70.2V396.4z M1703.7,570.6c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C1767.5,540.6,1740.7,570.6,1703.7,570.6z"/>
+            <polygon points="1875.3,631.7 1947.1,631.7 1947.1,276.9 1875.3,291.1"/>
+            <path d="M2177.4,393.2c-19.3-23.1-49.9-35.4-80.9-35.4c-74,0-122.2,62.2-122.2,139.4s47.2,139.4,121.2,139.4c32.2,0,66.5-11.8,85.8-37.5v37.7l68.1-14.1v-337h-71.8V393.2z M2113.6,570.1c-38.6,0-66.5-30.6-66.5-72.9c0-41.8,27.9-72.9,66.5-72.9c37,0,63.8,31.1,63.8,72.9C2177.4,540.1,2150.5,570.1,2113.6,570.1z"/>
+            <rect x="2285" y="559.5" width="71.8" height="71.8"/>
+            </g>
+          </svg>
+          <span class="presets-eyebrow">Managed Dedicated AI Hosting</span>
+        </a>
+        <div class="presets-chips" id="presetChips" role="group" aria-label="mittwald hosting tier presets"></div>
+        <p class="presets-note" id="presetsNote"></p>
+      </div>
       <div class="gpu-fields" id="gpuBar" hidden aria-label="GPU VRAM filter">
         <div class="field">
           <label for="gpuVendor">GPU Vendor</label>

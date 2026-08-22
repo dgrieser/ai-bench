@@ -563,12 +563,13 @@ As with scores, neither field is ever overwritten with `null`.
 card count, and the page turns that into a total VRAM budget (minus the **Reserve**
 share) that shades the VRAM columns and drops models that do not fit.
 
-Above the filters sits a compact preset strip — one chip per
-[mittwald](https://www.mittwald.de) *Managed Dedicated AI Hosting* tier, which is a
-shortcut into that same filter and nothing more: a chip fills in the tier's card and
-card count, and everything downstream behaves exactly as if the fields had been set
-by hand. Clicking the armed chip again clears the filter, and editing the fields
-unarms it.
+Leading that panel is a compact preset strip — one chip per mittwald
+[Managed Dedicated AI Hosting](https://www.mittwald.de/mstudio/ai-dedicated-hosting)
+tier, which is a shortcut into that same filter and nothing more: a chip fills in the
+tier's card and card count, and everything downstream behaves exactly as if the fields
+had been set by hand. Clicking the armed chip again clears the filter, and editing the
+fields unarms it. The strip is a full-width row of the filters grid, so it collapses
+with the panel like every other control.
 
 | Tier | Cards | Total VRAM |
 |---|---|---|
