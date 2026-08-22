@@ -470,7 +470,14 @@ Two consequences worth knowing (they hold for every derived index):
 - Ranks are relative to the models currently in the file, so **adding a model or a
   score moves other models' values**. That is also why `derive_indexes.py`
   clears a value back to `null` when a model stops qualifying, unlike the scrapers,
-  which never overwrite a value with `null`.
+  which never overwrite a value with `null`. Adding a *benchmark* can do the same
+  from the other direction: its weight joins the denominator as soon as two models
+  are scored on it, which lifts the `MIN_SCORED_FRACTION` bar every model has to
+  clear, so a column measured on almost nobody can cost thinly measured models
+  their rank. That is why SWE-bench Multimodal, scored on two of 136 models, is
+  carried as a column but left out of `INDEXES` for now — admitting it at 0.15
+  dropped four models from ranked to `null` and bought no discrimination in
+  return. Worth adding once its coverage grows.
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
