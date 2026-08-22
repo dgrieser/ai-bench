@@ -19,7 +19,7 @@
   <meta name="theme-color" content="#0e0d0b" media="(prefers-color-scheme: dark)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Sans:wght@400;500;600;700&family=Figtree:wght@600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -43,6 +43,11 @@
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
+      /* The hosting brand sets its product names in Proxima Nova Semibold. It
+         is a licensed face we cannot ship, so it leads the stack for anyone who
+         has it and Figtree — the closest free match on width and x-height —
+         carries everyone else. */
+      --font-hosting: "Proxima Nova", ProximaNova, "Figtree", var(--font-ui);
       --radius: 10px;
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 6px 24px rgba(0, 0, 0, 0.06);
       /* Tooltip paper sits a shade brighter than --surface so the slip reads
@@ -188,8 +193,8 @@
       color: inherit;
     }
 
-    .presets-brand:hover .presets-eyebrow,
-    .presets-brand:focus-visible .presets-eyebrow {
+    .presets-brand:hover .presets-product,
+    .presets-brand:focus-visible .presets-product {
       color: var(--accent);
     }
 
@@ -202,13 +207,14 @@
       color: var(--text);
     }
 
-    .presets-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.66rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
+    /* Set in the hosting brand's own headline face, weight and tracking, so the
+       product name beside the wordmark reads as it does on mittwald.de. */
+    .presets-product {
+      font-family: var(--font-hosting);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: -0.016em;
+      color: var(--text);
       transition: color 120ms ease;
     }
 
@@ -2985,7 +2991,7 @@
             <rect x="2285" y="559.5" width="71.8" height="71.8"/>
             </g>
           </svg>
-          <span class="presets-eyebrow">Managed Dedicated AI Hosting</span>
+          <span class="presets-product">Managed Dedicated AI Hosting</span>
         </a>
         <div class="presets-chips" id="presetChips" role="group" aria-label="mittwald hosting tier presets"></div>
         <p class="presets-note" id="presetsNote"></p>

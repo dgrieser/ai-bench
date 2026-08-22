@@ -577,6 +577,11 @@ with the panel like every other control.
 | **L** | 2 × | 192 GB |
 | **XL** | 4 × | 384 GB |
 
+The product name is set in the hosting brand's own headline face and weight
+(Proxima Nova Semibold, tracked at `-0.016em`), which `--font-hosting` leads with for
+anyone who has that licensed face installed; Figtree 600 — the closest free match on
+width and x-height — is what everyone else gets, and `--font-ui` backs both up.
+
 The chips are rendered from `gpu.json`, not from hard-coded totals, so the card's
 VRAM there is the single source of truth for the labels. Tiers live in
 `HOSTING_PRESETS` in `llm.html` (tier name + card count); the card they point at is
