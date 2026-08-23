@@ -471,8 +471,8 @@ How a value is produced:
    model cannot outrank a well-tested one on imputed strength alone.
 4. **Refuse to guess.** A benchmark with fewer than two scored models carries no
    rank and is dropped from the total weight. A model measured on less than
-   `MIN_SCORED_FRACTION` (20%) of that weight is left unranked (`null`) rather than
-   reported as a mostly-imputed number.
+   `MIN_SCORED_FRACTION` (18%, see [below](#why-the-evidence-bar-is-18)) of that
+   weight is left unranked (`null`) rather than reported as a mostly-imputed number.
 
 The result is reported as **whole index points**, `SCALE` (100,000) per full
 percentile, so the median model sits near 50,000 and the current field spans roughly
@@ -504,7 +504,11 @@ Two consequences worth knowing (they hold for every derived index):
   their rank. That is why SWE-bench Multimodal, scored on two of 136 models, is
   carried as a column but left out of `INDEXES` for now — admitting it at 0.15
   dropped four models from ranked to `null` and bought no discrimination in
-  return. Worth adding once its coverage grows.
+  return. Worth adding once its coverage grows. SWE-bench Multilingual, admitted
+  at 0.30 on 26 scored models, unseated the same four — and they came back when
+  the SWE Atlas trio was collapsed to one track, which took more weight out of
+  the denominator than the new column put in. Both moves are worked through
+  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track).
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
@@ -528,6 +532,133 @@ Two consequences worth knowing (they hold for every derived index):
 The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
 in `llm.json`), which is what this column replaced — that machinery is still in
 place, just with no group configured.
+
+### Why SWE-bench Multilingual sits at 0.30
+
+The newest member of the coding group, and the worked example of how a weight on the
+ladder gets chosen. Measured on the current file (26 scored models):
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| What it tests | 300 real issue/PR pairs from 42 repositories in nine languages other than Python, graded by running the repository's own fail-to-pass and pass-to-pass tests. No judge, no algorithmic toy problems. The rest of the group is Python-heavy, so this is the only column that can tell a model that only writes Python from one that ships Go and Rust. | **up** |
+| Saturation | Median 68.0, max 79.6, **nothing above 80** — no ceiling problem, unlike SWE-bench Verified (93.4 max, saturated) or LiveCodeBench (4 models ≥ 90). | **up** |
+| Head resolution | Top model minus fifth is **3.1 points**, the tightest in the group (SWE-bench Verified 12.8, SWE-bench Pro 18.2). It separates the mid-field well and the leaders barely at all. | down |
+| Redundancy | Spearman **0.92** with SWE-bench Verified on the 23 models that have both — the strongest overlap of any pair here, which is what the shared collection pipeline predicts. Also 0.85 with Terminal-Bench 2.1 and 0.77 with SWE-bench Pro. | down |
+| Trust | The official leaderboard runs one standardized mini-SWE-agent, but only **3** of our 26 values come from a run we can check (evals.report, Official/Verified). The other 23 are Hugging Face card self-reports at each lab's harness of choice. Public since 2025 and built by the SWE-bench pipeline, so its contamination profile is SWE-bench Pro's, not DeepSWE's. | down |
+| Coverage | 26 of 136 models (19%), from 11 vendors — mid-pack for this group: ahead of DeepSWE and the SWE-Atlas tracks (6–14) and behind Terminal-Bench 2.1 (78), LiveCodeBench (94), SciCode (125). | — |
+
+0.30 is where those pull: below `swe_bench_pro` (0.4) because most values are
+self-reported rather than harness-controlled, above `swe_bench_verified` (0.15)
+because it is unsaturated and it is the only non-Python signal in the group. The
+ranking barely moves — Spearman 0.994 against the pre-addition index, mean 2.3
+places, max 7.
+
+**What it cost on admission, measured.** Four models — `glm-4-6`, `glm-4-7-flash`,
+`qwen3-5-27b`, `qwen3-coder-480b-a35b-instruct` — went from ranked to `null`. None of
+them lost a score; the bar moved. Each carries the same four cheap members (SWE-bench
+Pro + LiveCodeBench + SciCode + SWE-bench Verified = **1.30** scored weight), and under
+the 20% threshold in force at the time that bar went from 1.272 to 1.332 — they had
+been clearing it by 0.028, so *any* new coding column above 0.14 would have unseated
+them. Not a fact about SWE-bench Multilingual. Both follow-ups have since removed the
+problem rather than papered over it: [the SWE Atlas
+trio](#why-swe-atlas-contributes-one-track) gave 0.26 back to the denominator, and
+[the threshold](#why-the-evidence-bar-is-18) moved to 18%, which puts the bar at 1.152
+and leaves them 0.15 of margin instead of 0.02.
+
+One knob deliberately not turned: weighting it **0.5** would also have cleared the
+bar for two models (at w ≥ 0.465 `deepseek-v3-2-0925` and `kimi-k2-thinking` qualify
+on their own SWE-bench Multilingual score). Buying coverage with a weight the trust
+evidence does not support is the mistake the ladder exists to prevent; the weight
+describes the benchmark, not the roster.
+
+### Why SWE Atlas contributes one track
+
+Scale AI's SWE Atlas ships three tracks and the index carried all three at 0.17 each,
+so the family voted 0.51 — deliberately, as "three narrow rubric-graded slices, half a
+benchmark between them". Measured on the current file, that reasoning does not hold:
+
+- **The three tracks are not three populations.** Every model scored on Refactoring
+  (6) or Test Writing (7) is also scored on Codebase Q&A (13). Dropping the first two
+  removes **no model** from the index, and Q&A alone covers the family's whole roster.
+- **They are barely three measurements.** Spearman **0.94** between Refactoring and
+  Test Writing, 0.77 and 0.89 against Q&A. Three near-duplicate ranks over one
+  ≤13-model population is the same triple-count that got `aa_coding_index` removed
+  from this group, one order of magnitude smaller.
+- **The redundant weight was not free.** Weight in the denominator raises the
+  `MIN_SCORED_FRACTION` bar for *every* model, including the ones the extra tracks
+  never measured.
+
+So the family now contributes **Codebase Q&A at 0.25**: one track, weighted a little
+above the 0.17 it held as one third of a trio, because it now carries the family's
+whole vote — and well below the 0.51 the trio held, because it is one small
+rubric-graded track. It stays under `swe_bench_multilingual` (0.30) and every
+execution-graded column above it, which is the honest place for it: Q&A is the one
+track in the trio that requires **no code changes** at all (124 comprehension tasks —
+tracing execution paths, multi-file reasoning), so on task shape it is the weakest of
+the three for a coding index. It is kept over the other two anyway because the
+correlations say all three rank models alike and only Q&A has the coverage.
+Refactoring and Test Writing remain columns in `llm.json`; they are simply not
+aggregated.
+
+### Why the evidence bar is 18%
+
+`MIN_SCORED_FRACTION` is the one number both derived indexes share: sum the weights of
+the contributing benchmarks a model actually has a score on, and if that is below
+`MIN_SCORED_FRACTION × total group weight`, the model is `null` instead of ranked. It
+is a share of *weight*, not a count of benchmarks — three cheap columns can be worth
+less evidence than one expensive one.
+
+At **0.18** the bars are 1.152 of 6.40 (Coding, 84 of 136 models ranked) and 1.107 of
+6.15 (Tooling, 85 ranked).
+
+Coverage does not spread evenly across models, it clusters, and the threshold should
+fall between clusters rather than through one. Measured over the current file:
+
+| fraction | Coding ranked | Tooling ranked | what the cut admits |
+| --- | --- | --- | --- |
+| 0.25 | 68 | 82 | |
+| 0.20 | 73 | 85 | the 20%-measured block, cut in half |
+| **0.18** | **84** | **85** | the rest of that block: 11 models at 19% |
+| 0.15 | 84 | 87 | nothing in Coding |
+| 0.12 | 97 | 114 | the 13–14% cluster |
+| 0.10 | 127 | 115 | the ~12% cluster |
+| 0.05 | 135 | 127 | models measured on a twentieth of the weight |
+
+0.20 was splitting a natural block: eleven models sit at 19% and none between 19% and
+20%, so `kimi-k2-thinking` and `deepseek-v3-2-0925` (both scored on LiveCodeBench,
+SciCode, SWE-bench Multilingual and SWE-bench Verified) were unranked while models with
+the same amount of evidence were not. 0.18 takes the whole block and stops before the
+next one. Lowering the bar never changes a ranked model's *value* — the total weight is
+the same either way — it only decides who appears; previously ranked models move a mean
+of 3 places as the new arrivals slot in, and Tooling does not move at all.
+
+Going further would change what the column means rather than how much of it is filled
+in. At 0.12, **90%** of ranked models would be measured on less than half the weight;
+at 0.10, 92%. The head stays safe at any setting — the imputation cap means a model
+measured on 12% of the weight cannot score above 56,000 even by topping every benchmark
+it has, and no model under 25% measured reaches the visible top 20 at any fraction I
+tested — but the mid-field crowds: the ten models measured on at least half the weight
+fall a mean 5 places at 0.12 and 11 places at 0.10, below models whose numbers are
+mostly imputation. 18% keeps the ranked field majority-measured; 12% does not.
+
+The setting is global to both indexes today. They do not want the same thing — Tooling
+is flat between 0.20 and 0.15 where Coding gains 11 models — so if the two ever need to
+diverge, the place for it is a per-index override on `IndexDef`, not a compromise
+value.
+
+Effects, measured: total group weight 6.66 → 6.40, and with it the bar (1.332 → 1.280
+at the 20% threshold in force at the time), which put the four models the SWE-bench
+Multilingual admission had unseated back in the ranking. Ranking agreement with the
+pre-change index is Spearman 0.999 (mean 390 index points across the table); the seven
+models that lose Refactoring/Test Writing evidence move by a mean of 1,103 points —
+`ornith-1-0-9b` most, +3,347, because its remaining evidence ranks it better than the
+two tracks it lost did.
+
+Worth being clear about what carries what: at today's 18% threshold those four clear
+the bar with or without this change, so the redundancy argument above is the whole
+justification for it, not the four models. Removing near-duplicate weight is right on
+its own; rescuing a rank is a lever, and [the threshold](#why-the-evidence-bar-is-18)
+is the honest one.
 
 ## Tooling Index
 

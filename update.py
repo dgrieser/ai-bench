@@ -187,6 +187,9 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "ifbench": (("ifbench",), to_percent),
     "critpt": (("critpt",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
+    # AA runs MMLU-Pro itself; the field is API-only, and the HF cards and
+    # evals.report carry the same benchmark for models AA has not run.
+    "mmlu_pro": (("mmlu_pro",), to_percent),
     "mmmu_pro": (("mmmu_pro",), to_percent),
     "gpqa_diamond": (("gpqa",), to_percent),
     "livecodebench": (("livecodebench",), to_percent),

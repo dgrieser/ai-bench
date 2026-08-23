@@ -51,6 +51,11 @@ BENCHMARKS: dict[str, str] = {
     "bfcl": "bfcl_v4",
     "mcp-atlas": "mcp_atlas",
     "ifbench": "ifbench",
+    # Both also arrive as Hugging Face card self-reports, which the HF ingest
+    # writes into nulls only; this source runs after it and does overwrite, so
+    # an Official or Verified run displaces a self-report wherever one exists.
+    "swe-bench-multilingual": "swe_bench_multilingual",
+    "mmlu-pro": "mmlu_pro",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}

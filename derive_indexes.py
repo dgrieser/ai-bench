@@ -96,9 +96,14 @@ INDEXES: list[IndexDef] = [
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
-            ("swe_atlas_rf", 0.17),
-            ("swe_atlas_tw", 0.17),
-            ("swe_atlas_qna", 0.17),
+            ("swe_bench_multilingual", 0.3),
+            # SWE Atlas contributes its Codebase Q&A track only: every model
+            # scored on Refactoring or Test Writing is also scored on Q&A, so
+            # the other two tracks add no coverage, correlate 0.94 with each
+            # other and 0.77-0.89 with Q&A, and their weight only raised the
+            # MIN_SCORED_FRACTION bar. One track at 0.25 instead of three at
+            # 0.17 -- see README, "Why SWE Atlas contributes one track".
+            ("swe_atlas_qna", 0.25),
             ("swe_bench_verified", 0.15),
         ],
     ),
@@ -120,8 +125,14 @@ INDEXES: list[IndexDef] = [
     ),
 ]
 
-# Below this share of an index's total weight a model is left unranked.
-MIN_SCORED_FRACTION = 0.2
+# Below this share of an index's total weight a model is left unranked. 0.18
+# rather than a round 0.2 because model coverage clusters rather than spreading
+# evenly: the coding group has 11 models measured on 19% of its weight and none
+# between 19% and 20%, so 0.2 was cutting a natural block of two-benchmark
+# models in half. The next cluster sits at 13-14%, and admitting it would make
+# 90% of the ranked field less than half measured -- see README, "Why the
+# evidence bar is 18%".
+MIN_SCORED_FRACTION = 0.18
 
 # Index points per full percentile: a model that tops every contributing
 # benchmark scores SCALE, the median model half of it. Sized for headroom --
