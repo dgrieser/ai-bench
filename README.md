@@ -557,6 +557,37 @@ purpose:
 
 As with scores, neither field is ever overwritten with `null`.
 
+## GPU Fit Filter and Hosting Presets
+
+`gpu.json` is the card catalogue behind `llm.html`'s GPU filter: pick a card, set a
+card count, and the page turns that into a total VRAM budget (minus the **Reserve**
+share) that shades the VRAM columns and drops models that do not fit.
+
+Leading that panel is a compact preset strip — one chip per mittwald
+[Managed Dedicated AI Hosting](https://www.mittwald.de/mstudio/ai-dedicated-hosting)
+tier, which is a shortcut into that same filter and nothing more: a chip fills in the
+tier's card and card count, and everything downstream behaves exactly as if the fields
+had been set by hand. Clicking the armed chip again clears the filter, and editing the
+fields unarms it. The strip is a full-width row of the filters grid, so it collapses
+with the panel like every other control.
+
+| Tier | Cards | Total VRAM |
+|---|---|---|
+| **M** | 1 × NVIDIA RTX PRO 6000 Blackwell (Server) | 96 GB |
+| **L** | 2 × | 192 GB |
+| **XL** | 4 × | 384 GB |
+
+The product name is set in the hosting brand's own headline face and weight
+(Proxima Nova Semibold, tracked at `-0.016em`), which `--font-hosting` leads with for
+anyone who has that licensed face installed; Figtree 600 — the closest free match on
+width and x-height — is what everyone else gets, and `--font-ui` backs both up.
+
+The chips are rendered from `gpu.json`, not from hard-coded totals, so the card's
+VRAM there is the single source of truth for the labels. Tiers live in
+`HOSTING_PRESETS` in `llm.html` (tier name + card count); the card they point at is
+`HOSTING_PRESET_VENDOR`/`HOSTING_PRESET_GPU`. If that card is missing from
+`gpu.json`, the strip stays hidden rather than offering a preset it cannot apply.
+
 ## Data Quality Features
 
 - **Model deduplication**: Same model across multiple benchmarks merged under one slug
@@ -637,6 +668,7 @@ ai-bench/
 ├── gpu.json                    # GPU configuration reference
 ├── model-names-*.txt           # Cached model name lists
 │
+├── icons/mittwald.svg             # mittwald wordmark (source of truth; inlined into llm.html)
 ├── icons/openbenchindex_logo.svg  # Master logo (hand-edited source of truth)
 ├── icons/openbenchindex_mark.svg  # Generated: logo minus the "INDEX" wordmark
 ├── favicon.ico / favicon_*.png    # Generated icon set
