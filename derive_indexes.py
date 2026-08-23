@@ -96,6 +96,7 @@ INDEXES: list[IndexDef] = [
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
+            ("swe_bench_multilingual", 0.3),
             ("swe_atlas_rf", 0.17),
             ("swe_atlas_tw", 0.17),
             ("swe_atlas_qna", 0.17),

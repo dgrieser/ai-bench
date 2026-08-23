@@ -377,6 +377,10 @@ re-deciding them:
    One `SCORE_MAPPINGS` line for the API half, and the HF half needs only a mapping-file edit
    (six alias spellings → `mmlu_pro`) because `update_huggingface_scores()` already writes
    into nulls without overwriting. Low weight; it is a tail instrument.
+   **Done** — added as a column on 2026-08-23, wired to the AA API (`mmlu_pro`), the HF cards
+   (7 aliases) and evals.report (`mmlu-pro`, 42 Official/Verified rows). 62 models scored on
+   the first ingest, without the AA half (no API key in that run). Not a member of any derived
+   index: it measures knowledge, and neither the Coding nor the Tooling index is about that.
 2. **`wildclawbench`** — 14 / 8, unsaturated, independent leaderboard to validate against,
    and its `avg_time` / `avg_cost` fields open a dimension the table does not have.
 3. **τ² beyond Telecom** — one column (Retail, or the explicit 3-domain average), *never*
@@ -384,6 +388,14 @@ re-deciding them:
    sibling sitting in the bin at 35 models.
 4. **`swe_bench_multilingual` @ w=0.30** — the call was already made; coverage has gone 17 → 24
    and 11 vendors in three weeks.
+   **Done** — added as a column on 2026-08-23 (26 models scored: 23 HF self-reports, 3
+   evals.report Official/Verified) and admitted to the Coding index at **0.30**. The weight was
+   re-derived against the live file rather than inherited: unsaturated (max 79.6, nothing above
+   80) and the group's only non-Python signal argue up; Spearman 0.92 with SWE-bench Verified,
+   a 3.1-point top-5 spread and 23 of 26 values self-reported argue down. Cost: four thinly
+   measured models drop from ranked to `null` because the `MIN_SCORED_FRACTION` bar rises —
+   they were clearing it by 0.028, so any new coding column above w=0.14 would do the same.
+   Full working in [the README](../README.md#why-swe-bench-multilingual-sits-at-030).
 5. **`claw_eval` (general split only)** — 19 / 8 and unsaturated, but resolve the 15-point
    channel disagreement and pick one split first.
 

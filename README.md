@@ -504,7 +504,10 @@ Two consequences worth knowing (they hold for every derived index):
   their rank. That is why SWE-bench Multimodal, scored on two of 136 models, is
   carried as a column but left out of `INDEXES` for now — admitting it at 0.15
   dropped four models from ranked to `null` and bought no discrimination in
-  return. Worth adding once its coverage grows.
+  return. Worth adding once its coverage grows. SWE-bench Multilingual, admitted
+  at 0.30 on 26 scored models, cost the same four — see
+  [below](#why-swe-bench-multilingual-sits-at-030) for why that price was worth
+  paying there and not here.
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
@@ -528,6 +531,45 @@ Two consequences worth knowing (they hold for every derived index):
 The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
 in `llm.json`), which is what this column replaced — that machinery is still in
 place, just with no group configured.
+
+### Why SWE-bench Multilingual sits at 0.30
+
+The newest member of the coding group, and the worked example of how a weight on the
+ladder gets chosen. Measured on the current file (26 scored models):
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| What it tests | 300 real issue/PR pairs from 42 repositories in nine languages other than Python, graded by running the repository's own fail-to-pass and pass-to-pass tests. No judge, no algorithmic toy problems. The rest of the group is Python-heavy, so this is the only column that can tell a model that only writes Python from one that ships Go and Rust. | **up** |
+| Saturation | Median 68.0, max 79.6, **nothing above 80** — no ceiling problem, unlike SWE-bench Verified (93.4 max, saturated) or LiveCodeBench (4 models ≥ 90). | **up** |
+| Head resolution | Top model minus fifth is **3.1 points**, the tightest in the group (SWE-bench Verified 12.8, SWE-bench Pro 18.2). It separates the mid-field well and the leaders barely at all. | down |
+| Redundancy | Spearman **0.92** with SWE-bench Verified on the 23 models that have both — the strongest overlap of any pair here, which is what the shared collection pipeline predicts. Also 0.85 with Terminal-Bench 2.1 and 0.77 with SWE-bench Pro. | down |
+| Trust | The official leaderboard runs one standardized mini-SWE-agent, but only **3** of our 26 values come from a run we can check (evals.report, Official/Verified). The other 23 are Hugging Face card self-reports at each lab's harness of choice. Public since 2025 and built by the SWE-bench pipeline, so its contamination profile is SWE-bench Pro's, not DeepSWE's. | down |
+| Coverage | 26 of 136 models (19%), from 11 vendors — mid-pack for this group: ahead of DeepSWE and the SWE-Atlas tracks (6–14) and behind Terminal-Bench 2.1 (78), LiveCodeBench (94), SciCode (125). | — |
+
+0.30 is where those pull: below `swe_bench_pro` (0.4) because most values are
+self-reported rather than harness-controlled, above `swe_bench_verified` (0.15)
+because it is unsaturated and it is the only non-Python signal in the group. The
+ranking barely moves — Spearman 0.994 against the pre-addition index, mean 2.3
+places, max 7.
+
+**What it cost, measured.** Four models — `glm-4-6`, `glm-4-7-flash`, `qwen3-5-27b`,
+`qwen3-coder-480b-a35b-instruct` — went from ranked to `null`, so the coding column
+ranks 69 models where it ranked 73. None of them lost a score; the bar moved. Each
+carries the same four cheap members (SWE-bench Pro + LiveCodeBench + SciCode +
+SWE-bench Verified = **1.30** scored weight) against a `MIN_SCORED_FRACTION` bar that
+was **1.272**. They were clearing it by 0.028, so *any* new coding column weighing
+more than 0.14 unseats them — this is not a fact about SWE-bench Multilingual.
+
+Two knobs, both deliberately not turned:
+
+- Weighting it **0.5** instead would rank 70 models rather than 69, because at
+  w ≥ 0.465 `deepseek-v3-2-0925` and `kimi-k2-thinking` clear the bar on their own
+  SWE-bench Multilingual score. Buying coverage with a weight the trust evidence does
+  not support is the mistake the ladder exists to prevent; the weight describes the
+  benchmark, not the roster.
+- `MIN_SCORED_FRACTION` **0.195** would keep all 73 ranked at w=0.30. That is the
+  honest lever if the four are wanted back — it is a statement about how much
+  evidence a rank needs, and it applies to the Tooling index too.
 
 ## Tooling Index
 

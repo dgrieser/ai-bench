@@ -47,6 +47,23 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 # ("SWE-Bench Verified (OpenHands)" and friends) are mapped already -- and
 # because fetch_evals_report.py runs after this ingest and does overwrite, so an
 # official run displaces the self-report as soon as one exists.
+#
+# The mmlu_pro and swe_bench_multilingual aliases were mapped on the same terms
+# (evals.report carries both, and runs after this ingest). Two things to know
+# when reading a value that came from here:
+#
+#   * A card can report the same benchmark twice -- once as structured Hub eval
+#     metadata under the dataset id, once as a README table cell -- and the two
+#     do not always agree. extract_scores() lets the structured value win, which
+#     is the channel a benchmark owner can also write to via a Hub PR. On the 27
+#     models reporting MMLU-Pro both ways 25 agree exactly, but deepseek-v4-pro
+#     reports 87.5 in metadata against 73.5 in its own table.
+#   * Scale is not normalized anywhere in the ingest, so a label is only mapped
+#     when every card reporting it uses percentage points. That is why
+#     "Multilingual MMLU" and "MMLU 5-shot" stay parked: the Ministral cards
+#     report them as 0-1 fractions (0.742, 0.794), which would land in llm.json
+#     as sub-1% scores. "MMLU-ProX" and "KMMLU-Pro" stay parked for the ordinary
+#     reason -- a multilingual extension and a Korean one are not MMLU-Pro.
 UNMAPPABLE = "__unmappable__"
 
 
