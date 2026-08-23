@@ -30,6 +30,9 @@ on:
     paths:
       - "*mapping*.json"
       - "llm.json"
+      # A merged proposal PR may carry nothing but a flipped new-model decision;
+      # that run is the one that has to act on it.
+      - "check_new-decisions.json"
 
   workflow_dispatch:
     inputs:
@@ -90,12 +93,14 @@ jobs:
       - run: pip install -r requirements.txt
 
       # Fails fast, before any network work. A broken freeze guard would let the
-      # run bury source names as __unmappable__ with nobody ever prompted, and a
-      # loosened match tier would commit wrong mappings into the proposal PR.
+      # run bury source names as __unmappable__ with nobody ever prompted, a
+      # loosened match tier would commit wrong mappings into the proposal PR, and
+      # a broken decision applier would silently re-add an ignored model.
       - name: Check collect mode and the matcher
         run: |
           ./test_prompts.py
           ./test_propose.py
+          ./test_new_models.py
 
       # The openness index has a 12h TTL, so the daily run always rebuilds it
       # from its three sources; this only spares re-fetching when a run is
@@ -204,7 +209,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.propose.outputs.pr }}
-          INTRO: "Each parked line below has a suggestion you can commit directly. Ignoring one is safe: `__pending__` records nothing and the name is queued again next run."
+          INTRO: "Each line below has a suggestion you can commit directly. Ignoring a parked mapping is safe: `__pending__` records nothing and the name is queued again next run. A new model's suggestion is the opposite answer to adding it: `__ignored__` removes the entry again on the next run and stops the slug being offered."
         run: |
           count=$(jq '.comments | length' "$RUNNER_TEMP/plan.json")
           if [ "$count" -eq 0 ]; then

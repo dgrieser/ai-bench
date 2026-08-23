@@ -18,6 +18,7 @@ import unittest
 from pathlib import Path
 
 import _matching
+import _new_models
 import _prompts
 import propose
 from _openness import CLOSED_WEIGHTS, PENDING, UNMAPPABLE
@@ -327,6 +328,89 @@ class TestSuggestions(unittest.TestCase):
         self.assertEqual(len(comments), 1)
 
 
+class TestModelSuggestions(unittest.TestCase):
+    """A new model must be as easy to decline as to accept.
+
+    The addition itself is the "yes"; without this comment the only way to say
+    no is to edit llm.json by hand, so the PR effectively only offers one answer.
+    """
+
+    def setUp(self) -> None:
+        self.tmp = Path(tempfile.mkdtemp())
+        self.path = self.tmp / "check_new-decisions.json"
+        self.saved = _new_models.DECISIONS_FILE
+        _new_models.DECISIONS_FILE = self.path
+        self.addCleanup(setattr, _new_models, "DECISIONS_FILE", self.saved)
+
+    def models(self, *names: str) -> list[dict]:
+        for name in names:
+            _new_models.record_proposed(name, self.path)
+        return [
+            {"name": name, "note": "released 2026-08-01", "line": _new_models.find_line(name, self.path)}
+            for name in names
+        ]
+
+    def test_lines_survive_a_later_model_sorting_above_an_earlier_one(self) -> None:
+        # The file is rewritten sorted on every insert, so a line read at insert
+        # time can be stale by the end -- and a suggestion on the wrong line
+        # would ignore the wrong model.
+        added = []
+        for name in ("z-model", "a-model"):
+            _new_models.record_proposed(name, self.path)
+            added.append({"name": name})
+        for model in added:
+            model["line"] = _new_models.find_line(model["name"], self.path)
+
+        lines = self.path.read_text(encoding="utf-8").splitlines()
+        for comment in propose.plan_model_suggestions(added, {}):
+            name = comment["body"].split("`")[1]
+            self.assertIn(f'"{name}"', lines[comment["line"] - 1])
+
+    def test_every_added_model_gets_an_ignore_suggestion(self) -> None:
+        comments = propose.plan_model_suggestions(self.models("new-model-9b"), {})
+        self.assertEqual(len(comments), 1)
+        self.assertEqual(comments[0]["path"], self.path.name)
+        self.assertEqual(comments[0]["side"], "RIGHT")
+        self.assertEqual(comments[0]["line"], 2)
+
+    def test_the_suggestion_is_a_valid_one_line_edit(self) -> None:
+        comments = propose.plan_model_suggestions(self.models("a-model", "b-model"), {})
+        text = self.path.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        for comment in comments:
+            with self.subTest(comment["line"]):
+                real = lines[comment["line"] - 1]
+                block = comment["body"].split("```suggestion\n")[1].split("\n```")[0]
+                # Same indentation and same trailing comma, or GitHub writes
+                # invalid JSON into the branch.
+                self.assertEqual(
+                    block[: len(block) - len(block.lstrip())],
+                    real[: len(real) - len(real.lstrip())],
+                )
+                self.assertEqual(block.endswith(","), real.endswith(","))
+                patched = json.loads(text.replace(real, block))
+                self.assertEqual(patched[comment["body"].split("`")[1]], _new_models.IGNORED)
+
+    def test_a_line_already_on_main_gets_no_comment(self) -> None:
+        # No hunk, and a review comment outside the diff 422s the whole review.
+        models = self.models("new-model-9b")
+        comments = propose.plan_model_suggestions(models, {"new-model-9b": _new_models.ADDED})
+        self.assertEqual(comments, [])
+
+    def test_a_model_without_a_line_is_skipped_not_crashed(self) -> None:
+        self.assertEqual(propose.plan_model_suggestions([{"name": "x", "line": None}], {}), [])
+
+    def test_a_line_with_nothing_to_flip_gets_no_comment(self) -> None:
+        # record_proposed() never overwrites a reviewer's answer, so a line that
+        # already reads __ignored__ stays put -- and a suggestion identical to
+        # the line is a button that does nothing.
+        self.path.write_text(
+            '{\n  "new-model-9b": "%s"\n}\n' % _new_models.IGNORED, encoding="utf-8"
+        )
+        models = [{"name": "new-model-9b", "line": 2}]
+        self.assertEqual(propose.plan_model_suggestions(models, {}), [])
+
+
 class TestAnsweredKeys(unittest.TestCase):
     """A queued name the mapping file already decided must be left alone.
 
@@ -426,6 +510,14 @@ class TestBody(unittest.TestCase):
         self.assertIn("`glm-5-air`", body)
         self.assertIn("new-model-9b", body)
         self.assertIn("released 2026-08-01", body)
+
+    def test_body_spells_out_the_other_answer_for_a_new_model(self) -> None:
+        # A reviewer who only reads the PR body must still learn that declining
+        # a model is one click, not a hand edit of llm.json.
+        body = propose.render_body(self.plan())
+        self.assertIn("check_new-decisions.json", body)
+        self.assertIn(_new_models.IGNORED, body)
+        self.assertIn("removes the entry", body)
 
     def test_body_explains_that_pending_is_not_a_decision(self) -> None:
         body = propose.render_body(self.plan())
