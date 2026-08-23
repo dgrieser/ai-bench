@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Compute the derived index columns in llm.json from the benchmarks they
 aggregate: the Coding index from the coding benchmarks, the Tooling index from
-the agentic tool-use benchmarks.
+the agentic tool-use benchmarks, the Knowledge index from the knowledge and
+reasoning benchmarks.
 
 Unlike every other column, a derived index is not scraped: it is computed from
 scores already in llm.json, so it has to be recomputed whenever any of them
@@ -123,6 +124,29 @@ INDEXES: list[IndexDef] = [
             ("ifbench", 0.2),
         ],
     ),
+    IndexDef(
+        key="knowledge_index",
+        fallback_source_url="https://github.com/dgrieser/ai-bench#knowledge-index",
+        contributing=[
+            ("aa_omniscience", 1.0),
+            ("hle", 0.9),
+            ("critpt", 0.6),
+            ("mmlu_pro", 0.5),
+            ("aime_2025", 0.4),
+            ("gpqa_diamond", 0.3),
+            # Deliberately not aggregated, though they are knowledge columns in
+            # llm.json: aa_omniscience_hallucination (the same AA run as
+            # aa_omniscience, whose index already prices confident errors and
+            # abstentions in, and it adds 6 models of coverage), aime_2026
+            # (the same exam one year on, scored on 28 models, 19 of them at or
+            # above 90), mmmu_pro (0.96 with GPQA and only multimodal models can
+            # be scored at all), aa_lcr and browsecomp (comprehension of a
+            # supplied document and retrieval with a browser, not what the model
+            # knows), aa_intelligence_index (a composite over benchmarks in this
+            # table, coding and tool use among them) -- see README, "Knowledge
+            # index".
+        ],
+    ),
 ]
 
 # Below this share of an index's total weight a model is left unranked. 0.18
@@ -135,9 +159,10 @@ INDEXES: list[IndexDef] = [
 MIN_SCORED_FRACTION = 0.18
 
 # Index points per full percentile: a model that tops every contributing
-# benchmark scores SCALE, the median model half of it. Sized for headroom --
-# the closest pair of models in the current set is ~15 points apart, so the
-# model count would have to grow many times over before two of them collide.
+# benchmark scores SCALE, the median model half of it. Sized for headroom, and
+# the headroom is real: the densest column is Knowledge, whose 133 ranked models
+# still leave its closest pair 1 point apart with no two values colliding, where
+# a 0-100 scale would have rounded a good part of its mid-field into ties.
 SCALE = 100_000
 
 

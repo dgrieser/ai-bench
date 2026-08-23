@@ -1,0 +1,79 @@
+<!-- OpenBench's own Knowledge index: an open book inside a two-tone ring,
+     sibling to the Coding and Tooling index marks. Ring geometry is copied from
+     coding-index.svg so the three marks line up, and the viewBox is cropped to
+     the drawing so sizing it by height lands its top and bottom on the ink —
+     see .tip-icon in llm.html. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="357.12 332.16 821.76 845.44"
+  fill="none"
+>
+  <!-- The glyph is the page's ink, not a fixed white: on a transparent ground
+       white vanishes on the light theme. llm.html sets color-scheme per theme
+       and the browser hands that down to an SVG loaded in an <img>, so this
+       follows the site's own toggle rather than the reader's OS. The two
+       values are llm.html's text ink; an <img> cannot read the page's custom
+       property, so they are copied here and have to be changed alongside it.
+       The stroke attributes below are the fallback for anything that ignores
+       the style. -->
+  <style>
+    .ink { stroke: #111111; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #e0ddd7; }
+    }
+  </style>
+
+  <!-- Outer ring: pink section -->
+  <path
+    d="M 483.10 478.51
+       A 391.14 403.21 0 1 1 1040.78 1043.75"
+    stroke="#FD2179"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="M 1040.78 1043.75
+       A 391.14 403.21 0 0 1 483.10 478.51"
+    stroke="#0170FE"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Left page -->
+  <path
+    d="M 762 668
+       C 700 630 610 620 528 640
+       L 528 852
+       C 610 832 700 842 762 880"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Right page -->
+  <path
+    d="M 762 668
+       C 824 630 914 620 996 640
+       L 996 852
+       C 914 832 824 842 762 880"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Spine -->
+  <path
+    d="M 762 668
+       L 762 880"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linecap="round"
+  />
+</svg>
