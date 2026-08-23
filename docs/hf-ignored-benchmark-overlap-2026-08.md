@@ -394,12 +394,14 @@ re-deciding them:
    80) and the group's only non-Python signal argue up; Spearman 0.92 with SWE-bench Verified,
    a 3.1-point top-5 spread and 23 of 26 values self-reported argue down. Admission unseated
    four thinly measured models (the `MIN_SCORED_FRACTION` bar rises with total weight and they
-   were clearing it by 0.028); they were ranked again once the SWE Atlas trio was collapsed to
-   its Codebase Q&A track at 0.25, which returned more weight to the denominator than this
-   column took out — every model scored on Refactoring or Test Writing already had Q&A, so
-   that cost no coverage. Full working in the README:
-   [the weight](../README.md#why-swe-bench-multilingual-sits-at-030),
-   [the trio](../README.md#why-swe-atlas-contributes-one-track).
+   were clearing it by 0.028), which prompted two follow-ups: the SWE Atlas trio was collapsed
+   to its Codebase Q&A track at 0.25 (every model scored on Refactoring or Test Writing
+   already had Q&A, so it cost no coverage and removed near-duplicate weight), and the
+   evidence bar moved from 20% to 18%, which is where the block of 19%-measured models
+   actually ends. The coding column now ranks 84 models, up from 73 before any of this.
+   Full working in the README: [the weight](../README.md#why-swe-bench-multilingual-sits-at-030),
+   [the trio](../README.md#why-swe-atlas-contributes-one-track),
+   [the bar](../README.md#why-the-evidence-bar-is-18).
 5. **`claw_eval` (general split only)** — 19 / 8 and unsaturated, but resolve the 15-point
    channel disagreement and pick one split first.
 

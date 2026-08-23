@@ -125,8 +125,14 @@ INDEXES: list[IndexDef] = [
     ),
 ]
 
-# Below this share of an index's total weight a model is left unranked.
-MIN_SCORED_FRACTION = 0.2
+# Below this share of an index's total weight a model is left unranked. 0.18
+# rather than a round 0.2 because model coverage clusters rather than spreading
+# evenly: the coding group has 11 models measured on 19% of its weight and none
+# between 19% and 20%, so 0.2 was cutting a natural block of two-benchmark
+# models in half. The next cluster sits at 13-14%, and admitting it would make
+# 90% of the ranked field less than half measured -- see README, "Why the
+# evidence bar is 18%".
+MIN_SCORED_FRACTION = 0.18
 
 # Index points per full percentile: a model that tops every contributing
 # benchmark scores SCALE, the median model half of it. Sized for headroom --
