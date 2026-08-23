@@ -253,6 +253,8 @@ Output: llm.json (unified dataset)
 ./fill_missing_source_urls.py llm.json --only vram-source -w   # one kind of gap only
 
 # Check for newly added/dismissed models
+#   [y] add it, [n] never ask again, [q] stop asking. Every run first carries
+#   out whatever check_new-decisions.json already says -- see below.
 ./check_new.py
 
 # Assess model openness (open-source vs closed-weight)
@@ -279,6 +281,31 @@ Interactive prompt guides you through:
 - Weights/licensing info
 - Openness classification
 - Optional manual score entries
+
+### 2b. Deciding a New Model Unattended
+
+`check_new.py` asks one question per newly released Artificial Analysis model:
+add it, or never offer it again. The scheduled GitHub Actions run cannot answer
+either, so it queues the question and `propose.py` turns it into a PR that
+carries **both** answers:
+
+- the model itself, added to `llm.json` with metadata prefilled from AA and null
+  scores — merge as-is and that is the "add";
+- a line in `check_new-decisions.json`:
+
+  ```json
+  { "some-new-model": "__added__" }
+  ```
+
+  Flip it to `__ignored__` — the PR attaches a clickable suggestion for exactly
+  that — and the next run removes the entry from `llm.json` again and records
+  the slug in `check_new-dismissed.json`, so AA never offers it.
+
+Both are applied by `apply_decisions()` (`_new_models.py`) at the top of the
+next `check_new.py` run, *before* any score is fetched, so an ignored model is
+gone before a mapping or a score can attach to it. The entry is dropped once
+acted on; a value that is neither sentinel is left in place and reported rather
+than guessed at.
 
 ### 3. Updating All Benchmarks
 
@@ -657,12 +684,15 @@ ai-bench/
 ├── _params.py                  # params field: AA counts, HF fallback (see below)
 ├── _context.py                 # context field: token counts → advertised sizes
 ├── check_new.py                # Detect new/dismissed models
+├── _new_models.py              # New-model decisions: add vs. ignore (see below)
 ├── fill_source_urls.py         # Utility for URLs
 ├── fill_missing_source_urls.py  # Interactive backfill of missing dates/source URLs
 ├── sync_score_dates.py         # Timestamp synchronization
 ├── make_favicons.py            # Render the icon set from the logo (see below)
 │
 ├── model-name-mapping-*.json   # Benchmark → canonical slug mappings
+├── check_new-decisions.json    # Open add/ignore questions for the proposal PR
+├── check_new-dismissed.json    # AA slugs never to offer again
 ├── huggingface-benchmark-name-mapping.json
 ├── llmstats-benchmark-name-mapping.json
 ├── gpu.json                    # GPU configuration reference

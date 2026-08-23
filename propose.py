@@ -10,7 +10,12 @@ turns that queue into changes a human can review as a diff:
                     loaders ignore, so merging it unanswered costs nothing and
                     the name is queued again next run.
   new models     -> a full llm.json entry via add.py, prefilled from Artificial
-                    Analysis. Scores stay null; the next update.py run fills them.
+                    Analysis, plus an __added__ line in check_new-decisions.json.
+                    Scores stay null; the next update.py run fills them. Flipping
+                    that line to __ignored__ -- one click on the suggestion this
+                    builds -- is the reviewer's other answer: the next run drops
+                    the entry again and AA never offers the slug. Without it the
+                    only reviewable outcome would be "add".
 
 Only normalized equality is ever written as a real mapping -- see _matching.py
 for why substring and subset matches are not safe to commit unreviewed.
@@ -38,6 +43,7 @@ from pathlib import Path
 from typing import Any
 
 import _matching
+import _new_models
 import _prompts
 from _openness import PENDING, UNMAPPABLE
 from _scores import editable_benchmarks
@@ -370,8 +376,66 @@ def add_models(entries: list[dict[str, Any]], llm_path: Path, limit: int) -> tup
         if proc.returncode != 0:
             print(f"warning: add.py failed for {name}: {proc.stderr.strip()}", file=sys.stderr)
             continue
+        # The entry in llm.json is the "add" half of the question; this line is
+        # where the reviewer answers it the other way.
+        _new_models.record_proposed(name)
         added.append({"name": name, "note": entry.get("note")})
+    # Located only once every entry is in: the file is written sorted, so each
+    # insert can push an earlier model's line down.
+    for model in added:
+        model["line"] = _new_models.find_line(model["name"])
     return added, max(0, len(wanted) - limit)
+
+
+def model_suggestion_body(name: str, line_text: str) -> str:
+    """A review comment whose suggestion turns an addition into a dismissal."""
+    return "\n".join(
+        [
+            f"`{name}` was added to `llm.json` from Artificial Analysis, with null "
+            "scores for the next refresh to fill in. Merging as-is keeps it.",
+            "",
+            "Not a model this project should track? Commit this suggestion instead: "
+            "the next run removes the entry again and never offers the slug.",
+            "",
+            "```suggestion",
+            line_text.replace(
+                json.dumps(_new_models.ADDED), json.dumps(_new_models.IGNORED)
+            ),
+            "```",
+        ]
+    )
+
+
+def plan_model_suggestions(models: list[dict], already: dict[str, str]) -> list[dict]:
+    """One "ignore instead" comment per model added by this run.
+
+    `already` is what the decisions file said before this run. A line it already
+    carried as __added__ produces no hunk, and GitHub 422s a review that points
+    at a line outside the diff -- taking every other suggestion down with it.
+    """
+    path = _new_models.DECISIONS_FILE
+    if not path.exists():
+        return []
+    lines = path.read_text(encoding="utf-8").splitlines()
+
+    comments = []
+    for model in models:
+        line = model.get("line")
+        if not line or already.get(model["name"]) == _new_models.ADDED:
+            continue
+        # Nothing to flip means nothing to suggest: a comment whose suggestion
+        # equals the line is a button that does nothing.
+        if json.dumps(_new_models.ADDED) not in lines[line - 1]:
+            continue
+        comments.append(
+            {
+                "path": path.name,
+                "line": line,
+                "side": "RIGHT",
+                "body": model_suggestion_body(model["name"], lines[line - 1]),
+            }
+        )
+    return comments
 
 
 def render_body(plan: dict[str, Any]) -> str:
@@ -432,6 +496,13 @@ def render_body(plan: dict[str, Any]) -> str:
             "",
             "Added to `llm.json` with metadata prefilled from Artificial Analysis and "
             "null scores; the next refresh fills the scores in. Check params and context.",
+            "",
+            "Each one also has a line in `check_new-decisions.json`. Leave it at "
+            f"`{_new_models.ADDED}` to keep the model. Flip it to "
+            f"`{_new_models.IGNORED}` &mdash; there is a clickable suggestion in the "
+            "review comments &mdash; and the next run removes the entry from "
+            "`llm.json` again and records the slug as never-offer-again, so "
+            "Artificial Analysis stops proposing it.",
             "",
         ]
         for model in plan["models"]:
@@ -551,7 +622,13 @@ def main() -> int:
 
     apply_mappings(proposals)
     comments, dropped_suggestions = plan_suggestions(proposals, args.max_suggestions)
+    # Read before add_models() writes, so a line that was already there (a
+    # decision the last run failed to apply) is not commented on.
+    decided_before = _new_models.load_decisions()
     models, dropped_models = add_models(entries, llm_path, args.max_models)
+    # Not capped against --max-suggestions: --max-models already bounds these,
+    # and dropping the ignore option would leave "add" as the only answer.
+    comments += plan_model_suggestions(models, decided_before)
     unchanged = [p for p in pending if not p.in_diff]
 
     if dropped_suggestions:

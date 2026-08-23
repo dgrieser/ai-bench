@@ -195,12 +195,15 @@ class TestFreezeInvariant(CollectModeBase):
         self.assertEqual(json.loads(target.read_text(encoding="utf-8")), {})
 
     def test_check_new_dismiss_frozen(self) -> None:
+        # The dismiss file moved to _new_models.py; check_new still owns the
+        # prompt that writes it, and that write stays frozen.
+        import _new_models
         import check_new
 
         self.collect()
-        before = check_new.DISMISSED_FILE.read_text(encoding="utf-8")
+        before = _new_models.DISMISSED_FILE.read_text(encoding="utf-8")
         check_new.dismiss("some-brand-new-model")
-        self.assertEqual(check_new.DISMISSED_FILE.read_text(encoding="utf-8"), before)
+        self.assertEqual(_new_models.DISMISSED_FILE.read_text(encoding="utf-8"), before)
 
 
 class TestPromptHooks(CollectModeBase):

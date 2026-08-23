@@ -15,9 +15,16 @@ addition:
                     again.
   [q] quit       -> stop asking.
 
-With no tty (e.g. inside a batch script), it only prints the candidates and
-makes no changes. Under --collect-prompts each candidate is queued for review
-instead of being offered, and nothing is dismissed.
+With no tty (e.g. inside a batch script), it offers nothing and only prints the
+candidates. Under --collect-prompts each candidate is queued for review instead
+of being offered, and nothing is dismissed.
+
+Both answers also exist unattended: propose.py turns a queued candidate into an
+llm.json entry plus a line in check_new-decisions.json, and the reviewer flips
+that line to __ignored__ to take the other branch. Every run except --no-add
+starts by carrying out whatever those lines already say -- before any score is
+fetched, so an ignored model is gone before anything can attach a mapping or a
+score to it. See _new_models.py.
 """
 
 from __future__ import annotations
@@ -31,13 +38,13 @@ from pathlib import Path
 
 import _prompts
 from _artificialanalysis_mapping import mapped_aa_slugs
+from _new_models import apply_decisions, dismiss, load_decisions, load_dismissed
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_LLM_JSON = HERE / "llm.json"
 AA_SCRIPT = HERE / "artificialanalysis.py"
 ADD_SCRIPT = HERE / "add.py"
 IGNORED_MAPPING = HERE / "model-name-mapping-llm-to-artificialanalysis-ignored.json"
-DISMISSED_FILE = HERE / "check_new-dismissed.json"
 
 
 def existing_slugs(llm_path: Path) -> set[str]:
@@ -53,24 +60,6 @@ def ignored_slugs() -> set[str]:
     for variants in mapping.values():
         slugs.update(variants)
     return slugs
-
-
-def load_dismissed() -> set[str]:
-    if not DISMISSED_FILE.exists():
-        return set()
-    return set(json.loads(DISMISSED_FILE.read_text(encoding="utf-8")))
-
-
-def dismiss(slug: str) -> None:
-    # Collect mode queues the candidate instead of offering it; dismissing it
-    # here would stop it ever being offered again.
-    if _prompts.freeze_decisions():
-        return
-    slugs = load_dismissed()
-    slugs.add(slug)
-    DISMISSED_FILE.write_text(
-        json.dumps(sorted(slugs), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
 
 
 def fetch_aa_models(cutoff: date, include_closed: bool) -> list[dict]:
@@ -167,7 +156,8 @@ def main() -> int:
     parser.add_argument(
         "--no-add",
         action="store_true",
-        help="Only print candidates; never prompt to add (report only).",
+        help="Only print candidates: never prompt to add, and never apply the "
+        "decisions recorded in check_new-decisions.json (report only).",
     )
     _prompts.add_cli_flag(parser)
     args = parser.parse_args()
@@ -181,10 +171,20 @@ def main() -> int:
     else:
         cutoff = date.today() - timedelta(days=args.days)
 
+    # A decision recorded in a merged proposal PR is carried out here, before
+    # any score is fetched: dismiss() is frozen under collect mode, this is not.
+    # --no-add promises to change nothing, so it skips this too.
+    if not args.no_add:
+        for line in apply_decisions(Path(args.json_file)):
+            print(line)
+
     known = (
         existing_slugs(Path(args.json_file))
         | mapped_aa_slugs()
         | ignored_slugs()
+        # A slug still awaiting its decision in the open proposal PR is not a
+        # candidate: it is already in front of a person.
+        | set(load_decisions())
         | load_dismissed()
     )
     models = fetch_aa_models(cutoff, args.include_closed)
