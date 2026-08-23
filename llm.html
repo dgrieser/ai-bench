@@ -1339,7 +1339,14 @@
 
     thead th {
       position: sticky;
-      top: 0;
+      /* The rows scroll inside .table-shell, so on its own this pins the header
+         to the top of that box. Scrolling the page is the other half of it: the
+         box travels up with the page, header included, and the rows left on
+         screen lose their labels. syncStickyHead() writes how far the box has
+         passed the top of the window into --sticky-head-top, which offsets the
+         header back down onto them — the model column staying put while the
+         columns scroll sideways, turned ninety degrees. */
+      top: var(--sticky-head-top, 0px);
       z-index: 2;
       background: var(--surface-alt);
       border-bottom: 1px solid var(--line);
@@ -4003,6 +4010,15 @@
         window.addEventListener("resize", debounce(() => updateFilterColumns(), 150));
         window.addEventListener("resize", debounce(() => syncTitleLines(), 100));
 
+        // Both move the table relative to the window, so both move the header.
+        window.addEventListener("scroll", queueStickyHeadSync, { passive: true });
+        window.addEventListener("resize", queueStickyHeadSync);
+        // So does anything above the table growing or shrinking — the filters
+        // panel folding open, a preset row appearing — which is neither.
+        if (typeof ResizeObserver === "function") {
+          new ResizeObserver(queueStickyHeadSync).observe(document.body);
+        }
+
         ui.sortMode.addEventListener("change", (event) => {
           const nextSort = parseSortModeValue(event.target.value);
           state.sort.key = nextSort.key;
@@ -4466,6 +4482,43 @@
         });
 
         initColumnResize();
+        syncStickyHead();
+      }
+
+      /* ── Sticky header ───────────────────────────────
+         The header row is sticky against .table-shell, which is only half the
+         job: the shell is a window onto the rows, and when the page scrolls
+         that window leaves the screen top first, taking the header with it
+         while rows are still in view. So the header is given an offset equal to
+         however far the shell has passed the top of the viewport, which lands it
+         back on the topmost row on screen. */
+      function syncStickyHead() {
+        const shell = ui.content.querySelector(".table-shell");
+        if (!shell) {
+          return;
+        }
+        const head = shell.querySelector("thead");
+        if (!head) {
+          return;
+        }
+        const shellRect = shell.getBoundingClientRect();
+        // Stopped at the bottom of the shell: beyond that the header would be
+        // standing over rows the shell has already scrolled out of sight.
+        const limit = Math.max(0, shellRect.height - head.getBoundingClientRect().height);
+        const offset = Math.min(Math.max(0, -shellRect.top), limit);
+        shell.style.setProperty("--sticky-head-top", `${Math.round(offset)}px`);
+      }
+
+      // One sync per frame: scroll fires far more often than the header moves.
+      let stickyHeadFrame = 0;
+      function queueStickyHeadSync() {
+        if (stickyHeadFrame) {
+          return;
+        }
+        stickyHeadFrame = requestAnimationFrame(() => {
+          stickyHeadFrame = 0;
+          syncStickyHead();
+        });
       }
 
       /* ── Recently added ──────────────────────────────
