@@ -138,6 +138,18 @@
         "https://github.com/dgrieser/ai-bench#tooling-index"
       ]
     },
+    "knowledge_index": {
+      "name": "OpenBench Knowledge Index",
+      "short_name": "Knowledge",
+      "category": "Composite Index",
+      "derived": true,
+      "decimals": 0,
+      "description": "This site's own knowledge composite, derived from the knowledge, science and math benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "icon_svg": "icons/knowledge-index.svg",
+      "urls": [
+        "https://github.com/dgrieser/ai-bench#knowledge-index"
+      ]
+    },
     "aa_intelligence_index": {
       "name": "AA Intelligence Index",
       "short_name": "Index",
@@ -561,6 +573,7 @@
       "scores": {
         "coding_index": 45528,
         "tooling_index": 47543,
+        "knowledge_index": 33957,
         "aa_intelligence_index": 19.2,
         "swe_bench_verified": 72.2,
         "swe_bench_multimodal": null,
@@ -603,6 +616,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -645,6 +659,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/devstral-2",
         "swe_bench_verified": "https://huggingface.co/mistralai/Devstral-2-123B-Instruct-2512",
         "swe_bench_multimodal": null,
@@ -708,6 +723,7 @@
       "scores": {
         "coding_index": 41807,
         "tooling_index": 45755,
+        "knowledge_index": 23391,
         "aa_intelligence_index": 17.7,
         "swe_bench_verified": 68.0,
         "swe_bench_multimodal": null,
@@ -750,6 +766,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -792,6 +809,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/devstral-small-2",
         "swe_bench_verified": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512",
         "swe_bench_multimodal": null,
@@ -855,6 +873,7 @@
       "scores": {
         "coding_index": 45600,
         "tooling_index": null,
+        "knowledge_index": 35481,
         "aa_intelligence_index": 23.3,
         "swe_bench_verified": 59.2,
         "swe_bench_multimodal": null,
@@ -897,6 +916,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -939,6 +959,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-7-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -1002,6 +1023,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 70601,
         "aa_intelligence_index": 26.5,
         "swe_bench_verified": 74.4,
         "swe_bench_multimodal": null,
@@ -1044,6 +1066,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-18",
         "swe_bench_multimodal": null,
@@ -1086,6 +1109,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/step-3-5-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -1149,6 +1173,7 @@
       "scores": {
         "coding_index": 39678,
         "tooling_index": null,
+        "knowledge_index": 62595,
         "aa_intelligence_index": 34.5,
         "swe_bench_verified": 80.2,
         "swe_bench_multimodal": null,
@@ -1191,6 +1216,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -1233,6 +1259,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m2-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -1296,6 +1323,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 28715,
         "aa_intelligence_index": 13.6,
         "swe_bench_verified": 51.6,
         "swe_bench_multimodal": null,
@@ -1338,6 +1366,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-18",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -1380,6 +1409,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-30b-a3b-instruct",
         "swe_bench_verified": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/discussions/30",
         "swe_bench_multimodal": null,
@@ -1443,6 +1473,7 @@
       "scores": {
         "coding_index": 44819,
         "tooling_index": 42202,
+        "knowledge_index": 42902,
         "aa_intelligence_index": 21.3,
         "swe_bench_verified": 70.6,
         "swe_bench_multimodal": null,
@@ -1485,6 +1516,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -1527,6 +1559,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-next",
         "swe_bench_verified": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
         "swe_bench_multimodal": null,
@@ -1590,6 +1623,7 @@
       "scores": {
         "coding_index": 39336,
         "tooling_index": 26923,
+        "knowledge_index": 39936,
         "aa_intelligence_index": 14.6,
         "swe_bench_verified": 22.0,
         "swe_bench_multimodal": null,
@@ -1632,6 +1666,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -1674,6 +1709,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -1737,6 +1773,7 @@
       "scores": {
         "coding_index": 48539,
         "tooling_index": 34150,
+        "knowledge_index": 57019,
         "aa_intelligence_index": 16.9,
         "swe_bench_verified": 74.5,
         "swe_bench_multimodal": null,
@@ -1779,6 +1816,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -1821,6 +1859,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -1884,6 +1923,7 @@
       "scores": {
         "coding_index": 60160,
         "tooling_index": 62243,
+        "knowledge_index": 73609,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 76.4,
         "swe_bench_multimodal": null,
@@ -1926,6 +1966,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-23",
         "swe_bench_multimodal": null,
@@ -1968,6 +2009,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -2031,6 +2073,7 @@
       "scores": {
         "coding_index": 55308,
         "tooling_index": 64285,
+        "knowledge_index": 64290,
         "aa_intelligence_index": 32.8,
         "swe_bench_verified": 72.0,
         "swe_bench_multimodal": null,
@@ -2073,6 +2116,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_multimodal": null,
@@ -2115,6 +2159,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -2178,6 +2223,7 @@
       "scores": {
         "coding_index": 52566,
         "tooling_index": 59189,
+        "knowledge_index": 63545,
         "aa_intelligence_index": 34.6,
         "swe_bench_verified": 72.4,
         "swe_bench_multimodal": null,
@@ -2220,6 +2266,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_multimodal": null,
@@ -2262,6 +2309,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -2325,6 +2373,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 52649,
+        "knowledge_index": 59727,
         "aa_intelligence_index": 29.9,
         "swe_bench_verified": 69.2,
         "swe_bench_multimodal": null,
@@ -2367,6 +2416,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-25",
         "swe_bench_multimodal": null,
@@ -2409,6 +2459,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -2472,6 +2523,7 @@
       "scores": {
         "coding_index": 47454,
         "tooling_index": 50786,
+        "knowledge_index": 47569,
         "aa_intelligence_index": 21.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2514,6 +2566,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2556,6 +2609,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2619,6 +2673,7 @@
       "scores": {
         "coding_index": 42597,
         "tooling_index": 47659,
+        "knowledge_index": 44561,
         "aa_intelligence_index": 20.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2661,6 +2716,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2703,6 +2759,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2766,6 +2823,7 @@
       "scores": {
         "coding_index": 35356,
         "tooling_index": 23239,
+        "knowledge_index": 16574,
         "aa_intelligence_index": 7.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2808,6 +2866,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2850,6 +2909,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2913,6 +2973,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 30370,
+        "knowledge_index": 15990,
         "aa_intelligence_index": 5.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2955,6 +3016,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -2997,6 +3059,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3060,6 +3123,7 @@
       "scores": {
         "coding_index": 50142,
         "tooling_index": 45943,
+        "knowledge_index": 69714,
         "aa_intelligence_index": 25.7,
         "swe_bench_verified": 60.5,
         "swe_bench_multimodal": null,
@@ -3102,6 +3166,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-11",
         "swe_bench_multimodal": null,
@@ -3144,6 +3209,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "swe_bench_verified": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
         "swe_bench_multimodal": null,
@@ -3207,6 +3273,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 33439,
         "aa_intelligence_index": 17.4,
         "swe_bench_verified": 54.4,
         "swe_bench_multimodal": null,
@@ -3249,6 +3316,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-23",
         "swe_bench_multimodal": null,
@@ -3291,6 +3359,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/longcat-flash-lite",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -3355,6 +3424,7 @@
       "scores": {
         "coding_index": 46379,
         "tooling_index": 41296,
+        "knowledge_index": 44437,
         "aa_intelligence_index": 15.2,
         "swe_bench_verified": 34.0,
         "swe_bench_multimodal": null,
@@ -3397,6 +3467,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -3439,6 +3510,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gpt-oss-20b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -3503,6 +3575,7 @@
       "scores": {
         "coding_index": 47963,
         "tooling_index": 47588,
+        "knowledge_index": 59095,
         "aa_intelligence_index": 24.1,
         "swe_bench_verified": 62.4,
         "swe_bench_multimodal": null,
@@ -3545,6 +3618,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-02-13",
         "swe_bench_multimodal": null,
@@ -3587,6 +3661,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gpt-oss-120b",
         "swe_bench_verified": "https://huggingface.co/openai/gpt-oss-120b",
         "swe_bench_multimodal": null,
@@ -3650,6 +3725,7 @@
       "scores": {
         "coding_index": 42902,
         "tooling_index": 38007,
+        "knowledge_index": 53239,
         "aa_intelligence_index": 14.5,
         "swe_bench_verified": 38.8,
         "swe_bench_multimodal": null,
@@ -3692,6 +3768,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-12",
         "swe_bench_multimodal": null,
@@ -3734,6 +3811,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -3797,6 +3875,7 @@
       "scores": {
         "coding_index": 47872,
         "tooling_index": 36597,
+        "knowledge_index": 51949,
         "aa_intelligence_index": 19.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3839,6 +3918,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3881,6 +3961,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-small-4",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3944,6 +4025,7 @@
       "scores": {
         "coding_index": 35361,
         "tooling_index": 56647,
+        "knowledge_index": 69216,
         "aa_intelligence_index": 38.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3986,6 +4068,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4028,6 +4111,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m2-7",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4091,6 +4175,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 34854,
         "aa_intelligence_index": 6.4,
         "swe_bench_verified": 34.0,
         "swe_bench_multimodal": null,
@@ -4133,6 +4218,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-03-27",
         "swe_bench_multimodal": null,
@@ -4175,6 +4261,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/sarvam-30b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -4238,6 +4325,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 51436,
         "aa_intelligence_index": 11.9,
         "swe_bench_verified": 45.0,
         "swe_bench_multimodal": null,
@@ -4280,6 +4368,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-18",
         "swe_bench_verified": "2026-03-27",
         "swe_bench_multimodal": null,
@@ -4322,6 +4411,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/sarvam-105b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -4385,6 +4475,7 @@
       "scores": {
         "coding_index": 37142,
         "tooling_index": 30286,
+        "knowledge_index": 55116,
         "aa_intelligence_index": 11,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4427,6 +4518,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4469,6 +4561,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nanbeige4-1-3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4532,6 +4625,7 @@
       "scores": {
         "coding_index": 52898,
         "tooling_index": 60161,
+        "knowledge_index": 63179,
         "aa_intelligence_index": 29.7,
         "swe_bench_verified": 80.9,
         "swe_bench_multimodal": null,
@@ -4574,6 +4668,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-28",
         "swe_bench_multimodal": null,
@@ -4616,6 +4711,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-31b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -4679,6 +4775,7 @@
       "scores": {
         "coding_index": 53185,
         "tooling_index": 49183,
+        "knowledge_index": 57082,
         "aa_intelligence_index": 26.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4721,6 +4818,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4763,6 +4861,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-26b-a4b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4826,6 +4925,7 @@
       "scores": {
         "coding_index": 36573,
         "tooling_index": 25663,
+        "knowledge_index": 39396,
         "aa_intelligence_index": 12.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4868,6 +4968,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4910,6 +5011,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-e4b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -4973,6 +5075,7 @@
       "scores": {
         "coding_index": 33928,
         "tooling_index": 20355,
+        "knowledge_index": 40851,
         "aa_intelligence_index": 9.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5015,6 +5118,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5057,6 +5161,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-e2b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5120,6 +5225,7 @@
       "scores": {
         "coding_index": 51702,
         "tooling_index": 44745,
+        "knowledge_index": 63196,
         "aa_intelligence_index": 32.1,
         "swe_bench_verified": 73.4,
         "swe_bench_multimodal": null,
@@ -5162,6 +5268,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-22",
         "swe_bench_multimodal": null,
@@ -5204,6 +5311,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -5267,6 +5375,7 @@
       "scores": {
         "coding_index": 58100,
         "tooling_index": 64541,
+        "knowledge_index": 69308,
         "aa_intelligence_index": 37.7,
         "swe_bench_verified": 77.2,
         "swe_bench_multimodal": 25.7,
@@ -5309,6 +5418,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-23",
         "swe_bench_multimodal": "2026-08-22",
@@ -5351,6 +5461,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-6-27b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": "https://huggingface.co/Qwen/Qwen3.8-27B",
@@ -5414,6 +5525,7 @@
       "scores": {
         "coding_index": 67298,
         "tooling_index": 74974,
+        "knowledge_index": 79410,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": 79.0,
         "swe_bench_multimodal": null,
@@ -5456,6 +5568,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-24",
         "swe_bench_multimodal": null,
@@ -5498,6 +5611,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -5561,6 +5675,7 @@
       "scores": {
         "coding_index": 56544,
         "tooling_index": 72368,
+        "knowledge_index": 75079,
         "aa_intelligence_index": 42.2,
         "swe_bench_verified": 74.4,
         "swe_bench_multimodal": null,
@@ -5603,6 +5718,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-04-28",
         "swe_bench_multimodal": null,
@@ -5645,6 +5761,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hy3",
         "swe_bench_verified": "https://huggingface.co/tencent/Hy3-preview",
         "swe_bench_multimodal": null,
@@ -5708,6 +5825,7 @@
       "scores": {
         "coding_index": 37827,
         "tooling_index": 28165,
+        "knowledge_index": 16975,
         "aa_intelligence_index": 6.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5750,6 +5868,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5792,6 +5911,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-8b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5855,6 +5975,7 @@
       "scores": {
         "coding_index": 34589,
         "tooling_index": 17156,
+        "knowledge_index": 9427,
         "aa_intelligence_index": 4.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5897,6 +6018,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -5939,6 +6061,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6002,6 +6125,7 @@
       "scores": {
         "coding_index": 37681,
         "tooling_index": 25630,
+        "knowledge_index": 18169,
         "aa_intelligence_index": 8.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6044,6 +6168,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6086,6 +6211,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/granite-4-1-30b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6149,6 +6275,7 @@
       "scores": {
         "coding_index": 50559,
         "tooling_index": 60406,
+        "knowledge_index": 59809,
         "aa_intelligence_index": 30.4,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -6191,6 +6318,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-05-03",
         "swe_bench_multimodal": null,
@@ -6233,6 +6361,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-medium-3-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -6296,6 +6425,7 @@
       "scores": {
         "coding_index": 38579,
         "tooling_index": 32612,
+        "knowledge_index": 23528,
         "aa_intelligence_index": 11.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6338,6 +6468,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6380,6 +6511,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-14b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6443,6 +6575,7 @@
       "scores": {
         "coding_index": 41334,
         "tooling_index": 38187,
+        "knowledge_index": 34941,
         "aa_intelligence_index": 15,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6485,6 +6618,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6527,6 +6661,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6590,6 +6725,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 32209,
+        "knowledge_index": 18586,
         "aa_intelligence_index": 3.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6632,6 +6768,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6674,6 +6811,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minicpm-v4-6-1-3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6737,6 +6875,7 @@
       "scores": {
         "coding_index": 47611,
         "tooling_index": 45198,
+        "knowledge_index": 61425,
         "aa_intelligence_index": 22.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6779,6 +6918,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6821,6 +6961,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/command-a-plus",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6884,6 +7025,7 @@
       "scores": {
         "coding_index": 53215,
         "tooling_index": 57222,
+        "knowledge_index": 61122,
         "aa_intelligence_index": 30.9,
         "swe_bench_verified": 76.5,
         "swe_bench_multimodal": null,
@@ -6926,6 +7068,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-01",
         "swe_bench_multimodal": null,
@@ -6968,6 +7111,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/step-3-7-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -7031,6 +7175,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 18942,
+        "knowledge_index": 12743,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7073,6 +7218,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-07-06",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7115,6 +7261,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-12b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7178,6 +7325,7 @@
       "scores": {
         "coding_index": 47597,
         "tooling_index": 43584,
+        "knowledge_index": 44114,
         "aa_intelligence_index": 20.2,
         "swe_bench_verified": 67.6,
         "swe_bench_multimodal": null,
@@ -7220,6 +7368,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-10",
         "swe_bench_multimodal": null,
@@ -7262,6 +7411,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/north-mini-code",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -7325,6 +7475,7 @@
       "scores": {
         "coding_index": 69265,
         "tooling_index": 84054,
+        "knowledge_index": 85209,
         "aa_intelligence_index": 52.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7367,6 +7518,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7409,6 +7561,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-5-2",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7472,6 +7625,7 @@
       "scores": {
         "coding_index": 53822,
         "tooling_index": 67685,
+        "knowledge_index": 79933,
         "aa_intelligence_index": 45.4,
         "swe_bench_verified": 80.5,
         "swe_bench_multimodal": null,
@@ -7514,6 +7668,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-18",
         "swe_bench_multimodal": null,
@@ -7556,6 +7711,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m3",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -7619,6 +7775,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 40850,
         "aa_intelligence_index": 8.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7661,6 +7818,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7703,6 +7861,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/lfm2-5-8b-a1b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7756,6 +7915,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 17730,
         "aa_intelligence_index": 2.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7798,6 +7958,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7840,6 +8001,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/lfm2-5-1-2b-thinking",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7902,6 +8064,7 @@
       "scores": {
         "coding_index": 34543,
         "tooling_index": 17507,
+        "knowledge_index": 28159,
         "aa_intelligence_index": 10.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7944,6 +8107,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7986,6 +8150,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/llama-4-scout",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8049,6 +8214,7 @@
       "scores": {
         "coding_index": 40945,
         "tooling_index": 23370,
+        "knowledge_index": 42840,
         "aa_intelligence_index": 14.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8091,6 +8257,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8133,6 +8300,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/llama-4-maverick",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8196,6 +8364,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 24896,
         "aa_intelligence_index": 4.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8238,6 +8407,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8280,6 +8450,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/phi-4",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8342,6 +8513,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 39748,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8384,6 +8556,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8426,6 +8599,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-32b-think",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8490,6 +8664,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 36523,
         "aa_intelligence_index": 6.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8532,6 +8707,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8574,6 +8750,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-1-32b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8637,6 +8814,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 27841,
         "aa_intelligence_index": 3.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8679,6 +8857,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8721,6 +8900,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-7b-think",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8784,6 +8964,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 20143,
         "aa_intelligence_index": 2.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8826,6 +9007,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8868,6 +9050,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/olmo-3-7b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8931,6 +9114,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 18078,
         "aa_intelligence_index": 5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8973,6 +9157,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9015,6 +9200,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/jamba-1-7-large",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9078,6 +9264,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 10925,
         "aa_intelligence_index": 2.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9120,6 +9307,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9162,6 +9350,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/jamba-1-7-mini",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9225,6 +9414,7 @@
       "scores": {
         "coding_index": 45404,
         "tooling_index": 41230,
+        "knowledge_index": 61632,
         "aa_intelligence_index": 18.7,
         "swe_bench_verified": 63.2,
         "swe_bench_multimodal": null,
@@ -9267,6 +9457,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -9309,6 +9500,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/trinity-large-thinking",
         "swe_bench_verified": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking",
         "swe_bench_multimodal": null,
@@ -9372,6 +9564,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 36425,
         "aa_intelligence_index": 8.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9414,6 +9607,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9456,6 +9650,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hermes-4-llama-3-1-405b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9519,6 +9714,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 24466,
         "aa_intelligence_index": 6.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9561,6 +9757,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9603,6 +9800,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hermes-4-llama-3-1-70b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9666,6 +9864,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 21996,
         "aa_intelligence_index": 3.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9708,6 +9907,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9750,6 +9950,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/reka-flash-3",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -9813,6 +10014,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 42002,
         "aa_intelligence_index": 20.8,
         "swe_bench_verified": 16.0,
         "swe_bench_multimodal": null,
@@ -9855,6 +10057,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -9897,6 +10100,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "swe_bench_verified": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "swe_bench_multimodal": null,
@@ -9960,6 +10164,7 @@
       "scores": {
         "coding_index": 49764,
         "tooling_index": 44205,
+        "knowledge_index": 53705,
         "aa_intelligence_index": 21.7,
         "swe_bench_verified": 73.1,
         "swe_bench_multimodal": null,
@@ -10002,6 +10207,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10044,6 +10250,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v3-2-0925",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10107,6 +10314,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 66873,
         "aa_intelligence_index": 20.4,
         "swe_bench_verified": 44.6,
         "swe_bench_multimodal": null,
@@ -10149,6 +10357,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10191,6 +10400,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-r1",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10254,6 +10464,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 65323,
         "aa_intelligence_index": 19.7,
         "swe_bench_verified": 64.2,
         "swe_bench_multimodal": null,
@@ -10296,6 +10507,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10338,6 +10550,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4.5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10401,6 +10614,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 44121,
         "aa_intelligence_index": 16.7,
         "swe_bench_verified": 57.6,
         "swe_bench_multimodal": null,
@@ -10443,6 +10657,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10485,6 +10700,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-5-air",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10548,6 +10764,7 @@
       "scores": {
         "coding_index": 43207,
         "tooling_index": 54743,
+        "knowledge_index": 52453,
         "aa_intelligence_index": 23.4,
         "swe_bench_verified": 68,
         "swe_bench_multimodal": null,
@@ -10590,6 +10807,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10632,6 +10850,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-6",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10695,6 +10914,7 @@
       "scores": {
         "coding_index": 55664,
         "tooling_index": 55299,
+        "knowledge_index": 74875,
         "aa_intelligence_index": 34.5,
         "swe_bench_verified": 73.8,
         "swe_bench_multimodal": null,
@@ -10737,6 +10957,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -10779,6 +11000,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-4-7",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -10842,6 +11064,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 18903,
         "aa_intelligence_index": 8.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -10884,6 +11107,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -10926,6 +11150,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-linear-48b-a3b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -10989,6 +11214,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 42052,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11031,6 +11257,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11073,6 +11300,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11136,6 +11364,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 51684,
         "aa_intelligence_index": 18.5,
         "swe_bench_verified": 56.0,
         "swe_bench_multimodal": null,
@@ -11178,6 +11407,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -11220,6 +11450,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/seed-oss-36b-instruct",
         "swe_bench_verified": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct",
         "swe_bench_multimodal": null,
@@ -11283,6 +11514,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 37353,
         "aa_intelligence_index": 9.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11325,6 +11557,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11367,6 +11600,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-flash-2-0",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11430,6 +11664,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 40196,
         "aa_intelligence_index": 8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11472,6 +11707,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11514,6 +11750,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ring-flash-2-0",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11577,6 +11814,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 22986,
         "aa_intelligence_index": 3.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11619,6 +11857,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11661,6 +11900,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-mini-2-0",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11724,6 +11964,7 @@
       "scores": {
         "coding_index": 52548,
         "tooling_index": 48383,
+        "knowledge_index": 46058,
         "aa_intelligence_index": 25.1,
         "swe_bench_verified": 73.4,
         "swe_bench_multimodal": null,
@@ -11766,6 +12007,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -11808,6 +12050,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-flash",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -11870,6 +12113,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 53990,
         "aa_intelligence_index": null,
         "swe_bench_verified": 60.4,
         "swe_bench_multimodal": null,
@@ -11912,6 +12156,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -11954,6 +12199,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -12017,6 +12263,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 66471,
         "aa_intelligence_index": null,
         "swe_bench_verified": 59.4,
         "swe_bench_multimodal": null,
@@ -12059,6 +12306,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -12101,6 +12349,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/meituan-longcat/LongCat-Flash-Thinking",
         "swe_bench_multimodal": null,
@@ -12165,6 +12414,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 50603,
         "aa_intelligence_index": 17.9,
         "swe_bench_verified": 56,
         "swe_bench_multimodal": null,
@@ -12207,6 +12457,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -12249,6 +12500,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m1-80k",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -12312,6 +12564,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 27291,
         "aa_intelligence_index": 8.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12354,6 +12607,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12396,6 +12650,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-32b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12459,6 +12714,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 41599,
+        "knowledge_index": 22598,
         "aa_intelligence_index": 6.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12501,6 +12757,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12543,6 +12800,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-14b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12606,6 +12864,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 40675,
+        "knowledge_index": 11335,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12648,6 +12907,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12690,6 +12950,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12753,6 +13014,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 21171,
         "aa_intelligence_index": 6.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12795,6 +13057,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12837,6 +13100,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-4b-instruct",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12900,6 +13164,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 38122,
+        "knowledge_index": 58964,
         "aa_intelligence_index": 18.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12942,6 +13207,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12984,6 +13250,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13047,6 +13314,7 @@
       "scores": {
         "coding_index": 50202,
         "tooling_index": 40470,
+        "knowledge_index": 64561,
         "aa_intelligence_index": 19.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13089,6 +13357,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13131,6 +13400,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13194,6 +13464,7 @@
       "scores": {
         "coding_index": 45608,
         "tooling_index": null,
+        "knowledge_index": 47537,
         "aa_intelligence_index": 18.2,
         "swe_bench_verified": 69.6,
         "swe_bench_multimodal": null,
@@ -13236,6 +13507,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-25",
         "swe_bench_multimodal": null,
@@ -13278,6 +13550,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-coder-480b-a35b-instruct",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -13341,6 +13614,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 39852,
         "aa_intelligence_index": 13.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13383,6 +13657,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13425,6 +13700,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwq-32b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13488,6 +13764,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 30455,
         "aa_intelligence_index": 5.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13530,6 +13807,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13572,6 +13850,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/exaone-4-0-32b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13635,6 +13914,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 16308,
         "aa_intelligence_index": 2.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13677,6 +13957,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13719,6 +14000,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/exaone-4-0-1-2b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13782,6 +14064,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 43824,
         "aa_intelligence_index": 15.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13824,6 +14107,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13866,6 +14150,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13929,6 +14214,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 37644,
         "aa_intelligence_index": 9.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13971,6 +14257,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14013,6 +14300,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14076,6 +14364,7 @@
       "scores": {
         "coding_index": 43758,
         "tooling_index": 34609,
+        "knowledge_index": 43539,
         "aa_intelligence_index": 15.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14118,6 +14407,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14160,6 +14450,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-large-3",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14223,6 +14514,7 @@
       "scores": {
         "coding_index": 35425,
         "tooling_index": 24060,
+        "knowledge_index": 18738,
         "aa_intelligence_index": 9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14265,6 +14557,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14307,6 +14600,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-8b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14370,6 +14664,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 31110,
+        "knowledge_index": 20479,
         "aa_intelligence_index": 7.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14412,6 +14707,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14454,6 +14750,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ministral-3-3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14517,6 +14814,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 40280,
         "aa_intelligence_index": 17.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14559,6 +14857,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14601,6 +14900,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/hyperclova-x-seed-think-32b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14664,6 +14964,7 @@
       "scores": {
         "coding_index": 34366,
         "tooling_index": 15423,
+        "knowledge_index": 18637,
         "aa_intelligence_index": 7.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14706,6 +15007,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-29",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14748,6 +15050,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-27b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14811,6 +15114,7 @@
       "scores": {
         "coding_index": 29055,
         "tooling_index": 13631,
+        "knowledge_index": 12081,
         "aa_intelligence_index": 1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14853,6 +15157,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14895,6 +15200,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-4b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14958,6 +15264,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 12823,
         "aa_intelligence_index": 1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15000,6 +15307,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-06-25",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15042,6 +15350,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-1b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15105,6 +15414,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 25934,
         "aa_intelligence_index": 2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15147,6 +15457,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15189,6 +15500,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-3-270m",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15252,6 +15564,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 17537,
         "aa_intelligence_index": 2.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15294,6 +15607,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15336,6 +15650,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/dbrx",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15390,6 +15705,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 25933,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15432,6 +15748,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15474,6 +15791,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/grok-2-1212",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15529,6 +15847,7 @@
       "scores": {
         "coding_index": 50591,
         "tooling_index": 46286,
+        "knowledge_index": 50406,
         "aa_intelligence_index": 22.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15571,6 +15890,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15613,6 +15933,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/gemma-4-12b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -15676,6 +15997,7 @@
       "scores": {
         "coding_index": 42433,
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 69.4,
         "swe_bench_multimodal": null,
@@ -15718,6 +16040,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_multimodal": null,
@@ -15760,6 +16083,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.0-9B",
         "swe_bench_multimodal": null,
@@ -15823,6 +16147,7 @@
       "scores": {
         "coding_index": 53740,
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 75.6,
         "swe_bench_multimodal": null,
@@ -15865,6 +16190,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_multimodal": null,
@@ -15907,6 +16233,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.0-35B",
         "swe_bench_multimodal": null,
@@ -15970,6 +16297,7 @@
       "scores": {
         "coding_index": 62409,
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 82.4,
         "swe_bench_multimodal": null,
@@ -16012,6 +16340,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-06-29",
         "swe_bench_multimodal": null,
@@ -16054,6 +16383,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.0-397B",
         "swe_bench_multimodal": null,
@@ -16117,6 +16447,7 @@
       "scores": {
         "coding_index": 51456,
         "tooling_index": 57081,
+        "knowledge_index": 81029,
         "aa_intelligence_index": 38.3,
         "swe_bench_verified": 70.7,
         "swe_bench_multimodal": null,
@@ -16159,6 +16490,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-06-29",
         "swe_bench_multimodal": null,
@@ -16201,6 +16533,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -16274,6 +16607,7 @@
       "scores": {
         "coding_index": 46184,
         "tooling_index": 39095,
+        "knowledge_index": 36361,
         "aa_intelligence_index": 13.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16316,6 +16650,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16358,6 +16693,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/diffusiongemma-26b-a4b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16421,6 +16757,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 62162,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16463,6 +16800,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16505,6 +16843,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16568,6 +16907,7 @@
       "scores": {
         "coding_index": 54337,
         "tooling_index": 64097,
+        "knowledge_index": 78749,
         "aa_intelligence_index": 42.3,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -16610,6 +16950,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-16",
         "swe_bench_multimodal": null,
@@ -16652,6 +16993,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling",
         "swe_bench_verified": "https://huggingface.co/thinkingmachines/Inkling",
         "swe_bench_multimodal": null,
@@ -16715,6 +17057,7 @@
       "scores": {
         "coding_index": 67703,
         "tooling_index": 73887,
+        "knowledge_index": 89753,
         "aa_intelligence_index": 53.2,
         "swe_bench_verified": 80.6,
         "swe_bench_multimodal": null,
@@ -16757,6 +17100,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-13",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -16799,6 +17143,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -16862,6 +17207,7 @@
       "scores": {
         "coding_index": 56150,
         "tooling_index": 55962,
+        "knowledge_index": 68860,
         "aa_intelligence_index": 34,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16904,6 +17250,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16946,6 +17293,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/longcat-2-0",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17009,6 +17357,7 @@
       "scores": {
         "coding_index": 53204,
         "tooling_index": null,
+        "knowledge_index": 76808,
         "aa_intelligence_index": 33.5,
         "swe_bench_verified": 71.3,
         "swe_bench_multimodal": null,
@@ -17051,6 +17400,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -17093,6 +17443,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-thinking",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -17156,6 +17507,7 @@
       "scores": {
         "coding_index": 42776,
         "tooling_index": 50380,
+        "knowledge_index": 86507,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 76.8,
         "swe_bench_multimodal": null,
@@ -17198,6 +17550,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -17240,6 +17593,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-5",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -17303,6 +17657,7 @@
       "scores": {
         "coding_index": 48674,
         "tooling_index": 71982,
+        "knowledge_index": 82626,
         "aa_intelligence_index": 45.1,
         "swe_bench_verified": 80.2,
         "swe_bench_multimodal": null,
@@ -17345,6 +17700,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -17387,6 +17743,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-6",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -17450,6 +17807,7 @@
       "scores": {
         "coding_index": 61222,
         "tooling_index": 71989,
+        "knowledge_index": 78817,
         "aa_intelligence_index": 43,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17492,6 +17850,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17534,6 +17893,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-7-code",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17597,6 +17957,7 @@
       "scores": {
         "coding_index": 84941,
         "tooling_index": 88254,
+        "knowledge_index": 87620,
         "aa_intelligence_index": 59.7,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -17639,6 +18000,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -17681,6 +18043,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k3",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -17744,6 +18107,7 @@
       "scores": {
         "coding_index": 38751,
         "tooling_index": 38263,
+        "knowledge_index": 50813,
         "aa_intelligence_index": 16.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17786,6 +18150,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17828,6 +18193,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/g9v3-3b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17891,6 +18257,7 @@
       "scores": {
         "coding_index": 56136,
         "tooling_index": 59450,
+        "knowledge_index": 72840,
         "aa_intelligence_index": 38,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17933,6 +18300,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17975,6 +18343,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-5-0424",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18038,6 +18407,7 @@
       "scores": {
         "coding_index": 50846,
         "tooling_index": 67759,
+        "knowledge_index": 74787,
         "aa_intelligence_index": 42.9,
         "swe_bench_verified": 78.9,
         "swe_bench_multimodal": null,
@@ -18080,6 +18450,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-28",
         "swe_bench_multimodal": null,
@@ -18122,6 +18493,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -18185,6 +18557,7 @@
       "scores": {
         "coding_index": 56436,
         "tooling_index": 66929,
+        "knowledge_index": 78056,
         "aa_intelligence_index": 41.2,
         "swe_bench_verified": 80.2,
         "swe_bench_multimodal": null,
@@ -18227,6 +18600,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-07",
         "swe_bench_verified": "2026-07-30",
         "swe_bench_multimodal": null,
@@ -18269,6 +18643,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling-small",
         "swe_bench_verified": "https://huggingface.co/thinkingmachines/Inkling-Small",
         "swe_bench_multimodal": null,
@@ -18332,6 +18707,7 @@
       "scores": {
         "coding_index": 49066,
         "tooling_index": 58959,
+        "knowledge_index": 61643,
         "aa_intelligence_index": 34,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18374,6 +18750,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-20",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18416,6 +18793,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/g9v3-39a5b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18474,6 +18852,7 @@
       "scores": {
         "coding_index": 68222,
         "tooling_index": 75283,
+        "knowledge_index": 85736,
         "aa_intelligence_index": 57.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18516,6 +18895,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-14",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18558,6 +18938,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18621,6 +19002,7 @@
       "scores": {
         "coding_index": 57065,
         "tooling_index": 61672,
+        "knowledge_index": 67108,
         "aa_intelligence_index": 37.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18663,6 +19045,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-10",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18705,6 +19088,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-3-0-flash",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18768,6 +19152,7 @@
       "scores": {
         "coding_index": 45177,
         "tooling_index": 53497,
+        "knowledge_index": 56828,
         "aa_intelligence_index": 24.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18810,6 +19195,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-10",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18852,6 +19238,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/ling-3-0-tiny",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18915,6 +19302,7 @@
       "scores": {
         "coding_index": 38050,
         "tooling_index": 39037,
+        "knowledge_index": 53355,
         "aa_intelligence_index": 11,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18957,6 +19345,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-23",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18999,6 +19388,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/lfm2-5-2-6b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19062,6 +19452,7 @@
       "scores": {
         "coding_index": 53973,
         "tooling_index": 61845,
+        "knowledge_index": 63732,
         "aa_intelligence_index": 35.1,
         "swe_bench_verified": 76,
         "swe_bench_multimodal": null,
@@ -19104,6 +19495,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-11",
         "swe_bench_verified": "2026-08-11",
         "swe_bench_multimodal": null,
@@ -19146,6 +19538,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/muse-glimmer",
         "swe_bench_verified": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
         "swe_bench_multimodal": null,
@@ -19209,6 +19602,7 @@
       "scores": {
         "coding_index": 40860,
         "tooling_index": 48680,
+        "knowledge_index": 62129,
         "aa_intelligence_index": 23.6,
         "swe_bench_verified": 51.6,
         "swe_bench_multimodal": null,
@@ -19251,6 +19645,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-13",
         "swe_bench_verified": "2026-08-13",
         "swe_bench_multimodal": null,
@@ -19293,6 +19688,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "swe_bench_verified": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_multimodal": null,
@@ -19356,6 +19752,7 @@
       "scores": {
         "coding_index": 78517,
         "tooling_index": 76573,
+        "knowledge_index": 85652,
         "aa_intelligence_index": 59.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19398,6 +19795,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-19",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19440,6 +19838,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-5-3",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19498,6 +19897,7 @@
       "scores": {
         "coding_index": 62490,
         "tooling_index": 69899,
+        "knowledge_index": 77329,
         "aa_intelligence_index": 52,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 38.6,
@@ -19540,6 +19940,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": null,
         "swe_bench_multimodal": "2026-08-22",
@@ -19582,6 +19983,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "swe_bench_verified": null,
         "swe_bench_multimodal": "https://huggingface.co/Qwen/Qwen3.8-27B",
@@ -19645,6 +20047,7 @@
       "scores": {
         "coding_index": 55967,
         "tooling_index": 58567,
+        "knowledge_index": 82558,
         "aa_intelligence_index": 37.4,
         "swe_bench_verified": 70.4,
         "swe_bench_multimodal": null,
@@ -19687,6 +20090,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": "2026-08-17",
         "swe_bench_multimodal": null,
@@ -19729,6 +20133,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/solar-open2-250b",
         "swe_bench_verified": "https://huggingface.co/upstage/Solar-Open2-250B",
         "swe_bench_multimodal": null,
@@ -19792,6 +20197,7 @@
       "scores": {
         "coding_index": 53662,
         "tooling_index": 60127,
+        "knowledge_index": 77124,
         "aa_intelligence_index": 35,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19834,6 +20240,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": "2026-08-17",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19876,6 +20283,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/a-x-k2",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19939,6 +20347,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": 51957,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19981,6 +20390,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -20023,6 +20433,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -20086,6 +20497,7 @@
       "scores": {
         "coding_index": 67843,
         "tooling_index": 67673,
+        "knowledge_index": 65625,
         "aa_intelligence_index": null,
         "swe_bench_verified": 86,
         "swe_bench_multimodal": null,
@@ -20128,6 +20540,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-21",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-08-21",
         "swe_bench_multimodal": null,
@@ -20170,6 +20583,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.5-397B",
         "swe_bench_multimodal": null,
@@ -20233,6 +20647,7 @@
       "scores": {
         "coding_index": 55614,
         "tooling_index": 51793,
+        "knowledge_index": 60672,
         "aa_intelligence_index": null,
         "swe_bench_verified": 79,
         "swe_bench_multimodal": null,
@@ -20275,6 +20690,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-08-21",
         "swe_bench_multimodal": null,
@@ -20317,6 +20733,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B",
         "swe_bench_multimodal": null,
@@ -20380,6 +20797,7 @@
       "scores": {
         "coding_index": 45882,
         "tooling_index": 37158,
+        "knowledge_index": 57494,
         "aa_intelligence_index": null,
         "swe_bench_verified": 70.6,
         "swe_bench_multimodal": null,
@@ -20422,6 +20840,7 @@
       "scores_updated": {
         "coding_index": "2026-08-23",
         "tooling_index": "2026-08-23",
+        "knowledge_index": "2026-08-23",
         "aa_intelligence_index": null,
         "swe_bench_verified": "2026-08-21",
         "swe_bench_multimodal": null,
@@ -20464,6 +20883,7 @@
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": "https://huggingface.co/ornith-ai/Ornith-1.5-9B",
         "swe_bench_multimodal": null,

@@ -5005,10 +5005,10 @@
         // the NEW badge beside its name already says the whole row is new —
         // marking each cell as well would be the same news thirty times over.
         if (isRecentModel(model)) return 0;
-        // A derived column (the Coding index) is recomputed from the others, so
-        // its date moves whenever any input moves. That is arithmetic catching
-        // up, not a new measurement, and the inputs that did change are marked
-        // in their own cells.
+        // A derived column (Coding, Tooling, Knowledge) is recomputed from the
+        // others, so its date moves whenever any input moves. That is arithmetic
+        // catching up, not a new measurement, and the inputs that did change are
+        // marked in their own cells.
         if (isDerivedBenchmark(key)) return 0;
         const age = daysSince(model.scores_updated?.[key]);
         if (age === null || age < 0 || age >= NEW_DAYS) return 0;
