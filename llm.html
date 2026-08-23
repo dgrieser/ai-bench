@@ -190,9 +190,12 @@
        a pixel at this size — and a replaced element takes its baseline from
        that edge. The band centres the lockup from there. */
     .presets-brand {
+      /* One size drives the lockup: the product name takes it directly and the
+         wordmark scales off it in em, so the two never drift apart. */
+      font-size: 0.88rem;
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 0.7em;
       min-width: 0;
       text-decoration: none;
       color: inherit;
@@ -203,11 +206,14 @@
       color: var(--accent);
     }
 
-    /* Sized by height: the wordmark keeps its own aspect ratio, and
-       currentColor lets it follow the theme's text colour. */
+    /* Sized by height: the wordmark keeps its own aspect ratio, and currentColor
+       lets it follow the theme's text colour. 0.78em of the lockup's type size
+       puts its ascenders — 91.8% of the artwork's height — on the label's
+       capitals, which is what makes the two read as one lockup instead of a
+       logo with a caption beside it. */
     .presets-logo {
       flex: none;
-      height: 14px;
+      height: 0.78em;
       width: auto;
       color: var(--text);
     }
@@ -216,7 +222,6 @@
        product name beside the wordmark reads as it does on mittwald.de. */
     .presets-product {
       font-family: var(--font-hosting);
-      font-size: 0.88rem;
       font-weight: 600;
       letter-spacing: -0.016em;
       color: var(--text);
