@@ -505,9 +505,10 @@ Two consequences worth knowing (they hold for every derived index):
   carried as a column but left out of `INDEXES` for now — admitting it at 0.15
   dropped four models from ranked to `null` and bought no discrimination in
   return. Worth adding once its coverage grows. SWE-bench Multilingual, admitted
-  at 0.30 on 26 scored models, cost the same four — see
-  [below](#why-swe-bench-multilingual-sits-at-030) for why that price was worth
-  paying there and not here.
+  at 0.30 on 26 scored models, unseated the same four — and they came back when
+  the SWE Atlas trio was collapsed to one track, which took more weight out of
+  the denominator than the new column put in. Both moves are worked through
+  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track).
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
@@ -552,24 +553,64 @@ because it is unsaturated and it is the only non-Python signal in the group. The
 ranking barely moves — Spearman 0.994 against the pre-addition index, mean 2.3
 places, max 7.
 
-**What it cost, measured.** Four models — `glm-4-6`, `glm-4-7-flash`, `qwen3-5-27b`,
-`qwen3-coder-480b-a35b-instruct` — went from ranked to `null`, so the coding column
-ranks 69 models where it ranked 73. None of them lost a score; the bar moved. Each
-carries the same four cheap members (SWE-bench Pro + LiveCodeBench + SciCode +
-SWE-bench Verified = **1.30** scored weight) against a `MIN_SCORED_FRACTION` bar that
-was **1.272**. They were clearing it by 0.028, so *any* new coding column weighing
-more than 0.14 unseats them — this is not a fact about SWE-bench Multilingual.
+**What it cost on admission, measured.** Four models — `glm-4-6`, `glm-4-7-flash`,
+`qwen3-5-27b`, `qwen3-coder-480b-a35b-instruct` — went from ranked to `null`. None of
+them lost a score; the bar moved. Each carries the same four cheap members (SWE-bench
+Pro + LiveCodeBench + SciCode + SWE-bench Verified = **1.30** scored weight) against a
+`MIN_SCORED_FRACTION` bar that was **1.272**. They were clearing it by 0.028, so *any*
+new coding column weighing more than 0.14 unseats them — this is not a fact about
+SWE-bench Multilingual. They are ranked again today because [the SWE Atlas
+trio](#why-swe-atlas-contributes-one-track) gave 0.26 back to the denominator, which
+is a bigger effect than this column's 0.30 taking weight out.
 
-Two knobs, both deliberately not turned:
+One knob deliberately not turned: weighting it **0.5** would also have cleared the
+bar for two models (at w ≥ 0.465 `deepseek-v3-2-0925` and `kimi-k2-thinking` qualify
+on their own SWE-bench Multilingual score). Buying coverage with a weight the trust
+evidence does not support is the mistake the ladder exists to prevent; the weight
+describes the benchmark, not the roster.
 
-- Weighting it **0.5** instead would rank 70 models rather than 69, because at
-  w ≥ 0.465 `deepseek-v3-2-0925` and `kimi-k2-thinking` clear the bar on their own
-  SWE-bench Multilingual score. Buying coverage with a weight the trust evidence does
-  not support is the mistake the ladder exists to prevent; the weight describes the
-  benchmark, not the roster.
-- `MIN_SCORED_FRACTION` **0.195** would keep all 73 ranked at w=0.30. That is the
-  honest lever if the four are wanted back — it is a statement about how much
-  evidence a rank needs, and it applies to the Tooling index too.
+### Why SWE Atlas contributes one track
+
+Scale AI's SWE Atlas ships three tracks and the index carried all three at 0.17 each,
+so the family voted 0.51 — deliberately, as "three narrow rubric-graded slices, half a
+benchmark between them". Measured on the current file, that reasoning does not hold:
+
+- **The three tracks are not three populations.** Every model scored on Refactoring
+  (6) or Test Writing (7) is also scored on Codebase Q&A (13). Dropping the first two
+  removes **no model** from the index, and Q&A alone covers the family's whole roster.
+- **They are barely three measurements.** Spearman **0.94** between Refactoring and
+  Test Writing, 0.77 and 0.89 against Q&A. Three near-duplicate ranks over one
+  ≤13-model population is the same triple-count that got `aa_coding_index` removed
+  from this group, one order of magnitude smaller.
+- **The redundant weight was not free.** Weight in the denominator raises the
+  `MIN_SCORED_FRACTION` bar for *every* model, including the ones the extra tracks
+  never measured.
+
+So the family now contributes **Codebase Q&A at 0.25**: one track, weighted a little
+above the 0.17 it held as one third of a trio, because it now carries the family's
+whole vote — and well below the 0.51 the trio held, because it is one small
+rubric-graded track. It stays under `swe_bench_multilingual` (0.30) and every
+execution-graded column above it, which is the honest place for it: Q&A is the one
+track in the trio that requires **no code changes** at all (124 comprehension tasks —
+tracing execution paths, multi-file reasoning), so on task shape it is the weakest of
+the three for a coding index. It is kept over the other two anyway because the
+correlations say all three rank models alike and only Q&A has the coverage.
+Refactoring and Test Writing remain columns in `llm.json`; they are simply not
+aggregated.
+
+Effects, measured: total group weight 6.66 → 6.40, bar 1.332 → 1.280, and the four
+models the SWE-bench Multilingual admission had unseated are ranked again — 73 models
+ranked, as before that addition. Ranking agreement with the pre-change index is
+Spearman 0.999 (mean 390 index points across the table); the seven models that lose
+Refactoring/Test Writing evidence move by a mean of 1,103 points — `ornith-1-0-9b`
+most, +3,347, because its remaining evidence ranks it better than the two tracks it
+lost did.
+
+**This is headroom, not a fix.** The four are back with 0.02 of margin: any *next*
+coding column weighing more than 0.1 unseats them again. If they should be ranked
+robustly, `MIN_SCORED_FRACTION` is the lever — 0.195 clears them at any weight — and
+that is a statement about how much evidence a rank needs, applying to the Tooling
+index too.
 
 ## Tooling Index
 

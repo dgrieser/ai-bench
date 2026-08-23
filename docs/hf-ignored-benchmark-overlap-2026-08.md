@@ -392,10 +392,14 @@ re-deciding them:
    evals.report Official/Verified) and admitted to the Coding index at **0.30**. The weight was
    re-derived against the live file rather than inherited: unsaturated (max 79.6, nothing above
    80) and the group's only non-Python signal argue up; Spearman 0.92 with SWE-bench Verified,
-   a 3.1-point top-5 spread and 23 of 26 values self-reported argue down. Cost: four thinly
-   measured models drop from ranked to `null` because the `MIN_SCORED_FRACTION` bar rises —
-   they were clearing it by 0.028, so any new coding column above w=0.14 would do the same.
-   Full working in [the README](../README.md#why-swe-bench-multilingual-sits-at-030).
+   a 3.1-point top-5 spread and 23 of 26 values self-reported argue down. Admission unseated
+   four thinly measured models (the `MIN_SCORED_FRACTION` bar rises with total weight and they
+   were clearing it by 0.028); they were ranked again once the SWE Atlas trio was collapsed to
+   its Codebase Q&A track at 0.25, which returned more weight to the denominator than this
+   column took out — every model scored on Refactoring or Test Writing already had Q&A, so
+   that cost no coverage. Full working in the README:
+   [the weight](../README.md#why-swe-bench-multilingual-sits-at-030),
+   [the trio](../README.md#why-swe-atlas-contributes-one-track).
 5. **`claw_eval` (general split only)** — 19 / 8 and unsaturated, but resolve the 15-point
    channel disagreement and pick one split first.
 

@@ -97,9 +97,13 @@ INDEXES: list[IndexDef] = [
             ("livecodebench", 0.4),
             ("scicode", 0.35),
             ("swe_bench_multilingual", 0.3),
-            ("swe_atlas_rf", 0.17),
-            ("swe_atlas_tw", 0.17),
-            ("swe_atlas_qna", 0.17),
+            # SWE Atlas contributes its Codebase Q&A track only: every model
+            # scored on Refactoring or Test Writing is also scored on Q&A, so
+            # the other two tracks add no coverage, correlate 0.94 with each
+            # other and 0.77-0.89 with Q&A, and their weight only raised the
+            # MIN_SCORED_FRACTION bar. One track at 0.25 instead of three at
+            # 0.17 -- see README, "Why SWE Atlas contributes one track".
+            ("swe_atlas_qna", 0.25),
             ("swe_bench_verified", 0.15),
         ],
     ),
