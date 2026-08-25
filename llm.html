@@ -3152,8 +3152,15 @@
       };
 
       // Upstream data sources, shared by the initial load and by exports.
-      const DATA_URL = "https://dgrieser.github.io/ai-bench/llm.json";
-      const GPU_DATA_URL = "https://dgrieser.github.io/ai-bench/gpu.json";
+      // Each is a candidate list tried in order. The relative path comes first
+      // so the page reads the data sitting next to it on whatever host serves
+      // it (github.io, the custom domain, a local server); the absolute URL is
+      // the fallback for a copy opened from disk or served without the data.
+      // The absolute URL cannot come first: with a custom domain configured,
+      // github.io redirects to it, and a cross-origin redirect carries no CORS
+      // headers, so the fetch fails on every host but github.io itself.
+      const DATA_URLS = ["llm.json", "https://dgrieser.github.io/ai-bench/llm.json"];
+      const GPU_DATA_URLS = ["gpu.json", "https://dgrieser.github.io/ai-bench/gpu.json"];
 
       // Fixed (non-benchmark) table columns. Only layout lives here — labels,
       // sort-option labels and tooltips come from data.columns in llm.json.
@@ -3354,17 +3361,28 @@
         }
       }
 
-      async function fetchRemoteText(url) {
-        const cacheBustedUrl = `${url}?t=${Date.now()}`;
-        const response = await fetch(cacheBustedUrl, { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error(`Request failed (${response.status})`);
+      // Takes a single URL or a candidate list, and returns the body of the
+      // first one that answers. The last failure is rethrown so the caller can
+      // report why nothing loaded.
+      async function fetchRemoteText(urls) {
+        const candidates = Array.isArray(urls) ? urls : [urls];
+        let lastError = new Error("No data source configured.");
+        for (const url of candidates) {
+          try {
+            const response = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
+            if (!response.ok) {
+              throw new Error(`Request failed (${response.status})`);
+            }
+            return await response.text();
+          } catch (err) {
+            lastError = err;
+          }
         }
-        return response.text();
+        throw lastError;
       }
 
       async function fetchRemoteData() {
-        return JSON.parse(await fetchRemoteText(DATA_URL));
+        return JSON.parse(await fetchRemoteText(DATA_URLS));
       }
 
       function showImportOnly(message) {
@@ -5085,21 +5103,13 @@
         if (state.gpu.list.length) {
           return;
         }
-        const urls = ["gpu.json", `https://dgrieser.github.io/ai-bench/gpu.json?t=${Date.now()}`];
-        for (const url of urls) {
-          try {
-            const response = await fetch(url, { cache: "no-store" });
-            if (!response.ok) {
-              continue;
-            }
-            const list = await response.json();
-            if (Array.isArray(list) && list.length) {
-              initGpuBar(list);
-              return;
-            }
-          } catch (err) {
-            // try next source; the GPU filter is optional
+        try {
+          const list = JSON.parse(await fetchRemoteText(GPU_DATA_URLS));
+          if (Array.isArray(list) && list.length) {
+            initGpuBar(list);
           }
+        } catch (err) {
+          // the GPU filter is optional; leave the bar unbuilt
         }
       }
 
@@ -5917,11 +5927,11 @@
         let tabulate;
         switch (dataset) {
           case "llm":
-            url = DATA_URL;
+            url = DATA_URLS;
             tabulate = modelsToCsv;
             break;
           case "gpu":
-            url = GPU_DATA_URL;
+            url = GPU_DATA_URLS;
             tabulate = gpusToCsv;
             break;
           default:
