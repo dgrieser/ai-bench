@@ -21081,9 +21081,9 @@
       "params": "320B-A18B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 700,
+        "int8": 350,
+        "int4": 175
       },
       "creator": {
         "name": "Z.AI",
@@ -21217,6 +21217,11 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3-Flash/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3-Flash/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3-Flash/"
       }
     },
     {
@@ -21226,9 +21231,9 @@
       "params": "125B-A6B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 392,
+        "int8": 196,
+        "int4": 98
       },
       "creator": {
         "name": "Alibaba",
@@ -21362,6 +21367,11 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-Flash-Next/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-Flash-Next/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-Flash-Next/"
       }
     }
   ],
