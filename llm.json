@@ -3423,7 +3423,7 @@
       },
       "scores": {
         "coding_index": 45945,
-        "tooling_index": 40256,
+        "tooling_index": 40364,
         "knowledge_index": 44064,
         "aa_intelligence_index": 15.2,
         "swe_bench_verified": 34.0,
@@ -3449,7 +3449,7 @@
         "bfcl_v4": null,
         "ifbench": 65.1,
         "itbench_aa": null,
-        "gdpval_aa": 565,
+        "gdpval_aa": 570,
         "aa_briefcase": null,
         "browsecomp": 28.3,
         "aa_omniscience": -63.1,
@@ -3492,7 +3492,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-08-07",
+        "gdpval_aa": "2026-08-28",
         "aa_briefcase": null,
         "browsecomp": "2026-02-13",
         "aa_omniscience": "2026-08-09",
@@ -5524,7 +5524,7 @@
       },
       "scores": {
         "coding_index": 65340,
-        "tooling_index": 72212,
+        "tooling_index": 72138,
         "knowledge_index": 78857,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": 79.0,
@@ -5550,7 +5550,7 @@
         "bfcl_v4": null,
         "ifbench": 79.2,
         "itbench_aa": 31.5,
-        "gdpval_aa": 1550,
+        "gdpval_aa": 1545,
         "aa_briefcase": 1280,
         "browsecomp": 73.2,
         "aa_omniscience": -14.3,
@@ -9413,7 +9413,7 @@
       "context": "512k",
       "scores": {
         "coding_index": 45436,
-        "tooling_index": 40779,
+        "tooling_index": 40671,
         "knowledge_index": 60945,
         "aa_intelligence_index": 18.7,
         "swe_bench_verified": 63.2,
@@ -19901,7 +19901,7 @@
       },
       "scores": {
         "coding_index": 60626,
-        "tooling_index": 69265,
+        "tooling_index": 69338,
         "knowledge_index": 75978,
         "aa_intelligence_index": 52,
         "swe_bench_verified": null,
@@ -21272,7 +21272,7 @@
         "bfcl_v4": null,
         "ifbench": 81.3,
         "itbench_aa": null,
-        "gdpval_aa": 1740,
+        "gdpval_aa": 1745,
         "aa_briefcase": null,
         "browsecomp": null,
         "aa_omniscience": -9.7,
@@ -21315,7 +21315,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-26",
         "itbench_aa": null,
-        "gdpval_aa": "2026-08-27",
+        "gdpval_aa": "2026-08-28",
         "aa_briefcase": null,
         "browsecomp": null,
         "aa_omniscience": "2026-08-27",
@@ -21686,9 +21686,9 @@
       "params": "30B",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 64,
+        "int8": 32,
+        "int4": 16
       },
       "creator": {
         "name": "IBM",
@@ -21822,6 +21822,11 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.2-30b",
         "mmmu_pro": null,
         "osworld_verified": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-30b/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-30b/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-30b/"
       }
     }
   ],
