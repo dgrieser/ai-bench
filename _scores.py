@@ -70,9 +70,9 @@ def editable_benchmarks(doc: dict[str, Any]) -> dict[str, Any]:
     """Benchmarks whose score can come from a source or a human.
 
     A benchmark flagged "derived" in llm.json is computed from other columns
-    instead (derive_indexes.py writes the Coding, Tooling and Knowledge
-    indexes), so a value in or mapped onto it would be recomputed away on the
-    next run. Derived keys therefore get no edit.py flag, no prompt, never count
+    instead (derive_indexes.py writes the Coding, Tooling, Knowledge and
+    Vision indexes), so a value in or mapped onto it would be recomputed away
+    on the next run. Derived keys therefore get no edit.py flag, no prompt, never count
     as missing, and are not offered as a mapping target.
     """
     benchmarks = doc.get("benchmarks")
