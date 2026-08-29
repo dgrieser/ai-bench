@@ -2,7 +2,7 @@
 """Compute the derived index columns in llm.json from the benchmarks they
 aggregate: the Coding index from the coding benchmarks, the Tooling index from
 the agentic tool-use benchmarks, the Knowledge index from the knowledge and
-reasoning benchmarks.
+reasoning benchmarks, the Vision index from the multimodal ones.
 
 Unlike every other column, a derived index is not scraped: it is computed from
 scores already in llm.json, so it has to be recomputed whenever any of them
@@ -145,6 +145,25 @@ INDEXES: list[IndexDef] = [
             # knows), aa_intelligence_index (a composite over benchmarks in this
             # table, coding and tool use among them) -- see README, "Knowledge
             # index".
+        ],
+    ),
+    IndexDef(
+        key="vision_index",
+        fallback_source_url="https://github.com/dgrieser/ai-bench#vision-index",
+        contributing=[
+            ("mmmu_pro", 1.0),
+            ("osworld_verified", 0.7),
+            ("mathvista_mini", 0.35),
+            ("zerobench", 0.35),
+            # Deliberately not aggregated, though it is the widest multimodal
+            # column in llm.json: gdpval_aa scores visual *output* (documents,
+            # slides, diagrams) produced in AA's agentic harness, so what it
+            # separates is shell agency -- 0.95 with the Tooling index that
+            # already prices it at 0.7, 0.97 with AA Intelligence. And 38
+            # models carry it as their only score here: at 0.7 its share is
+            # 0.226, over the evidence bar, so it would rank all 38 on no
+            # visual evidence at all -- see README, "Why GDPval-AA is left
+            # out".
         ],
     ),
 ]

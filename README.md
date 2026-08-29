@@ -238,8 +238,8 @@ Output: llm.json (unified dataset)
 ### Utilities
 
 ```bash
-# Recompute the derived index columns, Coding, Tooling and Knowledge (dry-run;
-# -w to persist)
+# Recompute the derived index columns, Coding, Tooling, Knowledge and Vision
+# (dry-run; -w to persist)
 ./derive_indexes.py llm.json
 ./derive_indexes.py llm.json -w
 
@@ -409,10 +409,13 @@ alias one key:
   all map onto `mathvista_mini`. MathVerse and MathVision are different
   benchmarks and stay unmapped.
 
-Neither column feeds a derived index, for the reason MMMU Pro does not: only a
-multimodal model can be scored at all, so the coverage they add is a slice of
+All three feed the [Vision index](#vision-index), and only that one. The
+modality gate — only a multimodal model can be scored at all — is what keeps
+them out of the Knowledge index, where the coverage they add would be a slice of
 the field rather than a measurement the rest of it is missing (see [What the
-Knowledge index leaves out](#what-the-knowledge-index-leaves-out)).
+Knowledge index leaves out](#what-the-knowledge-index-leaves-out)). In a column
+whose whole subject is that modality it is not a defect but the definition, so
+the same three columns that are wrong for Knowledge are right there.
 
 ## Mapping System
 
@@ -494,8 +497,9 @@ llm.json (unified, deduplicated dataset)
 The first benchmark column, **Coding**, is not scraped: `derive_indexes.py` computes
 it from the coding benchmarks already in the file and writes it to each model's
 `scores.coding_index`. It is also the table's default sort. The
-[Tooling](#tooling-index) and [Knowledge](#knowledge-index) indexes are its
-siblings — same script, same math, different contributing benchmarks.
+[Tooling](#tooling-index), [Knowledge](#knowledge-index) and
+[Vision](#vision-index) indexes are its siblings — same script, same math,
+different contributing benchmarks.
 
 How a value is produced:
 
@@ -647,27 +651,28 @@ aggregated.
 
 ### Why the evidence bar is 18%
 
-`MIN_SCORED_FRACTION` is the one number all three derived indexes share: sum the
+`MIN_SCORED_FRACTION` is the one number all four derived indexes share: sum the
 weights of the contributing benchmarks a model actually has a score on, and if that is
 below `MIN_SCORED_FRACTION × total group weight`, the model is `null` instead of
 ranked. It is a share of *weight*, not a count of benchmarks — three cheap columns can
 be worth less evidence than one expensive one.
 
-At **0.18** the bars are 1.152 of 6.40 (Coding, 84 of 136 models ranked), 1.107 of
-6.15 (Tooling, 85 ranked) and 0.666 of 3.70 (Knowledge, 133 ranked).
+At **0.18** the bars are 1.152 of 6.40 (Coding, 91 of 143 models ranked), 1.107 of
+6.15 (Tooling, 92 ranked), 0.666 of 3.70 (Knowledge, 140 ranked) and 0.432 of 2.40
+(Vision, 47 ranked).
 
 Coverage does not spread evenly across models, it clusters, and the threshold should
 fall between clusters rather than through one. Measured over the current file:
 
-| fraction | Coding ranked | Tooling ranked | Knowledge ranked | what the cut admits |
-| --- | --- | --- | --- | --- |
-| 0.25 | 68 | 82 | 132 | |
-| 0.20 | 73 | 85 | 133 | the 20%-measured block, cut in half |
-| **0.18** | **84** | **85** | **133** | the rest of that block: 11 models at 19% |
-| 0.15 | 84 | 87 | 133 | nothing in Coding |
-| 0.12 | 97 | 114 | 133 | the 13–14% cluster |
-| 0.10 | 127 | 115 | 133 | the ~12% cluster |
-| 0.05 | 135 | 127 | 133 | models measured on a twentieth of the weight |
+| fraction | Coding ranked | Tooling ranked | Knowledge ranked | Vision ranked | what the cut admits |
+| --- | --- | --- | --- | --- | --- |
+| 0.25 | 75 | 89 | 139 | 47 | |
+| 0.20 | 80 | 92 | 140 | 47 | the 20%-measured block, cut in half |
+| **0.18** | **91** | **92** | **140** | **47** | the rest of that block: 11 models at 19% |
+| 0.15 | 91 | 94 | 140 | 47 | nothing in Coding |
+| 0.12 | 104 | 121 | 140 | 47 | the 13–14% cluster |
+| 0.10 | 134 | 122 | 140 | 47 | the ~12% cluster |
+| 0.05 | 142 | 134 | 140 | 47 | models measured on a twentieth of the weight |
 
 0.20 was splitting a natural block: eleven models sit at 19% and none between 19% and
 20%, so `kimi-k2-thinking` and `deepseek-v3-2-0925` (both scored on LiveCodeBench,
@@ -686,10 +691,18 @@ tested — but the mid-field crowds: the ten models measured on at least half th
 fall a mean 5 places at 0.12 and 11 places at 0.10, below models whose numbers are
 mostly imputation. 18% keeps the ranked field majority-measured; 12% does not.
 
-The setting is global to all three indexes today. They do not want the same thing —
-Tooling is flat between 0.20 and 0.15 where Coding gains 11 models, and Knowledge is
-flat across the whole range — so if they ever need to diverge, the place for it is a
-per-index override on `IndexDef`, not a compromise value.
+The setting is global to all four indexes today. They do not want the same thing —
+Tooling barely moves between 0.20 and 0.15 where Coding gains 11 models, Knowledge is
+flat across almost the whole range, and Vision is flat across all of it — so if they
+ever need to diverge, the place for it is a per-index override on `IndexDef`, not a
+compromise value.
+
+Vision is the one column the bar could never bite, at any setting in the table above.
+Its cheapest member, MMMU Pro, is 42% of the group weight on its own and every model
+it ranks has that score, so the floor of its coverage ladder sits at 0.417 and the
+threshold would have to clear 0.40 to cut anyone. The modality gate filters that
+column instead — see [Why the evidence bar is inert
+here](#why-the-evidence-bar-is-inert-here).
 
 Knowledge is the column the threshold does the least for, at any setting: its members
 cover 40–97% of the table each, so 124 of the 133 models it ranks are measured on at
@@ -739,7 +752,7 @@ Contributing benchmarks and why they carry the weight they do:
 ## Knowledge Index
 
 The third derived column, **Knowledge**, is the Coding and Tooling indexes' sibling
-for what a model knows unaided: same script (`derive_indexes.py`), same
+for what a model knows unaided (the fourth, [Vision](#vision-index), came later): same script (`derive_indexes.py`), same
 percentile-rank math, imputation and coverage rules as
 [above](#coding-index), computed over the knowledge, science and math benchmarks
 instead and written to each model's `scores.knowledge_index`. Ranked values cite
@@ -801,7 +814,9 @@ differ:
   only a multimodal model can be scored at all — so admitting it would charge
   text-only models imputation weight for something other than knowledge. At 0.3 it
   moved ranks a mean of 1.2 places and left the head untouched: nothing gained, a
-  modality tax paid.
+  modality tax paid. It is not unaggregated, though — it anchors the [Vision
+  index](#vision-index) at 1.0, where the modality gate is the subject rather
+  than a tax.
 - **AA-LCR and BrowseComp** — the retrieval axis this index is defined against.
   AA-LCR answers open questions over 10k–100k-token documents *supplied in the
   prompt*, and BrowseComp is scored with a browser in the loop, so a strong score can
@@ -845,6 +860,144 @@ of the six but is scored on five of them against `kimi-k3`'s four. That is the i
 cap behaving as designed (a blank is an unknown opponent, never a better one), and with
 this group's coverage it is a visible effect rather than a footnote.
 
+
+## Vision Index
+
+The fourth derived column, **Vision**, is the Coding, Tooling and Knowledge
+indexes' sibling for what a model can do with an image: same script
+(`derive_indexes.py`), same percentile-rank math, imputation and coverage rules
+as [above](#coding-index), computed over the multimodal benchmarks instead and
+written to each model's `scores.vision_index`. Ranked values cite this section
+(`https://github.com/dgrieser/ai-bench#vision-index`) the same way the other
+three cite their own.
+
+The axis is **anything that starts with pixels**: college-level question
+answering over figures and diagrams, mathematical reasoning in visual contexts,
+deliberately-hard multi-step visual puzzles, and driving a real desktop GUI from
+screenshots. That last one is why the column is not called "vision-language" —
+OSWorld measures visual *agency*, not visual question answering, and it is the
+member the other three cannot stand in for.
+
+**It ranks 47 of 143 models, and the 96 blanks are the point.** Only a
+multimodal model can be scored on any of these benchmarks, so a blank here says
+"this model has never been pointed at an image", which is exactly the question
+the column exists to answer. That modality gate is the reason MMMU Pro is
+[kept out of the Knowledge index](#what-the-knowledge-index-leaves-out) — there
+it would charge text-only models imputation weight for something other than
+knowledge. Here it is the subject.
+
+It is the least independent of the four, and the number is worth stating rather
+than burying. Against the models it shares with them:
+
+| | full field | top 20 |
+| --- | --- | --- |
+| vs [Coding](#coding-index) | 0.83 (41 models) | **0.17** |
+| vs [Tooling](#tooling-index) | 0.88 (45) | **0.38** |
+| vs [Knowledge](#knowledge-index) | 0.94 (47) | **0.57** |
+| vs AA Intelligence Index | 0.93 (47) | 0.50 |
+| vs GPQA Diamond | 0.93 (47) | 0.60 |
+
+Those full-field figures sit above the 0.79/0.84 the [Knowledge
+index](#knowledge-index) holds up as proof it is not re-measuring its siblings,
+and no amount of reweighting fixes that, because it is mostly a range effect:
+the 47 ranked models run from `qwen3-5-0-8b` to 400B-plus mixtures of experts,
+and across a spread that wide nearly every capability column agrees with nearly
+every other. Inside the top 20 — where a reader actually chooses between models
+— it comes apart, to **0.17** against Coding and 0.38 against Tooling.
+
+So this column does not earn its place by being orthogonal to the other three.
+It earns it by covering a **modality** none of them touches, by saying so about
+the two thirds of the table it leaves blank, and by separating the frontier once
+general capability stops explaining the ranking.
+
+Contributing benchmarks and why they carry the weight they do (total group
+weight **2.40**):
+
+| Benchmark | Weight | Rationale |
+| --- | --- | --- |
+| MMMU Pro | 1.0 | The anchor, and the only member that ranks the field rather than a corner of it: **47 scored models across 15 creators**, against 11-14 and 3-4 creators for the rest. It also has the best provenance in the group by a distance — **46 of its 47 values are Artificial Analysis runs**, where the other three are dominated by Hugging Face card self-reports at each lab's harness of choice. Vision-centric by construction: MMMU Pro filters out the questions a text-only model could answer without the image, augments the candidate set so a lucky guess is worth less, and adds a vision-only setting where the question itself is embedded in the picture. Peer-reviewed (ACL 2025) and unsaturated, 25.8-82.3 with a median of 69.2. What it does *not* lead on is discrimination: 3.7 points between the best model and the fifth is a flatter head than OSWorld's, and it correlates 0.96 with MathVista-mini and 0.93 with ZeroBench, so it is the group's centre of gravity rather than its most independent voice. |
+| OSWorld-Verified | 0.7 | The highest-value *measurement* here and the least redundant member: mean Spearman **0.87** against the other three, including the group's weakest link at 0.78 with ZeroBench. A GUI agent driving a real Ubuntu desktop from screenshots is the only visual **agency** in the table, the Verified revision exists to repair task graders that were mis-scoring the original, and it is the least saturated member with by far the sharpest head — **13.0 points** between first and fifth against a 63.3 median, where the next best is ZeroBench's 4.0 on a benchmark whose entire observed range is 12 points. On design it would earn 0.85-0.90. It is discounted a full tier for two things it cannot currently do: **13 scored models from 4 creators**, the thinnest coverage of the four; and provenance no better than the coverage — only 3 of those 13 values come from the official board, 9 are card self-reports, and on a benchmark whose score moves with the step budget (this column takes the Foundation E2E GUI subset at a 100-step cap) mixing harnesses inside one percentile-normalized column is the trust hazard the weight scale exists to price. The weight is not load-bearing: moving it between 0.6 and 0.8 shifts the ranked field a mean of under one place and never touches the top three. |
+| MathVista-mini | 0.35 | The saturated member, and the most redundant. Median **86.0**, p75 87.4, best 90.3 — the entire top of the field is packed inside three points, and **2.9 points** separate first from fifth, the flattest head anywhere in this index. It is also mean Spearman **0.95** against the other three, including **0.96 with MMMU Pro** and 0.97 with ZeroBench, so most of its vote is already cast by members that measure more. Public since 2023, so it carries the contamination profile three years of exposure buys, and 12 of its 14 values are card self-reports. Kept because it is the second-widest member and the mid-field is where it still separates models — the coverage-backbone role GPQA Diamond plays at 0.30 in the [Knowledge index](#knowledge-index). |
+| ZeroBench | 0.35 | The opposite failure mode, which is why it lands on the same rung rather than above it. Its *design* is the best in the group: 100 hand-crafted multi-step questions built so that nothing solves them, which makes it the one member structurally immune to the saturation MathVista is already suffering. Its *measurement* is the weakest. Median **3.0**, best 12.0, three models tied at 0.0 — and at 100 questions the binomial standard error near p = 0.1 is about 3 points, so the whole observed 0-12 range is a few standard errors wide and a single question moves a rank. 11 scored models from 3 creators, 9 of them card self-reports. It is a headroom sentinel that will earn weight as models climb, not a discriminator today. Its exposure to a flattered variant slipping in through `update.py`'s best-value-wins Hugging Face ingest is handled in the benchmark-name mapping — see [Vision](#vision) above. |
+
+### Why GDPval-AA is left out
+
+`gdpval_aa` is the obvious fifth member and is deliberately not one. It has the
+best coverage in the table (79 models, 25 creators, 78 of them AA-run), and its
+deliverables are documents, slide decks, diagrams and spreadsheets, so it is the
+only column in `llm.json` scoring visual *output* rather than visual input. Two
+measurements keep it out:
+
+- **It is not a visual signal.** Spearman **0.95** with the Tooling index and
+  **0.97** with AA Intelligence Index. Artificial Analysis runs it in the
+  Stirrup agentic harness with shell access and a browser, so what the Elo
+  separates is shell agency mediated by pairwise judging of deliverable
+  quality — which is precisely what the [Tooling index](#tooling-index) already
+  prices it for at 0.70. Admitting it here would let one run vote twice on two
+  different axes.
+- **38 models carry it as their only score in this group** — models nothing has
+  ever measured on an image. At its Tooling weight of 0.7 its share of a
+  five-member group would be 0.226, over the [18% evidence
+  bar](#why-the-evidence-bar-is-18), so it would not merely contribute: it would
+  *rank* all 38 on no visual evidence whatsoever, taking the column from 47
+  ranked models to 85 and turning two thirds of a vision ranking into a restated
+  GDPval ranking.
+
+Holding it below the bar instead of dropping it was the other option — at 0.5 of
+a 2.9 total its share is 0.172, just under — and it was rejected as the wrong
+kind of clever: a weight chosen to sit under a threshold is one edit away from
+silently admitting 38 models, and the first objection above stands whatever the
+weight. GDPval-AA remains a column in the table and a member of the Tooling
+index; it is simply not evidence about vision.
+
+### Why the evidence bar is inert here
+
+Coverage does not spread across this group, it **steps**, because every one of
+the 47 ranked models has MMMU Pro and nothing else is scored on a model MMMU Pro
+is not:
+
+| share of weight | models | what they have |
+| --- | --- | --- |
+| 1.000 | 7 | all four |
+| 0.708 | 10 | MMMU Pro + OSWorld, or + both small members |
+| 0.563 | 3 | MMMU Pro + MathVista + ZeroBench |
+| 0.417 | 27 | MMMU Pro alone |
+
+The floor of that ladder is 0.417, so `MIN_SCORED_FRACTION` would have to exceed
+**0.40** to cut anybody: Vision ranks the same 47 models at every setting from
+0.05 to 0.30. The [18% bar](#why-the-evidence-bar-is-18) is completely inert
+here and **no per-index override is needed** — the modality gate is already
+doing the filtering the bar does elsewhere, and doing it on better evidence.
+
+The honest weakness that leaves is the mirror image of Knowledge's: **27 of the
+47 ranked models are measured on MMMU Pro alone**, and only 20 of 47 carry at
+least half the group's weight, where the Knowledge index gets that property for
+free from its own density. For most of this
+column's field, the ranking *is* MMMU Pro plus imputation, and it should be read
+that way — `--top` prints an `N/4 measured` column next to every value for
+exactly this reason.
+
+What keeps that safe is the imputation cap, and here it is legible in the
+numbers rather than a footnote. A model measured on MMMU Pro alone cannot score
+above **70,833** however well it does, because the 58% of the weight it is
+missing is filled at the median and never above it. So the head of the column is
+reserved for models measured on more of it, by construction. The leader,
+`qwen3-8-2-4t-a95b`, sits at **85,417** — exactly its own cap at 70.8% coverage
+— because it tops both MMMU Pro (82.3) and OSWorld-Verified (86.1) and has no
+score on either small member.
+
+Two other properties of the current field:
+
+- **47 ranked, 46 distinct values.** The one collision is not a rounding
+  artifact and no weighting can remove it: `devstral-small-2` and `gemma-4-e2b`
+  both score 44.6 on MMMU Pro and have no other score in the group, so their
+  evidence is byte-identical and the index is right to tie them at 26,336. Apart
+  from that pair the closest neighbours sit **27 index points** apart, the widest
+  margin of the four — a small ranked field spread over the full scale, where the
+  other three pack many more values into the same range.
+- **The range is the widest of the four**, 6,137 to 85,417, because the
+  multimodal field in this table runs from 0.8B models to frontier mixtures of
+  experts with very little in between.
 
 ## Openness Classification
 
@@ -968,7 +1121,7 @@ ai-bench/
 ├── update_*_mapping.py         # Mapping sync scripts (16 files)
 ├── _*_mapping.py               # Mapping application modules (16 files)
 │
-├── derive_indexes.py           # Derived Coding, Tooling & Knowledge index columns (see above)
+├── derive_indexes.py           # Derived Coding, Tooling, Knowledge & Vision index columns (see above)
 │
 ├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
 ├── _selector.py                # Type-to-search prompt: drawing + Tab completion

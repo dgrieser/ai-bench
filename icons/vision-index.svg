@@ -1,0 +1,66 @@
+<!-- OpenBench's own Vision index: an eye inside a two-tone ring, sibling to the
+     Coding, Tooling and Knowledge index marks. Ring geometry is copied from
+     coding-index.svg so the four marks line up, and the viewBox is cropped to
+     the drawing so sizing it by height lands its top and bottom on the ink —
+     see .tip-icon in llm.html. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="357.12 332.16 821.76 845.44"
+  fill="none"
+>
+  <!-- The glyph is the page's ink, not a fixed white: on a transparent ground
+       white vanishes on the light theme. llm.html sets color-scheme per theme
+       and the browser hands that down to an SVG loaded in an <img>, so this
+       follows the site's own toggle rather than the reader's OS. The two
+       values are llm.html's text ink; an <img> cannot read the page's custom
+       property, so they are copied here and have to be changed alongside it.
+       The stroke attributes below are the fallback for anything that ignores
+       the style. -->
+  <style>
+    .ink { stroke: #111111; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #e0ddd7; }
+    }
+  </style>
+
+  <!-- Outer ring: pink section -->
+  <path
+    d="M 483.10 478.51
+       A 391.14 403.21 0 1 1 1040.78 1043.75"
+    stroke="#FD2179"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="M 1040.78 1043.75
+       A 391.14 403.21 0 0 1 483.10 478.51"
+    stroke="#0170FE"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Eye outline: two mirrored curves meeting at the corners, centred on the
+       ring's own centre (762, 761) so the glyph sits square inside it. -->
+  <path
+    d="M 528 761
+       C 620 610 904 610 996 761
+       C 904 912 620 912 528 761
+       Z"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linejoin="round"
+  />
+
+  <!-- Pupil -->
+  <circle
+    cx="762"
+    cy="761"
+    r="58"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+  />
+</svg>
