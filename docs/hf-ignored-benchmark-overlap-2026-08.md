@@ -326,6 +326,12 @@ carries exactly one column (`mmmu_pro`, 45 models) — so the gap is real, but t
 filling it is one vendor deep. Second, a benchmark reported mainly by the lab that *wrote* it
 (`VitaBench`, `DeepPlanning`) is a self-report in the strongest sense.
 
+> **Since this snapshot:** `ZeroBench` and `MathVista` are no longer discarded. Both are now
+> columns (`zerobench`, `mathvista_mini`), which resolves the "one vendor deep" objection the
+> way the table above could not see: evals.report carries a verified row for each, so the
+> cards are a gap filler rather than the whole evidence base. See
+> [Vision](../README.md#vision) for the sources and the label traps.
+
 ---
 
 ## 5. Hazards to encode, not columns to add

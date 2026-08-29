@@ -370,6 +370,50 @@ hoping the labels agree:
 All three feed the [Tooling index](#tooling-index); the weight each carries, and
 why, is in that section's table.
 
+### Vision
+
+Three columns are multimodal: **MMMU Pro** (`mmmu_pro`), which Artificial
+Analysis runs itself, plus two assembled the same way the tool-use columns are.
+
+| Column | Leading source | Gap fillers |
+| --- | --- | --- |
+| **ZeroBench** (`zerobench`) | evals.report's `zerobench` table | Hugging Face model cards |
+| **MathVista-mini** (`mathvista_mini`) | evals.report's `mathvista` table | Hugging Face model cards |
+
+Neither leads from its own leaderboard, which is unusual here and worth saying
+why. MathVista's board stopped at the 2024 field — nothing on it is in this
+index. ZeroBench's is alive and first-party, but its *official* table is almost
+entirely closed-weight (Llama 4 Maverick and Scout are the only open rows we
+carry), and the open-weight numbers it does publish sit on its *externally
+reported* board, which is the same lab self-reports the model cards give us. So
+evals.report leads both and the cards fill gaps ahead of it. Scraping
+zerobench.github.io directly is the obvious next step, and it would pay off
+immediately: the official board has Maverick at 0.4 and Scout at 1.6 where
+evals.report reports 0.0 for both.
+
+Two traps are handled in the benchmark-name mapping rather than by hoping the
+labels agree, and one of them is sharper than the tool-use pair above, because
+`update.py`'s Hugging Face ingest keeps the **best** value when several labels
+alias one key:
+
+- **ZeroBench is pass@1 on the 100 main questions.** `ZEROBench` and
+  `ZeroBench` map onto `zerobench`. `ZEROBench_sub` (the 334 subquestions) is a
+  different question set, three to four times higher on the same card;
+  `ZeroBench (pass@5)` and `ZeroBench (w/ tools)` are the same questions on a
+  larger budget, which on a near-zero benchmark roughly doubles the number —
+  kimi-k2-5 reports 9.0 plain against 11.0 with tools. All three stay unmapped,
+  or best-wins would hand the column the flattered variant.
+- **MathVista is always testmini.** Every card reporting it reports the
+  1,000-example split whether or not the label says so, so `MathVista`,
+  `MathVista (mini)`, `MathVista mini`, `MathVista_MINI` and `Mathvista(mini)`
+  all map onto `mathvista_mini`. MathVerse and MathVision are different
+  benchmarks and stay unmapped.
+
+Neither column feeds a derived index, for the reason MMMU Pro does not: only a
+multimodal model can be scored at all, so the coverage they add is a slice of
+the field rather than a measurement the rest of it is missing (see [What the
+Knowledge index leaves out](#what-the-knowledge-index-leaves-out)).
+
 ## Mapping System
 
 The project uses a **multi-layer mapping strategy** to handle model name fragmentation:

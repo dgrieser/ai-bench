@@ -56,6 +56,16 @@ BENCHMARKS: dict[str, str] = {
     # an Official or Verified run displaces a self-report wherever one exists.
     "swe-bench-multilingual": "swe_bench_multilingual",
     "mmlu-pro": "mmlu_pro",
+    # The two vision columns. MathVista's own leaderboard stopped at the 2024
+    # field and ZeroBench's official board is almost all closed-weight, so
+    # neither first-party page is scraped: evals.report leads both and does
+    # overwrite, with the Hugging Face cards filling gaps ahead of it -- the
+    # same relation swe-bench-multimodal stands in. Its "mathvista" table is
+    # the 1,000-example testmini split, which is what mathvista_mini tracks;
+    # every open-weight row in its "zerobench" table is pass@1, the metric the
+    # column carries, though the table also holds closed-model pass@5 rows.
+    "zerobench": "zerobench",
+    "mathvista": "mathvista_mini",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}
