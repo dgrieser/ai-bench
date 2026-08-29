@@ -1,0 +1,71 @@
+<!-- OpenBench's own Trust index: a shield with a check inside a two-tone ring,
+     sibling to the Coding, Tooling, Knowledge and Vision index marks. Ring
+     geometry is copied from coding-index.svg so the marks line up, and the
+     viewBox is cropped to the drawing so sizing it by height lands its top and
+     bottom on the ink — see .tip-icon in llm.html. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="357.12 332.16 821.76 845.44"
+  fill="none"
+>
+  <!-- The glyph is the page's ink, not a fixed white: on a transparent ground
+       white vanishes on the light theme. llm.html sets color-scheme per theme
+       and the browser hands that down to an SVG loaded in an <img>, so this
+       follows the site's own toggle rather than the reader's OS. The two
+       values are llm.html's text ink; an <img> cannot read the page's custom
+       property, so they are copied here and have to be changed alongside it.
+       The stroke attributes below are the fallback for anything that ignores
+       the style. -->
+  <style>
+    .ink { stroke: #111111; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #e0ddd7; }
+    }
+  </style>
+
+  <!-- Outer ring: pink section -->
+  <path
+    d="M 483.10 478.51
+       A 391.14 403.21 0 1 1 1040.78 1043.75"
+    stroke="#FD2179"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="M 1040.78 1043.75
+       A 391.14 403.21 0 0 1 483.10 478.51"
+    stroke="#0170FE"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Shield -->
+  <path
+    d="M 762 586
+       L 620 640
+       L 620 776
+       C 620 862 692 914 762 936
+       C 832 914 904 862 904 776
+       L 904 640
+       Z"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Check -->
+  <path
+    d="M 700 764
+       L 745 810
+       L 828 722"
+    class="ink"
+    stroke="#111111"
+    stroke-width="35"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

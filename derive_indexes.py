@@ -2,7 +2,8 @@
 """Compute the derived index columns in llm.json from the benchmarks they
 aggregate: the Coding index from the coding benchmarks, the Tooling index from
 the agentic tool-use benchmarks, the Knowledge index from the knowledge and
-reasoning benchmarks, the Vision index from the multimodal ones.
+reasoning benchmarks, the Vision index from the multimodal ones, the Trust
+index from the honesty, grounding and instruction-compliance ones.
 
 Unlike every other column, a derived index is not scraped: it is computed from
 scores already in llm.json, so it has to be recomputed whenever any of them
@@ -142,9 +143,14 @@ INDEXES: list[IndexDef] = [
             # above 90), mmmu_pro (0.96 with GPQA and only multimodal models can
             # be scored at all), aa_lcr and browsecomp (comprehension of a
             # supplied document and retrieval with a browser, not what the model
-            # knows), aa_intelligence_index (a composite over benchmarks in this
-            # table, coding and tool use among them) -- see README, "Knowledge
-            # index".
+            # knows), aa_omniscience_accuracy (the correct share of the same run
+            # aa_omniscience already scores, the Index simply before the
+            # confident errors are netted off), aa_intelligence_index (a
+            # composite over benchmarks in this table, coding and tool use among
+            # them) -- see README, "Knowledge index". The first and the fourth
+            # of those are the Trust index's two anchors: what they measure is
+            # honesty, which is why they are worth aggregating there and not
+            # here.
         ],
     ),
     IndexDef(
@@ -164,6 +170,31 @@ INDEXES: list[IndexDef] = [
             # 0.226, over the evidence bar, so it would rank all 38 on no
             # visual evidence at all -- see README, "Why GDPval-AA is left
             # out".
+        ],
+    ),
+    IndexDef(
+        key="trust_index",
+        fallback_source_url="https://github.com/dgrieser/ai-bench#trust-index",
+        contributing=[
+            ("aa_omniscience_hallucination", 1.0),
+            # The brake on the anchor, and the reason the anchor can carry 1.0.
+            # A hallucination rate is incorrect / (incorrect + partial + not
+            # attempted), so a model that abstains on everything scores
+            # perfectly: without the accuracy of the same run beside it this
+            # column would rank a 3B model that answers nothing at the top --
+            # see README, "Why the anchor cannot stand alone".
+            ("aa_omniscience_accuracy", 0.6),
+            ("aa_lcr", 0.45),
+            ("ifbench", 0.3),
+            # Deliberately not aggregated, though both are trust-adjacent
+            # columns in llm.json: aa_omniscience is a function of the two
+            # members above (accuracy netted against confident error) over the
+            # same AA run, so it would spend a third slot on one run, and it is
+            # already the 1.0 anchor of the Knowledge index; browsecomp has no
+            # first-party run at all -- all 43 of its values are third-party
+            # self-reports, which is disqualifying provenance for a column
+            # whose whole subject is trustworthiness -- see README, "What the
+            # Trust index leaves out".
         ],
     ),
 ]

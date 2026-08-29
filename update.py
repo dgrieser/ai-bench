@@ -182,6 +182,11 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "aa_briefcase": (("briefcase",), to_index),
     "aa_omniscience": (("omniscience",), to_index),
     "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
+    # The other half of the same run: correct share before the Omniscience
+    # Index nets confident errors off against it. Both halves feed the Trust
+    # index, where the accuracy is what stops a model that abstains on
+    # everything from topping the hallucination rate.
+    "aa_omniscience_accuracy": (("omniscience_accuracy",), to_percent),
     "aa_lcr": (("lcr",), to_percent),
     # Ai2's IFBench, run independently by AA; the model pages carry it too.
     "ifbench": (("ifbench",), to_percent),
