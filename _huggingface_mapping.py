@@ -64,6 +64,25 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 #     report them as 0-1 fractions (0.742, 0.794), which would land in llm.json
 #     as sub-1% scores. "MMLU-ProX" and "KMMLU-Pro" stay parked for the ordinary
 #     reason -- a multilingual extension and a Korean one are not MMLU-Pro.
+#
+# The two vision columns are the same story with one extra trap: the cards do
+# not all report the same *run*, so only the plain label is mapped.
+#
+#   * ZeroBench. "ZEROBench" and "ZeroBench" are pass@1 over the 100 main
+#     questions, which is what zerobench tracks. "ZEROBench_sub" is the 334
+#     subquestions -- a different question set, scoring three to four times
+#     higher on the same card. "ZeroBench (pass@5)" and "ZeroBench (w/ tools)"
+#     are the same questions under a different budget, and on a near-zero
+#     benchmark that roughly doubles the number: kimi-k2-5 reports 9.0 plain
+#     against 11.0 with tools. All three stay parked, and parking them matters
+#     more here than elsewhere, because update.py's HF ingest keeps the *best*
+#     value when several labels alias one key -- mapping them would hand the
+#     column the flattered variant on every card carrying both.
+#   * MathVista. Every card reporting it reports the 1,000-example testmini
+#     split, whether or not the label says so ("MathVista", "MathVista (mini)",
+#     "MathVista mini", "MathVista_MINI", "Mathvista(mini)"), so all five map
+#     onto mathvista_mini. MathVerse and MathVision are different benchmarks
+#     and stay parked.
 UNMAPPABLE = "__unmappable__"
 
 
