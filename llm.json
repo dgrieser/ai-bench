@@ -120,7 +120,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: DeepSWE 1.0, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -132,7 +132,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: τ³-Bench Banking 1.0, Toolathlon-Verified 0.9, MCP-Atlas 0.85, Terminal-Bench 2.1 0.8, GDPval-AA v2 0.7, ITBench-AA 0.6, BFCL v4 0.5, τ²-Bench Telecom 0.3, Terminal-Bench Hard 0.3, IFBench 0.2.",
       "icon_svg": "icons/tooling-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#tooling-index"
@@ -144,7 +144,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own knowledge composite, derived from the knowledge, science and math benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own knowledge composite, derived from the knowledge, science and math benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: AA-Omniscience 1.0, Humanity's Last Exam 0.9, CritPt 0.6, MMLU-Pro 0.5, AIME 2025 0.4, GPQA Diamond 0.3.",
       "icon_svg": "icons/knowledge-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#knowledge-index"
@@ -156,7 +156,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own multimodal composite, derived from the vision benchmarks in this table. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Only a model measured on at least one of them is ranked, so the column is blank for a text-only model by design. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own multimodal composite, derived from the vision benchmarks in this table. A model measured on none of them stays blank by design. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: MMMU Pro 1.0, OSWorld-Verified 0.7, MathVista-mini 0.35, ZeroBench 0.35.",
       "icon_svg": "icons/vision-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#vision-index"
@@ -168,7 +168,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own trustworthiness composite, derived from the honesty, grounding and instruction-compliance benchmarks in this table. It ranks whether an answer can be believed rather than how capable the model is: what it does when it does not know, and whether it stays inside the document and the constraints it was given. Each benchmark becomes a percentile rank, averaged with per-benchmark reliability weights; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table.",
+      "description": "This site's own trustworthiness composite, derived from the honesty, grounding and instruction-compliance benchmarks in this table. It ranks whether an answer can be believed, not how capable the model is. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: AA-Omniscience Hallucination Rate 1.0, AA-Omniscience Accuracy 0.6, AA-LCR 0.45, IFBench 0.3.",
       "icon_svg": "icons/trust-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#trust-index"
