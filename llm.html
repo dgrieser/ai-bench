@@ -2722,23 +2722,79 @@
     /* The five-column table on a phone: name and score stay, the rest lives
        in the long-press dialog. The category subhead row's single cell is a
        first child, so the nth-child cut leaves it alone. What shoved the
-       scores off-screen was the name column sizing to its widest entry —
-       an unwrappable name plus a nowrap tag — so the tags cede their space
-       (the dialog and the name's slip both carry what they said) and names
-       are allowed to wrap; auto layout then fits the card on its own. A
-       pressed score must not start a text selection while the timer runs. */
+       scores off-screen was the name column sizing to its widest entry, so
+       table layout gives way to one flex row per entry: the score keeps the
+       right edge, the tags keep their size, and the name — the only thing
+       that can give — takes whatever width is left and ellipsizes on one
+       line. A pressed score must not start a text selection while the timer
+       runs. */
     @media (max-width: 720px) {
+      .detail-bench-table,
+      .detail-bench-table thead,
+      .detail-bench-table tbody {
+        display: block;
+      }
+
+      .detail-bench-table tr {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .detail-bench-table thead tr {
+        border-bottom-color: var(--line);
+      }
+
+      .detail-bench-table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .detail-bench-table th,
+      .detail-bench-table td {
+        display: block;
+        border-bottom: none;
+      }
+
       .detail-bench-table th:nth-child(n+3),
       .detail-bench-table td:nth-child(n+3) {
         display: none;
       }
 
-      .detail-bench-table .bench-flag {
-        display: none;
+      .detail-bench-table th:first-child,
+      .detail-bench-table td:first-child,
+      .bench-cat-row td {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      /* Name and tags share the flexible cell; the score cell keeps only
+         the width its number needs, flush right. */
+      .detail-bench-table td:first-child {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .detail-bench-table th:nth-child(2),
+      .detail-bench-table td:nth-child(2) {
+        flex: 0 0 auto;
       }
 
       .bench-name-cell {
-        overflow-wrap: anywhere;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .bench-name-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .bench-flag {
+        margin-left: 0;
+        flex-shrink: 0;
       }
 
       .detail-bench-table td.num {
@@ -6518,7 +6574,7 @@
             ].join("");
             return `
               <tr data-bench-key="${escapeAttr(key)}"${scored ? "" : ' class="bench-missing"'}>
-                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</span>${flags}</td>
+                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}<span class="bench-name-text">${escapeHtml(bench.name || getBenchmarkLabel(key))}</span></span>${flags}</td>
                 <td class="num">${formatScore(value, key)}</td>
                 <td class="num bench-pct">${Number.isFinite(pct) ? `p${Math.round(pct * 100)}` : '<span class="num na">&mdash;&nbsp;</span>'}</td>
                 <td class="num${fresh ? " fresh-score" : ""}">${updated ? escapeHtml(updated) : '<span class="num na">&mdash;&nbsp;</span>'}</td>
