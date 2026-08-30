@@ -2191,10 +2191,12 @@
       justify-content: center;
     }
 
+    /* The max-width also caps how far the SVG's fonts blow up on a wide
+       screen — the box's units scale with it. */
     svg.radar {
       display: block;
       width: 100%;
-      max-width: 620px;
+      max-width: 560px;
       height: auto;
     }
 
@@ -2244,14 +2246,14 @@
     .radar-label {
       fill: var(--text);
       font-family: var(--font-ui);
-      font-size: 12px;
+      font-size: 15px;
       font-weight: 600;
     }
 
     .radar-value {
       fill: var(--muted);
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 12.5px;
     }
 
     .radar-label.missing,
@@ -2729,6 +2731,12 @@
        line. A pressed score must not start a text selection while the timer
        runs. */
     @media (max-width: 720px) {
+      /* Every point of card padding comes straight out of the radar's
+         drawing width on a phone, so the cards slim down. */
+      .detail-card {
+        padding: 14px 12px;
+      }
+
       .detail-bench-table,
       .detail-bench-table thead,
       .detail-bench-table tbody {
@@ -6374,7 +6382,7 @@
       }
 
       function renderRadarChart(model, axes) {
-        const W = 560, H = 460, CX = 280, CY = 230, R = 150;
+        const W = 520, H = 480, CX = 260, CY = 238, R = 176;
         const n = axes.length;
         const r1 = (v) => Math.round(v * 10) / 10;
 
@@ -6432,10 +6440,17 @@
         }).join("");
 
         const labels = axisData.map((a) => {
-          const p = radarPoint(CX, CY, R * 1.16, a.i, n, 1);
+          const p = radarPoint(CX, CY, R * 1.12, a.i, n, 1);
           const cos = Math.cos(p.angle);
           const sin = Math.sin(p.angle);
           const anchor = cos > 0.3 ? "start" : cos < -0.3 ? "end" : "middle";
+          // Side labels grow away from their spoke, and at eight axes the
+          // horizontal-most anchors sit close enough to the edge that the
+          // longest short_name would leave the box — so they get nudged
+          // just far enough back in.
+          const labelX = anchor === "start" ? Math.min(p.x, W - 76)
+            : anchor === "end" ? Math.max(p.x, 76)
+            : p.x;
           // Two lines per axis — name over raw score — shifted clear of the
           // rim: up above the chart, down below it, centered at the sides.
           const nameY = sin < -0.5 ? p.y - 10 : sin > 0.5 ? p.y + 12 : p.y - 1;
@@ -6443,8 +6458,8 @@
           const valueText = a.scored ? a.value.toFixed(scoreDecimals(a.key)) : "&mdash;";
           const tip = a.ranked ? "" : tipAttrs(radarAxisTip(model, a));
           return `<g${tip}>` +
-            `<text class="radar-label${missing}" x="${r1(p.x)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(a.key))}</text>` +
-            `<text class="radar-value${missing}" x="${r1(p.x)}" y="${r1(nameY + 14)}" text-anchor="${anchor}">${valueText}</text>` +
+            `<text class="radar-label${missing}" x="${r1(labelX)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(a.key))}</text>` +
+            `<text class="radar-value${missing}" x="${r1(labelX)}" y="${r1(nameY + 16)}" text-anchor="${anchor}">${valueText}</text>` +
             `</g>`;
         }).join("");
 
