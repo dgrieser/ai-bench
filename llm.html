@@ -2042,6 +2042,553 @@
       }
     }
 
+    /* ── Model detail page ────────────────────────────
+       One model spelled out in full, reached from its name in the table (or a
+       shared #model/<slug> link) and rendered into the same content section
+       the table uses. The hero keeps its brand, theme toggle and export; the
+       filter panel (toolbar included) belongs to the table and goes with it. */
+
+    .page.detail-view .filters {
+      display: none;
+    }
+
+    .detail-head {
+      padding: 26px 20px 22px;
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn 350ms ease;
+    }
+
+    .detail-back {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      transition: color 120ms ease;
+    }
+
+    .detail-back:hover {
+      color: var(--accent);
+    }
+
+    .detail-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+      line-height: 1.15;
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+
+    .detail-byline {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .detail-byline a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--line);
+      text-underline-offset: 3px;
+      transition: color 120ms ease;
+    }
+
+    .detail-byline a:hover {
+      color: var(--accent);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      padding: 24px 20px 32px;
+      animation: fadeIn 350ms ease;
+    }
+
+    /* Cards on the detail page wear the reference cards' paper. */
+    .detail-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 16px 18px;
+    }
+
+    .detail-card h2 {
+      margin: 0 0 12px;
+      color: var(--subtle);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .detail-specs dl {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px 16px;
+      margin: 0;
+    }
+
+    .detail-specs dt {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+
+    .detail-specs dd {
+      margin: 0;
+      min-width: 0;
+      text-align: right;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .detail-specs dd a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .detail-specs dd a:hover {
+      text-decoration: underline;
+    }
+
+    /* The external model page keeps its whole address, ellipsized like the
+       reference cards' links — the host is the part that has to survive. */
+    .detail-specs dd.detail-url {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 0.76rem;
+    }
+
+    /* ── Radar chart ──
+       The chart itself is inline SVG built in renderRadarChart. Every color
+       is a theme token, so the dark palette restyles it with no extra work;
+       the grid stays in the recessive line greys and only the data polygon
+       wears the accent. */
+
+    .radar-figure {
+      display: flex;
+      justify-content: center;
+    }
+
+    svg.radar {
+      display: block;
+      width: 100%;
+      max-width: 620px;
+      height: auto;
+    }
+
+    .radar-ring {
+      fill: none;
+      stroke: var(--line-soft);
+    }
+
+    .radar-ring.major {
+      stroke: var(--line);
+    }
+
+    .radar-spoke {
+      stroke: var(--line-soft);
+    }
+
+    .radar-tick {
+      fill: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 9px;
+    }
+
+    .radar-shape {
+      fill: var(--accent);
+      fill-opacity: 0.12;
+      stroke: var(--accent);
+      stroke-width: 2;
+      stroke-linejoin: round;
+    }
+
+    /* The surface-colored ring keeps a dot legible where it crosses the
+       polygon's fill or a gridline, in either theme. */
+    .radar-dot {
+      fill: var(--accent);
+      stroke: var(--surface);
+      stroke-width: 2;
+    }
+
+    /* An axis with no score keeps its spoke and label, but its marker is a
+       hollow point at the hub — an honest gap, not a zero. */
+    .radar-dot.missing {
+      fill: var(--surface);
+      stroke: var(--subtle);
+      stroke-width: 1.5;
+    }
+
+    .radar-label {
+      fill: var(--text);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .radar-value {
+      fill: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .radar-label.missing,
+    .radar-value.missing {
+      fill: var(--subtle);
+    }
+
+    .radar-note {
+      margin: 6px 2px 2px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* ── Radar axis picker ──
+       The chips are the chart's current axes; the menu adds or removes any
+       benchmark in the index. The global button rule sets width:100% and a
+       32px height for the toolbar's sake, so everything here sizes itself
+       back down. */
+
+    .radar-controls {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 16px;
+    }
+
+    .axis-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 4px 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .axis-chip .benchmark-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    .axis-chip.no-score {
+      color: var(--subtle);
+    }
+
+    .axis-chip.no-score .benchmark-icon {
+      opacity: 0.45;
+    }
+
+    .axis-chip-x {
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 0 5px;
+      border-radius: 50%;
+      color: var(--subtle);
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .axis-chip-x:hover {
+      background: none;
+      border: none;
+      color: var(--fresh-ink);
+    }
+
+    .axis-chip-x[disabled] {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .axis-chip-x[disabled]:hover {
+      color: var(--subtle);
+    }
+
+    .axis-add-btn {
+      width: auto;
+      min-height: 0;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+    }
+
+    .axis-reset {
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 5px 6px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+
+    .axis-reset:hover {
+      background: none;
+      border: none;
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .axis-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 40;
+      width: min(380px, calc(100vw - 56px));
+      max-height: 340px;
+      overflow: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 6px;
+    }
+
+    .axis-menu-note {
+      padding: 6px 8px 2px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .axis-menu-cat {
+      padding: 9px 8px 3px;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .axis-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-height: 0;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      padding: 5px 8px;
+      text-align: left;
+      color: var(--text);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .axis-menu-item:hover {
+      background: var(--surface-alt);
+      border: none;
+      color: var(--text);
+    }
+
+    .axis-menu-item[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .axis-menu-item[disabled]:hover {
+      background: none;
+    }
+
+    .axis-menu-check {
+      width: 12px;
+      flex-shrink: 0;
+      color: var(--accent);
+      visibility: hidden;
+    }
+
+    .axis-menu-item.on .axis-menu-check {
+      visibility: visible;
+    }
+
+    .axis-menu-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .axis-menu-score {
+      margin-left: auto;
+      flex-shrink: 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    /* ── Detail benchmark table ──
+       Every benchmark the index lists for the model, scored or not: a blank
+       row is part of the picture, and it doubles as the axis picker's
+       shopping list, so it stays — dimmed, never hidden. */
+
+    .detail-bench-panel {
+      margin: 0;
+      padding: 28px 20px 36px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-alt);
+    }
+
+    .detail-bench-panel h2 {
+      margin: 0 0 14px;
+      color: var(--subtle);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .detail-bench-card {
+      max-width: 960px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow-x: auto;
+    }
+
+    .detail-bench-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .detail-bench-table th {
+      padding: 10px 14px 8px;
+      text-align: left;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .detail-bench-table th.num {
+      text-align: right;
+    }
+
+    .detail-bench-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--line-soft);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .detail-bench-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .detail-bench-table tbody tr:not(.bench-cat-row):hover {
+      background: var(--surface-alt);
+    }
+
+    .bench-cat-row td {
+      padding: 13px 14px 4px;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .bench-name-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .bench-flag {
+      margin-left: 6px;
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    tr.bench-missing td {
+      color: var(--subtle);
+    }
+
+    tr.bench-missing .benchmark-icon {
+      opacity: 0.45;
+    }
+
+    .detail-bench-table td.bench-pct {
+      color: var(--subtle);
+      font-weight: 600;
+    }
+
+    .bench-source a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .bench-source a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 900px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .detail-head,
+      .detail-grid,
+      .detail-bench-panel {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+
     /* ── Hero icon buttons (repo, theme toggle, export) ──── */
 
     .repo-link,
@@ -2644,6 +3191,12 @@
       border-color: #4a4845;
     }
 
+    /* The accent wash inside the radar polygon reads fainter against a dark
+       surface, so it gets a touch more presence there. */
+    [data-theme="dark"] .radar-shape {
+      fill-opacity: 0.18;
+    }
+
     [data-theme="dark"] button:hover {
       border-color: #3a3936;
     }
@@ -3168,6 +3721,17 @@
         },
         eventsBound: false,
         columnWidths: {},
+        // Which view #content shows: the table, or one model's detail page.
+        // Filters and sort stay in memory while a detail page is up, so the
+        // table comes back exactly as it was left.
+        route: { view: "table", slug: "" },
+        modelsBySlug: new Map(),
+        // Where the table was scrolled when a detail page took over.
+        tableScroll: 0,
+        radar: {
+          axes: [],
+          pickerOpen: false
+        },
         gpu: {
           list: [],
           visible: [],
@@ -3364,6 +3928,13 @@
       document.fonts?.ready.then(syncTitleLines);
       loadData();
 
+      // Hash routing: #model/<slug> is a model's detail page, anything else
+      // the table. The listener is live before the data is — renderRoute
+      // simply waits, and init dispatches again once there is something to
+      // draw, so a deep link works however the timing falls.
+      window.addEventListener("hashchange", onHashChange);
+      bindDetailEvents();
+
       // Exports always re-fetch llm.json, so this runs independently of loadData().
       const requestedExport = new URLSearchParams(location.search).get("export");
       if (requestedExport) {
@@ -3523,6 +4094,14 @@
         state.sort.direction = "desc";
         ensureSortVisible();
 
+        // The detail page resolves and ranks against the raw model objects —
+        // percentileMap keys its result by object identity, and the decorated
+        // copies applyAndRender builds would never match. Both caches are
+        // rebuilt whenever data lands (the initial load or an import).
+        state.modelsBySlug = new Map(data.models.map((model) => [modelSlug(model.name), model]));
+        detailPercentiles.clear();
+        state.radar.axes = loadRadarAxes();
+
         const title = data.title || "OpenBench Index";
         ui.title.textContent = title;
         syncTitleLines();
@@ -3545,7 +4124,9 @@
           bindEvents();
           state.eventsBound = true;
         }
-        applyAndRender();
+        // Through the router rather than straight to the table, so a page
+        // opened on a #model/<slug> link starts on that model's detail page.
+        renderRoute();
         loadGpuData();
       }
 
@@ -4109,6 +4690,12 @@
         if (!state.data) {
           return;
         }
+        // A filter handler can still fire while a detail page is showing (a
+        // debounced input resolving after navigation); the table waits until
+        // the route is back.
+        if (state.route.view === "model") {
+          return;
+        }
 
         const models = state.data.models
           .map((model) => {
@@ -4651,15 +5238,13 @@
       }
 
       // A model's name as it appears in this panel: the same slip the table row
-      // carries, and the same red when the model itself is the new thing.
+      // carries, the same red when the model itself is the new thing, and the
+      // same destination — the model's detail page.
       function renderRecentModelName(model, isNew) {
         const name = escapeHtml(model.name || "Unknown");
-        const url = recentLinkUrl(model.url);
         const tip = tipAttrs(modelTipFields(model));
         const className = `recent-model${isNew ? " model-new" : ""}`;
-        return url
-          ? `<a class="${className}" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"${tip}>${name}</a>`
-          : `<span class="${className}"${tip}>${name}</span>`;
+        return `<a class="${className}" href="#model/${escapeAttr(modelSlug(model.name))}"${tip}>${name}</a>`;
       }
 
       // The chips for one entry: each benchmark, its value, and a link to the
@@ -5087,7 +5672,6 @@
 
       function renderRow(model, bestInTable, scoreRanges, benchKeys) {
         const modelName = escapeHtml(model.name || "Unknown");
-        const modelUrl = model.url || "";
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
@@ -5118,7 +5702,7 @@
 
         return `
           <tr>
-            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${modelUrl ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a>` : `<span class="model-name-label${isNew ? ' model-new' : ""}"${modelTip}>${modelName}</span>`}</span></td>
+            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a></span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
@@ -5127,6 +5711,560 @@
             ${renderVramCell(model.vram?.int4)}
             ${scoreCells}
           </tr>
+        `;
+      }
+
+      /* ── Model detail page ───────────────────────────
+         One model in full: its specs, a radar profile over a hand-picked set
+         of benchmarks, and every score the index holds for it. The page lives
+         behind #model/<slug>, so it is a plain link — shareable, bookmarkable,
+         middle-clickable — and the browser's back button is the way home. */
+
+      // A model's address in the hash. Names are already slug-like
+      // ("devstral-2", "qwen3-coder-30b-a3b-instruct"), so this mostly
+      // passes them through; it exists so a future name with a space or a
+      // slash still yields a clean, collision-checked (in init) address.
+      function modelSlug(name) {
+        return String(name || "").toLowerCase()
+          .replace(/[^a-z0-9.]+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
+
+      function parseRoute() {
+        const match = String(location.hash || "").match(/^#model\/(.+)$/);
+        if (match) {
+          let slug = match[1];
+          // A pasted link may arrive percent-encoded; a malformed escape is
+          // taken literally rather than crashing the router.
+          try {
+            slug = decodeURIComponent(slug);
+          } catch (err) { /* keep the raw text */ }
+          return { view: "model", slug };
+        }
+        return { view: "table", slug: "" };
+      }
+
+      function renderRoute() {
+        // The hash can change before the data arrives; init dispatches again.
+        if (!state.data) {
+          return;
+        }
+        const route = parseRoute();
+        const cameFromTable = state.route.view === "table";
+        state.route = route;
+        document.getElementById("app").classList.toggle("detail-view", route.view === "model");
+
+        if (route.view === "model") {
+          // Only a table actually on screen has a scroll position worth
+          // keeping — jumping between two detail pages must not clobber it.
+          if (cameFromTable) {
+            state.tableScroll = window.scrollY;
+          }
+          const model = state.modelsBySlug.get(route.slug);
+          if (model) {
+            renderModelDetail(model);
+            document.title = `${model.name} · ${state.data.title || "OpenBench Index"}`;
+          } else {
+            renderUnknownModel(route.slug);
+            document.title = state.data.title || "OpenBench Index";
+          }
+          window.scrollTo(0, 0);
+        } else {
+          document.title = state.data.title || "OpenBench Index";
+          applyAndRender();
+          // The table was rendered synchronously just now, so the page is
+          // already tall enough for the old position to land where it was.
+          window.scrollTo(0, state.tableScroll);
+        }
+      }
+
+      function onHashChange() {
+        closeTip();
+        renderRoute();
+      }
+
+      // One-time wiring for the detail page: a single delegated listener on
+      // the content section (it survives every innerHTML swap and dies with
+      // the route), plus the same outside-click and Escape closing the axis
+      // menu that the export menu uses.
+      function bindDetailEvents() {
+        ui.content.addEventListener("click", (event) => {
+          if (state.route.view !== "model") {
+            return;
+          }
+          const model = state.modelsBySlug.get(state.route.slug);
+          const actionEl = event.target.closest("[data-action]");
+          if (!model || !actionEl) {
+            return;
+          }
+          const key = actionEl.dataset.key || "";
+          if (actionEl.dataset.action === "toggle-picker") {
+            state.radar.pickerOpen = !state.radar.pickerOpen;
+            rerenderRadarBlock(model);
+          } else if (actionEl.dataset.action === "add-axis") {
+            // A menu row toggles: it removes an axis already charted and adds
+            // one that is not, inside the min/max bounds.
+            if (state.radar.axes.includes(key)) {
+              if (state.radar.axes.length > RADAR_MIN_AXES) {
+                setRadarAxes(model, state.radar.axes.filter((k) => k !== key));
+              }
+            } else if (state.radar.axes.length < RADAR_MAX_AXES) {
+              setRadarAxes(model, [...state.radar.axes, key]);
+            }
+          } else if (actionEl.dataset.action === "remove-axis") {
+            if (state.radar.axes.length > RADAR_MIN_AXES) {
+              setRadarAxes(model, state.radar.axes.filter((k) => k !== key));
+            }
+          } else if (actionEl.dataset.action === "reset-axes") {
+            state.radar.pickerOpen = false;
+            setRadarAxes(model, defaultRadarAxes());
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!state.radar.pickerOpen) {
+            return;
+          }
+          // Clicks inside the menu (or on its toggle, which just flipped the
+          // flag itself) are not "outside". closest() still answers for a
+          // node the re-render detached, so the two listeners cannot fight.
+          if (event.target.closest(".axis-menu") || event.target.closest('[data-action="toggle-picker"]')) {
+            return;
+          }
+          state.radar.pickerOpen = false;
+          const model = state.modelsBySlug.get(state.route.slug);
+          if (model) {
+            rerenderRadarBlock(model);
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && state.radar.pickerOpen) {
+            state.radar.pickerOpen = false;
+            const model = state.modelsBySlug.get(state.route.slug);
+            if (model) {
+              rerenderRadarBlock(model);
+            }
+          }
+        });
+      }
+
+      function renderModelDetail(model) {
+        // Every anchor in here is about to be replaced.
+        closeTip();
+        ui.content.innerHTML = `
+          ${renderDetailHead(model)}
+          <div class="detail-grid">
+            ${renderDetailSpecs(model)}
+            ${renderRadarSection(model)}
+          </div>
+          ${renderDetailBenchTable(model)}
+        `;
+      }
+
+      // The slug in the hash names no model — a stale link after a rename, or
+      // a typo. Same empty-state voice the filtered-out table uses.
+      function renderUnknownModel(slug) {
+        closeTip();
+        ui.content.innerHTML = `
+          <section class="detail-head">
+            <a class="detail-back" href="#">&larr; Leaderboard</a>
+          </section>
+          <div class="empty">No model called &ldquo;${escapeHtml(slug)}&rdquo; is in the index.</div>
+        `;
+      }
+
+      function renderDetailHead(model) {
+        const isNew = isRecentModel(model);
+        const creatorName = escapeHtml(creatorNameOf(model));
+        const creatorUrl = recentLinkUrl(model.creator?.url);
+        const added = model.date_added || "";
+        const age = daysSince(added);
+        return `
+          <section class="detail-head">
+            <a class="detail-back" href="#">&larr; Leaderboard</a>
+            <h2 class="detail-name">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}</h2>
+            <p class="detail-byline">${creatorUrl
+              ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
+              : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
+          </section>
+        `;
+      }
+
+      function renderDetailSpecs(model) {
+        const creatorName = escapeHtml(creatorNameOf(model));
+        const creatorUrl = recentLinkUrl(model.creator?.url);
+        const modelUrl = recentLinkUrl(model.url);
+        const scored = state.benchmarkKeys
+          .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
+
+        // One VRAM row per quantization, each slip carrying where that figure
+        // was read — static fields, since TIP_RESOLVERS.vram is wired to the
+        // table's rows.
+        const vramRows = ["fp16", "int8", "int4"].map((quant) => {
+          const value = model.vram?.[quant];
+          const source = recentLinkUrl(model.vram_source?.[quant]);
+          const tip = value == null ? "" : tipAttrs({
+            eyebrow: "VRAM estimate",
+            title: `${model.name || "Unknown"} @ ${quant}`,
+            body: source ? "Estimated weights-only memory. The link is where the figure was read." : "Estimated weights-only memory. No source recorded.",
+            url: source
+          });
+          return `<dt>VRAM ${escapeHtml(quant)}</dt><dd${tip}>${formatVram(value)}</dd>`;
+        }).join("");
+
+        return `
+          <section class="detail-card detail-specs" aria-label="Model details">
+            <h2>Details</h2>
+            <dl>
+              <dt>Creator</dt>
+              <dd>${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</dd>
+              <dt>Parameters</dt>
+              <dd>${formatParams(model.params)}</dd>
+              <dt>Context</dt>
+              <dd>${formatContext(model.context)}</dd>
+              ${vramRows}
+              <dt>Added</dt>
+              <dd>${model.date_added ? escapeHtml(model.date_added) : "-"}</dd>
+              <dt>Coverage</dt>
+              <dd>${scored} of ${state.benchmarkKeys.length} benchmarks</dd>
+              <dt>Model page</dt>
+              <dd class="detail-url">${modelUrl
+                ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(modelUrl.replace(/^https?:\/\/(www\.)?/, ""))}</a>`
+                : "-"}</dd>
+            </dl>
+          </section>
+        `;
+      }
+
+      /* ── Radar profile ──
+         Every axis is the model's percentile rank across the whole index —
+         the one scale that makes a 0–100000 composite index, a 0–100 pass
+         rate and a flipped lower-is-better rate comparable, and the same
+         normalization the sort-group composites use. Ranks come from
+         percentileMap over the raw models, cached per benchmark because a
+         detail page asks for the same handful over and over. */
+
+      const RADAR_MIN_AXES = 3;
+      const RADAR_MAX_AXES = 8;
+      const RADAR_AXES_STORAGE_KEY = "radarAxes";
+      const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index"];
+
+      const detailPercentiles = new Map();
+
+      function percentileFor(model, key) {
+        if (!detailPercentiles.has(key)) {
+          detailPercentiles.set(key, percentileMap(state.data.models, key));
+        }
+        const map = detailPercentiles.get(key);
+        const pct = map ? map.get(model) : null;
+        return Number.isFinite(pct) ? pct : null;
+      }
+
+      // How many models a benchmark's rank is measured against.
+      function rankedCount(key) {
+        return detailPercentiles.get(key)?.size || 0;
+      }
+
+      function defaultRadarAxes() {
+        return RADAR_DEFAULT_AXES.filter((key) => state.benchmarkKeys.includes(key));
+      }
+
+      // The chosen axes are one personal graph, shared across every model's
+      // page — stored once, not per model. Stored keys that no longer exist
+      // in the data are dropped (mirror of the hiddenBenchmarks cleanup), and
+      // anything that leaves fewer than the minimum falls back to defaults.
+      function loadRadarAxes() {
+        let stored = null;
+        try {
+          stored = JSON.parse(localStorage.getItem(RADAR_AXES_STORAGE_KEY));
+        } catch (err) { /* disabled or corrupted storage: use the defaults */ }
+        const known = Array.isArray(stored)
+          ? [...new Set(stored)].filter((key) => state.benchmarkKeys.includes(key)).slice(0, RADAR_MAX_AXES)
+          : [];
+        return known.length >= RADAR_MIN_AXES ? known : defaultRadarAxes();
+      }
+
+      function saveRadarAxes(keys) {
+        try {
+          localStorage.setItem(RADAR_AXES_STORAGE_KEY, JSON.stringify(keys));
+        } catch (err) { /* private mode: the selection lives for this visit only */ }
+      }
+
+      function isDefaultRadarAxes(keys) {
+        const defaults = defaultRadarAxes();
+        return keys.length === defaults.length && keys.every((key, i) => key === defaults[i]);
+      }
+
+      function setRadarAxes(model, keys) {
+        state.radar.axes = keys;
+        saveRadarAxes(keys);
+        rerenderRadarBlock(model);
+      }
+
+      // Only the radar block re-renders when the axes change — the specs and
+      // the benchmark table below are untouched, so the page never jumps.
+      function rerenderRadarBlock(model) {
+        const block = document.getElementById("radarBlock");
+        if (block) {
+          closeTip();
+          block.outerHTML = renderRadarSection(model);
+        }
+      }
+
+      function renderRadarSection(model) {
+        const axes = state.radar.axes;
+        const total = state.data.models.length;
+        return `
+          <section class="detail-card radar-panel" id="radarBlock" aria-label="Benchmark radar chart">
+            <h2>Benchmark profile</h2>
+            ${renderAxisPicker(model, axes)}
+            <div class="radar-figure">${renderRadarChart(model, axes)}</div>
+            <p class="radar-note">Each axis is this model's percentile rank across all ${total} indexed
+              models — the rim is the best recorded result, the hub the worst. Lower-is-better
+              benchmarks are flipped, so outward always means better. An axis without a recorded
+              score keeps its place and stays empty. Pick your own axes above; the selection is
+              remembered on this device.</p>
+          </section>
+        `;
+      }
+
+      function renderAxisPicker(model, axes) {
+        const canRemove = axes.length > RADAR_MIN_AXES;
+        const chips = axes.map((key) => {
+          const scored = Number.isFinite(toNumber(model.scores?.[key]));
+          const tip = tipAttrs(benchmarkTipFields(key));
+          const removeLabel = canRemove
+            ? `Remove ${getBenchmarkFullName(key)} from the chart`
+            : `A radar needs at least ${RADAR_MIN_AXES} axes`;
+          return `<span class="axis-chip${scored ? "" : " no-score"}"${tip}>` +
+            `${renderBenchmarkIcon(key)}<span class="axis-chip-name">${escapeHtml(getBenchmarkLabel(key))}</span>` +
+            `<button type="button" class="axis-chip-x" data-action="remove-axis" data-key="${escapeAttr(key)}"${canRemove ? "" : " disabled"} aria-label="${escapeAttr(removeLabel)}">&times;</button>` +
+            `</span>`;
+        }).join("");
+
+        const atMax = axes.length >= RADAR_MAX_AXES;
+        const addBtn = `<button type="button" class="axis-add-btn" data-action="toggle-picker" aria-expanded="${String(Boolean(state.radar.pickerOpen))}" aria-haspopup="true">+ Add axis</button>`;
+        const reset = isDefaultRadarAxes(axes)
+          ? ""
+          : `<button type="button" class="axis-reset" data-action="reset-axes">Default axes</button>`;
+        const menu = state.radar.pickerOpen ? renderAxisMenu(model, axes, atMax) : "";
+        return `<div class="radar-controls">${chips}${addBtn}${reset}${menu}</div>`;
+      }
+
+      // The full index as a pick list, grouped the way the reference panel
+      // groups it, each row showing what this model scored — the blanks are
+      // pickable too, and simply chart as empty axes.
+      function renderAxisMenu(model, axes, atMax) {
+        const categories = [];
+        const keysByCategory = new Map();
+        state.benchmarkKeys.forEach((key) => {
+          const category = state.data?.benchmarks?.[key]?.category || "Other";
+          if (!keysByCategory.has(category)) {
+            keysByCategory.set(category, []);
+            categories.push(category);
+          }
+          keysByCategory.get(category).push(key);
+        });
+
+        const groups = categories.map((category) => {
+          const items = keysByCategory.get(category).map((key) => {
+            const on = axes.includes(key);
+            const value = toNumber(model.scores?.[key]);
+            const scoreText = Number.isFinite(value) ? value.toFixed(scoreDecimals(key)) : "&mdash;";
+            const disabled = !on && atMax;
+            return `<button type="button" class="axis-menu-item${on ? " on" : ""}" data-action="add-axis" data-key="${escapeAttr(key)}"${disabled ? " disabled" : ""}>` +
+              `<span class="axis-menu-check" aria-hidden="true">&#10003;</span>` +
+              `${renderBenchmarkIcon(key)}<span class="axis-menu-name">${escapeHtml(getBenchmarkFullName(key))}</span>` +
+              `<span class="axis-menu-score">${scoreText}</span>` +
+              `</button>`;
+          }).join("");
+          return `<div class="axis-menu-cat">${escapeHtml(category)}</div>${items}`;
+        }).join("");
+
+        const note = atMax
+          ? `<div class="axis-menu-note">${RADAR_MAX_AXES} of ${RADAR_MAX_AXES} axes &mdash; remove one to add another.</div>`
+          : "";
+        return `<div class="axis-menu">${note}${groups}</div>`;
+      }
+
+      // Point i of n on a radar with the first axis at 12 o'clock, clockwise,
+      // frac of the way from hub (0) to rim (1).
+      function radarPoint(cx, cy, radius, i, n, frac) {
+        const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+        return {
+          x: cx + radius * frac * Math.cos(angle),
+          y: cy + radius * frac * Math.sin(angle),
+          angle
+        };
+      }
+
+      function renderRadarChart(model, axes) {
+        const W = 560, H = 460, CX = 280, CY = 230, R = 150;
+        const n = axes.length;
+        const r1 = (v) => Math.round(v * 10) / 10;
+
+        const axisData = axes.map((key, i) => {
+          const value = toNumber(model.scores?.[key]);
+          const scored = Number.isFinite(value);
+          const pct = percentileFor(model, key);
+          // scored but unranked happens when fewer than 2 models ran the
+          // benchmark — there is a number, but no field to place it in.
+          return { key, i, value, scored, pct, ranked: scored && Number.isFinite(pct) };
+        });
+
+        // The grid: four concentric rings, the halfway and outer ones a shade
+        // firmer, one spoke per axis, and two tiny ticks anchoring the scale.
+        const rings = [0.25, 0.5, 0.75, 1].map((frac) => {
+          const pts = axisData
+            .map((a) => { const p = radarPoint(CX, CY, R, a.i, n, frac); return `${r1(p.x)},${r1(p.y)}`; })
+            .join(" ");
+          const major = frac === 0.5 || frac === 1;
+          return `<polygon class="radar-ring${major ? " major" : ""}" points="${pts}"/>`;
+        }).join("");
+
+        const spokes = axisData.map((a) => {
+          const p = radarPoint(CX, CY, R, a.i, n, 1);
+          return `<line class="radar-spoke" x1="${CX}" y1="${CY}" x2="${r1(p.x)}" y2="${r1(p.y)}"/>`;
+        }).join("");
+
+        const ticks = [[0.5, "p50"], [1, "p100"]].map(([frac, label]) =>
+          `<text class="radar-tick" x="${CX + 4}" y="${r1(CY - R * frac + 11)}">${label}</text>`
+        ).join("");
+
+        // The data polygon spans the ranked axes only: a missing score is a
+        // chord between its neighbours, never a fake zero at the hub.
+        const rankedAxes = axisData.filter((a) => a.ranked);
+        const shape = rankedAxes.length >= 2
+          ? `<polygon class="radar-shape" points="${rankedAxes
+              .map((a) => { const p = radarPoint(CX, CY, R, a.i, n, a.pct); return `${r1(p.x)},${r1(p.y)}`; })
+              .join(" ")}"/>`
+          : "";
+
+        const dots = axisData.map((a) => {
+          const p = radarPoint(CX, CY, R, a.i, n, a.ranked ? a.pct : 0);
+          return a.ranked
+            ? `<circle class="radar-dot" cx="${r1(p.x)}" cy="${r1(p.y)}" r="4.5"/>`
+            : `<circle class="radar-dot missing" cx="${r1(p.x)}" cy="${r1(p.y)}" r="3"/>`;
+        }).join("");
+
+        // Invisible hit targets over the ranked vertices; the delegated
+        // tooltip system picks the data-tip attributes up from SVG unchanged.
+        // Unranked axes carry the same slip on their label instead — a pile
+        // of hollow dots at the hub is no place to aim a pointer.
+        const hits = axisData.filter((a) => a.ranked).map((a) => {
+          const p = radarPoint(CX, CY, R, a.i, n, a.pct);
+          return `<circle class="radar-hit" cx="${r1(p.x)}" cy="${r1(p.y)}" r="14" fill="transparent"${tipAttrs(radarAxisTip(model, a))}/>`;
+        }).join("");
+
+        const labels = axisData.map((a) => {
+          const p = radarPoint(CX, CY, R * 1.16, a.i, n, 1);
+          const cos = Math.cos(p.angle);
+          const sin = Math.sin(p.angle);
+          const anchor = cos > 0.3 ? "start" : cos < -0.3 ? "end" : "middle";
+          // Two lines per axis — name over raw score — shifted clear of the
+          // rim: up above the chart, down below it, centered at the sides.
+          const nameY = sin < -0.5 ? p.y - 10 : sin > 0.5 ? p.y + 12 : p.y - 1;
+          const missing = a.scored ? "" : " missing";
+          const valueText = a.scored ? a.value.toFixed(scoreDecimals(a.key)) : "&mdash;";
+          const tip = a.ranked ? "" : tipAttrs(radarAxisTip(model, a));
+          return `<g${tip}>` +
+            `<text class="radar-label${missing}" x="${r1(p.x)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(a.key))}</text>` +
+            `<text class="radar-value${missing}" x="${r1(p.x)}" y="${r1(nameY + 14)}" text-anchor="${anchor}">${valueText}</text>` +
+            `</g>`;
+        }).join("");
+
+        return `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="Radar chart of ${escapeAttr(model.name || "this model")} percentile ranks over ${n} benchmarks">` +
+          rings + spokes + ticks + shape + dots + hits + labels +
+          `</svg>`;
+      }
+
+      // The slip on a radar vertex (or, for an empty axis, its label): which
+      // benchmark, the raw score, where it stands, when it moved, and where
+      // it was read — the same provenance a table cell's slip carries.
+      function radarAxisTip(model, a) {
+        const bench = state.data?.benchmarks?.[a.key] || {};
+        const updated = model.scores_updated?.[a.key];
+        const source = recentLinkUrl(model.scores_source?.[a.key]);
+        const body = a.scored
+          ? `Scores ${a.value.toFixed(scoreDecimals(a.key))}. ${scoreTipBody(a.key)}`
+          : `No score recorded for this model. ${scoreTipBody(a.key)}`;
+        return {
+          eyebrow: bench.category || "Benchmark",
+          title: bench.name || getBenchmarkLabel(a.key),
+          iconKey: a.key,
+          body,
+          meta: [
+            a.ranked ? `Percentile ${Math.round(a.pct * 100)} of ${rankedCount(a.key)} ranked models` : "",
+            a.scored && !a.ranked ? "Too few models ran this benchmark to rank it." : "",
+            updated ? `Updated ${updated}` : ""
+          ].filter(Boolean).join("\n"),
+          url: source || benchmarkLinks(bench)[0] || ""
+        };
+      }
+
+      // Everything the index knows about the model, scored or not, grouped
+      // the way the columns are. Dates wear the same red the table gives a
+      // freshly restamped score; sources show as their domain, since the
+      // domain is the provenance tell (see tipLinkMarkup).
+      function renderDetailBenchTable(model) {
+        const categories = [];
+        const keysByCategory = new Map();
+        state.benchmarkKeys.forEach((key) => {
+          const category = state.data?.benchmarks?.[key]?.category || "Other";
+          if (!keysByCategory.has(category)) {
+            keysByCategory.set(category, []);
+            categories.push(category);
+          }
+          keysByCategory.get(category).push(key);
+        });
+
+        const rows = categories.map((category) => {
+          const items = keysByCategory.get(category).map((key) => {
+            const bench = state.data.benchmarks[key] || {};
+            const value = toNumber(model.scores?.[key]);
+            const scored = Number.isFinite(value);
+            const pct = scored ? percentileFor(model, key) : null;
+            const updated = model.scores_updated?.[key] || "";
+            const source = recentLinkUrl(model.scores_source?.[key]);
+            const fresh = scored && scoreFreshness(model, key) > 0;
+            const flags = [
+              bench.derived ? `<span class="bench-flag">derived</span>` : "",
+              isLowerBetter(key) ? `<span class="bench-flag">lower is better</span>` : ""
+            ].join("");
+            return `
+              <tr${scored ? "" : ' class="bench-missing"'}>
+                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</span>${flags}</td>
+                <td class="num">${formatScore(value, key)}</td>
+                <td class="num bench-pct">${Number.isFinite(pct) ? `p${Math.round(pct * 100)}` : '<span class="num na">&mdash;&nbsp;</span>'}</td>
+                <td class="num${fresh ? " fresh-score" : ""}">${updated ? escapeHtml(updated) : '<span class="num na">&mdash;&nbsp;</span>'}</td>
+                <td class="bench-source">${source
+                  ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tipAttrs({ eyebrow: "Source", body: "Where this score was read.", url: source })}>${escapeHtml(tipSafeUrl(source).host.replace(/^www\./, ""))}</a>`
+                  : '<span class="na">&mdash;</span>'}</td>
+              </tr>`;
+          }).join("");
+          return `<tr class="bench-cat-row"><td colspan="5">${escapeHtml(category)}</td></tr>${items}`;
+        }).join("");
+
+        return `
+          <section class="detail-bench-panel" aria-label="All benchmarks for this model">
+            <h2>All benchmarks</h2>
+            <div class="detail-bench-card">
+              <table class="detail-bench-table">
+                <thead>
+                  <tr>
+                    <th>Benchmark</th>
+                    <th class="num">Score</th>
+                    <th class="num">Percentile</th>
+                    <th class="num">Updated</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </section>
         `;
       }
 
@@ -5754,8 +6892,8 @@
           eyebrowUrl: model.creator?.url || "",
           title: model.name || "Unknown",
           body: url
-            ? "The creator's page for this model: the model card or release note its details are checked against."
-            : "No page is recorded for this model, so nothing here links out.",
+            ? "Click for the model's detail page: every recorded score, and a radar profile you can shape. The link below is the creator's own page for it."
+            : "Click for the model's detail page: every recorded score, and a radar profile you can shape.",
           meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
           url
         };
