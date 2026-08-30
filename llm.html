@@ -2574,6 +2574,136 @@
       text-decoration: underline;
     }
 
+    /* The bare dash a source-less or unranked entry shows — same voice as
+       .num.na, which only dresses score cells. */
+    .bench-source .na,
+    .bench-dialog .na {
+      color: var(--subtle);
+      font-weight: 400;
+    }
+
+    /* ── Benchmark detail dialog ──
+       A phone cannot seat five columns, so below 720px the table keeps only
+       name and score and this dialog carries the rest — percentile, dates,
+       provenance — opened by a long press on a score row (see the pointer
+       wiring in bindDetailEvents). The native <dialog> brings the backdrop,
+       focus trapping and Escape for free. */
+
+    .bench-dialog {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 18px 18px 16px;
+      width: min(420px, calc(100vw - 32px));
+      box-shadow: var(--tip-shadow);
+    }
+
+    .bench-dialog::backdrop {
+      background: rgba(17, 17, 17, 0.45);
+    }
+
+    [data-theme="dark"] .bench-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .bench-dialog-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 2px 8px;
+      color: var(--subtle);
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .bench-dialog-close:hover {
+      background: none;
+      border: none;
+      color: var(--text);
+    }
+
+    .bench-dialog-eyebrow {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .bench-dialog-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 20px 8px 0;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .bench-dialog-title .benchmark-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .bench-dialog-desc {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .bench-dialog dl {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px 16px;
+      margin: 0;
+    }
+
+    .bench-dialog dt {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+
+    .bench-dialog dd {
+      margin: 0;
+      min-width: 0;
+      text-align: right;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .bench-dialog dd.fresh {
+      color: var(--fresh-ink);
+    }
+
+    .bench-dialog dd a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .bench-dialog dd a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 900px) {
       .detail-grid {
         grid-template-columns: 1fr;
@@ -2586,6 +2716,90 @@
       .detail-bench-panel {
         padding-left: 16px;
         padding-right: 16px;
+      }
+    }
+
+    /* The five-column table on a phone: name and score stay, the rest lives
+       in the long-press dialog. The category subhead row's single cell is a
+       first child, so the nth-child cut leaves it alone. What shoved the
+       scores off-screen was the name column sizing to its widest entry, so
+       table layout gives way to one flex row per entry: the score keeps the
+       right edge, the tags keep their size, and the name — the only thing
+       that can give — takes whatever width is left and ellipsizes on one
+       line. A pressed score must not start a text selection while the timer
+       runs. */
+    @media (max-width: 720px) {
+      .detail-bench-table,
+      .detail-bench-table thead,
+      .detail-bench-table tbody {
+        display: block;
+      }
+
+      .detail-bench-table tr {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .detail-bench-table thead tr {
+        border-bottom-color: var(--line);
+      }
+
+      .detail-bench-table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .detail-bench-table th,
+      .detail-bench-table td {
+        display: block;
+        border-bottom: none;
+      }
+
+      .detail-bench-table th:nth-child(n+3),
+      .detail-bench-table td:nth-child(n+3) {
+        display: none;
+      }
+
+      .detail-bench-table th:first-child,
+      .detail-bench-table td:first-child,
+      .bench-cat-row td {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      /* Name and tags share the flexible cell; the score cell keeps only
+         the width its number needs, flush right. */
+      .detail-bench-table td:first-child {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .detail-bench-table th:nth-child(2),
+      .detail-bench-table td:nth-child(2) {
+        flex: 0 0 auto;
+      }
+
+      .bench-name-cell {
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .bench-name-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .bench-flag {
+        margin-left: 0;
+        flex-shrink: 0;
+      }
+
+      .detail-bench-table td.num {
+        -webkit-user-select: none;
+        user-select: none;
       }
     }
 
@@ -3694,6 +3908,11 @@
 
   <div class="tip" id="tooltip" role="tooltip" aria-hidden="true" data-placement="bottom"></div>
 
+  <!-- On a phone the detail page's benchmark table keeps only name and score;
+       a long press on a score opens this dialog with everything the hidden
+       columns held. Filled and shown by openBenchDialog. -->
+  <dialog class="bench-dialog" id="benchDialog" aria-label="Benchmark details"></dialog>
+
   <script>
     (function () {
       const state = {
@@ -3878,7 +4097,8 @@
         exportList: document.getElementById("exportList"),
         exportModelsFlag: document.getElementById("exportModelsFlag"),
         exportModelsNote: document.getElementById("exportModelsNote"),
-        exportGpuFlag: document.getElementById("exportGpuFlag")
+        exportGpuFlag: document.getElementById("exportGpuFlag"),
+        benchDialog: document.getElementById("benchDialog")
       };
 
       /* ── Tooltip ────────────────────────────────────────
@@ -5781,6 +6001,7 @@
 
       function onHashChange() {
         closeTip();
+        closeBenchDialog();
         renderRoute();
       }
 
@@ -5846,6 +6067,58 @@
             if (model) {
               rerenderRadarBlock(model);
             }
+          }
+        });
+
+        // The benchmark dialog: a long press on a score row opens it on
+        // narrow screens (the layout that hides the columns it repeats).
+        // Pointer events cover touch and mouse alike; a drag past the slop
+        // or the browser taking the gesture for a scroll (pointercancel)
+        // calls the press off. The tooltip's long press is not in the way:
+        // it only answers anchors carrying data-tip, and the press below
+        // steps aside for those.
+        let benchPressTimer = 0;
+        let benchPressStart = null;
+        ui.content.addEventListener("pointerdown", (event) => {
+          if (state.route.view !== "model" || !benchDialogEnabled()) {
+            return;
+          }
+          if (event.target.closest("a, button, [data-tip], [data-tip-kind]")) {
+            return;
+          }
+          const row = event.target.closest("tr[data-bench-key]");
+          const model = state.modelsBySlug.get(state.route.slug);
+          if (!row || !model) {
+            return;
+          }
+          benchPressStart = { x: event.clientX, y: event.clientY };
+          clearTimeout(benchPressTimer);
+          benchPressTimer = setTimeout(() => {
+            benchPressTimer = 0;
+            openBenchDialog(model, row.dataset.benchKey);
+          }, BENCH_PRESS_MS);
+        });
+        const cancelBenchPress = (event) => {
+          if (!benchPressTimer) {
+            return;
+          }
+          if (event.type === "pointermove" && benchPressStart &&
+              Math.hypot(event.clientX - benchPressStart.x, event.clientY - benchPressStart.y) < BENCH_PRESS_SLOP) {
+            return;
+          }
+          clearTimeout(benchPressTimer);
+          benchPressTimer = 0;
+        };
+        ui.content.addEventListener("pointermove", cancelBenchPress);
+        ui.content.addEventListener("pointerup", cancelBenchPress);
+        ui.content.addEventListener("pointercancel", cancelBenchPress);
+
+        // Closing the dialog: its own button, or a click that lands on the
+        // backdrop — which the browser reports as the <dialog> itself.
+        // Escape is the element's native behaviour.
+        ui.benchDialog.addEventListener("click", (event) => {
+          if (event.target === ui.benchDialog || event.target.closest(".bench-dialog-close")) {
+            closeBenchDialog();
           }
         });
       }
@@ -6204,6 +6477,72 @@
         };
       }
 
+      /* ── Benchmark detail dialog ──
+         Below 720px the benchmark table keeps only name and score; a long
+         press on a score row opens this dialog with what the hidden columns
+         held — percentile, dates, provenance — plus the gist of what the
+         benchmark measures. Wired in bindDetailEvents. */
+
+      const BENCH_PRESS_MS = 450;   // the same deliberate hold the tooltip asks for
+      const BENCH_PRESS_SLOP = 10;  // a press that travels further is a pan
+
+      // The dialog exists for the layout that hides the columns it repeats;
+      // on a wide screen the table already says everything.
+      function benchDialogEnabled() {
+        return window.matchMedia("(max-width: 720px)").matches;
+      }
+
+      // A link shown as its domain: the domain is the provenance tell (see
+      // tipLinkMarkup). Callers pass URLs that already survived the gate.
+      function sourceHost(url) {
+        const parsed = tipSafeUrl(url);
+        return parsed ? parsed.host.replace(/^www\./, "") : "";
+      }
+
+      function openBenchDialog(model, key) {
+        if (!state.data?.benchmarks?.[key]) {
+          return;
+        }
+        const bench = state.data.benchmarks[key];
+        const value = toNumber(model.scores?.[key]);
+        const scored = Number.isFinite(value);
+        const pct = scored ? percentileFor(model, key) : null;
+        const updated = model.scores_updated?.[key] || "";
+        const age = daysSince(updated);
+        const source = recentLinkUrl(model.scores_source?.[key]);
+        const benchUrl = recentLinkUrl(benchmarkLinks(bench)[0] || "");
+        const fresh = scored && scoreFreshness(model, key) > 0;
+
+        ui.benchDialog.innerHTML = `
+          <button type="button" class="bench-dialog-close" aria-label="Close">&times;</button>
+          <span class="bench-dialog-eyebrow">${escapeHtml(bench.category || "Benchmark")}</span>
+          <h3 class="bench-dialog-title">${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</h3>
+          ${bench.description ? `<p class="bench-dialog-desc">${escapeHtml(firstSentence(bench.description))} ${isLowerBetter(key) ? "Lower is better." : "Higher is better."}</p>` : ""}
+          <dl>
+            <dt>Score</dt>
+            <dd${fresh ? ' class="fresh"' : ""}>${formatScore(value, key)}</dd>
+            <dt>Percentile</dt>
+            <dd>${Number.isFinite(pct) ? `p${Math.round(pct * 100)} of ${rankedCount(key)} ranked` : '<span class="na">&mdash;</span>'}</dd>
+            <dt>Updated</dt>
+            <dd${fresh ? ' class="fresh"' : ""}>${updated ? `${escapeHtml(updated)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : '<span class="na">&mdash;</span>'}</dd>
+            <dt>Source</dt>
+            <dd>${source ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceHost(source))}</a>` : '<span class="na">&mdash;</span>'}</dd>
+            <dt>About</dt>
+            <dd>${benchUrl ? `<a href="${escapeAttr(benchUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceHost(benchUrl))}</a>` : '<span class="na">&mdash;</span>'}</dd>
+          </dl>
+        `;
+        closeTip();
+        if (!ui.benchDialog.open) {
+          ui.benchDialog.showModal();
+        }
+      }
+
+      function closeBenchDialog() {
+        if (ui.benchDialog.open) {
+          ui.benchDialog.close();
+        }
+      }
+
       // Everything the index knows about the model, scored or not, grouped
       // the way the columns are. Dates wear the same red the table gives a
       // freshly restamped score; sources show as their domain, since the
@@ -6234,13 +6573,13 @@
               isLowerBetter(key) ? `<span class="bench-flag">lower is better</span>` : ""
             ].join("");
             return `
-              <tr${scored ? "" : ' class="bench-missing"'}>
-                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</span>${flags}</td>
+              <tr data-bench-key="${escapeAttr(key)}"${scored ? "" : ' class="bench-missing"'}>
+                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}<span class="bench-name-text">${escapeHtml(bench.name || getBenchmarkLabel(key))}</span></span>${flags}</td>
                 <td class="num">${formatScore(value, key)}</td>
                 <td class="num bench-pct">${Number.isFinite(pct) ? `p${Math.round(pct * 100)}` : '<span class="num na">&mdash;&nbsp;</span>'}</td>
                 <td class="num${fresh ? " fresh-score" : ""}">${updated ? escapeHtml(updated) : '<span class="num na">&mdash;&nbsp;</span>'}</td>
                 <td class="bench-source">${source
-                  ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tipAttrs({ eyebrow: "Source", body: "Where this score was read.", url: source })}>${escapeHtml(tipSafeUrl(source).host.replace(/^www\./, ""))}</a>`
+                  ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tipAttrs({ eyebrow: "Source", body: "Where this score was read.", url: source })}>${escapeHtml(sourceHost(source))}</a>`
                   : '<span class="na">&mdash;</span>'}</td>
               </tr>`;
           }).join("");
