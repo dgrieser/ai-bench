@@ -2052,10 +2052,29 @@
       display: none;
     }
 
+    /* The head band seats the name on the left and the spec card on the
+       right; on a narrow screen the card wraps below the name at full
+       width, which is the same stack the page had before the card moved
+       up here. */
     .detail-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+      align-items: flex-start;
+      justify-content: space-between;
       padding: 26px 20px 22px;
       border-bottom: 1px solid var(--line);
       animation: fadeIn 350ms ease;
+    }
+
+    .detail-head-main {
+      flex: 1 1 320px;
+      min-width: 0;
+    }
+
+    .detail-head .detail-specs {
+      flex: 0 1 420px;
+      min-width: min(320px, 100%);
     }
 
     .detail-back {
@@ -2108,10 +2127,6 @@
     }
 
     .detail-grid {
-      display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
-      gap: 24px;
-      align-items: start;
       padding: 24px 20px 32px;
       animation: fadeIn 350ms ease;
     }
@@ -2196,7 +2211,7 @@
     svg.radar {
       display: block;
       width: 100%;
-      max-width: 560px;
+      max-width: 600px;
       height: auto;
     }
 
@@ -2476,7 +2491,6 @@
     }
 
     .detail-bench-card {
-      max-width: 960px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--surface);
@@ -2704,12 +2718,6 @@
 
     .bench-dialog dd a:hover {
       text-decoration: underline;
-    }
-
-    @media (max-width: 900px) {
-      .detail-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 860px) {
@@ -6137,7 +6145,6 @@
         ui.content.innerHTML = `
           ${renderDetailHead(model)}
           <div class="detail-grid">
-            ${renderDetailSpecs(model)}
             ${renderRadarSection(model)}
           </div>
           ${renderDetailBenchTable(model)}
@@ -6162,13 +6169,19 @@
         const creatorUrl = recentLinkUrl(model.creator?.url);
         const added = model.date_added || "";
         const age = daysSince(added);
+        // The spec card shares the head band: name on the left, the model's
+        // vitals on the right, so the space beside the name works instead of
+        // sitting empty — and the radar below gets the full page to itself.
         return `
           <section class="detail-head">
-            <a class="detail-back" href="#">&larr; Leaderboard</a>
-            <h2 class="detail-name">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}</h2>
-            <p class="detail-byline">${creatorUrl
-              ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
-              : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
+            <div class="detail-head-main">
+              <a class="detail-back" href="#">&larr; Leaderboard</a>
+              <h2 class="detail-name">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}</h2>
+              <p class="detail-byline">${creatorUrl
+                ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
+                : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
+            </div>
+            ${renderDetailSpecs(model)}
           </section>
         `;
       }
