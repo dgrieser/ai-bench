@@ -30,7 +30,23 @@ import fetch_swe_marathon
 import fetch_toolathlon
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
-from _scores import round_score, stamp_score_source, stamp_score_updated
+from _precedence import (
+    AA_CODING_AGENTS_SOURCE_URL,
+    BFCL_SOURCE_URL,
+    DATACURVE_SOURCE_URL,
+    DEEPSWE_SOURCE_URL,
+    EVALS_REPORT_KEY_URLS,
+    FRONTIERCODE_SOURCE_URL,
+    FRONTIERSWE_SOURCE_URL,
+    LLMSTATS_SOURCE_URL,
+    MCP_ATLAS_SOURCE_URL,
+    OSWORLD_SOURCE_URL,
+    SWE_ATLAS_KEY_URLS,
+    SWE_MARATHON_SOURCE_URL,
+    TOOLATHLON_SOURCE_URL,
+    may_overwrite,
+)
+from _scores import round_score, score_source, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
 from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
@@ -203,33 +219,10 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
 }
 
-# Per-score source pages, stamped into models[].scores_source alongside every
-# score write. Read from the fetch_*.py constants (the fill_source_urls.py
-# rule) and stored canonicalized like every URL in llm.json. AA and Hugging
-# Face pages are per-model and resolved where the score is written; SWE Atlas
-# and evals.report resolve per benchmark key below.
-AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
-OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
-LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
-TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
-MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
-# The leaderboard page, not the CSV it hydrates its table from.
-BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
-DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
-# The leaderboard page, not the JSON artifact it hydrates from.
-DATACURVE_SOURCE_URL = canonical(fetch_datacurve.SITE_URL)
-FRONTIERSWE_SOURCE_URL = canonical(fetch_frontierswe.URL)
-# The leaderboard page, not the JSON it loads: the page is what a reader opens.
-FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
-SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)
-SWE_ATLAS_KEY_URLS = {
-    key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
-    for track, key in fetch_swe_atlas.TRACKS.items()
-}
-EVALS_REPORT_KEY_URLS = {
-    key: canonical(fetch_evals_report.BASE_URL.format(slug=slug))
-    for slug, key in fetch_evals_report.BENCHMARKS.items()
-}
+# Per-score source pages live in _precedence.py, next to the rank each source
+# carries: the page a score is attributed to and the authority that attribution
+# confers are the same fact, and stating them apart invites them to drift. Both
+# are read from the fetch_*.py constants (the fill_source_urls.py rule).
 
 
 def aa_model_page_url(aa_slug: str) -> str:
@@ -501,6 +494,10 @@ def apply_score(
         two decimals and one that reports one cannot disagree about a score the
         site prints identically either way;
       * never overwrite an existing non-null value with null;
+      * never overwrite a value credited to a better-ranked source: precedence
+        is declared in _precedence.py, not implied by the order main() calls
+        the ingests, so which numbers land does not depend on which subset of
+        the ingests ran (see the module docstring there);
       * fill_only: only fill nulls, never overwrite (the low-trust rule the
         Hugging Face and llm-stats aggregates follow);
       * fill_urls_only (--fill-source-urls): scores and dates stay untouched;
@@ -532,6 +529,12 @@ def apply_score(
     if old_value is not None and new_value is None:
         return 0
     if old_value == new_value:
+        return 0
+    # A stored value keeps its number until a source of at least its own
+    # standing reports a different one. Checked after the equal-value exit, so
+    # a source re-reporting what is already stored is a no-op either way and
+    # never has to be ranked at all.
+    if old_value is not None and not may_overwrite(url, score_source(model, key)):
         return 0
     scores[key] = new_value
     stamp_score_updated(model, key)
