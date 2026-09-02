@@ -66,6 +66,21 @@ def round_score(doc: dict[str, Any], key: str, value: Any) -> int | float | None
     return float(rounded)
 
 
+def score_source(model: dict[str, Any], key: str) -> str | None:
+    """The page one benchmark score is credited to, or None.
+
+    None covers both a score no source has claimed yet and one a hand edit
+    cleared, which rank the same: _precedence.source_rank() reads either as
+    hand-entered. A malformed map reads as unattributed rather than raising --
+    stamp_score_source() is the writer that fails loudly on it.
+    """
+    sources = model.get("scores_source")
+    if not isinstance(sources, dict):
+        return None
+    url = sources.get(key)
+    return url if isinstance(url, str) and url else None
+
+
 def editable_benchmarks(doc: dict[str, Any]) -> dict[str, Any]:
     """Benchmarks whose score can come from a source or a human.
 

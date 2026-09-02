@@ -321,28 +321,42 @@ This orchestrates:
 3. Merges results into `llm.json`
 4. Updates timestamps
 
-Sources are applied in a fixed order and a later one overwrites an earlier
-value, so the order encodes precedence: a benchmark's own site runs *after* the
-aggregator that republishes it. `fetch_swe_marathon.py` and
-`fetch_frontiercode.py` (Cognition's leaderboard) therefore run after
-`fetch_evals_report.py`, and evals.report only supplies models the benchmark's
-own leaderboard does not list. SWE-bench Multimodal is the one column where
-that is reversed: nothing scrapes swebench.com, so evals.report *is* the
-primary source and does overwrite, with the model cards filling gaps ahead of
-it. `fetch_datacurve.py` (DeepSWE's own leaderboard) stands in the same
-relation to `fetch_deepswe.py`, which reads benchlm.ai. `fetch_mcp_atlas.py`
-(Scale's own MCP-Atlas board) and `fetch_bfcl.py` (the Gorilla team's BFCL
-leaderboard) run last for the same reason: evals.report, llm-stats and the
-model cards all republish self-reported numbers for those two benchmarks, and
-where both a first-party run and a self-report exist they disagree by a point
-or two, so the first-party run has to be the one that lands.
-`fetch_aa_coding_agents.py` (Artificial Analysis' Coding Agent Index, its own
-agent-harness runs of DeepSWE, SWE-Atlas-QnA and Terminal-Bench 2.1) is
-*fill-only*, like the Hugging Face and llm-stats aggregates: AA's runs disagree
-systematically with the benchmarks' own leaderboards, so overwriting would flip
-a score within one run and restamp its date every refresh. It runs ahead of the
-other gap-fillers so a gap AA measured directly is filled by that measurement
-rather than a self-report; the leading sources overwrite either way.
+### Source precedence
+
+Most columns have more than one publisher — 32 of them carry values from two or
+more sources — so every refresh has to decide whose reading lands. Each source
+is declared with a **rank** in `_precedence.py`, and `apply_score()` refuses a
+write whose source is outranked by the one already credited with the stored
+value. Rank is matched against the page in `scores_source`, so the decision is
+made from what is in the file rather than from what ran, and the result does not
+depend on which ingests ran or in what order — the property `keep_best_row()`
+already gives row collisions inside a single source.
+
+| Rank | Source | Why there |
+| --- | --- | --- |
+| 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. |
+| 3 | **Curated third parties** — evals.report, benchlm.ai | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. |
+| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. |
+| 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
+| 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited, or null where a hand edit cleared the attribution. A hand entry seeds a column until something measures it, and any scraper may overwrite it. |
+
+Two sources on the same rank may still overwrite each other, which is what lets
+a source refresh its own value: rank blocks a write only when the stored value
+came from a *strictly* better-ranked source.
+
+The rungs are where they are because of what actually disagrees. Where both a
+first-party run and a self-report exist for one model they differ by a point or
+two, and `mcp_atlas`, `bfcl_v4`, `frontiercode`, `swe_marathon` and `deepswe`
+each carry both, so the run has to be the one that lands. IFBench and MMLU-Pro
+are the two columns where AA and evals.report both measure and the ranking
+therefore changed an outcome: before it, precedence was the order `main()`
+happened to call the ingests, so a run that skipped evals.report left AA's
+numbers and the next full refresh replaced them — a 17-value round trip
+(commits `2ab9ab0`…`0c24cc9`). SWE-bench Multimodal, ZeroBench and MathVista-mini
+sit the other way round and need no exception: nothing first-party is scraped
+for them, so evals.report leads at rank 3 unopposed, with the model cards
+filling gaps beneath it.
 
 ### Tool Use and Instruction Following
 
