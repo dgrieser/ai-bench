@@ -19,7 +19,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research | JSON API |
-| **FrontierSWE** | Research | JSON API |
+| **FrontierSWE** | Research | RSC flight payload |
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JSON API |
