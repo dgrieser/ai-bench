@@ -187,16 +187,20 @@ class TestPlanning(unittest.TestCase):
     def test_plan_reads_the_existing_decision_off_the_file(self) -> None:
         # Real ground truth: a label a person already declined. Re-proposing it
         # would revert that answer and put the name back in the queue for good.
+        # ALE-CLI is the Linux-only subset of Agents' Last Exam, a different
+        # scale from the Overall Pass Rate agents_last_exam stores, so it stays
+        # declined even though the bare "Agents' Last Exam" label now maps.
+        declined = "Agents' Last Exam (ALE-CLI)"
         proposals, _ = propose.plan_mappings(
             [
-                self.entry("Agents' Last Exam", script="./update_huggingface_mapping.py -w"),
+                self.entry(declined, script="./update_huggingface_mapping.py -w"),
                 self.entry("No Such Label 9000", script="./update_huggingface_mapping.py -w"),
             ],
             self.universes,
         )
         by_key = {p.key: p for p in proposals}
-        self.assertEqual(by_key["Agents' Last Exam"].previous, UNMAPPABLE)
-        self.assertTrue(by_key["Agents' Last Exam"].answered)
+        self.assertEqual(by_key[declined].previous, UNMAPPABLE)
+        self.assertTrue(by_key[declined].answered)
         self.assertIsNone(by_key["No Such Label 9000"].previous)
         self.assertFalse(by_key["No Such Label 9000"].answered)
 

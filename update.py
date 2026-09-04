@@ -15,6 +15,7 @@ from typing import Any, Callable
 import artificialanalysis
 import derive_indexes
 import fetch_aa_coding_agents
+import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
@@ -27,11 +28,13 @@ import fetch_mcp_atlas
 import fetch_osworld
 import fetch_swe_atlas
 import fetch_swe_marathon
+import fetch_tbench
 import fetch_toolathlon
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _precedence import (
     AA_CODING_AGENTS_SOURCE_URL,
+    AGENTS_LAST_EXAM_SOURCE_URL,
     BFCL_SOURCE_URL,
     DATACURVE_SOURCE_URL,
     DEEPSWE_SOURCE_URL,
@@ -43,6 +46,7 @@ from _precedence import (
     OSWORLD_SOURCE_URL,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
+    TBENCH_SOURCE_URL,
     TOOLATHLON_SOURCE_URL,
     may_overwrite,
 )
@@ -61,6 +65,8 @@ from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
+from _tbench_mapping import load_tbench_to_slug_mapping
+from _agents_last_exam_mapping import load_agents_last_exam_to_slug_mapping
 from _spheron_mapping import load_spheron_to_slug_mapping
 from _llmstats_mapping import (
     load_llmstats_to_slug_mapping,
@@ -78,6 +84,8 @@ TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
+TBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_tbench.py")
+AGENTS_LAST_EXAM_SCRIPT = Path(__file__).resolve().with_name("fetch_agents_last_exam.py")
 FRONTIERCODE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontiercode.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
@@ -305,6 +313,16 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip fetching scores from frontierswe.",
+    )
+    parser.add_argument(
+        "--skip-tbench",
+        action="store_true",
+        help="Skip fetching Terminal-Bench 4.0 scores from tbench.ai.",
+    )
+    parser.add_argument(
+        "--skip-agents-last-exam",
+        action="store_true",
+        help="Skip fetching Agents' Last Exam scores from agents-last-exam.org.",
     )
     parser.add_argument(
         "--skip-frontiercode",
@@ -1165,6 +1183,126 @@ def update_frontierswe_scores(
     return matched, updated, changes
 
 
+def build_fetch_tbench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_tbench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_tbench_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_tbench.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected tbench JSON format: expected a list")
+
+    tbench_to_slug = load_tbench_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        tbench_name = row.get("model")
+        if not isinstance(tbench_name, str) or not tbench_name:
+            continue
+        slug = tbench_to_slug.get(tbench_name)
+        if not slug:
+            continue
+        # One row per (agent, model, reasoning effort); the leaderboard's own
+        # ranking takes the best run, so the collision rule matches it.
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_tbench_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        tbench_model = by_slug.get(slug)
+        if tbench_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "terminal_bench_4_0", tbench_model.get("score"),
+            TBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_agents_last_exam_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_agents_last_exam_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_agents_last_exam_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_agents_last_exam.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected agents-last-exam JSON format: expected a list")
+
+    ale_to_slug = load_agents_last_exam_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        ale_name = row.get("model")
+        if not isinstance(ale_name, str) or not ale_name:
+            continue
+        slug = ale_to_slug.get(ale_name)
+        if not slug:
+            continue
+        # One row per (harness, model, harness variant); best run wins, which
+        # is how the leaderboard ranks a model across its efforts.
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_agents_last_exam_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        ale_model = by_slug.get(slug)
+        if ale_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "agents_last_exam", ale_model.get("score"),
+            AGENTS_LAST_EXAM_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
 def keep_newest_frontiercode_row(
     by_slug: dict[str, dict[str, Any]], slug: str, row: dict[str, Any]
 ) -> None:
@@ -1716,6 +1854,8 @@ def main() -> int:
     mcp_atlas_path = MCP_ATLAS_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
+    tbench_path = TBENCH_SCRIPT
+    agents_last_exam_path = AGENTS_LAST_EXAM_SCRIPT
     frontiercode_path = FRONTIERCODE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
     evals_report_path = EVALS_REPORT_SCRIPT
@@ -1745,6 +1885,12 @@ def main() -> int:
     )
     frontierswe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontierswe-to-artificialanalysis.json"
+    )
+    tbench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-tbench-to-artificialanalysis.json"
+    )
+    agents_last_exam_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-agents-last-exam-to-artificialanalysis.json"
     )
     frontiercode_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-frontiercode-to-artificialanalysis.json"
@@ -1805,6 +1951,12 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_datacurve_cmd(datacurve_path))}")
     if not args.skip_frontierswe:
         print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
+    if not args.skip_tbench:
+        print(f"  - {shlex.join(build_fetch_tbench_cmd(tbench_path))}")
+    if not args.skip_agents_last_exam:
+        print(
+            f"  - {shlex.join(build_fetch_agents_last_exam_cmd(agents_last_exam_path))}"
+        )
     if not args.skip_frontiercode:
         print(f"  - {shlex.join(build_fetch_frontiercode_cmd(frontiercode_path))}")
     if not args.skip_swe_atlas:
@@ -1952,6 +2104,32 @@ def main() -> int:
         )
         changes.extend(frontierswe_changes)
 
+    tbench_by_slug: dict[str, dict[str, Any]] = {}
+    tbench_matched = 0
+    tbench_updated = 0
+    if not args.skip_tbench:
+        tbench_by_slug = fetch_tbench_data(tbench_path, tbench_mapping_path)
+        tbench_matched, tbench_updated, tbench_changes = update_tbench_scores(
+            doc, tbench_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(tbench_changes)
+
+    agents_last_exam_by_slug: dict[str, dict[str, Any]] = {}
+    agents_last_exam_matched = 0
+    agents_last_exam_updated = 0
+    if not args.skip_agents_last_exam:
+        agents_last_exam_by_slug = fetch_agents_last_exam_data(
+            agents_last_exam_path, agents_last_exam_mapping_path
+        )
+        (
+            agents_last_exam_matched,
+            agents_last_exam_updated,
+            agents_last_exam_changes,
+        ) = update_agents_last_exam_scores(
+            doc, agents_last_exam_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(agents_last_exam_changes)
+
     swe_atlas_by_slug: dict[str, dict[str, Any]] = {}
     swe_atlas_matched = 0
     swe_atlas_updated = 0
@@ -2057,6 +2235,10 @@ def main() -> int:
         print(f"models returned by datacurve: {len(datacurve_by_slug)}")
     if not args.skip_frontierswe:
         print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
+    if not args.skip_tbench:
+        print(f"models returned by tbench: {len(tbench_by_slug)}")
+    if not args.skip_agents_last_exam:
+        print(f"models returned by agents-last-exam: {len(agents_last_exam_by_slug)}")
     if not args.skip_frontiercode:
         print(f"models returned by frontiercode: {len(frontiercode_by_slug)}")
     if not args.skip_swe_atlas:
@@ -2103,6 +2285,10 @@ def main() -> int:
         print(f"models matched on datacurve: {datacurve_matched}")
     if not args.skip_frontierswe:
         print(f"models matched on frontierswe: {frontierswe_matched}")
+    if not args.skip_tbench:
+        print(f"models matched on tbench: {tbench_matched}")
+    if not args.skip_agents_last_exam:
+        print(f"models matched on agents-last-exam: {agents_last_exam_matched}")
     if not args.skip_frontiercode:
         print(f"models matched on frontiercode: {frontiercode_matched}")
     if not args.skip_swe_atlas:
@@ -2138,6 +2324,10 @@ def main() -> int:
         print(f"{action} from datacurve: {datacurve_updated}")
     if not args.skip_frontierswe:
         print(f"{action} from frontierswe: {frontierswe_updated}")
+    if not args.skip_tbench:
+        print(f"{action} from tbench: {tbench_updated}")
+    if not args.skip_agents_last_exam:
+        print(f"{action} from agents-last-exam: {agents_last_exam_updated}")
     if not args.skip_frontiercode:
         print(f"{action} from frontiercode: {frontiercode_updated}")
     if not args.skip_swe_atlas:

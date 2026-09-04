@@ -65,6 +65,7 @@ from __future__ import annotations
 
 import artificialanalysis
 import fetch_aa_coding_agents
+import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
@@ -77,6 +78,7 @@ import fetch_mcp_atlas
 import fetch_osworld
 import fetch_swe_atlas
 import fetch_swe_marathon
+import fetch_tbench
 import fetch_toolathlon
 from fill_source_urls import canonical
 
@@ -106,6 +108,11 @@ FRONTIERSWE_SOURCE_URL = canonical(fetch_frontierswe.URL)
 # The leaderboard page, not the JSON it loads: the page is what a reader opens.
 FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
 SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)
+# The versioned leaderboard, not the app root the payload is read from: the
+# root would prefix-match the 2.0 and 2.1 boards on the same host too.
+TBENCH_SOURCE_URL = canonical(fetch_tbench.LEADERBOARD_URL)
+# The leaderboard page, not the JSON endpoint it hydrates from.
+AGENTS_LAST_EXAM_SOURCE_URL = canonical(fetch_agents_last_exam.LEADERBOARD_URL)
 SWE_ATLAS_KEY_URLS = {
     key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
     for track, key in fetch_swe_atlas.TRACKS.items()
@@ -140,6 +147,8 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (FRONTIERSWE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (FRONTIERCODE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (SWE_MARATHON_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (TBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
