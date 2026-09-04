@@ -81,12 +81,18 @@ class TestRowFetchers(unittest.TestCase):
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
-        ("deepswe", "score", "fetch_deepswe_data"),
         ("frontierswe", "score", "fetch_frontierswe_data"),
-        ("frontiercode", "score", "fetch_frontiercode_data"),
-        ("datacurve", "score", "fetch_datacurve_data"),
         ("tbench", "score", "fetch_tbench_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
+    ]
+
+    # The revision-split sources file rows under a column per revision, so the
+    # same collision resolves one level down.
+    REVISION_CASES = [
+        ("deepswe", "fetch_deepswe_data", "deepswe"),
+        ("datacurve", "fetch_datacurve_data", "deepswe"),
+        ("frontiercode", "fetch_frontiercode_data", "frontiercode"),
+        ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon"),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:
@@ -102,6 +108,19 @@ class TestRowFetchers(unittest.TestCase):
                         by_slug = getattr(update, func_name)(SCRIPT, mapping)
                     self.assertEqual(by_slug["m"][score_key], 45.0)
 
+    def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
+        for source, func_name, base in self.REVISION_CASES:
+            mapping = write_json({"Model": "m", "Model [high]": "m"})
+            rows = [
+                {"model": "Model", "revision": "1.1", "score": 30.0},
+                {"model": "Model [high]", "revision": "1.1", "score": 45.0},
+            ]
+            for order in (rows, list(reversed(rows))):
+                with self.subTest(source=source, first=order[0]["model"]):
+                    with stub_run(order):
+                        by_key = getattr(update, func_name)(SCRIPT, mapping)
+                    self.assertEqual(by_key[f"{base}_1_1"]["m"]["score"], 45.0)
+
 
 class TestAaCodingAgentsMerge(unittest.TestCase):
     """The Coding Agent Index lists one row per (agent, effort) variant and
@@ -110,9 +129,9 @@ class TestAaCodingAgentsMerge(unittest.TestCase):
     def test_best_variant_wins_per_key_in_either_order(self) -> None:
         mapping = write_json({"model": "m", "model [high]": "m"})
         rows = [
-            {"model": "model", "key": "deepswe", "score": 30.0},
+            {"model": "model", "key": "swe_atlas_qna", "score": 30.0},
             {"model": "model", "key": "terminal_bench_2_1", "score": 80.0},
-            {"model": "model [high]", "key": "deepswe", "score": 45.0},
+            {"model": "model [high]", "key": "swe_atlas_qna", "score": 45.0},
             {"model": "model [high]", "key": "terminal_bench_2_1", "score": 70.0},
         ]
         for order in (rows, list(reversed(rows))):
@@ -120,45 +139,74 @@ class TestAaCodingAgentsMerge(unittest.TestCase):
                 with stub_run(order):
                     by_slug = update.fetch_aa_coding_agents_data(SCRIPT, mapping)
                 self.assertEqual(
-                    by_slug["m"], {"deepswe": 45.0, "terminal_bench_2_1": 80.0}
+                    by_slug["m"], {"swe_atlas_qna": 45.0, "terminal_bench_2_1": 80.0}
                 )
 
 
-class TestFrontiercodeRevisions(unittest.TestCase):
-    """FrontierCode folds names across benchmark revisions, so the revision decides."""
+class TestRevisionRouting(unittest.TestCase):
+    """DeepSWE, FrontierCode and SWE-Marathon keep a column per revision.
 
-    def rows(self, *rows: dict) -> dict:
-        by_slug: dict = {}
+    A row therefore has to say which revision it measured before it can be
+    written anywhere, and rows compete only against their own revision -- the
+    best-run rule must never let a retired revision's higher number displace
+    the current re-run's, which is the blend the split exists to end.
+    """
+
+    def route(self, *rows: dict, base: str = "frontiercode") -> dict:
+        by_key: dict = {}
         for row in rows:
-            update.keep_newest_frontiercode_row(by_slug, "m", row)
-        return by_slug
+            update.keep_best_by_revision(by_key, base, "m", row)
+        return by_key
 
-    def test_newer_revision_wins_even_with_a_lower_score(self) -> None:
+    def test_each_revision_lands_in_its_own_column(self) -> None:
         old = {"model": "Model", "revision": "1.0", "score": 45.0}
         new = {"model": "Model Redux", "revision": "1.1", "score": 30.0}
         for order in ((old, new), (new, old)):
             with self.subTest(first=order[0]["revision"]):
-                self.assertEqual(self.rows(*order)["m"]["score"], 30.0)
+                by_key = self.route(*order)
+                self.assertEqual(by_key["frontiercode_1_0"]["m"]["score"], 45.0)
+                self.assertEqual(by_key["frontiercode_1_1"]["m"]["score"], 30.0)
+
+    def test_a_retired_revisions_higher_score_never_reaches_the_current_column(self) -> None:
+        by_key = self.route(
+            {"model": "Model", "revision": "1.0", "score": 99.0},
+            {"model": "Model", "revision": "1.1", "score": 1.0},
+        )
+        self.assertEqual(by_key["frontiercode_1_1"]["m"]["score"], 1.0)
 
     def test_within_one_revision_the_best_run_still_wins(self) -> None:
         low = {"model": "Model", "revision": "1.1", "score": 30.0}
         high = {"model": "Model [high]", "revision": "1.1", "score": 45.0}
         for order in ((low, high), (high, low)):
             with self.subTest(first=order[0]["model"]):
-                self.assertEqual(self.rows(*order)["m"]["score"], 45.0)
+                self.assertEqual(
+                    self.route(*order)["frontiercode_1_1"]["m"]["score"], 45.0
+                )
 
-    def test_scoreless_newer_row_never_displaces_a_scored_one(self) -> None:
-        scored = {"model": "Model", "revision": "1.0", "score": 45.0}
-        blank = {"model": "Model Redux", "revision": "1.1", "score": None}
-        self.assertEqual(self.rows(scored, blank)["m"]["score"], 45.0)
-
-    def test_revisionless_rows_fall_back_to_best_run(self) -> None:
-        self.assertEqual(
-            self.rows({"model": "a", "score": 30.0}, {"model": "b", "score": 45.0})["m"]["score"],
-            45.0,
+    def test_a_row_naming_no_revision_is_refused(self) -> None:
+        by_key: dict = {}
+        self.assertFalse(
+            update.keep_best_by_revision(by_key, "frontiercode", "m", {"score": 45.0})
         )
+        self.assertEqual(by_key, {})
 
-    def test_fetch_resolves_the_collision_in_either_payload_order(self) -> None:
+    def test_a_revision_without_a_column_is_refused(self) -> None:
+        by_key: dict = {}
+        self.assertFalse(
+            update.keep_best_by_revision(
+                by_key, "frontiercode", "m", {"revision": "9.9", "score": 45.0}
+            )
+        )
+        self.assertEqual(by_key, {})
+
+    def test_every_split_benchmark_routes_the_same_way(self) -> None:
+        for base in ("deepswe", "frontiercode", "swe_marathon"):
+            with self.subTest(base=base):
+                by_key = self.route({"revision": "1.0", "score": 1.0}, base=base)
+                self.assertEqual(list(by_key), [f"{base}_1_0"])
+
+    def test_fetch_routes_a_folded_name_by_revision(self) -> None:
+        """Two leaderboard names folding onto one slug, one per revision."""
         mapping = write_json({"Model": "m", "Model Redux": "m"})
         rows = [
             {"model": "Model", "revision": "1.0", "score": 45.0},
@@ -167,8 +215,14 @@ class TestFrontiercodeRevisions(unittest.TestCase):
         for order in (rows, list(reversed(rows))):
             with self.subTest(first=order[0]["model"]):
                 with stub_run(order):
-                    by_slug = update.fetch_frontiercode_data(SCRIPT, mapping)
-                self.assertEqual(by_slug["m"]["revision"], "1.1")
+                    by_key = update.fetch_frontiercode_data(SCRIPT, mapping)
+                self.assertEqual(by_key["frontiercode_1_0"]["m"]["score"], 45.0)
+                self.assertEqual(by_key["frontiercode_1_1"]["m"]["score"], 30.0)
+
+    def test_fetch_drops_rows_naming_no_revision(self) -> None:
+        mapping = write_json({"Model": "m"})
+        with stub_run([{"model": "Model", "score": 45.0}]):
+            self.assertEqual(update.fetch_frontiercode_data(SCRIPT, mapping), {})
 
 
 class TestLlmstatsMerge(unittest.TestCase):

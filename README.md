@@ -18,17 +18,17 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Artificial Analysis** | Commercial API | HTTP endpoint |
 | **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
-| **DeepSWE** | Research | JSON API |
+| **DeepSWE** | Research (benchlm.ai mirror) | JSON API |
 | **FrontierSWE** | Research | RSC flight payload |
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
-| **SWE Marathon** | Research | JSON API |
+| **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
 | **OSWorld** | Research | JSON API |
 | **Spheron** | Infrastructure | JSON API |
 | **LLMStats** | Community Aggregator | JSON API |
 | **Evals Report** | Research | JSON API |
 | **FrontierCode** | Research (Cognition) | Static leaderboard JSON |
-| **DeepSWE (Datacurve)** | Research (benchmark's own site) | Versioned JSON artifact |
+| **DeepSWE (Datacurve)** | Research (benchmark's own site) | One versioned JSON artifact per revision |
 | **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
@@ -190,21 +190,23 @@ Output: llm.json (unified dataset)
 ./update.py --fill-source-urls -w
 
 # Fetch from specific benchmarks
-./fetch_aa_coding_agents.py              # DeepSWE, SWE-Atlas-QnA, Terminal-Bench 2.1 as run by AA
+./fetch_aa_coding_agents.py              # SWE-Atlas-QnA, Terminal-Bench 2.1 as run by AA
 ./fetch_huggingface.py --repo owner/model-name
-./fetch_deepswe.py
+./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
 ./fetch_frontierswe.py
 ./fetch_osworld.py
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
-./fetch_swe_marathon.py
+./fetch_swe_marathon.py                 # both published boards, 1.0 and 1.1
+./fetch_swe_marathon.py --revision 1.1  # or pin one
 ./fetch_mcp_atlas.py                    # MCP-Atlas, from Scale's own leaderboard
 ./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
 ./fetch_evals_report.py
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
 ./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
-./fetch_frontiercode.py                 # every revision, newest wins per model
+./fetch_datacurve.py --revision 1.0     # one revision instead of every published one
+./fetch_frontiercode.py                 # every revision, each row labelled
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
 ./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
@@ -224,6 +226,7 @@ Output: llm.json (unified dataset)
 ./update_mcp_atlas_mapping.py
 ./update_osworld_mapping.py
 ./update_spheron_mapping.py
+./update_swe_marathon_mapping.py
 ```
 
 ### Model Management
@@ -342,9 +345,9 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. |
-| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. |
+| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its DeepSWE rows are not ingested at all: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited, or null where a hand edit cleared the attribution. A hand entry seeds a column until something measures it, and any scraper may overwrite it. |
 
@@ -354,8 +357,8 @@ came from a *strictly* better-ranked source.
 
 The rungs are where they are because of what actually disagrees. Where both a
 first-party run and a self-report exist for one model they differ by a point or
-two, and `mcp_atlas`, `bfcl_v4`, `frontiercode`, `swe_marathon` and `deepswe`
-each carry both, so the run has to be the one that lands. IFBench and MMLU-Pro
+two, and `mcp_atlas`, `bfcl_v4`, `frontiercode_1_1`, `swe_marathon_1_1` and
+`deepswe_1_1` each carry both, so the run has to be the one that lands. IFBench and MMLU-Pro
 are the two columns where AA and evals.report both measure and the ranking
 therefore changed an outcome: before it, precedence was the order `main()`
 happened to call the ingests, so a run that skipped evals.report left AA's
@@ -404,6 +407,55 @@ hoping the labels agree:
 
 All three feed the [Tooling index](#tooling-index); the weight each carries, and
 why, is in that section's table.
+
+### Benchmarks that publish more than one revision
+
+Three benchmarks in this table have re-run themselves, and in every case the
+re-run changed the task set, the verification or the scoring — so a 1.0 number
+and a 1.1 number are two different measurements that happen to share a name.
+Each revision gets its own column, the way `terminal_bench_2_0` and
+`terminal_bench_2_1` are already separate. `_revisions.py` owns the naming
+(`<benchmark>_<major>_<minor>`) so the scrapers, the ingest and the mappings
+cannot disagree about which column a row belongs in.
+
+| Benchmark | Columns | What changed between them |
+| --- | --- | --- |
+| **DeepSWE** | `deepswe_1_1`, `deepswe_1_0` | Datacurve serves one JSON artifact per revision and toggles between them. The re-run moved DeepSeek V4 Pro from 7.5 to 62.8, and 1.0 is the only revision that ever scored the dozen models retired before it. |
+| **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. |
+| **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
+
+Only the current revision feeds the [Coding index](#coding-index). A superseded
+revision measured a different task set, so its percentile ranks a model against
+a field that no longer exists; aggregating both would also count the benchmark
+twice for whoever was re-run and once for everyone else. The archived columns
+stay visible in the table — that is what they are for.
+
+**A source that does not say which revision it measured does not write to a
+revision column.** This is the rule a bare `BFCL` and a bare `Toolathlon`
+already get, applied consistently:
+
+- `fetch_datacurve.py` reads the revision from the artifact directory, and
+  discovers the older revisions from the page's own toggle — their paths never
+  appear in the served HTML, because the client requests them only on click.
+- `fetch_deepswe.py` (benchlm.ai) mirrors one artifact and names it in the
+  page's metadata; that path is what its rows are labelled with.
+- `fetch_swe_marathon.py` reads both boards the bundle ships. Only the archive
+  is stored as a leaderboard; the current board exists solely as the per-task
+  trial log the page aggregates in the browser, so the scraper reproduces that
+  aggregation (pass@1 is the share of a configuration's trials scoring a full
+  reward).
+- evals.report's `frontiercode` table is ingested into `frontiercode_1_1`,
+  because every row in it matches Cognition's 1.1 block. Its `swe-marathon`
+  table is **not** ingested: seven rows are the 1.0 archive verbatim, beside a
+  Kimi K3 that is on neither published board, with nothing saying which is
+  which.
+- The AA Coding Agent Index's `deep-swe` rows are **not** ingested, because its
+  dataset id carries no revision the way `terminal-bench-v2.1` does. Versioning
+  the id upstream would make re-enabling it a one-line change.
+- In `huggingface-benchmark-name-mapping.json`, `DeepSWE (v1.1)` and
+  `Agentic coding DeepSWE 1.1` map onto `deepswe_1_1` and a bare `DeepSWE` is
+  unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1`. llm-stats'
+  `swe_marathon` column is unmapped for the same reason.
 
 ### Vision
 
@@ -543,7 +595,8 @@ How a value is produced:
    an index score can be compared at all. A `lower_is_better` benchmark is inverted,
    so a percentile always means "how good".
 2. **Weight by reliability.** The ranks are averaged with the per-benchmark weights
-   the index declares in `INDEXES` (DeepSWE 1.0 down to SWE-bench Verified 0.15), so
+   the index declares in `INDEXES` (1.0 for DeepSWE 1.1, the highest, down to 0.15
+   for SWE-bench Verified, the lowest), so
    the benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
    Weights are relative — scaling them all leaves the ranking unchanged.
 3. **Impute blanks instead of zeroing them.** A missing score is filled between the
@@ -1360,6 +1413,7 @@ ai-bench/
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 │
 ├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
+├── _revisions.py               # Benchmark revisions: labels, order, and the column each feeds
 ├── _selector.py                # Type-to-search prompt: drawing + Tab completion
 ├── _openness.py                # Model openness classification
 ├── _params.py                  # params field: AA counts, HF fallback (see below)

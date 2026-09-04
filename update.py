@@ -20,7 +20,6 @@ import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
 import fetch_evals_report
-import fetch_frontiercode
 import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
@@ -64,6 +63,7 @@ from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
+from _revisions import known_revision_key
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
 from _tbench_mapping import load_tbench_to_slug_mapping
 from _agents_last_exam_mapping import load_agents_last_exam_to_slug_mapping
@@ -491,6 +491,19 @@ def keep_best_row(
         by_slug[slug] = row
 
 
+def revision_model_count(by_key: dict[str, dict[str, dict[str, Any]]]) -> int:
+    """Distinct models a revision-split source matched, across all its columns."""
+    return len({slug for by_slug in by_key.values() for slug in by_slug})
+
+
+def revision_breakdown(by_key: dict[str, dict[str, dict[str, Any]]]) -> str:
+    """" (key: n, key: n)" for the summary line, or "" for a source that filled nothing."""
+    if not by_key:
+        return ""
+    parts = ", ".join(f"{key}: {len(by_key[key])}" for key in sorted(by_key))
+    return f" ({parts})"
+
+
 def apply_score(
     doc: dict[str, Any],
     model: dict[str, Any],
@@ -559,6 +572,69 @@ def apply_score(
     stamp_score_source(model, key, url)
     changes.append((slug, key, old_value, new_value))
     return 1
+
+
+def keep_best_by_revision(
+    by_key: dict[str, dict[str, dict[str, Any]]],
+    base: str,
+    slug: str,
+    row: dict[str, Any],
+    score_key: str = "score",
+) -> bool:
+    """File one source row under its revision's column, best run per model.
+
+    DeepSWE, FrontierCode and SWE-Marathon each publish more than one revision
+    of themselves, and llm.json keeps a column per revision because the numbers
+    are not comparable across one (see _revisions.py). A row therefore has to
+    say which revision it measured before it can be written anywhere, and rows
+    are ranked against their own revision only -- keep_best_row's best-run rule
+    would otherwise let a retired revision's higher number displace the current
+    re-run's, which is exactly the blend the split exists to end.
+
+    Returns False for a row naming no revision, or one naming a revision this
+    table has no column for; the caller counts those and reports them rather
+    than folding them into a neighbouring column.
+    """
+    key = known_revision_key(base, row.get("revision"))
+    if key is None:
+        return False
+    keep_best_row(by_key.setdefault(key, {}), slug, row, score_key)
+    return True
+
+
+def apply_revision_scores(
+    doc: dict[str, Any],
+    by_key: dict[str, dict[str, dict[str, Any]]],
+    url: str,
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    """Write every revision column one source filled, sharing its source page.
+
+    Both revisions of a benchmark are published by the same leaderboard, so
+    they are credited to the same page; the column keeps them apart.
+    """
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        hit = False
+        for key, by_slug in by_key.items():
+            row = by_slug.get(slug)
+            if row is None:
+                continue
+            hit = True
+            updated += apply_score(
+                doc, model, slug, key, row.get("score"), url, changes,
+                fill_urls_only=fill_urls_only,
+            )
+        matched += 1 if hit else 0
+
+    return matched, updated, changes
 
 
 def ensure_scores_source(model: dict[str, Any], benchmark_keys: list[str]) -> None:
@@ -1073,7 +1149,12 @@ def build_fetch_deepswe_cmd(script: Path) -> list[str]:
 
 def fetch_deepswe_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """benchlm.ai's DeepSWE mirror, filed under the revision it mirrors.
+
+    benchlm reads one of Datacurve's artifacts and names which; rows that
+    arrive without a revision are dropped rather than guessed into a column.
+    """
     cmd = build_fetch_deepswe_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
@@ -1084,7 +1165,8 @@ def fetch_deepswe_data(
         raise RuntimeError("Unexpected deepswe JSON format: expected a list")
 
     deepswe_to_slug = load_deepswe_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1094,35 +1176,24 @@ def fetch_deepswe_data(
         slug = deepswe_to_slug.get(deepswe_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        if not keep_best_by_revision(by_key, "deepswe", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} deepswe row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_deepswe_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        deepswe_model = by_slug.get(slug)
-        if deepswe_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "deepswe", deepswe_model.get("score"),
-            DEEPSWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, DEEPSWE_SOURCE_URL, fill_urls_only=fill_urls_only
+    )
 
 
 def build_fetch_frontierswe_cmd(script: Path) -> list[str]:
@@ -1303,44 +1374,21 @@ def update_agents_last_exam_scores(
     return matched, updated, changes
 
 
-def keep_newest_frontiercode_row(
-    by_slug: dict[str, dict[str, Any]], slug: str, row: dict[str, Any]
-) -> None:
-    """Newer benchmark revision wins; within one revision, the better score wins.
-
-    fetch_frontiercode.py already resolves a model listed in several revisions,
-    but two *different* leaderboard names can fold onto one llm.json slug across
-    revisions (a renamed release, a variant label). The revision has to decide
-    there too -- keep_best_row's best-run rule would otherwise let a retired
-    revision's higher number outrank the current re-run.
-    """
-    current = by_slug.get(slug)
-    if current is None:
-        by_slug[slug] = row
-        return
-
-    new_rank = fetch_frontiercode.revision_rank(row.get("revision") or "")
-    old_rank = fetch_frontiercode.revision_rank(current.get("revision") or "")
-    if new_rank == old_rank:
-        keep_best_row(by_slug, slug, row, "score")
-        return
-    if new_rank > old_rank and is_number(row.get("score")):
-        by_slug[slug] = row
-
-
 def build_fetch_datacurve_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json", "--all-configs"]
 
 
 def fetch_datacurve_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
-    """DeepSWE scores from the benchmark's own leaderboard.
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """DeepSWE scores from the benchmark's own leaderboard, one column per revision.
 
     Shares the benchlm mapping file: both sources label a run
     "<model>[<effort>]", so a configuration reviewed once is mapped for both.
-    Every configuration is fetched (--all-configs) and the best one that maps to
-    a slug wins, the same rule keep_best_row applies to harness variants.
+    Every configuration of every published revision is fetched
+    (--all-configs), and within a revision the best configuration that maps to
+    a slug wins -- the same rule keep_best_row applies to harness variants,
+    applied per revision so a 1.0 number can never outrank a 1.1 one.
     """
     cmd = build_fetch_datacurve_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
@@ -1352,7 +1400,8 @@ def fetch_datacurve_data(
         raise RuntimeError("Unexpected datacurve JSON format: expected a list")
 
     deepswe_to_slug = load_deepswe_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1362,35 +1411,24 @@ def fetch_datacurve_data(
         slug = deepswe_to_slug.get(datacurve_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        if not keep_best_by_revision(by_key, "deepswe", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} datacurve row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_datacurve_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        datacurve_model = by_slug.get(slug)
-        if datacurve_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "deepswe", datacurve_model.get("score"),
-            DATACURVE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, DATACURVE_SOURCE_URL, fill_urls_only=fill_urls_only
+    )
 
 
 def build_fetch_frontiercode_cmd(script: Path) -> list[str]:
@@ -1399,7 +1437,13 @@ def build_fetch_frontiercode_cmd(script: Path) -> list[str]:
 
 def fetch_frontiercode_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Cognition's FrontierCode board, one column per revision it publishes.
+
+    The scraper reports every revision without merging them, so a model re-run
+    in 1.1 arrives twice; each row goes to its own revision's column and is
+    ranked only against that revision.
+    """
     cmd = build_fetch_frontiercode_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
@@ -1410,7 +1454,8 @@ def fetch_frontiercode_data(
         raise RuntimeError("Unexpected frontiercode JSON format: expected a list")
 
     frontiercode_to_slug = load_frontiercode_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1420,35 +1465,24 @@ def fetch_frontiercode_data(
         slug = frontiercode_to_slug.get(frontiercode_name)
         if not slug:
             continue
-        keep_newest_frontiercode_row(by_slug, slug, row)
-    return by_slug
+        if not keep_best_by_revision(by_key, "frontiercode", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} frontiercode row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_frontiercode_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        frontiercode_model = by_slug.get(slug)
-        if frontiercode_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "frontiercode", frontiercode_model.get("score"),
-            FRONTIERCODE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, FRONTIERCODE_SOURCE_URL, fill_urls_only=fill_urls_only
+    )
 
 
 def build_fetch_swe_atlas_cmd(script: Path) -> list[str]:
@@ -1591,12 +1625,17 @@ def build_fetch_swe_marathon_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
 
-def fetch_swe_marathon_data(script: Path, mapping_path: Path) -> dict[str, Any]:
-    """Return slug -> best SWE-Marathon pass@1 across the model's scaffolds.
+def fetch_swe_marathon_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """SWE-Marathon pass@1, one column per published board.
 
-    The leaderboard lists one row per (model, scaffold) pair and the score is
-    scaffold-dependent, so the model's best harness result is what lands in
-    llm.json -- same "best reported run wins" rule the evals.report ingest uses.
+    The site ships a v1.0 archive beside the current v1.1 board and the two are
+    not comparable, so each fills its own column. Within a board the rows are
+    one per (model, scaffold, reasoning effort) and the score is
+    configuration-dependent, so the model's best result on that board is what
+    lands -- the same "best reported run wins" rule the evals.report ingest
+    uses, applied per revision.
     """
     cmd = build_fetch_swe_marathon_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
@@ -1608,48 +1647,35 @@ def fetch_swe_marathon_data(script: Path, mapping_path: Path) -> dict[str, Any]:
         raise RuntimeError("Unexpected swe_marathon JSON format: expected a list")
 
     swe_marathon_to_slug = load_swe_marathon_to_slug_mapping(mapping_path)
-    by_slug: dict[str, Any] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
         name = row.get("model")
-        score = row.get("score")
-        if not isinstance(name, str) or isinstance(score, bool):
-            continue
-        if not isinstance(score, (int, float)):
+        if not isinstance(name, str) or not is_number(row.get("score")):
             continue
         slug = swe_marathon_to_slug.get(name)
         if not slug:
             continue
-        if slug not in by_slug or score > by_slug[slug]:
-            by_slug[slug] = score
-    return by_slug
+        if not keep_best_by_revision(by_key, "swe_marathon", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} swe_marathon row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_swe_marathon_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, Any],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        if slug not in by_slug:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "swe_marathon", by_slug[slug],
-            SWE_MARATHON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, SWE_MARATHON_SOURCE_URL, fill_urls_only=fill_urls_only
+    )
 
 
 def build_fetch_spheron_cmd(script: Path, paths: list[str]) -> list[str]:
@@ -2230,9 +2256,9 @@ def main() -> int:
     if not args.skip_toolathlon:
         print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
     if not args.skip_deepswe:
-        print(f"models returned by deepswe: {len(deepswe_by_slug)}")
+        print(f"models returned by deepswe: {revision_model_count(deepswe_by_slug)}" + revision_breakdown(deepswe_by_slug))
     if not args.skip_datacurve:
-        print(f"models returned by datacurve: {len(datacurve_by_slug)}")
+        print(f"models returned by datacurve: {revision_model_count(datacurve_by_slug)}" + revision_breakdown(datacurve_by_slug))
     if not args.skip_frontierswe:
         print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
     if not args.skip_tbench:
@@ -2240,13 +2266,13 @@ def main() -> int:
     if not args.skip_agents_last_exam:
         print(f"models returned by agents-last-exam: {len(agents_last_exam_by_slug)}")
     if not args.skip_frontiercode:
-        print(f"models returned by frontiercode: {len(frontiercode_by_slug)}")
+        print(f"models returned by frontiercode: {revision_model_count(frontiercode_by_slug)}" + revision_breakdown(frontiercode_by_slug))
     if not args.skip_swe_atlas:
         print(f"models returned by swe_atlas: {len(swe_atlas_by_slug)}")
     if not args.skip_evals_report:
         print(f"models returned by evals_report: {len(evals_report_by_slug)}")
     if not args.skip_swe_marathon:
-        print(f"models returned by swe_marathon: {len(swe_marathon_by_slug)}")
+        print(f"models returned by swe_marathon: {revision_model_count(swe_marathon_by_slug)}" + revision_breakdown(swe_marathon_by_slug))
     if not args.skip_mcp_atlas:
         print(f"models returned by mcp_atlas: {len(mcp_atlas_by_slug)}")
     if not args.skip_bfcl:

@@ -5,9 +5,10 @@ The payload nests model -> effort -> subset, carries two metrics per leaf
 (`new_score`, the site's Score column, and `correct`, the raw pass rate) and
 keeps every past revision alongside the current one. These tests pin the choices
 that decide which number reaches llm.json: subset, metric, which effort
-represents a model published at several, and the revision merge -- newest first,
-older revisions supplying only the models the newest one dropped, with the
-ordering read off the key so a future revision needs no code change.
+represents a model published at several, and the revision split -- every
+revision reported and labelled, never merged, because llm.json keeps a column
+per revision and a 1.0 number is not a 1.1 number. Ordering is read off the key
+so a future revision needs no code change.
 """
 
 from __future__ import annotations
@@ -120,8 +121,14 @@ class TestBestEffort(unittest.TestCase):
 
 
 class TestGetScores(unittest.TestCase):
-    def by_model(self, **kwargs) -> dict[str, dict]:
-        return {row["model"]: row for row in scores(**kwargs)}
+    def by_model(self, revision: str = "1.1", **kwargs) -> dict[str, dict]:
+        """Rows of one revision, keyed by model.
+
+        Defaults to the current revision: every revision is reported now, so a
+        model published in both appears twice and a flat model index would be
+        ambiguous.
+        """
+        return {row["model"]: row for row in scores(revision=revision, **kwargs)}
 
     def test_score_is_the_percentage_of_new_score(self) -> None:
         # llm.json stores the site's Score column as a percentage; the payload
@@ -155,34 +162,52 @@ class TestGetScores(unittest.TestCase):
         self.assertEqual(rows["Single Effort"]["score"], 19.0)
         self.assertNotIn("Multi Effort", rows)
 
-    def test_newest_revision_wins_for_a_model_in_both(self) -> None:
-        row = self.by_model()["Single Effort"]
-        self.assertEqual((row["revision"], row["score"]), ("1.1", 24.5))
+    def test_a_model_in_both_revisions_reports_both_numbers(self) -> None:
+        """The heart of the split: 19.0 and 24.5 are two measurements, not one.
+
+        Merging them -- the old behaviour -- silently dropped whichever
+        revision lost, so a column mixed 1.0 and 1.1 numbers with nothing
+        recording which was which.
+        """
+        both = {r["revision"]: r["score"] for r in scores() if r["model"] == "Single Effort"}
+        self.assertEqual(both, {"1.0": 19.0, "1.1": 24.5})
 
     def test_model_dropped_from_the_newest_revision_still_reports(self) -> None:
-        row = self.by_model()["Retired"]
+        row = self.by_model(revision="1.0")["Retired"]
         self.assertEqual((row["revision"], row["score"]), ("1.0", 7.0))
 
-    def test_merge_covers_the_union_of_revisions(self) -> None:
+    def test_every_revision_is_reported(self) -> None:
+        self.assertEqual({r["revision"] for r in scores()}, {"1.0", "1.1"})
         self.assertEqual(
-            set(self.by_model()),
-            {"Multi Effort", "Single Effort", "Retired"},
+            {(r["revision"], r["model"]) for r in scores()},
+            {
+                ("1.1", "Multi Effort"), ("1.1", "Single Effort"),
+                ("1.0", "Single Effort"), ("1.0", "Retired"),
+            },
         )
 
-    def test_a_future_revision_supersedes_the_current_one(self) -> None:
+    def test_a_future_revision_is_reported_beside_the_others(self) -> None:
         payload = {**PAYLOAD, "v1_2": {
             "models": ["Single Effort"],
             "subsets": {"main": 100},
             "data": {"Single Effort": {"none": {"main": leaf(0.31)}}},
         }}
         with mock.patch.object(fc, "fetch_json", return_value=payload):
-            rows = {r["model"]: r for r in fc.get_scores()}
-        self.assertEqual((rows["Single Effort"]["revision"], rows["Single Effort"]["score"]),
-                         ("1.2", 31.0))
+            rows = fc.get_scores()
+        self.assertEqual({r["revision"] for r in rows}, {"1.0", "1.1", "1.2"})
+        # Newest first, so a consumer reading in order meets the current run first.
+        self.assertEqual(rows[0]["revision"], "1.2")
 
-    def test_rows_are_ranked_best_first_across_revisions(self) -> None:
+    def test_rows_are_ranked_within_their_own_revision(self) -> None:
+        """Ranking across revisions would compare two different task sets."""
         rows = scores()
-        self.assertEqual([r["rank"] for r in rows], list(range(1, len(rows) + 1)))
+        by_revision: dict[str, list[dict]] = {}
+        for row in rows:
+            by_revision.setdefault(row["revision"], []).append(row)
+        for revision, group in by_revision.items():
+            self.assertEqual(
+                [r["rank"] for r in group], list(range(1, len(group) + 1)), revision
+            )
         self.assertEqual(rows[0]["model"], "Multi Effort")
 
     def test_harness_is_carried_through(self) -> None:
@@ -191,6 +216,10 @@ class TestGetScores(unittest.TestCase):
     def test_unknown_subset_raises(self) -> None:
         with self.assertRaises(ValueError):
             scores(subset="nope")
+
+    def test_unknown_revision_raises(self) -> None:
+        with self.assertRaises(ValueError):
+            scores(revision="9.9")
 
 
 class TestSourceUrls(unittest.TestCase):

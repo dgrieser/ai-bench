@@ -41,8 +41,18 @@ BASE_URL = "https://evals.report/benchmarks/{slug}?tab=scores"
 
 # evals.report benchmark slug -> llm.json benchmark key.
 BENCHMARKS: dict[str, str] = {
-    "frontiercode": "frontiercode",
-    "swe-marathon": "swe_marathon",
+    # evals.report publishes no revision label, so a table only feeds a
+    # versioned column when its numbers identify one. FrontierCode's does:
+    # every row it carries matches Cognition's 1.1 block (its leader is
+    # Claude Fable 5 at 53.5, the 1.1 number), so it fills gaps in
+    # frontiercode_1_1 and nothing else.
+    "frontiercode": "frontiercode_1_1",
+    # "swe-marathon" is deliberately absent. Its table is a mix: seven rows are
+    # the v1.0 archive verbatim (Grok 4.5 29.0, Opus 4.8 26.0, GLM-5.2 13.0
+    # ...) sitting beside a Kimi K3 at 42.0 that is on neither published board,
+    # with no column saying which revision any row was measured under. That is
+    # the mix swe_marathon_1_0/_1_1 exist to separate, so it is not ingested --
+    # the rule the README's version traps apply to a bare "BFCL".
     # The only source we scrape for SWE-bench Multimodal: the benchmark's own
     # leaderboard lists no open-weight system, and AA does not run it at all.
     "swe-bench-multimodal": "swe_bench_multimodal",
