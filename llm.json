@@ -24149,9 +24149,9 @@
       "params": "375B-A23B",
       "context": "512k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 827,
+        "int8": 413,
+        "int4": 207
       },
       "creator": {
         "name": "MBZUAI Institute of Foundation Models",
@@ -24300,6 +24300,11 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-375B-A23B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-375B-A23B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-375B-A23B/"
       }
     }
   ],
