@@ -207,6 +207,30 @@ INDEXES: list[IndexDef] = [
     ),
 ]
 
+# A benchmark that has re-run itself keeps a column per revision, because the
+# two are not comparable as published (see _revisions.py). For the *index* that
+# leaves a hole: a model measured only on the retired board contributes nothing
+# to the benchmark it was actually measured on, and is imputed at the median
+# instead -- which flatters a model that scored near zero there.
+#
+# The fix is a scale conversion, not a second column. The re-run's own overlap
+# -- the open-weight models published on both boards -- gives the factor that
+# carries an old score onto the current board's scale; applying it lets those
+# models join the current revision's population and be ranked against today's
+# field like everyone else. The converted value is used *here only*: llm.json's
+# columns keep exactly what each board published, so nothing in the table ever
+# shows a number its leaderboard did not.
+#
+# current revision key -> (older revision key, multiplier onto the current scale)
+REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
+    # DeepSWE 1.1 reads lower than 1.0 for the same model.
+    "deepswe_1_1": ("deepswe_1_0", 1 / 1.069),
+    # FrontierCode 1.1 reads higher: the mean of the two open-weight models
+    # published on both boards (GLM 5.2 19.2 -> 24.5, Kimi K2.7 22.0 -> 30.06).
+    "frontiercode_1_1": ("frontiercode_1_0", 1.32),
+}
+
+
 # Below this share of an index's total weight a model is left unranked. 0.18
 # rather than a round 0.2 because model coverage clusters rather than spreading
 # evenly: the coding group has 11 models measured on 19% of its weight and none
@@ -260,13 +284,34 @@ def is_lower_better(doc: dict[str, Any], key: str) -> bool:
     return benchmark.get("lower_is_better") is True
 
 
+def index_score(model: dict[str, Any], key: str) -> float:
+    """The value this benchmark contributes for one model, NaN when it has none.
+
+    Normally the stored score. For a benchmark with a REVISION_FALLBACKS entry,
+    a model absent from the current revision falls back to its older-revision
+    score converted onto the current scale, so it is ranked against the current
+    field rather than imputed at the median. A model published on both keeps
+    the current revision's own number -- the conversion only ever fills a hole.
+    """
+    scores = model.get("scores") or {}
+    value = to_number(scores.get(key))
+    if math.isfinite(value):
+        return value
+    fallback = REVISION_FALLBACKS.get(key)
+    if fallback is None:
+        return value
+    older_key, factor = fallback
+    older = to_number(scores.get(older_key))
+    return older * factor if math.isfinite(older) else older
+
+
 def percentile_map(
     models: list[dict[str, Any]], key: str, doc: dict[str, Any]
 ) -> dict[str, float] | None:
     """Model name -> percentile rank (0 worst .. 1 best) for one benchmark, or
     None when fewer than two models are scored on it and no rank exists."""
     entries = [
-        (model["name"], to_number((model.get("scores") or {}).get(key)))
+        (model["name"], index_score(model, key))
         for model in models
         if isinstance(model.get("name"), str)
     ]
@@ -334,12 +379,15 @@ def compute_index(
 
 
 def scored_count(model: dict[str, Any], index: IndexDef) -> int:
-    """How many contributing benchmarks this model actually has a score on."""
-    scores = model.get("scores") or {}
+    """How many contributing benchmarks this model actually has a score on.
+
+    Counts a revision fallback, because the model was measured on that
+    benchmark -- on its retired board -- and the index ranks it accordingly.
+    """
     return sum(
         1
         for key, _ in index.contributing
-        if math.isfinite(to_number(scores.get(key)))
+        if math.isfinite(index_score(model, key))
     )
 
 

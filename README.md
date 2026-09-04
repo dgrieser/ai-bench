@@ -424,11 +424,33 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
 
-Only the current revision feeds the [Coding index](#coding-index). A superseded
-revision measured a different task set, so its percentile ranks a model against
-a field that no longer exists; aggregating both would also count the benchmark
-twice for whoever was re-run and once for everyone else. The archived columns
-stay visible in the table — that is what they are for.
+Only the current revision feeds the [Coding index](#coding-index), as one
+member at one weight. Admitting both would count the benchmark twice for
+whoever was re-run and once for everyone else, and an archived revision's
+percentile ranks a model against a field that no longer exists.
+
+That would leave a hole, though: a model measured **only** on the retired board
+contributes nothing to the benchmark it was actually measured on, so the index
+imputes it at the median — which flatters a model that scored near zero there.
+`REVISION_FALLBACKS` in `derive_indexes.py` closes it with a scale conversion
+rather than a second index member:
+
+| Column | Falls back to | Factor | Derivation |
+| --- | --- | --- | --- |
+| `deepswe_1_1` | `deepswe_1_0` | ÷ 1.069 | 1.1 reads lower than 1.0 for the same model |
+| `frontiercode_1_1` | `frontiercode_1_0` | × 1.32 | mean of the two open-weight models published on both boards (GLM 5.2 19.2 → 24.5, Kimi K2.7 22.0 → 30.06) |
+
+A model absent from the current revision has its archived score carried onto
+the current scale and joins that revision's population, so it is ranked against
+today's field like everyone else instead of being imputed. A model published on
+both keeps the current board's own number — the conversion only ever fills a
+hole, it never displaces a measurement. `swe_marathon` needs no factor: both
+models on its archive alone scored 0.0, which converts to 0.0 either way.
+
+**The conversion lives in the index and nowhere else.** `llm.json`'s columns
+keep exactly what each board published, so nothing in the table ever shows a
+number its leaderboard did not — the archived columns stay visible and literal,
+which is what they are for.
 
 **A source that does not say which revision it measured does not write to a
 revision column.** This is the rule a bare `BFCL` and a bare `Toolathlon`
