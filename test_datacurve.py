@@ -2,11 +2,14 @@
 """Tests for the Datacurve DeepSWE leaderboard reader. Run with ./test_datacurve.py
 
 The board publishes one row per configuration (harness + model + reasoning
-effort) inside a versioned JSON artifact whose path the page carries. These tests
-pin the parts that decide what reaches llm.json: the configuration label (which
-has to match benchlm.ai's spelling, since both DeepSWE sources share one name
-mapping), the best-configuration-per-model reduction, the metric, and the
-artifact discovery that keeps a version bump from breaking the scraper.
+effort) inside a versioned JSON artifact whose path the page carries, and it
+toggles between the revisions it has published. These tests pin the parts that
+decide what reaches llm.json: the configuration label (which has to match
+benchlm.ai's spelling, since both DeepSWE sources share one name mapping), the
+best-configuration-per-model reduction, the metric, and the revision discovery
+that has to find *every* published revision -- reading only the newest silently
+froze the models a re-run dropped, which is what the per-revision columns exist
+to prevent.
 """
 
 from __future__ import annotations
@@ -56,6 +59,7 @@ class TestConfigLabel(unittest.TestCase):
 
 class TestParseRows(unittest.TestCase):
     def scores(self, **kwargs) -> dict[str, dict]:
+        kwargs.setdefault("revision", "1.1")
         return {r["model"]: r for r in dc.parse_rows(PAYLOAD, **kwargs)}
 
     def test_best_configuration_per_model_by_default(self) -> None:
@@ -77,7 +81,7 @@ class TestParseRows(unittest.TestCase):
         self.assertNotIn("broken[max]", self.scores(metric="pass@1", all_configs=True))
 
     def test_rows_are_ranked_best_first(self) -> None:
-        rows = dc.parse_rows(PAYLOAD, metric="pass@1", all_configs=True)
+        rows = dc.parse_rows(PAYLOAD, metric="pass@1", all_configs=True, revision="1.1")
         self.assertEqual([r["rank"] for r in rows], [1, 2, 3])
         self.assertEqual(rows[0]["model"], "glm-5-2[max]")
 
@@ -87,34 +91,69 @@ class TestParseRows(unittest.TestCase):
 
     def test_payload_without_rows_raises(self) -> None:
         with self.assertRaises(ValueError):
-            dc.parse_rows({}, metric="pass@1", all_configs=False)
+            dc.parse_rows({}, metric="pass@1", all_configs=False, revision="1.1")
+
+    def test_every_row_carries_the_revision_it_was_measured_under(self) -> None:
+        rows = self.scores(metric="pass@1", all_configs=True, revision="1.0")
+        self.assertEqual({r["revision"] for r in rows.values()}, {"1.0"})
 
 
 class TestArtifactDiscovery(unittest.TestCase):
-    def test_path_is_read_off_the_page(self) -> None:
+    def test_live_path_is_read_off_the_page(self) -> None:
         html = 'x ["artifact","/artifacts/v1.1/leaderboard-live.json"] y'
         with mock.patch.object(dc, "fetch_text", return_value=html):
             self.assertEqual(
-                dc.discover_artifact_url(),
-                "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
+                dc.discover_artifact_urls(),
+                {"1.1": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json"},
             )
 
-    def test_highest_version_wins_when_several_appear(self) -> None:
+    def test_toggle_reaches_revisions_the_page_never_requests(self) -> None:
+        """The older artifact's path is nowhere in the HTML; only its button is.
+
+        This is the regression that mattered: the client fetches an older
+        revision only on click, so a scan for artifact paths finds the current
+        one alone and every model the re-run dropped disappears.
+        """
+        html = (
+            '["artifact","/artifacts/v1.1/leaderboard-live.json"]'
+            '<div><button type="button" aria-pressed="true" class="x">v1.1</button>'
+            '<button type="button" aria-pressed="false" class="y">v1</button></div>'
+        )
+        with mock.patch.object(dc, "fetch_text", return_value=html):
+            self.assertEqual(
+                dc.discover_artifact_urls(),
+                {
+                    "1.0": "https://deepswe.datacurve.ai/artifacts/v1/leaderboard-live.json",
+                    "1.1": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
+                },
+            )
+
+    def test_neighbouring_toggles_are_not_mistaken_for_revisions(self) -> None:
+        html = (
+            '["artifact","/artifacts/v1.1/leaderboard-live.json"]'
+            '<button type="button" aria-pressed="true">Cost</button>'
+            '<button type="button" aria-pressed="false">Output tokens</button>'
+        )
+        with mock.patch.object(dc, "fetch_text", return_value=html):
+            self.assertEqual(sorted(dc.discover_artifact_urls()), ["1.1"])
+
+    def test_highest_version_supplies_the_path_template(self) -> None:
         html = (
             '"/artifacts/v1.1/leaderboard-live.json" '
             '"/artifacts/v1.10/leaderboard-live.json" '
             '"/artifacts/v1.2/leaderboard-live.json"'
         )
         with mock.patch.object(dc, "fetch_text", return_value=html):
-            self.assertTrue(dc.discover_artifact_url().endswith("v1.10/leaderboard-live.json"))
+            urls = dc.discover_artifact_urls()
+        self.assertTrue(urls["1.10"].endswith("v1.10/leaderboard-live.json"))
 
     def test_page_without_a_path_falls_back_to_the_pinned_one(self) -> None:
         with mock.patch.object(dc, "fetch_text", return_value="<html>no data</html>"):
-            self.assertEqual(dc.discover_artifact_url(), dc.URL)
+            self.assertEqual(dc.discover_artifact_urls(), {"1.1": dc.URL})
 
     def test_unreachable_page_falls_back_instead_of_raising(self) -> None:
         with mock.patch.object(dc, "fetch_text", side_effect=urllib.error.URLError("down")):
-            self.assertEqual(dc.discover_artifact_url(), dc.URL)
+            self.assertEqual(dc.discover_artifact_urls(), {"1.1": dc.URL})
 
     def test_pinned_url_points_at_the_site(self) -> None:
         self.assertTrue(dc.URL.startswith(dc.SITE_URL))
@@ -126,7 +165,7 @@ class TestGetScores(unittest.TestCase):
         import json as _json
 
         with mock.patch.object(dc, "fetch_text", return_value=_json.dumps(PAYLOAD)) as fetch:
-            with mock.patch.object(dc, "discover_artifact_url") as discover:
+            with mock.patch.object(dc, "discover_artifact_urls") as discover:
                 rows = dc.get_scores(artifact_url="https://example.com/a.json")
         discover.assert_not_called()
         fetch.assert_called_once_with("https://example.com/a.json")
@@ -136,6 +175,48 @@ class TestGetScores(unittest.TestCase):
         with mock.patch.object(dc, "fetch_text", return_value="[]"):
             with self.assertRaises(ValueError):
                 dc.get_scores(artifact_url="https://example.com/a.json")
+
+    def test_every_published_revision_is_read_and_labelled(self) -> None:
+        import json as _json
+
+        urls = {
+            "1.0": "https://deepswe.datacurve.ai/artifacts/v1/leaderboard-live.json",
+            "1.1": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
+        }
+        with mock.patch.object(dc, "discover_artifact_urls", return_value=urls):
+            with mock.patch.object(dc, "fetch_text", return_value=_json.dumps(PAYLOAD)):
+                rows = dc.get_scores()
+        self.assertEqual({r["revision"] for r in rows}, {"1.0", "1.1"})
+
+    def test_a_revision_that_stops_answering_does_not_lose_the_others(self) -> None:
+        import json as _json
+
+        urls = {"1.0": "https://example.com/v1.json", "1.1": "https://example.com/v11.json"}
+
+        def fetch(url: str) -> str:
+            if url.endswith("v1.json"):
+                raise urllib.error.URLError("gone")
+            return _json.dumps(PAYLOAD)
+
+        with mock.patch.object(dc, "discover_artifact_urls", return_value=urls):
+            with mock.patch.object(dc, "fetch_text", side_effect=fetch):
+                rows = dc.get_scores()
+        self.assertEqual({r["revision"] for r in rows}, {"1.1"})
+
+    def test_pinning_a_revision_reads_only_that_one(self) -> None:
+        import json as _json
+
+        urls = {"1.0": "https://example.com/v1.json", "1.1": "https://example.com/v11.json"}
+        with mock.patch.object(dc, "discover_artifact_urls", return_value=urls):
+            with mock.patch.object(dc, "fetch_text", return_value=_json.dumps(PAYLOAD)) as fetch:
+                rows = dc.get_scores(revision="1.0")
+        fetch.assert_called_once_with("https://example.com/v1.json")
+        self.assertEqual({r["revision"] for r in rows}, {"1.0"})
+
+    def test_pinning_an_unpublished_revision_raises(self) -> None:
+        with mock.patch.object(dc, "discover_artifact_urls", return_value={"1.1": "u"}):
+            with self.assertRaises(ValueError):
+                dc.get_scores(revision="9.9")
 
 
 if __name__ == "__main__":

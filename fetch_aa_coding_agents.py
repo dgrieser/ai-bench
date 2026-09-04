@@ -33,8 +33,14 @@ import urllib.request
 URL = "https://artificialanalysis.ai/agents/coding-agents"
 
 # datasetIndexName in the page's eval records -> llm.json benchmark key.
+#
+# "deep-swe" is deliberately absent. DeepSWE publishes two revisions whose
+# numbers are not comparable, llm.json keeps a column per revision, and AA
+# names no revision for the task set it ran -- its dataset id carries none, the
+# way "terminal-bench-v2.1" does. A number that cannot say which revision it
+# measured cannot pick a column, so it is not ingested; if AA ever versions the
+# id, adding "deep-swe-v1.1": "deepswe_1_1" here is the whole change.
 DATASETS: dict[str, str] = {
-    "deep-swe": "deepswe",
     "swe-atlas-qna": "swe_atlas_qna",
     "terminal-bench-v2.1": "terminal_bench_2_1",
 }

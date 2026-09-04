@@ -126,12 +126,15 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
     the site).
     """
     items: list[tuple[str, tuple[str, ...]]] = [
-        (fetch_aa_coding_agents.URL, ("deepswe", "swe_atlas_qna", "terminal_bench_2_1")),
-        (fetch_deepswe.URL, ("deepswe",)),
-        (fetch_datacurve.SITE_URL, ("deepswe",)),
+        (fetch_aa_coding_agents.URL, ("swe_atlas_qna", "terminal_bench_2_1")),
+        # Both DeepSWE readers can write either revision's column: benchlm
+        # mirrors whichever artifact it names, and Datacurve's own board
+        # publishes both.
+        (fetch_deepswe.URL, ("deepswe_1_0", "deepswe_1_1")),
+        (fetch_datacurve.SITE_URL, ("deepswe_1_0", "deepswe_1_1")),
         (fetch_frontierswe.URL, ("frontierswe",)),
-        (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode",)),
-        (fetch_swe_marathon.URL, ("swe_marathon",)),
+        (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode_1_0", "frontiercode_1_1")),
+        (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),

@@ -12,7 +12,7 @@ JSON directly instead of parsing markup:
      "v1": {...}}
 
 Each leaf carries both metrics the site shows: `new_score` (the Score column,
-which is what llm.json stores in the "frontiercode" benchmark) and `correct`
+which is what llm.json stores in its FrontierCode columns) and `correct`
 (the raw pass rate, a few points higher), plus tokens and cost.
 
 A model may be published at several reasoning efforts (Claude/GPT ship
@@ -20,35 +20,37 @@ low..max); the best-scoring effort is reported, matching how the other
 harness-variant sources in this repo resolve one row per model. `effort` and
 `efforts` name what was picked and what was on offer.
 
-Every revision in the payload is read, newest first, and a model is taken from
-the newest revision that publishes it: the current revision covers only the
-models Cognition re-ran, while older ones are the sole source for models retired
-before the re-run (Kimi K2.5, MiniMax M2.5 and friends live in v1 only).
+Every revision in the payload is reported, newest first, and every row names
+the `revision` it came from. Revisions are *not* merged: a 1.0 number was
+measured against that revision's task set and scoring, so it is a different
+measurement from a 1.1 number, and llm.json gives each its own column
+(`frontiercode_1_0`, `frontiercode_1_1`) rather than blending them -- see
+_revisions.py. A model re-run in 1.1 therefore appears twice, once per
+revision, and models retired before the re-run (Kimi K2.5, MiniMax M2.5 and
+friends) appear under 1.0 alone.
+
 Revisions are ordered by the numbers in their key, so a future "v1_2" or "v2"
-outranks today's "v1_1" without an edit here. Each row names the `revision` it
-came from, and --revision pins a single one -- worth doing when the mix matters,
-since a 1.0 number was measured against that revision's task set and scoring,
-not the current one.
+sorts ahead of today's "v1_1" without an edit here. --revision pins a single
+one.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 import urllib.request
+
+from _revisions import revision_label, revision_rank
 
 
 URL = "https://cognition.com/data/frontiercode-leaderboard/data.json"
 # The human-facing leaderboard, stored as the score's source page.
 LEADERBOARD_URL = "https://cognition.com/frontiercode"
 
-# --revision value that merges every revision instead of pinning one.
+# --revision value that reports every revision instead of pinning one.
 ALL_REVISIONS = "all"
 DEFAULT_REVISION = ALL_REVISIONS
-
-_REVISION_NUM_RE = re.compile(r"\d+")
 
 # Task subset: "main" is the 100-task set the leaderboard opens on, "extended"
 # the 150-task superset.
@@ -74,27 +76,6 @@ def fetch_json(url: str) -> dict:
     if not isinstance(payload, dict):
         raise ValueError(f"Unexpected payload from {url}: expected an object")
     return payload
-
-
-def revision_rank(key: str) -> tuple[int, ...]:
-    """Sort key ordering revisions oldest to newest by the numbers in their name.
-
-    "v1" -> (1,), "v1_1" -> (1, 1), "v2" -> (2,) -- and a shorter tuple sorts
-    before its own extensions, so v1 < v1_1 < v1_2 < v2. A key carrying no digits
-    cannot be placed among them and is treated as the oldest, so an unexpected
-    name never silently outranks a real revision.
-    """
-    numbers = tuple(int(n) for n in _REVISION_NUM_RE.findall(key))
-    return numbers or (-1,)
-
-
-def revision_label(key: str) -> str:
-    """The label the site prints for a payload key: "v1_1" -> "1.1", "v1" -> "1.0"."""
-    numbers = _REVISION_NUM_RE.findall(key)
-    if not numbers:
-        return key
-    major, *rest = numbers
-    return ".".join([major, *(rest or ["0"])])
 
 
 def revisions_newest_first(payload: dict) -> list[tuple[str, dict]]:
@@ -188,15 +169,16 @@ def get_scores(
     subset: str = DEFAULT_SUBSET,
     metric: str = DEFAULT_METRIC,
 ) -> list[dict]:
-    """Return one dict per model: model, revision, harness, effort, score, ...
+    """Return one dict per (model, revision): model, revision, harness, score, ...
 
     score = metric * 100, i.e. the percentage the leaderboard prints; the payload
     stores fractions.
 
-    revision="all" (the default) walks the revisions newest first and keeps the
-    first row it finds per model, so a re-run supersedes the older number and a
-    model dropped from the current revision still reports its last published one.
-    Any other value pins that single revision.
+    revision="all" (the default) reports every revision, newest first, without
+    merging them: each row carries the revision it was measured under, and a
+    model re-run in a later revision appears once per revision. Any other value
+    pins that single revision. Rows are ranked within their own revision, since
+    ranking across revisions would compare two different task sets.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     payload = fetch_json(URL)
@@ -208,27 +190,19 @@ def get_scores(
     else:
         blocks = [revision_block(payload, revision)]
 
-    by_model: dict[str, dict] = {}
+    results: list[dict] = []
     for key, block in blocks:
-        superseded = 0
-        added = 0
-        for row in revision_rows(key, block, subset, metric):
-            if row["model"] in by_model:
-                superseded += 1
-                continue
-            by_model[row["model"]] = row
-            added += 1
-        note = f", {superseded} superseded by a newer revision" if superseded else ""
+        rows = sorted(revision_rows(key, block, subset, metric), key=lambda r: -r["score"])
+        for i, row in enumerate(rows, 1):
+            row["rank"] = i
         print(
-            f"  revision {revision_label(key)} ({key}): {added} model(s){note}",
+            f"  revision {revision_label(key)} ({key}): {len(rows)} model(s)",
             file=sys.stderr,
         )
+        results.extend(rows)
 
-    results = sorted(by_model.values(), key=lambda r: -r["score"])
-    for i, r in enumerate(results, 1):
-        r["rank"] = i
     print(
-        f"  parsed {len(results)} models ({subset}, {metric})",
+        f"  parsed {len(results)} rows across {len(blocks)} revision(s) ({subset}, {metric})",
         file=sys.stderr,
     )
     return results
@@ -246,7 +220,7 @@ def parse_args() -> argparse.Namespace:
         "--revision",
         default=DEFAULT_REVISION,
         help=f"Pin one benchmark revision by label (1.1) or payload key (v1_1), "
-        f"or {ALL_REVISIONS!r} to merge them newest first (default: {DEFAULT_REVISION}).",
+        f"or {ALL_REVISIONS!r} to report every revision (default: {DEFAULT_REVISION}).",
     )
     parser.add_argument(
         "--subset",

@@ -189,23 +189,22 @@ class TestUpdateSourceOrderBackfill(unittest.TestCase):
             "models": [
                 {
                     "name": "m",
-                    "scores": {"deepswe": 45.0},
-                    "scores_updated": {"deepswe": "2026-01-01"},
-                    "scores_source": {"deepswe": None},
+                    "scores": {"deepswe_1_1": 45.0},
+                    "scores_updated": {"deepswe_1_1": "2026-01-01"},
+                    "scores_source": {"deepswe_1_1": None},
                 }
             ]
         }
-        update.update_deepswe_scores(doc, {"m": {"score": 45.0}}, fill_urls_only=True)
+        rows = {"deepswe_1_1": {"m": {"score": 45.0, "revision": "1.1"}}}
+        update.update_deepswe_scores(doc, rows, fill_urls_only=True)
         # A later source reporting the same number must not re-attribute it.
-        update.update_datacurve_scores(
-            doc, {"m": {"score": 45.0}}, fill_urls_only=True
-        )
+        update.update_datacurve_scores(doc, rows, fill_urls_only=True)
         model = doc["models"][0]
         self.assertEqual(
-            model["scores_source"]["deepswe"], update.DEEPSWE_SOURCE_URL
+            model["scores_source"]["deepswe_1_1"], update.DEEPSWE_SOURCE_URL
         )
-        self.assertEqual(model["scores"]["deepswe"], 45.0)
-        self.assertEqual(model["scores_updated"]["deepswe"], "2026-01-01")
+        self.assertEqual(model["scores"]["deepswe_1_1"], 45.0)
+        self.assertEqual(model["scores_updated"]["deepswe_1_1"], "2026-01-01")
 
 
 class TestHandEditClearsAttribution(unittest.TestCase):
