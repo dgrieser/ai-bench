@@ -120,7 +120,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: DeepSWE 1.0, Terminal-Bench 4.0 0.9, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, Agents' Last Exam 0.25, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: DeepSWE 1.0, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -132,7 +132,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: τ³-Bench Banking 1.0, Toolathlon-Verified 0.9, Terminal-Bench 4.0 0.85, MCP-Atlas 0.85, Terminal-Bench 2.1 0.8, Agents' Last Exam 0.7, GDPval-AA v2 0.7, ITBench-AA 0.6, BFCL v4 0.5, τ²-Bench Telecom 0.3, Terminal-Bench Hard 0.3, IFBench 0.2.",
+      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: τ³-Bench Banking 1.0, Toolathlon-Verified 0.9, MCP-Atlas 0.85, Terminal-Bench 2.1 0.8, GDPval-AA v2 0.7, ITBench-AA 0.6, BFCL v4 0.5, τ²-Bench Telecom 0.3, Terminal-Bench Hard 0.3, IFBench 0.2.",
       "icon_svg": "icons/tooling-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#tooling-index"
@@ -654,8 +654,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 45545,
-        "tooling_index": 46646,
+        "coding_index": 45404,
+        "tooling_index": 46399,
         "knowledge_index": 32766,
         "vision_index": null,
         "trust_index": 47771,
@@ -825,8 +825,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 42115,
-        "tooling_index": 45067,
+        "coding_index": 41865,
+        "tooling_index": 44704,
         "knowledge_index": 22415,
         "vision_index": 26336,
         "trust_index": 32418,
@@ -996,7 +996,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 45882,
+        "coding_index": 45739,
         "tooling_index": null,
         "knowledge_index": 34638,
         "vision_index": 37092,
@@ -1338,7 +1338,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 39879,
+        "coding_index": 39572,
         "tooling_index": null,
         "knowledge_index": 60971,
         "vision_index": null,
@@ -1680,8 +1680,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 44893,
-        "tooling_index": 41887,
+        "coding_index": 44733,
+        "tooling_index": 41290,
         "knowledge_index": 41744,
         "vision_index": null,
         "trust_index": 27010,
@@ -1851,8 +1851,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 39291,
-        "tooling_index": 27598,
+        "coding_index": 38938,
+        "tooling_index": 25949,
         "knowledge_index": 39216,
         "vision_index": null,
         "trust_index": 46202,
@@ -2022,8 +2022,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 48076,
-        "tooling_index": 34143,
+        "coding_index": 48013,
+        "tooling_index": 32976,
         "knowledge_index": 56038,
         "vision_index": null,
         "trust_index": 52914,
@@ -2193,8 +2193,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 59310,
-        "tooling_index": 59465,
+        "coding_index": 59674,
+        "tooling_index": 60542,
         "knowledge_index": 71303,
         "vision_index": 77551,
         "trust_index": 65122,
@@ -2364,8 +2364,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 54755,
-        "tooling_index": 61903,
+        "coding_index": 54941,
+        "tooling_index": 63258,
         "knowledge_index": 62682,
         "vision_index": 62114,
         "trust_index": 61977,
@@ -2535,8 +2535,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 52485,
-        "tooling_index": 58296,
+        "coding_index": 52582,
+        "tooling_index": 59240,
         "knowledge_index": 62042,
         "vision_index": 63554,
         "trust_index": 68230,
@@ -2586,7 +2586,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-09-04",
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": "2026-08-29",
         "trust_index": "2026-09-04",
@@ -2707,7 +2707,7 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 52440,
+        "tooling_index": 52717,
         "knowledge_index": 58434,
         "vision_index": 45014,
         "trust_index": 61095,
@@ -2757,7 +2757,7 @@
       },
       "scores_updated": {
         "coding_index": null,
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": "2026-08-29",
         "trust_index": "2026-09-04",
@@ -2877,8 +2877,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 47096,
-        "tooling_index": 50098,
+        "coding_index": 46999,
+        "tooling_index": 50109,
         "knowledge_index": 46750,
         "vision_index": 37010,
         "trust_index": 53817,
@@ -3048,8 +3048,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 42343,
-        "tooling_index": 46382,
+        "coding_index": 42087,
+        "tooling_index": 46104,
         "knowledge_index": 43855,
         "vision_index": 31193,
         "trust_index": 44367,
@@ -3219,8 +3219,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 35645,
-        "tooling_index": 23881,
+        "coding_index": 35142,
+        "tooling_index": 22179,
         "knowledge_index": 15905,
         "vision_index": 20101,
         "trust_index": 37765,
@@ -3391,7 +3391,7 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 31588,
+        "tooling_index": 30014,
         "knowledge_index": 15314,
         "vision_index": 6137,
         "trust_index": 33911,
@@ -3561,8 +3561,8 @@
       },
       "context": "1m",
       "scores": {
-        "coding_index": 50188,
-        "tooling_index": 45087,
+        "coding_index": 50196,
+        "tooling_index": 44776,
         "knowledge_index": 67790,
         "vision_index": null,
         "trust_index": 57636,
@@ -3904,8 +3904,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "coding_index": 45896,
-        "tooling_index": 40675,
+        "coding_index": 45761,
+        "tooling_index": 39989,
         "knowledge_index": 43539,
         "vision_index": null,
         "trust_index": 29527,
@@ -4076,8 +4076,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "coding_index": 47617,
-        "tooling_index": 46600,
+        "coding_index": 47543,
+        "tooling_index": 46384,
         "knowledge_index": 57985,
         "vision_index": null,
         "trust_index": 48324,
@@ -4247,8 +4247,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "coding_index": 42479,
-        "tooling_index": 37869,
+        "coding_index": 42231,
+        "tooling_index": 37079,
         "knowledge_index": 52495,
         "vision_index": null,
         "trust_index": 51443,
@@ -4418,8 +4418,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 47449,
-        "tooling_index": 36582,
+        "coding_index": 47364,
+        "tooling_index": 35594,
         "knowledge_index": 50364,
         "vision_index": 39961,
         "trust_index": 64225,
@@ -4589,8 +4589,8 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 32310,
-        "tooling_index": 48707,
+        "coding_index": 33945,
+        "tooling_index": 54488,
         "knowledge_index": 68314,
         "vision_index": null,
         "trust_index": 85400,
@@ -5102,8 +5102,8 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "coding_index": 37194,
-        "tooling_index": 31706,
+        "coding_index": 36765,
+        "tooling_index": 30142,
         "knowledge_index": 53663,
         "vision_index": null,
         "trust_index": 48569,
@@ -5273,8 +5273,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 52753,
-        "tooling_index": 58363,
+        "coding_index": 52861,
+        "tooling_index": 59315,
         "knowledge_index": 61561,
         "vision_index": 53623,
         "trust_index": 62319,
@@ -5444,8 +5444,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 52805,
-        "tooling_index": 47893,
+        "coding_index": 52914,
+        "tooling_index": 47759,
         "knowledge_index": 56122,
         "vision_index": 50453,
         "trust_index": 56483,
@@ -5615,8 +5615,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 36565,
-        "tooling_index": 26475,
+        "coding_index": 36115,
+        "tooling_index": 24744,
         "knowledge_index": 37880,
         "vision_index": 32790,
         "trust_index": 51873,
@@ -5786,8 +5786,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 34187,
-        "tooling_index": 21836,
+        "coding_index": 33657,
+        "tooling_index": 19764,
         "knowledge_index": 38844,
         "vision_index": 26336,
         "trust_index": 44280,
@@ -5957,8 +5957,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 51536,
-        "tooling_index": 43660,
+        "coding_index": 51596,
+        "tooling_index": 43408,
         "knowledge_index": 61642,
         "vision_index": 61646,
         "trust_index": 69450,
@@ -6128,8 +6128,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 57175,
-        "tooling_index": 61746,
+        "coding_index": 57455,
+        "tooling_index": 63083,
         "knowledge_index": 67363,
         "vision_index": 60612,
         "trust_index": 74494,
@@ -6299,8 +6299,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 61525,
-        "tooling_index": 68522,
+        "coding_index": 61976,
+        "tooling_index": 70630,
         "knowledge_index": 78262,
         "vision_index": null,
         "trust_index": 61726,
@@ -6470,8 +6470,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "coding_index": 55623,
-        "tooling_index": 66123,
+        "coding_index": 55842,
+        "tooling_index": 67958,
         "knowledge_index": 72524,
         "vision_index": null,
         "trust_index": 75085,
@@ -6641,8 +6641,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 37892,
-        "tooling_index": 29474,
+        "coding_index": 37468,
+        "tooling_index": 27662,
         "knowledge_index": 16281,
         "vision_index": null,
         "trust_index": 28185,
@@ -6812,8 +6812,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 34998,
-        "tooling_index": 19057,
+        "coding_index": 34472,
+        "tooling_index": 16780,
         "knowledge_index": 9137,
         "vision_index": null,
         "trust_index": 9103,
@@ -6983,8 +6983,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 37856,
-        "tooling_index": 26479,
+        "coding_index": 37431,
+        "tooling_index": 24748,
         "knowledge_index": 17432,
         "vision_index": null,
         "trust_index": 20127,
@@ -7154,8 +7154,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "coding_index": 49403,
-        "tooling_index": 58380,
+        "coding_index": 49384,
+        "tooling_index": 59333,
         "knowledge_index": 58256,
         "vision_index": 45697,
         "trust_index": 66572,
@@ -7325,8 +7325,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "coding_index": 38227,
-        "tooling_index": 32752,
+        "coding_index": 37832,
+        "tooling_index": 31483,
         "knowledge_index": 22678,
         "vision_index": 31356,
         "trust_index": 19974,
@@ -7496,8 +7496,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 41087,
-        "tooling_index": 38479,
+        "coding_index": 40774,
+        "tooling_index": 37463,
         "knowledge_index": 33576,
         "vision_index": 35658,
         "trust_index": 44213,
@@ -7668,7 +7668,7 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 33221,
+        "tooling_index": 31718,
         "knowledge_index": 17986,
         "vision_index": 21316,
         "trust_index": 4643,
@@ -7838,8 +7838,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 47385,
-        "tooling_index": 44549,
+        "coding_index": 47293,
+        "tooling_index": 44148,
         "knowledge_index": 60852,
         "vision_index": 44263,
         "trust_index": 64602,
@@ -8009,8 +8009,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "coding_index": 52751,
-        "tooling_index": 55564,
+        "coding_index": 52858,
+        "tooling_index": 56197,
         "knowledge_index": 59041,
         "vision_index": 61775,
         "trust_index": 65312,
@@ -8181,7 +8181,7 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 20751,
+        "tooling_index": 18462,
         "knowledge_index": 12191,
         "vision_index": 19882,
         "trust_index": 9664,
@@ -8351,8 +8351,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 47688,
-        "tooling_index": 43032,
+        "coding_index": 47616,
+        "tooling_index": 42520,
         "knowledge_index": 42627,
         "vision_index": null,
         "trust_index": 52381,
@@ -8522,8 +8522,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 62336,
-        "tooling_index": 78018,
+        "coding_index": 62260,
+        "tooling_index": 79581,
         "knowledge_index": 84752,
         "vision_index": null,
         "trust_index": 87254,
@@ -8691,8 +8691,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "coding_index": 51363,
-        "tooling_index": 64070,
+        "coding_index": 51416,
+        "tooling_index": 65672,
         "knowledge_index": 78755,
         "vision_index": 74502,
         "trust_index": 85000,
@@ -9193,8 +9193,8 @@
       },
       "context": "10m",
       "scores": {
-        "coding_index": 34631,
-        "tooling_index": 18721,
+        "coding_index": 34116,
+        "tooling_index": 16683,
         "knowledge_index": 27227,
         "vision_index": 21626,
         "trust_index": 45802,
@@ -9364,8 +9364,8 @@
       },
       "context": "1m",
       "scores": {
-        "coding_index": 40551,
-        "tooling_index": 23878,
+        "coding_index": 40235,
+        "tooling_index": 22176,
         "knowledge_index": 41642,
         "vision_index": 30095,
         "trust_index": 50429,
@@ -10732,8 +10732,8 @@
       },
       "context": "512k",
       "scores": {
-        "coding_index": 45382,
-        "tooling_index": 40988,
+        "coding_index": 45223,
+        "tooling_index": 40325,
         "knowledge_index": 60367,
         "vision_index": null,
         "trust_index": 52364,
@@ -11587,8 +11587,8 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 49763,
-        "tooling_index": 44008,
+        "coding_index": 49754,
+        "tooling_index": 43471,
         "knowledge_index": 50421,
         "vision_index": null,
         "trust_index": 41027,
@@ -11638,7 +11638,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-09-04",
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-29",
         "knowledge_index": "2026-09-04",
         "vision_index": null,
         "trust_index": "2026-09-04",
@@ -12271,8 +12271,8 @@
       },
       "context": "200k",
       "scores": {
-        "coding_index": 43211,
-        "tooling_index": 54264,
+        "coding_index": 42976,
+        "tooling_index": 54749,
         "knowledge_index": 47091,
         "vision_index": null,
         "trust_index": 56453,
@@ -12322,7 +12322,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-09-04",
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": null,
         "trust_index": "2026-09-04",
@@ -12442,8 +12442,8 @@
       },
       "context": "200k",
       "scores": {
-        "coding_index": 55171,
-        "tooling_index": 53499,
+        "coding_index": 55373,
+        "tooling_index": 53898,
         "knowledge_index": 72842,
         "vision_index": null,
         "trust_index": 51001,
@@ -13639,8 +13639,8 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 51743,
-        "tooling_index": 47329,
+        "coding_index": 51811,
+        "tooling_index": 47132,
         "knowledge_index": 44551,
         "vision_index": null,
         "trust_index": 48543,
@@ -14489,7 +14489,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 41828,
+        "tooling_index": 41006,
         "knowledge_index": 21624,
         "vision_index": null,
         "trust_index": 18665,
@@ -14539,7 +14539,7 @@
       },
       "scores_updated": {
         "coding_index": null,
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": null,
         "trust_index": "2026-09-04",
@@ -14660,7 +14660,7 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 40910,
+        "tooling_index": 39996,
         "knowledge_index": 10905,
         "vision_index": null,
         "trust_index": 11372,
@@ -14710,7 +14710,7 @@
       },
       "scores_updated": {
         "coding_index": null,
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": null,
         "trust_index": "2026-09-04",
@@ -15002,7 +15002,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 38213,
+        "tooling_index": 37149,
         "knowledge_index": 57556,
         "vision_index": null,
         "trust_index": 54771,
@@ -15052,7 +15052,7 @@
       },
       "scores_updated": {
         "coding_index": null,
-        "tooling_index": "2026-09-04",
+        "tooling_index": "2026-08-28",
         "knowledge_index": "2026-09-04",
         "vision_index": null,
         "trust_index": "2026-09-04",
@@ -15172,8 +15172,8 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 49672,
-        "tooling_index": 40155,
+        "coding_index": 49661,
+        "tooling_index": 39431,
         "knowledge_index": 63494,
         "vision_index": null,
         "trust_index": 54542,
@@ -15343,7 +15343,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 45926,
+        "coding_index": 45785,
         "tooling_index": null,
         "knowledge_index": 45952,
         "vision_index": null,
@@ -16369,8 +16369,8 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 43107,
-        "tooling_index": 34766,
+        "coding_index": 42876,
+        "tooling_index": 33645,
         "knowledge_index": 42344,
         "vision_index": 38527,
         "trust_index": 49637,
@@ -16540,8 +16540,8 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 35429,
-        "tooling_index": 25206,
+        "coding_index": 34941,
+        "tooling_index": 23382,
         "knowledge_index": 17892,
         "vision_index": 28487,
         "trust_index": 16112,
@@ -16712,7 +16712,7 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 31953,
+        "tooling_index": 30337,
         "knowledge_index": 19475,
         "vision_index": 22751,
         "trust_index": 33017,
@@ -17053,8 +17053,8 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 34421,
-        "tooling_index": 16960,
+        "coding_index": 33899,
+        "tooling_index": 14807,
         "knowledge_index": 17794,
         "vision_index": 29921,
         "trust_index": 16744,
@@ -17224,8 +17224,8 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 29686,
-        "tooling_index": 16140,
+        "coding_index": 29005,
+        "tooling_index": 13541,
         "knowledge_index": 11501,
         "vision_index": 18448,
         "trust_index": 4267,
@@ -18062,8 +18062,8 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "coding_index": 50376,
-        "tooling_index": 45531,
+        "coding_index": 50391,
+        "tooling_index": 45202,
         "knowledge_index": 49303,
         "vision_index": 51812,
         "trust_index": 57203,
@@ -18233,7 +18233,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 43010,
+        "coding_index": 42786,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -18401,7 +18401,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 53033,
+        "coding_index": 53152,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -18569,7 +18569,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 60845,
+        "coding_index": 61269,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -18737,8 +18737,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 50335,
-        "tooling_index": 54865,
+        "coding_index": 50348,
+        "tooling_index": 55419,
         "knowledge_index": 79388,
         "vision_index": null,
         "trust_index": 85018,
@@ -18918,8 +18918,8 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "coding_index": 45345,
-        "tooling_index": 38582,
+        "coding_index": 45189,
+        "tooling_index": 37637,
         "knowledge_index": 35660,
         "vision_index": 48566,
         "trust_index": 33274,
@@ -19257,8 +19257,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 44364,
-        "tooling_index": 60012,
+        "coding_index": 44228,
+        "tooling_index": 61152,
         "knowledge_index": 77016,
         "vision_index": 54529,
         "trust_index": 83111,
@@ -19428,8 +19428,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 66868,
-        "tooling_index": 73303,
+        "coding_index": 67806,
+        "tooling_index": 76768,
         "knowledge_index": 89702,
         "vision_index": null,
         "trust_index": 57549,
@@ -19597,8 +19597,8 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "coding_index": 55073,
-        "tooling_index": 54298,
+        "coding_index": 55272,
+        "tooling_index": 54787,
         "knowledge_index": 66472,
         "vision_index": null,
         "trust_index": 69370,
@@ -19768,7 +19768,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 53150,
+        "coding_index": 53274,
         "tooling_index": null,
         "knowledge_index": 74564,
         "vision_index": null,
@@ -19939,8 +19939,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 48075,
-        "tooling_index": 48663,
+        "coding_index": 48029,
+        "tooling_index": 48609,
         "knowledge_index": 84701,
         "vision_index": 72950,
         "trust_index": 80706,
@@ -20108,8 +20108,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 51195,
-        "tooling_index": 63973,
+        "coding_index": 52079,
+        "tooling_index": 68002,
         "knowledge_index": 81040,
         "vision_index": 72977,
         "trust_index": 87415,
@@ -20277,8 +20277,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 57096,
-        "tooling_index": 65640,
+        "coding_index": 57373,
+        "tooling_index": 67420,
         "knowledge_index": 76962,
         "vision_index": null,
         "trust_index": 72335,
@@ -20448,8 +20448,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 82441,
-        "tooling_index": 87426,
+        "coding_index": 81755,
+        "tooling_index": 85995,
         "knowledge_index": 87632,
         "vision_index": 82080,
         "trust_index": 83108,
@@ -20619,8 +20619,8 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
-        "coding_index": 38675,
-        "tooling_index": 38299,
+        "coding_index": 38278,
+        "tooling_index": 37298,
         "knowledge_index": 50173,
         "vision_index": null,
         "trust_index": 57597,
@@ -20790,8 +20790,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 53943,
-        "tooling_index": 52708,
+        "coding_index": 55492,
+        "tooling_index": 57082,
         "knowledge_index": 70818,
         "vision_index": 63134,
         "trust_index": 71469,
@@ -20961,8 +20961,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 49739,
-        "tooling_index": 64540,
+        "coding_index": 49732,
+        "tooling_index": 66195,
         "knowledge_index": 73032,
         "vision_index": 66304,
         "trust_index": 90044,
@@ -21132,8 +21132,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 55781,
-        "tooling_index": 62102,
+        "coding_index": 56006,
+        "tooling_index": 63479,
         "knowledge_index": 76319,
         "vision_index": 55435,
         "trust_index": 75828,
@@ -21303,8 +21303,8 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
-        "coding_index": 48805,
-        "tooling_index": 56985,
+        "coding_index": 48763,
+        "tooling_index": 57780,
         "knowledge_index": 60993,
         "vision_index": null,
         "trust_index": 68888,
@@ -21469,8 +21469,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 63523,
-        "tooling_index": 73235,
+        "coding_index": 62656,
+        "tooling_index": 71815,
         "knowledge_index": 85499,
         "vision_index": 85417,
         "trust_index": 81530,
@@ -21640,8 +21640,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 56034,
-        "tooling_index": 59143,
+        "coding_index": 56270,
+        "tooling_index": 60184,
         "knowledge_index": 64735,
         "vision_index": null,
         "trust_index": 67452,
@@ -21811,8 +21811,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 45152,
-        "tooling_index": 52504,
+        "coding_index": 44982,
+        "tooling_index": 52789,
         "knowledge_index": 55112,
         "vision_index": null,
         "trust_index": 56700,
@@ -21982,8 +21982,8 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
-        "coding_index": 37853,
-        "tooling_index": 38555,
+        "coding_index": 37446,
+        "tooling_index": 37694,
         "knowledge_index": 52133,
         "vision_index": null,
         "trust_index": 50339,
@@ -22153,8 +22153,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "coding_index": 53480,
-        "tooling_index": 59003,
+        "coding_index": 53615,
+        "tooling_index": 60028,
         "knowledge_index": 61461,
         "vision_index": 58771,
         "trust_index": 76369,
@@ -22324,8 +22324,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 41127,
-        "tooling_index": 47797,
+        "coding_index": 40832,
+        "tooling_index": 47615,
         "knowledge_index": 60710,
         "vision_index": null,
         "trust_index": 63065,
@@ -22495,8 +22495,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 85083,
-        "tooling_index": 70717,
+        "coding_index": 86454,
+        "tooling_index": 73074,
         "knowledge_index": 85536,
         "vision_index": null,
         "trust_index": 86685,
@@ -22666,8 +22666,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 60179,
-        "tooling_index": 68605,
+        "coding_index": 60019,
+        "tooling_index": 69097,
         "knowledge_index": 75478,
         "vision_index": 74215,
         "trust_index": 77852,
@@ -22837,8 +22837,8 @@
         "url": "https://www.upstage.ai"
       },
       "scores": {
-        "coding_index": 55462,
-        "tooling_index": 56611,
+        "coding_index": 55675,
+        "tooling_index": 57364,
         "knowledge_index": 81014,
         "vision_index": null,
         "trust_index": 76336,
@@ -23008,8 +23008,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "coding_index": 53249,
-        "tooling_index": 58116,
+        "coding_index": 53376,
+        "tooling_index": 59040,
         "knowledge_index": 75190,
         "vision_index": null,
         "trust_index": 74823,
@@ -23347,8 +23347,8 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 63940,
-        "tooling_index": 62705,
+        "coding_index": 64484,
+        "tooling_index": 64151,
         "knowledge_index": 65660,
         "vision_index": null,
         "trust_index": null,
@@ -23515,8 +23515,8 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 53451,
-        "tooling_index": 49839,
+        "coding_index": 53586,
+        "tooling_index": 49826,
         "knowledge_index": 59878,
         "vision_index": null,
         "trust_index": null,
@@ -23683,8 +23683,8 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 46044,
-        "tooling_index": 36752,
+        "coding_index": 45917,
+        "tooling_index": 35629,
         "knowledge_index": 56826,
         "vision_index": null,
         "trust_index": null,
@@ -23851,8 +23851,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 56368,
-        "tooling_index": 70175,
+        "coding_index": 56617,
+        "tooling_index": 72471,
         "knowledge_index": 76114,
         "vision_index": 58152,
         "trust_index": 58686,
@@ -24017,8 +24017,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 67497,
-        "tooling_index": 73706,
+        "coding_index": 68180,
+        "tooling_index": 76405,
         "knowledge_index": 83613,
         "vision_index": null,
         "trust_index": 86184,
@@ -24188,8 +24188,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 68016,
-        "tooling_index": 72226,
+        "coding_index": 68720,
+        "tooling_index": 74756,
         "knowledge_index": 79161,
         "vision_index": 69022,
         "trust_index": 84139,
@@ -24359,8 +24359,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 43483,
-        "tooling_index": 37286,
+        "coding_index": 43265,
+        "tooling_index": 36330,
         "knowledge_index": 51617,
         "vision_index": null,
         "trust_index": 57479,
@@ -24530,8 +24530,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 37100,
-        "tooling_index": 44961,
+        "coding_index": 36715,
+        "tooling_index": 44582,
         "knowledge_index": 50821,
         "vision_index": null,
         "trust_index": 61764,
@@ -24701,8 +24701,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 42385,
-        "tooling_index": 53741,
+        "coding_index": 42157,
+        "tooling_index": 54167,
         "knowledge_index": 56458,
         "vision_index": null,
         "trust_index": 65016,
@@ -24872,8 +24872,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "coding_index": 70930,
-        "tooling_index": 70741,
+        "coding_index": 71748,
+        "tooling_index": 73101,
         "knowledge_index": 72146,
         "vision_index": null,
         "trust_index": null,
@@ -25040,8 +25040,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 55822,
-        "tooling_index": 63167,
+        "coding_index": 56050,
+        "tooling_index": 64666,
         "knowledge_index": 75299,
         "vision_index": null,
         "trust_index": 77359,

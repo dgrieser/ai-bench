@@ -91,14 +91,6 @@ INDEXES: list[IndexDef] = [
         fallback_source_url="https://github.com/dgrieser/ai-bench#coding-index",
         contributing=[
             ("deepswe", 1.0),
-            # The current Terminal-Bench release, one notch above the 2.1 board
-            # it supersedes: 4.0 removed the saturated tasks and the ones with
-            # public solutions, and calibrated every task's resource budget, so
-            # it measures the same axis without the two caveats 2.1 carries.
-            # Both are kept because 2.1 is where the coverage is (86 models
-            # against 4.0's one); they share an axis, and the pair is worth
-            # revisiting once 4.0 overtakes it -- see README, "Coding index".
-            ("terminal_bench_4_0", 0.9),
             ("frontierswe", 0.9),
             ("frontiercode", 0.9),
             ("swe_marathon", 0.9),
@@ -107,14 +99,6 @@ INDEXES: list[IndexDef] = [
             ("livecodebench", 0.4),
             ("scicode", 0.35),
             ("swe_bench_multilingual", 0.3),
-            # Only part of ALE's 55 sub-industries is software work, so it
-            # corroborates this axis rather than leading it -- what it adds is
-            # long-horizon execution against a deterministic grader. 0.25 and
-            # not higher for the SWE Atlas reason: at 0.3 its weight does
-            # nothing but raise the MIN_SCORED_FRACTION bar past a cluster of
-            # 12 two-benchmark models, and eight scored models cannot buy that
-            # back -- see README, "Coding index".
-            ("agents_last_exam", 0.25),
             # SWE Atlas contributes its Codebase Q&A track only: every model
             # scored on Refactoring or Test Writing is also scored on Q&A, so
             # the other two tracks add no coverage, correlate 0.94 with each
@@ -131,10 +115,8 @@ INDEXES: list[IndexDef] = [
         contributing=[
             ("tau3_bench_banking", 1.0),
             ("toolathlon", 0.9),
-            ("terminal_bench_4_0", 0.85),
             ("mcp_atlas", 0.85),
             ("terminal_bench_2_1", 0.8),
-            ("agents_last_exam", 0.7),
             ("gdpval_aa", 0.7),
             ("itbench_aa", 0.6),
             ("bfcl_v4", 0.5),
