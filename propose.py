@@ -91,6 +91,17 @@ ROUTES: dict[str, dict[str, Route]] = {
     "update_swe_atlas_mapping.py": {
         "*": Route("_swe_atlas_mapping", "SWE_ATLAS_MAPPING", "add_swe_atlas_mapping", MODELS)
     },
+    "update_tbench_mapping.py": {
+        "*": Route("_tbench_mapping", "TBENCH_MAPPING", "add_tbench_mapping", MODELS)
+    },
+    "update_agents_last_exam_mapping.py": {
+        "*": Route(
+            "_agents_last_exam_mapping",
+            "AGENTS_LAST_EXAM_MAPPING",
+            "add_agents_last_exam_mapping",
+            MODELS,
+        )
+    },
     "update_aa_coding_agents_mapping.py": {
         "*": Route(
             "_aa_coding_agents_mapping",

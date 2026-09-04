@@ -28,6 +28,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 import artificialanalysis
 import fetch_aa_coding_agents
+import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
@@ -41,6 +42,7 @@ import fetch_osworld
 import fetch_spheron
 import fetch_swe_atlas
 import fetch_swe_marathon
+import fetch_tbench
 import fetch_toolathlon
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -75,6 +77,14 @@ COVERED_BY = [
     (
         f"{fetch_datacurve.URL} (versioned artifact)",
         fetch_datacurve.SITE_URL,
+    ),
+    (
+        fetch_tbench.URL,
+        fetch_tbench.LEADERBOARD_URL,
+    ),
+    (
+        fetch_agents_last_exam.URL,
+        fetch_agents_last_exam.LEADERBOARD_URL,
     ),
 ]
 
@@ -126,6 +136,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
         (TBENCH_2_1_LEADERBOARD, ("terminal_bench_2_1",)),
+        (fetch_tbench.LEADERBOARD_URL, ("terminal_bench_4_0",)),
+        (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         (spheron_root(), ()),
     ]

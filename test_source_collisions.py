@@ -85,6 +85,8 @@ class TestRowFetchers(unittest.TestCase):
         ("frontierswe", "score", "fetch_frontierswe_data"),
         ("frontiercode", "score", "fetch_frontiercode_data"),
         ("datacurve", "score", "fetch_datacurve_data"),
+        ("tbench", "score", "fetch_tbench_data"),
+        ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:

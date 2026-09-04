@@ -30,6 +30,8 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **FrontierCode** | Research (Cognition) | Static leaderboard JSON |
 | **DeepSWE (Datacurve)** | Research (benchmark's own site) | Versioned JSON artifact |
 | **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
+| **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
+| **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 
 ## Core Data Structure
 
@@ -204,6 +206,9 @@ Output: llm.json (unified dataset)
 ./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
 ./fetch_frontiercode.py                 # every revision, newest wins per model
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
+./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
+./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
+./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -211,6 +216,8 @@ Output: llm.json (unified dataset)
 ./update_bfcl_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
+./update_tbench_mapping.py
+./update_agents_last_exam_mapping.py
 ./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
@@ -335,7 +342,7 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. |
 | 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
@@ -381,6 +388,19 @@ hoping the labels agree:
 - **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
+- **Terminal-Bench is four columns, and only a versioned label picks one.**
+  `terminal_bench_4_0`, `terminal_bench_2_1`, `terminal_bench_2_0` and
+  `terminal_bench_hard` are separate series — 4.0 alone removed 8 tasks and
+  changed the resource budgets — so the alias file maps only labels that name a
+  version (`Terminal-Bench 4.0`, `harborframework/terminal-bench-4.0
+  (terminalbench_4)`, `Terminal Bench 2.1 (Terminus-2)`, …) and leaves a bare
+  `Terminal-Bench`, `TerminalBench<sub>(acc)</sub>` and the whole 3.0 family
+  unmapped. llm-stats' `terminal_bench` column is unmapped for the same reason
+  and one more: its field tops out at Claude Sonnet 4.5, so whatever series it
+  is, it is not the current one.
+- **Agents' Last Exam is one tier of several.** The stored column is the Overall
+  Pass Rate, so `Agents' Last Exam` maps onto `agents_last_exam` and
+  `Agents' Last Exam (ALE-CLI)` — the Linux-only subset — does not.
 
 All three feed the [Tooling index](#tooling-index); the weight each carries, and
 why, is in that section's table.
@@ -573,6 +593,19 @@ Two consequences worth knowing (they hold for every derived index):
   the SWE Atlas trio was collapsed to one track, which took more weight out of
   the denominator than the new column put in. Both moves are worked through
   below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track).
+- **Terminal-Bench 4.0 and Agents' Last Exam are out of `INDEXES` for the same
+  reason**, and they are the clearest illustration of it. Terminal-Bench 4.0 is
+  the better-run board of the Terminal-Bench pair — 4.0 removed the saturated
+  tasks and the ones with public solutions and calibrated every task's resource
+  budget — but it is scored on one model of 144, so it carries no rank at all and
+  any weight for it would be an assertion from release notes rather than a
+  measurement. Agents' Last Exam is scored on eight, and that was enough: admitted
+  to both groups it moved *every* ranked value, all 92 Coding and 93 Tooling. Eight
+  overlapping models is too thin a base to re-rank the whole table on, and the
+  weight it could carry was being chosen around the bar rather than around what it
+  measures — 0.30 dropped twelve models to `null`, so only 0.25 fit. Both stay
+  columns, scraped and rendered like any other; both are worth admitting once
+  their coverage grows.
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
@@ -672,32 +705,40 @@ below `MIN_SCORED_FRACTION × total group weight`, the model is `null` instead o
 ranked. It is a share of *weight*, not a count of benchmarks — three cheap columns can
 be worth less evidence than one expensive one.
 
-At **0.18** the bars are 1.152 of 6.40 (Coding, 91 of 143 models ranked), 1.107 of
-6.15 (Tooling, 92 ranked), 0.666 of 3.70 (Knowledge, 140 ranked), 0.432 of 2.40
-(Vision, 47 ranked) and 0.315 of an effective 1.75 (Trust, 132 ranked — 0.423 of its
-declared 2.35 once [AA-Omniscience Accuracy](#why-the-anchor-cannot-stand-alone)
-is fetched).
+At **0.18** the bars are 1.152 of 6.40 (Coding, 92 of 144 models ranked), 1.107 of
+6.15 (Tooling, 93 ranked), 0.666 of 3.70 (Knowledge, 141 ranked), 0.432 of 2.40
+(Vision, 47 ranked) and 0.423 of 2.35 (Trust, 133 ranked, now that
+[AA-Omniscience Accuracy](#why-the-anchor-cannot-stand-alone) is fetched).
 
 Coverage does not spread evenly across models, it clusters, and the threshold should
 fall between clusters rather than through one. Measured over the current file:
 
 | fraction | Coding ranked | Tooling ranked | Knowledge ranked | Vision ranked | Trust ranked | what the cut admits |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.25 | 75 | 89 | 139 | 47 | 132 | |
-| 0.20 | 80 | 92 | 140 | 47 | 132 | the 20%-measured block, cut in half |
-| **0.18** | **91** | **92** | **140** | **47** | **132** | the rest of that block: 11 models at 19% |
-| 0.15 | 91 | 94 | 140 | 47 | 132 | nothing in Coding |
-| 0.12 | 104 | 121 | 140 | 47 | 132 | the 13–14% cluster |
-| 0.10 | 134 | 122 | 140 | 47 | 132 | the ~12% cluster |
-| 0.05 | 142 | 134 | 140 | 47 | 132 | models measured on a twentieth of the weight |
+| 0.25 | 75 | 90 | 140 | 47 | 133 | |
+| 0.20 | 80 | 93 | 141 | 47 | 133 | the 20%-measured block, cut in half |
+| **0.18** | **92** | **93** | **141** | **47** | **133** | the rest of that block: 12 models at 19% |
+| 0.15 | 92 | 95 | 141 | 47 | 133 | nothing in Coding |
+| 0.12 | 105 | 122 | 141 | 47 | 133 | the 13–16% cluster |
+| 0.10 | 135 | 123 | 141 | 47 | 133 | the ~12% cluster |
+| 0.05 | 143 | 135 | 141 | 47 | 133 | models measured on a twentieth of the weight |
 
-0.20 was splitting a natural block: eleven models sit at 19% and none between 19% and
-20%, so `kimi-k2-thinking` and `deepseek-v3-2-0925` (both scored on LiveCodeBench,
+0.20 was splitting a natural block: eleven models sat at 19% and none between 19% and
+20% (twelve today), so `kimi-k2-thinking` and `deepseek-v3-2-0925` (both scored on LiveCodeBench,
 SciCode, SWE-bench Multilingual and SWE-bench Verified) were unranked while models with
 the same amount of evidence were not. 0.18 takes the whole block and stops before the
 next one. Lowering the bar never changes a ranked model's *value* — the total weight is
 the same either way — it only decides who appears; previously ranked models move a mean
 of 3 places as the new arrivals slot in, and Tooling does not move at all.
+
+The exact fractions drift as members join and leave — every admission changes the
+denominator, so the same absolute evidence is a smaller share afterwards — but the
+shape does not, and 0.18 has stayed inside the gap through each of them. Today the
+Coding ladder jumps 14.1% → 18.8% and the Tooling ladder 16.3% → 21.1%, so the bar
+still falls between clusters rather than through one. That is a live constraint on
+what may join, not just a historical note: it is one of the reasons Terminal-Bench
+4.0 and Agents' Last Exam are [carried as columns and left out of
+`INDEXES`](#coding-index) for now.
 
 Going further would change what the column means rather than how much of it is filled
 in. At 0.12, **90%** of ranked models would be measured on less than half the weight;
@@ -1253,10 +1294,43 @@ VRAM there is the single source of truth for the labels. Tiers live in
    - Fetches fresh model names from benchmark API
    - Updates mapping file
 
-4. Register in `update.py`:
+4. Create `_<benchmark>_mapping.py`, the loader the ingest reads the mapping
+   through. `test_prompts.py` finds it by glob and drives it, so it has to expose
+   the whole contract: `<SOURCE>_MAPPING`, `fetch_*_model_names()`,
+   `load_*_to_slug_mapping()` (sentinels filtered out), `load_reviewed_*_names()`,
+   `write_*_to_slug_mapping()` (a no-op under `freeze_decisions()`),
+   `add_*_mapping()`, `add_*_unmappable()` and, if the source publishes weight
+   availability, `add_*_closed_weights()`. Copy `_frontierswe_mapping.py`.
+
+5. Register in `update.py`:
    - Add fetch command builder
    - Add skip flags
    - Add to orchestration flow
+
+6. Rank the source in `_precedence.py`. Import the module and add
+   `<SOURCE>_SOURCE_URL = canonical(fetch_<benchmark>.LEADERBOARD_URL)` to
+   `_ranked_prefixes()` at the rung it belongs on. Read the URL off the scraper's
+   own constant, never spell it out again, and prefer the most specific page: a
+   bare host prefix-matches every other board the site serves.
+
+7. List the pages it reads in `fill_source_urls.build_inventory()`, so the
+   leaderboard reaches `benchmarks[].urls` and the Sources panel. An API host with
+   a human-facing equivalent goes in `COVERED_BY` instead, which reports it without
+   inserting it.
+
+8. Route its reviewer in `propose.ROUTES` — `test_propose.py` fails on an unrouted
+   `update_*_mapping.py` — and add the ingest to the `CASES` list in
+   `test_source_collisions.py`, which pins that row order cannot change the score.
+
+9. Decide whether the new column joins a derived index. If it does, three places
+   have to agree: `derive_indexes.INDEXES`, the `description` of the index entry in
+   `llm.json` (it restates the weight list), and the rationale table in this file
+   (see [Coding Index](#coding-index) and [Tooling Index](#tooling-index)). Check
+   the ranked counts before and after: a new member's weight joins the denominator
+   and lifts the [evidence bar](#why-the-evidence-bar-is-18) for every model that
+   does not have the new score.
+
+`update-all` needs no change — it globs `update_*.py`.
 
 ### Key Dependencies
 
@@ -1279,9 +1353,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (16 files)
-├── update_*_mapping.py         # Mapping sync scripts (16 files)
-├── _*_mapping.py               # Mapping application modules (16 files)
+├── fetch_*.py                  # Benchmark data fetchers (18 files)
+├── update_*_mapping.py         # Mapping sync scripts (18 files)
+├── _*_mapping.py               # Mapping application modules (18 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 │
