@@ -40,20 +40,25 @@
          a fresh score overrides in the cell they share. */
       --fresh-ink: #991b1b;
       --fresh-glow: rgba(153, 27, 27, 0.3);
-      /* Comparison series. Five hues from the Okabe-Ito set, nudged for contrast
-         on this paper: each clears 3:1 against --surface, and the ramp is
-         ordered by lightness as well as hue, so two series stay apart for a
-         reader with deuteranopia or protanopia -- where blue and orange survive
-         and green and red do not. None of them collides with what is already in
-         play: --accent is links and the single-model radar, --fresh-ink is
-         "new", and the gold group indicator is the sorted column. Colour is
-         never the only cue -- every series also carries a dash pattern and a
-         marker shape (see radarMarker), so the chart survives achromatopsia. */
-      --series-1: #0b6fb4;
-      --series-2: #d55e00;
-      --series-3: #007d5a;
-      --series-4: #9a3f98;
-      --series-5: #c8860d;
+      /* Comparison series: a neon ramp -- cyan, magenta, lime, amber, violet --
+         spread roughly evenly around the wheel so no two sit next to each
+         other. A true neon is a light source, and this paper is white, so the
+         light theme takes the same five hues at the deepest value that still
+         clears 3:1 against --surface; the dark theme (where the tubes actually
+         glow) runs them at full strength. None of them collides with what is
+         already in play: --accent is links and the single-model radar,
+         --fresh-ink is "new", and the gold group indicator is the sorted
+         column. Colour is never the only cue, and at this saturation it can
+         afford to be even less of one: neon trades away the even lightness
+         ramp that would have separated these hues in greyscale (dark magenta
+         and violet land within a hundredth of each other), so the dash
+         pattern and the marker shape (see radarMarker) are what a reader with
+         deuteranopia, protanopia or achromatopsia actually reads. */
+      --series-1: #0091b0;
+      --series-2: #e0009a;
+      --series-3: #2f9e00;
+      --series-4: #d97800;
+      --series-5: #7b3fe4;
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
@@ -2990,17 +2995,21 @@
        Colour comes from the slot, which is the model's position in the
        address -- so reordering the hash reorders the colours and nothing else
        does. Dash and marker shape ride along, because colour alone is not a
-       label. */
+       label. `color` is set alongside the paint so the bloom below can name
+       the series' own hue as currentColor and stay one rule instead of five. */
 
-    .radar-series[data-series="0"] { stroke: var(--series-1); fill: var(--series-1); }
-    .radar-series[data-series="1"] { stroke: var(--series-2); fill: var(--series-2); }
-    .radar-series[data-series="2"] { stroke: var(--series-3); fill: var(--series-3); }
-    .radar-series[data-series="3"] { stroke: var(--series-4); fill: var(--series-4); }
-    .radar-series[data-series="4"] { stroke: var(--series-5); fill: var(--series-5); }
+    .radar-series[data-series="0"] { stroke: var(--series-1); fill: var(--series-1); color: var(--series-1); }
+    .radar-series[data-series="1"] { stroke: var(--series-2); fill: var(--series-2); color: var(--series-2); }
+    .radar-series[data-series="2"] { stroke: var(--series-3); fill: var(--series-3); color: var(--series-3); }
+    .radar-series[data-series="3"] { stroke: var(--series-4); fill: var(--series-4); color: var(--series-4); }
+    .radar-series[data-series="4"] { stroke: var(--series-5); fill: var(--series-5); color: var(--series-5); }
 
+    /* Held lower than the single polygon's wash, and lower again since the
+       colours went neon: five saturated fills stacked over each other turn to
+       mud, and it is the lit strokes that carry this chart anyway. */
     .radar-fill.radar-series {
       stroke: none;
-      fill-opacity: 0.1;
+      fill-opacity: 0.07;
     }
 
     .radar-line.radar-series {
@@ -3020,6 +3029,23 @@
     .radar-mark.radar-series {
       stroke: var(--surface);
       stroke-width: 1.5;
+    }
+
+    /* The bloom that makes a bright line read as a lit one rather than just a
+       saturated one. Kept tight -- a wide halo on five overlapping shapes is
+       fog -- and held back on white paper, where a glow has nothing to glow
+       against and only softens the edge the reader is following. */
+    .radar-line.radar-series,
+    .radar-mark.radar-series {
+      filter: drop-shadow(0 0 1px currentColor);
+    }
+
+    [data-theme="dark"] .radar-line.radar-series {
+      filter: drop-shadow(0 0 3px currentColor);
+    }
+
+    [data-theme="dark"] .radar-mark.radar-series {
+      filter: drop-shadow(0 0 2px currentColor);
     }
 
     .radar-series {
@@ -3909,14 +3935,16 @@
          rest of the palette — the same red .model-new switches to here. */
       --fresh-ink: #f87171;
       --fresh-glow: rgba(248, 113, 113, 0.28);
-      /* The same five hues lifted onto near-black paper: every one clears 6:1
-         against --surface, and the lightness order of the light ramp is kept so
-         a series does not swap places in the reader's head when the theme does. */
-      --series-1: #58a6ff;
-      --series-2: #ff8a50;
-      --series-3: #3dd6a8;
-      --series-4: #c98be0;
-      --series-5: #e8b93c;
+      /* The same five hues at full neon on near-black paper, which is the
+         ground they were picked for -- every one clears 5.5:1 against
+         --surface. Hue order is what carries across the themes: a series keeps
+         its identity when the theme flips even though the lightness ramp
+         cannot follow it onto black. */
+      --series-1: #00e5ff;
+      --series-2: #ff2bd1;
+      --series-3: #7cff3d;
+      --series-4: #ffa51f;
+      --series-5: #9d7bff;
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.4);
       --tip-bg: #211f1c;
       --tip-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 44px rgba(0, 0, 0, 0.55);
@@ -3997,7 +4025,7 @@
     /* Same reasoning for a comparison's washes, held lower than the single
        polygon's because up to five of them stack. */
     [data-theme="dark"] .radar-fill.radar-series {
-      fill-opacity: 0.14;
+      fill-opacity: 0.1;
     }
 
     [data-theme="dark"] button:hover {
