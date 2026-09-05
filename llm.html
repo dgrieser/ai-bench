@@ -3291,15 +3291,12 @@
       text-decoration: underline;
     }
 
-    /* Just the mark, centred over the column it belongs to -- the width of
-       this cell is no longer the width of somebody's URL. */
-    .compare-spec-value.compare-url {
-      text-align: center;
-    }
-
+    /* Just the mark -- the width of this cell is no longer the width of
+       somebody's URL. It keeps the right edge every other value in the column
+       lines up on, so the padding is all on the side nothing is aligned to. */
     .compare-link {
       display: inline-block;
-      padding: 0 6px;
+      padding: 3px 0 3px 12px;
       color: var(--accent);
       text-decoration: none;
       font-size: 0.9rem;
@@ -8075,7 +8072,7 @@
           row("Model page", models.map((model) => {
             const url = recentLinkUrl(model.url);
             const name = model.name || "Unknown";
-            return `<td class="compare-spec-value compare-url">${url
+            return `<td class="compare-spec-value">${url
               ? `<a class="compare-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"` +
                 `${tipAttrs({ eyebrow: "Model page", title: name, body: "Where this model is published.", url })}` +
                 ` aria-label="${escapeAttr(`Open the ${name} model page`)}">&#8599;</a>`
