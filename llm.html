@@ -1405,32 +1405,27 @@
     /* The same offset again, but handed to the browser as a rule instead of a
        measurement: the header rides the page's own scroll timeline, sliding
        from nothing to the shell's height less its own over exactly the stretch
-       of scroll in which the shell is passing the top of the window
-       (--sticky-head-start to --sticky-head-end, both measured by
-       syncStickyHead). The browser evaluates that against the scroll offset it
-       is painting, so the header sits on the right row in the very frame the
-       rows move — the scroll handler cannot do that on a phone, where a flick
-       is scrolled off the main thread and every event it fires is already a
-       frame or more old. The three lengths it needs move with the layout, not
-       with the scrolling, so measuring them costs nothing per frame. */
-    @keyframes sticky-head-follow {
-      from {
-        transform: translateY(0);
-      }
+       of scroll in which the shell is passing the top of the window. The
+       browser evaluates that against the scroll offset it is painting, so the
+       header sits on the right row in the very frame the rows move — the scroll
+       handler cannot do that on a phone, where a flick is scrolled off the main
+       thread and every event it fires is already a frame or more old.
 
-      to {
-        transform: translateY(var(--sticky-head-travel, 0px));
-      }
-    }
-
+       The slide itself is @keyframes sticky-head-follow, written by
+       syncStickyHead() because the stop where the header stops moving falls at
+       a percentage of the range, and percentages in a keyframe cannot come from
+       a variable. --sticky-head-start and --sticky-head-end are the ends of
+       that range, and --sticky-head-end sits past the last scrollable pixel of
+       the page on purpose: an animation whose range ends within reach is
+       finished the moment the scroll passes it, and a finished animation is
+       handed back to the main thread, so coming up into the table from the
+       panels below would begin with the stutter this is all here to avoid.
+       Everything it needs moves with the layout, not with the scrolling. */
     @supports (animation-timeline: scroll()) {
       thead th {
         top: 0;
         animation-name: sticky-head-follow;
         animation-timing-function: linear;
-        /* Held at both ends: flat against the top of the shell until the shell
-           reaches the top of the window, parked over the last row once the
-           shell has gone past it. */
         animation-fill-mode: both;
         animation-timeline: scroll(root block);
         animation-range: var(--sticky-head-start, 0px) var(--sticky-head-end, 0px);
@@ -5423,6 +5418,33 @@
         typeof CSS.supports === "function" &&
         CSS.supports("animation-timeline: scroll()");
 
+      // The slide the header takes, as keyframes: down at the speed of the
+      // scroll until it has caught up with the bottom of the shell, then held
+      // there for the whole rest of the page. That hold is what keeps the
+      // header inside the shell — a header still sliding past the last row
+      // would push the shell's scrollable area down with it — and it is why
+      // these keyframes are written rather than declared: the stop it starts at
+      // is a share of the range, and a keyframe's percentage cannot be a
+      // variable.
+      let stickyHeadStyle = null;
+      let stickyHeadRule = "";
+      function setStickyHeadKeyframes(travel, span) {
+        const hold = span > 0 ? Math.min(100, (travel / span) * 100) : 100;
+        const rule = "@keyframes sticky-head-follow{" +
+          "0%{transform:translateY(0)}" +
+          `${hold}%{transform:translateY(${travel}px)}` +
+          `100%{transform:translateY(${travel}px)}}`;
+        if (rule === stickyHeadRule) {
+          return;
+        }
+        stickyHeadRule = rule;
+        if (!stickyHeadStyle) {
+          stickyHeadStyle = document.createElement("style");
+          document.head.appendChild(stickyHeadStyle);
+        }
+        stickyHeadStyle.textContent = rule;
+      }
+
       function syncStickyHead() {
         const shell = ui.content.querySelector(".table-shell");
         if (!shell) {
@@ -5437,14 +5459,17 @@
         // standing over rows the shell has already scrolled out of sight.
         const limit = Math.max(0, shellRect.height - head.getBoundingClientRect().height);
         if (hasScrollTimelines) {
-          // Where the shell's top edge reaches the top of the window, and where
-          // it has carried the header as far as it may go. Left unrounded: the
-          // browser reads these as the two ends of a slide the header takes at
-          // exactly the speed of the scroll, and a rounded end would tilt it.
+          // Where the shell's top edge reaches the top of the window, and a
+          // range long enough to outrun the page: the document's full height
+          // added to a start that is never negative cannot be scrolled to, so
+          // the animation stays live all the way down. Left unrounded, because
+          // the browser reads the range and the keyframes as one slide taken at
+          // exactly the speed of the scroll, and rounding one of them tilts it.
           const start = Math.max(0, shellRect.top + window.scrollY);
+          const span = Math.max(limit, document.documentElement.scrollHeight);
           shell.style.setProperty("--sticky-head-start", `${start}px`);
-          shell.style.setProperty("--sticky-head-end", `${start + limit}px`);
-          shell.style.setProperty("--sticky-head-travel", `${limit}px`);
+          shell.style.setProperty("--sticky-head-end", `${start + span}px`);
+          setStickyHeadKeyframes(limit, span);
           return;
         }
         const offset = Math.min(Math.max(0, -shellRect.top), limit);
