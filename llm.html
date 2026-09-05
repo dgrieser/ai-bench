@@ -40,6 +40,20 @@
          a fresh score overrides in the cell they share. */
       --fresh-ink: #991b1b;
       --fresh-glow: rgba(153, 27, 27, 0.3);
+      /* Comparison series. Five hues from the Okabe-Ito set, nudged for contrast
+         on this paper: each clears 3:1 against --surface, and the ramp is
+         ordered by lightness as well as hue, so two series stay apart for a
+         reader with deuteranopia or protanopia -- where blue and orange survive
+         and green and red do not. None of them collides with what is already in
+         play: --accent is links and the single-model radar, --fresh-ink is
+         "new", and the gold group indicator is the sorted column. Colour is
+         never the only cue -- every series also carries a dash pattern and a
+         marker shape (see radarMarker), so the chart survives achromatopsia. */
+      --series-1: #0b6fb4;
+      --series-2: #d55e00;
+      --series-3: #007d5a;
+      --series-4: #9a3f98;
+      --series-5: #c8860d;
       --font-display: "Newsreader", Georgia, serif;
       --font-ui: "DM Sans", "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "Consolas", monospace;
@@ -831,6 +845,51 @@
     .model-compare-reset-btn:hover {
       color: var(--text);
       border-color: var(--accent);
+    }
+
+    /* The verb that rides beside the reset ×: what the selection is *for*,
+       offered where the reader's hand already is when the list is open. It
+       shares the wrap's lift so the two sit on one line above the bottom
+       edge. */
+    .model-compare-go {
+      pointer-events: auto;
+      width: auto;
+      height: 26px;
+      min-height: unset;
+      min-width: unset;
+      padding: 0 10px;
+      margin: 0 6px 0 0;
+      transform: translateY(calc(-100% - 8px));
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 120ms ease, border-color 120ms ease;
+    }
+
+    .model-compare-go:hover {
+      border-color: var(--accent-hover);
+      background: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .model-compare-go[disabled] {
+      border-color: var(--line);
+      background: var(--surface);
+      color: var(--subtle);
+      cursor: not-allowed;
+    }
+
+    .model-compare-go[disabled]:hover {
+      border-color: var(--line);
+      background: var(--surface);
+      color: var(--subtle);
     }
 
     .model-compare-item.is-filtered-out {
@@ -2720,10 +2779,440 @@
       text-decoration: underline;
     }
 
+    /* ── Model comparison ──
+       Two to five models side by side behind #compare/<slug>,<slug>. Almost
+       everything here is a small delta on the detail page's own furniture --
+       the head band, the cards, the axis picker's menu -- because a comparison
+       is the detail page with more columns, not a second design. What is
+       genuinely new: the series colours (and the dashes and marker shapes that
+       carry them for a reader who cannot see colour), the legend that names
+       them, and tables that scroll sideways with their first column pinned. */
+
+    .compare-head .detail-name {
+      /* A sentence, not a title: it names a set, so it does not need the
+         weight a model's own name carries. */
+      font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+    }
+
+    .compare-byline-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    /* The swatch before a name in the byline and in a table head: the colour
+       key repeated wherever a model is named, so the radar's legend is never
+       the only place to look it up. */
+    .compare-swatch {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .compare-actions {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    /* The global button rule sets width:100% and a 32px height for the
+       toolbar's sake; these size themselves back down, exactly as
+       .axis-add-btn does. */
+    .compare-btn {
+      width: auto;
+      min-height: 0;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+    }
+
+    .compare-btn.is-primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .compare-btn.is-primary:hover {
+      border-color: var(--accent-hover);
+      background: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .compare-btn[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .compare-btn[disabled]:hover {
+      border-color: var(--line);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .compare-btn.is-primary[disabled]:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    /* The picker menu is the axis menu with a search row on top -- four
+       hundred models is not a list you scroll -- so it borrows that shell
+       rather than growing a second one (see .axis-menu). */
+    .compare-menu-search {
+      position: sticky;
+      top: -6px;
+      z-index: 1;
+      display: flex;
+      gap: 4px;
+      padding: 4px 2px 6px;
+      margin: -6px -2px 0;
+      background: var(--surface);
+    }
+
+    .compare-menu-search-input {
+      width: 100%;
+      min-height: 0;
+      padding: 6px 9px;
+      font-size: 0.78rem;
+    }
+
+    .compare-menu-foot {
+      position: sticky;
+      bottom: -6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 4px 2px;
+      margin: 4px -2px -6px;
+      border-top: 1px solid var(--line-soft);
+      background: var(--surface);
+    }
+
+    .compare-menu-empty {
+      padding: 10px 8px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .compare-missing-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* ── Radar legend ──
+       HTML rather than SVG so it wraps on a narrow screen and its names stay
+       selectable and linkable. The swatch is drawn with the very classes the
+       chart uses, so a colour or dash can never drift between the two. */
+
+    .radar-legend {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 18px;
+      margin: 4px 0 0;
+      padding: 0;
+    }
+
+    .radar-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .radar-legend-swatch {
+      width: 26px;
+      height: 12px;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .radar-legend-name {
+      color: var(--text);
+      text-decoration: none;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .radar-legend-name:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .radar-legend-mean {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .radar-legend-x {
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 0 4px;
+      border-radius: 50%;
+      color: var(--subtle);
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .radar-legend-x:hover {
+      background: none;
+      border: none;
+      color: var(--fresh-ink);
+    }
+
+    /* The figure stacks chart over legend once there is more than one series;
+       a single-model page keeps the bare centred chart it always had. */
+    .radar-figure.is-multi {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── Radar series ──
+       Colour comes from the slot, which is the model's position in the
+       address -- so reordering the hash reorders the colours and nothing else
+       does. Dash and marker shape ride along, because colour alone is not a
+       label. */
+
+    .radar-series[data-series="0"] { stroke: var(--series-1); fill: var(--series-1); }
+    .radar-series[data-series="1"] { stroke: var(--series-2); fill: var(--series-2); }
+    .radar-series[data-series="2"] { stroke: var(--series-3); fill: var(--series-3); }
+    .radar-series[data-series="3"] { stroke: var(--series-4); fill: var(--series-4); }
+    .radar-series[data-series="4"] { stroke: var(--series-5); fill: var(--series-5); }
+
+    .radar-fill.radar-series {
+      stroke: none;
+      fill-opacity: 0.1;
+    }
+
+    .radar-line.radar-series {
+      fill: none;
+      stroke-width: 2;
+      stroke-linejoin: round;
+    }
+
+    .radar-line[data-series="1"] { stroke-dasharray: 7 4; }
+    .radar-line[data-series="2"] { stroke-dasharray: 2 3; }
+    .radar-line[data-series="3"] { stroke-dasharray: 10 3 2 3; }
+    .radar-line[data-series="4"] { stroke-dasharray: 1 4; stroke-linecap: round; }
+
+    /* The surface-coloured rim keeps two coincident markers reading as two.
+       Doubled up with .radar-series so it outweighs the [data-series] rules
+       above, which set stroke for the lines' sake. */
+    .radar-mark.radar-series {
+      stroke: var(--surface);
+      stroke-width: 1.5;
+    }
+
+    .radar-series {
+      transition: opacity 120ms ease;
+    }
+
+    /* Hovering a legend row pushes every other series back. Pure CSS, one
+       rule per slot -- nothing to bind, and nothing to unbind when the block
+       re-renders. */
+    .radar-figure:has(.radar-legend-item[data-series="0"]:hover) .radar-series:not([data-series="0"]),
+    .radar-figure:has(.radar-legend-item[data-series="1"]:hover) .radar-series:not([data-series="1"]),
+    .radar-figure:has(.radar-legend-item[data-series="2"]:hover) .radar-series:not([data-series="2"]),
+    .radar-figure:has(.radar-legend-item[data-series="3"]:hover) .radar-series:not([data-series="3"]),
+    .radar-figure:has(.radar-legend-item[data-series="4"]:hover) .radar-series:not([data-series="4"]) {
+      opacity: 0.22;
+    }
+
+    /* ── Side-by-side tables ──
+       Deliberately NOT .detail-bench-table: the phone rules for that class
+       turn it into flex rows and hide every cell past the second, which would
+       delete every model column but the first. Here the card scrolls sideways
+       instead and the benchmark name stays pinned to the left edge. */
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .compare-table th {
+      padding: 10px 14px 8px;
+      text-align: left;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .compare-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--line-soft);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      vertical-align: top;
+    }
+
+    .compare-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tbody tr:not(.bench-cat-row):hover {
+      background: var(--surface-alt);
+    }
+
+    /* Five model columns overflow on purpose; the name column is pinned so a
+       reader who has scrolled to the fifth model still knows what the row is.
+       Same sticky-plus-seam trick the leaderboard's first column uses. */
+    .compare-table th:first-child,
+    .compare-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--surface);
+      box-shadow: 1px 0 0 var(--line-soft);
+    }
+
+    .compare-table tbody tr:not(.bench-cat-row):hover td:first-child {
+      background: var(--surface-alt);
+    }
+
+    .compare-table .bench-cat-row td {
+      background: var(--surface);
+    }
+
+    .compare-table thead th:not(:first-child) {
+      min-width: 96px;
+    }
+
+    .compare-head-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .compare-head-cell a {
+      color: var(--text);
+      text-decoration: none;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      font-size: 0.74rem;
+    }
+
+    .compare-head-cell a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .compare-cell {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Score over rank: the raw number is what a reader came for, the
+       percentile is what makes two different scales comparable. */
+    .compare-cell .compare-pct {
+      display: block;
+      margin-top: 1px;
+      color: var(--subtle);
+      font-size: 0.66rem;
+      font-weight: 500;
+    }
+
+    /* The row's best value. Not .top-score-mark -- that is a fixed-padding
+       gradient built for the leaderboard's single-line cells and it would
+       fight the rank line underneath. */
+    .compare-cell.is-best {
+      color: var(--top-score-text);
+      font-weight: 700;
+    }
+
+    .compare-cell.is-best .compare-score {
+      border-radius: 5px;
+      padding: 1px 5px;
+      margin-right: -5px;
+      background: color-mix(in srgb, var(--accent) 13%, transparent);
+    }
+
+    .compare-cell.is-fresh {
+      color: var(--fresh-ink);
+    }
+
+    .compare-cell .na {
+      color: var(--subtle);
+      font-weight: 400;
+    }
+
+    .compare-spec-name {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .compare-spec-value {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .compare-spec-value.is-best {
+      color: var(--top-score-text);
+    }
+
+    .compare-spec-value a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.76rem;
+    }
+
+    .compare-spec-value a:hover {
+      text-decoration: underline;
+    }
+
+    .compare-spec-value.compare-url {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     @media (max-width: 860px) {
       .detail-head,
       .detail-grid,
       .detail-bench-panel {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .compare-head,
+      .compare-panel {
         padding-left: 16px;
         padding-right: 16px;
       }
@@ -2816,6 +3305,54 @@
       .detail-bench-table td.num {
         -webkit-user-select: none;
         user-select: none;
+      }
+
+      /* The comparison tables keep every model column and scroll instead --
+         the rank line is what gives way, because each score cell's own slip
+         carries it, and a long press is what opens a slip on touch. */
+      .compare-table th,
+      .compare-table td {
+        padding: 6px 9px;
+        font-size: 0.76rem;
+      }
+
+      .compare-table thead th:not(:first-child) {
+        min-width: 84px;
+      }
+
+      .compare-cell .compare-pct {
+        display: none;
+      }
+
+      .compare-cell {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      /* Left to itself the benchmark name fills the whole card on a phone and
+         the first swipe is the only way to learn that there are any numbers.
+         Capping the pinned column puts a model's scores on screen from the
+         start; the full name and its tags are still in the row's slip. */
+      .compare-table th:first-child,
+      .compare-table td:first-child {
+        max-width: 168px;
+        overflow: hidden;
+      }
+
+      .compare-table td:first-child .bench-name-cell {
+        max-width: 100%;
+      }
+
+      .compare-table .bench-flag {
+        display: none;
+      }
+
+      .radar-legend {
+        gap: 4px 12px;
+      }
+
+      .radar-legend-name {
+        max-width: 150px;
       }
     }
 
@@ -3350,6 +3887,14 @@
          rest of the palette — the same red .model-new switches to here. */
       --fresh-ink: #f87171;
       --fresh-glow: rgba(248, 113, 113, 0.28);
+      /* The same five hues lifted onto near-black paper: every one clears 6:1
+         against --surface, and the lightness order of the light ramp is kept so
+         a series does not swap places in the reader's head when the theme does. */
+      --series-1: #58a6ff;
+      --series-2: #ff8a50;
+      --series-3: #3dd6a8;
+      --series-4: #c98be0;
+      --series-5: #e8b93c;
       --shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.4);
       --tip-bg: #211f1c;
       --tip-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 44px rgba(0, 0, 0, 0.55);
@@ -3425,6 +3970,12 @@
        surface, so it gets a touch more presence there. */
     [data-theme="dark"] .radar-shape {
       fill-opacity: 0.18;
+    }
+
+    /* Same reasoning for a comparison's washes, held lower than the single
+       polygon's because up to five of them stack. */
+    [data-theme="dark"] .radar-fill.radar-series {
+      fill-opacity: 0.14;
     }
 
     [data-theme="dark"] button:hover {
@@ -3910,6 +4461,11 @@
           <span class="pill" id="creatorCount">0 creators</span>
           <span class="pill" id="benchmarkCount">0 benchmarks</span>
           <button id="resetBtn" type="button">Reset Filters</button>
+          <!-- The verb for the Compare Models picker. The picker's own footer
+               button only exists while its list is open, and the toolbar is
+               where this page keeps its verbs. Hidden unless the selection is
+               a comparison-sized one; see updateCompareEntry. -->
+          <button id="compareBtn" type="button" hidden>Compare</button>
           <button style="display: none" id="importBtn" type="button">Import llm.json</button>
           <input id="importFile" class="file-input-offscreen" type="file" accept="application/json,.json">
         </section>
@@ -3966,6 +4522,19 @@
         radar: {
           axes: [],
           pickerOpen: false
+        },
+        // A comparison is an address, not a filter: *which* models are being
+        // compared lives in the hash, so it is shareable and the back button
+        // undoes it. Only what the address cannot hold sits here -- the open
+        // state of the "compare with..." menu and the set it is assembling.
+        // Note that filters.selectedModels is a different thing entirely: it
+        // narrows the table (and the export with it), while a comparison
+        // narrows nothing. Picking models there is one way *into* a
+        // comparison, not the comparison itself.
+        compare: {
+          pickerOpen: false,
+          pending: [],
+          query: ""
         },
         gpu: {
           list: [],
@@ -4089,6 +4658,7 @@
         importFile: document.getElementById("importFile"),
         resetBtn: document.getElementById("resetBtn"),
         clearCompare: document.getElementById("clearCompare"),
+        compareBtn: document.getElementById("compareBtn"),
         clearBenchmarks: document.getElementById("clearBenchmarks"),
         clearSearch: document.getElementById("clearSearch"),
         hostingPresets: document.getElementById("hostingPresets"),
@@ -4446,7 +5016,11 @@
       // options while it is open. Call after the items have been written.
       // `reset` ({label, tip, action}) becomes the floating button in the
       // bottom-right corner of the open list that resets the selection.
-      function decorateMultiSelectWidget(el, placeholder, reset) {
+      // `primary` is optional: a widget whose selection is good for something
+      // beyond filtering (the model picker's is a comparison) puts that verb
+      // in the same corner as the reset ×, where the reader's eye already is
+      // when the list is open.
+      function decorateMultiSelectWidget(el, placeholder, reset, primary) {
         const empty = document.createElement("div");
         empty.className = "model-compare-empty";
         empty.textContent = "No matches";
@@ -4504,6 +5078,20 @@
           e.stopPropagation(); // the widget's own click handler would close the list
           reset.action();
         });
+        if (primary) {
+          const primaryBtn = document.createElement("button");
+          primaryBtn.type = "button";
+          primaryBtn.className = "model-compare-go";
+          primaryBtn.addEventListener("mousedown", (e) => {
+            e.preventDefault(); // keeps focus inside the widget so the list stays open
+            e.stopPropagation();
+          });
+          primaryBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // the widget's own click handler would close the list
+            primary.action();
+          });
+          resetWrap.appendChild(primaryBtn);
+        }
         resetWrap.appendChild(resetBtn);
         el.appendChild(resetWrap);
 
@@ -4609,6 +5197,8 @@
             updateCompareWidget();
             applyAndRender();
           }
+        }, {
+          action: goToSelectedComparison
         });
         updateCompareSummary();
 
@@ -4838,6 +5428,40 @@
           summary.textContent = state.filters.selectedModels.join(", ");
           summary.classList.remove("is-hint");
         }
+        updateCompareEntry();
+      }
+
+      // The two ways this widget's selection turns into a comparison: the
+      // button in its own corner, and the toolbar pill — because the corner
+      // button only exists while the list is open, and the toolbar is where
+      // this page keeps its verbs. Both say the same thing, so they are
+      // written from one place, which updateCompareSummary already calls on
+      // every selection change.
+      function updateCompareEntry() {
+        const count = state.filters.selectedModels.length;
+        const ready = compareSelectionReady();
+        const label = ready ? `Compare ${count}` : "Compare";
+        const tip = count < COMPARE_MIN
+          ? `Pick at least ${COMPARE_MIN} models to compare them side by side.`
+          : `A comparison holds ${COMPARE_MAX} models — unselect ${count - COMPARE_MAX} to compare these.`;
+
+        const inline = ui.modelCompare.querySelector(".model-compare-go");
+        if (inline) {
+          inline.textContent = label;
+          inline.disabled = !ready;
+          inline.setAttribute("aria-label", ready ? `Compare the ${count} selected models` : "Compare selected models");
+          inline.setAttribute("data-tip", ready ? "Open these models side by side." : tip);
+        }
+
+        if (ui.compareBtn) {
+          ui.compareBtn.textContent = label;
+          // Hidden rather than disabled: the toolbar is a row of live verbs,
+          // and a permanently greyed one would just be furniture. The corner
+          // button inside the picker is where a reader mid-selection is told
+          // why they cannot compare yet.
+          ui.compareBtn.hidden = !ready;
+          ui.compareBtn.setAttribute("data-tip", "Open the selected models side by side.");
+        }
       }
 
       function bindEvents() {
@@ -4849,6 +5473,8 @@
           state.filters.search = event.target.value.trim().toLowerCase();
           applyAndRender();
         }, 100));
+
+        ui.compareBtn.addEventListener("click", goToSelectedComparison);
 
         ui.clearCompare.addEventListener("mousedown", (e) => {
           e.preventDefault(); // keeps focus off modelCompare so clearing does not open it
@@ -4926,10 +5552,10 @@
         if (!state.data) {
           return;
         }
-        // A filter handler can still fire while a detail page is showing (a
-        // debounced input resolving after navigation); the table waits until
-        // the route is back.
-        if (state.route.view === "model") {
+        // A filter handler can still fire while a detail or comparison page is
+        // showing (a debounced input resolving after navigation); the table
+        // waits until the route is back.
+        if (state.route.view !== "table") {
           return;
         }
 
@@ -5967,18 +6593,49 @@
           .replace(/^-|-$/g, "");
       }
 
+      // A pasted link may arrive percent-encoded; a malformed escape is taken
+      // literally rather than crashing the router.
+      function decodeSlug(raw) {
+        try {
+          return decodeURIComponent(raw);
+        } catch (err) {
+          return raw;
+        }
+      }
+
+      // The slug list in a #compare address, cleaned up the way the router
+      // needs it: "+" tolerated as a separator (some clients rewrite a comma
+      // into one), blanks dropped, duplicates collapsed -- comparing a model
+      // with itself is two identical columns -- and the list cut to
+      // COMPARE_MAX, because neither the radar nor the score table stays
+      // readable past five series.
+      function parseCompareSlugs(raw) {
+        const seen = new Set();
+        return decodeSlug(raw)
+          .split(/[,+]/)
+          .map((part) => part.trim())
+          .filter((part) => part && !seen.has(part) && seen.add(part))
+          .slice(0, COMPARE_MAX);
+      }
+
+      function compareHash(slugs) {
+        return `#compare/${slugs.map((slug) => encodeURIComponent(slug)).join(COMPARE_SEP)}`;
+      }
+
+      // Every branch carries `slugs` so nothing downstream has to tell the
+      // shapes apart, and every branch keeps `slug` because the delegated
+      // detail listeners read it.
       function parseRoute() {
+        const compare = String(location.hash || "").match(/^#compare\/(.+)$/);
+        if (compare) {
+          return { view: "compare", slug: "", slugs: parseCompareSlugs(compare[1]) };
+        }
         const match = String(location.hash || "").match(/^#model\/(.+)$/);
         if (match) {
-          let slug = match[1];
-          // A pasted link may arrive percent-encoded; a malformed escape is
-          // taken literally rather than crashing the router.
-          try {
-            slug = decodeURIComponent(slug);
-          } catch (err) { /* keep the raw text */ }
-          return { view: "model", slug };
+          const slug = decodeSlug(match[1]);
+          return { view: "model", slug, slugs: [slug] };
         }
-        return { view: "table", slug: "" };
+        return { view: "table", slug: "", slugs: [] };
       }
 
       function renderRoute() {
@@ -5989,9 +6646,25 @@
         const route = parseRoute();
         const cameFromTable = state.route.view === "table";
         state.route = route;
-        document.getElementById("app").classList.toggle("detail-view", route.view === "model");
+        const app = document.getElementById("app");
+        // The filter panel belongs to the table, so both away-from-table views
+        // hide it; compare-view is the extra hook for what only a comparison
+        // needs.
+        app.classList.toggle("detail-view", route.view !== "table");
+        app.classList.toggle("compare-view", route.view === "compare");
+        // The picker menu belongs to the page that drew it, and every route
+        // change replaces that page.
+        state.compare.pickerOpen = false;
 
-        if (route.view === "model") {
+        if (route.view === "compare") {
+          // Only a table actually on screen has a scroll position worth
+          // keeping — jumping between two detail pages must not clobber it.
+          if (cameFromTable) {
+            state.tableScroll = window.scrollY;
+          }
+          renderCompareRoute(route.slugs);
+          window.scrollTo(0, 0);
+        } else if (route.view === "model") {
           // Only a table actually on screen has a scroll position worth
           // keeping — jumping between two detail pages must not clobber it.
           if (cameFromTable) {
@@ -6021,68 +6694,114 @@
         renderRoute();
       }
 
-      // One-time wiring for the detail page: a single delegated listener on
-      // the content section (it survives every innerHTML swap and dies with
-      // the route), plus the same outside-click and Escape closing the axis
-      // menu that the export menu uses.
+      // One-time wiring for the two away-from-table views: a single delegated
+      // listener on the content section (it survives every innerHTML swap and
+      // dies with the route), plus the same outside-click and Escape closing
+      // the axis and model menus that the export menu uses.
       function bindDetailEvents() {
         ui.content.addEventListener("click", (event) => {
-          if (state.route.view !== "model") {
+          if (state.route.view === "table") {
             return;
           }
-          const model = state.modelsBySlug.get(state.route.slug);
           const actionEl = event.target.closest("[data-action]");
-          if (!model || !actionEl) {
+          if (!actionEl) {
             return;
           }
           const key = actionEl.dataset.key || "";
-          if (actionEl.dataset.action === "toggle-picker") {
+          const slug = actionEl.dataset.slug || "";
+          const action = actionEl.dataset.action;
+          if (action === "toggle-picker") {
             state.radar.pickerOpen = !state.radar.pickerOpen;
-            rerenderRadarBlock(model);
-          } else if (actionEl.dataset.action === "add-axis") {
+            rerenderRadarBlock();
+          } else if (action === "add-axis") {
             // A menu row toggles: it removes an axis already charted and adds
             // one that is not, inside the min/max bounds.
             if (state.radar.axes.includes(key)) {
               if (state.radar.axes.length > RADAR_MIN_AXES) {
-                setRadarAxes(model, state.radar.axes.filter((k) => k !== key));
+                setRadarAxes(state.radar.axes.filter((k) => k !== key));
               }
             } else if (state.radar.axes.length < RADAR_MAX_AXES) {
-              setRadarAxes(model, [...state.radar.axes, key]);
+              setRadarAxes([...state.radar.axes, key]);
             }
-          } else if (actionEl.dataset.action === "remove-axis") {
+          } else if (action === "remove-axis") {
             if (state.radar.axes.length > RADAR_MIN_AXES) {
-              setRadarAxes(model, state.radar.axes.filter((k) => k !== key));
+              setRadarAxes(state.radar.axes.filter((k) => k !== key));
             }
-          } else if (actionEl.dataset.action === "reset-axes") {
+          } else if (action === "reset-axes") {
             state.radar.pickerOpen = false;
-            setRadarAxes(model, defaultRadarAxes());
+            setRadarAxes(defaultRadarAxes());
+          } else if (action === "compare-toggle-picker") {
+            // Opening seeds the menu with whatever is on screen, so the
+            // footer button always says what will actually happen.
+            state.compare.pickerOpen = !state.compare.pickerOpen;
+            if (state.compare.pickerOpen) {
+              state.compare.pending = currentRadarModels().map((model) => modelSlug(model.name));
+              state.compare.query = "";
+            }
+            rerenderCompareControls();
+          } else if (action === "compare-pick") {
+            togglePendingModel(slug);
+          } else if (action === "compare-go") {
+            if (state.compare.pending.length >= COMPARE_MIN) {
+              state.compare.pickerOpen = false;
+              location.hash = compareHash(state.compare.pending.slice(0, COMPARE_MAX));
+            }
+          } else if (action === "compare-remove") {
+            location.hash = compareHash(state.route.slugs.filter((s) => s !== slug));
+          } else if (action === "compare-clear") {
+            location.hash = "";
+          } else if (action === "compare-copy") {
+            copyCompareLink(actionEl);
+          }
+        });
+
+        // Typing in the picker: only the menu body is swapped, so the input
+        // itself is never replaced and keeps its focus and its caret.
+        ui.content.addEventListener("input", (event) => {
+          if (!event.target.classList.contains("compare-menu-search-input")) {
+            return;
+          }
+          state.compare.query = event.target.value;
+          const body = document.getElementById("compareMenuBody");
+          if (body) {
+            body.innerHTML = renderCompareMenuBody();
           }
         });
 
         document.addEventListener("click", (event) => {
-          if (!state.radar.pickerOpen) {
-            return;
-          }
-          // Clicks inside the menu (or on its toggle, which just flipped the
+          // Clicks inside a menu (or on its toggle, which just flipped the
           // flag itself) are not "outside". closest() still answers for a
-          // node the re-render detached, so the two listeners cannot fight.
-          if (event.target.closest(".axis-menu") || event.target.closest('[data-action="toggle-picker"]')) {
-            return;
+          // node the re-render detached, so the listeners cannot fight.
+          if (state.radar.pickerOpen &&
+              !event.target.closest(".axis-menu") &&
+              !event.target.closest('[data-action="toggle-picker"]')) {
+            state.radar.pickerOpen = false;
+            rerenderRadarBlock();
           }
-          state.radar.pickerOpen = false;
-          const model = state.modelsBySlug.get(state.route.slug);
-          if (model) {
-            rerenderRadarBlock(model);
+          // A picked row is the one click inside the menu that closest() cannot
+          // vouch for afterwards: the handler above swaps the menu body out
+          // from under it, severing the node from .compare-menu before this
+          // listener gets to ask. So the action itself is the tell.
+          if (state.compare.pickerOpen &&
+              !event.target.closest(".compare-menu") &&
+              !event.target.closest('[data-action="compare-pick"]') &&
+              !event.target.closest('[data-action="compare-toggle-picker"]')) {
+            state.compare.pickerOpen = false;
+            rerenderCompareControls();
           }
         });
 
         document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && state.radar.pickerOpen) {
+          if (event.key !== "Escape") {
+            return;
+          }
+          if (state.radar.pickerOpen) {
             state.radar.pickerOpen = false;
-            const model = state.modelsBySlug.get(state.route.slug);
-            if (model) {
-              rerenderRadarBlock(model);
-            }
+            rerenderRadarBlock();
+          }
+          if (state.compare.pickerOpen) {
+            state.compare.pickerOpen = false;
+            rerenderCompareControls();
           }
         });
 
@@ -6145,7 +6864,7 @@
         ui.content.innerHTML = `
           ${renderDetailHead(model)}
           <div class="detail-grid">
-            ${renderRadarSection(model)}
+            ${renderRadarSection([model])}
           </div>
           ${renderDetailBenchTable(model)}
         `;
@@ -6180,6 +6899,7 @@
               <p class="detail-byline">${creatorUrl
                 ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
                 : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
+              <div class="compare-actions">${renderComparePicker([model], "Compare with&hellip;")}</div>
             </div>
             ${renderDetailSpecs(model)}
           </section>
@@ -6190,8 +6910,6 @@
         const creatorName = escapeHtml(creatorNameOf(model));
         const creatorUrl = recentLinkUrl(model.creator?.url);
         const modelUrl = recentLinkUrl(model.url);
-        const scored = state.benchmarkKeys
-          .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
 
         // One VRAM row per quantization, each slip carrying where that figure
         // was read — static fields, since TIP_RESOLVERS.vram is wired to the
@@ -6222,7 +6940,7 @@
               <dt>Added</dt>
               <dd>${model.date_added ? escapeHtml(model.date_added) : "-"}</dd>
               <dt>Coverage</dt>
-              <dd>${scored} of ${state.benchmarkKeys.length} benchmarks</dd>
+              <dd>${modelCoverage(model)} of ${state.benchmarkKeys.length} benchmarks</dd>
               <dt>Model page</dt>
               <dd class="detail-url">${modelUrl
                 ? `<a href="${escapeAttr(modelUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(modelUrl.replace(/^https?:\/\/(www\.)?/, ""))}</a>`
@@ -6291,43 +7009,66 @@
         return keys.length === defaults.length && keys.every((key, i) => key === defaults[i]);
       }
 
-      function setRadarAxes(model, keys) {
+      function setRadarAxes(keys) {
         state.radar.axes = keys;
         saveRadarAxes(keys);
-        rerenderRadarBlock(model);
+        rerenderRadarBlock();
+      }
+
+      // Which models the radar block on screen is charting: one on a detail
+      // page, two to five on a comparison. The axis picker edits a *chart*,
+      // not a model, so it asks here rather than being handed a subject —
+      // which is why setRadarAxes and rerenderRadarBlock take no model.
+      function currentRadarModels() {
+        if (state.route.view === "compare") {
+          return resolveCompareModels(state.route.slugs).models;
+        }
+        const model = state.modelsBySlug.get(state.route.slug);
+        return model ? [model] : [];
       }
 
       // Only the radar block re-renders when the axes change — the specs and
       // the benchmark table below are untouched, so the page never jumps.
-      function rerenderRadarBlock(model) {
+      function rerenderRadarBlock() {
         const block = document.getElementById("radarBlock");
-        if (block) {
+        const models = currentRadarModels();
+        if (block && models.length) {
           closeTip();
-          block.outerHTML = renderRadarSection(model);
+          block.outerHTML = renderRadarSection(models);
         }
       }
 
-      function renderRadarSection(model) {
+      // One series on a detail page, two to five on a comparison. The array is
+      // the only shape here: a single model is a comparison of one, and the
+      // one place that still cares is the chart itself, which keeps the
+      // single-model drawing exactly as it was.
+      function renderRadarSection(models) {
         const axes = state.radar.axes;
         const total = state.data.models.length;
+        const single = models.length === 1;
         return `
           <section class="detail-card radar-panel" id="radarBlock" aria-label="Benchmark radar chart">
             <h2>Benchmark profile</h2>
-            ${renderAxisPicker(model, axes)}
-            <div class="radar-figure">${renderRadarChart(model, axes)}</div>
-            <p class="radar-note">Each axis is this model's percentile rank across all ${total} indexed
+            ${renderAxisPicker(models, axes)}
+            <div class="radar-figure${single ? "" : " is-multi"}">${renderRadarChart(models, axes)}${single ? "" : radarLegend(radarSeries(models, axes))}</div>
+            <p class="radar-note">Each axis is ${single ? "this model's" : "each model's"} percentile rank across all ${total} indexed
               models — the rim is the best recorded result, the hub the worst. Lower-is-better
               benchmarks are flipped, so outward always means better. An axis without a recorded
-              score keeps its place and stays empty. Pick your own axes above; the selection is
+              score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
+              mean of that model's ranks over the charted axes, so one number says which shape is
+              bigger. `}Pick your own axes above; the selection is
               remembered on this device.</p>
           </section>
         `;
       }
 
-      function renderAxisPicker(model, axes) {
+      function renderAxisPicker(models, axes) {
         const canRemove = axes.length > RADAR_MIN_AXES;
         const chips = axes.map((key) => {
-          const scored = Number.isFinite(toNumber(model.scores?.[key]));
+          // A chip greys out only when *nobody* on the chart scored the axis:
+          // with several models, one score is enough for the axis to be
+          // carrying information.
+          const scored = models.some((model) => Number.isFinite(toNumber(model.scores?.[key])));
           const tip = tipAttrs(benchmarkTipFields(key));
           const removeLabel = canRemove
             ? `Remove ${getBenchmarkFullName(key)} from the chart`
@@ -6343,30 +7084,24 @@
         const reset = isDefaultRadarAxes(axes)
           ? ""
           : `<button type="button" class="axis-reset" data-action="reset-axes">Default axes</button>`;
-        const menu = state.radar.pickerOpen ? renderAxisMenu(model, axes, atMax) : "";
+        const menu = state.radar.pickerOpen ? renderAxisMenu(models, axes, atMax) : "";
         return `<div class="radar-controls">${chips}${addBtn}${reset}${menu}</div>`;
       }
 
       // The full index as a pick list, grouped the way the reference panel
-      // groups it, each row showing what this model scored — the blanks are
-      // pickable too, and simply chart as empty axes.
-      function renderAxisMenu(model, axes, atMax) {
-        const categories = [];
-        const keysByCategory = new Map();
-        state.benchmarkKeys.forEach((key) => {
-          const category = state.data?.benchmarks?.[key]?.category || "Other";
-          if (!keysByCategory.has(category)) {
-            keysByCategory.set(category, []);
-            categories.push(category);
-          }
-          keysByCategory.get(category).push(key);
-        });
-
-        const groups = categories.map((category) => {
-          const items = keysByCategory.get(category).map((key) => {
+      // groups it, each row showing what the chart's models scored — one
+      // number for one model, a "k of N ran it" count for a comparison, since
+      // five numbers do not fit on a menu row. The blanks are pickable too,
+      // and simply chart as empty axes.
+      function renderAxisMenu(models, axes, atMax) {
+        const groups = benchmarkKeysByCategory().map(({ category, keys }) => {
+          const items = keys.map((key) => {
             const on = axes.includes(key);
-            const value = toNumber(model.scores?.[key]);
-            const scoreText = Number.isFinite(value) ? value.toFixed(scoreDecimals(key)) : "&mdash;";
+            const values = models.map((model) => toNumber(model.scores?.[key]));
+            const scored = values.filter((value) => Number.isFinite(value)).length;
+            const scoreText = models.length === 1
+              ? (scored ? values[0].toFixed(scoreDecimals(key)) : "&mdash;")
+              : `${scored}/${models.length}`;
             const disabled = !on && atMax;
             return `<button type="button" class="axis-menu-item${on ? " on" : ""}" data-action="add-axis" data-key="${escapeAttr(key)}"${disabled ? " disabled" : ""}>` +
               `<span class="axis-menu-check" aria-hidden="true">&#10003;</span>` +
@@ -6394,32 +7129,82 @@
         };
       }
 
-      function renderRadarChart(model, axes) {
+      // The pie slice belonging to one axis, hub to just past the rim: the
+      // aiming area for its tooltip. Sweep flag 1 because SVG's y grows
+      // downward, so increasing angles run clockwise — the direction
+      // radarPoint lays the axes out in.
+      function radarAxisWedge(cx, cy, radius, i, n) {
+        const half = Math.PI / n;
+        const mid = (2 * Math.PI * i) / n - Math.PI / 2;
+        const p = (angle) => `${(cx + radius * Math.cos(angle)).toFixed(1)} ${(cy + radius * Math.sin(angle)).toFixed(1)}`;
+        return `M ${cx} ${cy} L ${p(mid - half)} A ${radius} ${radius} 0 0 1 ${p(mid + half)} Z`;
+      }
+
+      // One entry per model: its axis data plus the slot that decides its
+      // colour, dash and marker. The slot is the model's position in the
+      // comparison, so it is stable while the address is — reordering the hash
+      // reorders the colours, and nothing else does.
+      function radarSeries(models, axes) {
+        return models.map((model, slot) => {
+          const axisData = axes.map((key, i) => {
+            const value = toNumber(model.scores?.[key]);
+            const scored = Number.isFinite(value);
+            const pct = percentileFor(model, key);
+            // scored but unranked happens when fewer than 2 models ran the
+            // benchmark — there is a number, but no field to place it in.
+            return { key, i, value, scored, pct, ranked: scored && Number.isFinite(pct) };
+          });
+          const ranked = axisData.filter((a) => a.ranked);
+          const mean = ranked.length ? ranked.reduce((sum, a) => sum + a.pct, 0) / ranked.length : null;
+          return { model, slot, axisData, ranked, mean };
+        });
+      }
+
+      // The marker for a series, shaped by its slot. Colour comes from CSS;
+      // shape has to be geometry, and it is what keeps two series apart for a
+      // reader who cannot tell their colours apart at all.
+      // 0 circle · 1 square · 2 triangle up · 3 diamond · 4 triangle down
+      function radarMarker(slot, x, y, r) {
+        const r1 = (v) => Math.round(v * 10) / 10;
+        const cls = `class="radar-mark radar-series" data-series="${slot}"`;
+        const poly = (points) => `<polygon ${cls} points="${points.map(([px, py]) => `${r1(px)},${r1(py)}`).join(" ")}"/>`;
+        switch (slot % 5) {
+          case 1:
+            return `<rect ${cls} x="${r1(x - r)}" y="${r1(y - r)}" width="${r1(r * 2)}" height="${r1(r * 2)}" rx="1"/>`;
+          case 2:
+            return poly([[x, y - r * 1.2], [x + r * 1.1, y + r * 0.8], [x - r * 1.1, y + r * 0.8]]);
+          case 3:
+            return poly([[x, y - r * 1.3], [x + r * 1.3, y], [x, y + r * 1.3], [x - r * 1.3, y]]);
+          case 4:
+            return poly([[x, y + r * 1.2], [x + r * 1.1, y - r * 0.8], [x - r * 1.1, y - r * 0.8]]);
+          default:
+            return `<circle ${cls} cx="${r1(x)}" cy="${r1(y)}" r="${r1(r)}"/>`;
+        }
+      }
+
+      function renderRadarChart(models, axes) {
         const W = 520, H = 480, CX = 260, CY = 238, R = 176;
         const n = axes.length;
         const r1 = (v) => Math.round(v * 10) / 10;
-
-        const axisData = axes.map((key, i) => {
-          const value = toNumber(model.scores?.[key]);
-          const scored = Number.isFinite(value);
-          const pct = percentileFor(model, key);
-          // scored but unranked happens when fewer than 2 models ran the
-          // benchmark — there is a number, but no field to place it in.
-          return { key, i, value, scored, pct, ranked: scored && Number.isFinite(pct) };
-        });
+        // The single-model drawing is kept exactly as it was rather than being
+        // re-expressed as "a comparison of one": it is the page most readers
+        // land on, and the accent polygon with its hollow hub dots and raw
+        // scores under the labels is a finished thing.
+        const single = models.length === 1;
+        const series = radarSeries(models, axes);
 
         // The grid: four concentric rings, the halfway and outer ones a shade
         // firmer, one spoke per axis, and two tiny ticks anchoring the scale.
         const rings = [0.25, 0.5, 0.75, 1].map((frac) => {
-          const pts = axisData
-            .map((a) => { const p = radarPoint(CX, CY, R, a.i, n, frac); return `${r1(p.x)},${r1(p.y)}`; })
+          const pts = axes
+            .map((key, i) => { const p = radarPoint(CX, CY, R, i, n, frac); return `${r1(p.x)},${r1(p.y)}`; })
             .join(" ");
           const major = frac === 0.5 || frac === 1;
           return `<polygon class="radar-ring${major ? " major" : ""}" points="${pts}"/>`;
         }).join("");
 
-        const spokes = axisData.map((a) => {
-          const p = radarPoint(CX, CY, R, a.i, n, 1);
+        const spokes = axes.map((key, i) => {
+          const p = radarPoint(CX, CY, R, i, n, 1);
           return `<line class="radar-spoke" x1="${CX}" y1="${CY}" x2="${r1(p.x)}" y2="${r1(p.y)}"/>`;
         }).join("");
 
@@ -6427,33 +7212,66 @@
           `<text class="radar-tick" x="${CX + 4}" y="${r1(CY - R * frac + 11)}">${label}</text>`
         ).join("");
 
-        // The data polygon spans the ranked axes only: a missing score is a
-        // chord between its neighbours, never a fake zero at the hub.
-        const rankedAxes = axisData.filter((a) => a.ranked);
-        const shape = rankedAxes.length >= 2
-          ? `<polygon class="radar-shape" points="${rankedAxes
-              .map((a) => { const p = radarPoint(CX, CY, R, a.i, n, a.pct); return `${r1(p.x)},${r1(p.y)}`; })
-              .join(" ")}"/>`
-          : "";
+        const vertices = (s) => s.ranked
+          .map((a) => { const p = radarPoint(CX, CY, R, a.i, n, a.pct); return `${r1(p.x)},${r1(p.y)}`; })
+          .join(" ");
 
-        const dots = axisData.map((a) => {
-          const p = radarPoint(CX, CY, R, a.i, n, a.ranked ? a.pct : 0);
-          return a.ranked
-            ? `<circle class="radar-dot" cx="${r1(p.x)}" cy="${r1(p.y)}" r="4.5"/>`
-            : `<circle class="radar-dot missing" cx="${r1(p.x)}" cy="${r1(p.y)}" r="3"/>`;
-        }).join("");
+        // Fills first, then every stroke, then every marker: no series' wash
+        // can then sit on top of another's outline. The data polygon spans the
+        // ranked axes only — a missing score is a chord between its
+        // neighbours, never a fake zero at the hub.
+        const shapes = single
+          ? (series[0].ranked.length >= 2 ? `<polygon class="radar-shape" points="${vertices(series[0])}"/>` : "")
+          : series.map((s) => {
+              // Two vertices make a line, not an area, so a fill would draw
+              // nothing but a seam over its own stroke.
+              const fill = s.ranked.length >= 3
+                ? `<polygon class="radar-shape radar-fill radar-series" data-series="${s.slot}" points="${vertices(s)}"/>`
+                : "";
+              // Closed by repeating the first point rather than with <polygon>,
+              // so a dash pattern starts and ends on a vertex.
+              const line = s.ranked.length >= 2
+                ? `<polyline class="radar-line radar-series" data-series="${s.slot}" points="${vertices(s)} ${vertices(s).split(" ")[0]}"/>`
+                : "";
+              return { fill, line };
+            }).reduce((out, part) => ({ fills: out.fills + part.fill, lines: out.lines + part.line }), { fills: "", lines: "" });
 
-        // Invisible hit targets over the ranked vertices; the delegated
-        // tooltip system picks the data-tip attributes up from SVG unchanged.
-        // Unranked axes carry the same slip on their label instead — a pile
-        // of hollow dots at the hub is no place to aim a pointer.
-        const hits = axisData.filter((a) => a.ranked).map((a) => {
-          const p = radarPoint(CX, CY, R, a.i, n, a.pct);
-          return `<circle class="radar-hit" cx="${r1(p.x)}" cy="${r1(p.y)}" r="14" fill="transparent"${tipAttrs(radarAxisTip(model, a))}/>`;
-        }).join("");
+        const shapeMarkup = single ? shapes : shapes.fills + shapes.lines;
 
-        const labels = axisData.map((a) => {
-          const p = radarPoint(CX, CY, R * 1.12, a.i, n, 1);
+        // Markers. One model keeps its hollow hub dot for a missing axis; a
+        // comparison drops it, because five hollow dots piled on the hub say
+        // nothing the axis label's "k/N" does not say better.
+        const dots = single
+          ? series[0].axisData.map((a) => {
+              const p = radarPoint(CX, CY, R, a.i, n, a.ranked ? a.pct : 0);
+              return a.ranked
+                ? `<circle class="radar-dot" cx="${r1(p.x)}" cy="${r1(p.y)}" r="4.5"/>`
+                : `<circle class="radar-dot missing" cx="${r1(p.x)}" cy="${r1(p.y)}" r="3"/>`;
+            }).join("")
+          : series.map((s) => s.ranked.map((a) => {
+              const p = radarPoint(CX, CY, R, a.i, n, a.pct);
+              return radarMarker(s.slot, p.x, p.y, 4);
+            }).join("")).join("");
+
+        // Invisible hit targets; the delegated tooltip system picks the
+        // data-tip attributes up from SVG unchanged. One model gets a target
+        // per vertex, with its unranked axes carrying the same slip on their
+        // label instead — a pile of hollow dots at the hub is no place to aim
+        // a pointer. A comparison gets one wedge per axis instead of one
+        // target per vertex: two models tied on an axis stack their markers,
+        // and a target you cannot separate is a target you cannot hit. The
+        // wedge's slip lists every model on that axis, best first.
+        const hits = single
+          ? series[0].axisData.filter((a) => a.ranked).map((a) => {
+              const p = radarPoint(CX, CY, R, a.i, n, a.pct);
+              return `<circle class="radar-hit" cx="${r1(p.x)}" cy="${r1(p.y)}" r="14" fill="transparent"${tipAttrs(radarAxisTip(models[0], a))}/>`;
+            }).join("")
+          : axes.map((key, i) =>
+              `<path class="radar-hit" d="${radarAxisWedge(CX, CY, R * 1.06, i, n)}" fill="transparent"${tipAttrs(radarCompareAxisTip(series, i, key))}/>`
+            ).join("");
+
+        const labels = axes.map((key, i) => {
+          const p = radarPoint(CX, CY, R * 1.12, i, n, 1);
           const cos = Math.cos(p.angle);
           const sin = Math.sin(p.angle);
           const anchor = cos > 0.3 ? "start" : cos < -0.3 ? "end" : "middle";
@@ -6467,18 +7285,53 @@
           // Two lines per axis — name over raw score — shifted clear of the
           // rim: up above the chart, down below it, centered at the sides.
           const nameY = sin < -0.5 ? p.y - 10 : sin > 0.5 ? p.y + 12 : p.y - 1;
-          const missing = a.scored ? "" : " missing";
-          const valueText = a.scored ? a.value.toFixed(scoreDecimals(a.key)) : "&mdash;";
-          const tip = a.ranked ? "" : tipAttrs(radarAxisTip(model, a));
+          const scoredCount = series.filter((s) => s.axisData[i].scored).length;
+          const missing = scoredCount ? "" : " missing";
+          // One model shows its number; a comparison shows how many of its
+          // models ran the benchmark at all, and only when some did not —
+          // five numbers do not fit under one label, and "5 of 5" is noise.
+          const valueText = single
+            ? (series[0].axisData[i].scored ? series[0].axisData[i].value.toFixed(scoreDecimals(key)) : "&mdash;")
+            : (scoredCount < series.length ? `${scoredCount}/${series.length}` : "");
+          const tip = single && !series[0].axisData[i].ranked ? tipAttrs(radarAxisTip(models[0], series[0].axisData[i])) : "";
           return `<g${tip}>` +
-            `<text class="radar-label${missing}" x="${r1(labelX)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(a.key))}</text>` +
-            `<text class="radar-value${missing}" x="${r1(labelX)}" y="${r1(nameY + 16)}" text-anchor="${anchor}">${valueText}</text>` +
+            `<text class="radar-label${missing}" x="${r1(labelX)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(key))}</text>` +
+            (valueText ? `<text class="radar-value${missing}" x="${r1(labelX)}" y="${r1(nameY + 16)}" text-anchor="${anchor}">${valueText}</text>` : "") +
             `</g>`;
         }).join("");
 
-        return `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="Radar chart of ${escapeAttr(model.name || "this model")} percentile ranks over ${n} benchmarks">` +
-          rings + spokes + ticks + shape + dots + hits + labels +
+        const title = single
+          ? `Radar chart of ${models[0].name || "this model"} percentile ranks over ${n} benchmarks`
+          : `Radar chart comparing ${models.map((model) => model.name || "Unknown").join(", ")} over ${n} benchmarks by percentile rank`;
+        return `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeAttr(title)}">` +
+          rings + spokes + ticks + shapeMarkup + dots + hits + labels +
           `</svg>`;
+      }
+
+      // Who is who. The swatch is drawn with the very classes the chart uses,
+      // so a colour or a dash can never drift between the two, and the mean
+      // percentile beside each name is the one number that says which shape is
+      // bigger. The × is the fourth way to edit a comparison: it navigates to
+      // the same address minus that model.
+      function radarLegend(series) {
+        const items = series.map((s) => {
+          const name = s.model.name || "Unknown";
+          const slug = modelSlug(name);
+          const meanText = s.mean === null ? "&mdash;" : `p${Math.round(s.mean * 100)}`;
+          const meanTip = s.mean === null
+            ? "No charted axis has a rank for this model."
+            : `Mean percentile rank over the ${s.ranked.length} charted ${s.ranked.length === 1 ? "axis" : "axes"} this model is ranked on.`;
+          return `<li class="radar-legend-item" data-series="${s.slot}">` +
+            `<svg class="radar-legend-swatch" viewBox="0 0 26 12" aria-hidden="true">` +
+              `<line class="radar-line radar-series" data-series="${s.slot}" x1="1" y1="6" x2="25" y2="6"/>` +
+              radarMarker(s.slot, 13, 6, 3.5) +
+            `</svg>` +
+            `<a class="radar-legend-name" href="#model/${escapeAttr(encodeURIComponent(slug))}">${escapeHtml(name)}</a>` +
+            `<span class="radar-legend-mean"${tipAttrs({ eyebrow: "Mean rank", title: name, body: meanTip })}>${meanText}</span>` +
+            `<button type="button" class="radar-legend-x" data-action="compare-remove" data-slug="${escapeAttr(slug)}" aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
+            `</li>`;
+        }).join("");
+        return `<ul class="radar-legend">${items}</ul>`;
       }
 
       // The slip on a radar vertex (or, for an empty axis, its label): which
@@ -6502,6 +7355,31 @@
             updated ? `Updated ${updated}` : ""
           ].filter(Boolean).join("\n"),
           url: source || benchmarkLinks(bench)[0] || ""
+        };
+      }
+
+      // The slip on an axis wedge: every compared model's standing on that one
+      // benchmark, best first. Models with no score are listed too — an
+      // absence is the comparison's point as often as a number is.
+      function radarCompareAxisTip(series, i, key) {
+        const bench = state.data?.benchmarks?.[key] || {};
+        const rows = series
+          .map((s) => ({ name: s.model.name || "Unknown", a: s.axisData[i] }))
+          .sort((x, y) => (y.a.ranked ? y.a.pct : -1) - (x.a.ranked ? x.a.pct : -1));
+        const meta = rows.map(({ name, a }) => {
+          if (!a.scored) {
+            return `${name} — no score`;
+          }
+          const score = a.value.toFixed(scoreDecimals(key));
+          return a.ranked ? `${name} — ${score} (p${Math.round(a.pct * 100)})` : `${name} — ${score} (unranked)`;
+        }).join("\n");
+        return {
+          eyebrow: bench.category || "Benchmark",
+          title: bench.name || getBenchmarkLabel(key),
+          iconKey: key,
+          body: scoreTipBody(key),
+          meta,
+          url: benchmarkLinks(bench)[0] || ""
         };
       }
 
@@ -6575,20 +7453,34 @@
       // the way the columns are. Dates wear the same red the table gives a
       // freshly restamped score; sources show as their domain, since the
       // domain is the provenance tell (see tipLinkMarkup).
-      function renderDetailBenchTable(model) {
-        const categories = [];
-        const keysByCategory = new Map();
+      // How many of the index's benchmarks this model has a number for — the
+      // Coverage line on a detail page and in a comparison's specs table, so
+      // the two can never disagree about what "N of M" counts.
+      function modelCoverage(model) {
+        return state.benchmarkKeys
+          .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
+      }
+
+      // Benchmarks in the index's own order, filed under their category. The
+      // detail table, the axis menu and the comparison table all walk this, so
+      // there is one definition of the grouping and of the order it comes in.
+      function benchmarkKeysByCategory() {
+        const groups = [];
+        const byCategory = new Map();
         state.benchmarkKeys.forEach((key) => {
           const category = state.data?.benchmarks?.[key]?.category || "Other";
-          if (!keysByCategory.has(category)) {
-            keysByCategory.set(category, []);
-            categories.push(category);
+          if (!byCategory.has(category)) {
+            byCategory.set(category, { category, keys: [] });
+            groups.push(byCategory.get(category));
           }
-          keysByCategory.get(category).push(key);
+          byCategory.get(category).keys.push(key);
         });
+        return groups;
+      }
 
-        const rows = categories.map((category) => {
-          const items = keysByCategory.get(category).map((key) => {
+      function renderDetailBenchTable(model) {
+        const rows = benchmarkKeysByCategory().map(({ category, keys }) => {
+          const items = keys.map((key) => {
             const bench = state.data.benchmarks[key] || {};
             const value = toNumber(model.scores?.[key]);
             const scored = Number.isFinite(value);
@@ -6628,6 +7520,482 @@
                     <th>Source</th>
                   </tr>
                 </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }
+
+      /* ── Model comparison ────────────────────────────
+         Two to five models side by side: one radar with a series each, one
+         specs table, one all-benchmarks table with a column per model. It
+         lives behind #compare/<slug>,<slug>, so a comparison is a link the
+         way a detail page is — and it is built out of the detail page's
+         parts rather than a second copy of them: the same axes, the same
+         percentile ranks, the same benchmark grouping. */
+
+      const COMPARE_MIN = 2;
+      const COMPARE_MAX = 5;
+      // Never emitted with anything else: modelSlug only ever produces
+      // [a-z0-9.-], so a comma can never turn up inside a slug.
+      const COMPARE_SEP = ",";
+
+      // Route slugs to model objects — raw ones out of state.modelsBySlug,
+      // because percentileFor keys its rank maps by object identity (see the
+      // note in init) and the decorated copies applyAndRender builds would
+      // rank as null for everything. Two models that slug the same collide in
+      // that map already, so a comparison can only ever hold one of them;
+      // there is nothing to do about it here that renaming would not do
+      // better upstream.
+      function resolveCompareModels(slugs) {
+        const models = [];
+        const missing = [];
+        slugs.forEach((slug) => {
+          const model = state.modelsBySlug.get(slug);
+          if (model) {
+            models.push(model);
+          } else {
+            missing.push(slug);
+          }
+        });
+        return { models, missing };
+      }
+
+      // Everything the address can get wrong is decided here, and in every
+      // case the hash is left saying exactly what the page shows — so a link
+      // that gets shared onward is the link the sharer was looking at.
+      function renderCompareRoute(slugs) {
+        const raw = String(location.hash || "").match(/^#compare\/(.+)$/);
+        // parseCompareSlugs already dropped duplicates and cut the list; this
+        // is how many the reader actually asked for.
+        const asked = raw ? decodeSlug(raw[1]).split(/[,+]/).filter((part) => part.trim()).length : slugs.length;
+        const truncated = asked > slugs.length;
+        const { models, missing } = resolveCompareModels(slugs);
+
+        // A comparison of one is a detail page — including one left holding a
+        // single model because the rest of the address went stale. Replaced
+        // rather than pushed: the degenerate address has no business sitting
+        // in the history for the back button to walk into.
+        if (models.length === 1) {
+          location.replace(`#model/${encodeURIComponent(modelSlug(models[0].name))}`);
+          return;
+        }
+
+        if (!models.length) {
+          renderUnknownCompare(slugs);
+          document.title = state.data.title || "OpenBench Index";
+          return;
+        }
+
+        const kept = models.map((model) => modelSlug(model.name));
+        if (missing.length || truncated) {
+          history.replaceState(null, "", compareHash(kept));
+          state.route.slugs = kept;
+        }
+
+        renderCompareView(models, missing, truncated ? asked : 0);
+        document.title = `${models.map((model) => model.name).join(" vs ")} · ${state.data.title || "OpenBench Index"}`;
+      }
+
+      // Nothing in the address names a model the index knows — every slug is
+      // stale or mistyped. Same empty-state voice renderUnknownModel uses.
+      function renderUnknownCompare(slugs) {
+        closeTip();
+        ui.content.innerHTML = `
+          <section class="detail-head">
+            <a class="detail-back" href="#">&larr; Leaderboard</a>
+          </section>
+          <div class="empty">No model called ${slugs.map((slug) => `&ldquo;${escapeHtml(slug)}&rdquo;`).join(" or ")} is in the index.</div>
+        `;
+      }
+
+      function renderCompareView(models, missing, asked) {
+        // Every anchor in here is about to be replaced.
+        closeTip();
+        ui.content.innerHTML = `
+          ${renderCompareHead(models, missing, asked)}
+          <div class="detail-grid">
+            ${renderRadarSection(models)}
+          </div>
+          ${renderCompareSpecs(models)}
+          ${renderCompareBenchTable(models)}
+        `;
+      }
+
+      // The swatch that ties a name to its series, repeated wherever a model
+      // is named on this page — the byline, the table heads — so the legend is
+      // never the only place to look a colour up.
+      function compareSwatch(slot) {
+        return `<span class="compare-swatch" style="background: var(--series-${slot + 1})" aria-hidden="true"></span>`;
+      }
+
+      function renderCompareHead(models, missing, asked) {
+        const byline = models.map((model, slot) => {
+          const name = model.name || "Unknown";
+          return `<span class="compare-byline-item">${compareSwatch(slot)}` +
+            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span>`;
+        }).join(" &middot; ");
+
+        const notes = [
+          asked ? `Showing the first ${models.length} of ${asked} models — a comparison holds ${COMPARE_MAX}.` : "",
+          missing.length ? `${missing.map((slug) => `&ldquo;${escapeHtml(slug)}&rdquo;`).join(" and ")} ${missing.length === 1 ? "is" : "are"} not in the index and ${missing.length === 1 ? "was" : "were"} dropped.` : ""
+        ].filter(Boolean).map((note) => `<p class="compare-missing-note">${note}</p>`).join("");
+
+        return `
+          <section class="detail-head compare-head">
+            <div class="detail-head-main">
+              <a class="detail-back" href="#">&larr; Leaderboard</a>
+              <h2 class="detail-name">Comparing ${models.length} model${models.length === 1 ? "" : "s"}</h2>
+              <p class="detail-byline">${byline}</p>
+              <div class="compare-actions">${compareHeadActions(models)}</div>
+              ${notes}
+            </div>
+          </section>
+        `;
+      }
+
+      /* ── The "compare with…" picker ──
+         One component with two callers: the + Add model button on a
+         comparison and the Compare with… button on a single model's page. It
+         borrows the axis menu's shell and rows wholesale — the only thing it
+         adds is a search box, because four hundred models is not a list
+         anyone scrolls. */
+
+      function compareHeadActions(models) {
+        return `${renderComparePicker(models, "+ Add model", models.length >= COMPARE_MAX)}
+          <button type="button" class="compare-btn" data-action="compare-copy"${tipAttrs({
+            eyebrow: "Share",
+            body: "Copies this page's address. The comparison lives in the link, so it reopens exactly as it is here — note that the export button still follows the filter panel, not this page."
+          })}>Copy link</button>
+          <button type="button" class="compare-btn" data-action="compare-clear">Clear</button>`;
+      }
+
+      // Only the action row re-renders when the menu opens, closes or is
+      // typed into — the radar and the tables below it are untouched, so the
+      // page never jumps. Both views put their picker in .compare-actions,
+      // which is what makes one function enough.
+      function rerenderCompareControls() {
+        const host = ui.content.querySelector(".compare-actions");
+        if (!host) {
+          return;
+        }
+        closeTip();
+        const models = currentRadarModels();
+        if (state.route.view === "compare") {
+          host.innerHTML = compareHeadActions(models);
+        } else if (models.length) {
+          host.innerHTML = renderComparePicker(models, "Compare with&hellip;");
+        }
+        // Typing straight into the search box is the point of opening the
+        // list, but only where a keyboard is already out — the same rule
+        // focusOptionSearch follows for the filter panel's widgets.
+        if (state.compare.pickerOpen && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+          host.querySelector(".compare-menu-search-input")?.focus();
+        }
+      }
+
+      // A menu row toggles, inside the cap. Only the body is swapped, so the
+      // search box above it keeps focus and caret while the reader works.
+      function togglePendingModel(slug) {
+        const index = state.compare.pending.indexOf(slug);
+        if (index >= 0) {
+          state.compare.pending.splice(index, 1);
+        } else if (state.compare.pending.length < COMPARE_MAX) {
+          state.compare.pending.push(slug);
+        }
+        const body = document.getElementById("compareMenuBody");
+        if (body) {
+          body.innerHTML = renderCompareMenuBody();
+        }
+      }
+
+      // The address is the comparison, so handing it over is the whole share
+      // story. The prompt is the fallback for a browser that withholds the
+      // clipboard (no permission, or a page not served over https).
+      function copyCompareLink(button) {
+        const restore = () => {
+          const label = button.textContent;
+          button.textContent = "Copied";
+          window.setTimeout(() => { button.textContent = label; }, 1200);
+        };
+        const ask = () => window.prompt("Copy this link", location.href);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(location.href).then(restore, ask);
+        } else {
+          ask();
+        }
+      }
+
+      // The slugs the Compare Models picker currently adds up to. Names go
+      // through modelSlug rather than being looked up, because that widget
+      // holds names and the address holds slugs.
+      function selectedCompareSlugs() {
+        return state.filters.selectedModels.map((name) => modelSlug(name));
+      }
+
+      function compareSelectionReady() {
+        const count = state.filters.selectedModels.length;
+        return count >= COMPARE_MIN && count <= COMPARE_MAX;
+      }
+
+      function goToSelectedComparison() {
+        if (compareSelectionReady()) {
+          location.hash = compareHash(selectedCompareSlugs());
+        }
+      }
+
+      function renderComparePicker(models, label, disabled) {
+        const menu = state.compare.pickerOpen ? renderCompareMenu() : "";
+        return `<button type="button" class="compare-btn" data-action="compare-toggle-picker"` +
+          `${disabled ? " disabled" : ""} aria-expanded="${String(Boolean(state.compare.pickerOpen))}" aria-haspopup="true"` +
+          `${disabled ? tipAttrs({ body: `A comparison holds ${COMPARE_MAX} models — drop one first.` }) : ""}>${label}</button>${menu}`;
+      }
+
+      function renderCompareMenu() {
+        return `<div class="axis-menu compare-menu">
+          <div class="compare-menu-search">
+            <input type="text" class="compare-menu-search-input" placeholder="Filter models" aria-label="Filter models"
+              autocomplete="off" spellcheck="false" value="${escapeAttr(state.compare.query)}">
+          </div>
+          <div id="compareMenuBody">${renderCompareMenuBody()}</div>
+        </div>`;
+      }
+
+      // Only this body is ever swapped as the reader types, so the input above
+      // it is never replaced and keeps its focus and its caret.
+      function renderCompareMenuBody() {
+        const pending = state.compare.pending;
+        const query = state.compare.query.trim().toLowerCase();
+        const atMax = pending.length >= COMPARE_MAX;
+
+        // Picked first, then the leaderboard order the reader was just looking
+        // at, then whatever the filters were hiding — alphabetically, so the
+        // tail is at least predictable.
+        const seen = new Set();
+        const ordered = [];
+        const push = (model) => {
+          const slug = modelSlug(model.name);
+          if (!seen.has(slug)) {
+            seen.add(slug);
+            ordered.push({ model, slug });
+          }
+        };
+        pending.forEach((slug) => {
+          const model = state.modelsBySlug.get(slug);
+          if (model) push(model);
+        });
+        state.filteredModels.forEach((row) => {
+          const model = state.modelsBySlug.get(modelSlug(row.name));
+          if (model) push(model);
+        });
+        [...state.data.models]
+          .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
+          .forEach(push);
+
+        const items = ordered
+          .filter(({ model }) => !query || `${model.name || ""} ${creatorNameOf(model)}`.toLowerCase().includes(query))
+          .map(({ model, slug }) => {
+            const on = pending.includes(slug);
+            const disabled = !on && atMax;
+            return `<button type="button" class="axis-menu-item${on ? " on" : ""}" data-action="compare-pick" data-slug="${escapeAttr(slug)}"${disabled ? " disabled" : ""}>` +
+              `<span class="axis-menu-check" aria-hidden="true">&#10003;</span>` +
+              `<span class="axis-menu-name">${escapeHtml(model.name || "Unknown")}</span>` +
+              `<span class="axis-menu-score">${escapeHtml(creatorNameOf(model))}</span>` +
+              `</button>`;
+          }).join("");
+
+        const note = atMax
+          ? `<div class="axis-menu-note">${COMPARE_MAX} of ${COMPARE_MAX} &mdash; unpick one to add another.</div>`
+          : "";
+        const empty = items ? "" : `<div class="compare-menu-empty">No model matches that.</div>`;
+        const ready = pending.length >= COMPARE_MIN;
+        const foot = `<div class="compare-menu-foot">
+          <button type="button" class="compare-btn is-primary" data-action="compare-go"${ready ? "" : " disabled"}${ready ? "" : tipAttrs({
+            body: `Pick at least ${COMPARE_MIN} models to compare them side by side.`
+          })}>Compare ${pending.length} model${pending.length === 1 ? "" : "s"}</button>
+        </div>`;
+        return `${note}${empty}${items}${foot}`;
+      }
+
+      /* ── Specs, side by side ──
+         A table rather than the detail page's <dl>: a two-column definition
+         list does not generalize to five models. Same rows in the same order,
+         so a reader moving between the two pages reads the same list. */
+
+      // Which cells in a spec row earn the best-value mark. Context and
+      // coverage have a best — more of either is strictly better. Parameters
+      // and VRAM do not: a bigger model is not a better one, and a smaller
+      // VRAM figure is a smaller model rather than a better result, which is
+      // exactly why the table's own VRAM shading is a fit test against a
+      // budget and not a ranking.
+      function compareSpecBest(values) {
+        const numbers = values.filter((value) => Number.isFinite(value));
+        if (numbers.length < 2) {
+          return new Set();
+        }
+        const top = Math.max(...numbers);
+        const best = new Set();
+        values.forEach((value, i) => {
+          if (Number.isFinite(value) && nearlyEqual(value, top)) {
+            best.add(i);
+          }
+        });
+        return best;
+      }
+
+      function renderCompareSpecs(models) {
+        const heads = models.map((model, slot) => {
+          const name = model.name || "Unknown";
+          return `<th scope="col"><span class="compare-head-cell">${compareSwatch(slot)}` +
+            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span></th>`;
+        }).join("");
+
+        const row = (label, cells) =>
+          `<tr><th scope="row" class="compare-spec-name">${label}</th>${cells}</tr>`;
+
+        const creators = models.map((model) => {
+          const name = escapeHtml(creatorNameOf(model));
+          const url = recentLinkUrl(model.creator?.url);
+          return `<td class="compare-spec-value">${url
+            ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${name}</a>`
+            : name}</td>`;
+        }).join("");
+
+        // Context arrives as a unit string ("256k", "1M"), so it goes through
+        // parseUnitNumber — the same reader the table's own top-context mark
+        // and the context sort use.
+        const contexts = compareSpecBest(models.map((model) => parseUnitNumber(model.context)));
+        const coverages = compareSpecBest(models.map((model) => modelCoverage(model)));
+
+        // One VRAM row per quantization, each slip carrying where that figure
+        // was read — the same static fields the detail page's card uses.
+        const vramRows = ["fp16", "int8", "int4"].map((quant) => {
+          const cells = models.map((model) => {
+            const value = model.vram?.[quant];
+            const source = recentLinkUrl(model.vram_source?.[quant]);
+            const tip = value == null ? "" : tipAttrs({
+              eyebrow: "VRAM estimate",
+              title: `${model.name || "Unknown"} @ ${quant}`,
+              body: source ? "Estimated weights-only memory. The link is where the figure was read." : "Estimated weights-only memory. No source recorded.",
+              url: source
+            });
+            return `<td class="compare-spec-value"${tip}>${formatVram(value)}</td>`;
+          }).join("");
+          return row(`VRAM ${escapeHtml(quant)}`, cells);
+        }).join("");
+
+        const rows = [
+          row("Creator", creators),
+          row("Parameters", models.map((model) => `<td class="compare-spec-value">${formatParams(model.params)}</td>`).join("")),
+          row("Context", models.map((model, i) => `<td class="compare-spec-value${contexts.has(i) ? " is-best" : ""}">${formatContext(model.context)}</td>`).join("")),
+          vramRows,
+          row("Added", models.map((model) => `<td class="compare-spec-value">${model.date_added ? escapeHtml(model.date_added) : "-"}</td>`).join("")),
+          row("Coverage", models.map((model, i) => `<td class="compare-spec-value${coverages.has(i) ? " is-best" : ""}">${modelCoverage(model)} / ${state.benchmarkKeys.length}</td>`).join("")),
+          row("Model page", models.map((model) => {
+            const url = recentLinkUrl(model.url);
+            return `<td class="compare-spec-value compare-url">${url
+              ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url.replace(/^https?:\/\/(www\.)?/, ""))}</a>`
+              : "-"}</td>`;
+          }).join(""))
+        ].join("");
+
+        return `
+          <section class="detail-bench-panel compare-panel" aria-label="Specifications side by side">
+            <h2>Details</h2>
+            <div class="detail-bench-card">
+              <table class="compare-table compare-specs-table">
+                <thead><tr><th scope="col">Detail</th>${heads}</tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }
+
+      /* ── Benchmarks, side by side ──
+         Every benchmark in the index, scored or not, grouped the way the
+         columns are — a row nobody ran is dimmed rather than dropped, because
+         a shared blank is as much of an answer as a number, and the row is
+         also the axis picker's shopping list. */
+
+      // The best cells in one row: every model tied at the best value, flipped
+      // for a lower-is-better benchmark. Nothing is marked when fewer than two
+      // models have a number — there is no "best" among one score.
+      function compareBestSet(models, key) {
+        const values = models.map((model) => toNumber(model.scores?.[key]));
+        const numbers = values.filter((value) => Number.isFinite(value));
+        if (numbers.length < 2) {
+          return new Set();
+        }
+        const top = isLowerBetter(key) ? Math.min(...numbers) : Math.max(...numbers);
+        const best = new Set();
+        values.forEach((value, i) => {
+          if (Number.isFinite(value) && nearlyEqual(value, top)) {
+            best.add(i);
+          }
+        });
+        return best;
+      }
+
+      // Score over rank. The dates and the provenance the detail page shows in
+      // their own columns move into the cell's own slip here — five models
+      // times five fields is not a table anyone reads — and the slip is also
+      // what a phone gets, where the rank line is hidden and a long press on
+      // the cell is what opens it.
+      function renderCompareScoreCell(model, key, isBest) {
+        const value = toNumber(model.scores?.[key]);
+        const scored = Number.isFinite(value);
+        const pct = scored ? percentileFor(model, key) : null;
+        const fresh = scored && scoreFreshness(model, key) > 0;
+        const classes = ["compare-cell", isBest ? "is-best" : "", fresh ? "is-fresh" : ""].filter(Boolean).join(" ");
+        const tip = tipAttrs(radarAxisTip(model, {
+          key,
+          value,
+          scored,
+          pct,
+          ranked: scored && Number.isFinite(pct)
+        }));
+        const score = scored
+          ? `<span class="compare-score">${formatScore(value, key)}</span>`
+          : `<span class="na">&mdash;</span>`;
+        const rank = Number.isFinite(pct) ? `p${Math.round(pct * 100)}` : "&mdash;";
+        return `<td class="${classes}"${tip}>${score}<span class="compare-pct">${rank}</span></td>`;
+      }
+
+      function renderCompareBenchTable(models) {
+        const span = models.length + 1;
+        const heads = models.map((model, slot) => {
+          const name = model.name || "Unknown";
+          return `<th scope="col"><span class="compare-head-cell">${compareSwatch(slot)}` +
+            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span></th>`;
+        }).join("");
+
+        const rows = benchmarkKeysByCategory().map(({ category, keys }) => {
+          const items = keys.map((key) => {
+            const bench = state.data.benchmarks[key] || {};
+            const best = compareBestSet(models, key);
+            const anyScored = models.some((model) => Number.isFinite(toNumber(model.scores?.[key])));
+            const flags = [
+              bench.derived ? `<span class="bench-flag">derived</span>` : "",
+              isLowerBetter(key) ? `<span class="bench-flag">lower is better</span>` : ""
+            ].join("");
+            const cells = models.map((model, i) => renderCompareScoreCell(model, key, best.has(i))).join("");
+            return `
+              <tr data-bench-key="${escapeAttr(key)}"${anyScored ? "" : ' class="bench-missing"'}>
+                <td><span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}<span class="bench-name-text">${escapeHtml(bench.name || getBenchmarkLabel(key))}</span></span>${flags}</td>
+                ${cells}
+              </tr>`;
+          }).join("");
+          return `<tr class="bench-cat-row"><td colspan="${span}">${escapeHtml(category)}</td></tr>${items}`;
+        }).join("");
+
+        return `
+          <section class="detail-bench-panel compare-panel" aria-label="All benchmarks side by side">
+            <h2>All benchmarks</h2>
+            <div class="detail-bench-card">
+              <table class="compare-table">
+                <thead><tr><th scope="col">Benchmark</th>${heads}</tr></thead>
                 <tbody>${rows}</tbody>
               </table>
             </div>
