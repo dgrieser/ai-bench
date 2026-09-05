@@ -1343,10 +1343,14 @@
       /* The rows scroll inside .table-shell, so on its own this pins the header
          to the top of that box. Scrolling the page is the other half of it: the
          box travels up with the page, header included, and the rows left on
-         screen lose their labels. syncStickyHead() writes how far the box has
-         passed the top of the window into --sticky-head-top, which offsets the
-         header back down onto them — the model column staying put while the
-         columns scroll sideways, turned ninety degrees. */
+         screen lose their labels. So the header is pushed back down onto them
+         by however far the box has passed the top of the window — the model
+         column staying put while the columns scroll sideways, turned ninety
+         degrees.
+
+         That distance comes from a scroll-driven animation where the browser
+         supports one (see below), and from syncStickyHead() writing
+         --sticky-head-top where it does not. */
       top: var(--sticky-head-top, 0px);
       z-index: 2;
       background: var(--surface-alt);
@@ -1396,6 +1400,41 @@
 
     thead th:has(.sort-indicator:not(.group-indicator)):hover {
       background: #d8d7d3 !important;
+    }
+
+    /* The same offset again, but handed to the browser as a rule instead of a
+       measurement: the header rides the page's own scroll timeline, sliding
+       from nothing to the shell's height less its own over exactly the stretch
+       of scroll in which the shell is passing the top of the window
+       (--sticky-head-start to --sticky-head-end, both measured by
+       syncStickyHead). The browser evaluates that against the scroll offset it
+       is painting, so the header sits on the right row in the very frame the
+       rows move — the scroll handler cannot do that on a phone, where a flick
+       is scrolled off the main thread and every event it fires is already a
+       frame or more old. The three lengths it needs move with the layout, not
+       with the scrolling, so measuring them costs nothing per frame. */
+    @keyframes sticky-head-follow {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(var(--sticky-head-travel, 0px));
+      }
+    }
+
+    @supports (animation-timeline: scroll()) {
+      thead th {
+        top: 0;
+        animation-name: sticky-head-follow;
+        animation-timing-function: linear;
+        /* Held at both ends: flat against the top of the shell until the shell
+           reaches the top of the window, parked over the last row once the
+           shell has gone past it. */
+        animation-fill-mode: both;
+        animation-timeline: scroll(root block);
+        animation-range: var(--sticky-head-start, 0px) var(--sticky-head-end, 0px);
+      }
     }
 
     /* Sticky first column */
@@ -4878,11 +4917,16 @@
         window.addEventListener("resize", debounce(() => updateFilterColumns(), 150));
         window.addEventListener("resize", debounce(() => syncTitleLines(), 100));
 
-        // Both move the table relative to the window, so both move the header.
-        window.addEventListener("scroll", queueStickyHeadSync, { passive: true });
+        // Only for the browsers left measuring the header offset themselves:
+        // the rest are already following the page scroll without being asked.
+        if (!hasScrollTimelines) {
+          window.addEventListener("scroll", syncStickyHead, { passive: true });
+        }
+        // A resize moves the table relative to the window, and so does anything
+        // above it growing or shrinking — the filters panel folding open, a
+        // preset row appearing — which is neither a scroll nor a resize. Both
+        // change what every browser here needs measured.
         window.addEventListener("resize", queueStickyHeadSync);
-        // So does anything above the table growing or shrinking — the filters
-        // panel folding open, a preset row appearing — which is neither.
         if (typeof ResizeObserver === "function") {
           new ResizeObserver(queueStickyHeadSync).observe(document.body);
         }
@@ -5365,7 +5409,20 @@
          that window leaves the screen top first, taking the header with it
          while rows are still in view. So the header is given an offset equal to
          however far the shell has passed the top of the viewport, which lands it
-         back on the topmost row on screen. */
+         back on the topmost row on screen.
+
+         Where the browser can follow the scroll itself — the scroll timeline
+         in the stylesheet — that offset is none of this code's business: all
+         that is left here is measuring the two ends of the slide, and those
+         only move when the layout does. Everywhere else the offset is measured
+         and written per scroll event, which is a frame behind whenever the
+         scrolling is not on the main thread. */
+
+      // Chrome 115+, Safari 26+, Firefox 144+.
+      const hasScrollTimelines = typeof CSS !== "undefined" &&
+        typeof CSS.supports === "function" &&
+        CSS.supports("animation-timeline: scroll()");
+
       function syncStickyHead() {
         const shell = ui.content.querySelector(".table-shell");
         if (!shell) {
@@ -5379,11 +5436,24 @@
         // Stopped at the bottom of the shell: beyond that the header would be
         // standing over rows the shell has already scrolled out of sight.
         const limit = Math.max(0, shellRect.height - head.getBoundingClientRect().height);
+        if (hasScrollTimelines) {
+          // Where the shell's top edge reaches the top of the window, and where
+          // it has carried the header as far as it may go. Left unrounded: the
+          // browser reads these as the two ends of a slide the header takes at
+          // exactly the speed of the scroll, and a rounded end would tilt it.
+          const start = Math.max(0, shellRect.top + window.scrollY);
+          shell.style.setProperty("--sticky-head-start", `${start}px`);
+          shell.style.setProperty("--sticky-head-end", `${start + limit}px`);
+          shell.style.setProperty("--sticky-head-travel", `${limit}px`);
+          return;
+        }
         const offset = Math.min(Math.max(0, -shellRect.top), limit);
         shell.style.setProperty("--sticky-head-top", `${Math.round(offset)}px`);
       }
 
-      // One sync per frame: scroll fires far more often than the header moves.
+      // One sync per frame, for the layout changes that can arrive in bursts.
+      // The scroll fallback does not go through here: a frame of delay is the
+      // whole problem it is trying not to have.
       let stickyHeadFrame = 0;
       function queueStickyHeadSync() {
         if (stickyHeadFrame) {
