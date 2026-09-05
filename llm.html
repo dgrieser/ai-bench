@@ -1486,7 +1486,15 @@
        panels below would begin with the stutter this is all here to avoid.
        Everything it needs moves with the layout, not with the scrolling. */
     @supports (animation-timeline: scroll()) {
-      thead th {
+      /* Scoped to the shell, because the slide only makes sense for the table
+         that lives in one. The comparison's two tables are `thead th` as much
+         as this one is, and they sit outside any shell: they would inherit
+         neither end of the range, hold at the end state of a keyframe measured
+         for the leaderboard, and carry their head cells a couple of thousand
+         pixels down out of the card -- taking the model names with them and
+         leaving that much phantom scroll behind in a box that should not
+         scroll vertically at all. */
+      .table-shell thead th {
         top: 0;
         animation-name: sticky-head-follow;
         animation-timing-function: linear;
