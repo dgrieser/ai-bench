@@ -3080,22 +3080,44 @@
 
     /* Five model columns overflow on purpose; the name column is pinned so a
        reader who has scrolled to the fifth model still knows what the row is.
-       Same sticky-plus-seam trick the leaderboard's first column uses. */
+       The pinning itself is already done: the sheet's own `th:first-child,
+       td:first-child` rule pins every table's first column, zebra shade and
+       all, so only the seam is added here — and only where there is a column
+       edge to draw. */
     .compare-table th:first-child,
     .compare-table td:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 1;
-      background: var(--surface);
       box-shadow: 1px 0 0 var(--line-soft);
+    }
+
+    /* The header's first cell inherits z-index 1 from that rule while its
+       siblings inherit 2 from `thead th`, which would let a model column slide
+       over the word it is meant to stay behind. The leaderboard settles this
+       with a 3 on its own head cell; the same number does it here. */
+    .compare-table thead th:first-child {
+      z-index: 3;
     }
 
     .compare-table tbody tr:not(.bench-cat-row):hover td:first-child {
       background: var(--surface-alt);
     }
 
+    /* A category subhead spans every column, so pinning the cell pins nothing:
+       sticky cannot carry an element past its own containing block, and this
+       one is as wide as the table. The label inside it is what travels. */
     .compare-table .bench-cat-row td {
+      position: static;
       background: var(--surface);
+      box-shadow: none;
+      /* `tbody td` hides its overflow, which makes the cell a scroll box of
+         its own — and a scroll box that never scrolls is the nearest one the
+         label would stick inside, so it would not stick at all. */
+      overflow: visible;
+    }
+
+    .compare-table .bench-cat-label {
+      position: sticky;
+      left: 14px;
+      display: inline-block;
     }
 
     .compare-table thead th:not(:first-child) {
@@ -3334,7 +3356,7 @@
          Capping the pinned column puts a model's scores on screen from the
          start; the full name and its tags are still in the row's slip. */
       .compare-table th:first-child,
-      .compare-table td:first-child {
+      .compare-table td:first-child:not([colspan]) {
         max-width: 168px;
         overflow: hidden;
       }
@@ -7987,7 +8009,7 @@
                 ${cells}
               </tr>`;
           }).join("");
-          return `<tr class="bench-cat-row"><td colspan="${span}">${escapeHtml(category)}</td></tr>${items}`;
+          return `<tr class="bench-cat-row"><td colspan="${span}"><span class="bench-cat-label">${escapeHtml(category)}</span></td></tr>${items}`;
         }).join("");
 
         return `
