@@ -3285,10 +3285,23 @@
       text-decoration: underline;
     }
 
+    /* Just the mark, centred over the column it belongs to -- the width of
+       this cell is no longer the width of somebody's URL. */
     .compare-spec-value.compare-url {
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .compare-link {
+      display: inline-block;
+      padding: 0 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .compare-link:hover {
+      color: var(--accent-hover);
     }
 
     @media (max-width: 860px) {
@@ -8045,11 +8058,20 @@
           vramRows,
           row("Added", models.map((model) => `<td class="compare-spec-value">${model.date_added ? escapeHtml(model.date_added) : "-"}</td>`).join("")),
           row("Coverage", models.map((model, i) => `<td class="compare-spec-value${coverages.has(i) ? " is-best" : ""}">${modelCoverage(model)} / ${state.benchmarkKeys.length}</td>`).join("")),
+          // The address itself, spelled out, is the one cell that can force a
+          // model's whole column wider than the phone it is being read on --
+          // and five of them say the same host anyway. So the row is the mark
+          // the tooltips use for an outbound link, and the address travels in
+          // the slip behind it, where the host and path are already styled
+          // apart.
           row("Model page", models.map((model) => {
             const url = recentLinkUrl(model.url);
+            const name = model.name || "Unknown";
             return `<td class="compare-spec-value compare-url">${url
-              ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url.replace(/^https?:\/\/(www\.)?/, ""))}</a>`
-              : "-"}</td>`;
+              ? `<a class="compare-link" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"` +
+                `${tipAttrs({ eyebrow: "Model page", title: name, body: "Where this model is published.", url })}` +
+                ` aria-label="${escapeAttr(`Open the ${name} model page`)}">&#8599;</a>`
+              : '<span class="na">&mdash;</span>'}</td>`;
           }).join(""))
         ].join("");
 
