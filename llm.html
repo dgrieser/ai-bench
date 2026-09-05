@@ -1538,7 +1538,11 @@
       background: #fafaf8;
     }
 
-    /* sticky first column needs explicit background since td overrides tr */
+    /* The sticky first column needs an explicit background, since the cell
+       paints over the row -- and it is a th where the rows carry a header of
+       their own (the comparison's specs table), so both spellings are named
+       here or that column stops following the stripe. */
+    tbody tr:nth-child(even) th:first-child,
     tbody tr:nth-child(even) td:first-child {
       background: #fafaf8;
     }
@@ -1547,6 +1551,7 @@
       background: #eeeeed;
     }
 
+    tbody tr:hover th:first-child,
     tbody tr:hover td:first-child {
       background: #eeeeed;
     }
@@ -3165,6 +3170,7 @@
       z-index: 3;
     }
 
+    .compare-table tbody tr:not(.bench-cat-row):hover th:first-child,
     .compare-table tbody tr:not(.bench-cat-row):hover td:first-child {
       background: var(--surface-alt);
     }
@@ -4015,11 +4021,13 @@
     }
 
     [data-theme="dark"] tbody tr:nth-child(even),
+    [data-theme="dark"] tbody tr:nth-child(even) th:first-child,
     [data-theme="dark"] tbody tr:nth-child(even) td:first-child {
       background: #131210;
     }
 
     [data-theme="dark"] tbody tr:hover,
+    [data-theme="dark"] tbody tr:hover th:first-child,
     [data-theme="dark"] tbody tr:hover td:first-child {
       background: #252421;
     }
