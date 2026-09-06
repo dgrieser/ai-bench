@@ -2840,17 +2840,49 @@
        carry them for a reader who cannot see colour), the legend that names
        them, and tables that scroll sideways with their first column pinned. */
 
+    /* Five names is a longer title than one, so it is set a size down from a
+       model's own -- and it wraps, because the alternative at five is a line
+       nobody can read. */
     .compare-head .detail-name {
-      /* A sentence, not a title: it names a set, so it does not need the
-         weight a model's own name carries. */
-      font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+      font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+      flex-wrap: wrap;
+      gap: 4px 10px;
     }
 
-    .compare-byline-item {
+    .compare-name-item {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .compare-name a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .compare-name a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-color: var(--line);
+      text-underline-offset: 5px;
+    }
+
+    /* The joiner is punctuation, not a name: it steps back so the eye lands on
+       the models it separates. */
+    .compare-vs {
+      color: var(--subtle);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 0.68em;
+    }
+
+    /* In the heading the swatch scales with the type it sits in; everywhere
+       else it is the fixed 10px chip below. */
+    .compare-name .compare-swatch {
+      width: 0.46em;
+      height: 0.46em;
+      border-radius: 0.14em;
     }
 
     /* The swatch before a name in the byline and in a table head: the colour
@@ -7802,11 +7834,20 @@
       }
 
       function renderCompareHead(models, missing, asked) {
-        const byline = models.map((model, slot) => {
+        // The heading is the comparison — the models' own names, joined the way
+        // the page title joins them, each in its series colour and each still a
+        // link to its own page. A byline underneath would now be the same names
+        // a second time, so the swatch and the link came up here with them.
+        // Each "vs" travels inside the item it introduces rather than between
+        // two of them, so five long names wrap as "…thinker / vs qwen3…" and
+        // never leave a joiner stranded at the end of a line.
+        const heading = models.map((model, slot) => {
           const name = model.name || "Unknown";
-          return `<span class="compare-byline-item">${compareSwatch(slot)}` +
+          return `<span class="compare-name-item">` +
+            (slot ? `<span class="compare-vs">vs</span>` : "") +
+            `${compareSwatch(slot)}` +
             `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span>`;
-        }).join(" &middot; ");
+        }).join("");
 
         const notes = [
           asked ? `Showing the first ${models.length} of ${asked} models — a comparison holds ${COMPARE_MAX}.` : "",
@@ -7817,8 +7858,7 @@
           <section class="detail-head compare-head">
             <div class="detail-head-main">
               <a class="detail-back" href="#">&larr; Leaderboard</a>
-              <h2 class="detail-name">Comparing ${models.length} model${models.length === 1 ? "" : "s"}</h2>
-              <p class="detail-byline">${byline}</p>
+              <h2 class="detail-name compare-name">${heading}</h2>
               <div class="compare-actions">${compareHeadActions(models)}</div>
               ${notes}
             </div>
