@@ -499,6 +499,20 @@ class TestWorkflowWiring(unittest.TestCase):
         )
         self.assertIn("./test_answers.py", run)
 
+    def test_the_admin_page_stays_off_the_published_site(self) -> None:
+        """Pages runs Jekyll, which does not copy _-prefixed paths into the site.
+
+        That is already why _matching.py and its siblings 404 there, and it is
+        the whole of what keeps _admin/ and _pending/ unpublished. Adding a
+        .nojekyll would serve both directories to anyone who asked.
+        """
+        self.assertFalse(
+            (_answers.HERE / ".nojekyll").exists(),
+            "a .nojekyll would publish _admin/ and _pending/ on the live site",
+        )
+        for directory in ("_admin", "_pending"):
+            self.assertTrue(directory.startswith("_"), directory)
+
     def test_a_push_trigger_is_never_added(self) -> None:
         """The commits ride a deploy key, which does trigger workflow events."""
         import yaml
