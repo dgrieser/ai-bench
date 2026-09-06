@@ -2868,6 +2868,34 @@
       text-underline-offset: 5px;
     }
 
+    /* The same × the radar's legend carries, in the line that names the set.
+       Sized in em so it tracks the heading rather than sitting under it, and
+       padded well past its glyph -- negative margins pull the layout back in --
+       so a thumb has something to land on. The padding is lopsided on purpose:
+       the room to grow is rightward, into the gap before the next "vs", since
+       growing left would lay the button's hit area over the tail of the very
+       name it belongs to. */
+    .compare-name-x {
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 10px 13px 10px 8px;
+      margin: -10px -11px -10px -3px;
+      border-radius: 50%;
+      color: var(--subtle);
+      font-family: var(--font-ui);
+      font-size: 0.6em;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .compare-name-x:hover {
+      background: none;
+      border: none;
+      color: var(--fresh-ink);
+    }
+
     /* The joiner is punctuation, not a name: it steps back so the eye lands on
        the models it separates. */
     .compare-vs {
@@ -7841,12 +7869,21 @@
         // Each "vs" travels inside the item it introduces rather than between
         // two of them, so five long names wrap as "…thinker / vs qwen3…" and
         // never leave a joiner stranded at the end of a line.
+        // Each name carries the × that drops it, because the line that says who
+        // is being compared is where a reader looks to change who is being
+        // compared. Same action the legend's × fires, so the two cannot drift:
+        // it navigates to this address minus that model, and dropping to one
+        // lands on the survivor's own page, exactly as a one-slug address does.
         const heading = models.map((model, slot) => {
           const name = model.name || "Unknown";
+          const slug = modelSlug(name);
           return `<span class="compare-name-item">` +
             (slot ? `<span class="compare-vs">vs</span>` : "") +
             `${compareSwatch(slot)}` +
-            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span>`;
+            `<a href="#model/${escapeAttr(encodeURIComponent(slug))}">${escapeHtml(name)}</a>` +
+            `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(slug)}"` +
+            ` aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
+            `</span>`;
         }).join("");
 
         const notes = [
