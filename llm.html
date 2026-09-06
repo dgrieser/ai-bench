@@ -2862,12 +2862,18 @@
        so a thumb has something to land on. It can sit in close now that the
        name beside it is inert: a tap that lands on the name's tail costs
        nothing, so the hit area no longer has to keep its distance from it.
-       Centring puts the glyph above the name's baseline, since it is a small
-       mark in a tall line, so `top` drops it back onto the eye level of the
-       word it belongs to without moving the layout. */
+
+       The lift centres the × on the name's x-height. Flex centring aligns the
+       button's box, not the mark inside it, and that box is padded and far
+       taller than the glyph, so the × lands well below the letters. The figure
+       is measured rather than judged: rendered in Newsreader at 390, 768 and
+       1500px, the × ink sits 2.7-3.7px under the centre of the "im" in
+       "kimi", and -0.24em of the button's own size closes that to under a
+       pixel at every width. Check any change to it in the real face -- against
+       the Georgia fallback the same offset reads as far too high. */
     .compare-name-x {
       position: relative;
-      top: 0.18em;
+      top: -0.24em;
       width: auto;
       min-height: 0;
       border: none;
