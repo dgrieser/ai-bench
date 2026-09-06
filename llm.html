@@ -2856,16 +2856,36 @@
       min-width: 0;
     }
 
-    .compare-name a {
-      color: inherit;
-      text-decoration: none;
+    /* The same × the radar's legend carries, in the line that names the set.
+       Sized in em so it tracks the heading rather than sitting under it, and
+       padded well past its glyph -- negative margins pull the layout back in --
+       so a thumb has something to land on. It can sit in close now that the
+       name beside it is inert: a tap that lands on the name's tail costs
+       nothing, so the hit area no longer has to keep its distance from it.
+       Centring puts the glyph above the name's baseline, since it is a small
+       mark in a tall line, so `top` drops it back onto the eye level of the
+       word it belongs to without moving the layout. */
+    .compare-name-x {
+      position: relative;
+      top: 0.18em;
+      width: auto;
+      min-height: 0;
+      border: none;
+      background: none;
+      padding: 10px 12px 10px 10px;
+      margin: -10px -10px -10px -8px;
+      border-radius: 50%;
+      color: var(--subtle);
+      font-family: var(--font-ui);
+      font-size: 0.6em;
+      font-weight: 400;
+      line-height: 1;
     }
 
-    .compare-name a:hover {
-      color: var(--accent);
-      text-decoration: underline;
-      text-decoration-color: var(--line);
-      text-underline-offset: 5px;
+    .compare-name-x:hover {
+      background: none;
+      border: none;
+      color: var(--fresh-ink);
     }
 
     /* The joiner is punctuation, not a name: it steps back so the eye lands on
@@ -7841,12 +7861,24 @@
         // Each "vs" travels inside the item it introduces rather than between
         // two of them, so five long names wrap as "…thinker / vs qwen3…" and
         // never leave a joiner stranded at the end of a line.
+        // Each name carries the × that drops it, because the line that says who
+        // is being compared is where a reader looks to change who is being
+        // compared. Same action the legend's × fires, so the two cannot drift:
+        // it navigates to this address minus that model, and dropping to one
+        // lands on the survivor's own page, exactly as a one-slug address does.
+        // The names themselves are inert: a title is a label for the page you
+        // are on, and one that quietly navigates away is a trap next to a
+        // button that removes things. Each model's own page is still a click
+        // away from its column head in both tables, and from the legend.
         const heading = models.map((model, slot) => {
           const name = model.name || "Unknown";
           return `<span class="compare-name-item">` +
             (slot ? `<span class="compare-vs">vs</span>` : "") +
             `${compareSwatch(slot)}` +
-            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span>`;
+            `<span class="compare-name-text">${escapeHtml(name)}</span>` +
+            `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(modelSlug(name))}"` +
+            ` aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
+            `</span>`;
         }).join("");
 
         const notes = [
