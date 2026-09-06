@@ -436,6 +436,77 @@ class TestHelperFailures(AnswersTestCase):
         self.assertIn("boom", str(caught.exception))
 
 
+class TestWorkflowWiring(unittest.TestCase):
+    """The workflow is the other half of the trust boundary.
+
+    _answers.py can only refuse a record it is handed. If the input reaches a
+    shell before it reaches Python, none of that matters: ${{ }} is textual
+    substitution before bash parses, on a runner holding a write deploy key and
+    two API tokens.
+    """
+
+    WORKFLOW = _answers.HERE / ".github" / "workflows" / "update-benchmarks.yml"
+
+    def steps(self) -> list[dict]:
+        import yaml
+
+        doc = yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
+        return doc["jobs"]["update"]["steps"]
+
+    def test_no_expression_is_interpolated_into_a_script(self) -> None:
+        import re
+
+        offenders = [
+            (step.get("name"), expr.strip())
+            for step in self.steps()
+            for expr in re.findall(r"\$\{\{(.*?)\}\}", step.get("run") or "")
+        ]
+        self.assertEqual(
+            offenders,
+            [],
+            "pass the value through env: and read it as \"$VAR\" instead",
+        )
+
+    def test_the_answers_input_is_only_ever_an_env_value(self) -> None:
+        uses = [
+            step.get("name")
+            for step in self.steps()
+            if "inputs.answers" in str(step.get("env") or {})
+        ]
+        self.assertEqual(uses, ["Apply the answers"])
+
+    def test_every_step_that_acts_on_the_input_is_gated_on_it(self) -> None:
+        """The cron and merge paths must be untouched by this feature.
+
+        The test step is deliberately not in this list: it guards the applier
+        and has to run on every path, answers or not.
+        """
+        gated = {"Guard the answers input", "Apply the answers", "Commit and push the answers"}
+        names = {s.get("name") for s in self.steps()}
+        self.assertTrue(gated <= names, f"missing steps: {gated - names}")
+        for step in self.steps():
+            if step.get("name") in gated:
+                self.assertIn("inputs.answers", str(step.get("if") or ""), step.get("name"))
+
+    def test_the_apply_step_turns_collect_mode_off(self) -> None:
+        """Every mapping writer is a no-op while it is on."""
+        apply_step = next(s for s in self.steps() if s.get("name") == "Apply the answers")
+        self.assertEqual(apply_step["env"][_prompts.ENV_VAR], "")
+
+    def test_the_answer_applier_is_tested_before_anything_is_pushed(self) -> None:
+        run = next(
+            s["run"] for s in self.steps() if s.get("name", "").startswith("Check collect mode")
+        )
+        self.assertIn("./test_answers.py", run)
+
+    def test_a_push_trigger_is_never_added(self) -> None:
+        """The commits ride a deploy key, which does trigger workflow events."""
+        import yaml
+
+        doc = yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
+        self.assertNotIn("push", doc[True])
+
+
 class TestShapes(AnswersTestCase):
     def test_a_record_must_be_an_object_of_a_known_kind(self) -> None:
         self.refused("just a string", "expected an object")
