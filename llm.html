@@ -2856,32 +2856,24 @@
       min-width: 0;
     }
 
-    .compare-name a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .compare-name a:hover {
-      color: var(--accent);
-      text-decoration: underline;
-      text-decoration-color: var(--line);
-      text-underline-offset: 5px;
-    }
-
     /* The same × the radar's legend carries, in the line that names the set.
        Sized in em so it tracks the heading rather than sitting under it, and
        padded well past its glyph -- negative margins pull the layout back in --
-       so a thumb has something to land on. The padding is lopsided on purpose:
-       the room to grow is rightward, into the gap before the next "vs", since
-       growing left would lay the button's hit area over the tail of the very
-       name it belongs to. */
+       so a thumb has something to land on. It can sit in close now that the
+       name beside it is inert: a tap that lands on the name's tail costs
+       nothing, so the hit area no longer has to keep its distance from it.
+       Centring puts the glyph above the name's baseline, since it is a small
+       mark in a tall line, so `top` drops it back onto the eye level of the
+       word it belongs to without moving the layout. */
     .compare-name-x {
+      position: relative;
+      top: 0.18em;
       width: auto;
       min-height: 0;
       border: none;
       background: none;
-      padding: 10px 13px 10px 8px;
-      margin: -10px -11px -10px -3px;
+      padding: 10px 12px 10px 10px;
+      margin: -10px -10px -10px -8px;
       border-radius: 50%;
       color: var(--subtle);
       font-family: var(--font-ui);
@@ -7874,14 +7866,17 @@
         // compared. Same action the legend's × fires, so the two cannot drift:
         // it navigates to this address minus that model, and dropping to one
         // lands on the survivor's own page, exactly as a one-slug address does.
+        // The names themselves are inert: a title is a label for the page you
+        // are on, and one that quietly navigates away is a trap next to a
+        // button that removes things. Each model's own page is still a click
+        // away from its column head in both tables, and from the legend.
         const heading = models.map((model, slot) => {
           const name = model.name || "Unknown";
-          const slug = modelSlug(name);
           return `<span class="compare-name-item">` +
             (slot ? `<span class="compare-vs">vs</span>` : "") +
             `${compareSwatch(slot)}` +
-            `<a href="#model/${escapeAttr(encodeURIComponent(slug))}">${escapeHtml(name)}</a>` +
-            `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(slug)}"` +
+            `<span class="compare-name-text">${escapeHtml(name)}</span>` +
+            `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(modelSlug(name))}"` +
             ` aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
             `</span>`;
         }).join("");
