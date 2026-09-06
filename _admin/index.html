@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenBench admin</title>
+<link rel="icon" href="data:,">
+<style>
+  /* The tokens are llm.html's, so the two pages read as one thing. */
+  :root {
+    color-scheme: light;
+    --bg: #f5f4f1; --surface: #fff; --surface-alt: #f2f1ee;
+    --text: #111; --muted: #6b6b6b; --subtle: #ababab;
+    --line: #e2e1de; --line-soft: #edece9;
+    --accent: #1d4ed8;
+    --good: #166534; --bad: #991b1b; --warn: #92400e;
+    --font-ui: "DM Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Consolas", monospace;
+    --radius: 10px;
+    --shadow: 0 1px 4px rgba(0,0,0,.06), 0 6px 24px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0e0d0b; --surface: #171614; --surface-alt: #1e1d1a;
+      --text: #f2f1ee; --muted: #a3a29e; --subtle: #6b6a66;
+      --line: #2c2b27; --line-soft: #232220;
+      --accent: #7aa2f7;
+      --good: #86efac; --bad: #fca5a5; --warn: #fcd34d;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui);
+         font-size: 15px; line-height: 1.5; padding: 0 0 6rem; }
+  code, .mono { font-family: var(--font-mono); font-size: .92em; }
+
+  header { position: sticky; top: 0; z-index: 5; background: var(--surface);
+           border-bottom: 1px solid var(--line); padding: .75rem 1rem; }
+  .wrap { max-width: 60rem; margin: 0 auto; }
+  h1 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
+  h1 span { color: var(--muted); font-weight: 400; }
+  nav { display: flex; gap: .25rem; margin-top: .6rem; flex-wrap: wrap; }
+  nav button { font: inherit; border: 1px solid var(--line); background: var(--surface);
+               color: var(--muted); padding: .3rem .7rem; border-radius: 999px; cursor: pointer; }
+  nav button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  nav .badge { display: inline-block; min-width: 1.2em; margin-left: .35em;
+               background: var(--surface-alt); color: var(--text);
+               border-radius: 999px; padding: 0 .35em; font-size: .8em; }
+  nav button[aria-selected="true"] .badge { background: rgba(255,255,255,.25); color: #fff; }
+
+  main { padding: 1rem; }
+  .card { background: var(--surface); border: 1px solid var(--line);
+          border-radius: var(--radius); padding: .85rem 1rem; margin-bottom: .7rem; }
+  .card.answered { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  .subject { font-family: var(--font-mono); font-weight: 600; word-break: break-word; }
+  .meta { color: var(--muted); font-size: .85rem; margin-top: .15rem; }
+  .meta .now { color: var(--warn); }
+  .options { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .6rem; }
+  .opt { font: inherit; cursor: pointer; border: 1px solid var(--line);
+         background: var(--surface-alt); color: var(--text);
+         border-radius: var(--radius); padding: .3rem .6rem; text-align: left; }
+  .opt:hover { border-color: var(--accent); }
+  .opt[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .opt .why { display: block; font-size: .75rem; opacity: .75; }
+  .opt.exact { border-color: var(--good); }
+  .opt.decline { border-style: dashed; }
+  input[type="text"], input[type="number"], select {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: .3rem .5rem; }
+  .row { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin-top: .5rem; }
+  .row label { color: var(--muted); font-size: .85rem; min-width: 6rem; }
+
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface);
+         border-top: 1px solid var(--line); padding: .7rem 1rem; box-shadow: var(--shadow); }
+  .bar .wrap { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+  .bar .count { flex: 1; color: var(--muted); font-size: .9rem; }
+  button.primary { font: inherit; background: var(--accent); color: #fff; border: 0;
+                   border-radius: var(--radius); padding: .45rem 1rem; cursor: pointer; }
+  button.primary[disabled] { background: var(--subtle); cursor: not-allowed; }
+  button.ghost { font: inherit; background: none; color: var(--muted);
+                 border: 1px solid var(--line); border-radius: var(--radius);
+                 padding: .45rem .8rem; cursor: pointer; }
+  .note { padding: .6rem .8rem; border-radius: var(--radius); margin-bottom: .8rem;
+          border: 1px solid var(--line); background: var(--surface-alt); font-size: .9rem; }
+  .note.bad { border-color: var(--bad); color: var(--bad); }
+  .note.good { border-color: var(--good); color: var(--good); }
+  .empty { color: var(--muted); text-align: center; padding: 3rem 1rem; }
+  ul.runs { list-style: none; }
+  ul.runs li { display: flex; gap: .6rem; align-items: baseline;
+               border-bottom: 1px solid var(--line-soft); padding: .5rem 0; }
+  ul.runs a { color: var(--accent); }
+  .dot { width: .6rem; height: .6rem; border-radius: 50%; background: var(--subtle); flex: none; }
+  .dot.success { background: var(--good); } .dot.failure { background: var(--bad); }
+  .dot.running { background: var(--warn); }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>OpenBench <span>admin</span></h1>
+  <nav id="tabs"></nav>
+</div></header>
+
+<main class="wrap">
+  <div id="notice"></div>
+  <div id="view"></div>
+</main>
+
+<div class="bar"><div class="wrap">
+  <span class="count" id="count"></span>
+  <label style="color:var(--muted);font-size:.85rem">
+    <input type="checkbox" id="skip"> record only, refresh later
+  </label>
+  <button class="ghost" id="clear">Clear</button>
+  <button class="primary" id="send" disabled>Send</button>
+</div></div>
+
+<script>
+"use strict";
+
+/* Reads need no credential: both of these send Access-Control-Allow-Origin: *,
+   so the page talks to GitHub directly and the PHP endpoint exists only to hold
+   the token for the one thing that does need it. */
+const SITE = "https://openbench.david-grieser.de";
+const RAW = "https://raw.githubusercontent.com/dgrieser/ai-bench/main";
+const bust = (u) => `${u}${u.includes("?") ? "&" : "?"}t=${Date.now()}`;
+
+const state = {
+  tab: "queue",
+  questions: [],
+  llm: null,
+  runs: [],
+  answers: new Map(),   // key -> record
+  error: "",
+  ok: "",
+};
+
+const KEY = (q) => `${q.route} ${q.route_kind} ${q.subject}`;
+const NEW_MODEL_ROUTE = "check_new.py";
+const AA_ROUTE = "update_artificialanalysis_mapping.py";
+
+const el = (tag, props = {}, kids = []) => {
+  const node = Object.assign(document.createElement(tag), props);
+  for (const kid of [].concat(kids)) {
+    if (kid) node.append(kid.nodeType ? kid : document.createTextNode(kid));
+  }
+  return node;
+};
+
+/* ---------------------------------------------------------------- loading */
+
+async function load() {
+  const [queue, llm] = await Promise.allSettled([
+    fetch(bust(`${RAW}/_pending/pending.json`), { cache: "no-store" }).then((r) =>
+      r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))),
+    fetch(bust(`${SITE}/llm.json`), { cache: "no-store" }).then((r) =>
+      r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))),
+  ]);
+
+  if (queue.status === "fulfilled") {
+    state.questions = queue.value.questions || [];
+  } else {
+    /* Until the first refresh publishes it there is nothing to answer, which is
+       a state worth naming rather than showing as a failure. */
+    state.questions = [];
+    state.error = String(queue.reason.message).includes("404")
+      ? "No published queue yet. It appears after the next refresh run."
+      : `Could not read the queue (${queue.reason.message}).`;
+  }
+  if (llm.status === "fulfilled") state.llm = llm.value;
+  else state.error = `Could not read llm.json (${llm.reason.message}).`;
+
+  await loadRuns();
+  render();
+}
+
+async function loadRuns() {
+  try {
+    const response = await fetch(bust("api.php"), { cache: "no-store" });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+    state.runs = body.runs || [];
+  } catch (error) {
+    state.runs = [];
+    state.error ||= `Could not read the runs (${error.message}).`;
+  }
+}
+
+/* The universes are derived here rather than shipped with the queue: the model
+   list alone is hundreds of names and the AA list thousands, so committing them
+   would rewrite pending.json on runs where no question changed. answer.py
+   revalidates everything regardless, which is the check that counts. */
+const models = () => (state.llm?.models || []).map((m) => m.name).filter(Boolean).sort();
+const benchmarks = () =>
+  Object.entries(state.llm?.benchmarks || {})
+    .filter(([, b]) => b?.derived !== true)
+    .map(([key]) => key)
+    .sort();
+
+function universeFor(question) {
+  if (question.route === NEW_MODEL_ROUTE) return [];
+  if (question.route === AA_ROUTE) return [];   // AA slugs are not in llm.json
+  return question.route_kind.includes("benchmark") ? benchmarks() : models();
+}
+
+/* ---------------------------------------------------------------- answers */
+
+function setAnswer(question, record) {
+  const key = KEY(question);
+  if (record === null) state.answers.delete(key);
+  else state.answers.set(key, record);
+  render();
+}
+
+const answerOf = (question) => state.answers.get(KEY(question));
+
+function mappingRecord(question, value) {
+  return {
+    kind: "mapping",
+    route: question.route,
+    route_kind: question.route_kind,
+    subject: question.subject,
+    answer: value,
+    /* What the queue said the file held. answer.py rejects the record if the
+       file has since changed, rather than overwriting whoever answered first. */
+    if_previous: question.if_previous ?? null,
+  };
+}
+
+/* --------------------------------------------------------------- rendering */
+
+function render() {
+  renderTabs();
+  const notice = document.getElementById("notice");
+  notice.replaceChildren();
+  if (state.error) notice.append(el("div", { className: "note bad" }, state.error));
+  if (state.ok) notice.append(el("div", { className: "note good" }, state.ok));
+
+  document.getElementById("view").replaceChildren(
+    state.tab === "queue" ? renderQueue()
+      : state.tab === "new" ? renderNew()
+        : state.tab === "models" ? renderModels()
+          : renderRuns()
+  );
+
+  const pending = state.answers.size;
+  document.getElementById("count").textContent =
+    pending ? `${pending} answer${pending === 1 ? "" : "s"} ready` : "Nothing to send yet";
+  document.getElementById("send").disabled = pending === 0;
+}
+
+function renderTabs() {
+  const mappingCount = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE).length;
+  const newCount = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE).length;
+  const tabs = [
+    ["queue", "Queue", mappingCount],
+    ["new", "New models", newCount],
+    ["models", "Models", null],
+    ["runs", "Runs", null],
+  ];
+  document.getElementById("tabs").replaceChildren(
+    ...tabs.map(([id, label, n]) => {
+      const button = el("button", {
+        type: "button",
+        onclick: () => { state.tab = id; render(); },
+      }, label);
+      button.setAttribute("aria-selected", String(state.tab === id));
+      if (n !== null) button.append(el("span", { className: "badge" }, String(n)));
+      return button;
+    })
+  );
+}
+
+function renderQueue() {
+  const questions = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE);
+  if (!questions.length) {
+    return el("p", { className: "empty" },
+      "Nothing pending. Every source name and benchmark label is mapped.");
+  }
+  return el("div", {}, questions.map(renderQuestion));
+}
+
+function renderQuestion(question) {
+  const chosen = answerOf(question);
+  const card = el("div", { className: `card${chosen ? " answered" : ""}` });
+  card.append(el("div", { className: "subject" }, question.subject));
+
+  const source = question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
+  const meta = el("div", { className: "meta" }, `${source} / ${question.route_kind}`);
+  if (question.if_previous) {
+    meta.append(" - now ", el("span", { className: "now mono" }, question.if_previous.join(", ")));
+  }
+  if (question.note) meta.append(" - ", question.note);
+  card.append(meta);
+
+  const options = el("div", { className: "options" });
+  for (const candidate of question.candidates || []) {
+    const pressed = chosen?.answer === candidate.option;
+    const button = el("button", {
+      type: "button",
+      className: `opt${candidate.confidence === "exact" ? " exact" : ""}`,
+      onclick: () => setAnswer(question, pressed ? null : mappingRecord(question, candidate.option)),
+    }, candidate.option);
+    button.setAttribute("aria-pressed", String(pressed));
+    button.append(el("span", { className: "why" }, candidate.reason));
+    options.append(button);
+  }
+
+  const declined = chosen?.answer === "__unmappable__";
+  const decline = el("button", {
+    type: "button",
+    className: "opt decline",
+    onclick: () => setAnswer(question, declined ? null : mappingRecord(question, "__unmappable__")),
+  }, "__unmappable__");
+  decline.setAttribute("aria-pressed", String(declined));
+  decline.append(el("span", { className: "why" }, "reviewed, deliberately not mapped"));
+  options.append(decline);
+  card.append(options);
+
+  /* Anything the candidates missed. Filtered client-side purely so the control
+     is usable; the value is checked again on the runner. */
+  const universe = universeFor(question);
+  if (universe.length) {
+    const listId = `u-${Math.random().toString(36).slice(2)}`;
+    const freeform = chosen
+      && chosen.answer !== "__unmappable__"
+      && !(question.candidates || []).some((c) => c.option === chosen.answer);
+    const input = el("input", {
+      type: "text",
+      placeholder: "or search the full list...",
+      value: freeform ? chosen.answer : "",
+    });
+    input.setAttribute("list", listId);
+    input.oninput = () => {
+      const value = input.value.trim();
+      setAnswer(question, universe.includes(value) ? mappingRecord(question, value) : null);
+    };
+    const list = el("datalist", { id: listId },
+      universe.slice(0, 2000).map((option) => el("option", { value: option })));
+    card.append(el("div", { className: "row" }, [input, list]));
+  }
+  return card;
+}
+
+function renderNew() {
+  const questions = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
+  if (!questions.length) return el("p", { className: "empty" }, "No new models waiting.");
+
+  return el("div", {}, questions.map((question) => {
+    const chosen = answerOf(question);
+    const card = el("div", { className: `card${chosen ? " answered" : ""}` });
+    card.append(el("div", { className: "subject" }, question.subject));
+    card.append(el("div", { className: "meta" }, question.note || question.question));
+
+    /* "Yes" is a model-add, not an __added__ decision. apply_decisions() keeps
+       __added__ only for an entry already in llm.json; for a new slug it clears
+       the line without dismissing it, so the model is offered again on every
+       run after this one. */
+    const adding = chosen?.kind === "model-add";
+    const add = el("button", {
+      type: "button",
+      className: "opt exact",
+      onclick: () => setAnswer(question, adding ? null : { kind: "model-add", name: question.subject }),
+    }, "Add it");
+    add.setAttribute("aria-pressed", String(adding));
+    add.append(el("span", { className: "why" }, "adds the entry; scores land on the next refresh"));
+
+    const ignoring = chosen?.kind === "new-model";
+    const ignore = el("button", {
+      type: "button",
+      className: "opt decline",
+      onclick: () => setAnswer(question, ignoring ? null
+        : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
+    }, "Ignore it");
+    ignore.setAttribute("aria-pressed", String(ignoring));
+    ignore.append(el("span", { className: "why" }, "never offer this slug again"));
+
+    card.append(el("div", { className: "options" }, [add, ignore]));
+    return card;
+  }));
+}
+
+function renderModels() {
+  const box = el("div", {});
+  const search = el("input", { type: "text", placeholder: "Find a model..." });
+  const results = el("div", {});
+  const draw = () => {
+    const needle = search.value.trim().toLowerCase();
+    results.replaceChildren(
+      ...(needle
+        ? (state.llm?.models || [])
+          .filter((m) => m.name.toLowerCase().includes(needle))
+          .slice(0, 20)
+          .map(renderModelCard)
+        : [el("p", { className: "empty" }, "Type to find a model to edit.")])
+    );
+  };
+  search.oninput = draw;
+  box.append(el("div", { className: "card" }, search), results);
+  draw();
+  return box;
+}
+
+function renderModelCard(model) {
+  const key = `model-edit  ${model.name}`;
+  const existing = state.answers.get(key);
+  const card = el("div", { className: `card${existing ? " answered" : ""}` });
+  card.append(el("div", { className: "subject" }, model.name));
+  card.append(el("div", { className: "meta" },
+    `${model.creator?.name || "?"} - added ${model.date_added || "?"}`));
+
+  const draft = {
+    fields: { ...(existing?.fields || {}) },
+    scores: { ...(existing?.scores || {}) },
+  };
+  const commit = () => {
+    const empty = !Object.keys(draft.fields).length && !Object.keys(draft.scores).length;
+    if (empty) state.answers.delete(key);
+    else state.answers.set(key, { kind: "model-edit", name: model.name, ...draft });
+    render();
+  };
+
+  /* Only what edit.py has a flag for: one per benchmark and two for metadata.
+     Anything else exits 2 out of argparse. */
+  for (const field of ["params", "context"]) {
+    const input = el("input", { type: "text", value: draft.fields[field] ?? model[field] ?? "" });
+    input.oninput = () => {
+      const value = input.value.trim();
+      if (value === (model[field] ?? "")) delete draft.fields[field];
+      else draft.fields[field] = value === "" ? null : value;
+      commit();
+    };
+    card.append(el("div", { className: "row" }, [el("label", {}, field), input]));
+  }
+
+  const scores = el("div", {});
+  const drawScores = () => {
+    scores.replaceChildren(...Object.keys(draft.scores).sort().map((bench) => {
+      const input = el("input", { type: "number", step: "0.1", value: draft.scores[bench] ?? "" });
+      input.oninput = () => {
+        draft.scores[bench] = input.value === "" ? null : Number(input.value);
+        commit();
+      };
+      const drop = el("button", {
+        type: "button",
+        className: "ghost",
+        onclick: () => { delete draft.scores[bench]; drawScores(); commit(); },
+      }, "remove");
+      return el("div", { className: "row" }, [el("label", {}, bench), input, drop]);
+    }));
+  };
+
+  const picker = el("select", {}, [el("option", { value: "" }, "add a score...")]
+    .concat(benchmarks().map((b) => el("option", { value: b }, b))));
+  picker.onchange = () => {
+    if (!picker.value) return;
+    draft.scores[picker.value] = model.scores?.[picker.value] ?? null;
+    picker.value = "";
+    drawScores();
+    commit();
+  };
+  card.append(scores, el("div", { className: "row" }, picker));
+  drawScores();
+  return card;
+}
+
+function renderRuns() {
+  if (!state.runs.length) return el("p", { className: "empty" }, "No runs to show.");
+  return el("ul", { className: "runs" }, state.runs.map((run) => {
+    const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
+    return el("li", {}, [
+      el("span", { className: `dot ${shade}` }),
+      el("span", {}, run.status === "completed" ? (run.conclusion || "done") : run.status),
+      el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)),
+      el("span", { className: "meta" }, new Date(run.created_at).toLocaleString()),
+    ]);
+  }));
+}
+
+/* ---------------------------------------------------------------- sending */
+
+async function send() {
+  const answers = [...state.answers.values()];
+  document.getElementById("send").disabled = true;
+  state.error = state.ok = "";
+  try {
+    const response = await fetch("api.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-AI-Bench-Admin": "1" },
+      body: JSON.stringify({ answers, skip_refresh: document.getElementById("skip").checked }),
+    });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+    state.answers.clear();
+    state.ok = `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
+      + "Watch it under Runs, then reload to confirm they left the queue: the run's "
+      + "own summary is what counts, not its colour, since a dead scraper reds a run "
+      + "whose answers landed perfectly well.";
+  } catch (error) {
+    state.error = `Could not send: ${error.message}`;
+  }
+  await loadRuns();
+  render();
+}
+
+document.getElementById("send").onclick = send;
+document.getElementById("clear").onclick = () => { state.answers.clear(); render(); };
+load();
+</script>
+</body>
+</html>

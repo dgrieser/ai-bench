@@ -1,0 +1,26 @@
+# Authentication is the web server's job, not the application's. Point
+# AuthUserFile at an .htpasswd outside the docroot and everything below this
+# directory is gated before a single line of PHP runs.
+#
+# Create one with:  htpasswd -B -c /path/outside/docroot/.htpasswd you
+AuthType Basic
+AuthName "ai-bench admin"
+AuthUserFile /path/outside/docroot/.htpasswd
+Require valid-user
+
+# Only the page and its one endpoint are reachable. Anything else that ends up
+# in this directory -- a stray config, an editor backup, a copy of a mapping
+# file -- is not served even if the auth above is ever misconfigured.
+<FilesMatch "^(?!index\.html$|api\.php$).*$">
+    Require all denied
+</FilesMatch>
+
+# The page is one file with no build step, and the queue it renders changes
+# every few hours, so nothing here should be cached.
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-store"
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "no-referrer"
+</IfModule>
+
+Options -Indexes

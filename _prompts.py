@@ -59,6 +59,20 @@ def reset(path: str | Path | None = None) -> Path:
     return report
 
 
+def child_env(env: dict[str, str] | None = None) -> dict[str, str]:
+    """A copy of the environment with collect mode switched off.
+
+    enable() deliberately exports the variable so every subprocess collects too
+    -- that is how check_new.py -> add.py queues its questions. A tool that is
+    *answering* needs the opposite: add.py returns 0 without doing anything
+    under collect mode, so a child that inherited the variable would report
+    success for a write that never happened.
+    """
+    out = dict(os.environ if env is None else env)
+    out.pop(ENV_VAR, None)
+    return out
+
+
 def default_command() -> str:
     """The local command that would ask this question, for the report."""
     name = Path(sys.argv[0]).name or "update-all"

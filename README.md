@@ -264,6 +264,16 @@ Output: llm.json (unified dataset)
 ./fill_missing_source_urls.py llm.json -m kimi-k3 -w           # one model only
 ./fill_missing_source_urls.py llm.json --only vram-source -w   # one kind of gap only
 
+# Answer the queued questions directly, no proposal PR
+#   Dry-run by default; -w to persist. All or nothing per batch.
+./answer.py tbench "Fable 5.1" __unmappable__ -w
+./answer.py --stdin -w < answers.json
+
+# Render the queue the last unattended run left behind
+#   markdown for the proposal PR, json for answer.py and the admin page
+./pending_prompts.py pending-prompts.jsonl --format markdown
+./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json
+
 # Check for newly added/dismissed models
 #   [y] add it, [n] never ask again, [q] stop asking. Every run first carries
 #   out whatever check_new-decisions.json already says -- see below.
@@ -318,6 +328,61 @@ next `check_new.py` run, *before* any score is fetched, so an ignored model is
 gone before a mapping or a score can attach to it. The entry is dropped once
 acted on; a value that is neither sentinel is left in place and reported rather
 than guessed at.
+
+### 2c. Answering Without a Pull Request
+
+The proposal PR is one way to answer the queue. `answer.py` is the other: it
+applies a batch of answers directly, through each source's own writer, with no
+PR anywhere in it.
+
+```bash
+# One answer, by hand
+./answer.py tbench "Fable 5.1" __unmappable__ -w
+
+# A batch, as JSON
+./answer.py --stdin -w < answers.json
+```
+
+Dry run by default, like everything else here, and a batch is all or nothing —
+one bad record and nothing is written, because half an answered queue is the
+outcome nobody could reconstruct afterwards.
+
+The record shapes live in `_answers.py`, which reuses `propose.ROUTES` and
+`build_universes()` so the answer space is exactly the proposal space. It
+assumes its input came from outside the repository and refuses rather than
+sanitises: a route is a key of the hard-coded table and never a module or a
+path, `__pending__` is refused everywhere (it is a parking marker, and writing
+it over a decision re-queues that name for good), an empty universe refuses
+rather than admits, and only a question the queue actually asked can be
+answered at all.
+
+Two shapes are worth knowing because the obvious version is wrong:
+
+- **Adding a model is `model-add`, not `{"answer": "__added__"}`.**
+  `apply_decisions()` keeps `__added__` only for an entry already in `llm.json`;
+  for a slug that is not, it clears the line without dismissing it, and
+  `check_new.py` offers the model again on the next run and every run after
+  that. `model-add` runs `add.py` and *then* records `__added__`, which is the
+  pair `propose.py` already uses.
+- **The Artificial Analysis mapping runs the other way round.** Its keys are
+  `llm.json` model names and its values are AA slugs, one or a list, so both
+  ends are checked against different universes.
+
+### 2d. The Admin Page
+
+`_admin/` is the same queue as a web page, for answering from somewhere that is
+not a terminal. It renders `_pending/pending.json`, you tap an answer, and it
+dispatches `update-benchmarks.yml` with the batch as an input; the run applies
+it with `answer.py` and pushes to `main`.
+
+It is not on the published site. Pages runs Jekyll here (there is no
+`.nojekyll`), and Jekyll does not copy `_`-prefixed paths into the built site —
+already why `_matching.py` and its siblings 404 there. `test_answers.py` asserts
+the `.nojekyll` stays absent, since adding one would publish both `_admin/` and
+`_pending/`.
+
+Deployment, the token's scope and why it is scoped that way are in
+`_admin/README.md`.
 
 ### 3. Updating All Benchmarks
 
@@ -1448,6 +1513,11 @@ ai-bench/
 ├── make_favicons.py            # Render the icon set from the logo (see below)
 │
 ├── model-name-mapping-*.json   # Benchmark → canonical slug mappings
+├── answer.py                   # Apply queued answers directly (no PR)
+├── _answers.py                 # Validation and writing behind answer.py
+├── _admin/                     # The admin page and its dispatch endpoint
+│                               #   (leading _, so Jekyll never publishes it)
+├── _pending/pending.json       # The queue as data, for answer.py and the page
 ├── check_new-decisions.json    # Open add/ignore questions for the proposal PR
 ├── check_new-dismissed.json    # AA slugs never to offer again
 ├── huggingface-benchmark-name-mapping.json
