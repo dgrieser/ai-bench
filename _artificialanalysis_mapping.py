@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS
 from _prompts import freeze_decisions
 
 AA_SCRIPT = Path(__file__).resolve().with_name("artificialanalysis.py")
@@ -62,8 +63,42 @@ def _load_raw_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str | list[str
 
 
 def load_llm_to_aa_slugs(path: Path = AA_MODEL_MAPPING) -> dict[str, list[str]]:
-    """Real llm.json model slug -> Artificial Analysis slugs, best first."""
-    return {k: _slug_list(v) for k, v in _load_raw_mapping(path).items()}
+    """Real llm.json model slug -> Artificial Analysis slugs, best first.
+
+    Sentinels are markers, not slugs, so they are dropped here exactly as every
+    other source's load_*_to_slug_mapping drops them. Letting them through is
+    what allowed a __pending__ line to pose as an answer; load_reviewed_llm_names
+    below is the set that decides whether a name still needs asking about.
+    """
+    mapped = {
+        name: [slug for slug in _slug_list(value) if slug not in SENTINELS]
+        for name, value in _load_raw_mapping(path).items()
+    }
+    return {name: slugs for name, slugs in mapped.items() if slugs}
+
+
+def load_reviewed_llm_names(
+    path: Path = AA_MODEL_MAPPING, include_closed: bool = True
+) -> set[str]:
+    """llm.json model names already reviewed, whether mapped or left unmapped.
+
+    The mirror of every other source's load_reviewed_* set, and the reason this
+    is not simply the mapping's keys: PENDING is a parking marker rather than an
+    answer, so a name propose.py parked must come back. Reading the raw keys was
+    what silenced those models for good.
+
+    include_closed=False drops the names recorded as closed-weight, so a source
+    that mislabelled one can be reviewed again.
+    """
+    reviewed: set[str] = set()
+    for name, value in _load_raw_mapping(path).items():
+        slugs = _slug_list(value)
+        if PENDING in slugs:
+            continue
+        if not include_closed and CLOSED_WEIGHTS in slugs:
+            continue
+        reviewed.add(name)
+    return reviewed
 
 
 def load_llm_to_aa_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str]:

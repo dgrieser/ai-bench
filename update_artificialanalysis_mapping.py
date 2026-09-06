@@ -20,6 +20,7 @@ from _artificialanalysis_mapping import (
     fetch_aa_model_names,
     load_ignored_aa_suggestions,
     load_llm_to_aa_mapping,
+    load_reviewed_llm_names,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -211,6 +212,9 @@ def main() -> int:
 
     aa_by_norm = {normalize_slug(slug): slug for slug in aa_slugs}
     mapping = load_llm_to_aa_mapping()
+    # Keys alone would include the names propose.py merely parked; a
+    # __pending__ line is not an answer, so those must be asked again.
+    reviewed = load_reviewed_llm_names()
     ignored_by_model = load_ignored_aa_suggestions()
     interactive = sys.stdin.isatty()
 
@@ -232,11 +236,16 @@ def main() -> int:
         if not isinstance(model_name, str):
             continue
 
-        mapped_slug = mapping.get(model_name)
-        if mapped_slug:
+        if model_name in reviewed:
             already_mapped += 1
             print(f"{model_name}")
-            print(f"  mapped already: {mapped_slug}")
+            # A reviewed name with no slug was deliberately left unmapped;
+            # only a real slug is worth naming.
+            mapped_slug = mapping.get(model_name)
+            if mapped_slug:
+                print(f"  mapped already: {mapped_slug}")
+            else:
+                print("  reviewed already: deliberately unmapped")
             continue
 
         direct_slug = exact_aa_slug(model, aa_by_norm)
