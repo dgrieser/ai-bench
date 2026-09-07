@@ -66,6 +66,55 @@ class TestMappingFile(MappingFileTestCase):
         )
 
 
+class TestSentinels(MappingFileTestCase):
+    """A sentinel is a marker, never a slug -- and only one of them is an answer.
+
+    propose.py parks a name it could not resolve as __pending__. Read back as a
+    slug, that line posed as a mapping: update_artificialanalysis_mapping.py saw
+    a truthy value, printed "mapped already" and skipped the model, so a parked
+    name was never asked about again. Every other source drops sentinels in its
+    load_*_to_slug_mapping and excludes only PENDING from its reviewed set;
+    these pin the same two halves here.
+    """
+
+    def test_sentinels_are_not_slugs(self) -> None:
+        path = self.write_mapping(
+            {
+                "parked": "__pending__",
+                "declined": "__unmappable__",
+                "closed": "__closed_weights__",
+                "real": "real-aa",
+            }
+        )
+        self.assertEqual(aa_mapping.load_llm_to_aa_slugs(path), {"real": ["real-aa"]})
+        self.assertEqual(aa_mapping.mapped_aa_slugs(path), {"real-aa"})
+
+    def test_a_sentinel_beside_a_slug_leaves_the_slug(self) -> None:
+        path = self.write_mapping({"two": ["__pending__", "two-old"]})
+        self.assertEqual(aa_mapping.load_llm_to_aa_slugs(path), {"two": ["two-old"]})
+
+    def test_a_parked_name_is_not_reviewed(self) -> None:
+        path = self.write_mapping(
+            {
+                "parked": "__pending__",
+                "declined": "__unmappable__",
+                "closed": "__closed_weights__",
+                "real": "real-aa",
+            }
+        )
+        self.assertEqual(
+            aa_mapping.load_reviewed_llm_names(path),
+            {"declined", "closed", "real"},
+        )
+
+    def test_closed_weights_can_be_rechecked(self) -> None:
+        path = self.write_mapping({"declined": "__unmappable__", "closed": "__closed_weights__"})
+        self.assertEqual(
+            aa_mapping.load_reviewed_llm_names(path, include_closed=False),
+            {"declined"},
+        )
+
+
 class TestResolveAaSlugs(MappingFileTestCase):
     def test_unmapped_model_reads_its_own_slug(self) -> None:
         path = self.write_mapping({})

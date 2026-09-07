@@ -18,9 +18,11 @@ on:
   # This cannot run away: the only trigger a write of this workflow could hit is
   # a pull request being merged, and the workflow never merges anything -- it
   # pushes a data commit to main and force-pushes its proposal branch. One human
-  # merge is one run. Note that the data commit is pushed with a deploy key,
+  # merge is one run. Note that those commits are pushed with a deploy key,
   # which unlike GITHUB_TOKEN *does* trigger workflow events, so a `push`
-  # trigger must never be added to this file.
+  # trigger must never be added to this file. A run carrying `answers` pushes
+  # *twice* -- the answers, then the data they produced -- so the same rule is
+  # now load-bearing in two places, not one.
   # `branches` filters the PR's *base*, so only merges into main qualify. Without
   # it a stacked PR merged into a feature branch would refresh that branch and
   # push the data commit there, off the published site.
@@ -38,6 +40,24 @@ on:
     inputs:
       dry_run:
         description: "Run everything but do not commit, propose, or push"
+        type: boolean
+        default: false
+      # The admin page's write path. A JSON array of answer records; see
+      # _answers.py for the shapes and for the validation that makes accepting
+      # them from outside the repository safe. Empty on every other run, so the
+      # cron and merge paths are untouched.
+      #
+      # This value is attacker-controlled as far as this file is concerned, and
+      # this job holds a write deploy key and two API tokens. It must therefore
+      # reach a `run:` only through `env:` -- never as ${{ inputs.answers }}
+      # inside a script, which is textual substitution before the shell parses
+      # and would make a crafted payload arbitrary code on the runner.
+      answers:
+        description: "JSON array of answers to apply before refreshing"
+        type: string
+        default: ""
+      skip_refresh:
+        description: "Apply the answers and stop, instead of also refreshing scores"
         type: boolean
         default: false
 
@@ -59,6 +79,13 @@ jobs:
   update:
     # For a pull_request event: merges only, and only from this repo -- a fork
     # PR's GITHUB_TOKEN is read-only and could not push the refreshed scores.
+    #
+    # Note what this no longer says. Dispatching used to require repository
+    # write, so this guard bounded who could make the job push to main. With the
+    # `answers` input that is no longer true: the bound is now the fine-grained
+    # PAT's scope (Actions only, so it can queue this workflow and nothing
+    # else), the host auth in front of the page, and answer.py's validation of
+    # every record. The ref check below is the part of that which lives here.
     if: >-
       github.event_name != 'pull_request' ||
       (github.event.pull_request.merged == true &&
@@ -96,11 +123,88 @@ jobs:
       # run bury source names as __unmappable__ with nobody ever prompted, a
       # loosened match tier would commit wrong mappings into the proposal PR, and
       # a broken decision applier would silently re-add an ignored model.
-      - name: Check collect mode and the matcher
+      #
+      # test_answers.py is here for a stronger reason than the others: it is the
+      # gate on input this workflow accepts from outside the repository, so a
+      # regression in it has to stop the run before anything is applied or
+      # pushed, not after.
+      - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
           ./test_propose.py
           ./test_new_models.py
+          ./test_answers.py
+          ./test_pending_json.py
+
+      # Two combinations that are silently destructive rather than merely wrong,
+      # so they are refused rather than interpreted.
+      - name: Guard the answers input
+        if: ${{ inputs.answers != '' }}
+        # Through env rather than interpolated, for the same reason `answers` is:
+        # a ref name may contain backticks and $( , and both would run inside the
+        # test below.
+        env:
+          REF: ${{ github.ref_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          # The ref of a workflow_dispatch is whatever the caller named. Without
+          # this, answers could be applied and pushed to a branch off the
+          # published site, with a green check and nobody the wiser.
+          if [ "$REF" != "main" ]; then
+            echo "answers may only be applied on main, not $REF" >&2
+            exit 1
+          fi
+          # dry_run skips the commit but not the run: check_new.py would consume
+          # and clear the decisions the apply step just wrote, so the answers
+          # would be destroyed rather than previewed. answer.py has its own dry
+          # run for that.
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "answers cannot be combined with dry_run: the decisions would be" >&2
+            echo "applied, consumed by check_new.py and then not committed." >&2
+            exit 1
+          fi
+
+      # The value never appears in the script: env only, read as "$ANSWERS" and
+      # piped in, so no quoting or length question arises. The AA key is needed
+      # because an Artificial Analysis answer is checked against the live slug
+      # list, and an empty list refuses rather than admits.
+      - name: Apply the answers
+        if: ${{ inputs.answers != '' }}
+        env:
+          ANSWERS: ${{ inputs.answers }}
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+          # Explicit, though no sibling step exports it: every mapping writer is
+          # a no-op under collect mode, so a leak would make this step report
+          # success while writing nothing.
+          AI_BENCH_PENDING_PROMPTS: ""
+        run: |
+          printf '%s' "$ANSWERS" | ./answer.py --stdin -w --result "$RUNNER_TEMP/answers.json"
+          {
+            echo "## Answers applied"
+            echo
+            jq -r '.applied[] | "- \(.)"' "$RUNNER_TEMP/answers.json"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Its own commit, so the history reads "these were the answers" then "this
+      # is what they produced" -- the shape a merged mapping PR and its follow-up
+      # refresh already have.
+      - name: Commit and push the answers
+        if: ${{ inputs.answers != '' }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "The answers changed nothing." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # Counted from the applier's own result, never from the input: the
+          # input must not reach a script even inside quotes.
+          count=$(jq '.applied | length' "$RUNNER_TEMP/answers.json")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(mappings): apply answers from the admin UI" \
+                     -m "Applied ${count} answer(s) dispatched from the admin UI."
+          git pull --rebase --autostash origin main
+          git push
 
       # The openness index has a 12h TTL, so the daily run always rebuilds it
       # from its three sources; this only spares re-fetching when a run is
@@ -113,19 +217,35 @@ jobs:
           key: ai-bench-openness-${{ github.run_id }}
           restore-keys: ai-bench-openness-
 
+      # skip_refresh is fast feedback for an answers-only run: the answer is
+      # recorded in about a minute and the scores it unlocks land on the next
+      # cron. It is not an equivalent path -- a mapping does nothing until
+      # update.py reads it.
       - name: Refresh benchmarks
         id: refresh
+        if: ${{ !inputs.skip_refresh }}
         continue-on-error: true
         env:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: ./update-all --collect-prompts pending-prompts.jsonl
 
-      # Rendered outside the working tree so the commit step cannot pick it up.
+      # The markdown stays outside the working tree so the commit step cannot
+      # pick it up; the JSON deliberately does not, because the admin page reads
+      # it and answer.py checks answers against it.
+      #
+      # Only a wholly successful refresh may rewrite it. `Refresh benchmarks` is
+      # continue-on-error, so a half-failed run leaves a partial queue, and a
+      # skipped one leaves none at all -- committing either would erase live
+      # questions from the page until the next cron.
       - name: Render the pending queue
         id: pending
+        if: ${{ steps.refresh.outcome == 'success' }}
+        env:
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
         run: |
           ./pending_prompts.py pending-prompts.jsonl --format markdown > "$RUNNER_TEMP/pending.md"
+          ./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json
           echo "count=$(./pending_prompts.py pending-prompts.jsonl --count)" >> "$GITHUB_OUTPUT"
           {
             echo "## Pending review"
@@ -147,11 +267,16 @@ jobs:
             echo "No data changed." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+          # llm.json is a megabyte written in one go. A run cancelled mid-write
+          # would otherwise push a truncated file straight to the live site.
+          python3 -c 'import json, sys; sys.exit(0 if json.load(open("llm.json")).get("models") else "llm.json has no models; refusing to commit")' \
+            || exit 1
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore(data): benchmark refresh" \
                      -m "${REASON} ${COUNT} prompt(s) queued for manual review."
+          git pull --rebase --autostash origin main
           git push
 
       # A proposal PR, not an issue: the mapping questions become a reviewable
@@ -159,7 +284,7 @@ jobs:
       # open, so a force-push can never discard review work in progress.
       - name: Propose the pending mappings
         id: propose
-        if: ${{ !inputs.dry_run && steps.pending.outputs.count != '0' }}
+        if: ${{ !inputs.dry_run && steps.pending.outputs.count != '' && steps.pending.outputs.count != '0' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
@@ -243,7 +368,7 @@ jobs:
           [ "$attached" -gt 0 ]
 
       - name: Fail if a step of update-all failed
-        if: ${{ steps.refresh.outcome != 'success' }}
+        if: ${{ !inputs.skip_refresh && steps.refresh.outcome != 'success' }}
         run: |
           echo "update-all reported a failed step; see its log above." >&2
           exit 1
