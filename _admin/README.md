@@ -28,19 +28,43 @@ exist.
 ## How it fits together
 
 ```
-browser  ──reads──►  llm.json (the published site)
-                     _pending/pending.json (raw.githubusercontent)
-             both send Access-Control-Allow-Origin: *, so reads need no token
+browser  ──asks────►  api.php     "which repo, and where do I read?"
+         ◄──────────  { repo, ref, raw, runs }
 
-browser  ──writes─►  api.php  ──►  workflow_dispatch: update-benchmarks.yml
-                                        │
-                                   ./answer.py -w   validates every record
-                                   git push         to main, with the deploy key
-                                   ./update-all     scores the new mappings
+browser  ──reads───►  <raw>/llm.json
+                      <raw>/_pending/pending.json
+              raw.githubusercontent sends Access-Control-Allow-Origin: *,
+              so reads need no token
+
+browser  ──writes──►  api.php  ──►  workflow_dispatch: update-benchmarks.yml
+                                         │
+                                    ./answer.py -w   validates every record
+                                    git push         to main, with the deploy key
+                                    ./update-all     scores the new mappings
 ```
 
 The page holds no credential. `api.php` holds one, and it can do exactly two
 things: queue this one workflow, and list its runs.
+
+## There is no URL to configure
+
+The page has no domain in it. It asks `api.php` where to read, and `api.php`
+derives that from the single `repo` in its config — so the repository name is the
+only thing set anywhere, and the two cannot drift apart. The repo it resolved is
+printed in the page header, so it is obvious which one a batch is about to go to.
+
+Both files are read from `raw.githubusercontent.com`, not from the published
+site, and that is deliberate. The site does serve `llm.json`, but only under its
+custom domain: `https://dgrieser.github.io/ai-bench/llm.json` answers **301** to
+`https://openbench.david-grieser.de/llm.json`, and a cross-origin redirect
+carries no CORS headers, so a derived `github.io` URL fails in the browser.
+`llm.html` has the same note at its `DATA_URLS`. Reading from raw also means the
+page sees `main` as the last run left it rather than whatever the Pages build has
+caught up with — which is what you want from an admin tool.
+
+Changing the Pages custom domain therefore needs no change here. Pointing the
+page at a fork or a different repository is one line in the config outside the
+docroot.
 
 ## Deploying
 

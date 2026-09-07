@@ -39,6 +39,7 @@
   .wrap { max-width: 60rem; margin: 0 auto; }
   h1 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
   h1 span { color: var(--muted); font-weight: 400; }
+  h1 .repo { font-family: var(--font-mono); font-size: .8rem; }
   nav { display: flex; gap: .25rem; margin-top: .6rem; flex-wrap: wrap; }
   nav button { font: inherit; border: 1px solid var(--line); background: var(--surface);
                color: var(--muted); padding: .3rem .7rem; border-radius: 999px; cursor: pointer; }
@@ -96,7 +97,7 @@
 </head>
 <body>
 <header><div class="wrap">
-  <h1>OpenBench <span>admin</span></h1>
+  <h1>OpenBench <span>admin</span> <span class="repo" id="repo"></span></h1>
   <nav id="tabs"></nav>
 </div></header>
 
@@ -117,15 +118,22 @@
 <script>
 "use strict";
 
-/* Reads need no credential: both of these send Access-Control-Allow-Origin: *,
-   so the page talks to GitHub directly and the PHP endpoint exists only to hold
-   the token for the one thing that does need it. */
-const SITE = "https://openbench.david-grieser.de";
-const RAW = "https://raw.githubusercontent.com/dgrieser/ai-bench/main";
+/* No URL is configured here. api.php derives it from the one repo name in its
+   config and hands it over, so there is a single place to change and no chance
+   of the two disagreeing.
+
+   Both files come from raw.githubusercontent rather than the published site.
+   The site serves llm.json, but only under its custom domain: the github.io
+   form 301s to it, and a cross-origin redirect carries no CORS headers. Reading
+   from raw also means the page sees main as the last run left it, rather than
+   whatever the Pages build has caught up with. Reads need no credential either
+   way -- raw sends Access-Control-Allow-Origin: *. */
 const bust = (u) => `${u}${u.includes("?") ? "&" : "?"}t=${Date.now()}`;
 
 const state = {
   tab: "queue",
+  raw: null,        // where to read the data, per api.php
+  repo: null,
   questions: [],
   llm: null,
   runs: [],
@@ -149,11 +157,18 @@ const el = (tag, props = {}, kids = []) => {
 /* ---------------------------------------------------------------- loading */
 
 async function load() {
+  /* First, because it says where everything else lives. Without it the page
+     could not send either, so failing here is fatal rather than degraded. */
+  if (!(await loadRuns())) {
+    render();
+    return;
+  }
+
+  const json = (url) => fetch(bust(url), { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
   const [queue, llm] = await Promise.allSettled([
-    fetch(bust(`${RAW}/_pending/pending.json`), { cache: "no-store" }).then((r) =>
-      r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))),
-    fetch(bust(`${SITE}/llm.json`), { cache: "no-store" }).then((r) =>
-      r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))),
+    json(`${state.raw}/_pending/pending.json`),
+    json(`${state.raw}/llm.json`),
   ]);
 
   if (queue.status === "fulfilled") {
@@ -169,7 +184,6 @@ async function load() {
   if (llm.status === "fulfilled") state.llm = llm.value;
   else state.error = `Could not read llm.json (${llm.reason.message}).`;
 
-  await loadRuns();
   render();
 }
 
@@ -179,9 +193,15 @@ async function loadRuns() {
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.runs = body.runs || [];
+    if (body.raw) state.raw = body.raw;
+    if (body.repo) state.repo = body.repo;
+    return Boolean(state.raw);
   } catch (error) {
     state.runs = [];
-    state.error ||= `Could not read the runs (${error.message}).`;
+    state.error = `Could not reach api.php (${error.message}). `
+      + "Nothing can be read or sent until it answers -- check the host config "
+      + "and the error log; see _admin/README.md.";
+    return false;
   }
 }
 
@@ -229,6 +249,8 @@ function mappingRecord(question, value) {
 /* --------------------------------------------------------------- rendering */
 
 function render() {
+  /* Named, so it is obvious which repository a batch is about to be sent to. */
+  document.getElementById("repo").textContent = state.repo || "";
   renderTabs();
   const notice = document.getElementById("notice");
   notice.replaceChildren();

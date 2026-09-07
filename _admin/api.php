@@ -126,6 +126,24 @@ function github(array $config, string $method, string $path, ?array $body = null
     return [$status, json_decode((string) $raw, true) ?: []];
 }
 
+/**
+ * Where the page should read its data, derived rather than configured.
+ *
+ * Both files come from raw.githubusercontent, not from the published site. The
+ * site would work for llm.json, but only under its custom domain: the
+ * dgrieser.github.io form 301s to openbench.david-grieser.de, and a
+ * cross-origin redirect carries no CORS headers, so a derived github.io URL
+ * fails in the browser. llm.html has the same note at its DATA_URLS.
+ *
+ * Reading both from raw means the repo name is the only thing configured, and
+ * the page sees main exactly as the last run left it rather than whatever the
+ * Pages build has caught up with.
+ */
+function data_base(array $config): string
+{
+    return 'https://raw.githubusercontent.com/' . $config['repo'] . '/' . REF;
+}
+
 function recent_runs(array $config): array
 {
     [$status, $body] = github(
@@ -153,7 +171,12 @@ $config = config();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    ok(['runs' => recent_runs($config)]);
+    ok([
+        'repo' => $config['repo'],
+        'ref'  => REF,
+        'raw'  => data_base($config),
+        'runs' => recent_runs($config),
+    ]);
 }
 
 if ($method !== 'POST') {
