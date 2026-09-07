@@ -1,0 +1,58 @@
+{
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "exact to GDPval-AA v2, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": [
+        "__pending__"
+      ],
+      "note": null,
+      "question": "Map HF label 'GDPval-AA v2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GDPval-AA v2"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": [
+        "__pending__"
+      ],
+      "note": null,
+      "question": "Map HF label 'QwenClaw' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "QwenClaw"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": [
+        "__pending__"
+      ],
+      "note": null,
+      "question": "Map HF label 'SciCode (wbg)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "SciCode (wbg)"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": [
+        "__pending__"
+      ],
+      "note": null,
+      "question": "Map HF label 'WildClaw' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "WildClaw"
+    }
+  ]
+}
