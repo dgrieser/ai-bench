@@ -44,24 +44,48 @@ things: queue this one workflow, and list its runs.
 
 ## Deploying
 
-The page is one file with no build step, so deploying is a copy:
+### What actually goes on the host
+
+Three files, and only three:
+
+| | |
+| --- | --- |
+| `index.html` | the page |
+| `api.php` | the dispatch endpoint |
+| `.htaccess` | the gate in front of both |
+
+Everything else here is for you, not for a web server: `config.example.php` is
+a template whose real copy belongs *outside* the docroot, and `README.md` and
+`deploy` are documentation and tooling.
+
+`./deploy` copies exactly that allowlist — dry run by default, `--go` to
+commit — and uses `rsync` or falls back to `scp`:
 
 ```sh
-rsync -av --delete \
-  --exclude config.example.php --exclude README.md \
-  _admin/ you@your-host:/path/to/docroot/admin/
+./_admin/deploy you@your-host:/path/to/docroot/admin/         # see what it would do
+./_admin/deploy you@your-host:/path/to/docroot/admin/ --go    # copy
 ```
 
-Then, **outside the docroot**, create the config:
+The page needs nothing else: no build step, no bundler, no fonts or scripts
+from anywhere. It reads `llm.json` and the queue straight from GitHub.
+
+### Then, outside the docroot
+
+Create the config:
 
 ```sh
 cp _admin/config.example.php /path/outside/docroot/ai-bench-admin-config.php
 $EDITOR /path/outside/docroot/ai-bench-admin-config.php   # paste the token
 ```
 
-`api.php` looks for it at `../../ai-bench-admin-config.php` relative to itself,
-or at `$AI_BENCH_ADMIN_CONFIG`. It refuses to start without one rather than
-falling back to anything.
+`api.php` tries one level above `DOCUMENT_ROOT` first, then two and three levels
+above itself, since hosts disagree about the shape above the docroot. Set
+`AI_BENCH_ADMIN_CONFIG` if yours sits somewhere else. When it finds nothing it
+logs every path it tried and returns a 500 — it never falls back to a default.
+
+Keep it above the docroot rather than beside `api.php`. If PHP ever stops
+running — a bad `.htaccess`, a module falling over — a file inside the docroot is
+served as plain text, and that file holds the token.
 
 Finally, point `.htaccess` at an `.htpasswd`:
 

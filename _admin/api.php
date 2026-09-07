@@ -43,19 +43,50 @@ function ok(array $body): never
     exit;
 }
 
-/** Config lives outside the docroot so a misconfigured server cannot serve it. */
+/**
+ * Where the config may live. It has to be outside the docroot, so that a server
+ * that stops running PHP -- a bad .htaccess, a module falling over -- serves a
+ * 404 rather than the token in plain text.
+ *
+ * Hosts disagree about the shape above the docroot, so rather than guess once
+ * and fail obscurely, this tries the sensible candidates in order. Set
+ * AI_BENCH_ADMIN_CONFIG to skip the guessing; SetEnv in .htaccess lands in
+ * $_SERVER under mod_php and in the environment under FPM, so both are read.
+ */
+function config_candidates(): array
+{
+    $explicit = $_SERVER['AI_BENCH_ADMIN_CONFIG'] ?? getenv('AI_BENCH_ADMIN_CONFIG');
+    if (is_string($explicit) && $explicit !== '') {
+        return [$explicit];
+    }
+    $name = '/ai-bench-admin-config.php';
+    $candidates = [dirname(__DIR__, 2) . $name, dirname(__DIR__, 3) . $name];
+    if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+        // The likeliest of the lot: one level above the docroot itself, whatever
+        // depth this directory happens to sit at.
+        array_unshift($candidates, dirname($_SERVER['DOCUMENT_ROOT']) . $name);
+    }
+    return array_values(array_unique($candidates));
+}
+
 function config(): array
 {
-    $path = getenv('AI_BENCH_ADMIN_CONFIG')
-        ?: dirname(__DIR__, 2) . '/ai-bench-admin-config.php';
-    if (!is_readable($path)) {
-        fail(500, 'Server is not configured: see _admin/README.md.');
+    $tried = config_candidates();
+    foreach ($tried as $path) {
+        if (!is_readable($path)) {
+            continue;
+        }
+        $config = require $path;
+        if (!is_array($config) || empty($config['token']) || empty($config['repo'])) {
+            error_log("ai-bench admin: $path has no token or repo");
+            fail(500, 'Server config is incomplete; see _admin/README.md.');
+        }
+        return $config;
     }
-    $config = require $path;
-    if (empty($config['token']) || empty($config['repo'])) {
-        fail(500, 'Server config is missing a token or a repo.');
-    }
-    return $config;
+    // The paths go to the log, not the response: if the .htaccess is what is
+    // broken, this reply is not behind any authentication.
+    error_log('ai-bench admin: no config found; tried ' . implode(', ', $tried));
+    fail(500, 'Server is not configured. See _admin/README.md; the paths tried are in the error log.');
 }
 
 /**

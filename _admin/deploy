@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Upload the admin page to the host.
+#
+#   ./_admin/deploy you@host:/path/to/docroot/admin/            # dry run
+#   ./_admin/deploy you@host:/path/to/docroot/admin/ --go       # actually copy
+#
+# Exactly three files go up: the page, the endpoint, and the .htaccess that
+# gates them. Nothing else in this directory belongs on a web server --
+# config.example.php is a template whose real copy lives outside the docroot,
+# and README.md and this script are for you, not for the host.
+#
+# Dry run by default, like every other script in this repository.
+
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# The allowlist is the point: an --exclude list would silently ship whatever
+# lands in this directory next.
+FILES=(index.html api.php .htaccess)
+
+usage() {
+    sed -n '3,13p' "${BASH_SOURCE[0]}" | sed 's/^# \?//'
+}
+
+target="${1:-}"
+if [ -z "$target" ] || [ "$target" = "-h" ] || [ "$target" = "--help" ]; then
+    usage
+    exit "$([ -z "$target" ] && echo 2 || echo 0)"
+fi
+
+go=""
+[ "${2:-}" = "--go" ] && go="yes"
+
+for file in "${FILES[@]}"; do
+    [ -f "$HERE/$file" ] || { echo "missing: $HERE/$file" >&2; exit 1; }
+done
+
+if grep -q '/path/outside/docroot/' "$HERE/.htaccess"; then
+    echo "note: .htaccess still has the placeholder AuthUserFile path." >&2
+    echo "      Set it to your .htpasswd, or the directory will 500 rather" >&2
+    echo "      than let anyone in -- which is the safe failure, but not a" >&2
+    echo "      working one. See _admin/README.md." >&2
+    echo >&2
+fi
+
+cd "$HERE"
+
+if [ -z "$go" ]; then
+    echo "Would copy to $target:"
+    for file in "${FILES[@]}"; do
+        printf '  %-12s %6s bytes\n' "$file" "$(wc -c <"$file" | tr -d ' ')"
+    done
+    if command -v rsync >/dev/null; then
+        echo
+        rsync -av --dry-run "${FILES[@]}" "$target"
+    fi
+    echo
+    echo "Dry run. Re-run with --go to copy."
+    exit 0
+fi
+
+# rsync where it exists, scp otherwise -- Hetzner webhosting speaks both, and
+# three small files do not need the delta transfer.
+if command -v rsync >/dev/null; then
+    rsync -av "${FILES[@]}" "$target"
+elif command -v scp >/dev/null; then
+    echo "rsync not found; using scp." >&2
+    scp -p "${FILES[@]}" "$target"
+else
+    echo "error: neither rsync nor scp is installed." >&2
+    echo "       The three files to upload by any means you like:" >&2
+    for file in "${FILES[@]}"; do echo "         $HERE/$file" >&2; done
+    exit 1
+fi
+
+echo
+
+cat <<'EOF'
+Uploaded. Two things still live outside the docroot, and neither is in git:
+
+  1. the config, holding the token
+       cp _admin/config.example.php <above-the-docroot>/ai-bench-admin-config.php
+     api.php looks one level above DOCUMENT_ROOT first, then two and three
+     levels above itself. Set AI_BENCH_ADMIN_CONFIG if yours sits elsewhere;
+     when it cannot find one it logs every path it tried.
+
+  2. the password file
+       htpasswd -B -c <above-the-docroot>/.htpasswd you
+     then point AuthUserFile at it in the uploaded .htaccess.
+
+Then check the gate actually closed, because nothing in the PHP re-checks it:
+
+     curl -si https://your-host/admin/api.php | head -1     # expect 401
+EOF
