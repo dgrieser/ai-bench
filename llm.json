@@ -26570,9 +26570,9 @@
       "params": "2.6B",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 5.5,
+        "int8": 2.7,
+        "int4": 1.4
       },
       "creator": {
         "name": "OpenBMB",
@@ -26615,7 +26615,7 @@
         "gdpval_aa": 830,
         "agents_last_exam": null,
         "aa_briefcase": 435,
-        "browsecomp": null,
+        "browsecomp": 39.7,
         "aa_omniscience": -11.7,
         "aa_omniscience_hallucination": 21.9,
         "aa_omniscience_accuracy": 8.4,
@@ -26668,7 +26668,7 @@
         "gdpval_aa": "2026-09-07",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-07",
-        "browsecomp": null,
+        "browsecomp": "2026-09-07",
         "aa_omniscience": "2026-09-07",
         "aa_omniscience_hallucination": "2026-09-07",
         "aa_omniscience_accuracy": "2026-09-07",
@@ -26721,7 +26721,7 @@
         "gdpval_aa": "https://artificialanalysis.ai/models/minicpm5-2b",
         "agents_last_exam": null,
         "aa_briefcase": "https://artificialanalysis.ai/models/minicpm5-2b",
-        "browsecomp": null,
+        "browsecomp": "https://huggingface.co/openbmb/MiniCPM5-2B",
         "aa_omniscience": "https://artificialanalysis.ai/models/minicpm5-2b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/minicpm5-2b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/minicpm5-2b",
@@ -26736,6 +26736,11 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/openbmb/MiniCPM5-2B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/openbmb/MiniCPM5-2B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/openbmb/MiniCPM5-2B/"
       }
     }
   ],
