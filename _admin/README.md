@@ -159,6 +159,10 @@ tells you why.
   entry. The fields offered are exactly the ones `edit.py` has a flag for.
 - **Runs** — the last few runs of the workflow.
 
+The icon in the header cycles the theme: follow the system, force light, force
+dark. It is stored under the same `theme` key `llm.html` uses, so both pages
+agree on one device.
+
 Answers batch up and go in one dispatch, so a sitting is one commit.
 
 Two things worth knowing:
