@@ -93,6 +93,11 @@ commit — and uses `rsync` or falls back to `scp`:
 The page needs nothing else: no build step, no bundler, no fonts or scripts
 from anywhere. It reads `llm.json` and the queue straight from GitHub.
 
+**Send `index.html` and `api.php` together.** They share a contract — the page
+asks the endpoint which repository to read — and `api.php` reports a version so
+a half-updated pair says so. If the page reports that `api.php` is older than
+it is, re-run `./deploy`; uploading only the page is what causes it.
+
 ### Then, outside the docroot
 
 Create the config:

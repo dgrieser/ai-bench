@@ -22,6 +22,10 @@
 
 declare(strict_types=1);
 
+// Bumped whenever the shape the page depends on changes, so a half-updated
+// deployment says so instead of rendering an empty, unexplained page.
+const API_VERSION = 2;
+
 const WORKFLOW = 'update-benchmarks.yml';
 const REF      = 'main';           // never taken from the client: see the workflow
 const MAX_RECORDS = 25;
@@ -172,6 +176,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     ok([
+        'api'  => API_VERSION,
         'repo' => $config['repo'],
         'ref'  => REF,
         'raw'  => data_base($config),
