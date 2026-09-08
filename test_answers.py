@@ -513,6 +513,26 @@ class TestWorkflowWiring(unittest.TestCase):
         for directory in ("_admin", "_pending"):
             self.assertTrue(directory.startswith("_"), directory)
 
+    def test_the_proposal_pr_is_opt_in(self) -> None:
+        """No automatic path may open one.
+
+        The admin page answers the same queue from _pending/pending.json, so a
+        proposal PR is a fallback rather than the delivery mechanism -- and one
+        nobody intends to merge is not free: the propose step skips while a PR
+        is open, so a stale one blocks the next.
+
+        `inputs` is null on a schedule and on a merge, which makes this falsy
+        there; only a manual dispatch that ticks the box can open one.
+        """
+        step = next(s for s in self.steps() if s.get("name") == "Propose the pending mappings")
+        self.assertIn("inputs.propose", str(step.get("if")))
+
+        import yaml
+
+        doc = yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
+        propose = doc[True]["workflow_dispatch"]["inputs"]["propose"]
+        self.assertIs(propose["default"], False)
+
     def test_a_push_trigger_is_never_added(self) -> None:
         """The commits ride a deploy key, which does trigger workflow events."""
         import yaml

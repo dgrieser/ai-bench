@@ -308,8 +308,17 @@ Interactive prompt guides you through:
 
 `check_new.py` asks one question per newly released Artificial Analysis model:
 add it, or never offer it again. The scheduled GitHub Actions run cannot answer
-either, so it queues the question and `propose.py` turns it into a PR that
-carries **both** answers:
+either, so it queues the question.
+
+> **The proposal PR is opt-in.** Answers now go through the admin page or
+> `answer.py` (below), and the queue is published to `_pending/pending.json` on
+> every successful refresh, so the questions survive without a PR carrying them.
+> Nothing automatic opens one: tick `propose` on a manual `workflow_dispatch` to
+> get one back. That is worth knowing if the admin host is ever down, since the
+> PR is then the only way to answer without a terminal.
+
+When asked for, `propose.py` turns the queue into a PR that carries **both**
+answers:
 
 - the model itself, added to `llm.json` with metadata prefilled from AA and null
   scores — merge as-is and that is the "add";

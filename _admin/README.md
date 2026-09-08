@@ -180,10 +180,17 @@ unlocks arrive with the next scheduled run.
 
 ## When the page is down
 
-Nothing here is load-bearing. `propose.py` still opens its PR, and `answer.py`
-works from a terminal:
+The queue is not lost with it. `_pending/pending.json` is published on every
+successful refresh whatever else happens, so the questions are all still there,
+and `answer.py` works from a terminal:
 
 ```sh
 ./answer.py tbench "Fable 5.1" __unmappable__ -w
 ./answer.py --stdin -w < answers.json
 ```
+
+The proposal PR is the other way back, and it is now **opt-in** — nothing
+automatic opens one, since a PR nobody intends to merge is noise that also
+blocks the next proposal (the step skips while one is open). Run
+`update-benchmarks.yml` by hand with `propose` ticked and it behaves as it
+always did.
