@@ -16,7 +16,8 @@
       "question": "Map HF label 'GDPval-AA v2' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "GDPval-AA v2"
+      "subject": "GDPval-AA v2",
+      "universe": "benchmarks"
     },
     {
       "candidates": [],
@@ -28,7 +29,8 @@
       "question": "Map HF label 'QwenClaw' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "QwenClaw"
+      "subject": "QwenClaw",
+      "universe": "benchmarks"
     },
     {
       "candidates": [],
@@ -40,7 +42,8 @@
       "question": "Map HF label 'SciCode (wbg)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "SciCode (wbg)"
+      "subject": "SciCode (wbg)",
+      "universe": "benchmarks"
     },
     {
       "candidates": [],
@@ -52,7 +55,8 @@
       "question": "Map HF label 'WildClaw' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "WildClaw"
+      "subject": "WildClaw",
+      "universe": "benchmarks"
     },
     {
       "candidates": [
@@ -73,7 +77,8 @@
       "question": "Which llm.json model is llm-stats id 'inkling'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "inkling"
+      "subject": "inkling",
+      "universe": "models"
     },
     {
       "candidates": [
@@ -104,7 +109,8 @@
       "question": "Which llm.json model is llm-stats id 'ling-3.0-flash'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "ling-3.0-flash"
+      "subject": "ling-3.0-flash",
+      "universe": "models"
     },
     {
       "candidates": [
@@ -135,7 +141,8 @@
       "question": "Which llm.json model is llm-stats id 'ling-3.0-flash-fin'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "ling-3.0-flash-fin"
+      "subject": "ling-3.0-flash-fin",
+      "universe": "models"
     },
     {
       "candidates": [
@@ -171,7 +178,8 @@
       "question": "Which llm.json model is llm-stats id 'qwen3-14b'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "qwen3-14b"
+      "subject": "qwen3-14b",
+      "universe": "models"
     },
     {
       "candidates": [],
@@ -181,7 +189,8 @@
       "question": "Which llm.json model is llm-stats id 'qwen3-max-thinking'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "qwen3-max-thinking"
+      "subject": "qwen3-max-thinking",
+      "universe": "models"
     },
     {
       "candidates": [
@@ -202,7 +211,8 @@
       "question": "Which llm.json model is llm-stats id 'step-3.7-flash'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "subject": "step-3.7-flash"
+      "subject": "step-3.7-flash",
+      "universe": "models"
     }
   ]
 }

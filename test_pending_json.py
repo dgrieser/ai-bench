@@ -136,6 +136,31 @@ class TestContent(PendingJsonTestCase):
             question = self.questions([many])[0]
         self.assertLessEqual(len(question["candidates"]), pending_prompts.MAX_CANDIDATES)
 
+    def test_each_question_names_the_list_its_answer_comes_from(self) -> None:
+        """The kind cannot be read for this, which is the bug it fixes.
+
+        update_huggingface_mapping.py asks a plain "mapping" question whose
+        answers are benchmark keys. A page inferring the universe from the kind
+        string offered model slugs for every HuggingFace question -- a list in
+        which no correct answer appears. propose.ROUTES is where this is known.
+        """
+        universes = {q["route"]: q["universe"] for q in self.questions(ENTRIES)}
+        self.assertEqual(universes["update_tbench_mapping.py"], propose.MODELS)
+        self.assertEqual(universes["update_llmstats_mapping.py"], propose.BENCHMARKS)
+        self.assertIsNone(universes["check_new.py"])
+
+    def test_a_plain_mapping_kind_can_still_be_a_benchmark_question(self) -> None:
+        entry = dict(ENTRIES[0], command="./update_huggingface_mapping.py -w", kind="mapping")
+        question = self.questions([entry])[0]
+        self.assertEqual(question["route_kind"], "mapping")
+        self.assertEqual(question["universe"], propose.BENCHMARKS)
+
+    def test_every_route_reports_the_universe_its_table_entry_declares(self) -> None:
+        for route_name, by_kind in propose.ROUTES.items():
+            for kind, route in by_kind.items():
+                entry = dict(ENTRIES[0], command=f"./{route_name} -w", kind=kind)
+                self.assertEqual(self.questions([entry])[0]["universe"], route.universe)
+
     def test_no_universe_is_embedded(self) -> None:
         """Hundreds of model names and thousands of AA slugs, each on its own
         schedule, would rewrite this file on runs where nothing was asked -- and
