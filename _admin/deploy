@@ -6,7 +6,10 @@
 #   ./_admin/deploy you@host:/path/to/docroot/admin/ --go       # actually copy
 #
 # Exactly three files go up: the page, the endpoint, and the .htaccess that
-# gates them. Nothing else in this directory belongs on a web server --
+# gates them. Always all three together -- index.html and api.php share a
+# contract (the page asks the endpoint which repository to read), and a
+# half-updated pair used to render an empty page with no explanation. The page
+# now names the mismatch, but re-sending both is what fixes it. Nothing else in this directory belongs on a web server --
 # config.example.php is a template whose real copy lives outside the docroot,
 # and README.md and this script are for you, not for the host.
 #

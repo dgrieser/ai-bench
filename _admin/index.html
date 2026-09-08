@@ -699,6 +699,12 @@ const state = {
   ok: "",
 };
 
+/* The api.php contract this page needs. An older endpoint answers without a
+   `raw`, so the page has nowhere to read the queue from -- which used to show
+   as an empty Queue with no explanation, because the two files are deployed
+   separately and nothing checked that they matched. */
+const NEEDS_API = 2;
+
 const KEY = (q) => `${q.route} ${q.route_kind} ${q.subject}`;
 const NEW_MODEL_ROUTE = "check_new.py";
 
@@ -787,7 +793,14 @@ async function loadRuns() {
     state.runs = body.runs || [];
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
-    return Boolean(state.raw);
+    if (!state.raw || (body.api || 1) < NEEDS_API) {
+      state.error = "api.php answered, but it is older than this page: it did not "
+        + "say which repository to read. Upload _admin/api.php alongside "
+        + "index.html -- ./_admin/deploy sends both. Until then the queue cannot "
+        + "be loaded and nothing can be sent.";
+      return false;
+    }
+    return true;
   } catch (error) {
     state.runs = [];
     state.error = `Could not reach api.php (${error.message}). `
