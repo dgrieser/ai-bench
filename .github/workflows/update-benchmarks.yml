@@ -60,6 +60,18 @@ on:
         description: "Apply the answers and stop, instead of also refreshing scores"
         type: boolean
         default: false
+      # The proposal PR is off unless asked for. The admin page answers the same
+      # queue without one, and a PR nobody intends to merge is noise that also
+      # blocks the next proposal, since the propose step skips while one is open.
+      #
+      # `inputs` is null on a schedule or a merge, so this is falsy there and no
+      # PR is opened on any automatic path. Ticking it on a manual dispatch is
+      # the way back -- worth knowing about if the admin host is ever down, since
+      # the PR is then the only way to answer without a terminal.
+      propose:
+        description: "Also open a proposal PR for anything still unanswered"
+        type: boolean
+        default: false
 
 permissions:
   # Read-only for contents: nothing is written with GITHUB_TOKEN any more. Both
@@ -282,9 +294,14 @@ jobs:
       # A proposal PR, not an issue: the mapping questions become a reviewable
       # diff with clickable suggestions. Skipped entirely while one is already
       # open, so a force-push can never discard review work in progress.
+      #
+      # Now opt-in (see the `propose` input). The queue is published to
+      # _pending/pending.json on every successful refresh and the admin page
+      # answers from that, so the questions survive without a PR carrying them --
+      # this step is the fallback, not the delivery mechanism.
       - name: Propose the pending mappings
         id: propose
-        if: ${{ !inputs.dry_run && steps.pending.outputs.count != '' && steps.pending.outputs.count != '0' }}
+        if: ${{ inputs.propose && !inputs.dry_run && steps.pending.outputs.count != '' && steps.pending.outputs.count != '0' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}

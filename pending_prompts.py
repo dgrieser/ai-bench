@@ -127,6 +127,12 @@ def render_json(entries: list[dict[str, Any]], llm_path: Path, skip_aa: bool) ->
             {
                 "route": route_name,
                 "route_kind": entry.get("kind") or "",
+                # Which list an answer must come from. The kind cannot be read
+                # for this: update_huggingface_mapping.py asks a plain "mapping"
+                # question whose answers are benchmark keys, so anything
+                # inferring the universe from the kind string offers model slugs
+                # for it. ROUTES is where that is actually known.
+                "universe": route.universe if route is not None else None,
                 "subject": subject,
                 "question": entry.get("question") or "",
                 "note": entry.get("note"),

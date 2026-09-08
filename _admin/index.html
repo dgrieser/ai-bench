@@ -70,6 +70,8 @@
     border: 1px solid var(--line); border-radius: var(--radius); padding: .3rem .5rem; }
   .row { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin-top: .5rem; }
   .row label { color: var(--muted); font-size: .85rem; min-width: 6rem; }
+  input.unknown { border-color: var(--bad); }
+  .row input[type="text"] { flex: 1; min-width: 12rem; }
 
   .bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface);
          border-top: 1px solid var(--line); padding: .7rem 1rem; box-shadow: var(--shadow); }
@@ -216,19 +218,40 @@ const benchmarks = () =>
     .map(([key]) => key)
     .sort();
 
+/* Which list an answer must come from, as the queue states it.
+   Never inferred from the kind: update_huggingface_mapping.py asks a plain
+   "mapping" question whose answers are benchmark keys, so guessing from the
+   kind string offered model slugs for every HuggingFace question. propose.ROUTES
+   is where this is known, and pending.json now carries it.
+   An older queue has no universe field; offering nothing beats offering the
+   wrong list, and the next refresh restores it. */
+const UNIVERSES = { models, benchmarks };
+
 function universeFor(question) {
-  if (question.route === NEW_MODEL_ROUTE) return [];
-  if (question.route === AA_ROUTE) return [];   // AA slugs are not in llm.json
-  return question.route_kind.includes("benchmark") ? benchmarks() : models();
+  const build = UNIVERSES[question.universe];
+  return build ? build() : [];
 }
 
 /* ---------------------------------------------------------------- answers */
 
-function setAnswer(question, record) {
+/* rerender:false is for the free-text box. render() rebuilds the whole view,
+   which replaces the very input being typed into -- the caret, the value and
+   the focus all went with it, so the box could only ever be filled by picking
+   from the list in one shot. Typing now updates the batch and touches only the
+   footer and this card. */
+function setAnswer(question, record, rerender = true) {
   const key = KEY(question);
   if (record === null) state.answers.delete(key);
   else state.answers.set(key, record);
-  render();
+  if (rerender) render();
+  else refreshFooter();
+}
+
+function refreshFooter() {
+  const pending = state.answers.size;
+  document.getElementById("count").textContent =
+    pending ? `${pending} answer${pending === 1 ? "" : "s"} ready` : "Nothing to send yet";
+  document.getElementById("send").disabled = pending === 0;
 }
 
 const answerOf = (question) => state.answers.get(KEY(question));
@@ -264,10 +287,7 @@ function render() {
           : renderRuns()
   );
 
-  const pending = state.answers.size;
-  document.getElementById("count").textContent =
-    pending ? `${pending} answer${pending === 1 ? "" : "s"} ready` : "Nothing to send yet";
-  document.getElementById("send").disabled = pending === 0;
+  refreshFooter();
 }
 
 function renderTabs() {
@@ -346,15 +366,25 @@ function renderQuestion(question) {
     const freeform = chosen
       && chosen.answer !== "__unmappable__"
       && !(question.candidates || []).some((c) => c.option === chosen.answer);
+    const noun = question.universe === "benchmarks" ? "benchmarks" : "models";
     const input = el("input", {
       type: "text",
-      placeholder: "or search the full list...",
+      placeholder: `or search ${universe.length} ${noun}...`,
       value: freeform ? chosen.answer : "",
     });
     input.setAttribute("list", listId);
     input.oninput = () => {
       const value = input.value.trim();
-      setAnswer(question, universe.includes(value) ? mappingRecord(question, value) : null);
+      const known = universe.includes(value);
+      setAnswer(question, known ? mappingRecord(question, value) : null, false);
+      // Half-typed is neither an answer nor an error; only a finished word that
+      // names nothing is worth flagging.
+      input.classList.toggle("unknown", Boolean(value) && !known);
+      card.classList.toggle("answered", Boolean(answerOf(question)));
+      if (value) {
+        card.querySelectorAll('.opt[aria-pressed="true"]')
+          .forEach((button) => button.setAttribute("aria-pressed", "false"));
+      }
     };
     const list = el("datalist", { id: listId },
       universe.slice(0, 2000).map((option) => el("option", { value: option })));
