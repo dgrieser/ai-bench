@@ -162,6 +162,15 @@ tells you why.
   comment in `_answers.py`, and `_new_models.apply_decisions`.)
 - **Models** — edit `params`, `context` and any non-derived score on an existing
   entry. The fields offered are exactly the ones `edit.py` has a flag for.
+  Adding a score also asks when it was read and what page it was read from: the
+  date defaults to today (yours, not the runner's — the run can start on the
+  other side of midnight) and the page to nothing, which is what a hand edit has
+  always meant. Naming one is not cosmetic. `_precedence.source_rank()` reads an
+  unattributed score as hand-entered, the weakest rung, so any scraper replaces
+  it; crediting the leaderboard it actually came from moves it onto that page's
+  rung, where only that page or a better one may. One date and one page cover
+  every score in the card, which is how a sitting goes — a second leaderboard is
+  a second batch.
 - **Runs** — the last few runs of the workflow.
 
 The icon in the header cycles the theme: follow the system, force light, force
@@ -181,6 +190,17 @@ has left the queue.
 one run plus one queued, and a third arrival cancels the queued one silently.
 `api.php` returns 409 rather than letting a second batch evict the first — wait
 for the run to start, then send.
+
+**Answered cards stay disabled until their run finishes.** The queue is only
+republished when the run pushes, so a question you have just answered is still
+listed, and answering it again is worse than a wasted tap: the second record
+carries the same `if_previous`, the run applies the first, and `answer.py` then
+rejects the second as stale — and a batch is all or nothing, so every other
+answer in that sitting goes down with it. The page therefore remembers what it
+dispatched, marks those cards *sent*, and disables them until the run is no
+longer in flight; everything else stays answerable. The lock survives a reload
+(that is the advice above, after all) and lifts only on a run list the page
+actually managed to read, never on a failed one.
 
 **"Record only, refresh later"** skips the score refresh, so the answer is
 recorded in about a minute instead of up to an hour. It is not an equivalent

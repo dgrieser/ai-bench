@@ -238,6 +238,11 @@ Output: llm.json (unified dataset)
 # Edit existing model entries
 ./edit.py --json llm.json [model-slug]
 
+# ... crediting the page and the day a hand-entered score came from, instead of
+# today and nobody
+./edit.py -m devstral-2 --swe-bench-verified=72.2 \
+          --score-date=2026-08-06 --score-url=https://example.com/leaderboard
+
 # Remove models or prune invalid entries
 ./prune.py llm.json
 
@@ -376,6 +381,14 @@ Two shapes are worth knowing because the obvious version is wrong:
 - **The Artificial Analysis mapping runs the other way round.** Its keys are
   `llm.json` model names and its values are AA slugs, one or a list, so both
   ends are checked against different universes.
+- **A `model-edit` may say when its scores were read and from where.**
+  `score_date` and `score_url` stamp `scores_updated` and `scores_source` for
+  the scores in that record — one date and one page for all of them, since
+  `edit.py` stamps what a run changes. Left off, `edit.py`'s own defaults apply:
+  today, credited to nobody, which is `RANK_HAND_ENTERED` and so overwritable by
+  every scraper. Naming the page moves the value onto that page's rung instead.
+  Both are refused with nothing to stamp them on, a date in the future is
+  refused, and a page has to be a URL rather than free text.
 
 ### 2d. The Admin Page
 
@@ -383,6 +396,12 @@ Two shapes are worth knowing because the obvious version is wrong:
 not a terminal. It renders `_pending/pending.json`, you tap an answer, and it
 dispatches `update-benchmarks.yml` with the batch as an input; the run applies
 it with `answer.py` and pushes to `main`.
+
+The cards it has dispatched stay disabled until that run is no longer in flight.
+The queue is only republished when the run pushes, so a question just answered
+is still listed, and answering it twice is not a wasted tap: the second record
+carries the same `if_previous`, so `answer.py` rejects it as stale — and a batch
+is all or nothing, which takes every other answer in the sitting with it.
 
 It is not on the published site. Pages runs Jekyll here (there is no
 `.nojekyll`), and Jekyll does not copy `_`-prefixed paths into the built site —
@@ -423,7 +442,7 @@ already gives row collisions inside a single source.
 | 3 | **Curated third parties** — evals.report, benchlm.ai | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. |
 | 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its DeepSWE rows are not ingested at all: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
-| 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited, or null where a hand edit cleared the attribution. A hand entry seeds a column until something measures it, and any scraper may overwrite it. |
+| 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
 Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value

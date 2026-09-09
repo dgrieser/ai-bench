@@ -13,7 +13,11 @@ leaderboard.
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 from unittest import mock
 
@@ -217,6 +221,91 @@ class TestHandEditClearsAttribution(unittest.TestCase):
         model = {"name": "m", "scores_source": []}
         with self.assertRaises(TypeError):
             stamp_score_source(model, "bench", URL_A)
+
+
+class TestHandEditProvenance(unittest.TestCase):
+    """edit.py may now say when a score was read and from where.
+
+    Both default to what a hand edit has always meant -- today, credited to
+    nobody, which is _precedence.RANK_HAND_ENTERED and so overwritable by every
+    scraper. Naming the page is what moves the value onto that page's rung,
+    which is why the flags exist and why the value has to be a URL.
+    """
+
+    EDIT = Path(__file__).resolve().parent / "edit.py"
+
+    def setUp(self) -> None:
+        self.tmp = Path(tempfile.mkdtemp())
+        self.llm = self.tmp / "llm.json"
+        self.llm.write_text(
+            json.dumps(
+                {
+                    "benchmarks": {"bench": {"name": "Bench"}, "other": {"name": "Other"}},
+                    "models": [
+                        {"name": "m", "scores": {}, "scores_updated": {}, "scores_source": {}}
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def edit(self, *flags: str) -> subprocess.CompletedProcess:
+        # --flag=VALUE and the path after a bare --, the form infer_json_file()
+        # reads unambiguously; stdin closed so the run is non-interactive.
+        return subprocess.run(
+            [sys.executable, str(self.EDIT), "--model=m", *flags, "--", str(self.llm)],
+            capture_output=True,
+            text=True,
+            stdin=subprocess.DEVNULL,
+        )
+
+    def model(self) -> dict:
+        return json.loads(self.llm.read_text(encoding="utf-8"))["models"][0]
+
+    def test_a_date_and_a_page_are_stamped_on_the_score(self) -> None:
+        self.assertEqual(
+            self.edit("--bench=42.5", "--score-date=2026-08-06", f"--score-url={URL_A}").returncode,
+            0,
+        )
+        model = self.model()
+        self.assertEqual(model["scores"]["bench"], 42.5)
+        self.assertEqual(model["scores_updated"]["bench"], "2026-08-06")
+        self.assertEqual(model["scores_source"]["bench"], URL_A)
+
+    def test_the_defaults_are_today_and_nobody(self) -> None:
+        self.assertEqual(self.edit("--bench=42.5").returncode, 0)
+        model = self.model()
+        self.assertEqual(model["scores_updated"]["bench"], date.today().isoformat())
+        self.assertIsNone(model["scores_source"]["bench"])
+
+    def test_null_credits_nobody(self) -> None:
+        self.edit("--bench=42.5", f"--score-url={URL_A}")
+        self.assertEqual(self.edit("--bench=43.5", "--score-url=null").returncode, 0)
+        self.assertIsNone(self.model()["scores_source"]["bench"])
+
+    def test_the_stamp_covers_every_score_the_run_changes(self) -> None:
+        """One sitting is one leaderboard read on one day."""
+        self.edit("--bench=1", "--other=2", "--score-date=2026-08-06", f"--score-url={URL_B}")
+        model = self.model()
+        self.assertEqual(model["scores_updated"], {"bench": "2026-08-06", "other": "2026-08-06"})
+        self.assertEqual(model["scores_source"], {"bench": URL_B, "other": URL_B})
+
+    def test_a_metadata_only_edit_has_nothing_to_stamp(self) -> None:
+        result = self.edit("--params=70B", "--score-date=2026-08-06")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("pass a benchmark flag too", result.stderr)
+
+    def test_free_text_is_not_a_page(self) -> None:
+        result = self.edit("--bench=1", "--score-url=example.com/board")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("http://", result.stderr)
+        self.assertEqual(self.model()["scores"], {})
+
+    def test_a_malformed_date_is_refused(self) -> None:
+        result = self.edit("--bench=1", "--score-date=06.08.2026")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("YYYY-MM-DD", result.stderr)
+        self.assertEqual(self.model()["scores"], {})
 
 
 class TestPerBenchmarkUrls(unittest.TestCase):
