@@ -235,13 +235,20 @@ Output: llm.json (unified dataset)
 # Add a new model to llm.json (interactive CLI)
 ./add.py --json llm.json
 
-# Edit existing model entries
+# Edit existing model entries: params, context, url, creator, creator url,
+# date added -- the same fields add.py asks for -- and any non-derived score
 ./edit.py --json llm.json [model-slug]
+./edit.py -m devstral-2 --creator=Mistral --creator-url=https://mistral.ai/
 
 # ... crediting the page and the day a hand-entered score came from, instead of
 # today and nobody
 ./edit.py -m devstral-2 --swe-bench-verified=72.2 \
           --score-date=2026-08-06 --score-url=https://example.com/leaderboard
+
+# Rename a model's slug in llm.json and every mapping file that names it
+# (dry-run; -w to persist)
+./rename.py glm-5.3 glm-5-3
+./rename.py glm-5.3 glm-5-3 -w
 
 # Remove models or prune invalid entries
 ./prune.py llm.json
@@ -381,6 +388,19 @@ Two shapes are worth knowing because the obvious version is wrong:
 - **The Artificial Analysis mapping runs the other way round.** Its keys are
   `llm.json` model names and its values are AA slugs, one or a list, so both
   ends are checked against different universes.
+- **Adding a model comes in two shapes.** `model-add` answers a queued
+  `check_new.py` question — the slug is one Artificial Analysis published, and
+  the gate is that the queue actually asked. `model-create` is the other
+  direction: a model no source has offered, typed in by hand, so there is no
+  question to check it against and the guard is the name having to be a slug,
+  the entry having to be new, and every metadata value being one its field
+  accepts. Both run `add.py`; only the first records `__added__`, because only
+  the first answers a question somebody asked.
+- **A `model-rename` is not an edit of the `name` field.** The name is a
+  model's identity: every source's mapping file points at it, the AA mapping is
+  keyed by it, and `update.py` reads AA directly for a model whose name *is* an
+  AA slug. `_rename.py` moves all of that at once, and a name left behind in a
+  mapping file would not fail — it would silently stop matching.
 - **A `model-edit` may say when its scores were read and from where.**
   `score_date` and `score_url` stamp `scores_updated` and `scores_source` for
   the scores in that record — one date and one page for all of them, since
@@ -396,6 +416,14 @@ Two shapes are worth knowing because the obvious version is wrong:
 not a terminal. It renders `_pending/pending.json`, you tap an answer, and it
 dispatches `update-benchmarks.yml` with the batch as an input; the run applies
 it with `answer.py` and pushes to `main`.
+
+Its **Models** tab edits every field `add.py` asks for plus any non-derived
+score, its **New models** tab adds a model nothing offered, and a model whose
+slug Artificial Analysis never adopted can be renamed onto AA's own — the
+suggestions come from AA's model list, which `api.php` fetches with an optional
+key in its config. See [A hand-added model meets Artificial
+Analysis](#a-hand-added-model-meets-artificial-analysis) for which of those a
+given model needs.
 
 The cards it has dispatched stay disabled until that run is no longer in flight.
 The queue is only republished when the run pushes, so a question just answered
@@ -701,6 +729,44 @@ the gaps it leaves. The model's own slug leads unless the list places it
 somewhere else. The extra slugs are an ingestion detail — they never reach
 `llm.json`, `llm.html` or `llm-cli`, and `check_new.py` does not offer them as
 new models.
+
+### A hand-added model meets Artificial Analysis
+
+A model added by hand — `add.py`, or the admin page's **Add a model** — exists in
+`llm.json` before any source knows about it. What happens when Artificial
+Analysis catches up is decided by one comparison in `update.resolve_aa_slugs()`,
+and only one of the two outcomes resolves itself:
+
+| AA publishes | What happens | What to do |
+| --- | --- | --- |
+| the same slug | `resolve_aa_slugs()` reads a model's own name off AA when it is a slug there, so the scores start arriving on the next refresh | nothing, ever |
+| a different slug | nothing arrives, and nothing will | map it, or rename the entry |
+
+The comparison is byte for byte, so `glm-5.3` and `glm-5-3` fall in the second
+row however alike they look. `update_artificialanalysis_mapping.py` calls that
+pair out by name — it used to report it as an exact match that `update.py` would
+"fetch directly", which it then did not.
+
+Both remedies are one answer through the admin page or one command:
+
+```bash
+# Keep the name, record which AA slug it means. What the Queue tab asks, once a
+# refresh has noticed the model has no AA index.
+./answer.py update_artificialanalysis_mapping.py glm-5.3 glm-5-3 -w
+
+# Or take the AA slug as the entry's name, and the identity match above takes
+# over -- nothing left to maintain.
+./rename.py glm-5.3 glm-5-3 -w
+```
+
+Renaming is the bigger operation of the two and is not an edit of `llm.json`: a
+model's name is written down in every source's mapping file as well, plus as a
+key in the two AA files and in `check_new-decisions.json`. A name left behind in
+one of them does not fail — it silently stops matching, and the scores that
+source used to write stop arriving. `_rename.py` moves all of them in one go,
+taking the file list off `propose.ROUTES` so a source added there cannot be
+forgotten, and writing each file through its own `add_*` writer so the diff is
+one line rather than a reordering.
 
 ### Many Source Rows, One Slug
 
@@ -1565,7 +1631,9 @@ ai-bench/
 ├── llm.html                    # Web visualization
 │
 ├── add.py                      # Add new model (interactive CLI)
-├── edit.py                     # Edit model metadata
+├── edit.py                     # Edit model metadata and scores
+├── rename.py                   # Rename a model slug, everywhere it is written
+├── _rename.py                  # The file list and the rewrite behind rename.py
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │

@@ -139,13 +139,16 @@ jobs:
       # test_answers.py is here for a stronger reason than the others: it is the
       # gate on input this workflow accepts from outside the repository, so a
       # regression in it has to stop the run before anything is applied or
-      # pushed, not after.
+      # pushed, not after. test_model_admin.py covers what that input then runs:
+      # add.py, edit.py and the rename, which between them can move a model's
+      # name out from under every mapping file that points at it.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
           ./test_propose.py
           ./test_new_models.py
           ./test_answers.py
+          ./test_model_admin.py
           ./test_pending_json.py
 
       # Two combinations that are silently destructive rather than merely wrong,

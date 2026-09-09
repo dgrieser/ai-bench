@@ -19,6 +19,7 @@ from pathlib import Path
 
 import _artificialanalysis_mapping as aa_mapping
 import update
+from _matching import normalize_slug
 
 
 class MappingFileTestCase(unittest.TestCase):
@@ -146,6 +147,61 @@ class TestResolveAaSlugs(MappingFileTestCase):
         self.assertEqual(
             update.resolve_aa_slugs(["m"], {"m", "m-old"}, path), {"m": ["m-old", "m"]}
         )
+
+
+class TestHandAddedModelMeetsAa(MappingFileTestCase):
+    """A model added before Artificial Analysis tracked it.
+
+    The entry exists with no AA mapping at all. What happens next depends on the
+    slug AA eventually publishes, and only one of the two cases resolves itself.
+    """
+
+    def test_a_slug_aa_does_not_have_yet_reads_nothing(self) -> None:
+        path = self.write_mapping({})
+        self.assertEqual(update.resolve_aa_slugs(["acme-model-1"], {"other"}, path), {})
+
+    def test_the_same_slug_appearing_on_aa_maps_itself(self) -> None:
+        """No mapping entry, no answer to give: the name is the match."""
+        path = self.write_mapping({})
+        self.assertEqual(
+            update.resolve_aa_slugs(["acme-model-1"], {"acme-model-1", "other"}, path),
+            {"acme-model-1": ["acme-model-1"]},
+        )
+
+    def test_a_declined_name_still_maps_itself_once_aa_has_it(self) -> None:
+        """__unmappable__ said AA had no slug for it; AA now says otherwise."""
+        path = self.write_mapping({"acme-model-1": "__unmappable__"})
+        self.assertEqual(
+            update.resolve_aa_slugs(["acme-model-1"], {"acme-model-1"}, path),
+            {"acme-model-1": ["acme-model-1"]},
+        )
+
+    def test_a_slug_that_differs_only_in_punctuation_does_not_map_itself(self) -> None:
+        """Which is why the entry has to be mapped or renamed: this comparison
+        is byte for byte, however alike the two names look."""
+        path = self.write_mapping({})
+        self.assertEqual(update.resolve_aa_slugs(["acme-model-1.5"], {"acme-model-1-5"}, path), {})
+        # Either remedy connects them. Renaming leaves nothing to maintain.
+        mapped = self.write_mapping({"acme-model-1.5": "acme-model-1-5"})
+        self.assertEqual(
+            update.resolve_aa_slugs(["acme-model-1.5"], {"acme-model-1-5"}, mapped),
+            {"acme-model-1.5": ["acme-model-1-5"]},
+        )
+        self.assertEqual(
+            update.resolve_aa_slugs(["acme-model-1-5"], {"acme-model-1-5"}, self.write_mapping({})),
+            {"acme-model-1-5": ["acme-model-1-5"]},
+        )
+
+    def test_the_reviewer_is_told_which_case_it_is(self) -> None:
+        """update_artificialanalysis_mapping.py used to promise the punctuation
+        case would be fetched directly, and then it was not."""
+        import update_artificialanalysis_mapping as aa_review
+
+        aa_by_norm = {normalize_slug(s): s for s in ["acme-model-1-5", "other"]}
+        self.assertEqual(
+            aa_review.exact_aa_slug({"name": "acme-model-1.5"}, aa_by_norm), "acme-model-1-5"
+        )
+        self.assertIsNone(aa_review.exact_aa_slug({"name": "acme-model-9"}, aa_by_norm))
 
 
 class TestMergeAaModels(unittest.TestCase):

@@ -112,6 +112,10 @@ above itself, since hosts disagree about the shape above the docroot. Set
 `AI_BENCH_ADMIN_CONFIG` if yours sits somewhere else. When it finds nothing it
 logs every path it tried and returns a 500 — it never falls back to a default.
 
+The config takes an optional third value, `aa_api_key`: an Artificial Analysis
+key, which is what lets the Models tab list AA slugs for a rename. Leave it
+empty and that one control says so; everything else works untouched.
+
 Keep it above the docroot rather than beside `api.php`. If PHP ever stops
 running — a bad `.htaccess`, a module falling over — a file inside the docroot is
 served as plain text, and that file holds the token.
@@ -140,6 +144,10 @@ A **fine-grained** personal access token:
 | Repository access | only `dgrieser/ai-bench` |
 | Permissions | **Actions → Read and write**, nothing else |
 
+(The optional `aa_api_key` beside it is an Artificial Analysis key, not a GitHub
+one. It is read-only against a public leaderboard's API, and the worst it can do
+is list model slugs.)
+
 That scope is the point, not an inconvenience. A `Contents: write` token would
 bypass the branch ruleset outright — the repository owner is on its bypass list —
 which would turn an internet-facing endpoint into arbitrary-write-to-`main`. With
@@ -155,13 +163,26 @@ tells you why.
 - **Queue** — one card per unanswered source name. Candidates come from
   `_matching.grade()`, best first, each labelled with why it matched; an exact
   match is outlined in green. `__unmappable__` declines the name. The search box
-  falls back to the full list.
+  falls back to the full list — of models, of benchmark keys, or, for the
+  "which AA slug is this model" question, of Artificial Analysis' own slugs,
+  which needs the `aa_api_key` below.
 - **New models** — *Add it* runs `add.py` and records the answer; *Ignore it*
   writes `__ignored__`, which removes the entry and stops the slug being offered.
   (These are genuinely different records, not two values of one field — see the
   comment in `_answers.py`, and `_new_models.apply_decisions`.)
-- **Models** — edit `params`, `context` and any non-derived score on an existing
-  entry. The fields offered are exactly the ones `edit.py` has a flag for.
+
+  Above those cards is **Add a model**, for the other direction: a release
+  Artificial Analysis does not track, so nothing offered it and there is no
+  question to answer. Name it and fill in as much as you know; `add.py` fills
+  the rest from AA when it happens to know the name, and leaves it blank when it
+  does not. The name is checked as you type — it has to be a slug, and it says
+  whether AA already publishes one exactly like it, which decides whether scores
+  arrive by themselves (see *A hand-added model and AA* below).
+- **Models** — edit every field `add.py` asks for — `params`, `context`, `url`,
+  `creator`, `creator url`, `date added` — and any non-derived score. The two
+  sets are the same on purpose: nothing is enterable once and then frozen.
+  (`vram` is not among them; Spheron writes it, and a hand-typed figure would be
+  recomputed away.)
   Adding a score also asks when it was read and what page it was read from: the
   date defaults to today (yours, not the runner's — the run can start on the
   other side of midnight) and the page to nothing, which is what a hand edit has
@@ -171,6 +192,12 @@ tells you why.
   rung, where only that page or a better one may. One date and one page cover
   every score in the card, which is how a sitting goes — a second leaderboard is
   a second batch.
+
+  At the foot of the card is **artificial analysis**, which says whether AA
+  publishes this exact slug and, when it does not, offers the slugs that look
+  like it. Picking one is a *rename*, not a mapping — see below. A rename is
+  sent on its own: one record per model per run, so the fields above grey out
+  while one is drafted.
 - **Runs** — the last few runs of the workflow.
 
 The icon in the header cycles the theme: follow the system, force light, force
@@ -207,6 +234,46 @@ recorded in about a minute instead of up to an hour. It is not an equivalent
 path: a mapping does nothing until `update.py` reads it, so the scores it
 unlocks arrive with the next scheduled run.
 
+## A hand-added model and AA
+
+A model added by hand exists before any source knows about it. What happens when
+Artificial Analysis catches up depends on one comparison, and it is worth
+knowing which case you are in because only one of them resolves itself:
+
+- **AA publishes the same slug.** Nothing to do, ever.
+  `update.resolve_aa_slugs()` reads AA for a model whose *name* is a slug there,
+  so the scores simply start arriving on the next refresh. The Models tab says
+  so when this is already true.
+- **AA publishes a different slug.** Nothing arrives, and nothing will. Two ways
+  out, and the page offers the second:
+  - *Map it* — keep the name and record which AA slug it means. The Queue tab
+    asks exactly this, as soon as a refresh has noticed the model has no AA
+    index. Right when the name is one this site wants to keep.
+  - *Rename it* — take the AA slug as the entry's name. Right when the name was
+    only ever a placeholder, and it leaves nothing to maintain: the identity
+    match above takes over.
+
+The comparison is byte for byte, so `glm-5.3` and `glm-5-3` are the second case,
+however alike they look. That pair is what the suggestions call *the same name
+bar punctuation*, and it is the usual reason to rename.
+
+A rename is not an edit of `llm.json`. The name is written down in every
+source's mapping file too, and one left behind does not fail — it silently stops
+matching, and the scores that source used to write stop arriving. `_rename.py`
+moves all of them at once, reading the file list off `propose.ROUTES` so a
+source added there is never quietly forgotten, and `./rename.py old new` does
+the same job from a terminal.
+
+**The slug list needs a key.** The suggestions come from AA's own model list,
+which `api.php` fetches with the `aa_api_key` in its config — the same key
+`artificialanalysis.py` reads from `ARTIFICIAL_ANALYSIS_API_KEY`. It is proxied
+rather than fetched by the page because the AA API authenticates with a header,
+so a browser request preflights and AA answers no CORS headers; keeping it
+server-side also keeps the key out of every browser that opens the page. Without
+a key the page says the list is unavailable and nothing else changes — the
+endpoint reports whether it has one, so an older `api.php` costs the
+suggestions rather than the whole page.
+
 ## When the page is down
 
 The queue is not lost with it. `_pending/pending.json` is published on every
@@ -216,6 +283,7 @@ and `answer.py` works from a terminal:
 ```sh
 ./answer.py tbench "Fable 5.1" __unmappable__ -w
 ./answer.py --stdin -w < answers.json
+./rename.py glm-5.3 glm-5-3 -w        # what the Models tab's rename does
 ```
 
 The proposal PR is the other way back, and it is now **opt-in** — nothing

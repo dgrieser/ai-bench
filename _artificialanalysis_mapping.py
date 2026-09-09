@@ -62,6 +62,16 @@ def _load_raw_mapping(path: Path = AA_MODEL_MAPPING) -> dict[str, str | list[str
     }
 
 
+def load_raw_llm_to_aa(path: Path = AA_MODEL_MAPPING) -> dict[str, str | list[str]]:
+    """Every entry exactly as the file holds it: sentinels, lists and all.
+
+    load_llm_to_aa_slugs() below is the reading view, which drops both. A
+    rewrite of the file -- _rename.py moving an entry to a new model name -- has
+    to keep what it does not understand, so it starts here instead.
+    """
+    return _load_raw_mapping(path)
+
+
 def load_llm_to_aa_slugs(path: Path = AA_MODEL_MAPPING) -> dict[str, list[str]]:
     """Real llm.json model slug -> Artificial Analysis slugs, best first.
 

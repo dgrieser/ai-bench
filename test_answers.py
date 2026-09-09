@@ -25,7 +25,18 @@ import edit
 import _new_models
 import _prompts
 import propose
-from _answers import MAPPING, MODEL_ADD, MODEL_EDIT, NEW_MODEL, AA_IGNORE, Answer, AnswerError
+import _rename
+from _answers import (
+    AA_IGNORE,
+    MAPPING,
+    MODEL_ADD,
+    MODEL_CREATE,
+    MODEL_EDIT,
+    MODEL_RENAME,
+    NEW_MODEL,
+    Answer,
+    AnswerError,
+)
 
 TBENCH = "update_tbench_mapping.py"
 LLMSTATS = "update_llmstats_mapping.py"
@@ -307,9 +318,51 @@ class TestNewModels(AnswersTestCase):
 class TestModelEdits(AnswersTestCase):
     def test_only_edit_pys_own_metadata_fields_are_offered(self) -> None:
         """edit.py has a flag per field; anything else exits 2 from argparse."""
-        self.assertEqual(set(_answers.METADATA_FIELDS), {"params", "context"})
-        self.refused({"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"url": "x"}}, "not editable")
+        self.assertEqual(
+            set(_answers.METADATA_FIELDS),
+            {"params", "context", "url", "creator", "creator_url", "date_added"},
+        )
+        # The name is the model's identity, not a field: renaming it has to move
+        # every mapping file with it, which is what a model-rename record is for.
         self.refused({"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"name": "x"}}, "not editable")
+        self.refused({"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"vram": "8"}}, "not editable")
+
+    def test_a_metadata_value_is_checked_against_its_own_field(self) -> None:
+        """A URL that is not one and a date that is not one are silent lies."""
+        for field, value in (
+            ("url", "huggingface.co/x/y"),
+            ("creator_url", "mistral.ai"),
+        ):
+            self.refused({"kind": MODEL_EDIT, "name": "devstral-2", "fields": {field: value}}, "URL")
+        self.refused(
+            {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"date_added": "03.02.2026"}},
+            "YYYY-MM-DD",
+        )
+        answer = self.accepted({
+            "kind": MODEL_EDIT,
+            "name": "devstral-2",
+            "fields": {
+                "url": "https://huggingface.co/x/y",
+                "creator": "Mistral",
+                "creator_url": "https://mistral.ai/",
+                "date_added": "2026-02-03",
+                "params": "123B",
+                "context": "256k",
+            },
+        })
+        self.assertEqual(len(answer.fields), 6)
+
+    def test_a_creator_field_reaches_edit_py_as_its_own_flag(self) -> None:
+        """The record keeps the underscore; argparse only knows the dash."""
+        answer = Answer(
+            index=0, kind=MODEL_EDIT, subject="devstral-2",
+            fields={"creator_url": "https://mistral.ai/", "date_added": None},
+        )
+        with mock.patch.object(_answers, "_run") as run:
+            _answers._apply_edit(answer, self.llm)
+        argv = run.call_args[0][0]
+        self.assertIn("--creator-url=https://mistral.ai/", argv)
+        self.assertIn("--date-added=null", argv)
 
     def test_a_derived_column_takes_no_score(self) -> None:
         """derive_indexes.py recomputes it, so the write is a silent no-op."""
@@ -452,6 +505,103 @@ class TestModelEdits(AnswersTestCase):
         self.assertEqual(edit_parser_flags, {"--score-date", "--score-url"})
 
 
+class TestModelCreate(AnswersTestCase):
+    """A model added by hand, which no queue ever offered.
+
+    model-add is the queue's answer and stays gated on the question. This is the
+    other direction, so the guard is the name and the metadata instead.
+    """
+
+    def create(self, **overrides) -> dict:
+        record = {"kind": MODEL_CREATE, "name": "fresh-model-1"}
+        record.update(overrides)
+        return record
+
+    def test_a_hand_added_model_needs_no_queued_question(self) -> None:
+        answer = self.accepted(self.create())
+        self.assertEqual(answer.kind, MODEL_CREATE)
+        self.assertEqual(answer.subject, "fresh-model-1")
+
+    def test_the_name_has_to_be_a_slug(self) -> None:
+        """It is the model's identity in every mapping file and in AA lookups."""
+        for name in ("Fresh Model", "GLM-5.3", "fresh_model", "fresh--model", "-fresh"):
+            self.refused(self.create(name=name), "slug")
+
+    def test_an_existing_model_is_not_created_again(self) -> None:
+        self.refused(self.create(name="devstral-2"), "already a model")
+
+    def test_metadata_travels_with_it_and_is_checked(self) -> None:
+        answer = self.accepted(self.create(fields={
+            "url": "https://huggingface.co/x/y",
+            "creator": "Mistral",
+            "creator_url": "https://mistral.ai/",
+            "params": "123B",
+            "context": "256k",
+        }))
+        self.assertEqual(answer.fields["creator"], "Mistral")
+        self.refused(self.create(fields={"url": "not-a-url"}), "URL")
+        self.refused(self.create(fields={"vram": "8"}), "not editable")
+
+    def test_add_py_is_called_with_every_field(self) -> None:
+        answer = Answer(
+            index=0,
+            kind=MODEL_CREATE,
+            subject="fresh-model-1",
+            fields={"creator_url": "https://mistral.ai/", "params": "123B"},
+        )
+        with mock.patch.object(_answers, "_run") as run:
+            _answers._apply_one(answer, self.llm)
+        argv = run.call_args[0][0]
+        self.assertIn("--name=fresh-model-1", argv)
+        self.assertIn("--creator-url=https://mistral.ai/", argv)
+        self.assertIn("--params=123B", argv)
+        self.assertEqual(argv[-2:], ["--", str(self.llm)])
+        flags = [a for a in argv if a.startswith("--") and a != "--"]
+        self.assertTrue(all("=" in flag for flag in flags), flags)
+
+    def test_creating_records_no_decision_the_way_adding_does(self) -> None:
+        """__added__ answers a question check_new.py asked; nobody asked this one."""
+        answer = Answer(index=0, kind=MODEL_CREATE, subject="fresh-model-1")
+        with mock.patch.object(_answers, "_run"), mock.patch.object(
+            _new_models, "record_proposed"
+        ) as recorded:
+            _answers._apply_one(answer, self.llm)
+        recorded.assert_not_called()
+
+
+class TestModelRename(AnswersTestCase):
+    def rename(self, **overrides) -> dict:
+        record = {"kind": MODEL_RENAME, "name": "devstral-2", "new_name": "devstral-2-0512"}
+        record.update(overrides)
+        return record
+
+    def test_a_rename_names_both_ends(self) -> None:
+        answer = self.accepted(self.rename())
+        self.assertEqual((answer.subject, answer.value), ("devstral-2", "devstral-2-0512"))
+
+    def test_the_model_has_to_exist_and_the_new_name_must_not(self) -> None:
+        self.refused(self.rename(name="ghost"), "not a model")
+        self.refused(self.rename(new_name="glm-5-3"), "already a model")
+        self.refused(self.rename(new_name="devstral-2"), "already its name")
+
+    def test_the_new_name_has_to_be_a_slug(self) -> None:
+        self.refused(self.rename(new_name="Devstral 2"), "slug")
+
+    def test_the_rollback_snapshot_covers_every_mapping_file(self) -> None:
+        """A rename walks all of them; a half-renamed model is undetectable."""
+        answer = Answer(index=0, kind=MODEL_RENAME, subject="devstral-2", value="devstral-2-0512")
+        paths = set(_answers.touchable_paths([answer], self.llm))
+        self.assertTrue(set(_rename.touched_paths(self.llm)) <= paths)
+        self.assertIn(_answers.HERE / "model-name-mapping-tbench-to-artificialanalysis.json", paths)
+
+    def test_it_is_applied_by_the_renamer_not_by_a_json_poke(self) -> None:
+        answer = Answer(index=0, kind=MODEL_RENAME, subject="devstral-2", value="devstral-2-0512")
+        with mock.patch.object(_rename, "rename", return_value=["did it"]) as renamed:
+            log = _answers._apply_one(answer, self.llm)
+        renamed.assert_called_once_with("devstral-2", "devstral-2-0512", self.llm)
+        self.assertEqual(log, ["did it"])
+
+
 class TestBatches(AnswersTestCase):
     def test_a_batch_is_capped(self) -> None:
         records = [self.mapping(subject=f"m{i}") for i in range(_answers.MAX_RECORDS + 1)]
@@ -460,6 +610,49 @@ class TestBatches(AnswersTestCase):
         )
         self.assertEqual(answers, [])
         self.assertIn("at most", failures[0].message)
+
+    def test_one_model_may_only_be_touched_once(self) -> None:
+        """Records apply in order and roll back together, so an edit sent with a
+        rename of the same model would look for a name that is no longer there."""
+        answers, failures = _answers.validate(
+            [
+                {"kind": MODEL_RENAME, "name": "devstral-2", "new_name": "devstral-2-0512"},
+                {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"params": "70B"}},
+            ],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=self.queue,
+        )
+        self.assertEqual(len(answers), 2)
+        self.assertEqual(len(failures), 1)
+        self.assertIn("touched twice", failures[0].message)
+
+    def test_a_rename_target_may_not_be_created_in_the_same_batch(self) -> None:
+        _answers_out, failures = _answers.validate(
+            [
+                {"kind": MODEL_RENAME, "name": "devstral-2", "new_name": "devstral-3"},
+                {"kind": MODEL_CREATE, "name": "devstral-3"},
+            ],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=self.queue,
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("touched twice", failures[0].message)
+
+    def test_two_different_models_in_one_batch_are_fine(self) -> None:
+        answers, failures = _answers.validate(
+            [
+                {"kind": MODEL_RENAME, "name": "devstral-2", "new_name": "devstral-2-0512"},
+                {"kind": MODEL_EDIT, "name": "glm-5-3", "fields": {"params": "70B"}},
+                {"kind": MODEL_CREATE, "name": "fresh-model-1"},
+            ],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=self.queue,
+        )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual(len(answers), 3)
 
     def test_answering_the_same_question_twice_is_refused(self) -> None:
         records = [self.mapping(), self.mapping(answer="devstral-2")]

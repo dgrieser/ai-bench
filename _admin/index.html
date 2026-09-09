@@ -456,6 +456,14 @@ input[type="date"], input[type="url"], select {
   font: 400 .9375rem/1.4 var(--font-ui);
 }
 input::placeholder { color: var(--faint); }
+/* Inert rather than merely inactive: a field is disabled here because
+   something else in the card has taken the record -- a drafted rename, or a
+   batch already on its way to a run. */
+input:disabled, select:disabled {
+  background: var(--surface-2);
+  color: var(--faint);
+  cursor: not-allowed;
+}
 input.unknown { border-color: var(--bad); background: var(--bad-soft); }
 
 select {
@@ -481,6 +489,9 @@ select {
 .provenance .field { margin-top: 0; }
 .provenance .fields { display: grid; gap: .5rem; }
 .provenance .note-text { margin-top: .55rem; font-size: .8125rem; }
+.provenance > .field > label { font-size: .8125rem; color: var(--faint); }
+.provenance .options { margin-top: .5rem; }
+.note-text.good-text { color: var(--good); }
 @media (min-width: 30rem) {
   .provenance .fields { grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
 }
@@ -733,6 +744,12 @@ const state = {
   runs: [],
   answers: new Map(),   // key -> record
   sent: null,           // the batch a run is applying: { at, keys }
+  /* Artificial Analysis model slugs, for renaming a hand-added entry onto one.
+     `offered` is what api.php says it can serve; the list itself is fetched
+     once, and only when the Models tab is opened. */
+  aa: { offered: false, slugs: null, error: "", asked: false },
+  modelSearch: "",      // kept here so a re-render does not empty the tab
+  newModel: null,       // the hand-added model being typed: { name, fields }
   error: "",
   ok: "",
 };
@@ -763,6 +780,37 @@ const badUrl = (raw) => {
   const value = String(raw ?? "").trim();
   return Boolean(value) && !/^https?:\/\//i.test(value);
 };
+
+/* The shape every name in llm.json has. Checked here so a name that could not
+   become an entry is caught while it is being typed rather than on the runner,
+   where the whole batch would go down with it. */
+const SLUG_RE = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/;
+
+/* _matching.normalize_slug, in JavaScript. Only used to rank suggestions: the
+   answer is checked against the real list, never against this. */
+const normSlug = (value) => String(value ?? "").toLowerCase()
+  .replace(/'/g, "")
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/-+/g, "-")
+  .replace(/^-|-$/g, "");
+
+/* The six fields add.py asks for, which are exactly the ones edit.py can change
+   afterwards. Two of them live inside the creator object, so nothing may read
+   model[key] blindly. */
+const META_FIELDS = [
+  ["params", "text", "123B, or 230B-A10B"],
+  ["context", "text", "256k"],
+  ["url", "url", "https://huggingface.co/..."],
+  ["creator", "text", "Mistral"],
+  ["creator_url", "url", "https://mistral.ai/"],
+  ["date_added", "date", ""],
+];
+
+const readField = (model, key) => (
+  key === "creator" ? model?.creator?.name
+    : key === "creator_url" ? model?.creator?.url
+      : model?.[key]
+) ?? "";
 
 const el = (tag, props = {}, kids = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -892,6 +940,46 @@ async function tick() {
   render();         // the pill moves from queued to in progress
 }
 
+/* --------------------------------------------------- artificial analysis */
+
+/* Asked for once, and only when something needs it: the AA payload dwarfs
+   everything else the page reads, and most sittings never rename anything.
+
+   It comes through api.php rather than from the browser because the AA API
+   authenticates with a header -- the request would preflight, and AA sends no
+   CORS headers -- and because the key belongs on the server beside the GitHub
+   token, not in every browser that opens this page. */
+async function ensureAaSlugs() {
+  if (!state.aa.offered || state.aa.asked) return;
+  state.aa.asked = true;
+  try {
+    const response = await fetch(bust("api.php?aa=slugs"), { cache: "no-store" });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+    state.aa.slugs = (body.slugs || []).filter((slug) => typeof slug === "string");
+  } catch (error) {
+    state.aa.error = String(error.message);
+  }
+  render();
+}
+
+/* AA slugs worth offering for a model of this name, best first. The ranking is
+   deliberately shallow -- these are suggestions to click, and the click sends a
+   slug from AA's own list either way. */
+function aaSuggestions(name, limit = 6) {
+  const wanted = normSlug(name);
+  const ranked = [];
+  for (const slug of state.aa.slugs || []) {
+    const norm = normSlug(slug);
+    if (norm === wanted) ranked.push([0, "the same name bar punctuation", slug]);
+    else if (norm.startsWith(`${wanted}-`)) ranked.push([1, "this name with a suffix", slug]);
+    else if (wanted.startsWith(`${norm}-`)) ranked.push([2, "a shorter form of this name", slug]);
+    else if (norm.includes(wanted) || wanted.includes(norm)) ranked.push([3, "an overlapping name", slug]);
+  }
+  ranked.sort((a, b) => a[0] - b[0] || a[2].length - b[2].length || a[2].localeCompare(b[2]));
+  return ranked.slice(0, limit).map(([, why, slug]) => ({ slug, why }));
+}
+
 /* ---------------------------------------------------------------- loading */
 
 async function load() {
@@ -936,6 +1024,9 @@ async function loadRuns() {
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.runs = body.runs || [];
     settleSent();
+    /* Announced rather than required: an endpoint without an AA key -- or one
+       older than this page -- costs the rename suggestions and nothing else. */
+    state.aa.offered = Boolean(body.aa);
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
     if (!state.raw || (body.api || 1) < NEEDS_API) {
@@ -973,7 +1064,24 @@ const benchmarks = () =>
    is where this is known, and pending.json now carries it.
    An older queue has no universe field; offering nothing beats offering the
    wrong list, and the next refresh restores it. */
-const UNIVERSES = { models, benchmarks };
+const UNIVERSES = {
+  models,
+  benchmarks,
+  /* The AA route asks which slug a model is, and its answers are AA's own
+     names -- which the page can only offer now that api.php can list them.
+     Empty without a key, which is the same as it has always been: the
+     candidates the queue carries, and nothing to search. */
+  "aa-slugs": () => state.aa.slugs || [],
+};
+
+/* What a question's answer has to be, in words, for the card's chip. */
+const UNIVERSE_NOUNS = {
+  models: ["a model", "models"],
+  benchmarks: ["a benchmark", "benchmarks"],
+  "aa-slugs": ["an Artificial Analysis slug", "AA slugs"],
+};
+const universeNoun = (question, plural = false) =>
+  (UNIVERSE_NOUNS[question.universe] || UNIVERSE_NOUNS.models)[plural ? 1 : 0];
 
 function universeFor(question) {
   const build = UNIVERSES[question.universe];
@@ -1115,6 +1223,7 @@ function option(text, why, { pressed, className = "", tag = "", onclick }) {
 
 function renderQueue() {
   const questions = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE);
+  if (questions.some((q) => q.universe === "aa-slugs")) ensureAaSlugs();
   if (!questions.length) {
     return el("p", { className: "empty" },
       "Nothing pending. Every source name and benchmark label is mapped.");
@@ -1131,8 +1240,7 @@ function renderQuestion(question) {
   const source = question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
   const chips = el("div", { className: "chips" }, [
     chip("source", source),
-    chip("answer", question.universe === "benchmarks" ? "a benchmark" : "a model",
-      { prose: true }),
+    chip("answer", universeNoun(question), { prose: true }),
   ]);
   if (question.if_previous) {
     chips.append(chip("now", question.if_previous.join(", "), { className: "now" }));
@@ -1167,7 +1275,7 @@ function renderQuestion(question) {
     const freeform = chosen
       && chosen.answer !== "__unmappable__"
       && !(question.candidates || []).some((c) => c.option === chosen.answer);
-    const noun = question.universe === "benchmarks" ? "benchmarks" : "models";
+    const noun = universeNoun(question, true);
     const input = el("input", {
       type: "text",
       placeholder: `Search all ${universe.length} ${noun}...`,
@@ -1195,47 +1303,162 @@ function renderQuestion(question) {
 }
 
 function renderNew() {
+  ensureAaSlugs();
   const questions = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
-  if (!questions.length) return el("p", { className: "empty" }, "No new models waiting.");
+  const box = el("div", { className: "stack" }, renderAddModel());
+  if (!questions.length) {
+    box.append(el("p", { className: "empty" },
+      "No new models waiting. Artificial Analysis has offered nothing this site "
+      + "does not already track."));
+    return box;
+  }
+  box.append(...questions.map(renderNewQuestion));
+  return box;
+}
 
-  return el("div", { className: "stack" }, questions.map((question) => {
-    const chosen = answerOf(question);
-    const card = el("div", { className: `card${chosen ? " answered" : ""}` });
-    card.append(el("div", { className: "subject" }, question.subject));
-    if (question.note) {
-      card.append(el("div", { className: "chips" }, chip("", question.note, { prose: true })));
+/* A model nothing offered. check_new.py finds the ones Artificial Analysis
+   publishes; this is the other direction -- a release AA does not track, or
+   does not track yet -- so there is no question to answer and no slug to
+   accept. add.py builds the entry from what is typed here, filling anything
+   left blank from AA if it happens to know the name. */
+function renderAddModel() {
+  const draft = state.newModel || (state.newModel = { name: "", fields: {} });
+  const card = el("div", { className: "card" });
+  /* Locked only while the model *in the form* is the one in flight, so
+     "Add another" -- which clears the name -- hands the form back. */
+  const sentKey = `model-create  ${draft.name.trim()}`;
+  const sent = Boolean(draft.name.trim()) && isSent(sentKey);
+
+  card.append(el("div", { className: "subject" }, "Add a model"));
+  const known = new Set((state.llm?.models || []).map((m) => m.name));
+
+  const status = el("div", { className: "chips" });
+  const commit = () => {
+    for (const answerKey of [...state.answers.keys()]) {
+      if (answerKey.startsWith("model-create  ")) state.answers.delete(answerKey);
     }
+    const name = draft.name.trim();
+    const shaped = SLUG_RE.test(name);
+    const taken = known.has(name);
+    const broken = META_FIELDS.some(([f, type]) => type === "url" && badUrl(draft.fields[f]));
+    /* Typed back in after being sent: the run is creating it, and a second
+       record would have add.py refuse the whole batch for a duplicate name. */
+    const inFlight = isSent(`model-create  ${name}`);
 
-    /* "Yes" is a model-add, not an __added__ decision. apply_decisions() keeps
-       __added__ only for an entry already in llm.json; for a new slug it clears
-       the line without dismissing it, so the model is offered again on every
-       run after this one. */
-    const adding = chosen?.kind === "model-add";
-    const ignoring = chosen?.kind === "new-model";
-    card.append(el("div", { className: "options" }, [
-      option("Add it", "adds the entry; scores land on the next refresh", {
-        pressed: adding,
-        className: "exact",
-        onclick: () => setAnswer(question, adding ? null
-          : { kind: "model-add", name: question.subject }),
-      }),
-      option("Ignore it", "never offer this slug again", {
-        pressed: ignoring,
-        className: "decline",
-        onclick: () => setAnswer(question, ignoring ? null
-          : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
-      }),
+    status.replaceChildren(...(!name ? [] : [
+      !shaped
+        ? chip("", "not a slug: lowercase words joined by single dots or dashes",
+          { prose: true, className: "now" })
+        : taken
+          ? chip("", "already tracked -- edit it on the Models tab", { prose: true, className: "now" })
+          : inFlight
+            ? chip("", "already sent -- the run is creating it", { prose: true, className: "now" })
+            : state.aa.slugs === null
+              ? chip("", "adding it as a new entry", { prose: true })
+              : state.aa.slugs.includes(name)
+                ? chip("", "an Artificial Analysis slug: its scores arrive on the next refresh",
+                  { prose: true })
+                : chip("", "not an AA slug: AA scores will need a mapping or a rename later",
+                  { prose: true }),
     ]));
-    return guard(card, KEY(question));
-  }));
+
+    if (shaped && !taken && !broken && !inFlight) {
+      const fields = Object.fromEntries(
+        Object.entries(draft.fields).filter(([, value]) => value !== null)
+      );
+      state.answers.set(`model-create  ${name}`, { kind: "model-create", name, fields });
+    }
+    card.classList.toggle("answered", shaped && !taken && !broken);
+    refreshFooter();
+  };
+
+  const nameInput = el("input", {
+    type: "text", placeholder: "acme-model-1", value: draft.name, disabled: sent,
+  });
+  nameInput.oninput = () => {
+    draft.name = nameInput.value;
+    nameInput.classList.toggle("unknown",
+      Boolean(draft.name.trim()) && !SLUG_RE.test(draft.name.trim()));
+    commit();
+  };
+  card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameInput]), status);
+
+  for (const [field, type, placeholder] of META_FIELDS) {
+    if (field === "date_added") continue;   // add.py stamps the day it runs
+    const input = el("input", {
+      type, placeholder, value: draft.fields[field] ?? "", disabled: sent,
+    });
+    input.oninput = () => {
+      const value = input.value.trim();
+      if (value === "") delete draft.fields[field];
+      else draft.fields[field] = value;
+      if (type === "url") input.classList.toggle("unknown", badUrl(value));
+      commit();
+    };
+    card.append(el("div", { className: "field" },
+      [el("label", {}, field.replace(/_/g, " ")), input]));
+  }
+
+  card.append(el("p", { className: "note-text" },
+    "Anything left blank is filled from Artificial Analysis when it knows the "
+    + "name, and stays empty when it does not. Scores land on the next refresh; "
+    + "type them in on the Models tab if they are not coming from anywhere."));
+
+  if (sent) {
+    /* Appended after the lock, not before it: lockCard() disables every control
+       it finds, and this one is the way out of the locked state. */
+    const locked = guard(card, sentKey);
+    const another = el("button", { className: "btn ghost tiny", type: "button" }, "Add another");
+    another.onclick = () => { state.newModel = { name: "", fields: {} }; render(); };
+    locked.append(el("div", { className: "field" }, another));
+    return locked;
+  }
+  commit();
+  return card;
+}
+
+function renderNewQuestion(question) {
+  const chosen = answerOf(question);
+  const card = el("div", { className: `card${chosen ? " answered" : ""}` });
+  card.append(el("div", { className: "subject" }, question.subject));
+  if (question.note) {
+    card.append(el("div", { className: "chips" }, chip("", question.note, { prose: true })));
+  }
+
+  /* "Yes" is a model-add, not an __added__ decision. apply_decisions() keeps
+     __added__ only for an entry already in llm.json; for a new slug it clears
+     the line without dismissing it, so the model is offered again on every
+     run after this one. */
+  const adding = chosen?.kind === "model-add";
+  const ignoring = chosen?.kind === "new-model";
+  card.append(el("div", { className: "options" }, [
+    option("Add it", "adds the entry; scores land on the next refresh", {
+      pressed: adding,
+      className: "exact",
+      onclick: () => setAnswer(question, adding ? null
+        : { kind: "model-add", name: question.subject }),
+    }),
+    option("Ignore it", "never offer this slug again", {
+      pressed: ignoring,
+      className: "decline",
+      onclick: () => setAnswer(question, ignoring ? null
+        : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
+    }),
+  ]));
+  return guard(card, KEY(question));
 }
 
 function renderModels() {
+  ensureAaSlugs();
   const box = el("div", { className: "stack" });
-  const search = el("input", { type: "search", placeholder: "Find a model by name..." });
+  const search = el("input", {
+    type: "search",
+    placeholder: "Find a model by name...",
+    value: state.modelSearch,
+  });
   const results = el("div", { className: "stack" });
   const draw = () => {
-    const needle = search.value.trim().toLowerCase();
+    const needle = state.modelSearch.trim().toLowerCase();
     const found = needle
       ? (state.llm?.models || []).filter((m) => m.name.toLowerCase().includes(needle))
       : [];
@@ -1243,12 +1466,15 @@ function renderModels() {
       ...(needle
         ? (found.length
           ? found.slice(0, 20).map(renderModelCard)
-          : [el("p", { className: "empty" }, `No model matches "${search.value.trim()}".`)])
+          : [el("p", { className: "empty" }, `No model matches "${state.modelSearch.trim()}".`)])
         : [el("p", { className: "empty" },
           `Type to find one of ${(state.llm?.models || []).length} models to edit.`)])
     );
   };
-  search.oninput = draw;
+  /* Held in state, not in the input: a rename is drafted with a click, which
+     re-renders the whole view, and a needle that lived only in the DOM would
+     take the card being worked on with it. */
+  search.oninput = () => { state.modelSearch = search.value; draw(); };
   box.append(el("div", { className: "search" }, search), results);
   draw();
   return box;
@@ -1256,8 +1482,10 @@ function renderModels() {
 
 function renderModelCard(model) {
   const key = `model-edit  ${model.name}`;
+  const renameKey = `model-rename  ${model.name}`;
+  const rename = state.answers.get(renameKey);
   const existing = state.answers.get(key);
-  const card = el("div", { className: `card${existing ? " answered" : ""}` });
+  const card = el("div", { className: `card${existing || rename ? " answered" : ""}` });
   card.append(el("div", { className: "subject" }, model.name));
   card.append(el("div", { className: "chips" }, [
     chip("", model.creator?.name || "unknown", { prose: true }),
@@ -1276,7 +1504,8 @@ function renderModelCard(model) {
        reach it: it would refuse this record and take every other answer in the
        sitting down with it. The card simply stops counting as answered until
        the URL is one. */
-    const broken = scored && badUrl(draft.score_url);
+    const broken = META_FIELDS.some(([field, type]) => type === "url" && badUrl(draft.fields[field]))
+      || (scored && badUrl(draft.score_url));
     const empty = !Object.keys(draft.fields).length && !scored;
     if (empty || broken) state.answers.delete(key);
     else {
@@ -1297,29 +1526,42 @@ function renderModelCard(model) {
     refreshFooter();
   };
 
-  /* Only what edit.py has a flag for: one per benchmark and two for metadata.
-     Anything else exits 2 out of argparse. */
-  for (const field of ["params", "context"]) {
-    const input = el("input", { type: "text", value: draft.fields[field] ?? model[field] ?? "" });
+  /* Every field add.py asks for, so nothing is enterable once and then frozen.
+     Anything outside this list exits 2 out of edit.py's argparse. */
+  const fields = el("div", {});
+  for (const [field, type, placeholder] of META_FIELDS) {
+    const current = readField(model, field);
+    const input = el("input", {
+      type,
+      placeholder,
+      value: draft.fields[field] ?? current,
+      disabled: Boolean(rename),
+    });
     input.oninput = () => {
       const value = input.value.trim();
-      if (value === (model[field] ?? "")) delete draft.fields[field];
+      if (value === current) delete draft.fields[field];
       else draft.fields[field] = value === "" ? null : value;
+      if (type === "url") input.classList.toggle("unknown", badUrl(value));
       commit();
     };
-    card.append(el("div", { className: "field" }, [el("label", {}, field), input]));
+    fields.append(el("div", { className: "field" },
+      [el("label", {}, field.replace(/_/g, " ")), input]));
   }
+  card.append(fields);
 
   /* One date and one page for the whole edit rather than per score: a sitting
      is one leaderboard read on one day, and edit.py stamps what that run
      changes. Two dates means two batches. */
-  const dateInput = el("input", { type: "date", value: draft.score_date, max: today() });
+  const dateInput = el("input", {
+    type: "date", value: draft.score_date, max: today(), disabled: Boolean(rename),
+  });
   dateInput.oninput = () => { draft.score_date = dateInput.value; commit(); };
   const urlInput = el("input", {
     type: "url",
     inputMode: "url",
     placeholder: "https://... (blank credits nobody)",
     value: draft.score_url,
+    disabled: Boolean(rename),
   });
   urlInput.oninput = () => {
     draft.score_url = urlInput.value;
@@ -1345,6 +1587,7 @@ function renderModelCard(model) {
       const input = el("input", {
         type: "number", step: "0.1", inputMode: "decimal",
         value: draft.scores[bench] ?? "",
+        disabled: Boolean(rename),
       });
       input.oninput = () => {
         draft.scores[bench] = input.value === "" ? null : Number(input.value);
@@ -1353,14 +1596,16 @@ function renderModelCard(model) {
       const drop = el("button", {
         type: "button",
         className: "btn ghost tiny",
+        disabled: Boolean(rename),
         onclick: () => { delete draft.scores[bench]; drawScores(); commit(); },
       }, "Remove");
       return el("div", { className: "score-row" }, [el("label", {}, bench), input, drop]);
     }));
   };
 
-  const picker = el("select", {}, [el("option", { value: "" }, "Add a score...")]
-    .concat(benchmarks().map((b) => el("option", { value: b }, b))));
+  const picker = el("select", { disabled: Boolean(rename) },
+    [el("option", { value: "" }, "Add a score...")]
+      .concat(benchmarks().map((b) => el("option", { value: b }, b))));
   picker.onchange = () => {
     if (!picker.value) return;
     draft.scores[picker.value] = model.scores?.[picker.value] ?? null;
@@ -1370,7 +1615,114 @@ function renderModelCard(model) {
   };
   card.append(scores, provenance, el("div", { className: "field" }, picker));
   drawScores();
-  return guard(card, key);
+  card.append(renameBlock(model, renameKey, rename));
+  return guard(card, isSent(renameKey) ? renameKey : key);
+}
+
+/* Which Artificial Analysis slug this entry answers to -- and, when the answer
+   is "none of them", the way to change that.
+
+   update.resolve_aa_slugs() reads AA for a model whose *name* is a slug there,
+   byte for byte. So an entry added by hand before AA tracked it starts
+   collecting AA scores by itself the day AA publishes the same slug, and needs
+   nothing here. When AA publishes it under a different slug there are two ways
+   out: map the name to the slug (the Queue tab asks exactly that, once a
+   refresh has noticed), or take the slug as the entry's name, which leaves
+   nothing to maintain afterwards. This is the second. */
+function renameBlock(model, renameKey, rename) {
+  const block = el("div", { className: "provenance aa" });
+  block.append(el("div", { className: "field" }, el("label", {}, "artificial analysis")));
+
+  if (rename) {
+    block.append(
+      el("div", { className: "chips" }, chip("rename to", rename.new_name)),
+      el("div", { className: "options" }, option("Cancel the rename", "keep this name", {
+        pressed: false,
+        className: "decline",
+        onclick: () => { state.answers.delete(renameKey); render(); },
+      })),
+      el("p", { className: "note-text" },
+        `${model.name} becomes ${rename.new_name} in llm.json and in every mapping `
+        + "file that names it -- rename.py does both, because a name left behind in "
+        + "one of them does not fail, it just stops matching. The fields above are "
+        + "not sent with it: one record per model per run."),
+    );
+    return block;
+  }
+
+  if (!state.aa.offered) {
+    block.append(el("p", { className: "note-text" },
+      "No Artificial Analysis key in api.php's config, so the slug list is not "
+      + "available here. ./rename.py does the same job from a terminal."));
+    return block;
+  }
+  if (state.aa.error) {
+    block.append(el("p", { className: "note-text" },
+      `Could not read the Artificial Analysis slugs (${state.aa.error}).`));
+    return block;
+  }
+  if (state.aa.slugs === null) {
+    block.append(el("p", { className: "note-text" }, "Reading the Artificial Analysis slugs..."));
+    return block;
+  }
+  if (state.aa.slugs.includes(model.name)) {
+    block.append(el("p", { className: "note-text good-text" },
+      "Artificial Analysis publishes this exact slug, so update.py reads it "
+      + "directly. Nothing to map and nothing to rename."));
+    return block;
+  }
+
+  const suggestions = aaSuggestions(model.name);
+  const options = el("div", { className: "options" });
+  for (const { slug, why } of suggestions) {
+    options.append(option(slug, `rename to this -- ${why}`, {
+      pressed: false,
+      className: why.startsWith("the same name") ? "exact" : "",
+      tag: why.startsWith("the same name") ? "best match" : "",
+      onclick: () => setRename(model, renameKey, slug),
+    }));
+  }
+  if (suggestions.length) block.append(options);
+
+  const listId = `aa-${Math.random().toString(36).slice(2)}`;
+  const input = el("input", { type: "text", placeholder: "type to search" });
+  input.setAttribute("list", listId);
+  const apply = el("button", { className: "btn ghost tiny", type: "button" }, "Rename");
+  apply.onclick = () => {
+    const value = input.value.trim();
+    if (!state.aa.slugs.includes(value)) {
+      input.classList.add("unknown");
+      return;
+    }
+    setRename(model, renameKey, value);
+  };
+  input.oninput = () => input.classList.remove("unknown");
+  block.append(
+    el("div", { className: "score-row" }, [
+      el("label", {}, `or one of ${state.aa.slugs.length} AA slugs`),
+      input,
+      apply,
+      el("datalist", { id: listId },
+        state.aa.slugs.slice(0, 2000).map((value) => el("option", { value }))),
+    ]),
+    el("p", { className: "note-text" },
+      suggestions.length
+        ? "Renaming is what makes AA read this model without a mapping. Keeping the "
+          + "name instead is the Queue tab's job: it asks which slug this model is."
+        : "No slug looks like this name. If AA does track the model under an "
+          + "unrelated slug, map it from the Queue tab rather than renaming."),
+  );
+  return block;
+}
+
+function setRename(model, renameKey, slug) {
+  /* One record per model per run: the batch applies in order and rolls back
+     together, so an edit sent alongside a rename would be looking for a name
+     that is no longer there. The edit loses, because the rename is the thing
+     just clicked. */
+  state.answers.delete(`model-edit  ${model.name}`);
+  state.answers.set(renameKey, { kind: "model-rename", name: model.name, new_name: slug });
+  render();
 }
 
 const runLabel = (run) => (run.status === "completed"
