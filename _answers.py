@@ -36,6 +36,7 @@ import math
 import subprocess
 import sys
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
@@ -99,6 +100,11 @@ class Answer:
     value: Any = None
     fields: dict[str, Any] = field(default_factory=dict)
     scores: dict[str, Any] = field(default_factory=dict)
+    # Provenance for the scores in one edit: the date they were read and the
+    # page they were read from. None each means edit.py's own default -- today,
+    # credited to nobody.
+    score_date: str | None = None
+    score_url: str | None = None
 
     def describe(self) -> str:
         if self.kind == MAPPING:
@@ -110,7 +116,12 @@ class Answer:
         if self.kind == MODEL_ADD:
             return f"add model {self.subject!r}"
         changes = sorted([*self.fields, *self.scores])
-        return f"edit model {self.subject!r}: {', '.join(changes)}"
+        described = f"edit model {self.subject!r}: {', '.join(changes)}"
+        if self.score_date:
+            described += f", dated {self.score_date}"
+        if self.score_url:
+            described += f", from {self.score_url}"
+        return described
 
 
 @dataclass(frozen=True)
@@ -530,6 +541,58 @@ def _validate_model_add(
     return Answer(index=index, kind=MODEL_ADD, subject=subject)
 
 
+def _score_date(record: dict[str, Any], has_scores: bool) -> str | None:
+    """The date the scores in this record were read, or None for today.
+
+    Absent means today, stamped on the runner rather than here, which is what
+    edit.py has always done. A date that is present is checked hard: it lands in
+    scores_updated, which is what the site prints as a score's age and what
+    sync_score_dates.py reconciles, so a malformed or invented one is a lie the
+    file then carries.
+    """
+    raw = record.get("score_date")
+    if raw is None:
+        return None
+    if not has_scores:
+        raise AnswerError("'score_date' stamps a score, so send at least one score with it")
+    if not isinstance(raw, str):
+        raise AnswerError("'score_date' must be a date like 2026-08-06, or null for today")
+    try:
+        parsed = date.fromisoformat(raw.strip())
+    except ValueError:
+        raise AnswerError(f"{raw!r} is not a date like 2026-08-06") from None
+    if parsed > date.today():
+        # A score cannot have been read from a page that has not happened yet,
+        # and a stray year would sit at the top of every "recently updated"
+        # view until somebody noticed.
+        raise AnswerError(f"{parsed.isoformat()} is in the future; a score cannot be read yet")
+    return parsed.isoformat()
+
+
+def _score_url(record: dict[str, Any], has_scores: bool) -> str | None:
+    """The page the scores in this record were read from, or None for nobody.
+
+    None is a real answer and the default: _precedence.source_rank() reads an
+    unattributed score as hand-entered, the weakest rung, so any scraper may
+    replace it. Naming the page therefore matters -- it moves the value onto
+    that page's rung -- which is also why the value is checked to be a URL and
+    not free text.
+    """
+    raw = record.get("score_url")
+    if raw is None:
+        return None
+    if not has_scores:
+        raise AnswerError("'score_url' credits a score, so send at least one score with it")
+    if not isinstance(raw, str):
+        raise AnswerError("'score_url' must be a URL string, or null to credit nobody")
+    url = raw.strip()
+    if not url:
+        return None
+    if not url.startswith(("http://", "https://")):
+        raise AnswerError(f"{raw!r} is not a URL starting with http:// or https://")
+    return url
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -576,6 +639,8 @@ def _validate_model_edit(
         subject=subject,
         fields=dict(fields),
         scores=dict(scores),
+        score_date=_score_date(record, bool(scores)),
+        score_url=_score_url(record, bool(scores)),
     )
 
 
@@ -675,6 +740,12 @@ def _apply_edit(answer: Answer, llm_path: Path) -> list[str]:
     for key, value in sorted(answer.scores.items()):
         flag = key.replace("_", "-")
         argv.append(f"--{flag}={'null' if value is None else value}")
+    # Left off entirely when the record said nothing, so edit.py applies its own
+    # defaults rather than being told them second-hand.
+    if answer.score_date is not None:
+        argv.append(f"--score-date={answer.score_date}")
+    if answer.score_url is not None:
+        argv.append(f"--score-url={answer.score_url}")
     argv += ["--", str(llm_path)]
     _run(argv, f"edit.py failed for {answer.subject!r}")
     changed = ", ".join(sorted([*answer.fields, *answer.scores]))

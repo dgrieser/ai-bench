@@ -16,10 +16,12 @@ import json
 import os
 import tempfile
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 from unittest import mock
 
 import _answers
+import edit
 import _new_models
 import _prompts
 import propose
@@ -329,6 +331,82 @@ class TestModelEdits(AnswersTestCase):
     def test_an_empty_edit_is_refused(self) -> None:
         self.refused({"kind": MODEL_EDIT, "name": "devstral-2"}, "nothing to change")
 
+    def test_a_score_carries_the_date_and_page_it_was_read_from(self) -> None:
+        answer = self.accepted({
+            "kind": MODEL_EDIT,
+            "name": "devstral-2",
+            "scores": {"hle": 42.5},
+            "score_date": "2026-08-06",
+            "score_url": "https://example.com/board",
+        })
+        self.assertEqual(answer.score_date, "2026-08-06")
+        self.assertEqual(answer.score_url, "https://example.com/board")
+
+    def test_provenance_defaults_to_today_and_nobody(self) -> None:
+        """Absent is not the same as null: edit.py stamps the defaults itself.
+
+        Sending None for either would say the same thing today, but leaving the
+        flags off keeps one script deciding what "now" and "unattributed" mean.
+        """
+        answer = self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}})
+        self.assertIsNone(answer.score_date)
+        self.assertIsNone(answer.score_url)
+        with mock.patch.object(_answers, "_run") as run:
+            _answers._apply_edit(answer, self.llm)
+        flags = [a for a in run.call_args[0][0] if a.startswith("--score-")]
+        self.assertEqual(flags, [])
+
+    def test_a_blank_page_credits_nobody(self) -> None:
+        """Which is what a hand edit means, and the weakest precedence rung."""
+        answer = self.accepted(
+            {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}, "score_url": "  "}
+        )
+        self.assertIsNone(answer.score_url)
+
+    def test_provenance_needs_a_score_to_stamp(self) -> None:
+        """A params edit has nothing to date or credit."""
+        self.refused(
+            {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"params": "70B"},
+             "score_date": "2026-08-06"},
+            "send at least one score",
+        )
+        self.refused(
+            {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"params": "70B"},
+             "score_url": "https://example.com/board"},
+            "send at least one score",
+        )
+
+    def test_a_date_that_is_not_one_is_refused(self) -> None:
+        for value in ("06.08.2026", "2026-13-01", "yesterday", 20260806):
+            self.refused(
+                {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
+                 "score_date": value},
+                "date",
+            )
+
+    def test_a_date_in_the_future_is_refused(self) -> None:
+        """Nothing can have been read from a page tomorrow, and a stray year
+        would sit at the top of every recently-updated view until noticed."""
+        ahead = (date.today() + timedelta(days=1)).isoformat()
+        self.refused(
+            {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}, "score_date": ahead},
+            "future",
+        )
+        self.assertEqual(
+            self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
+                           "score_date": date.today().isoformat()}).score_date,
+            date.today().isoformat(),
+        )
+
+    def test_a_page_must_be_a_url(self) -> None:
+        """It decides the score's precedence rung, so free text is not one."""
+        for value in ("example.com/board", "javascript:alert(1)", "file:///etc/passwd", 7):
+            self.refused(
+                {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
+                 "score_url": value},
+                "URL",
+            )
+
     def test_argv_is_built_so_edit_pys_own_argv_scan_cannot_be_fooled(self) -> None:
         """infer_json_file() hand-parses argv before argparse ever sees it.
 
@@ -353,6 +431,25 @@ class TestModelEdits(AnswersTestCase):
         self.assertIn("--params=70B", flags)
         self.assertIn("--swe-bench-verified=61.2", flags)
         self.assertIn("--hle=null", flags)  # the literal edit.py reads as "clear"
+
+    def test_the_provenance_flags_edit_py_actually_has(self) -> None:
+        """--flag=VALUE for these too, and only the ones the record set."""
+        answer = Answer(
+            index=0,
+            kind=MODEL_EDIT,
+            subject="devstral-2",
+            scores={"hle": 42.5},
+            score_date="2026-08-06",
+            score_url="https://example.com/board",
+        )
+        with mock.patch.object(_answers, "_run") as run:
+            _answers._apply_edit(answer, self.llm)
+        argv = run.call_args[0][0]
+        self.assertIn("--score-date=2026-08-06", argv)
+        self.assertIn("--score-url=https://example.com/board", argv)
+        self.assertEqual(argv[-2:], ["--", str(self.llm)])
+        edit_parser_flags = set(edit.SCORE_PROVENANCE_FLAGS)
+        self.assertEqual(edit_parser_flags, {"--score-date", "--score-url"})
 
 
 class TestBatches(AnswersTestCase):

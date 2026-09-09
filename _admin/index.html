@@ -46,6 +46,7 @@
   --bad-line: #eeb6b6;
   --warn: #8a5a00;
   --warn-soft: #fbf1dc;
+  --warn-line: #e9cf95;
 
   --focus: #2647c9;
 
@@ -94,6 +95,7 @@
     --bad-line: #562b2b;
     --warn: #f0c268;
     --warn-soft: #2b2113;
+    --warn-line: #4d3c1c;
 
     --focus: #8aa5ff;
 
@@ -126,6 +128,7 @@
   --bad-line: #562b2b;
   --warn: #f0c268;
   --warn-soft: #2b2113;
+  --warn-line: #4d3c1c;
   --focus: #8aa5ff;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-2: 0 -1px 0 var(--line), 0 -8px 24px rgba(0, 0, 0, .45);
@@ -286,6 +289,19 @@ main { padding-block: 1rem; }
   box-shadow: var(--shadow-1);
   padding: .9rem 1rem 1rem;
 }
+/* Answered and gone to a run: still readable -- it is the record of what is
+   being applied -- but plainly not something to answer again. */
+.card.sent { border-style: dashed; background: var(--surface-2); }
+.card.sent .opt, .card.sent input, .card.sent select { opacity: .55; cursor: not-allowed; }
+.sent-mark {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  flex-wrap: wrap;
+  margin-bottom: .55rem;
+  color: var(--muted);
+  font-size: .8125rem;
+}
 .card.answered {
   border-color: var(--accent-line);
   background: linear-gradient(var(--accent-soft), var(--accent-soft)) left / 3px 100% no-repeat,
@@ -428,7 +444,8 @@ main { padding-block: 1rem; }
   overflow-wrap: anywhere;
 }
 
-input[type="text"], input[type="number"], input[type="search"], select {
+input[type="text"], input[type="number"], input[type="search"],
+input[type="date"], input[type="url"], select {
   width: 100%;                  /* fills the line -- these used to sit stranded */
   min-height: var(--tap);
   padding: .5rem .7rem;
@@ -449,6 +466,23 @@ select {
   background-position: calc(100% - 1.1rem) 55%, calc(100% - .75rem) 55%;
   background-size: .35rem .35rem;
   background-repeat: no-repeat;
+}
+
+/* The date and the page every score in one edit is stamped with. Set apart
+   from the score rows above rather than added to them, because it describes
+   them: one sitting, one leaderboard, one day. */
+.provenance {
+  margin-top: .75rem;
+  padding: .65rem .75rem .75rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r);
+  background: var(--surface-2);
+}
+.provenance .field { margin-top: 0; }
+.provenance .fields { display: grid; gap: .5rem; }
+.provenance .note-text { margin-top: .55rem; font-size: .8125rem; }
+@media (min-width: 30rem) {
+  .provenance .fields { grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
 }
 
 /* label / input / remove, aligned in a column on a phone and a row when wide */
@@ -572,6 +606,9 @@ select {
 .note.bad::before { content: "!"; }
 .note.good { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
 .note.good::before { content: "\2713"; font-style: normal; }
+.note.busy { background: var(--warn-soft); border-color: var(--warn-line); color: var(--warn); }
+.note.busy::before { content: "\21BB"; font-style: normal; font-weight: 500; }
+.note.busy a { color: inherit; font-weight: 500; }
 
 .search { position: sticky; top: 0; z-index: 1; padding-bottom: .1rem; }
 
@@ -695,6 +732,7 @@ const state = {
   llm: null,
   runs: [],
   answers: new Map(),   // key -> record
+  sent: null,           // the batch a run is applying: { at, keys }
   error: "",
   ok: "",
 };
@@ -707,6 +745,24 @@ const NEEDS_API = 2;
 
 const KEY = (q) => `${q.route} ${q.route_kind} ${q.subject}`;
 const NEW_MODEL_ROUTE = "check_new.py";
+
+/* Today where the person is, not in UTC: an evening in Berlin is already
+   tomorrow by toISOString(), and this date is what the site prints as a
+   score's age. Sending it explicitly rather than letting the runner stamp its
+   own today is the point -- the run can start hours later, on the other side
+   of midnight. */
+const today = () => {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+};
+
+/* A page a score can be credited to. Blank is a real answer -- it means the
+   number came from a person and nothing may be cited -- so only a non-empty
+   value that is not a URL is wrong. */
+const badUrl = (raw) => {
+  const value = String(raw ?? "").trim();
+  return Boolean(value) && !/^https?:\/\//i.test(value);
+};
 
 const el = (tag, props = {}, kids = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -752,6 +808,90 @@ function cycleTheme() {
   applyTheme(next);
 }
 
+/* --------------------------------------------------------- the run in flight */
+
+/* A dispatched answer is not applied yet, and the question it answers is still
+   in the queue: _pending/pending.json is only republished when the run pushes.
+   So the page keeps showing a card that has already been answered, and the
+   obvious thing to do is answer it again -- which is the one thing that must
+   not happen. The second record carries the same `if_previous`, the run applies
+   the first one, and answer.py then rejects the second as stale; a batch is all
+   or nothing, so every other answer in that sitting goes down with it.
+   The cards in flight are therefore disabled until the run they were sent to
+   has finished.
+
+   Kept in localStorage because the page's own advice is to reload after a run,
+   and a reload must not hand the questions back. */
+const SENT_KEY = "ai-bench-admin-sent";
+const POLL_MS = 20000;
+/* A dispatch answers 204 before the run exists. Until it shows up there is
+   nothing in the list to wait for, which must not read as "finished". */
+const GRACE_MS = 90000;
+/* Clock skew between here and GitHub, so the run this batch created is not
+   mistaken for one that predates it. */
+const SKEW_MS = 60000;
+
+function readSent() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(SENT_KEY) || "null");
+    if (!stored || !Number.isFinite(stored.at) || !Array.isArray(stored.keys)) return null;
+    return { at: stored.at, keys: stored.keys.filter((k) => typeof k === "string") };
+  } catch { return null; }   // private mode, blocked storage, half-written value
+}
+
+function writeSent(batch) {
+  state.sent = batch;
+  try {
+    if (batch) localStorage.setItem(SENT_KEY, JSON.stringify(batch));
+    else localStorage.removeItem(SENT_KEY);
+  } catch { /* the lock still holds for this page; not worth failing over */ }
+}
+
+/* The run applying the batch, if it is still going. Runs arrive newest first. */
+function applyingRun() {
+  if (!state.sent) return null;
+  return state.runs.find((run) =>
+    run.status !== "completed" && Date.parse(run.created_at) >= state.sent.at - SKEW_MS) || null;
+}
+
+const locked = () => state.sent !== null;
+const isSent = (key) => locked() && state.sent.keys.includes(key);
+
+/* Drops the lock once the run applying the batch is done with it. Called only
+   from a fresh run list, never from a failed read: while the page cannot see
+   GitHub it cannot know the run has finished, and unlocking on a network blip
+   is how the same answer gets sent twice. */
+function settleSent() {
+  if (!state.sent || applyingRun()) return;
+  if (Date.now() - state.sent.at < GRACE_MS) return;
+  writeSent(null);
+}
+
+let poll = null;
+
+/* Idempotent, and called at the end of every render, so the timer exists
+   exactly while something is in flight. */
+function syncPolling() {
+  if (locked() && poll === null) poll = setInterval(tick, POLL_MS);
+  else if (!locked() && poll !== null) { clearInterval(poll); poll = null; }
+}
+
+async function tick() {
+  const wasLocked = locked();
+  if (!(await loadRuns())) {
+    render();       // the note says why; the lock stays until GitHub answers
+    return;
+  }
+  if (wasLocked && !locked()) {
+    state.ok = "That run has finished. The queue below has just been re-read, so "
+      + "anything still listed is a question the run did not answer -- its own "
+      + "summary is the record of what landed, not its colour.";
+    await loadData();
+    return;
+  }
+  render();         // the pill moves from queued to in progress
+}
+
 /* ---------------------------------------------------------------- loading */
 
 async function load() {
@@ -762,6 +902,10 @@ async function load() {
     return;
   }
 
+  await loadData();
+}
+
+async function loadData() {
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
   const [queue, llm] = await Promise.allSettled([
@@ -791,6 +935,7 @@ async function loadRuns() {
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.runs = body.runs || [];
+    settleSent();
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
     if (!state.raw || (body.api || 1) < NEEDS_API) {
@@ -887,6 +1032,7 @@ function render() {
   notice.replaceChildren();
   if (state.error) notice.append(el("div", { className: "note bad" }, state.error));
   if (state.ok) notice.append(el("div", { className: "note good" }, state.ok));
+  if (locked()) notice.append(inFlightNote());
 
   document.getElementById("view").replaceChildren(
     state.tab === "queue" ? renderQueue()
@@ -896,7 +1042,39 @@ function render() {
   );
 
   refreshFooter();
+  syncPolling();
 }
+
+/* Why those cards are disabled, and what to wait for. */
+function inFlightNote() {
+  const run = applyingRun();
+  const count = state.sent.keys.length;
+  return el("div", { className: "note busy" }, el("span", {}, [
+    count === 1 ? "1 answer is on its way" : `${count} answers are on their way`,
+    run ? " in " : ", but the run has not appeared on GitHub yet.",
+    run ? el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)) : null,
+    run ? ` (${runLabel(run)}).` : "",
+    " Until that run finishes, the questions it answers stay disabled: the queue "
+    + "is only republished when the run pushes, so it still lists them, and "
+    + "answering one twice would have the next batch rejected as stale. Checked "
+    + `every ${POLL_MS / 1000} seconds.`,
+  ]));
+}
+
+/* A card whose answer is in the run. Disabled after the fact rather than at
+   every control, so one place locks every kind of card and one unlocks it. */
+function lockCard(card) {
+  card.classList.add("sent");
+  card.classList.remove("answered");
+  card.querySelectorAll("button, input, select").forEach((node) => { node.disabled = true; });
+  card.prepend(el("div", { className: "sent-mark" }, [
+    el("span", { className: "pill running" }, [el("span", { className: "dot" }), "sent"]),
+    "the run is applying this answer",
+  ]));
+  return card;
+}
+
+const guard = (card, key) => (isSent(key) ? lockCard(card) : card);
 
 function renderTabs() {
   const mappingCount = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE).length;
@@ -941,7 +1119,8 @@ function renderQueue() {
     return el("p", { className: "empty" },
       "Nothing pending. Every source name and benchmark label is mapped.");
   }
-  return el("div", { className: "stack" }, questions.map(renderQuestion));
+  return el("div", { className: "stack" },
+    questions.map((question) => guard(renderQuestion(question), KEY(question))));
 }
 
 function renderQuestion(question) {
@@ -1047,7 +1226,7 @@ function renderNew() {
           : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
       }),
     ]));
-    return card;
+    return guard(card, KEY(question));
   }));
 }
 
@@ -1088,14 +1267,33 @@ function renderModelCard(model) {
   const draft = {
     fields: { ...(existing?.fields || {}) },
     scores: { ...(existing?.scores || {}) },
+    score_date: existing?.score_date ?? today(),
+    score_url: existing?.score_url ?? "",
   };
   const commit = () => {
-    const empty = !Object.keys(draft.fields).length && !Object.keys(draft.scores).length;
-    if (empty) state.answers.delete(key);
-    else state.answers.set(key, { kind: "model-edit", name: model.name, ...draft });
+    const scored = Object.keys(draft.scores).length > 0;
+    /* A batch is all or nothing on the runner, so a half-typed page must not
+       reach it: it would refuse this record and take every other answer in the
+       sitting down with it. The card simply stops counting as answered until
+       the URL is one. */
+    const broken = scored && badUrl(draft.score_url);
+    const empty = !Object.keys(draft.fields).length && !scored;
+    if (empty || broken) state.answers.delete(key);
+    else {
+      /* The provenance travels with the scores or not at all: answer.py refuses
+         a date or a page with nothing to stamp it on, and a params-only edit
+         has nothing. A blank date leaves the stamping to the runner, which is
+         still "now", just its own. */
+      const record = { kind: "model-edit", name: model.name, fields: draft.fields, scores: draft.scores };
+      if (scored) {
+        if (draft.score_date) record.score_date = draft.score_date;
+        record.score_url = draft.score_url.trim() || null;
+      }
+      state.answers.set(key, record);
+    }
     /* Same reason the queue's search box does not re-render: a full rebuild
        would replace the input being typed into. */
-    card.classList.toggle("answered", !empty);
+    card.classList.toggle("answered", !empty && !broken);
     refreshFooter();
   };
 
@@ -1112,8 +1310,37 @@ function renderModelCard(model) {
     card.append(el("div", { className: "field" }, [el("label", {}, field), input]));
   }
 
+  /* One date and one page for the whole edit rather than per score: a sitting
+     is one leaderboard read on one day, and edit.py stamps what that run
+     changes. Two dates means two batches. */
+  const dateInput = el("input", { type: "date", value: draft.score_date, max: today() });
+  dateInput.oninput = () => { draft.score_date = dateInput.value; commit(); };
+  const urlInput = el("input", {
+    type: "url",
+    inputMode: "url",
+    placeholder: "https://... (blank credits nobody)",
+    value: draft.score_url,
+  });
+  urlInput.oninput = () => {
+    draft.score_url = urlInput.value;
+    urlInput.classList.toggle("unknown", badUrl(draft.score_url));
+    commit();
+  };
+  const provenance = el("div", { className: "provenance" }, [
+    el("div", { className: "fields" }, [
+      el("div", { className: "field" }, [el("label", {}, "score date"), dateInput]),
+      el("div", { className: "field" }, [el("label", {}, "score url"), urlInput]),
+    ]),
+    el("p", { className: "note-text" },
+      "Stamped on every score changed above. A page moves the value onto that "
+      + "page's rung of the source precedence, where only that page or a better "
+      + "one may overwrite it; left blank it counts as hand-entered, which any "
+      + "scraper may replace."),
+  ]);
+
   const scores = el("div", {});
   const drawScores = () => {
+    provenance.hidden = !Object.keys(draft.scores).length;
     scores.replaceChildren(...Object.keys(draft.scores).sort().map((bench) => {
       const input = el("input", {
         type: "number", step: "0.1", inputMode: "decimal",
@@ -1141,21 +1368,22 @@ function renderModelCard(model) {
     drawScores();
     commit();
   };
-  card.append(scores, el("div", { className: "field" }, picker));
+  card.append(scores, provenance, el("div", { className: "field" }, picker));
   drawScores();
-  return card;
+  return guard(card, key);
 }
+
+const runLabel = (run) => (run.status === "completed"
+  ? (run.conclusion || "done")
+  : run.status.replace(/_/g, " "));
 
 function renderRuns() {
   if (!state.runs.length) return el("p", { className: "empty" }, "No runs to show.");
   return el("ul", { className: "runs" }, state.runs.map((run) => {
     const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
-    const label = run.status === "completed"
-      ? (run.conclusion || "done")
-      : run.status.replace(/_/g, " ");
     const when = new Date(run.created_at);
     return el("li", {}, [
-      el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), label]),
+      el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), runLabel(run)]),
       el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)),
       el("time", { dateTime: run.created_at }, when.toLocaleString()),
     ]);
@@ -1166,6 +1394,7 @@ function renderRuns() {
 
 async function send() {
   const answers = [...state.answers.values()];
+  const keys = [...state.answers.keys()];
   document.getElementById("send").disabled = true;
   state.error = state.ok = "";
   try {
@@ -1177,10 +1406,13 @@ async function send() {
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.answers.clear();
+    /* Before the run list is refreshed, so nothing can settle the batch before
+       it is even recorded. */
+    writeSent({ at: Date.now(), keys });
     state.ok = `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
-      + "Watch it under Runs, then reload to confirm they left the queue: the run's "
-      + "own summary is what counts, not its colour, since a dead scraper reds a run "
-      + "whose answers landed perfectly well.";
+      + "Watch it under Runs; the questions it answers are disabled until it "
+      + "finishes, and its own summary is what counts, not its colour, since a "
+      + "dead scraper reds a run whose answers landed perfectly well.";
   } catch (error) {
     state.error = `Could not send: ${error.message}`;
   }
@@ -1189,6 +1421,9 @@ async function send() {
 }
 
 applyTheme(readTheme());
+/* Before the first read, so a reload mid-run renders the cards it answers as
+   locked rather than offering them again for one paint. */
+state.sent = readSent();
 document.getElementById("theme").onclick = cycleTheme;
 document.getElementById("send").onclick = send;
 document.getElementById("clear").onclick = () => { state.answers.clear(); render(); };

@@ -28,6 +28,12 @@ SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 
 METADATA_FIELDS = {"context": "Context Window", "params": "Model Size"}
 
+# The provenance of the scores one run writes: the date they were read and the
+# page they were read from. Not per-benchmark flags like the scores themselves,
+# because the answer is the same for every score typed in from one page in one
+# sitting; a second sitting is a second run.
+SCORE_PROVENANCE_FLAGS = ("--score-date", "--score-url")
+
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:
@@ -112,12 +118,23 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
     )
     parser.add_argument("--context", help="Context window, e.g. 256k. Use 'null' to clear.")
     parser.add_argument("--params", help="Model size, e.g. 123B or 230B-A10B. Use 'null' to clear.")
+    parser.add_argument(
+        "--score-date",
+        metavar="YYYY-MM-DD",
+        help="Date to stamp on the scores this run changes. Defaults to today.",
+    )
+    parser.add_argument(
+        "--score-url",
+        metavar="URL",
+        help="Page the scores this run changes were read from. Use 'null', or leave it "
+        "off, to credit nobody -- which is what a hand edit means by default.",
+    )
 
-    metadata_flags = {f"--{key}" for key in METADATA_FIELDS}
+    reserved_flags = {f"--{key}" for key in METADATA_FIELDS} | set(SCORE_PROVENANCE_FLAGS)
     for key, benchmark in editable_benchmarks(doc).items():
         flag = f"--{key.replace('_', '-')}"
-        if flag in metadata_flags:
-            raise ValueError(f"Benchmark key '{key}' collides with the metadata flag {flag}.")
+        if flag in reserved_flags:
+            raise ValueError(f"Benchmark key '{key}' collides with the reserved flag {flag}.")
         parser.add_argument(flag, dest=key, help=f"Score for {benchmark.get('name', key)}. Use 'null' to clear.")
 
     return parser.parse_args(argv)
@@ -155,6 +172,26 @@ def parse_score_value(raw: str) -> int | float | None:
     if "." in text:
         return float(text)
     return int(text)
+
+
+def parse_score_source(raw: str | None) -> str | None:
+    """The page a hand-entered score is credited to, or None for nobody.
+
+    None is a real answer rather than a missing one: `stamp_score_source` takes
+    it to mean the score reached llm.json through a person, which is the weakest
+    rung of _precedence.source_rank() and so the one every scraper may
+    overwrite. Naming the page a number was actually read from is therefore not
+    cosmetic -- it moves the value onto that page's rung, where only that page's
+    own rung or better replaces it.
+    """
+    if raw is None:
+        return None
+    text = raw.strip()
+    if not text or text.lower() == "null":
+        return None
+    if not text.startswith(("http://", "https://")):
+        raise ValueError(f"Invalid URL '{raw}': expected one starting with http:// or https://.")
+    return text
 
 
 def parse_metadata_value(raw: str) -> str | None:
@@ -499,6 +536,15 @@ def main() -> int:
     if args.field and not args.missing:
         raise ValueError("--field can only be used with --missing.")
 
+    # Which of the two were actually passed, kept separately from their values:
+    # both parse to None when cleared, and "credit nobody" has to stay
+    # distinguishable from "said nothing" for the checks below.
+    provenance_flags = [
+        flag
+        for flag, raw in zip(SCORE_PROVENANCE_FLAGS, (args.score_date, args.score_url))
+        if raw is not None
+    ]
+
     if args.missing:
         score_flags = [key for key in editable_benchmarks(doc) if getattr(args, key) is not None]
         if score_flags:
@@ -508,6 +554,12 @@ def main() -> int:
             raise ValueError(
                 "--missing cannot be combined with metadata flags: "
                 + ", ".join(f"--{key}" for key in metadata_flags)
+            )
+        if provenance_flags:
+            # --missing walks every model with a gap; one date and one page
+            # could not honestly describe that whole sweep.
+            raise ValueError(
+                "--missing cannot be combined with " + " or ".join(provenance_flags) + "."
             )
         if args.model is not None and find_model(doc["models"], args.model) is None:
             raise ValueError(f"Model '{args.model}' does not exist.")
@@ -569,9 +621,19 @@ def main() -> int:
         print(f"Updated {changed} field(s) across {models_changed} model(s) in {path}")
         return 0
 
+    # Parsed after the --missing branch has returned, so a flag that does not
+    # belong there is reported as not belonging rather than as malformed.
+    score_date = parse_date(args.score_date).isoformat() if args.score_date is not None else None
+    score_url = parse_score_source(args.score_url)
+
     model, score_updates, metadata_updates = collect_updates(doc, args, interactive)
     if not score_updates and not metadata_updates:
         raise ValueError("No score or metadata updates provided.")
+    if provenance_flags and not score_updates:
+        raise ValueError(
+            " and ".join(provenance_flags)
+            + " stamps the scores this run writes, so it needs one: pass a benchmark flag too."
+        )
 
     changed = 0
     scores_changed = False
@@ -579,10 +641,12 @@ def main() -> int:
     for key, value in score_updates.items():
         if scores.get(key) != value:
             scores[key] = value
-            stamp_score_updated(model, key)
-            # A hand edit has no source page; whatever attribution the
-            # previous automated write left behind is now stale.
-            stamp_score_source(model, key, None)
+            # Today and nobody unless --score-date and --score-url say
+            # otherwise: a hand edit is read today from no page anybody can
+            # cite, and whatever attribution the previous automated write left
+            # behind is stale either way.
+            stamp_score_updated(model, key, score_date)
+            stamp_score_source(model, key, score_url)
             changed += 1
             scores_changed = True
     for key, value in metadata_updates.items():
