@@ -169,6 +169,7 @@ INDEXES: list[IndexDef] = [
             ("osworld_verified", 0.7),
             ("mathvista_mini", 0.35),
             ("zerobench", 0.35),
+            ("charxiv_reasoning", 0.35),
             # Deliberately not aggregated, though it is the widest multimodal
             # column in llm.json: gdpval_aa scores visual *output* (documents,
             # slides, diagrams) produced in AA's agentic harness, so what it

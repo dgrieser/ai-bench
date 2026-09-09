@@ -76,6 +76,13 @@ BENCHMARKS: dict[str, str] = {
     # column carries, though the table also holds closed-model pass@5 rows.
     "zerobench": "zerobench",
     "mathvista": "mathvista_mini",
+    # CharXiv leads from the Hugging Face cards rather than from here -- this
+    # table is 18 Unverified rows to 6 Official/Verified, and only two of the
+    # trusted ones are open-weight (Muse Glimmer 30B 78.8, Inkling 78.1). Both
+    # match the no-tool number the card of that model publishes, which is the
+    # metric charxiv_reasoning carries, so this source overwrites a self-report
+    # with an agreeing vetted run and fills Inkling, which no card reports.
+    "charxiv": "charxiv_reasoning",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}

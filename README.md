@@ -437,10 +437,13 @@ are the two columns where AA and evals.report both measure and the ranking
 therefore changed an outcome: before it, precedence was the order `main()`
 happened to call the ingests, so a run that skipped evals.report left AA's
 numbers and the next full refresh replaced them — a 17-value round trip
-(commits `2ab9ab0`…`0c24cc9`). SWE-bench Multimodal, ZeroBench and MathVista-mini
-sit the other way round and need no exception: nothing first-party is scraped
-for them, so evals.report leads at rank 3 unopposed, with the model cards
-filling gaps beneath it.
+(commits `2ab9ab0`…`0c24cc9`). SWE-bench Multimodal, ZeroBench, MathVista-mini
+and CharXiv Reasoning sit the other way round and need no exception: nothing
+first-party is scraped for them, so evals.report leads at rank 3 unopposed, with
+the model cards filling gaps beneath it. CharXiv is the thinnest case of the
+four — evals.report has only two trusted open-weight rows there, so in practice
+the cards carry the column and rank 3 confirms two of its values rather than
+leading it.
 
 ### Tool Use and Instruction Following
 
@@ -555,27 +558,39 @@ already get, applied consistently:
 
 ### Vision
 
-Three columns are multimodal: **MMMU Pro** (`mmmu_pro`), which Artificial
-Analysis runs itself, plus two assembled the same way the tool-use columns are.
+Four columns are multimodal: **MMMU Pro** (`mmmu_pro`), which Artificial
+Analysis runs itself, plus three assembled the same way the tool-use columns are.
 
 | Column | Leading source | Gap fillers |
 | --- | --- | --- |
 | **ZeroBench** (`zerobench`) | evals.report's `zerobench` table | Hugging Face model cards |
 | **MathVista-mini** (`mathvista_mini`) | evals.report's `mathvista` table | Hugging Face model cards |
+| **CharXiv Reasoning** (`charxiv_reasoning`) | Hugging Face model cards | evals.report's `charxiv` table, where it also overwrites |
 
-Neither leads from its own leaderboard, which is unusual here and worth saying
-why. MathVista's board stopped at the 2024 field — nothing on it is in this
-index. ZeroBench's is alive and first-party, but its *official* table is almost
-entirely closed-weight (Llama 4 Maverick and Scout are the only open rows we
-carry), and the open-weight numbers it does publish sit on its *externally
+None of the three leads from its own leaderboard, which is unusual here and
+worth saying why. MathVista's board stopped at the 2024 field — nothing on it is
+in this index. ZeroBench's is alive and first-party, but its *official* table is
+almost entirely closed-weight (Llama 4 Maverick and Scout are the only open rows
+we carry), and the open-weight numbers it does publish sit on its *externally
 reported* board, which is the same lab self-reports the model cards give us. So
 evals.report leads both and the cards fill gaps ahead of it. Scraping
 zerobench.github.io directly is the obvious next step, and it would pay off
 immediately: the official board has Maverick at 0.4 and Scout at 1.6 where
 evals.report reports 0.0 for both.
 
-Two traps are handled in the benchmark-name mapping rather than by hoping the
-labels agree, and one of them is sharper than the tool-use pair above, because
+CharXiv is the far end of the same problem, and the reason its order is
+inverted. Its board is a plain CSV
+(`charxiv.github.io/data/val_result.csv`, 96 rows, 68 of them open-weight) and
+would take an afternoon to scrape — but it is frozen at the Qwen2.5-VL and
+InternVL3 field, where the best open model reasons at 49.7, and **not one row on
+it is a model in this index**. Its aggregators are no better placed: evals.report
+carries 24 rows of which 18 are Unverified and only two trusted ones are
+open-weight, and llm-stats' `charxiv_r` is left unmapped on purpose (below). So
+the cards lead this one, and the two vetted evals.report rows displace a
+self-report where they exist.
+
+Three traps are handled in the benchmark-name mapping rather than by hoping the
+labels agree, and all of them are sharper than the tool-use pair above, because
 `update.py`'s Hugging Face ingest keeps the **best** value when several labels
 alias one key:
 
@@ -591,14 +606,41 @@ alias one key:
   `MathVista (mini)`, `MathVista mini`, `MathVista_MINI` and `Mathvista(mini)`
   all map onto `mathvista_mini`. MathVerse and MathVision are different
   benchmarks and stay unmapped.
+- **CharXiv is the reasoning split, without tools.** The column is CharXiv's
+  reasoning questions ("RQ"), so `CharXiv (RQ)`, `CharXiv(RQ)`, `CharXiv RQ`,
+  `CharXiv (reasoning)`, `Charxiv Reasoning` and Qwen's
+  `Scientific chart analysis CharXiv (RQ)` all map onto `charxiv_reasoning`.
+  Two labels that sit on those same cards do not:
+  `CharXiv (descriptive)` is the other split and a far easier question set —
+  `apriel-v1-6-15b-thinker` reports **89.85** descriptive against **56.0**
+  reasoning — and `CharXiv (RQ) (w/ python)` is the same questions with a code
+  interpreter, worth about six points: `kimi-k2-6` reports 80.4 plain against
+  86.7 with python, Qwen3.8-27B prints "Without CI / With CI" as 83.7 / 90.2,
+  and Kimi K3 84.8 / 91.3. Best-value-wins would take the flattered number on
+  every card carrying both.
 
-All three feed the [Vision index](#vision-index), and only that one. The
+That last gap is also why **llm-stats' `charxiv_r` stays `__unmappable__`**
+even though it would add four models (`command-a-plus`, `glm-5-3-flash`,
+`inkling-small`, `mimo-v2-5-0424`) this column cannot otherwise reach. Its
+column mixes the two run modes: on the eleven models it shares with the cards it
+agrees exactly on seven and is high by 6.0–6.5 on the four newest and strongest
+— `kimi-k3` 91.3 against the card's 84.8, `qwen3-8-27b` 90.2 against 83.7,
+`qwen3-8-flash-next` 90.6 against 84.6, `kimi-k2-6` 86.7 against 80.4, each of
+them the with-tools figure its own card publishes beside the plain one. Both
+ingests are fill-only and rank equal ([source precedence](#source-precedence)),
+and llm-stats runs first, so mapping it would claim the null the card value
+wants and put a tool-assisted number at the head of the column — where the
+ranking work happens. Measured over the 22 models the two channels cover
+together: card values leading give a top-5 spread of 8.4 points and nothing at
+90, llm-stats leading gives 4.6 and three models at or above 90.
+
+All four feed the [Vision index](#vision-index), and only that one. The
 modality gate — only a multimodal model can be scored at all — is what keeps
 them out of the Knowledge index, where the coverage they add would be a slice of
 the field rather than a measurement the rest of it is missing (see [What the
 Knowledge index leaves out](#what-the-knowledge-index-leaves-out)). In a column
 whose whole subject is that modality it is not a defect but the definition, so
-the same three columns that are wrong for Knowledge are right there.
+the same four columns that are wrong for Knowledge are right there.
 
 ## Mapping System
 
@@ -855,7 +897,7 @@ ranked. It is a share of *weight*, not a count of benchmarks — three cheap col
 be worth less evidence than one expensive one.
 
 At **0.18** the bars are 1.152 of 6.40 (Coding, 92 of 144 models ranked), 1.107 of
-6.15 (Tooling, 93 ranked), 0.666 of 3.70 (Knowledge, 141 ranked), 0.432 of 2.40
+6.15 (Tooling, 93 ranked), 0.666 of 3.70 (Knowledge, 141 ranked), 0.495 of 2.75
 (Vision, 47 ranked) and 0.423 of 2.35 (Trust, 133 ranked, now that
 [AA-Omniscience Accuracy](#why-the-anchor-cannot-stand-alone) is fetched).
 
@@ -905,9 +947,9 @@ if they ever need to diverge, the place for it is a per-index override on `Index
 not a compromise value.
 
 Vision and Trust are the two columns the bar could never bite, at any setting in the
-table above. Vision's cheapest member, MMMU Pro, is 42% of the group weight on its own
+table above. Vision's cheapest member, MMMU Pro, is 36% of the group weight on its own
 and every model it ranks has that score, so the floor of its coverage ladder sits at
-0.417 and the threshold would have to clear 0.40 to cut anyone. Trust is the same shape
+0.364 and the threshold would have to clear 0.36 to cut anyone. Trust is the same shape
 for the same reason — its anchor is 57% of today's effective weight and carried by every
 model it ranks. What filters both columns is availability of the underlying run: the
 modality gate for one, whether Artificial Analysis has run the model at all for the
@@ -1084,12 +1126,13 @@ three cite their own.
 
 The axis is **anything that starts with pixels**: college-level question
 answering over figures and diagrams, mathematical reasoning in visual contexts,
-deliberately-hard multi-step visual puzzles, and driving a real desktop GUI from
-screenshots. That last one is why the column is not called "vision-language" —
-OSWorld measures visual *agency*, not visual question answering, and it is the
-member the other three cannot stand in for.
+reasoning over the charts in a scientific paper, deliberately-hard multi-step
+visual puzzles, and driving a real desktop GUI from screenshots. That last one
+is why the column is not called "vision-language" — OSWorld measures visual
+*agency*, not visual question answering, and it is the member the other four
+cannot stand in for.
 
-**It ranks 47 of 143 models, and the 96 blanks are the point.** Only a
+**It ranks 47 of 145 models, and the 98 blanks are the point.** Only a
 multimodal model can be scored on any of these benchmarks, so a blank here says
 "this model has never been pointed at an image", which is exactly the question
 the column exists to answer. That modality gate is the reason MMMU Pro is
@@ -1102,11 +1145,11 @@ than burying. Against the models it shares with them:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | 0.83 (41 models) | **0.17** |
-| vs [Tooling](#tooling-index) | 0.88 (45) | **0.38** |
-| vs [Knowledge](#knowledge-index) | 0.94 (47) | **0.57** |
-| vs AA Intelligence Index | 0.93 (47) | 0.50 |
-| vs GPQA Diamond | 0.93 (47) | 0.60 |
+| vs [Coding](#coding-index) | 0.91 (41 models) | **0.57** |
+| vs [Tooling](#tooling-index) | 0.87 (45) | **0.41** |
+| vs [Knowledge](#knowledge-index) | 0.93 (47) | 0.55 |
+| vs AA Intelligence Index | 0.92 (47) | 0.54 |
+| vs GPQA Diamond | 0.91 (47) | 0.58 |
 
 Those full-field figures sit above the 0.79/0.84 the [Knowledge
 index](#knowledge-index) holds up as proof it is not re-measuring its siblings,
@@ -1114,7 +1157,8 @@ and no amount of reweighting fixes that, because it is mostly a range effect:
 the 47 ranked models run from `qwen3-5-0-8b` to 400B-plus mixtures of experts,
 and across a spread that wide nearly every capability column agrees with nearly
 every other. Inside the top 20 — where a reader actually chooses between models
-— it comes apart, to **0.17** against Coding and 0.38 against Tooling.
+— it loosens by a third to a half, to **0.41** against Tooling and 0.57 against
+Coding.
 
 So this column does not earn its place by being orthogonal to the other three.
 It earns it by covering a **modality** none of them touches, by saying so about
@@ -1122,18 +1166,19 @@ the two thirds of the table it leaves blank, and by separating the frontier once
 general capability stops explaining the ranking.
 
 Contributing benchmarks and why they carry the weight they do (total group
-weight **2.40**):
+weight **2.75**):
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| MMMU Pro | 1.0 | The anchor, and the only member that ranks the field rather than a corner of it: **47 scored models across 15 creators**, against 11-14 and 3-4 creators for the rest. It also has the best provenance in the group by a distance — **46 of its 47 values are Artificial Analysis runs**, where the other three are dominated by Hugging Face card self-reports at each lab's harness of choice. Vision-centric by construction: MMMU Pro filters out the questions a text-only model could answer without the image, augments the candidate set so a lucky guess is worth less, and adds a vision-only setting where the question itself is embedded in the picture. Peer-reviewed (ACL 2025) and unsaturated, 25.8-82.3 with a median of 69.2. What it does *not* lead on is discrimination: 3.7 points between the best model and the fifth is a flatter head than OSWorld's, and it correlates 0.96 with MathVista-mini and 0.93 with ZeroBench, so it is the group's centre of gravity rather than its most independent voice. |
-| OSWorld-Verified | 0.7 | The highest-value *measurement* here and the least redundant member: mean Spearman **0.87** against the other three, including the group's weakest link at 0.78 with ZeroBench. A GUI agent driving a real Ubuntu desktop from screenshots is the only visual **agency** in the table, the Verified revision exists to repair task graders that were mis-scoring the original, and it is the least saturated member with by far the sharpest head — **13.0 points** between first and fifth against a 63.3 median, where the next best is ZeroBench's 4.0 on a benchmark whose entire observed range is 12 points. On design it would earn 0.85-0.90. It is discounted a full tier for two things it cannot currently do: **13 scored models from 4 creators**, the thinnest coverage of the four; and provenance no better than the coverage — only 3 of those 13 values come from the official board, 9 are card self-reports, and on a benchmark whose score moves with the step budget (this column takes the Foundation E2E GUI subset at a 100-step cap) mixing harnesses inside one percentile-normalized column is the trust hazard the weight scale exists to price. The weight is not load-bearing: moving it between 0.6 and 0.8 shifts the ranked field a mean of under one place and never touches the top three. |
-| MathVista-mini | 0.35 | The saturated member, and the most redundant. Median **86.0**, p75 87.4, best 90.3 — the entire top of the field is packed inside three points, and **2.9 points** separate first from fifth, the flattest head anywhere in this index. It is also mean Spearman **0.95** against the other three, including **0.96 with MMMU Pro** and 0.97 with ZeroBench, so most of its vote is already cast by members that measure more. Public since 2023, so it carries the contamination profile three years of exposure buys, and 12 of its 14 values are card self-reports. Kept because it is the second-widest member and the mid-field is where it still separates models — the coverage-backbone role GPQA Diamond plays at 0.30 in the [Knowledge index](#knowledge-index). |
+| MMMU Pro | 1.0 | The anchor, and the only member that ranks the field rather than a corner of it: **47 scored models across 15 creators**, against 11-18 and 3-5 creators for the rest. It also has the best provenance in the group by a distance — **46 of its 47 values are Artificial Analysis runs**, where the other four are dominated by Hugging Face card self-reports at each lab's harness of choice. Vision-centric by construction: MMMU Pro filters out the questions a text-only model could answer without the image, augments the candidate set so a lucky guess is worth less, and adds a vision-only setting where the question itself is embedded in the picture. Peer-reviewed (ACL 2025) and unsaturated, 25.8-82.3 with a median of 69.2. What it does *not* lead on is discrimination: 3.7 points between the best model and the fifth is a flatter head than OSWorld's, and it correlates 0.96 with MathVista-mini and 0.93 with ZeroBench, so it is the group's centre of gravity rather than its most independent voice. |
+| OSWorld-Verified | 0.7 | The highest-value *measurement* here and the least redundant member: mean Spearman **0.86** against the other four, including the group's weakest link at 0.78 with ZeroBench. A GUI agent driving a real Ubuntu desktop from screenshots is the only visual **agency** in the table, the Verified revision exists to repair task graders that were mis-scoring the original, and it is the least saturated member with by far the sharpest head — **13.0 points** between first and fifth against a 63.3 median, where the next best is ZeroBench's 4.0 on a benchmark whose entire observed range is 12 points. On design it would earn 0.85-0.90. It is discounted a full tier for two things it cannot currently do: **13 scored models from 4 creators**, the thinnest coverage of the five; and provenance no better than the coverage — only 3 of those 13 values come from the official board, 9 are card self-reports, and on a benchmark whose score moves with the step budget (this column takes the Foundation E2E GUI subset at a 100-step cap) mixing harnesses inside one percentile-normalized column is the trust hazard the weight scale exists to price. The weight is not load-bearing: moving it between 0.6 and 0.8 shifts the ranked field a mean of under one place and never touches the top three. |
+| MathVista-mini | 0.35 | The saturated member, and the most redundant. Median **86.0**, p75 87.4, best 90.3 — the entire top of the field is packed inside three points, and **2.9 points** separate first from fifth, the flattest head anywhere in this index. It is also mean Spearman **0.94** against the other four, including **0.96 with MMMU Pro** and 0.97 with ZeroBench, so most of its vote is already cast by members that measure more. Public since 2023, so it carries the contamination profile three years of exposure buys, and 12 of its 14 values are card self-reports. Kept because the mid-field is where it still separates models — the coverage-backbone role GPQA Diamond plays at 0.30 in the [Knowledge index](#knowledge-index). |
 | ZeroBench | 0.35 | The opposite failure mode, which is why it lands on the same rung rather than above it. Its *design* is the best in the group: 100 hand-crafted multi-step questions built so that nothing solves them, which makes it the one member structurally immune to the saturation MathVista is already suffering. Its *measurement* is the weakest. Median **3.0**, best 12.0, three models tied at 0.0 — and at 100 questions the binomial standard error near p = 0.1 is about 3 points, so the whole observed 0-12 range is a few standard errors wide and a single question moves a rank. 11 scored models from 3 creators, 9 of them card self-reports. It is a headroom sentinel that will earn weight as models climb, not a discriminator today. Its exposure to a flattered variant slipping in through `update.py`'s best-value-wins Hugging Face ingest is handled in the benchmark-name mapping — see [Vision](#vision) above. |
+| CharXiv Reasoning | 0.35 | The same rung as the two small members, for the opposite reason to either: the *column* is the second best in the group and the *provenance* the weakest. It is the *second-widest* member — **18 scored models across 5 creators** on the first ingest, against MathVista's 14 and ZeroBench's 11 — and the only one that is neither saturated nor at the floor: median **78.1**, best 84.8, worst 41.3, nothing within five points of 90, and **4.4 points** between first and fifth, a head as live as ZeroBench's on a scale that actually resolves. Mean Spearman **0.90** against the other four, below MathVista's 0.94 and ZeroBench's 0.91, and **0.89 with MMMU Pro** where MathVista is 0.96 — so it re-votes less of the anchor than either. It also measures something no other member does: reading quantities off the figures of a real paper, which is the one visual task the models in this table are actually pointed at for work. What holds it to 0.35 is everything about where the numbers come from. **16 of the 18 are lab self-reports** and only two are vetted runs (evals.report's Verified rows for `muse-glimmer` and `inkling`); **12 of the 18 are one creator's** release family, so the column ranks Qwen against Qwen over two thirds of its field; the benchmark's own leaderboard is frozen at the 2024-25 field and cannot check any of it; and the same question set is published in two other forms — a descriptive split and a code-interpreter run — that a card may report under a near-identical label, worth 6 to 34 points, which is why one aggregator that carries it is deliberately not read (see [Vision](#vision) above). |
 
 ### Why GDPval-AA is left out
 
-`gdpval_aa` is the obvious fifth member and is deliberately not one. It has the
+`gdpval_aa` is the obvious sixth member and is deliberately not one. It has the
 best coverage in the table (79 models, 25 creators, 78 of them AA-run), and its
 deliverables are documents, slide decks, diagrams and spreadsheets, so it is the
 only column in `llm.json` scoring visual *output* rather than visual input. Two
@@ -1148,14 +1193,14 @@ measurements keep it out:
   different axes.
 - **38 models carry it as their only score in this group** — models nothing has
   ever measured on an image. At its Tooling weight of 0.7 its share of a
-  five-member group would be 0.226, over the [18% evidence
+  six-member group would be 0.203, over the [18% evidence
   bar](#why-the-evidence-bar-is-18), so it would not merely contribute: it would
   *rank* all 38 on no visual evidence whatsoever, taking the column from 47
   ranked models to 85 and turning two thirds of a vision ranking into a restated
   GDPval ranking.
 
 Holding it below the bar instead of dropping it was the other option — at 0.5 of
-a 2.9 total its share is 0.172, just under — and it was rejected as the wrong
+a 3.25 total its share is 0.154, just under — and it was rejected as the wrong
 kind of clever: a weight chosen to sit under a threshold is one edit away from
 silently admitting 38 models, and the first objection above stands whatever the
 weight. GDPval-AA remains a column in the table and a member of the Tooling
@@ -1169,44 +1214,47 @@ is not:
 
 | share of weight | models | what they have |
 | --- | --- | --- |
-| 1.000 | 7 | all four |
-| 0.708 | 10 | MMMU Pro + OSWorld, or + both small members |
-| 0.563 | 3 | MMMU Pro + MathVista + ZeroBench |
-| 0.417 | 27 | MMMU Pro alone |
+| 1.000 | 7 | all five |
+| 0.745 | 6 | MMMU Pro + OSWorld + CharXiv, or + all three small members |
+| 0.618 | 7 | MMMU Pro + two small members, or + OSWorld |
+| 0.491 | 2 | MMMU Pro + CharXiv |
+| 0.364 | 25 | MMMU Pro alone |
 
-The floor of that ladder is 0.417, so `MIN_SCORED_FRACTION` would have to exceed
-**0.40** to cut anybody: Vision ranks the same 47 models at every setting from
+The floor of that ladder is 0.364, so `MIN_SCORED_FRACTION` would have to exceed
+**0.36** to cut anybody: Vision ranks the same 47 models at every setting from
 0.05 to 0.30. The [18% bar](#why-the-evidence-bar-is-18) is completely inert
 here and **no per-index override is needed** — the modality gate is already
 doing the filtering the bar does elsewhere, and doing it on better evidence.
 
-The honest weakness that leaves is the mirror image of Knowledge's: **27 of the
+The honest weakness that leaves is the mirror image of Knowledge's: **25 of the
 47 ranked models are measured on MMMU Pro alone**, and only 20 of 47 carry at
 least half the group's weight, where the Knowledge index gets that property for
 free from its own density. For most of this
 column's field, the ranking *is* MMMU Pro plus imputation, and it should be read
-that way — `--top` prints an `N/4 measured` column next to every value for
+that way — `--top` prints an `N/5 measured` column next to every value for
 exactly this reason.
 
 What keeps that safe is the imputation cap, and here it is legible in the
 numbers rather than a footnote. A model measured on MMMU Pro alone cannot score
-above **70,833** however well it does, because the 58% of the weight it is
+above **68,182** however well it does, because the 64% of the weight it is
 missing is filled at the median and never above it. So the head of the column is
-reserved for models measured on more of it, by construction. The leader,
-`qwen3-8-2-4t-a95b`, sits at **85,417** — exactly its own cap at 70.8% coverage
+reserved for models measured on more of it, by construction.
+`qwen3-8-2-4t-a95b` sits at **80,909** — exactly its own cap at 61.8% coverage
 — because it tops both MMMU Pro (82.3) and OSWorld-Verified (86.1) and has no
-score on either small member.
+score on any small member. That cap is what CharXiv moved at the head: `kimi-k3`
+is measured on three of the five and now leads at **84,361**, where the same
+value under a four-member group put it second.
 
 Two other properties of the current field:
 
 - **47 ranked, 46 distinct values.** The one collision is not a rounding
   artifact and no weighting can remove it: `devstral-small-2` and `gemma-4-e2b`
   both score 44.6 on MMMU Pro and have no other score in the group, so their
-  evidence is byte-identical and the index is right to tie them at 26,336. Apart
-  from that pair the closest neighbours sit **27 index points** apart, the widest
+  evidence is byte-identical and the index is right to tie them at 28,656. Apart
+  from that pair the closest neighbours sit **107 index points** apart, the widest
   margin of the five — a small ranked field spread over the full scale, where the
   other four pack many more values into the same range.
-- **The range is the widest of the five**, 6,137 to 85,417, because the
+- **The range is the widest of the five**, 4,836 to 84,361, because the
   multimodal field in this table runs from 0.8B models to frontier mixtures of
   experts with very little in between.
 
