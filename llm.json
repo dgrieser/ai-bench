@@ -671,6 +671,18 @@
         "https://huggingface.co/datasets/AI4Math/MathVista",
         "https://evals.report/benchmarks/mathvista"
       ]
+    },
+    "charxiv_reasoning": {
+      "name": "CharXiv Reasoning",
+      "short_name": "CharXiv",
+      "category": "Vision-language Reasoning",
+      "description": "Reasoning over scientific charts: 2,323 figures taken from arXiv papers, each with four open-ended reasoning questions whose answers have to be read off the chart itself rather than recalled. This column is the reasoning split (\"RQ\") without tool use — the descriptive split is a different, far easier question set, and a run allowed a code interpreter is a different measurement again.",
+      "urls": [
+        "https://charxiv.github.io",
+        "https://arxiv.org/abs/2406.18521",
+        "https://huggingface.co/datasets/princeton-nlp/CharXiv",
+        "https://evals.report/benchmarks/charxiv"
+      ]
     }
   },
   "models": [
@@ -735,7 +747,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -788,7 +801,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -841,7 +855,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 273,
@@ -915,7 +930,8 @@
         "mmmu_pro": 44.6,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -968,7 +984,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -1021,7 +1038,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/devstral-small-2",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 52,
@@ -1095,7 +1113,8 @@
         "mmmu_pro": 54.0,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -1148,7 +1167,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -1201,7 +1221,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/glm-4-7-flash",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 68,
@@ -1275,7 +1296,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -1328,7 +1350,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -1381,7 +1404,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 435,
@@ -1455,7 +1479,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -1508,7 +1533,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -1561,7 +1587,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 499,
@@ -1635,7 +1662,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -1688,7 +1716,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -1741,7 +1770,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 67,
@@ -1815,7 +1845,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -1868,7 +1899,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -1921,7 +1953,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 174,
@@ -1995,7 +2028,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -2048,7 +2082,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -2101,7 +2136,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 67,
@@ -2175,7 +2211,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -2228,7 +2265,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -2281,7 +2319,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 177,
@@ -2355,7 +2394,8 @@
         "mmmu_pro": 77.3,
         "osworld_verified": 62.2,
         "zerobench": 12,
-        "mathvista_mini": 90.3
+        "mathvista_mini": 90.3,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -2408,7 +2448,8 @@
         "mmmu_pro": "2026-03-10",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -2461,7 +2502,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 879,
@@ -2535,7 +2577,8 @@
         "mmmu_pro": 75,
         "osworld_verified": 58.0,
         "zerobench": 9,
-        "mathvista_mini": 87.4
+        "mathvista_mini": 87.4,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -2588,7 +2631,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -2641,7 +2685,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 273,
@@ -2715,7 +2760,8 @@
         "mmmu_pro": 75,
         "osworld_verified": 56.2,
         "zerobench": 10,
-        "mathvista_mini": 87.8
+        "mathvista_mini": 87.8,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -2768,7 +2814,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -2821,7 +2868,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-27B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-27B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-27B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-27B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 61,
@@ -2895,7 +2943,8 @@
         "mmmu_pro": 72.7,
         "osworld_verified": 54.5,
         "zerobench": 8,
-        "mathvista_mini": 86.2
+        "mathvista_mini": 86.2,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -2948,7 +2997,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -3001,7 +3051,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 78,
@@ -3075,7 +3126,8 @@
         "mmmu_pro": 69.2,
         "osworld_verified": 41.8,
         "zerobench": 3,
-        "mathvista_mini": 85.7
+        "mathvista_mini": 85.7,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -3128,7 +3180,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -3181,7 +3234,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-9B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-9B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-9B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-9B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 21,
@@ -3255,7 +3309,8 @@
         "mmmu_pro": 65.4,
         "osworld_verified": 35.6,
         "zerobench": 3,
-        "mathvista_mini": 85.1
+        "mathvista_mini": 85.1,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -3308,7 +3363,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -3361,7 +3417,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-4B",
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-4B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-4B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-4B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 10,
@@ -3435,7 +3492,8 @@
         "mmmu_pro": 43,
         "osworld_verified": null,
         "zerobench": 1,
-        "mathvista_mini": 76.7
+        "mathvista_mini": 76.7,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -3488,7 +3546,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -3541,7 +3600,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "osworld_verified": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-2B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-2B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-2B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 5.0,
@@ -3615,7 +3675,8 @@
         "mmmu_pro": 25.8,
         "osworld_verified": null,
         "zerobench": 0,
-        "mathvista_mini": 62.2
+        "mathvista_mini": 62.2,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -3668,7 +3729,8 @@
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -3721,7 +3783,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "osworld_verified": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-0.8B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1.9,
@@ -3795,7 +3858,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -3848,7 +3912,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -3901,7 +3966,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 269,
@@ -3975,7 +4041,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -4028,7 +4095,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -4081,7 +4149,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 151,
@@ -4156,7 +4225,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -4209,7 +4279,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -4262,7 +4333,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 46,
@@ -4337,7 +4409,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -4390,7 +4463,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -4443,7 +4517,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 255,
@@ -4517,7 +4592,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -4570,7 +4646,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -4623,7 +4700,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 69,
@@ -4697,7 +4775,8 @@
         "mmmu_pro": 56.8,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -4750,7 +4829,8 @@
         "mmmu_pro": "2026-03-18",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -4803,7 +4883,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-small-4",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 260,
@@ -4877,7 +4958,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -4930,7 +5012,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -4983,7 +5066,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 499,
@@ -5057,7 +5141,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -5110,7 +5195,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -5163,7 +5249,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 70,
@@ -5237,7 +5324,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -5290,7 +5378,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -5343,7 +5432,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 231,
@@ -5417,7 +5507,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -5470,7 +5561,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -5523,7 +5615,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 8.6,
@@ -5597,7 +5690,8 @@
         "mmmu_pro": 73.4,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -5650,7 +5744,8 @@
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -5703,7 +5798,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-31b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 68,
@@ -5777,7 +5873,8 @@
         "mmmu_pro": 69.2,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -5830,7 +5927,8 @@
         "mmmu_pro": "2026-04-08",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -5883,7 +5981,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-26b-a4b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 56,
@@ -5957,7 +6056,8 @@
         "mmmu_pro": 51.4,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6010,7 +6110,8 @@
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6063,7 +6164,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-e4b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 17,
@@ -6137,7 +6239,8 @@
         "mmmu_pro": 44.6,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6190,7 +6293,8 @@
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6243,7 +6347,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-e2b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 11,
@@ -6317,7 +6422,8 @@
         "mmmu_pro": 75,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": 86.4
+        "mathvista_mini": 86.4,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6370,7 +6476,8 @@
         "mmmu_pro": "2026-04-22",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6423,7 +6530,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 78,
@@ -6497,7 +6605,8 @@
         "mmmu_pro": 74.6,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": 87.4
+        "mathvista_mini": 87.4,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6550,7 +6659,8 @@
         "mmmu_pro": "2026-04-24",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6603,7 +6713,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-6-27b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-27B"
+        "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-27B",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 61,
@@ -6677,7 +6788,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6730,7 +6842,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6783,7 +6896,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 634,
@@ -6857,7 +6971,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -6910,7 +7025,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -6963,7 +7079,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 651,
@@ -7037,7 +7154,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7090,7 +7208,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -7143,7 +7262,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 19,
@@ -7217,7 +7337,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7270,7 +7391,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -7323,7 +7445,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 7.4,
@@ -7397,7 +7520,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7450,7 +7574,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -7503,7 +7628,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 63,
@@ -7577,7 +7703,8 @@
         "mmmu_pro": 64.9,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7630,7 +7757,8 @@
         "mmmu_pro": "2026-05-03",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -7683,7 +7811,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-medium-3-5",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 278,
@@ -7757,7 +7886,8 @@
         "mmmu_pro": 49.8,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7810,7 +7940,8 @@
         "mmmu_pro": "2026-05-03",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -7863,7 +7994,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-14b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 30,
@@ -7937,7 +8069,8 @@
         "mmmu_pro": 53.2,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -7990,7 +8123,8 @@
         "mmmu_pro": "2026-05-13",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -8043,7 +8177,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 72,
@@ -8117,7 +8252,8 @@
         "mmmu_pro": 37.9,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -8170,7 +8306,8 @@
         "mmmu_pro": "2026-05-13",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -8223,7 +8360,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/minicpm-v4-6-1-3b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 2.8,
@@ -8297,7 +8435,8 @@
         "mmmu_pro": 63.2,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -8350,7 +8489,8 @@
         "mmmu_pro": "2026-05-24",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -8403,7 +8543,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/command-a-plus",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 477,
@@ -8477,7 +8618,8 @@
         "mmmu_pro": 75.3,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -8530,7 +8672,8 @@
         "mmmu_pro": "2026-06-01",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -8583,7 +8726,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/step-3-7-flash",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 439,
@@ -8657,7 +8801,8 @@
         "mmmu_pro": 37.5,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -8710,7 +8855,8 @@
         "mmmu_pro": "2026-06-06",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -8763,7 +8909,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-12b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 27,
@@ -8837,7 +8984,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -8890,7 +9038,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -8943,7 +9092,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 66,
@@ -9017,7 +9167,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -9070,7 +9221,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -9123,7 +9275,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1642,
@@ -9197,7 +9350,8 @@
         "mmmu_pro": 78.6,
         "osworld_verified": 75.2,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -9250,7 +9404,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": "2026-06-18",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -9303,7 +9458,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/minimax-m3",
         "osworld_verified": "https://os-world.github.io",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 931,
@@ -9377,7 +9533,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -9430,7 +9587,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -9483,7 +9641,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -9547,7 +9706,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -9600,7 +9760,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -9653,7 +9814,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 2.6,
@@ -9726,7 +9888,8 @@
         "mmmu_pro": 52.9,
         "osworld_verified": null,
         "zerobench": 0,
-        "mathvista_mini": 70.7
+        "mathvista_mini": 70.7,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -9779,7 +9942,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -9832,7 +9996,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/llama-4-scout",
         "osworld_verified": null,
         "zerobench": "https://evals.report/benchmarks/zerobench",
-        "mathvista_mini": "https://evals.report/benchmarks/mathvista"
+        "mathvista_mini": "https://evals.report/benchmarks/mathvista",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 237,
@@ -9906,7 +10071,8 @@
         "mmmu_pro": 62.1,
         "osworld_verified": null,
         "zerobench": 0,
-        "mathvista_mini": 73.7
+        "mathvista_mini": 73.7,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -9959,7 +10125,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -10012,7 +10179,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/llama-4-maverick",
         "osworld_verified": null,
         "zerobench": "https://evals.report/benchmarks/zerobench",
-        "mathvista_mini": "https://evals.report/benchmarks/mathvista"
+        "mathvista_mini": "https://evals.report/benchmarks/mathvista",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 875,
@@ -10086,7 +10254,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -10139,7 +10308,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -10192,7 +10362,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 32,
@@ -10265,7 +10436,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -10318,7 +10490,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -10371,7 +10544,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "context": "64k",
       "vram": {
@@ -10446,7 +10620,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -10499,7 +10674,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -10552,7 +10728,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 70,
@@ -10626,7 +10803,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -10679,7 +10857,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -10732,7 +10911,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 16,
@@ -10806,7 +10986,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -10859,7 +11040,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -10912,7 +11094,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 16,
@@ -10986,7 +11169,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -11039,7 +11223,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -11092,7 +11277,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 869,
@@ -11166,7 +11352,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -11219,7 +11406,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -11272,7 +11460,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 112,
@@ -11346,7 +11535,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -11399,7 +11589,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -11452,7 +11643,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 869,
@@ -11526,7 +11718,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -11579,7 +11772,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -11632,7 +11826,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 885,
@@ -11706,7 +11901,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -11759,7 +11955,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -11812,7 +12009,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 154,
@@ -11886,7 +12084,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -11939,7 +12138,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -11992,7 +12192,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 46,
@@ -12066,7 +12267,8 @@
         "mmmu_pro": 60.3,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": 79.9
+        "mathvista_mini": 79.9,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -12119,7 +12321,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -12172,7 +12375,8 @@
         "mmmu_pro": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker"
+        "mathvista_mini": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 32,
@@ -12246,7 +12450,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -12299,7 +12504,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -12352,7 +12558,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1494,
@@ -12426,7 +12633,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -12479,7 +12687,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -12532,7 +12741,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1492,
@@ -12606,7 +12816,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -12659,7 +12870,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -12712,7 +12924,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 781,
@@ -12786,7 +12999,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -12839,7 +13053,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -12892,7 +13107,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 241,
@@ -12966,7 +13182,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -13019,7 +13236,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -13072,7 +13290,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 778,
@@ -13146,7 +13365,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -13199,7 +13419,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -13252,7 +13473,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 781,
@@ -13326,7 +13548,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -13379,7 +13602,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -13432,7 +13656,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 107,
@@ -13506,7 +13731,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -13559,7 +13785,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -13612,7 +13839,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 655,
@@ -13686,7 +13914,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -13739,7 +13968,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -13792,7 +14022,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 79,
@@ -13866,7 +14097,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -13919,7 +14151,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -13972,7 +14205,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 224,
@@ -14046,7 +14280,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -14099,7 +14334,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -14152,7 +14388,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 224,
@@ -14226,7 +14463,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -14279,7 +14517,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -14332,7 +14571,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 35,
@@ -14406,7 +14646,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -14459,7 +14700,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -14512,7 +14754,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 675,
@@ -14585,7 +14828,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -14638,7 +14882,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -14691,7 +14936,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1225,
@@ -14765,7 +15011,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -14818,7 +15065,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -14871,7 +15119,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1225,
@@ -14946,7 +15195,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -14999,7 +15249,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15052,7 +15303,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 994,
@@ -15126,7 +15378,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -15179,7 +15432,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15232,7 +15486,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 71,
@@ -15306,7 +15561,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -15359,7 +15615,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15412,7 +15669,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 32,
@@ -15486,7 +15744,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -15539,7 +15798,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15592,7 +15852,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 18,
@@ -15666,7 +15927,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -15719,7 +15981,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15772,7 +16035,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 8.8,
@@ -15846,7 +16110,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -15899,7 +16164,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -15952,7 +16218,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 513,
@@ -16026,7 +16293,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -16079,7 +16347,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -16132,7 +16401,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 513,
@@ -16206,7 +16476,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -16259,7 +16530,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -16312,7 +16584,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1047,
@@ -16386,7 +16659,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -16439,7 +16713,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -16492,7 +16767,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 71,
@@ -16566,7 +16842,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -16619,7 +16896,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -16672,7 +16950,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 70,
@@ -16746,7 +17025,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -16799,7 +17079,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -16852,7 +17133,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 2.8,
@@ -16926,7 +17208,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -16979,7 +17262,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -17032,7 +17316,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 224,
@@ -17106,7 +17391,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -17159,7 +17445,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -17212,7 +17499,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 17,
@@ -17286,7 +17574,8 @@
         "mmmu_pro": 55.7,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -17339,7 +17628,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -17392,7 +17682,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-large-3",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1472,
@@ -17466,7 +17757,8 @@
         "mmmu_pro": 46,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -17519,7 +17811,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -17572,7 +17865,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-8b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 19,
@@ -17646,7 +17940,8 @@
         "mmmu_pro": 38.1,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -17699,7 +17994,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -17752,7 +18048,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-3b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 8.4,
@@ -17826,7 +18123,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -17879,7 +18177,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -17932,7 +18231,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 73,
@@ -18006,7 +18306,8 @@
         "mmmu_pro": 48,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -18059,7 +18360,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -18112,7 +18414,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-27b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 60,
@@ -18186,7 +18489,8 @@
         "mmmu_pro": 29.9,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -18239,7 +18543,8 @@
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -18292,7 +18597,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-4b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 9.4,
@@ -18366,7 +18672,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -18419,7 +18726,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -18472,7 +18780,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 2.2,
@@ -18546,7 +18855,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -18599,7 +18909,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -18652,7 +18963,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 0.6,
@@ -18726,7 +19038,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -18779,7 +19092,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -18832,7 +19146,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {},
       "params": "132B-A36B"
@@ -18897,7 +19212,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -18950,7 +19266,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -19003,7 +19320,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {},
       "params": "270B-A115B"
@@ -19069,7 +19387,8 @@
         "mmmu_pro": 69.7,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -19122,7 +19441,8 @@
         "mmmu_pro": "2026-06-29",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -19175,7 +19495,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-12b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 26,
@@ -19249,7 +19570,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -19302,7 +19624,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -19355,7 +19678,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 20,
@@ -19429,7 +19753,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -19482,7 +19807,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -19535,7 +19861,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 76,
@@ -19609,7 +19936,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -19662,7 +19990,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -19715,7 +20044,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 865,
@@ -19789,7 +20119,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -19842,7 +20173,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -19895,7 +20227,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram": {
         "fp16": 1222,
@@ -19979,7 +20312,8 @@
         "mmmu_pro": 66.5,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -20032,7 +20366,8 @@
         "mmmu_pro": "2026-07-06",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -20085,7 +20420,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/diffusiongemma-26b-a4b",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -20159,7 +20495,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -20212,7 +20549,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -20265,7 +20603,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -20339,7 +20678,8 @@
         "mmmu_pro": 73.5,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -20392,7 +20732,8 @@
         "mmmu_pro": "2026-07-20",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -20445,7 +20786,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/inkling",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -20519,7 +20861,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -20572,7 +20915,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -20625,7 +20969,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -20699,7 +21044,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -20752,7 +21098,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -20805,7 +21152,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -20879,7 +21227,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -20932,7 +21281,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -20985,7 +21335,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21059,7 +21410,8 @@
         "mmmu_pro": 75.4,
         "osworld_verified": 63.3,
         "zerobench": 9,
-        "mathvista_mini": 90.1
+        "mathvista_mini": 90.1,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -21112,7 +21464,8 @@
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-20",
         "zerobench": "2026-08-29",
-        "mathvista_mini": "2026-08-29"
+        "mathvista_mini": "2026-08-29",
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -21165,7 +21518,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k2-5",
         "osworld_verified": "https://os-world.github.io",
         "zerobench": "https://huggingface.co/moonshotai/Kimi-K2.5",
-        "mathvista_mini": "https://huggingface.co/moonshotai/Kimi-K2.5"
+        "mathvista_mini": "https://huggingface.co/moonshotai/Kimi-K2.5",
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21239,7 +21593,8 @@
         "mmmu_pro": 79.4,
         "osworld_verified": 73.1,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -21292,7 +21647,8 @@
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-20",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -21345,7 +21701,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k2-6",
         "osworld_verified": "https://os-world.github.io",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21419,7 +21776,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -21472,7 +21830,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -21525,7 +21884,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21599,7 +21959,8 @@
         "mmmu_pro": 80.5,
         "osworld_verified": 84.8,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -21652,7 +22013,8 @@
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-27",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -21705,7 +22067,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k3",
         "osworld_verified": "https://huggingface.co/moonshotai/Kimi-K3",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21779,7 +22142,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -21832,7 +22196,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -21885,7 +22250,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -21959,7 +22325,8 @@
         "mmmu_pro": 75.4,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22012,7 +22379,8 @@
         "mmmu_pro": "2026-07-28",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22065,7 +22433,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/mimo-v2-5-0424",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -22139,7 +22508,8 @@
         "mmmu_pro": 77.9,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22192,7 +22562,8 @@
         "mmmu_pro": "2026-07-28",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22245,7 +22616,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -22319,7 +22691,8 @@
         "mmmu_pro": 74,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22372,7 +22745,8 @@
         "mmmu_pro": "2026-07-30",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22425,7 +22799,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/inkling-small",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -22499,7 +22874,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22552,7 +22928,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22605,7 +22982,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -22674,7 +23052,8 @@
         "mmmu_pro": 82.3,
         "osworld_verified": 86.1,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22727,7 +23106,8 @@
         "mmmu_pro": "2026-08-06",
         "osworld_verified": "2026-08-21",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22780,7 +23160,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-8-max",
         "osworld_verified": "https://www.datacamp.com/blog/qwen3-8-max",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-2.4T-A95B/",
@@ -22854,7 +23235,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -22907,7 +23289,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22960,7 +23343,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-flash/",
@@ -23034,7 +23418,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23087,7 +23472,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -23140,7 +23526,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-tiny/",
@@ -23214,7 +23601,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23267,7 +23655,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -23320,7 +23709,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-2.6B/",
@@ -23394,7 +23784,8 @@
         "mmmu_pro": 74.3,
         "osworld_verified": 65.9,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23447,7 +23838,8 @@
         "mmmu_pro": "2026-08-11",
         "osworld_verified": "2026-08-11",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -23500,7 +23892,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/muse-glimmer",
         "osworld_verified": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Glimmer-30B/",
@@ -23574,7 +23967,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23627,7 +24021,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -23680,7 +24075,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16/",
@@ -23754,7 +24150,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23807,7 +24204,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -23860,7 +24258,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3/",
@@ -23934,7 +24333,8 @@
         "mmmu_pro": 76.3,
         "osworld_verified": 84.3,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -23987,7 +24387,8 @@
         "mmmu_pro": "2026-08-17",
         "osworld_verified": "2026-08-15",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24040,7 +24441,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.8-27B",
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-27B/",
@@ -24114,7 +24516,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -24167,7 +24570,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24220,7 +24624,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/upstage/Solar-Open2-250B/",
@@ -24294,7 +24699,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -24347,7 +24753,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24400,7 +24807,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/skt/A.X-K2/",
@@ -24474,7 +24882,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": null,
@@ -24527,7 +24936,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": null,
@@ -24580,7 +24990,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/NousResearch/Hermes-4.3-36B/",
@@ -24654,7 +25065,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -24707,7 +25119,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24760,7 +25173,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-397B/",
@@ -24834,7 +25248,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -24887,7 +25302,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24940,7 +25356,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-35B-A3B/",
@@ -25014,7 +25431,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25067,7 +25485,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -25120,7 +25539,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-9B/",
@@ -25194,7 +25614,8 @@
         "mmmu_pro": 74.8,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25247,7 +25668,8 @@
         "mmmu_pro": "2026-08-27",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -25300,7 +25722,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/deepseek-v4-flash-vision",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       }
     },
     {
@@ -25369,7 +25792,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25422,7 +25846,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -25475,7 +25900,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3-Flash/",
@@ -25549,7 +25975,8 @@
         "mmmu_pro": 79.8,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25602,7 +26029,8 @@
         "mmmu_pro": "2026-08-27",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -25655,7 +26083,8 @@
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-8-flash-next",
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/Qwen/Qwen3.8-Flash-Next/",
@@ -25729,7 +26158,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25782,7 +26212,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -25835,7 +26266,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-3b/",
@@ -25909,7 +26341,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -25962,7 +26395,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -26015,7 +26449,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-8b/",
@@ -26089,7 +26524,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -26142,7 +26578,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -26195,7 +26632,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/ibm-granite/granite-4.2-30b/",
@@ -26269,7 +26707,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -26322,7 +26761,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -26375,7 +26815,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/tencent/Hy4-preview/",
@@ -26449,7 +26890,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -26502,7 +26944,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -26555,7 +26998,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-375B-A23B/",
@@ -26629,7 +27073,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_updated": {
         "coding_index": "2026-09-07",
@@ -26682,7 +27127,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -26735,7 +27181,8 @@
         "mmmu_pro": null,
         "osworld_verified": null,
         "zerobench": null,
-        "mathvista_mini": null
+        "mathvista_mini": null,
+        "charxiv_reasoning": null
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/openbmb/MiniCPM5-2B/",

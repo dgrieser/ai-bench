@@ -331,6 +331,32 @@ filling it is one vendor deep. Second, a benchmark reported mainly by the lab th
 > way the table above could not see: evals.report carries a verified row for each, so the
 > cards are a gap filler rather than the whole evidence base. See
 > [Vision](../README.md#vision) for the sources and the label traps.
+>
+> **Since this snapshot (2026-09-09):** `CharXiv` is a column too
+> (`charxiv_reasoning`), and the objection it had to answer was the same one. Re-measured
+> against the live file: **17 models / 4 vendors** from the cards (up from 16 / 4), plus
+> `inkling` from evals.report's `charxiv` table, which also has a Verified row agreeing with
+> `muse-glimmer`'s card — **18 models across 5 creators**, the second-widest vision column
+> after MMMU Pro, unsaturated (median 78.1, best 84.8, nothing near 90) and less redundant
+> with the anchor than MathVista is (0.89 against 0.96). Admitted to the
+> [Vision index](../README.md#vision-index) at 0.35; nobody was unseated, because Vision's
+> coverage ladder floors at MMMU Pro's share and the bar cannot reach it.
+>
+> The interesting part for this document is what the *third* channel did. llm-stats'
+> `charxiv_r` covers 16 of our models and is **left unmapped**: it serves the
+> code-interpreter run for the four newest models it shares with the cards (`kimi-k3` 91.3
+> against 84.8, `qwen3-8-27b` 90.2 against 83.7, `qwen3-8-flash-next` 90.6 against 84.6,
+> `kimi-k2-6` 86.7 against 80.4) and the no-tool run for the other seven, with no column
+> saying which. That is §5's "one name, two metrics" hazard arriving through an aggregator
+> instead of a card, and it costs four models this column would otherwise reach.
+>
+> `MMVU` (10 / 2 here) was evaluated in the same pass and **rejected**: no aggregator carries
+> it (llm-stats has no field, evals.report no page, AA nothing, and the OpenVLM dump is
+> frozen at 2025-09), its own leaderboard JSON is clean but stopped at the Jan-2025 field
+> where the best open model scores 53.0, and on its 10 models it is Spearman **0.98** with
+> `mmmu_pro` — every one of which already has that score, so it would rank nobody new. The
+> video gap it would have filled stays open; `VideoMMMU` (11 / 2), `VideoMME` (10 / 1) and
+> `LVBench` (10 / 2) are no better placed.
 
 ---
 

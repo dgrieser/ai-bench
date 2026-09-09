@@ -83,6 +83,22 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 #     "MathVista mini", "MathVista_MINI", "Mathvista(mini)"), so all five map
 #     onto mathvista_mini. MathVerse and MathVision are different benchmarks
 #     and stay parked.
+#   * CharXiv. charxiv_reasoning is the reasoning split ("RQ") run without
+#     tools, so five spellings of that one thing are mapped -- "CharXiv (RQ)",
+#     "CharXiv(RQ)", "CharXiv RQ", "CharXiv (reasoning)", "Charxiv Reasoning"
+#     and Qwen's capability-prefixed "Scientific chart analysis CharXiv (RQ)".
+#     Two labels on the same cards stay parked, and both would win best-value:
+#     "CharXiv (descriptive)" is the other, far easier split (Apriel-1.6 reports
+#     89.85 descriptive against 56.0 reasoning, a 34-point gap), and
+#     "CharXiv (RQ) (w/ python)" is the same questions with a code interpreter
+#     (kimi-k2-6 reports 80.4 plain against 86.7 with python). The tool-mode gap
+#     is systematic at about 6 points wherever a card reports both -- Qwen3.8
+#     prints it as "Without CI / With CI" (83.7 / 90.2) and Kimi K3 as "without
+#     and with tool augmentation" (84.8 / 91.3) -- which is also why llm-stats'
+#     charxiv_r stays parked in llmstats-benchmark-name-mapping.json: it serves
+#     the with-tools number for those models, and its ingest runs before this
+#     one, so mapping it would take the null this column wants for the no-tool
+#     value. See README, "Vision".
 UNMAPPABLE = "__unmappable__"
 
 
