@@ -249,16 +249,28 @@ def main() -> int:
             continue
 
         direct_slug = exact_aa_slug(model, aa_by_norm)
-        if direct_slug:
+        if direct_slug == model_name:
+            # Nothing to record: update.resolve_aa_slugs() reads a model's own
+            # name off AA when it is a slug there. That is what makes a
+            # hand-added entry start collecting AA scores by itself on the day
+            # AA publishes the same slug.
             exact += 1
             print(f"{model_name}")
-            print(f"  exact AA slug: {direct_slug} (update.py will fetch it directly)")
+            print(f"  exact AA slug: {direct_slug} (update.py fetches it directly)")
             continue
 
         ignored = ignored_by_model.get(model_name, set())
         candidates = find_candidate_slugs(model, aa_slugs, ignored, args.limit)
         print(f"{model_name}")
         print_candidates(candidates)
+        if direct_slug and direct_slug not in ignored:
+            # The same name bar punctuation or case. update.py matches a slug
+            # byte for byte, so this one does *not* map itself, however alike
+            # the two look -- which is exactly the case that used to be reported
+            # as "update.py will fetch it directly" and then silently fetched
+            # nothing. Two ways out, and the second needs no mapping afterwards.
+            print(f"  same slug bar punctuation: {direct_slug}")
+            print(f"  -> map it below, or rename the entry: ./rename.py {model_name} {direct_slug}")
 
         if candidates:
             suggested += 1

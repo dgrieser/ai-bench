@@ -26,7 +26,58 @@ from _selector import (
 
 SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 
-METADATA_FIELDS = {"context": "Context Window", "params": "Model Size"}
+# Every metadata field a person may set on an existing entry, and its prompt
+# label. The set is add.py's: what that script asks when a model is created is
+# what this one can change afterwards, so nothing is enterable once and then
+# frozen. vram/vram_source are absent on purpose -- Spheron writes those, and a
+# hand-typed figure would be recomputed away on the next run.
+METADATA_FIELDS = {
+    "context": "Context Window",
+    "params": "Model Size",
+    "url": "Model URL",
+    "creator": "Creator",
+    "creator_url": "Creator URL",
+    "date_added": "Date Added",
+}
+
+METADATA_HELP = {
+    "context": "Context window, e.g. 256k. Use 'null' to clear.",
+    "params": "Model size, e.g. 123B or 230B-A10B. Use 'null' to clear.",
+    "url": "Model page, e.g. its Hugging Face repo. Use 'null' to clear.",
+    "creator": "Creator name, e.g. Mistral. Use 'null' to clear.",
+    "creator_url": "Creator home page. Use 'null' to clear.",
+    "date_added": "Date the entry was added, YYYY-MM-DD. Use 'null' to clear.",
+}
+
+# Where a field lives on the entry. Two of them sit inside the creator object,
+# so nothing may assume model[key].
+FIELD_PATHS = {"creator": ("creator", "name"), "creator_url": ("creator", "url")}
+
+
+def field_path(key: str) -> tuple[str, ...]:
+    return FIELD_PATHS.get(key, (key,))
+
+
+def read_field(model: dict[str, Any], key: str) -> Any:
+    node: Any = model
+    for part in field_path(key):
+        if not isinstance(node, dict):
+            return None
+        node = node.get(part)
+    return node
+
+
+def write_field(model: dict[str, Any], key: str, value: str | None) -> None:
+    path = field_path(key)
+    node = model
+    for part in path[:-1]:
+        child = node.get(part)
+        if not isinstance(child, dict):
+            child = {}
+            node[part] = child
+        node = child
+    node[path[-1]] = value
+
 
 # The provenance of the scores one run writes: the date they were read and the
 # page they were read from. Not per-benchmark flags like the scores themselves,
@@ -116,8 +167,8 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         metavar="YYYY-MM-DD",
         help="Scope --missing to models whose date_added is after this date.",
     )
-    parser.add_argument("--context", help="Context window, e.g. 256k. Use 'null' to clear.")
-    parser.add_argument("--params", help="Model size, e.g. 123B or 230B-A10B. Use 'null' to clear.")
+    for key, label in METADATA_FIELDS.items():
+        parser.add_argument(f"--{key.replace('_', '-')}", dest=key, help=METADATA_HELP[key])
     parser.add_argument(
         "--score-date",
         metavar="YYYY-MM-DD",
@@ -130,7 +181,9 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         "off, to credit nobody -- which is what a hand edit means by default.",
     )
 
-    reserved_flags = {f"--{key}" for key in METADATA_FIELDS} | set(SCORE_PROVENANCE_FLAGS)
+    reserved_flags = {
+        f"--{key.replace('_', '-')}" for key in METADATA_FIELDS
+    } | set(SCORE_PROVENANCE_FLAGS)
     for key, benchmark in editable_benchmarks(doc).items():
         flag = f"--{key.replace('_', '-')}"
         if flag in reserved_flags:
@@ -174,6 +227,33 @@ def parse_score_value(raw: str) -> int | float | None:
     return int(text)
 
 
+def parse_url_field(raw: str | None, flag: str = "--url") -> str | None:
+    """A URL, or None where there is none. Blank and 'null' both clear it."""
+    if raw is None:
+        return None
+    text = raw.strip()
+    if not text or text.lower() == "null":
+        return None
+    if not text.startswith(("http://", "https://")):
+        raise ValueError(
+            f"Invalid URL '{raw}' for {flag}: expected one starting with http:// or https://."
+        )
+    return text
+
+
+def parse_date_field(raw: str | None, flag: str = "--date-added") -> str | None:
+    """An ISO date, or None. Checked here so a typo cannot become the entry's age."""
+    if raw is None:
+        return None
+    text = raw.strip()
+    if not text or text.lower() == "null":
+        return None
+    try:
+        return date.fromisoformat(text).isoformat()
+    except ValueError:
+        raise ValueError(f"Invalid date '{raw}' for {flag}: expected format YYYY-MM-DD.") from None
+
+
 def parse_score_source(raw: str | None) -> str | None:
     """The page a hand-entered score is credited to, or None for nobody.
 
@@ -184,14 +264,7 @@ def parse_score_source(raw: str | None) -> str | None:
     cosmetic -- it moves the value onto that page's rung, where only that page's
     own rung or better replaces it.
     """
-    if raw is None:
-        return None
-    text = raw.strip()
-    if not text or text.lower() == "null":
-        return None
-    if not text.startswith(("http://", "https://")):
-        raise ValueError(f"Invalid URL '{raw}': expected one starting with http:// or https://.")
-    return text
+    return parse_url_field(raw, "--score-url")
 
 
 def parse_metadata_value(raw: str) -> str | None:
@@ -201,6 +274,22 @@ def parse_metadata_value(raw: str) -> str | None:
     return text
 
 
+# Fields whose value is checked rather than taken as typed. A URL that is not
+# one and a date that is not one are both silent lies once they are in the file.
+FIELD_PARSERS = {
+    "url": parse_url_field,
+    "creator_url": parse_url_field,
+    "date_added": parse_date_field,
+}
+
+
+def parse_field_value(key: str, raw: str | None) -> str | None:
+    parser = FIELD_PARSERS.get(key)
+    if parser is not None:
+        return parser(raw, f"--{key.replace('_', '-')}")
+    return parse_metadata_value(raw) if raw is not None else None
+
+
 def format_score_value(value: Any) -> str:
     if value is None:
         return "null"
@@ -208,13 +297,8 @@ def format_score_value(value: Any) -> str:
 
 
 def get_existing_values(models: list[dict[str, Any]], key: str) -> list[str]:
-    return sorted(
-        {
-            model[key]
-            for model in models
-            if isinstance(model, dict) and isinstance(model.get(key), str) and model[key].strip()
-        }
-    )
+    values = (read_field(model, key) for model in models if isinstance(model, dict))
+    return sorted({value for value in values if isinstance(value, str) and value.strip()})
 
 
 def is_missing_text(value: Any) -> bool:
@@ -390,7 +474,7 @@ def get_missing_score_keys(doc: dict[str, Any], model: dict[str, Any]) -> list[s
 
 
 def get_missing_metadata_keys(model: dict[str, Any]) -> list[str]:
-    return [key for key in METADATA_FIELDS if is_missing_text(model.get(key))]
+    return [key for key in METADATA_FIELDS if is_missing_text(read_field(model, key))]
 
 
 def collect_updates(
@@ -433,13 +517,21 @@ def collect_updates(
         raw_value = getattr(args, key)
 
         if raw_value is not None:
-            metadata_updates[key] = parse_metadata_value(raw_value)
+            metadata_updates[key] = parse_field_value(key, raw_value)
             continue
 
         if interactive:
-            metadata_updates[key] = prompt_metadata_value(
-                label, model.get(key), get_existing_values(models, key)
-            )
+            # Re-asked rather than raised on: a mistyped URL should cost one
+            # line, not the whole sitting.
+            while True:
+                answer = prompt_metadata_value(
+                    label, read_field(model, key), get_existing_values(models, key)
+                )
+                try:
+                    metadata_updates[key] = parse_field_value(key, answer)
+                    break
+                except ValueError as exc:
+                    print(f"  {exc}")
 
     return model, score_updates, metadata_updates
 
@@ -497,9 +589,15 @@ def collect_missing_updates(
                 doc, key, prompt_score(benchmark.get("name", key), scores.get(key))
             )
         for key in missing_metadata_keys:
-            metadata_updates[key] = prompt_metadata_value(
-                METADATA_FIELDS[key], model.get(key), get_existing_values(doc["models"], key)
-            )
+            while True:
+                answer = prompt_metadata_value(
+                    METADATA_FIELDS[key], read_field(model, key), get_existing_values(doc["models"], key)
+                )
+                try:
+                    metadata_updates[key] = parse_field_value(key, answer)
+                    break
+                except ValueError as exc:
+                    print(f"  {exc}")
         planned.append((model, score_updates, metadata_updates))
 
     return planned
@@ -605,8 +703,8 @@ def main() -> int:
                     model_changed = True
                     scores_changed = True
             for key, value in metadata_updates.items():
-                if model.get(key) != value:
-                    model[key] = value
+                if read_field(model, key) != value:
+                    write_field(model, key, value)
                     changed += 1
                     model_changed = True
             if model_changed:
@@ -650,8 +748,8 @@ def main() -> int:
             changed += 1
             scores_changed = True
     for key, value in metadata_updates.items():
-        if model.get(key) != value:
-            model[key] = value
+        if read_field(model, key) != value:
+            write_field(model, key, value)
             changed += 1
 
     if scores_changed:

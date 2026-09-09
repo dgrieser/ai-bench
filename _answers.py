@@ -42,6 +42,7 @@ from typing import Any, Iterable, Sequence
 
 import _new_models
 import _prompts
+import _rename
 import edit
 import propose
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
@@ -62,8 +63,18 @@ MAPPING = "mapping"
 AA_IGNORE = "aa-ignore"
 NEW_MODEL = "new-model"
 MODEL_ADD = "model-add"
+MODEL_CREATE = "model-create"
 MODEL_EDIT = "model-edit"
-KINDS = frozenset({MAPPING, AA_IGNORE, NEW_MODEL, MODEL_ADD, MODEL_EDIT})
+MODEL_RENAME = "model-rename"
+KINDS = frozenset(
+    {MAPPING, AA_IGNORE, NEW_MODEL, MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME}
+)
+
+# The kinds that act on one entry in llm.json. A batch may touch each entry
+# once: the records are applied in order and rolled back together, so an edit
+# that follows a rename of the same model looks for a name that is no longer
+# there and takes every other answer down with it.
+MODEL_KINDS = frozenset({MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME})
 
 # The route whose mapping file runs the other way round: its keys are llm.json
 # model names and its values are Artificial Analysis slugs, one or a list.
@@ -115,6 +126,11 @@ class Answer:
             return f"new model {self.subject!r} -> {self.value}"
         if self.kind == MODEL_ADD:
             return f"add model {self.subject!r}"
+        if self.kind == MODEL_CREATE:
+            named = ", ".join(f"{k}={v!r}" for k, v in sorted(self.fields.items()))
+            return f"create model {self.subject!r}" + (f" ({named})" if named else "")
+        if self.kind == MODEL_RENAME:
+            return f"rename model {self.subject!r} -> {self.value!r}"
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -318,11 +334,36 @@ def validate(
             failures.append(Failure(index, str(exc)))
 
     seen: set[tuple[str, str | None, str | None, str]] = set()
+    reported: set[int] = set()
     for answer in answers:
         key = (answer.kind, answer.route, answer.route_kind, answer.subject)
         if key in seen:
             failures.append(Failure(answer.index, f"answered twice in one batch: {answer.subject!r}"))
+            reported.add(answer.index)
         seen.add(key)
+
+    # One entry, one record. The batch is applied in order and rolled back
+    # together, so an edit sent alongside a rename of the same model would be
+    # looking for a name that no longer exists -- and would take every other
+    # answer in the sitting down with it. A rename's new name counts as touched
+    # too: creating it in the same batch is the same collision seen from the
+    # other end.
+    touched: dict[str, str] = {}
+    for answer in answers:
+        if answer.kind not in MODEL_KINDS:
+            continue
+        names = [answer.subject] + ([answer.value] if answer.kind == MODEL_RENAME else [])
+        for name in names:
+            if name in touched and answer.index not in reported:
+                failures.append(
+                    Failure(
+                        answer.index,
+                        f"{name!r} is touched twice in one batch (also by a "
+                        f"{touched[name]} record); send the second one after this run",
+                    )
+                )
+                reported.add(answer.index)
+            touched.setdefault(name, answer.kind)
 
     return answers, failures
 
@@ -357,6 +398,10 @@ def _validate_one(
         return _validate_new_model(index, record, model_names, queue, require_queue)
     if kind == MODEL_ADD:
         return _validate_model_add(index, record, model_names, queue, require_queue)
+    if kind == MODEL_CREATE:
+        return _validate_model_create(index, record, model_names)
+    if kind == MODEL_RENAME:
+        return _validate_model_rename(index, record, model_names)
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -541,6 +586,51 @@ def _validate_model_add(
     return Answer(index=index, kind=MODEL_ADD, subject=subject)
 
 
+def _metadata_fields(record: dict[str, Any]) -> dict[str, Any]:
+    """The metadata a record sets, checked field by field.
+
+    The whitelist is edit.py's own METADATA_FIELDS, and each value goes through
+    that script's parser for its field, so a URL that is not one and a date that
+    is not one are refused here rather than reaching llm.json. A null clears the
+    field, which is the same thing `--flag=null` means on the command line.
+    """
+    fields = record.get("fields") or {}
+    if not isinstance(fields, dict):
+        raise AnswerError("'fields' must be an object")
+
+    checked: dict[str, Any] = {}
+    for key, value in fields.items():
+        if key not in METADATA_FIELDS:
+            raise AnswerError(
+                f"{key!r} is not editable; expected one of: {', '.join(METADATA_FIELDS)}"
+            )
+        if value is not None and not isinstance(value, str):
+            raise AnswerError(f"{key!r} must be a string or null")
+        try:
+            edit.parse_field_value(key, value)
+        except ValueError as exc:
+            raise AnswerError(str(exc)) from None
+        checked[key] = value
+    return checked
+
+
+def _model_slug(record: dict[str, Any]) -> str:
+    """A name that may become an entry in llm.json, checked to be a slug.
+
+    Every name in the file is lowercase words joined by single dots or dashes,
+    and the name is the model's identity everywhere -- mapping files, the AA
+    lookup, the site's own links -- so a stray capital or space is not a style
+    preference to fix later.
+    """
+    name = _subject_of(record, "name")
+    if not _rename.SLUG_RE.fullmatch(name):
+        raise AnswerError(
+            f"{name!r} is not a model slug: lowercase letters, digits, and single "
+            "dots or dashes between them"
+        )
+    return name
+
+
 def _score_date(record: dict[str, Any], has_scores: bool) -> str | None:
     """The date the scores in this record were read, or None for today.
 
@@ -593,6 +683,55 @@ def _score_url(record: dict[str, Any], has_scores: bool) -> str | None:
     return url
 
 
+def _validate_model_create(
+    index: int,
+    record: dict[str, Any],
+    model_names: set[str],
+) -> Answer:
+    """A model somebody adds deliberately, rather than one the queue offered.
+
+    model-add is the queue's answer and stays gated on the question: check_new
+    found the slug on Artificial Analysis, and add.py fills the entry in from
+    what AA knows. This is the other direction -- a model no source has offered,
+    typed in by hand -- so there is no question to check it against, and the
+    guard is the name having to be a slug, the entry having to be new, and every
+    metadata value being one its field accepts.
+    """
+    name = _model_slug(record)
+    if name in model_names:
+        raise AnswerError(f"{name!r} is already a model in llm.json; edit it instead")
+    return Answer(
+        index=index,
+        kind=MODEL_CREATE,
+        subject=name,
+        fields=_metadata_fields(record),
+    )
+
+
+def _validate_model_rename(
+    index: int,
+    record: dict[str, Any],
+    model_names: set[str],
+) -> Answer:
+    """Give an entry a different slug -- usually the one AA ended up using.
+
+    update.py reads Artificial Analysis directly for a model whose name is an AA
+    slug, so this is how a hand-added entry starts collecting AA scores without
+    a mapping to maintain. _rename.py is what makes it safe: the name is written
+    down in every source's mapping file too, and one left behind does not fail,
+    it silently stops matching.
+    """
+    old = _subject_of(record, "name")
+    if old not in model_names:
+        raise AnswerError(f"{old!r} is not a model in llm.json")
+    new = _model_slug({"name": record.get("new_name")})
+    if new == old:
+        raise AnswerError(f"{old!r} is already its name")
+    if new in model_names:
+        raise AnswerError(f"{new!r} is already a model in llm.json; merge them by hand")
+    return Answer(index=index, kind=MODEL_RENAME, subject=old, value=new)
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -603,20 +742,13 @@ def _validate_model_edit(
     if subject not in model_names:
         raise AnswerError(f"{subject!r} is not a model in llm.json")
 
-    fields = record.get("fields") or {}
+    fields = _metadata_fields(record)
     scores = record.get("scores") or {}
-    if not isinstance(fields, dict) or not isinstance(scores, dict):
-        raise AnswerError("'fields' and 'scores' must be objects")
+    if not isinstance(scores, dict):
+        raise AnswerError("'scores' must be an object")
     if not fields and not scores:
         raise AnswerError("nothing to change: send at least one field or score")
 
-    for key, value in fields.items():
-        if key not in METADATA_FIELDS:
-            raise AnswerError(
-                f"{key!r} is not editable; expected one of: {', '.join(METADATA_FIELDS)}"
-            )
-        if value is not None and not isinstance(value, str):
-            raise AnswerError(f"{key!r} must be a string or null")
     for key, value in scores.items():
         if key not in benchmarks:
             # editable_benchmarks drops the derived index columns: a score
@@ -658,6 +790,11 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
             paths.add(mapping_path(resolve_route(answer.route, answer.route_kind)))
         elif answer.kind == AA_IGNORE:
             paths.add(aa_module.AA_MODEL_IGNORES)
+        elif answer.kind == MODEL_RENAME:
+            # A rename walks every mapping file, so the snapshot has to as well:
+            # a failure part way through is precisely the half-renamed model
+            # nothing else in the repository can detect.
+            paths.update(_rename.touched_paths(llm_path))
     return sorted(paths)
 
 
@@ -717,16 +854,44 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         return [f"{_new_models.DECISIONS_FILE.name}: {answer.subject!r} -> {answer.value}"]
 
     if answer.kind == MODEL_ADD:
-        _run(
-            [sys.executable, str(ADD_SCRIPT), "--name", answer.subject, str(llm_path)],
-            f"add.py failed for {answer.subject!r}",
-        )
+        _add_model(answer, llm_path)
         # The half that stops check_new.py offering the slug again: without it
         # the model is in llm.json but nothing says the question was answered.
         _new_models.record_proposed(answer.subject)
         return [f"{llm_path.name}: added {answer.subject!r} (scores land on the next refresh)"]
 
+    if answer.kind == MODEL_CREATE:
+        _add_model(answer, llm_path)
+        # No record_proposed here, unlike model-add: that line answers a
+        # question check_new.py asked about an AA slug, and nobody asked this
+        # one. If AA does turn out to publish the same slug, the entry is
+        # already in llm.json, which is what check_new.py filters on.
+        named = ", ".join(sorted(answer.fields)) or "name only"
+        return [f"{llm_path.name}: created {answer.subject!r} ({named})"]
+
+    if answer.kind == MODEL_RENAME:
+        return _rename.rename(answer.subject, answer.value, llm_path)
+
     return _apply_edit(answer, llm_path)
+
+
+def _add_model(answer: Answer, llm_path: Path) -> None:
+    """Run add.py for one model, with whatever metadata the record carried.
+
+    add.py fills anything left out from Artificial Analysis, and leaves it null
+    when AA has never heard of the model -- which is the usual case for one
+    added by hand. A null field is therefore left off the command line rather
+    than sent as an empty value: an empty one is add.py's way of saying "no,
+    really, nothing here", which would suppress that prefill. Same argv rules as
+    the edit below: --flag=VALUE, and the path after a bare --.
+    """
+    argv = [sys.executable, str(ADD_SCRIPT), f"--name={answer.subject}"]
+    for key, value in sorted(answer.fields.items()):
+        if value is None:
+            continue
+        argv.append(f"--{key.replace('_', '-')}={value}")
+    argv += ["--", str(llm_path)]
+    _run(argv, f"add.py failed for {answer.subject!r}")
 
 
 def _apply_edit(answer: Answer, llm_path: Path) -> list[str]:
@@ -736,7 +901,9 @@ def _apply_edit(answer: Answer, llm_path: Path) -> list[str]:
     # silently redirect the write.
     argv = [sys.executable, str(EDIT_SCRIPT), f"--model={answer.subject}"]
     for key, value in sorted(answer.fields.items()):
-        argv.append(f"--{key}={'null' if value is None else value}")
+        # creator_url is --creator-url; the record keeps the underscore because
+        # that is the key on the model and argparse's own dest.
+        argv.append(f"--{key.replace('_', '-')}={'null' if value is None else value}")
     for key, value in sorted(answer.scores.items()):
         flag = key.replace("_", "-")
         argv.append(f"--{flag}={'null' if value is None else value}")
