@@ -1,3 +1,86 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ApexBench (Pass@1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ApexBench (Pass@1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AutomationBench (Public)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AutomationBench (Public)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Chartography' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Chartography",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ZeroBench (Pass@5)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ZeroBench (Pass@5)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'joelniklaus/LEXam-hard' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "joelniklaus/LEXam-hard",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to DeepSeek-V4-Flash-Vision-Exp, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "deepseek-v4-flash-vision",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'deepseek-ai/DeepSeek-V4-Flash-Vision-Exp' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+      "universe": "models"
+    }
+  ]
 }
