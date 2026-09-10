@@ -1,3 +1,167 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to deepseek-v4-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-0420",
+          "reason": "exact to deepseek-v4-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek-v4-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-0420-high",
+          "reason": "exact to deepseek-v4-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-non-reasoning",
+          "reason": "exact to deepseek-v4-1-flash, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'deepseek-v4-1-flash'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "deepseek-v4-1-flash",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label '# Backbone Params' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "# Backbone Params",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BBEH (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "BBEH (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CVBench (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "CVBench (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DocVQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "DocVQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "exact to MMMU-Pro (EM), most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMU-Pro (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MMMU-Pro (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MultiLoKo (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MultiLoKo (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RefCOCO-avg (Acc@0.5)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "RefCOCO-avg (Acc@0.5)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SimpleQA-Verified (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "SimpleQA-Verified (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to DeepSeek-V4.1-Flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to DeepSeek-V4.1-Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to DeepSeek-V4.1-Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "deepseek-v4-1-flash",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'deepseek-ai/DeepSeek-V4.1-Flash' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "universe": "models"
+    }
+  ]
 }
