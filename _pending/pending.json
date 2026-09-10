@@ -68,6 +68,1306 @@
       "route_kind": "mapping",
       "subject": "DeepSeek V4 Flash Vision Exp",
       "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-large",
+          "reason": "exact to jamba-large-1.6, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-mini",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'ai21labs/jamba-large-1.6' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ai21labs/jamba-large-1.6",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-mini",
+          "reason": "exact to jamba-mini-1.6, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-large",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'ai21labs/jamba-mini-1.6' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ai21labs/jamba-mini-1.6",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3-max' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3-max-2026-01-23' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3-max-2026-01-23",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3-max-preview' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3-max-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "exact to qwen3.5-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "exact to qwen3.5-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "exact to qwen3.5-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "exact to qwen3.5-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-0-8b",
+          "reason": "exact to qwen3.5-flash, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3.5-flash' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3.5-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-0-8b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3.5-plus-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3.5-plus-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-6-27b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-6-35b-a3b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3.6-max-preview' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3.6-max-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-27b",
+          "reason": "exact to qwen3.8-max, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-flash-next",
+          "reason": "exact to qwen3.8-max, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-2-4t-a95b",
+          "reason": "exact to qwen3.8-max, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8b-instruct",
+          "reason": "drop suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen3.8-max' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "alibaba/qwen3.8-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "exact to ling-3.0-flash-2607, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-flash-2-0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-mini-2-0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'ant/ling-3.0-flash-2607' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ant/ling-3.0-flash-2607",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-opus-4-8-claude-code' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-opus-4-8-claude-code",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "command-a-plus",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'cohere/command-a-03-2025' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "cohere/command-a-03-2025",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "command-a-plus",
+          "reason": "exact to command-r-plus, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'cohere/command-r-plus' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "cohere/command-r-plus",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to deepseek-v4-flash-0731, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-v4-flash-0731, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek-v4-flash-0731, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'deepseek/deepseek-v4-flash-0731' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek/deepseek-v4-flash-0731",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "exact to deepseek-v4-pro-0813, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'deepseek/deepseek-v4-pro-0813' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek/deepseek-v4-pro-0813",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v3-2-0925",
+          "reason": "exact to deepseek-v3, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-r1",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "drop short code to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/deepseek-v3' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/deepseek-v3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v3-2-0925",
+          "reason": "exact to deepseek-v3-0324, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/deepseek-v3-0324' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/deepseek-v3-0324",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/deepseek-v3p1' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/deepseek-v3p1",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/deepseek-v3p2' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/deepseek-v3p2",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/deepseek-v3p2-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/deepseek-v3p2-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/llama4-maverick-instruct-basic' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/llama4-maverick-instruct-basic",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/nemotron-lightning-3p5-30b-a3b' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/nemotron-lightning-3p5-30b-a3b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-235b-a22b-instruct-2507",
+          "reason": "exact to qwen3-235b-a22b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-235b-a22b-instruct-2507-reasoning",
+          "reason": "exact to qwen3-235b-a22b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "drop size to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'fireworks/qwen3-235b-a22b' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fireworks/qwen3-235b-a22b",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-1.5-flash-002' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-1.5-flash-002",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-1.5-pro-002' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-1.5-pro-002",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.0-flash-001' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.0-flash-001",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-lite-preview-09-2025' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-lite-preview-09-2025",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-lite-preview-09-2025-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-lite-preview-09-2025-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-preview-04-17' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-preview-04-17",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-preview-04-17-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-preview-04-17-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-preview-09-2025' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-preview-09-2025",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-flash-preview-09-2025-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-flash-preview-09-2025-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-pro-exp-03-25' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-pro-exp-03-25",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-2.5-pro-preview-03-25' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-2.5-pro-preview-03-25",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemma-4-31b",
+          "reason": "exact to gemma-4-31b-it, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-4-12b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-4-e2b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-4-e4b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-4-26b-a4b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemma-4-31b-it' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemma-4-31b-it",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "grok-2-1212",
+          "reason": "exact to grok-2-vision-1212, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-2-vision-1212' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-2-vision-1212",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-3-mini-fast-high-reasoning' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-3-mini-fast-high-reasoning",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-3-mini-fast-low-reasoning' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-3-mini-fast-low-reasoning",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-4-0709' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-4-0709",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-4-1-fast-non-reasoning' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-4-1-fast-non-reasoning",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-4-fast-non-reasoning' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-4-fast-non-reasoning",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-4.20-0309-reasoning' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-4.20-0309-reasoning",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "exact to kimi-k2.5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-thinking",
+          "reason": "exact to kimi-k2.5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-6",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-7-code",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'kimi/kimi-k2.5-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "kimi/kimi-k2.5-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "exact to MiniMax-M2.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "exact to MiniMax-M2.1, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'minimax/MiniMax-M2.1' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "minimax/MiniMax-M2.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/devstral-2512' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/devstral-2512",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/labs-devstral-small-2512' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/labs-devstral-small-2512",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/magistral-medium-2509' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/magistral-medium-2509",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/magistral-small-2509' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/magistral-small-2509",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "exact to mistral-large-2411, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-large-2411' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-large-2411",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "exact to mistral-large-2512, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-large-2512' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-large-2512",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-medium-3-5",
+          "reason": "exact to mistral-medium-2505, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-medium-2505' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-medium-2505",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to mistral-small-2402, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-small-2402' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-small-2402",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to mistral-small-2503, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-small-2503' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-small-2503",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to mistral-small-2603, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-small-2603' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-small-2603",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
+          "reason": "exact to nemotron-3-ultra-550b-a55b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-nano-omni-30b-a3b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'nvidia/nemotron-3-ultra-550b-a55b' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nvidia/nemotron-3-ultra-550b-a55b",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-5.5-codex' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "openai/gpt-5.5-codex",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-5.5-factory' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "openai/gpt-5.5-factory",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'poolside/laguna-m.1' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "poolside/laguna-m.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'poolside/laguna-xs.2' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "poolside/laguna-xs.2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/langston/nim/nvidia/llama-3.3-nemotron-super-49b-v1-42e84561' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/langston/nim/nvidia/llama-3.3-nemotron-super-49b-v1-42e84561",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/langston/nim/nvidia/llama-3.3-nemotron-super-49b-v1-42e84561-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/langston/nim/nvidia/llama-3.3-nemotron-super-49b-v1-42e84561-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/meta-llama/Llama-3.3-70B-Instruct-Turbo' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "llama-4-scout",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "llama-4-maverick",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/meta-llama/Llama-4-Scout-17B-16E-Instruct' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "exact to Kimi-K2-Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-6",
+          "reason": "exact to Kimi-K2-Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-thinking",
+          "reason": "exact to Kimi-K2-Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-7-code",
+          "reason": "exact to Kimi-K2-Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-linear-48b-a3b-instruct",
+          "reason": "exact to Kimi-K2-Instruct, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'together/moonshotai/Kimi-K2-Instruct' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "together/moonshotai/Kimi-K2-Instruct",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "exact to mimo-v2.5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "exact to mimo-v2.5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "exact to mimo-v2.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'xiaomi/mimo-v2.5' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "xiaomi/mimo-v2.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "exact to glm-5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "exact to glm-5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "exact to glm-5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "exact to glm-5-thinking, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "exact to glm-5-thinking, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'zai/glm-5-thinking' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "zai/glm-5-thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "exact to glm-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "exact to glm-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "exact to glm-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "exact to glm-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "exact to glm-5.1, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'zai/glm-5.1' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "zai/glm-5.1",
+      "universe": "models"
     }
   ]
 }
