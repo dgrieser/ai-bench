@@ -332,7 +332,10 @@ the same job from a terminal.
 
 **The slug list needs a key.** The suggestions come from AA's own model list,
 which `api.php` fetches with the `aa_api_key` in its config — the same key
-`artificialanalysis.py` reads from `ARTIFICIAL_ANALYSIS_API_KEY`. It is proxied
+`artificialanalysis.py` reads from `ARTIFICIAL_ANALYSIS_API_KEY`, against the
+documented V2 endpoint (`/api/v2/language/models`, paged, falling back to
+`/models/free` for a key without a Pro subscription) now that the legacy
+`/api/v2/data/*` route it used to call has retired. It is proxied
 rather than fetched by the page because the AA API authenticates with a header,
 so a browser request preflights and AA answers no CORS headers; keeping it
 server-side also keeps the key out of every browser that opens the page. Without

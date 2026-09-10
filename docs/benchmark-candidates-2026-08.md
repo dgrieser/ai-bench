@@ -630,7 +630,9 @@ correlated across this whole table.*
 **2. Artificial Analysis — exact, via the v2 API and a full page run.** Two paths:
 
 - `GET /api/v2/data/llms/models` with a key → 590 records, 115 of our 122 slugs matched
-  exactly. Serves 17 evaluation fields including `tau_banking`, `lcr`, `ifbench`, `mmlu_pro`,
+  exactly. *(That route was retired on 2026-11-04. The audit stands as run; the
+  replacement is `GET /api/v2/language/models`, paged — see
+  [Artificial Analysis API](../README.md#artificial-analysis-api).)* Serves 17 evaluation fields including `tau_banking`, `lcr`, `ifbench`, `mmlu_pro`,
   `artificial_analysis_math_index`, `math_500`, `aime`.
 - A full `./artificialanalysis.py --open --output json` run → 332 open-weight models, 111 of
   ours (the `--open` filter drops `step-3-5-flash`, `north-mini-code`, `glm-4-6`,

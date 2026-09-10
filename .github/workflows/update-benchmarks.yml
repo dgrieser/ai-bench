@@ -142,6 +142,10 @@ jobs:
       # pushed, not after. test_model_admin.py covers what that input then runs:
       # add.py, edit.py and the rename, which between them can move a model's
       # name out from under every mapping file that points at it.
+      #
+      # test_artificialanalysis_api.py is here on the same grounds: AA is a
+      # locked rank-1 source, so a field this run reads under the wrong name
+      # writes a wrong number that only a later AA number can replace.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -150,6 +154,7 @@ jobs:
           ./test_answers.py
           ./test_model_admin.py
           ./test_pending_json.py
+          ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,
       # so they are refused rather than interpreted.

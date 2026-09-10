@@ -33,7 +33,15 @@ const WORKFLOW = 'update-benchmarks.yml';
 // The workflow step that applies a dispatched batch, by name. The run's own
 // conclusion cannot stand in for it: see answer_step() below.
 const ANSWER_STEP = 'Apply the answers';
-const AA_MODELS_URL = 'https://artificialanalysis.ai/api/v2/data/llms/models';
+// The legacy /api/v2/data/llms/models route answers 410 Gone from 2026-11-04
+// (https://artificialanalysis.ai/data-api/migrate-v2-data). Only the slugs are
+// read here and both tiers carry those, so a key without a Pro subscription
+// falls back to the free route rather than costing the page its suggestions.
+const AA_MODELS_URL      = 'https://artificialanalysis.ai/api/v2/language/models';
+const AA_MODELS_FREE_URL = 'https://artificialanalysis.ai/api/v2/language/models/free';
+// The list endpoint pages at 200 records; the cap guards against a response
+// that keeps claiming another page, not against AA's ~600 models.
+const AA_MAX_PAGES = 25;
 const REF      = 'main';           // never taken from the client: see the workflow
 const MAX_RECORDS = 25;
 const MAX_BYTES   = 60000;         // workflow_dispatch caps an input near 64 KB
@@ -175,36 +183,64 @@ function aa_slugs(array $config): array
         fail(501, 'No Artificial Analysis API key in the config; see _admin/README.md.');
     }
 
-    $handle = curl_init(AA_MODELS_URL);
-    curl_setopt_array($handle, [
-        CURLOPT_HTTPHEADER     => ['x-api-key: ' . $key, 'User-Agent: ai-bench-admin'],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 20,
-    ]);
-    $raw = curl_exec($handle);
-    if ($raw === false) {
-        $error = curl_error($handle);
-        curl_close($handle);
-        fail(502, 'Could not reach Artificial Analysis: ' . $error);
+    [$slugs, $status] = aa_slug_pages(AA_MODELS_URL, $key);
+    if ($status === 403) {
+        // A key without a Pro subscription. The free route lists the same
+        // models with fewer fields on each, and fields are not what this reads.
+        [$slugs, $status] = aa_slug_pages(AA_MODELS_FREE_URL, $key);
     }
-    $status = (int) curl_getinfo($handle, CURLINFO_HTTP_CODE);
-    curl_close($handle);
     if ($status >= 400) {
         // An expired or wrong key is the usual reason, and it fails opaquely
         // otherwise -- the same trap the GitHub token has.
         fail($status, 'Artificial Analysis rejected the request (status ' . $status . ').');
     }
 
-    $body = json_decode((string) $raw, true);
-    $slugs = [];
-    foreach ($body['data'] ?? [] as $model) {
-        if (is_array($model) && !empty($model['slug']) && is_string($model['slug'])) {
-            $slugs[] = $model['slug'];
-        }
-    }
     $slugs = array_values(array_unique($slugs));
     sort($slugs);
     return $slugs;
+}
+
+/**
+ * The slugs on one endpoint, as [slugs, status]. The V2 list endpoints page
+ * their answers, so this walks them until one says there is no more.
+ */
+function aa_slug_pages(string $url, string $key): array
+{
+    $slugs = [];
+    for ($page = 1; $page <= AA_MAX_PAGES; $page++) {
+        $handle = curl_init($url . '?page=' . $page);
+        curl_setopt_array($handle, [
+            CURLOPT_HTTPHEADER     => ['x-api-key: ' . $key, 'User-Agent: ai-bench-admin'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 20,
+        ]);
+        $raw = curl_exec($handle);
+        if ($raw === false) {
+            $error = curl_error($handle);
+            curl_close($handle);
+            fail(502, 'Could not reach Artificial Analysis: ' . $error);
+        }
+        $status = (int) curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
+        if ($status >= 400) {
+            return [[], $status];
+        }
+
+        $body = json_decode((string) $raw, true);
+        if (!is_array($body)) {
+            return [[], 502];
+        }
+        foreach ($body['data'] ?? [] as $model) {
+            if (is_array($model) && !empty($model['slug']) && is_string($model['slug'])) {
+                $slugs[] = $model['slug'];
+            }
+        }
+        if (empty($body['pagination']['has_more'])) {
+            break;
+        }
+    }
+
+    return [$slugs, 200];
 }
 
 /**

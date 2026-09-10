@@ -15,7 +15,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 
 | Source | Type | Data Format |
 |--------|------|-------------|
-| **Artificial Analysis** | Commercial API | HTTP endpoint |
+| **Artificial Analysis** | Commercial API | HTTP endpoint (V2, paged; see [Artificial Analysis API](#artificial-analysis-api)) |
 | **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research (benchlm.ai mirror) | JSON API |
@@ -215,6 +215,10 @@ Output: llm.json (unified dataset)
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_vals.py --benchmark swebench    # or pin one board
+
+# Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
+./artificialanalysis.py --open          # every open-weights model AA lists
+./artificialanalysis.py --tier free -m gpt-oss-20b   # pin the free endpoint
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -1541,12 +1545,78 @@ The `_openness.py` module classifies models as:
 
 This information is stored in each model's `weights` metadata and affects aggregation logic (some analyses exclude closed models).
 
+`artificialanalysis.py --open` / `--closed` reads the same distinction off AA's
+`licensing.is_open_weights`, falling back to whether the model page links a
+weights repo for the free-tier records that carry no licensing block.
+
+## Artificial Analysis API
+
+`artificialanalysis.py` reads AA's documented V2 endpoints. The legacy
+`/api/v2/data/llms/models` route it used to call answers `410 Gone` from
+**2026-11-04** ([migration guide](https://artificialanalysis.ai/data-api/migrate-v2-data)),
+and nothing in the tree points at `/api/v2/data/` any more.
+
+| | Endpoint |
+| --- | --- |
+| Pro | `GET /api/v2/language/models` |
+| Free | `GET /api/v2/language/models/free` |
+
+Both authenticate with the same `x-api-key` header and the same
+`ARTIFICIAL_ANALYSIS_API_KEY`; the free route answers the same shape with fewer
+fields on each record. **Pro is read first and a `403` falls back to free**, so
+a key without a subscription still fills the columns both tiers carry. Pin one
+with `--tier free` / `--tier pro` (or `ARTIFICIAL_ANALYSIS_API_TIER`) — a pinned
+tier is never second-guessed, and a failure that is not a `403` is reported
+rather than quietly downgraded. Nothing else retries: a rate-limited key
+(100 requests/24h free, 500 Pro) would spend its next request for a worse
+answer.
+
+The list endpoints **page** at 200 records, so a fetch walks
+`?page=1,2,…` until one says `"has_more": false` and hands back a single
+payload whose `data` holds the lot. `_admin/api.php` does the same for its slug
+suggestions.
+
+Paging is what makes the request budget worth stating. AA lists ~600 models, so
+one fetch is three requests, and a `update-all` run makes three fetches —
+`update_artificialanalysis_mapping.py` and `update.py` each read the slug list,
+`update.py` then reads the records — for **~9 requests, ~72 a day** against the
+three-hourly cron, plus three more on a run that proposes mappings. Comfortable
+against Pro's 500/24h; a free-tier key would sit against its 100 ceiling.
+
+The V2 contract also renamed a number of fields. Everything downstream — the
+table, `update.py`'s `SCORE_MAPPINGS`, and the model pages this script still
+scrapes — is keyed on the old names, so the response is translated once on the
+way in:
+
+| V2 field | Read as |
+| --- | --- |
+| `aa_lcr` | `lcr` |
+| `tau2_telecom` | `tau2` |
+| `gpqa_diamond` | `gpqa` |
+| `aa_omniscience_index` | `omniscience` |
+| `aa_omniscience_accuracy` | `omniscience_accuracy` |
+| `aa_omniscience_non_hallucination_rate` | `omniscience_hallucination_rate`, as the complement — and only where the model page states no rate of its own, so an inferred figure never displaces a reported one |
+| `gdpval_aa_elo` / `gdpval_aa_normalized` | `gdpval` / `gdpval_normalized` |
+| `artificial_analysis_agentic_index` | `agentic_index` |
+| `artificial_analysis_openness_index` | `openness_index` |
+| `performance.percentile_05_output_tokens_per_second` (and the rest of the spread) | `output_speed_p05`, `…_q25`, `…_median`, `…_q75`, `…_p95`, `ttft_*` |
+
+**The model pages are still read, and still fill the gaps.** Pro carries the
+open-weights flag, the context window, the parameter counts, the Hugging Face
+url and most of the benchmarks natively — those no longer cost a page fetch —
+but AA-Briefcase, IT-Bench SRE, Apex Agents, the Harvey and AutomationBench
+rows, the openness breakdown and the creator's own url appear on the pages
+only, as does everything at all on the free tier. A page value is used where
+the API sent none; it never overrides one that arrived.
+
 ## Model Size and Context Fields
 
-`params` and `context` come from Artificial Analysis' model pages, parsed out of the
-`currentModel` payload (`parameters`, `inferenceParametersActiveBillions`,
-`contextWindowTokens`) by `artificialanalysis.py`. They are handled differently on
-purpose:
+`params` and `context` come from Artificial Analysis, read by
+`artificialanalysis.py` off the Pro API record (`parameters.total`,
+`parameters.active`, `context_window_tokens`) and, where that carries neither —
+every model on the free tier — off the model page's `currentModel` payload
+(`parameters`, `inferenceParametersActiveBillions`, `contextWindowTokens`),
+which reports the same counts. They are handled differently on purpose:
 
 - **`context` is refreshed** on every `update.py` run. Sources report raw token counts,
   so `_context.py` snaps them to the advertised size (`262144` → `256k`, `131072` →

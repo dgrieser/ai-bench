@@ -15,9 +15,25 @@ from tabulate import tabulate
 import yaml
 
 from _context import format_context_tokens, snap_context_tokens
+from _matching import normalize_slug
 from _params import format_params
 
-API_URL = "https://artificialanalysis.ai/api/v2/data/llms/models"
+API_BASE_URL = "https://artificialanalysis.ai/api/v2"
+# The legacy /api/v2/data/llms/models route answers 410 Gone from 2026-11-04
+# (https://artificialanalysis.ai/data-api/migrate-v2-data). These are its
+# documented replacements. Pro carries the licensing, parameter, context-window
+# and Hugging Face fields the table would otherwise scrape off the model pages,
+# so it is tried first and the free route is the fallback for a key without a
+# subscription -- same shape, fewer fields.
+MODELS_URL = f"{API_BASE_URL}/language/models"
+MODELS_FREE_URL = f"{API_BASE_URL}/language/models/free"
+TIERS = ("auto", "pro", "free")
+_ENV_TIER = os.getenv("ARTIFICIAL_ANALYSIS_API_TIER", "").strip().lower()
+DEFAULT_TIER = _ENV_TIER if _ENV_TIER in TIERS else "auto"
+# The list endpoints page at 200 records. The cap is a runaway guard against a
+# response that keeps claiming another page, not a limit we expect to reach:
+# AA lists ~600 models.
+MAX_PAGES = 25
 FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
 _PAGE_METRICS_CACHE = {}
@@ -30,12 +46,15 @@ _CACHE_WARMED = False
 
 
 def _is_open_source(model: dict):
+    licensing = model.get("licensing")
+    if isinstance(licensing, dict) and licensing.get("is_open_weights") is not None:
+        return bool(licensing["is_open_weights"])
     for key in ("open_source", "is_open_source", "open"):
         if key in model:
             return bool(model.get(key))
-    # AA's v2 API no longer carries an open-source flag; fall back to the model
-    # page, which links a weights repo ("Model weights" row) only for open
-    # models. Page metrics are cached, so enrichment reuses this fetch.
+    # The free tier drops the licensing block; fall back to the model page,
+    # which links a weights repo ("Model weights" row) only for open models.
+    # Page metrics are cached, so enrichment reuses this fetch.
     slug = model.get("slug", "")
     if not slug:
         return None
@@ -44,6 +63,174 @@ def _is_open_source(model: dict):
 
 def _parse_release_date(raw: str) -> date:
     return datetime.strptime(raw, "%Y-%m-%d").date()
+
+
+# The documented V2 contract spells a number of fields differently from the
+# legacy /api/v2/data route. Everything downstream is keyed on the old names --
+# the table below, update.py's SCORE_MAPPINGS, and the model pages this script
+# still scrapes for the benchmarks no endpoint carries -- so the response is
+# translated once on the way in rather than every reader learning both
+# spellings.
+_API_EVAL_ALIASES = {
+    "artificial_analysis_agentic_index": "agentic_index",
+    "artificial_analysis_openness_index": "openness_index",
+    "aa_lcr": "lcr",
+    "tau2_telecom": "tau2",
+    "gpqa_diamond": "gpqa",
+    "aa_omniscience_index": "omniscience",
+    "aa_omniscience_accuracy": "omniscience_accuracy",
+    "gdpval_aa_elo": "gdpval",
+    "gdpval_aa_normalized": "gdpval_normalized",
+}
+
+# Pro's performance block carries the speed spread the model pages report as
+# "outputSpeedVariance" / "timeToFirstChunkVariance". Same numbers, so they land
+# under the same keys and the page fetch is left to fill the gaps.
+_API_PERFORMANCE_ALIASES = {
+    "percentile_05_output_tokens_per_second": "output_speed_p05",
+    "quartile_25_output_tokens_per_second": "output_speed_q25",
+    "median_output_tokens_per_second": "output_speed_median",
+    "quartile_75_output_tokens_per_second": "output_speed_q75",
+    "percentile_95_output_tokens_per_second": "output_speed_p95",
+    "percentile_05_time_to_first_token_seconds": "ttft_p05",
+    "quartile_25_time_to_first_token_seconds": "ttft_q25",
+    "median_time_to_first_token_seconds": "ttft_median",
+    "quartile_75_time_to_first_token_seconds": "ttft_q75",
+    "percentile_95_time_to_first_token_seconds": "ttft_p95",
+}
+
+
+def _normalize_model(m: dict) -> dict:
+    """Rewrite a V2 record into the field names the rest of this script uses."""
+    evals = m.get("evaluations")
+    if isinstance(evals, dict):
+        for api_name, internal in _API_EVAL_ALIASES.items():
+            if api_name not in evals:
+                continue
+            value = evals.pop(api_name)
+            if evals.get(internal) is None:
+                evals[internal] = value
+
+    performance = m.get("performance")
+    if isinstance(performance, dict):
+        for api_name, internal in _API_PERFORMANCE_ALIASES.items():
+            value = performance.get(api_name)
+            if value is not None and m.get(internal) is None:
+                m[internal] = value
+
+    return m
+
+
+def _normalize_models(models):
+    for m in models:
+        if isinstance(m, dict):
+            _normalize_model(m)
+    return models
+
+
+def _tier_url(tier: str) -> str:
+    return MODELS_FREE_URL if tier == "free" else MODELS_URL
+
+
+def _log_rate_limit(resp) -> None:
+    if not _VERBOSE:
+        return
+    limit = resp.headers.get("X-RateLimit-Limit")
+    remaining = resp.headers.get("X-RateLimit-Remaining")
+    if limit or remaining:
+        print(
+            f"< rate limit {remaining or '?'}/{limit or '?'} left this window",
+            file=sys.stderr,
+        )
+
+
+def _error_message(resp) -> str:
+    """The API's own error text where it sent one, else the bare status."""
+    message = f"status {resp.status_code}"
+    try:
+        payload = resp.json()
+    except ValueError:
+        payload = None
+    if isinstance(payload, dict) and isinstance(payload.get("error"), str) and payload["error"]:
+        message = f"{message}: {payload['error']}"
+    retry_after = resp.headers.get("Retry-After")
+    if resp.status_code == 429 and retry_after:
+        message = f"{message} (retry after {retry_after}s)"
+    return message
+
+
+def _fetch_all_pages(url: str, api_key: str, timeout: int):
+    """Walk one endpoint's pages. Returns (payload, error, status)."""
+    merged = None
+    models = []
+    page = 1
+    while page <= MAX_PAGES:
+        try:
+            if _VERBOSE:
+                print(f"> GET {url}?page={page}", file=sys.stderr)
+            resp = requests.get(
+                url,
+                headers={"x-api-key": api_key},
+                params={"page": page},
+                timeout=timeout,
+            )
+        except requests.RequestException as exc:
+            return None, f"request failed: {exc}", None
+        if _VERBOSE:
+            print(f"< {resp.status_code} {url}?page={page}", file=sys.stderr)
+        _log_rate_limit(resp)
+        if resp.status_code != 200:
+            return None, _error_message(resp), resp.status_code
+        try:
+            payload = resp.json()
+        except ValueError:
+            return None, "response was not JSON", resp.status_code
+        if not isinstance(payload, dict):
+            return None, "response was not an object", resp.status_code
+
+        data = payload.get("data")
+        if isinstance(data, dict):
+            data = [data]
+        if isinstance(data, list):
+            models.extend(item for item in data if isinstance(item, dict))
+        if merged is None:
+            # The envelope (tier, intelligence_index_version) is the same on
+            # every page; the pagination block describes one page and would
+            # only mislead about the merged list, so it is dropped.
+            merged = {k: v for k, v in payload.items() if k not in {"data", "pagination"}}
+
+        pagination = payload.get("pagination")
+        if not isinstance(pagination, dict) or not pagination.get("has_more"):
+            break
+        page += 1
+
+    merged = merged if merged is not None else {}
+    merged["data"] = _normalize_models(models)
+    return merged, "", 200
+
+
+def _fetch_models(api_key: str, tier: str = "auto", timeout: int = 30):
+    """Every model AA lists, as (payload, error).
+
+    The V2 list endpoints paginate, so this walks them and hands back one
+    payload whose "data" holds the lot, normalized. On "auto" a 403 from the
+    Pro route -- a key without a Pro subscription -- falls back to the free
+    route; any other failure is reported as it stands rather than silently
+    downgrading the fields the caller gets.
+    """
+    order = ["pro", "free"] if tier == "auto" else [tier]
+    error = ""
+    for index, attempt in enumerate(order):
+        url = _tier_url(attempt)
+        payload, failure, status = _fetch_all_pages(url, api_key, timeout)
+        if payload is not None:
+            return payload, ""
+        error = f"{url}: {failure}"
+        if status != 403 or index == len(order) - 1:
+            break
+        if _VERBOSE:
+            print(f"< no Pro access; retrying on {MODELS_FREE_URL}", file=sys.stderr)
+    return None, error
 
 
 def _format_headers(labels, style):
@@ -59,6 +246,26 @@ def _format_headers(labels, style):
 def _extract_creator(m: dict) -> str:
     if isinstance(m.get("model_creator"), dict):
         return m["model_creator"].get("slug") or m["model_creator"].get("name", "")
+    return ""
+
+
+def _creator_slug(m: dict) -> str:
+    """The creator's slug, derived from its name where the API sends none.
+
+    The legacy route carried "model_creator.slug"; the V2 records carry an id,
+    a name and (on Pro) a country. The names slugify to what AA itself uses in
+    its urls ("OpenAI" -> "openai"), which is what --creator has always taken
+    and what the completion cache is filled with.
+    """
+    creator = m.get("model_creator")
+    if not isinstance(creator, dict):
+        return ""
+    slug = creator.get("slug")
+    if isinstance(slug, str) and slug:
+        return slug
+    name = creator.get("name")
+    if isinstance(name, str) and name:
+        return normalize_slug(name)
     return ""
 
 
@@ -318,13 +525,35 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
     return result
 
 
+def _api_context_window(m: dict):
+    tokens = m.get("context_window_tokens")
+    if not isinstance(tokens, (int, float)) or isinstance(tokens, bool) or tokens <= 0:
+        return ""
+    # The API reports the raw count, same as the pages do, so it goes through
+    # the same snap back to the advertised size (131072 -> 128k).
+    return format_context_tokens(snap_context_tokens(int(tokens)))
+
+
+def _api_params(m: dict):
+    parameters = m.get("parameters")
+    if not isinstance(parameters, dict):
+        return ""
+    return format_params(parameters.get("total"), parameters.get("active"))
+
+
 def _extract_context_window(m: dict):
+    value = _api_context_window(m)
+    if value:
+        return value
     if not _CONTEXT_ENABLED:
         return ""
     return _fetch_page_metrics(m.get("slug", "")).get("context_window", "")
 
 
 def _extract_params(m: dict):
+    value = _api_params(m)
+    if value:
+        return value
     if not _PARAMS_ENABLED:
         return ""
     return _fetch_page_metrics(m.get("slug", "")).get("params", "")
@@ -347,6 +576,9 @@ def _extract_page_creator(m: dict):
 
 
 def _extract_hugging_face_url(m: dict):
+    url = m.get("huggingface_url")
+    if isinstance(url, str) and url:
+        return _canonical_hf_url(url)
     return _fetch_page_metrics(m.get("slug", "")).get("hugging_face_url", "")
 
 
@@ -359,7 +591,11 @@ def _extract_mmmu_pro(m: dict):
     return _fetch_page_metrics(m.get("slug", "")).get("mmmu_pro")
 
 
-_PAGE_ONLY_EVALS = [
+# Benchmarks the model pages carry. Pro now answers most of them itself, so
+# these fill the gaps rather than override: a page value is used where the API
+# sent none, which is every one of them on the free tier and the handful below
+# that no endpoint carries at all.
+_PAGE_EVALS = [
     "agentic_index",
     "omniscience",
     "omniscience_accuracy",
@@ -373,9 +609,6 @@ _PAGE_ONLY_EVALS = [
     "harvey_lab_criteria_pass",
     "automation_bench_partial_score",
     "enterprise_ops_gym",
-]
-
-_PAGE_FALLBACK_EVALS = [
     "terminalbench_v2_1",
     "terminalbench_hard",
     "ifbench",
@@ -405,7 +638,19 @@ _PAGE_META_KEYS = [
 ]
 
 
-def _extract_page_eval(m: dict, key: str):
+def _extract_metric(m: dict, key: str):
+    """A metric off the API record where it carries one, else off the page.
+
+    Normalization lands the API's own values under these keys -- the speed
+    spread at the top level, the benchmarks under "evaluations" -- so both
+    shapes are checked before paying for a page fetch.
+    """
+    val = m.get(key)
+    if val is not None:
+        return val
+    val = _extract_eval_any(m, [key])
+    if val is not None:
+        return val
     return _fetch_page_metrics(m.get("slug", "")).get(key)
 
 
@@ -424,21 +669,29 @@ def _enrich_structured_metrics(models):
         evals["mmmu_pro"] = _extract_mmmu_pro(m)
 
         page_metrics = _fetch_page_metrics(m.get("slug", ""))
-        for key in _PAGE_ONLY_EVALS:
-            val = page_metrics.get(key)
-            if val is not None:
-                evals[key] = val
-        for key in _PAGE_FALLBACK_EVALS:
+        for key in _PAGE_EVALS:
             if evals.get(key) is None:
                 val = page_metrics.get(key)
                 if val is not None:
                     evals[key] = val
+
+        # The one field the API states the other way round: it reports the
+        # share of answers that are *not* hallucinated, while the pages, the
+        # column and update.py are keyed on the rate itself. Taken as the
+        # complement, and only after the page pass above, so a rate AA reported
+        # directly is never displaced by one inferred from its opposite.
+        if evals.get("omniscience_hallucination_rate") is None:
+            rate = evals.get("aa_omniscience_non_hallucination_rate")
+            if isinstance(rate, (int, float)) and not isinstance(rate, bool):
+                evals["omniscience_hallucination_rate"] = 1 - rate
+
         m["evaluations"] = evals
 
         for key in _PAGE_META_KEYS:
-            val = page_metrics.get(key)
-            if val is not None:
-                m[key] = val
+            if m.get(key) is None:
+                val = page_metrics.get(key)
+                if val is not None:
+                    m[key] = val
 
         context = _extract_context_window(m)
         params = _extract_params(m)
@@ -487,10 +740,9 @@ def _save_cache(models):
             slug = m.get("slug")
             if slug:
                 slugs.append(slug)
-            if isinstance(m.get("model_creator"), dict):
-                cslug = m["model_creator"].get("slug")
-                if cslug:
-                    creators.add(cslug)
+            cslug = _creator_slug(m)
+            if cslug:
+                creators.add(cslug)
         payload = {
             "slugs": sorted(set(slugs)),
             "creators": sorted(creators),
@@ -513,20 +765,9 @@ def _ensure_cache():
     if not api_key:
         _CACHE_WARMED = True
         return cache
-    try:
-        if _VERBOSE:
-            print(f"> GET {API_URL}", file=sys.stderr)
-        resp = requests.get(API_URL, headers={"x-api-key": api_key}, timeout=15)
-        if _VERBOSE:
-            print(f"< {resp.status_code} {API_URL}", file=sys.stderr)
-        if resp.status_code != 200:
-            _CACHE_WARMED = True
-            return cache
-        data = resp.json()
-        models = data.get("data", [])
-        _save_cache(models)
-    except requests.RequestException:
-        pass
+    payload, _error = _fetch_models(api_key, tier=DEFAULT_TIER, timeout=15)
+    if payload is not None:
+        _save_cache(payload.get("data", []))
     _CACHE_WARMED = True
     return _load_cache()
 
@@ -564,8 +805,8 @@ def _print_table(models, output):
         ("Intelligence Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
         ("Coding Index", lambda m: _extract_eval_any(m, ["artificial_analysis_coding_index"])),
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
-        ("Agentic Index", lambda m: _extract_page_eval(m, "agentic_index")),
-        ("AA-Omniscience", lambda m: _extract_page_eval(m, "omniscience")),
+        ("Agentic Index", lambda m: _extract_metric(m, "agentic_index")),
+        ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
         ("tau^2 Bench Telecom", lambda m: _extract_eval_any(m, ["tau2"])),
         ("AA-LCR", lambda m: _extract_eval_any(m, ["lcr"])),
@@ -576,16 +817,16 @@ def _print_table(models, output):
         ("IFBench", lambda m: _extract_eval_or_page(m, ["ifbench"], "ifbench")),
         ("AIME 2025", lambda m: _extract_eval_or_page(m, ["aime_25"], "aime_25")),
         ("MMMU Pro", _extract_mmmu_pro),
-        ("GDPval", lambda m: _extract_page_eval(m, "gdpval_normalized")),
-        ("IT-Bench SRE", lambda m: _extract_page_eval(m, "it_bench_sre")),
-        ("Briefcase", lambda m: _extract_page_eval(m, "briefcase")),
-        ("Crit-Pt", lambda m: _extract_page_eval(m, "critpt")),
-        ("Apex Agents", lambda m: _extract_page_eval(m, "apex_agents")),
-        ("Openness", lambda m: _extract_page_eval(m, "openness_index")),
-        ("Out Speed p05", lambda m: _extract_page_eval(m, "output_speed_p05")),
-        ("Out Speed p95", lambda m: _extract_page_eval(m, "output_speed_p95")),
-        ("TTFT p05", lambda m: _extract_page_eval(m, "ttft_p05")),
-        ("TTFT p95", lambda m: _extract_page_eval(m, "ttft_p95")),
+        ("GDPval", lambda m: _extract_metric(m, "gdpval_normalized")),
+        ("IT-Bench SRE", lambda m: _extract_metric(m, "it_bench_sre")),
+        ("Briefcase", lambda m: _extract_metric(m, "briefcase")),
+        ("Crit-Pt", lambda m: _extract_metric(m, "critpt")),
+        ("Apex Agents", lambda m: _extract_metric(m, "apex_agents")),
+        ("Openness", lambda m: _extract_metric(m, "openness_index")),
+        ("Out Speed p05", lambda m: _extract_metric(m, "output_speed_p05")),
+        ("Out Speed p95", lambda m: _extract_metric(m, "output_speed_p95")),
+        ("TTFT p05", lambda m: _extract_metric(m, "ttft_p05")),
+        ("TTFT p95", lambda m: _extract_metric(m, "ttft_p95")),
     ]
 
     headers = _format_headers([c[0] for c in columns], output)
@@ -659,6 +900,12 @@ def main():
         default=[],
         help="filter by model_creator.slug (can be repeated)",
     )
+    parser.add_argument(
+        "--tier",
+        choices=TIERS,
+        default=DEFAULT_TIER,
+        help="which endpoint to read (auto falls back to free without Pro access)",
+    )
     parser.add_argument("--output", "-o", choices=sorted(FORMATS), default="text", help="output format")
     parser.add_argument("--release-date", "-d", help="release date on/after YYYY-mm-dd")
     parser.add_argument("--verbose", action="store_true", help="log requests to stderr")
@@ -704,22 +951,12 @@ def main():
         print("ARTIFICIAL_ANALYSIS_API_KEY is not set", file=sys.stderr)
         return 1
 
-    try:
-        if _VERBOSE:
-            print(f"> GET {API_URL}", file=sys.stderr)
-        resp = requests.get(API_URL, headers={"x-api-key": api_key}, timeout=30)
-        if _VERBOSE:
-            print(f"< {resp.status_code} {API_URL}", file=sys.stderr)
-    except requests.RequestException as exc:
-        print(f"request failed: {exc}", file=sys.stderr)
+    payload, error = _fetch_models(api_key, tier=args.tier)
+    if payload is None:
+        print(f"request failed: {error}", file=sys.stderr)
         return 1
 
-    if resp.status_code != 200:
-        print(f"request failed: status {resp.status_code}", file=sys.stderr)
-        return 1
-
-    data = resp.json()
-    models = data.get("data", [])
+    models = payload.get("data", [])
     _save_cache(models)
 
     if args.list_models:
@@ -734,11 +971,7 @@ def main():
         models = [m for m in models if m.get("slug") in wanted]
 
     if args.creator:
-        wanted = set(args.creator)
-        def _creator_slug(m):
-            if isinstance(m.get("model_creator"), dict):
-                return m["model_creator"].get("slug")
-            return None
+        wanted = {normalize_slug(c) for c in args.creator}
         models = [m for m in models if _creator_slug(m) in wanted]
 
     if args.release_date:
@@ -771,13 +1004,13 @@ def main():
 
     if args.output == "json":
         _enrich_structured_metrics(models)
-        data["data"] = models
-        print(json.dumps(data, indent=2))
+        payload["data"] = models
+        print(json.dumps(payload, indent=2))
         return 0
     if args.output == "yaml":
         _enrich_structured_metrics(models)
-        data["data"] = models
-        print(yaml.safe_dump(data, sort_keys=False))
+        payload["data"] = models
+        print(yaml.safe_dump(payload, sort_keys=False))
         return 0
 
     _print_table(models, args.output)
