@@ -14,43 +14,6 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "exact to deepseek-v4-1-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-0420",
-          "reason": "exact to deepseek-v4-1-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to deepseek-v4-1-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-0420-high",
-          "reason": "exact to deepseek-v4-1-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-0420-non-reasoning",
-          "reason": "exact to deepseek-v4-1-flash, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'deepseek-v4-1-flash'?",
-      "route": "update_artificialanalysis_mapping.py",
-      "route_kind": "aa-mapping",
-      "subject": "deepseek-v4-1-flash",
-      "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "exact",
           "option": "deepseek-v4-1-flash",
           "reason": "exact to deepseek-v4.1-flash, exact match"
