@@ -40,19 +40,19 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to DeepSeek-V4.1-Flash, exact match"
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to DeepSeek V4 Flash Vision Exp, most components match"
         },
         {
           "confidence": "weak",
           "option": "deepseek-v4-flash",
-          "reason": "exact to DeepSeek-V4.1-Flash, most components match"
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to DeepSeek-V4.1-Flash, most components match"
+          "option": "deepseek-v4-1-flash",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
@@ -60,13 +60,13 @@
           "reason": "drop suffix to a variant, most components match"
         }
       ],
-      "default": "deepseek-v4-1-flash",
+      "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'deepseek-ai/DeepSeek-V4.1-Flash' to llm.json model",
-      "route": "update_spheron_mapping.py",
+      "question": "Map FrontierSWE model 'DeepSeek V4 Flash Vision Exp' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
       "route_kind": "mapping",
-      "subject": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "subject": "DeepSeek V4 Flash Vision Exp",
       "universe": "models"
     }
   ]

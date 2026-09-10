@@ -27202,9 +27202,9 @@
       "params": "552B-A16B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 1056,
+        "int8": 528,
+        "int4": 264
       },
       "creator": {
         "name": null,
@@ -27371,6 +27371,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/deepseek-ai/DeepSeek-V4.1-Flash/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/deepseek-ai/DeepSeek-V4.1-Flash/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/deepseek-ai/DeepSeek-V4.1-Flash/"
       }
     }
   ],
