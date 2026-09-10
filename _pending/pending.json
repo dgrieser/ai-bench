@@ -36,6 +36,28 @@
       "route_kind": "aa-mapping",
       "subject": "deepseek-v4-1-flash",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'SWE-2' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "subject": "SWE-2",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'harborframework/terminal-bench (terminalbench_4)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "harborframework/terminal-bench (terminalbench_4)",
+      "universe": "benchmarks"
     }
   ]
 }
