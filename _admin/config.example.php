@@ -26,20 +26,4 @@
 return [
     'token' => 'github_pat_...',
     'repo'  => 'dgrieser/ai-bench',
-
-    /*
-     * Optional, and only the page's Models tab uses it: with a key here,
-     * api.php can list Artificial Analysis model slugs, so a model added by
-     * hand can be renamed to the slug AA ended up publishing it under -- which
-     * is what makes update.py read its scores without any mapping at all.
-     *
-     * The same key artificialanalysis.py takes from
-     * ARTIFICIAL_ANALYSIS_API_KEY. It stays here rather than going to the
-     * browser: the AA API authenticates with a header, so a request from the
-     * page would preflight and AA sends no CORS headers.
-     *
-     * Leave it empty and the page says the list is unavailable; nothing else
-     * changes.
-     */
-    'aa_api_key' => '',
 ];

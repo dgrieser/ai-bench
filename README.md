@@ -15,7 +15,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 
 | Source | Type | Data Format |
 |--------|------|-------------|
-| **Artificial Analysis** | Commercial API | HTTP endpoint |
+| **Artificial Analysis** | Commercial API | HTTP endpoint (V2, paged; see [Artificial Analysis API](#artificial-analysis-api)) |
 | **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research (benchlm.ai mirror) | JSON API |
@@ -215,6 +215,12 @@ Output: llm.json (unified dataset)
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_vals.py --benchmark swebench    # or pin one board
+
+# Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
+./artificialanalysis.py --open          # every open-weights model AA lists
+./artificialanalysis.py --tier free -m gpt-oss-20b   # pin the free endpoint
+./artificialanalysis.py --list-models --no-cache     # bypass the cached response
+./artificialanalysis.py --publish-models _aa/models.json  # the admin page's slug list
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -1541,12 +1547,144 @@ The `_openness.py` module classifies models as:
 
 This information is stored in each model's `weights` metadata and affects aggregation logic (some analyses exclude closed models).
 
+`artificialanalysis.py --open` / `--closed` reads the same distinction off AA's
+`licensing.is_open_weights`, falling back to whether the model page links a
+weights repo for the free-tier records that carry no licensing block.
+
+## Artificial Analysis API
+
+`artificialanalysis.py` reads AA's documented V2 endpoints. The legacy
+`/api/v2/data/llms/models` route it used to call answers `410 Gone` from
+**2026-11-04** ([migration guide](https://artificialanalysis.ai/data-api/migrate-v2-data)),
+and nothing in the tree points at `/api/v2/data/` any more.
+
+| | Endpoint |
+| --- | --- |
+| Pro | `GET /api/v2/language/models` |
+| Free | `GET /api/v2/language/models/free` |
+
+Both authenticate with the same `x-api-key` header and the same
+`ARTIFICIAL_ANALYSIS_API_KEY`; the free route answers the same shape with fewer
+fields on each record. **Pro is read first and a `403` falls back to free**, so
+a key without a subscription still fills the columns both tiers carry. That
+`403` is itself billed, so the refusal is remembered for 24h rather than
+rediscovered on every fetch. Pin a tier with `--tier free` / `--tier pro` (or
+`ARTIFICIAL_ANALYSIS_API_TIER`) to skip the probe entirely — a pinned tier is
+never second-guessed, and a failure that is not a `403` is reported rather than
+quietly downgraded. A rate-limited key is not retried elsewhere: it would spend
+its next request for a worse answer. A page that dies at the *transport* layer
+is retried once, since a request that got no response was not billed.
+
+The list endpoints **page** at 200 records, so a fetch walks
+`?page=1,2,…` until one says `"has_more": false` and hands back a single
+payload whose `data` holds the lot. `_admin/api.php` no longer reads AA at
+all: the admin page's slug suggestions come from a committed file instead (see
+below).
+
+### The request budget, and why the response is cached
+
+Paging turns the request count into something that has to be counted. AA lists
+**644 models at 200 a page, so one fetch is four requests** — and an
+`update-all` run fetches three times, in three separate processes:
+`update_artificialanalysis_mapping.py` and `update.py` each read the slug list,
+then `update.py` reads the records. At twelve requests a run and eight
+three-hourly crons a day, that is **96–120 requests against a free key's 100 a
+day**: the pipeline would start answering `429` by mid-afternoon.
+
+Every one of those three fetches asks for the same list, so **the whole
+response is cached on disk** (`~/.cache/artificialanalysis/response.json`) and
+a run costs one fetch — **4 requests, 32 a day**, comfortable on either tier.
+The window is one hour (`ARTIFICIAL_ANALYSIS_CACHE_TTL`, seconds), well inside
+the three-hourly cron, so no cron ever serves another's data; `--no-cache`
+forces a fresh read.
+
+On CI the container is new each run, so within-run deduplication — the part
+that was over budget — needs no configuration at all. The `update-benchmarks`
+workflow additionally restores the cache directory between runs with
+`actions/cache`, which buys nothing on the cron path (three hours apart, one
+hour of window) but takes a merge- or dispatch-triggered refresh landing
+shortly after a cron down to no requests at all. It cannot stale a cron either
+way: what was restored only matters if the TTL still accepts it.
+
+Rate limits are **100 requests/24h on free, 500 on Pro**; `--verbose` prints
+what each response reports as remaining. The model pages are not part of this
+budget — they are unauthenticated page reads, not API calls.
+
+### `_aa/models.json`, and why the admin page no longer proxies
+
+The admin page offers AA's slugs when renaming a hand-added model onto the name
+AA publishes it under. It used to read them live through `api.php`, which after
+paging cost **four API requests every sitting** — on the interactive path,
+where running out is a human waiting on a `429`.
+
+So the list is committed instead. `./artificialanalysis.py --publish-models
+_aa/models.json` writes the slug, name, creator and release date of every model
+AA lists (~96 KiB), and the page reads it from the repository beside the queue
+and `llm.json`. Three things make that safe to commit on every refresh:
+
+- **No timestamp**, and a total, case-insensitive order over the whole record
+  — so a run where AA published nothing new is an empty diff, not a rewrite.
+  It is the churn rule `pending_prompts.py` already applies to the queue.
+  Sorting on the slug alone would not be enough: offset paging can return one
+  model twice (four page reads seconds apart, and an insert at AA's end
+  between two of them shifts everything after it), and a tie left in API order
+  is the one input to this file that is not stable run to run. Duplicate slugs
+  are collapsed to one entry.
+- **Nothing that moves.** Scores, pricing and performance stay out; `llm.json`
+  is where this project publishes those, and they would change every run.
+- **A floor.** It refuses to write fewer than 100 models, so a bad answer from
+  AA leaves the last good list in place rather than emptying the page's
+  suggestions — the failure `pending_prompts.py` names in its own docstring as
+  the reason the AA universe was kept out of `pending.json`.
+
+Publishing costs no API request of its own: the refresh has already fetched
+that response and it is still inside the cache window. The page reads the file
+from `raw.githubusercontent.com`, like the queue — **not** from the Pages site,
+which runs Jekyll and would not serve an underscore-prefixed directory.
+
+The V2 contract also renamed a number of fields. Everything downstream — the
+table, `update.py`'s `SCORE_MAPPINGS`, and the model pages this script still
+scrapes — is keyed on the old names, so the response is translated once on the
+way in:
+
+| V2 field | Read as |
+| --- | --- |
+| `aa_lcr` | `lcr` |
+| `tau2_telecom` | `tau2` |
+| `gpqa_diamond` | `gpqa` |
+| `aa_omniscience_index` | `omniscience` |
+| `aa_omniscience_accuracy` | `omniscience_accuracy` |
+| `aa_omniscience_non_hallucination_rate` | `omniscience_hallucination_rate`, as the complement — and only where the model page states no rate of its own, so an inferred figure never displaces a reported one |
+| `gdpval_aa_elo` / `gdpval_aa_normalized` | `gdpval` / `gdpval_normalized` |
+| `artificial_analysis_agentic_index` | `agentic_index` |
+| `artificial_analysis_openness_index` | `openness_index` |
+| `performance.percentile_05_output_tokens_per_second` (and the rest of the spread) | `output_speed_p05`, `…_q25`, `…_median`, `…_q75`, `…_p95`, `ttft_*` |
+
+**The model pages are still read, and still fill the gaps.** Pro carries the
+open-weights flag, the context window, the parameter counts, the Hugging Face
+url and most of the benchmarks natively — those no longer cost a page fetch —
+but AA-Briefcase, IT-Bench SRE, Apex Agents, the Harvey and AutomationBench
+rows, the openness breakdown and the creator's own url appear on the pages
+only. A page value is used where the API sent none; it never overrides one that
+arrived.
+
+**On the free tier the pages carry nearly everything.** Its `evaluations` block
+holds three composite indices — Intelligence, Coding and Agentic — and its
+`performance` block the medians only; there is no licensing, parameter,
+context-window or Hugging Face field on the record at all. A measured
+free-tier run of `gpt-oss-120b` returns 20 populated benchmarks, 17 of them
+scraped. That is why the page fetch is retried and why a page failure is
+logged under `--verbose` rather than passed over: on free it is the source, not
+the fallback.
+
 ## Model Size and Context Fields
 
-`params` and `context` come from Artificial Analysis' model pages, parsed out of the
-`currentModel` payload (`parameters`, `inferenceParametersActiveBillions`,
-`contextWindowTokens`) by `artificialanalysis.py`. They are handled differently on
-purpose:
+`params` and `context` come from Artificial Analysis, read by
+`artificialanalysis.py` off the Pro API record (`parameters.total`,
+`parameters.active`, `context_window_tokens`) and, where that carries neither —
+every model on the free tier — off the model page's `currentModel` payload
+(`parameters`, `inferenceParametersActiveBillions`, `contextWindowTokens`),
+which reports the same counts. They are handled differently on purpose:
 
 - **`context` is refreshed** on every `update.py` run. Sources report raw token counts,
   so `_context.py` snaps them to the advertised size (`262144` → `256k`, `131072` →

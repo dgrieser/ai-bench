@@ -131,6 +131,30 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # The Artificial Analysis response cache (see "The request budget" in
+      # README.md). Within a run the three fetches update-all makes already
+      # share it through the container's own filesystem; this carries it
+      # between runs, so a merge- or dispatch-triggered refresh landing inside
+      # the window after a cron costs no API requests at all -- which is what
+      # keeps a free key, 100 requests a day, clear of its ceiling on a busy
+      # day of merged proposals.
+      #
+      # It cannot serve a cron stale data: the crons are three hours apart and
+      # the cache window is one, so the fetch re-reads regardless of what was
+      # restored. Freshness is the TTL's business, not this step's.
+      #
+      # Restored before `Apply the answers` because that step reads AA too --
+      # an answer is checked against the live slug list.
+      #
+      # Same key shape as the openness cache below, for the same reason: an
+      # exact hit skips the save, which would freeze the contents forever, so
+      # the run_id makes every key new and restore-keys does the restoring.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/artificialanalysis
+          key: aa-response-${{ github.run_id }}
+          restore-keys: aa-response-
+
       # Fails fast, before any network work. A broken freeze guard would let the
       # run bury source names as __unmappable__ with nobody ever prompted, a
       # loosened match tier would commit wrong mappings into the proposal PR, and
@@ -142,6 +166,10 @@ jobs:
       # pushed, not after. test_model_admin.py covers what that input then runs:
       # add.py, edit.py and the rename, which between them can move a model's
       # name out from under every mapping file that points at it.
+      #
+      # test_artificialanalysis_api.py is here on the same grounds: AA is a
+      # locked rank-1 source, so a field this run reads under the wrong name
+      # writes a wrong number that only a later AA number can replace.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -150,6 +178,7 @@ jobs:
           ./test_answers.py
           ./test_model_admin.py
           ./test_pending_json.py
+          ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,
       # so they are refused rather than interpreted.
@@ -267,6 +296,25 @@ jobs:
             echo
             cat "$RUNNER_TEMP/pending.md"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # The slug list the admin page offers when renaming a hand-added model
+      # onto the name AA publishes it under. Committed rather than proxied so
+      # the page reads it straight from the repo like the queue and llm.json:
+      # api.php used to fetch it live, which cost four API requests every
+      # sitting, on the interactive path, against a free key's hundred a day.
+      #
+      # Free: the response this run already fetched is still inside the cache
+      # window, so writing the file costs no request of its own. Gated on a
+      # wholly successful refresh for the same reason the queue is -- and
+      # artificialanalysis.py refuses to write a short list, so a bad answer
+      # from AA leaves yesterday's good one in place instead of emptying the
+      # page's suggestions.
+      - name: Publish the Artificial Analysis model list
+        if: ${{ steps.refresh.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+        run: ./artificialanalysis.py --publish-models _aa/models.json
 
       - name: Commit and push
         if: ${{ !inputs.dry_run }}

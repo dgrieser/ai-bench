@@ -33,7 +33,6 @@ const WORKFLOW = 'update-benchmarks.yml';
 // The workflow step that applies a dispatched batch, by name. The run's own
 // conclusion cannot stand in for it: see answer_step() below.
 const ANSWER_STEP = 'Apply the answers';
-const AA_MODELS_URL = 'https://artificialanalysis.ai/api/v2/data/llms/models';
 const REF      = 'main';           // never taken from the client: see the workflow
 const MAX_RECORDS = 25;
 const MAX_BYTES   = 60000;         // workflow_dispatch caps an input near 64 KB
@@ -156,58 +155,6 @@ function data_base(array $config): string
 }
 
 /**
- * Every Artificial Analysis model slug, sorted. Names only -- nothing else on
- * those records is any of the page's business.
- *
- * Why this is proxied rather than fetched in the browser: the AA API is
- * authenticated with a header, so a cross-origin request preflights, and AA
- * answers no CORS headers -- the fetch fails before it is sent. Routing it
- * through here also keeps the key on the server, where the GitHub token already
- * lives, instead of shipping it to every browser that opens the page.
- *
- * The key is optional. Without it the page simply does not offer the slug list,
- * which is why this is announced in the GET payload rather than required.
- */
-function aa_slugs(array $config): array
-{
-    $key = $config['aa_api_key'] ?? '';
-    if (!is_string($key) || $key === '') {
-        fail(501, 'No Artificial Analysis API key in the config; see _admin/README.md.');
-    }
-
-    $handle = curl_init(AA_MODELS_URL);
-    curl_setopt_array($handle, [
-        CURLOPT_HTTPHEADER     => ['x-api-key: ' . $key, 'User-Agent: ai-bench-admin'],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 20,
-    ]);
-    $raw = curl_exec($handle);
-    if ($raw === false) {
-        $error = curl_error($handle);
-        curl_close($handle);
-        fail(502, 'Could not reach Artificial Analysis: ' . $error);
-    }
-    $status = (int) curl_getinfo($handle, CURLINFO_HTTP_CODE);
-    curl_close($handle);
-    if ($status >= 400) {
-        // An expired or wrong key is the usual reason, and it fails opaquely
-        // otherwise -- the same trap the GitHub token has.
-        fail($status, 'Artificial Analysis rejected the request (status ' . $status . ').');
-    }
-
-    $body = json_decode((string) $raw, true);
-    $slugs = [];
-    foreach ($body['data'] ?? [] as $model) {
-        if (is_array($model) && !empty($model['slug']) && is_string($model['slug'])) {
-            $slugs[] = $model['slug'];
-        }
-    }
-    $slugs = array_values(array_unique($slugs));
-    sort($slugs);
-    return $slugs;
-}
-
-/**
  * What the run's own answer step concluded, if that run has one.
  *
  * The run's conclusion cannot answer this. `Fail if a step of update-all
@@ -265,12 +212,6 @@ $config = config();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    // One extra read, asked for only when the page needs it: the AA payload is
-    // far larger than everything else here put together, and most sittings
-    // never open the rename control at all.
-    if (($_GET['aa'] ?? '') === 'slugs') {
-        ok(['api' => API_VERSION, 'slugs' => aa_slugs($config)]);
-    }
     // Asked for once per dispatched batch, when its run finishes. Digits only:
     // the value is pasted into a GitHub path.
     $answered = (string) ($_GET['answered'] ?? '');
@@ -285,9 +226,6 @@ if ($method === 'GET') {
         'repo' => $config['repo'],
         'ref'  => REF,
         'raw'  => data_base($config),
-        // Whether the slug list above can be served at all, so the page can
-        // offer the control or explain its absence instead of failing at it.
-        'aa'   => !empty($config['aa_api_key']),
         // Whether ?answered=<run id> can be served. A page against an older
         // endpoint keeps every answered card locked rather than guessing from
         // the run's conclusion, which is the safe half of the choice.

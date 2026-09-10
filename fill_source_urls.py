@@ -64,7 +64,7 @@ COVERED_BY = [
         fetch_llmstats.LEADERBOARD_URL,
     ),
     (
-        artificialanalysis.API_URL,
+        artificialanalysis.MODELS_URL,
         "https://artificialanalysis.ai/leaderboards/models?is_open_weights=open_source",
     ),
     (
