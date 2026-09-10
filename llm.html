@@ -2471,22 +2471,34 @@
       font-size: 0.72rem;
     }
 
-    .axis-reset {
+    /* The preset dropdown swaps a whole axis set in one go -- the five
+       composite indexes, or the benchmarks one index aggregates. It replaces
+       the old "Default axes" reset link, whose job is now the first option.
+       The global select rule sets width:100% and a 42px height for the filter
+       panel's sake, so this sizes itself back down into the chip row the same
+       way .axis-add-btn does. */
+    .axis-preset {
       width: auto;
-      min-height: 0;
-      border: none;
-      background: none;
-      padding: 5px 6px;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+      height: auto;
+      padding: 5px 30px 5px 12px;
+      border-radius: 999px;
+      background-position: right 11px center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .axis-reset:hover {
-      background: none;
-      border: none;
-      color: var(--accent);
-      text-decoration: underline;
+    .axis-preset:hover {
+      border-color: var(--accent);
+    }
+
+    /* The preset picks the set; the chips beside it edit that set. The rule
+       between them says so. */
+    .axis-preset-sep {
+      align-self: stretch;
+      width: 1px;
+      margin: 3px 3px;
+      background: var(--line);
     }
 
     .axis-menu {
@@ -2969,6 +2981,16 @@
       border-color: var(--accent);
       background: var(--accent);
       color: #ffffff;
+    }
+
+    /* The one button on a model's page that leads somewhere new, so it is
+       sized and weighted like it: the row it sits in otherwise reads as three
+       equal afterthoughts. */
+    .compare-btn.is-cta {
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      box-shadow: 0 1px 10px -4px var(--accent);
     }
 
     /* The picker menu is the axis menu with a search row on top -- four
@@ -6956,9 +6978,6 @@
             if (state.radar.axes.length > RADAR_MIN_AXES) {
               setRadarAxes(state.radar.axes.filter((k) => k !== key));
             }
-          } else if (action === "reset-axes") {
-            state.radar.pickerOpen = false;
-            setRadarAxes(defaultRadarAxes());
           } else if (action === "compare-toggle-picker") {
             // Opening seeds the menu with whatever is on screen, so the
             // footer button always says what will actually happen.
@@ -6982,6 +7001,20 @@
           } else if (action === "compare-copy") {
             copyCompareLink(actionEl);
           }
+        });
+
+        // The axis preset dropdown: one change swaps the whole set, so the
+        // open axis menu (if any) is stale and closes with it.
+        ui.content.addEventListener("change", (event) => {
+          if (!event.target.classList.contains("axis-preset")) {
+            return;
+          }
+          const preset = radarPreset(event.target.value);
+          if (!preset) {
+            return;
+          }
+          state.radar.pickerOpen = false;
+          setRadarAxes(presetAxes(preset));
         });
 
         // Typing in the picker: only the menu body is swapped, so the input
@@ -7128,7 +7161,7 @@
               <p class="detail-byline">${creatorUrl
                 ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
                 : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
-              <div class="compare-actions">${renderComparePicker([model], "Compare with&hellip;")}</div>
+              <div class="compare-actions">${renderComparePicker([model], "Compare with&hellip;", false, "is-primary is-cta")}</div>
             </div>
             ${renderDetailSpecs(model)}
           </section>
@@ -7188,9 +7221,55 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      const RADAR_MAX_AXES = 8;
+      // Eleven because that is what the widest preset needs (the Coding index
+      // aggregates eleven benchmarks) and a preset has to fit inside the same
+      // bounds a hand-picked set does -- otherwise the chips would show a set
+      // the picker refuses to reproduce.
+      const RADAR_MAX_AXES = 11;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index"];
+
+      /* ── Axis presets ──
+         "Default axes" is the five composite indexes — the profile every page
+         opens on. Each other preset opens one of those indexes up: the
+         benchmarks it aggregates, in the weight order they carry there, so
+         the chart answers "what is this index made of, and where does this
+         model sit on each part" rather than only "how high is the composite".
+
+         derive_indexes.py's INDEXES is the source of truth for those lists.
+         Weights live only there and never move a chart, but a contributor
+         added or dropped there has to be mirrored here — the lists are not
+         published in llm.json, only prose'd into each index's description. */
+      const RADAR_PRESETS = [
+        { id: "default", label: "Default axes", axes: RADAR_DEFAULT_AXES },
+        {
+          id: "coding",
+          label: "Coding",
+          axes: ["deepswe_1_1", "frontierswe", "frontiercode_1_1", "swe_marathon_1_1", "terminal_bench_2_1",
+            "swe_bench_pro", "livecodebench", "scicode", "swe_bench_multilingual", "swe_atlas_qna", "swe_bench_verified"]
+        },
+        {
+          id: "tooling",
+          label: "Tooling",
+          axes: ["tau3_bench_banking", "toolathlon", "mcp_atlas", "terminal_bench_2_1", "gdpval_aa",
+            "itbench_aa", "bfcl_v4", "tau2_bench_telecom", "terminal_bench_hard", "ifbench"]
+        },
+        {
+          id: "knowledge",
+          label: "Knowledge",
+          axes: ["aa_omniscience", "hle", "critpt", "mmlu_pro", "aime_2025", "gpqa_diamond"]
+        },
+        {
+          id: "trust",
+          label: "Trust",
+          axes: ["aa_omniscience_hallucination", "aa_omniscience_accuracy", "aa_lcr", "ifbench"]
+        },
+        {
+          id: "vision",
+          label: "Vision",
+          axes: ["mmmu_pro", "osworld_verified", "mathvista_mini", "zerobench", "charxiv_reasoning"]
+        }
+      ];
 
       const detailPercentiles = new Map();
 
@@ -7208,8 +7287,33 @@
         return detailPercentiles.get(key)?.size || 0;
       }
 
+      // A preset's axes as this data set can actually chart them: a key the
+      // index no longer carries is dropped (same cleanup loadRadarAxes does to
+      // a stored selection), and the result is capped, so a preset can never
+      // hand the picker a set it would refuse.
+      function presetAxes(preset) {
+        return preset.axes.filter((key) => state.benchmarkKeys.includes(key)).slice(0, RADAR_MAX_AXES);
+      }
+
+      function radarPreset(id) {
+        return RADAR_PRESETS.find((preset) => preset.id === id) || null;
+      }
+
       function defaultRadarAxes() {
         return RADAR_DEFAULT_AXES.filter((key) => state.benchmarkKeys.includes(key));
+      }
+
+      // Which preset the chart is currently showing, or "" for a hand-edited
+      // set. Derived rather than stored: the axes are what persists, so
+      // deriving is the only way the dropdown cannot disagree with the chips
+      // it sits beside. Order counts — the axes are laid out clockwise in it,
+      // so the same benchmarks in another order is a different chart.
+      function radarPresetId(axes) {
+        const match = RADAR_PRESETS.find((preset) => {
+          const keys = presetAxes(preset);
+          return keys.length === axes.length && keys.every((key, i) => key === axes[i]);
+        });
+        return match ? match.id : "";
       }
 
       // The chosen axes are one personal graph, shared across every model's
@@ -7231,11 +7335,6 @@
         try {
           localStorage.setItem(RADAR_AXES_STORAGE_KEY, JSON.stringify(keys));
         } catch (err) { /* private mode: the selection lives for this visit only */ }
-      }
-
-      function isDefaultRadarAxes(keys) {
-        const defaults = defaultRadarAxes();
-        return keys.length === defaults.length && keys.every((key, i) => key === defaults[i]);
       }
 
       function setRadarAxes(keys) {
@@ -7285,8 +7384,9 @@
               benchmarks are flipped, so outward always means better. An axis without a recorded
               score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
-              bigger. `}Pick your own axes above; the selection is
-              remembered on this device.</p>
+              bigger. `}Pick a preset above &mdash; the five indexes, or the
+              benchmarks one index is built from &mdash; or edit the axes chip by chip. The
+              selection is remembered on this device.</p>
           </section>
         `;
       }
@@ -7310,11 +7410,26 @@
 
         const atMax = axes.length >= RADAR_MAX_AXES;
         const addBtn = `<button type="button" class="axis-add-btn" data-action="toggle-picker" aria-expanded="${String(Boolean(state.radar.pickerOpen))}" aria-haspopup="true">+ Add axis</button>`;
-        const reset = isDefaultRadarAxes(axes)
-          ? ""
-          : `<button type="button" class="axis-reset" data-action="reset-axes">Default axes</button>`;
         const menu = state.radar.pickerOpen ? renderAxisMenu(models, axes, atMax) : "";
-        return `<div class="radar-controls">${chips}${addBtn}${reset}${menu}</div>`;
+        return `<div class="radar-controls">${renderAxisPresetSelect(axes)}<span class="axis-preset-sep" aria-hidden="true"></span>${chips}${addBtn}${menu}</div>`;
+      }
+
+      // The preset dropdown. "Custom" is offered only while the axes match no
+      // preset, and it is never selectable back into — there is nothing to go
+      // back to, since the custom set is the one already on screen.
+      function renderAxisPresetSelect(axes) {
+        const current = radarPresetId(axes);
+        const options = RADAR_PRESETS
+          // A preset the data cannot fill enough of is no preset at all.
+          .filter((preset) => presetAxes(preset).length >= RADAR_MIN_AXES)
+          .map((preset) => `<option value="${escapeAttr(preset.id)}"${preset.id === current ? " selected" : ""}>${escapeHtml(preset.label)}</option>`)
+          .join("");
+        const custom = current ? "" : `<option value="" selected disabled>Custom</option>`;
+        const tip = tipAttrs({
+          eyebrow: "Axis preset",
+          body: "Default axes charts the five composite indexes. Every other preset opens one index up and charts the benchmarks it aggregates instead, so the shape shows where the composite comes from. Editing the chips leaves the preset behind as a custom set."
+        });
+        return `<select class="axis-preset" aria-label="Axis preset"${tip}>${custom}${options}</select>`;
       }
 
       // The full index as a pick list, grouped the way the reference panel
@@ -7411,6 +7526,23 @@
         }
       }
 
+      // Roughly how wide a radar label draws at its 15px semibold. A
+      // string-built SVG cannot measure its own text, and the labels do not
+      // need kerning — only to be kept inside the box, so an over-estimate is
+      // the safe direction. Caps carry full width, M and W more, and the
+      // narrow punctuation a name like "SWE-M 1.1" is half made of next to
+      // nothing.
+      function radarLabelWidth(text) {
+        let width = 0;
+        for (const ch of text) {
+          if (/[ .,:'|\-lijft1]/.test(ch)) width += 5;
+          else if (/[MWmw]/.test(ch)) width += 12.5;
+          else if (/[A-Z0-9]/.test(ch)) width += 10.5;
+          else width += 7.5;
+        }
+        return width;
+      }
+
       function renderRadarChart(models, axes) {
         const W = 520, H = 480, CX = 260, CY = 238, R = 176;
         const n = axes.length;
@@ -7504,13 +7636,15 @@
           const cos = Math.cos(p.angle);
           const sin = Math.sin(p.angle);
           const anchor = cos > 0.3 ? "start" : cos < -0.3 ? "end" : "middle";
-          // Side labels grow away from their spoke, and at eight axes the
-          // horizontal-most anchors sit close enough to the edge that the
-          // longest short_name would leave the box — so they get nudged
-          // just far enough back in.
-          const labelX = anchor === "start" ? Math.min(p.x, W - 76)
-            : anchor === "end" ? Math.max(p.x, 76)
-            : p.x;
+          // Side labels grow away from their spoke, and once a preset fills
+          // the chart the horizontal-most anchors sit close enough to the edge
+          // that the longest short_name would leave the box — so each is
+          // nudged back in by its own estimated width rather than by one
+          // figure that fits the shortest name and clips the longest.
+          const room = radarLabelWidth(getBenchmarkLabel(key)) + 8;
+          const labelX = anchor === "start" ? Math.min(p.x, W - room)
+            : anchor === "end" ? Math.max(p.x, room)
+            : Math.min(Math.max(p.x, room / 2), W - room / 2);
           // Two lines per axis — name over raw score — shifted clear of the
           // rim: up above the chart, down below it, centered at the sides.
           const nameY = sin < -0.5 ? p.y - 10 : sin > 0.5 ? p.y + 12 : p.y - 1;
@@ -7934,7 +8068,7 @@
         if (state.route.view === "compare") {
           host.innerHTML = compareHeadActions(models);
         } else if (models.length) {
-          host.innerHTML = renderComparePicker(models, "Compare with&hellip;");
+          host.innerHTML = renderComparePicker(models, "Compare with&hellip;", false, "is-primary is-cta");
         }
         // Typing straight into the search box is the point of opening the
         // list, but only where a keyboard is already out — the same rule
@@ -7994,9 +8128,12 @@
         }
       }
 
-      function renderComparePicker(models, label, disabled) {
+      // extraClass is how the single-model page asks for the accent treatment:
+      // there the button is the only way on to a comparison, so it leads,
+      // while on a comparison it is one edit among four and stays quiet.
+      function renderComparePicker(models, label, disabled, extraClass) {
         const menu = state.compare.pickerOpen ? renderCompareMenu() : "";
-        return `<button type="button" class="compare-btn" data-action="compare-toggle-picker"` +
+        return `<button type="button" class="compare-btn${extraClass ? ` ${extraClass}` : ""}" data-action="compare-toggle-picker"` +
           `${disabled ? " disabled" : ""} aria-expanded="${String(Boolean(state.compare.pickerOpen))}" aria-haspopup="true"` +
           `${disabled ? tipAttrs({ body: `A comparison holds ${COMPARE_MAX} models — drop one first.` }) : ""}>${label}</button>${menu}`;
       }
