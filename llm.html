@@ -2376,6 +2376,21 @@
       font-weight: 600;
     }
 
+    /* A label group is a tooltip anchor, so it takes the pointer as one piece
+       -- the glyph outlines alone are a thin thing to aim at -- and says so
+       with the same cursor every other anchor uses. */
+    svg.radar g[data-tip] {
+      cursor: help;
+    }
+
+    svg.radar g[data-tip] text {
+      pointer-events: none;
+    }
+
+    .radar-label-hit {
+      fill: transparent;
+    }
+
     .radar-value {
       fill: var(--muted);
       font-family: var(--font-mono);
@@ -6869,24 +6884,88 @@
           .slice(0, COMPARE_MAX);
       }
 
+      /* ── The axes in the address ──
+         A hash is a path and, optionally, a query: "#model/x?axes=coding".
+         The chart's axes ride in that query so a link reopens on the profile
+         it was shared with, and so "Copy link" hands over what the sharer was
+         actually looking at rather than whatever the reader has stored.
+
+         A preset travels as its id, a hand-edited set as its keys — which is
+         the same distinction the picker itself draws, and it keeps the common
+         address short. The default profile travels as nothing at all: it is
+         what a bare "#model/x" already means. */
+
+      const AXES_SEP = ",";
+
+      function parseHash() {
+        const raw = String(location.hash || "");
+        const cut = raw.indexOf("?");
+        return {
+          path: cut < 0 ? raw : raw.slice(0, cut),
+          // Read through URLSearchParams, because a pasted link may arrive
+          // percent-encoded. Written by hand below: it would escape the very
+          // commas an axis list is made of, and a fragment may hold those as
+          // they are.
+          query: new URLSearchParams(cut < 0 ? "" : raw.slice(cut + 1))
+        };
+      }
+
+      // The axes an address asks for, or null for "it does not say". Unknown
+      // keys are dropped the way a stale stored selection is, and anything
+      // left short of the minimum is treated as no request at all rather than
+      // charting a remnant the reader never picked.
+      function parseAxesParam(raw) {
+        if (!raw) {
+          return null;
+        }
+        const preset = radarPreset(raw.trim());
+        const keys = preset
+          ? presetAxes(preset)
+          : (() => {
+              const seen = new Set();
+              return raw.split(AXES_SEP)
+                .map((part) => part.trim())
+                .filter((key) => key && state.benchmarkKeys.includes(key) && !seen.has(key) && seen.add(key))
+                .slice(0, RADAR_MAX_AXES);
+            })();
+        return keys.length >= RADAR_MIN_AXES ? keys : null;
+      }
+
+      // What the current selection is worth writing as: a preset's id, or the
+      // keys spelled out.
+      function radarAxesParam(axes) {
+        return radarPresetId(axes) || axes.join(AXES_SEP);
+      }
+
+      // Any address this page builds carries the axes it is showing, so
+      // dropping a model from a comparison does not silently drop the profile
+      // it was being read on.
+      function withRadarParam(path) {
+        return radarPresetId(state.radar.axes) === "default"
+          ? path
+          : `${path}?axes=${radarAxesParam(state.radar.axes)}`;
+      }
+
       function compareHash(slugs) {
-        return `#compare/${slugs.map((slug) => encodeURIComponent(slug)).join(COMPARE_SEP)}`;
+        return withRadarParam(`#compare/${slugs.map((slug) => encodeURIComponent(slug)).join(COMPARE_SEP)}`);
       }
 
       // Every branch carries `slugs` so nothing downstream has to tell the
       // shapes apart, and every branch keeps `slug` because the delegated
       // detail listeners read it.
       function parseRoute() {
-        const compare = String(location.hash || "").match(/^#compare\/(.+)$/);
+        const { path, query } = parseHash();
+        const axes = parseAxesParam(query.get("axes"));
+        const compare = path.match(/^#compare\/(.+)$/);
         if (compare) {
-          return { view: "compare", slug: "", slugs: parseCompareSlugs(compare[1]) };
+          return { view: "compare", slug: "", slugs: parseCompareSlugs(compare[1]), axes };
         }
-        const match = String(location.hash || "").match(/^#model\/(.+)$/);
+        const match = path.match(/^#model\/(.+)$/);
         if (match) {
           const slug = decodeSlug(match[1]);
-          return { view: "model", slug, slugs: [slug] };
+          return { view: "model", slug, slugs: [slug], axes };
         }
-        return { view: "table", slug: "", slugs: [] };
+        return { view: "table", slug: "", slugs: [], axes };
       }
 
       function renderRoute() {
@@ -6897,6 +6976,17 @@
         const route = parseRoute();
         const cameFromTable = state.route.view === "table";
         state.route = route;
+        // The address outranks the stored selection: a link opens on the axes
+        // it was shared with. Adopting them stores them too, so every page the
+        // reader walks to next keeps that profile — a shared link is a way of
+        // picking axes, not a one-page exception. With nothing in the address,
+        // the stored selection stands and the address is brought up to say so.
+        if (route.axes) {
+          state.radar.axes = route.axes;
+          saveRadarAxes(route.axes);
+        } else if (route.view !== "table") {
+          syncRadarHash();
+        }
         const app = document.getElementById("app");
         // The filter panel belongs to the table, so both away-from-table views
         // hide it; compare-view is the extra hook for what only a comparison
@@ -7340,7 +7430,19 @@
       function setRadarAxes(keys) {
         state.radar.axes = keys;
         saveRadarAxes(keys);
+        syncRadarHash();
         rerenderRadarBlock();
+      }
+
+      // Replaced rather than pushed: picking a preset or dropping a chip is a
+      // view tweak, and the back button has no business walking back through
+      // eleven of them. replaceState fires no hashchange either, so nothing
+      // re-renders behind this.
+      function syncRadarHash() {
+        if (state.route.view === "table") {
+          return;
+        }
+        history.replaceState(null, "", withRadarParam(parseHash().path));
       }
 
       // Which models the radar block on screen is charting: one on a detail
@@ -7384,9 +7486,10 @@
               benchmarks are flipped, so outward always means better. An axis without a recorded
               score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
-              bigger. `}Pick a preset above &mdash; the five indexes, or the
-              benchmarks one index is built from &mdash; or edit the axes chip by chip. The
-              selection is remembered on this device.</p>
+              bigger. `}Hover an axis for what it measures. Pick a preset above
+              &mdash; the five indexes, or the benchmarks one index is built from &mdash; or edit
+              the axes chip by chip. The selection rides in this page's address, so a copied
+              link reopens on it, and it is remembered on this device.</p>
           </section>
         `;
       }
@@ -7656,8 +7759,26 @@
           const valueText = single
             ? (series[0].axisData[i].scored ? series[0].axisData[i].value.toFixed(scoreDecimals(key)) : "&mdash;")
             : (scoredCount < series.length ? `${scoredCount}/${series.length}` : "");
-          const tip = single && !series[0].axisData[i].ranked ? tipAttrs(radarAxisTip(models[0], series[0].axisData[i])) : "";
+          // Every label is a tip anchor, so an axis can be read from its name
+          // rather than only from its vertex — which on a comparison is where
+          // several markers can sit stacked, and on a single model is a hollow
+          // dot at the hub whenever nothing was scored. The wedge and the
+          // vertex targets stop at the rim; the labels sit outside it, so the
+          // two never fight over the same pointer.
+          const tip = single
+            ? tipAttrs(radarAxisTip(models[0], series[0].axisData[i]))
+            : tipAttrs(radarCompareAxisTip(series, i, key));
+          // The block the pointer aims at: the two text lines boxed, built
+          // from the same width estimate that placed them. Wider than the
+          // glyphs by a few px on each side, because a label is a small target
+          // and the reader is aiming at a word, not at its outline.
+          const hitW = room + 4;
+          const hitX = anchor === "start" ? labelX - 6
+            : anchor === "end" ? labelX - hitW + 6
+            : labelX - hitW / 2;
+          const hitH = valueText ? 36 : 19;
           return `<g${tip}>` +
+            `<rect class="radar-label-hit" x="${r1(hitX)}" y="${r1(nameY - 14)}" width="${r1(hitW)}" height="${hitH}"/>` +
             `<text class="radar-label${missing}" x="${r1(labelX)}" y="${r1(nameY)}" text-anchor="${anchor}">${escapeHtml(getBenchmarkLabel(key))}</text>` +
             (valueText ? `<text class="radar-value${missing}" x="${r1(labelX)}" y="${r1(nameY + 16)}" text-anchor="${anchor}">${valueText}</text>` : "") +
             `</g>`;
@@ -7929,7 +8050,7 @@
       // case the hash is left saying exactly what the page shows — so a link
       // that gets shared onward is the link the sharer was looking at.
       function renderCompareRoute(slugs) {
-        const raw = String(location.hash || "").match(/^#compare\/(.+)$/);
+        const raw = parseHash().path.match(/^#compare\/(.+)$/);
         // parseCompareSlugs already dropped duplicates and cut the list; this
         // is how many the reader actually asked for.
         const asked = raw ? decodeSlug(raw[1]).split(/[,+]/).filter((part) => part.trim()).length : slugs.length;
@@ -7941,7 +8062,7 @@
         // rather than pushed: the degenerate address has no business sitting
         // in the history for the back button to walk into.
         if (models.length === 1) {
-          location.replace(`#model/${encodeURIComponent(modelSlug(models[0].name))}`);
+          location.replace(withRadarParam(`#model/${encodeURIComponent(modelSlug(models[0].name))}`));
           return;
         }
 
@@ -9862,7 +9983,14 @@
         document.addEventListener("pointerdown", (event) => {
           swallowClick = false;
           if (tooltip.el.contains(event.target)) return;
-          const anchor = tipAnchorFrom(event.target);
+          // A <select> opens a popup of its own on the very press that would
+          // otherwise leave its slip standing: the native option list renders
+          // over the slip, and with the pointer captured by that list there is
+          // no pointerout left to close it by. So from here on a select counts
+          // as no anchor at all, and the press closes the slip like any other
+          // press on nothing.
+          const pressed = tipAnchorFrom(event.target);
+          const anchor = pressed && pressed.tagName === "SELECT" ? null : pressed;
           if (event.pointerType === "touch" || event.pointerType === "pen") {
             cancelPress();
             if (anchor !== tooltip.anchor) closeTip();
