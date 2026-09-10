@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-10 - InclusionAI - https://huggingface.co/inclusionAI/Ling-3.0-flash-VL",
+      "question": "Add newly released model 'ling-3-0-flash-vl' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "ling-3-0-flash-vl",
+      "universe": null
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
@@ -24,7 +35,7 @@
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-non-reasoning",
+          "option": "deepseek-v4-flash-0420-non-reasoning",
           "reason": "exact to deepseek-v4-1-flash, most components match"
         }
       ],
@@ -36,6 +47,70 @@
       "route_kind": "aa-mapping",
       "subject": "deepseek-v4-1-flash",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-v4.1-flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to deepseek-v4.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek-v4.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "deepseek-v4-1-flash",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'deepseek-v4.1-flash'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "deepseek-v4.1-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-v4.1-flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to deepseek-v4.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek-v4.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'deepseek/deepseek-v4.1-flash' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek/deepseek-v4.1-flash",
+      "universe": "models"
     }
   ]
 }
