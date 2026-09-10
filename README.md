@@ -219,6 +219,7 @@ Output: llm.json (unified dataset)
 # Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
 ./artificialanalysis.py --open          # every open-weights model AA lists
 ./artificialanalysis.py --tier free -m gpt-oss-20b   # pin the free endpoint
+./artificialanalysis.py --list-models --no-cache     # bypass the cached response
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -1564,24 +1565,41 @@ and nothing in the tree points at `/api/v2/data/` any more.
 Both authenticate with the same `x-api-key` header and the same
 `ARTIFICIAL_ANALYSIS_API_KEY`; the free route answers the same shape with fewer
 fields on each record. **Pro is read first and a `403` falls back to free**, so
-a key without a subscription still fills the columns both tiers carry. Pin one
-with `--tier free` / `--tier pro` (or `ARTIFICIAL_ANALYSIS_API_TIER`) — a pinned
-tier is never second-guessed, and a failure that is not a `403` is reported
-rather than quietly downgraded. Nothing else retries: a rate-limited key
-(100 requests/24h free, 500 Pro) would spend its next request for a worse
-answer.
+a key without a subscription still fills the columns both tiers carry. That
+`403` is itself billed, so the refusal is remembered for 24h rather than
+rediscovered on every fetch. Pin a tier with `--tier free` / `--tier pro` (or
+`ARTIFICIAL_ANALYSIS_API_TIER`) to skip the probe entirely — a pinned tier is
+never second-guessed, and a failure that is not a `403` is reported rather than
+quietly downgraded. A rate-limited key is not retried elsewhere: it would spend
+its next request for a worse answer. A page that dies at the *transport* layer
+is retried once, since a request that got no response was not billed.
 
 The list endpoints **page** at 200 records, so a fetch walks
 `?page=1,2,…` until one says `"has_more": false` and hands back a single
 payload whose `data` holds the lot. `_admin/api.php` does the same for its slug
 suggestions.
 
-Paging is what makes the request budget worth stating. AA lists ~600 models, so
-one fetch is three requests, and a `update-all` run makes three fetches —
+### The request budget, and why the response is cached
+
+Paging turns the request count into something that has to be counted. AA lists
+**644 models at 200 a page, so one fetch is four requests** — and an
+`update-all` run fetches three times, in three separate processes:
 `update_artificialanalysis_mapping.py` and `update.py` each read the slug list,
-`update.py` then reads the records — for **~9 requests, ~72 a day** against the
-three-hourly cron, plus three more on a run that proposes mappings. Comfortable
-against Pro's 500/24h; a free-tier key would sit against its 100 ceiling.
+then `update.py` reads the records. At twelve requests a run and eight
+three-hourly crons a day, that is **96–120 requests against a free key's 100 a
+day**: the pipeline would start answering `429` by mid-afternoon.
+
+Every one of those three fetches asks for the same list, so **the whole
+response is cached on disk** (`~/.cache/artificialanalysis/response.json`) and
+a run costs one fetch — **4 requests, 32 a day**, comfortable on either tier.
+The window is one hour (`ARTIFICIAL_ANALYSIS_CACHE_TTL`, seconds), well inside
+the three-hourly cron, so no cron ever serves another's data; `--no-cache`
+forces a fresh read. On CI the container is new each run, so the cache only
+ever dedupes within a run — which is exactly the part that was over budget.
+
+Rate limits are **100 requests/24h on free, 500 on Pro**; `--verbose` prints
+what each response reports as remaining. The model pages are not part of this
+budget — they are unauthenticated page reads, not API calls.
 
 The V2 contract also renamed a number of fields. Everything downstream — the
 table, `update.py`'s `SCORE_MAPPINGS`, and the model pages this script still
@@ -1606,8 +1624,17 @@ open-weights flag, the context window, the parameter counts, the Hugging Face
 url and most of the benchmarks natively — those no longer cost a page fetch —
 but AA-Briefcase, IT-Bench SRE, Apex Agents, the Harvey and AutomationBench
 rows, the openness breakdown and the creator's own url appear on the pages
-only, as does everything at all on the free tier. A page value is used where
-the API sent none; it never overrides one that arrived.
+only. A page value is used where the API sent none; it never overrides one that
+arrived.
+
+**On the free tier the pages carry nearly everything.** Its `evaluations` block
+holds three composite indices — Intelligence, Coding and Agentic — and its
+`performance` block the medians only; there is no licensing, parameter,
+context-window or Hugging Face field on the record at all. A measured
+free-tier run of `gpt-oss-120b` returns 20 populated benchmarks, 17 of them
+scraped. That is why the page fetch is retried and why a page failure is
+logged under `--verbose` rather than passed over: on free it is the source, not
+the fallback.
 
 ## Model Size and Context Fields
 

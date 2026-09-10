@@ -7,6 +7,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, date
 
 import argcomplete
@@ -36,6 +37,26 @@ DEFAULT_TIER = _ENV_TIER if _ENV_TIER in TIERS else "auto"
 MAX_PAGES = 25
 FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
+# One update-all run reads the list three times in three processes:
+# update_artificialanalysis_mapping.py and update.py each ask for the slugs,
+# then update.py asks for the records. Paged, that is 3 x 4 requests against a
+# free key's 100 a day, which the three-hourly cron blows through by tea time.
+# The answer is the same list every time, so the whole response is cached on
+# disk between processes and the run costs one fetch. The window is well under
+# the cron interval, so no cron ever serves another's data.
+RESPONSE_CACHE_PATH = os.path.expanduser("~/.cache/artificialanalysis/response.json")
+try:
+    RESPONSE_CACHE_TTL = int(os.getenv("ARTIFICIAL_ANALYSIS_CACHE_TTL", "3600"))
+except ValueError:
+    RESPONSE_CACHE_TTL = 3600
+# A 403 from the Pro route costs a request of the same budget, so "auto"
+# remembers the refusal rather than paying to rediscover it every fetch.
+PRO_RETRY_INTERVAL = 86400
+# A page that dies at the transport layer takes the whole walk with it, and the
+# pages already read are spent either way. One retry, since a request that got
+# no response was not billed; an HTTP status is never retried, because it was.
+PAGE_RETRIES = 1
+PAGE_RETRY_DELAY = 2.0
 _PAGE_METRICS_CACHE = {}
 _CONTEXT_ENABLED = True
 _PARAMS_ENABLED = True
@@ -132,6 +153,69 @@ def _tier_url(tier: str) -> str:
     return MODELS_FREE_URL if tier == "free" else MODELS_URL
 
 
+def _read_response_cache() -> dict:
+    try:
+        with open(RESPONSE_CACHE_PATH, "r", encoding="utf-8") as f:
+            cached = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return cached if isinstance(cached, dict) else {}
+
+
+def _write_response_cache(cached: dict) -> None:
+    try:
+        os.makedirs(os.path.dirname(RESPONSE_CACHE_PATH), exist_ok=True)
+        with open(RESPONSE_CACHE_PATH, "w", encoding="utf-8") as f:
+            json.dump(cached, f)
+    except OSError:
+        pass
+
+
+def _cached_response(tier: str):
+    """A payload from a recent fetch, where one is still inside the window.
+
+    A pinned tier only accepts its own; "auto" takes whichever tier the last
+    fetch reached, which is the one it would reach again.
+    """
+    if RESPONSE_CACHE_TTL <= 0:
+        return None
+    cached = _read_response_cache()
+    payload = cached.get("payload")
+    if not isinstance(payload, dict):
+        return None
+    if tier != "auto" and cached.get("tier") != tier:
+        return None
+    age = time.time() - cached.get("fetched_at", 0)
+    if age < 0 or age > RESPONSE_CACHE_TTL:
+        return None
+    if _VERBOSE:
+        print(
+            f"< {len(payload.get('data', []))} models from the response cache "
+            f"({int(age)}s old, tier {cached.get('tier')})",
+            file=sys.stderr,
+        )
+    return payload
+
+
+def _store_response(tier: str, payload: dict) -> None:
+    cached = _read_response_cache()
+    cached.update({"tier": tier, "fetched_at": time.time(), "payload": payload})
+    _write_response_cache(cached)
+
+
+def _pro_recently_denied() -> bool:
+    denied_at = _read_response_cache().get("pro_denied_at")
+    if not isinstance(denied_at, (int, float)):
+        return False
+    return 0 <= time.time() - denied_at <= PRO_RETRY_INTERVAL
+
+
+def _remember_pro_denied() -> None:
+    cached = _read_response_cache()
+    cached["pro_denied_at"] = time.time()
+    _write_response_cache(cached)
+
+
 def _log_rate_limit(resp) -> None:
     if not _VERBOSE:
         return
@@ -165,17 +249,24 @@ def _fetch_all_pages(url: str, api_key: str, timeout: int):
     models = []
     page = 1
     while page <= MAX_PAGES:
-        try:
-            if _VERBOSE:
-                print(f"> GET {url}?page={page}", file=sys.stderr)
-            resp = requests.get(
-                url,
-                headers={"x-api-key": api_key},
-                params={"page": page},
-                timeout=timeout,
-            )
-        except requests.RequestException as exc:
-            return None, f"request failed: {exc}", None
+        resp = None
+        for attempt in range(PAGE_RETRIES + 1):
+            try:
+                if _VERBOSE:
+                    print(f"> GET {url}?page={page}", file=sys.stderr)
+                resp = requests.get(
+                    url,
+                    headers={"x-api-key": api_key},
+                    params={"page": page},
+                    timeout=timeout,
+                )
+                break
+            except requests.RequestException as exc:
+                if attempt == PAGE_RETRIES:
+                    return None, f"request failed: {exc}", None
+                if _VERBOSE:
+                    print(f"< {exc}; retrying page {page}", file=sys.stderr)
+                time.sleep(PAGE_RETRY_DELAY)
         if _VERBOSE:
             print(f"< {resp.status_code} {url}?page={page}", file=sys.stderr)
         _log_rate_limit(resp)
@@ -209,23 +300,37 @@ def _fetch_all_pages(url: str, api_key: str, timeout: int):
     return merged, "", 200
 
 
-def _fetch_models(api_key: str, tier: str = "auto", timeout: int = 30):
+def _fetch_models(api_key: str, tier: str = "auto", timeout: int = 30, use_cache: bool = True):
     """Every model AA lists, as (payload, error).
 
     The V2 list endpoints paginate, so this walks them and hands back one
-    payload whose "data" holds the lot, normalized. On "auto" a 403 from the
-    Pro route -- a key without a Pro subscription -- falls back to the free
-    route; any other failure is reported as it stands rather than silently
-    downgrading the fields the caller gets.
+    payload whose "data" holds the lot, normalized -- served from the response
+    cache where a recent fetch left one. On "auto" a 403 from the Pro route --
+    a key without a Pro subscription -- falls back to the free route, and the
+    refusal is remembered so the next fetch does not pay for it again. Any
+    other failure is reported as it stands rather than silently downgrading the
+    fields the caller gets.
     """
-    order = ["pro", "free"] if tier == "auto" else [tier]
+    if use_cache:
+        payload = _cached_response(tier)
+        if payload is not None:
+            return payload, ""
+
+    if tier == "auto":
+        order = ["free"] if _pro_recently_denied() else ["pro", "free"]
+    else:
+        order = [tier]
+
     error = ""
     for index, attempt in enumerate(order):
         url = _tier_url(attempt)
         payload, failure, status = _fetch_all_pages(url, api_key, timeout)
         if payload is not None:
+            _store_response(attempt, payload)
             return payload, ""
         error = f"{url}: {failure}"
+        if status == 403 and attempt == "pro":
+            _remember_pro_denied()
         if status != 403 or index == len(order) - 1:
             break
         if _VERBOSE:
@@ -501,25 +606,40 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
 
     result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
     url = MODEL_PAGE_URL.format(slug)
-    try:
-        if _VERBOSE:
-            print(f"> GET {url}", file=sys.stderr)
-        resp = requests.get(url, headers={"RSC": "1"}, timeout=15)
-        if _VERBOSE:
-            print(f"< {resp.status_code} {url}", file=sys.stderr)
-        if resp.status_code != 200:
-            _PAGE_METRICS_CACHE[slug] = result
-            return result
-        result["context_window"] = _parse_context_window(resp.text, slug)
-        result["params"] = _parse_params(resp.text, slug)
-        result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
-        result["creator"] = _parse_creator(resp.text, creator_name)
-        metrics = _parse_metrics_block(resp.text, slug)
-        result.update(metrics)
-        if "mmmu_pro" not in result:
-            result["mmmu_pro"] = None
-    except requests.RequestException:
-        pass
+    # These pages are megabytes each and they carry most of a free-tier run's
+    # columns, so a dropped connection is worth one retry: the alternative is a
+    # model that silently reports none of them.
+    resp = None
+    for attempt in range(PAGE_RETRIES + 1):
+        try:
+            if _VERBOSE:
+                print(f"> GET {url}", file=sys.stderr)
+            resp = requests.get(url, headers={"RSC": "1"}, timeout=15)
+            break
+        except requests.RequestException as exc:
+            if attempt == PAGE_RETRIES:
+                if _VERBOSE:
+                    print(f"< {exc}; giving up on {url}", file=sys.stderr)
+                _PAGE_METRICS_CACHE[slug] = result
+                return result
+            if _VERBOSE:
+                print(f"< {exc}; retrying {url}", file=sys.stderr)
+            time.sleep(PAGE_RETRY_DELAY)
+
+    if _VERBOSE:
+        print(f"< {resp.status_code} {url}", file=sys.stderr)
+    if resp.status_code != 200:
+        _PAGE_METRICS_CACHE[slug] = result
+        return result
+
+    result["context_window"] = _parse_context_window(resp.text, slug)
+    result["params"] = _parse_params(resp.text, slug)
+    result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
+    result["creator"] = _parse_creator(resp.text, creator_name)
+    metrics = _parse_metrics_block(resp.text, slug)
+    result.update(metrics)
+    if "mmmu_pro" not in result:
+        result["mmmu_pro"] = None
 
     _PAGE_METRICS_CACHE[slug] = result
     return result
@@ -906,6 +1026,11 @@ def main():
         default=DEFAULT_TIER,
         help="which endpoint to read (auto falls back to free without Pro access)",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="re-read the API even if a recent response is cached",
+    )
     parser.add_argument("--output", "-o", choices=sorted(FORMATS), default="text", help="output format")
     parser.add_argument("--release-date", "-d", help="release date on/after YYYY-mm-dd")
     parser.add_argument("--verbose", action="store_true", help="log requests to stderr")
@@ -951,7 +1076,7 @@ def main():
         print("ARTIFICIAL_ANALYSIS_API_KEY is not set", file=sys.stderr)
         return 1
 
-    payload, error = _fetch_models(api_key, tier=args.tier)
+    payload, error = _fetch_models(api_key, tier=args.tier, use_cache=not args.no_cache)
     if payload is None:
         print(f"request failed: {error}", file=sys.stderr)
         return 1

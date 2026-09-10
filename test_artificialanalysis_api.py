@@ -11,7 +11,10 @@ have always read.
 
 from __future__ import annotations
 
+import tempfile
+import time
 import unittest
+from pathlib import Path
 from unittest import mock
 
 import artificialanalysis as aa
@@ -44,6 +47,15 @@ def page(models, *, has_more=False, page_number=1, tier="pro"):
 
 
 class FetchTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        # The response cache is a real file under ~/.cache; every test gets its
+        # own so none of them reads the developer's, or each other's.
+        cache = Path(tempfile.mkdtemp()) / "response.json"
+        patcher = mock.patch.object(aa, "RESPONSE_CACHE_PATH", str(cache))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.cache_path = cache
+
     def get(self, responses):
         """A requests.get double answering the queued responses in order."""
         self.calls = []
@@ -135,6 +147,32 @@ class TestEndpoints(FetchTestCase):
         self.assertIn("Rate limit exceeded", error)
         self.assertIn("60", error)
 
+    def test_a_dropped_connection_is_retried_once_before_the_walk_is_lost(self) -> None:
+        # A page that dies at the transport layer was not billed, and losing it
+        # throws away the pages already paid for.
+        calls = []
+
+        def _get(url, headers=None, params=None, timeout=None):
+            calls.append(params["page"])
+            if len(calls) == 2:
+                raise aa.requests.ConnectionError("Connection reset by peer")
+            return FakeResponse(payload=page([{"slug": f"m{len(calls)}"}], has_more=len(calls) == 1))
+
+        with mock.patch.object(aa.requests, "get", _get), mock.patch.object(aa.time, "sleep", lambda _s: None):
+            payload, error = aa._fetch_models("key", tier="free")
+        self.assertEqual(error, "")
+        self.assertEqual(calls, [1, 2, 2])
+        self.assertEqual([m["slug"] for m in payload["data"]], ["m1", "m3"])
+
+    def test_a_connection_that_stays_down_fails_the_fetch(self) -> None:
+        def _get(url, headers=None, params=None, timeout=None):
+            raise aa.requests.ConnectionError("Connection reset by peer")
+
+        with mock.patch.object(aa.requests, "get", _get), mock.patch.object(aa.time, "sleep", lambda _s: None):
+            payload, error = aa._fetch_models("key", tier="free")
+        self.assertIsNone(payload)
+        self.assertIn("Connection reset by peer", error)
+
     def test_the_retired_route_reports_what_the_api_said(self) -> None:
         gone = {"error": "This endpoint was retired on 2026-11-04. See /data-api/migrate-v2-data"}
         with mock.patch.object(aa.requests, "get", self.get([FakeResponse(410, gone)])):
@@ -142,6 +180,88 @@ class TestEndpoints(FetchTestCase):
         self.assertIsNone(payload)
         self.assertIn("410", error)
         self.assertIn("migrate-v2-data", error)
+
+
+class TestResponseCache(FetchTestCase):
+    def test_a_second_fetch_in_the_window_costs_no_requests(self) -> None:
+        # The three fetches in one update-all run are three processes, so the
+        # cache is on disk: without it a free key spends 12 of its 100 daily
+        # requests per run and the three-hourly cron runs out before the day does.
+        with mock.patch.object(aa.requests, "get", self.get([FakeResponse(payload=page([{"slug": "a"}]))])):
+            first, _ = aa._fetch_models("key")
+            second, error = aa._fetch_models("key")
+        self.assertEqual(len(self.calls), 1)
+        self.assertEqual(error, "")
+        self.assertEqual(second["data"], first["data"])
+
+    def test_a_stale_response_is_re_read(self) -> None:
+        responses = [FakeResponse(payload=page([{"slug": "a"}])), FakeResponse(payload=page([{"slug": "b"}]))]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            aa._fetch_models("key")
+            with mock.patch.object(aa, "RESPONSE_CACHE_TTL", -1):
+                payload, _error = aa._fetch_models("key")
+        self.assertEqual(len(self.calls), 2)
+        self.assertEqual([m["slug"] for m in payload["data"]], ["b"])
+
+    def test_no_cache_forces_a_fresh_read(self) -> None:
+        responses = [FakeResponse(payload=page([{"slug": "a"}])), FakeResponse(payload=page([{"slug": "b"}]))]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            aa._fetch_models("key")
+            payload, _error = aa._fetch_models("key", use_cache=False)
+        self.assertEqual(len(self.calls), 2)
+        self.assertEqual([m["slug"] for m in payload["data"]], ["b"])
+
+    def test_a_pinned_tier_does_not_serve_the_other_tiers_response(self) -> None:
+        responses = [
+            FakeResponse(payload=page([{"slug": "a"}], tier="free")),
+            FakeResponse(payload=page([{"slug": "a"}], tier="pro")),
+        ]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            aa._fetch_models("key", tier="free")
+            payload, _error = aa._fetch_models("key", tier="pro")
+        self.assertEqual(len(self.calls), 2)
+        self.assertEqual(payload["tier"], "pro")
+
+    def test_a_failed_fetch_is_not_cached(self) -> None:
+        responses = [FakeResponse(500, {"error": "boom"}), FakeResponse(payload=page([{"slug": "a"}]))]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            failed, error = aa._fetch_models("key", tier="free")
+            payload, _error = aa._fetch_models("key", tier="free")
+        self.assertIsNone(failed)
+        self.assertIn("boom", error)
+        self.assertEqual([m["slug"] for m in payload["data"]], ["a"])
+
+    def test_a_refused_pro_route_is_not_probed_again(self) -> None:
+        # The 403 is billed against the same 100-a-day budget, so rediscovering
+        # it every fetch would cost a free key a request each time.
+        responses = [
+            FakeResponse(403, {"error": "Language models list requires a Pro subscription"}),
+            FakeResponse(payload=page([{"slug": "a"}], tier="free")),
+            FakeResponse(payload=page([{"slug": "a"}], tier="free")),
+        ]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            aa._fetch_models("key")
+            with mock.patch.object(aa, "RESPONSE_CACHE_TTL", -1):
+                payload, error = aa._fetch_models("key")
+        self.assertEqual(error, "")
+        self.assertEqual([call[0] for call in self.calls], [aa.MODELS_URL, aa.MODELS_FREE_URL, aa.MODELS_FREE_URL])
+        self.assertEqual(payload["tier"], "free")
+
+    def test_the_pro_route_is_probed_again_once_the_memo_ages_out(self) -> None:
+        responses = [
+            FakeResponse(403, {"error": "nope"}),
+            FakeResponse(payload=page([{"slug": "a"}], tier="free")),
+            FakeResponse(payload=page([{"slug": "a"}], tier="pro")),
+        ]
+        with mock.patch.object(aa.requests, "get", self.get(responses)):
+            aa._fetch_models("key")
+            aged = aa._read_response_cache()
+            aged["pro_denied_at"] = time.time() - aa.PRO_RETRY_INTERVAL - 1
+            aa._write_response_cache(aged)
+            with mock.patch.object(aa, "RESPONSE_CACHE_TTL", -1):
+                payload, _error = aa._fetch_models("key")
+        self.assertEqual(self.calls[2][0], aa.MODELS_URL)
+        self.assertEqual(payload["tier"], "pro")
 
 
 PRO_MODEL = {
@@ -313,6 +433,38 @@ class TestPageFallback(unittest.TestCase):
         self.assertEqual(model["context"], "128k")
         self.assertEqual(model["params"], "21B-A4B")
         self.assertEqual(model["ttft_p05"], 0.28)
+
+
+class TestPageFetchRetry(unittest.TestCase):
+    def setUp(self) -> None:
+        aa._PAGE_METRICS_CACHE.clear()
+        self.addCleanup(aa._PAGE_METRICS_CACHE.clear)
+
+    def test_a_dropped_page_is_retried_before_it_is_written_off(self) -> None:
+        # On the free tier the pages carry most of the columns, so writing one
+        # off on the first blip silently drops every score on that model.
+        calls = []
+        body = '"slug":"a","microevalsEnabled":true,"critpt":0.5'
+
+        def _get(url, headers=None, timeout=None):
+            calls.append(url)
+            if len(calls) == 1:
+                raise aa.requests.ConnectionError("Connection reset by peer")
+            return mock.Mock(status_code=200, text=body)
+
+        with mock.patch.object(aa.requests, "get", _get), mock.patch.object(aa.time, "sleep", lambda _s: None):
+            metrics = aa._fetch_page_metrics("a")
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(metrics["critpt"], 0.5)
+
+    def test_a_page_that_stays_down_leaves_the_record_empty(self) -> None:
+        def _get(url, headers=None, timeout=None):
+            raise aa.requests.ConnectionError("Connection reset by peer")
+
+        with mock.patch.object(aa.requests, "get", _get), mock.patch.object(aa.time, "sleep", lambda _s: None):
+            metrics = aa._fetch_page_metrics("a")
+        self.assertEqual(metrics["context_window"], "")
+        self.assertIsNone(metrics["mmmu_pro"])
 
 
 class TestCreatorSlug(unittest.TestCase):
