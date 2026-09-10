@@ -32,6 +32,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
+| **Vals AI** | Independent evaluator | Astro island props |
 
 ## Core Data Structure
 
@@ -161,6 +162,7 @@ rather than to even, and an integral result is stored as an int (`34`, not
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
+│  fetch_tbench.py          │ fetch_vals.py               │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -211,6 +213,8 @@ Output: llm.json (unified dataset)
 ./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
+./fetch_vals.py                         # every Vals AI board llm.json has a column for
+./fetch_vals.py --benchmark swebench    # or pin one board
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -227,6 +231,7 @@ Output: llm.json (unified dataset)
 ./update_osworld_mapping.py
 ./update_spheron_mapping.py
 ./update_swe_marathon_mapping.py
+./update_vals_mapping.py
 ```
 
 ### Model Management
@@ -467,7 +472,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
-| 3 | **Curated third parties** — evals.report, benchlm.ai | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. |
+| 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. |
 | 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its DeepSWE rows are not ingested at all: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
@@ -491,6 +496,49 @@ the model cards filling gaps beneath it. CharXiv is the thinnest case of the
 four — evals.report has only two trusted open-weight rows there, so in practice
 the cards carry the column and rank 3 confirms two of its values rather than
 leading it.
+
+### What Vals AI contributes
+
+Vals AI runs the models itself rather than collecting what labs report, and it
+publishes a standard error, a latency and a cost per test beside every accuracy.
+That makes it a second uniform run of columns that already have a publisher, so
+it never leads one: at rank 3 it fills gaps under Artificial Analysis and under
+each benchmark's own board, and displaces the model-card self-reports below it.
+
+Eight of its boards name a column `llm.json` already tracks — the table lives in
+`fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
+more:
+
+| Vals board | Column | Note |
+| --- | --- | --- |
+| `swebench` | `swe_bench_verified` | Titled "SWE-bench Verified"; the metadata slug is the bare `swebench` |
+| `terminal-bench-2-1` / `terminal-bench-2` | `terminal_bench_2_1` / `terminal_bench_2_0` | Each page stamps its own version, so neither can be read as the other |
+| `lcb` | `livecodebench` | Vals' own implementation |
+| `gpqa` | `gpqa_diamond` | |
+| `mmlu_pro` | `mmlu_pro` | |
+| `mmmu` | `mmmu_pro` | Titled "MMMU Pro"; the metadata slug is the bare `mmmu` |
+| `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
+
+The AIME board is the one that needs a task override. Vals runs the 2024 and
+2025 exams as two tasks of one board and its "overall" is the pair pooled, while
+`llm.json` keeps a column per exam year. Writing the pooled number into
+`aime_2025` would be exactly the revision blend the versioned columns exist to
+prevent, so `fetch_vals.TASKS` pins that board to its 2025 task and the 2024 half
+is dropped. The board is archived upstream, so it fills the models it measured
+and never moves again.
+
+Model names are Vals' own `<provider>/<model>` paths, the shape the Spheron
+mapping already uses, because the leaderboard payload publishes no display name
+and the path is the only stable identity on offer. The provider half names the
+API Vals called rather than the model — the same weights arrive as
+`fireworks/gpt-oss-120b` where another source says `gpt-oss-120b` — so the path
+is the mapping key, but every comparison against another source's name (the
+review candidates, the [openness index](#openness-classification)) is made on the
+model half alone.
+
+The boards Vals runs that no column tracks — its private industry suites
+(Finance Agent, LegalBench, MedQA, the Vals Index), plus MATH 500 and MGSM — are
+deliberately not ingested.
 
 ### Tool Use and Instruction Following
 
@@ -1637,9 +1685,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (18 files)
-├── update_*_mapping.py         # Mapping sync scripts (18 files)
-├── _*_mapping.py               # Mapping application modules (18 files)
+├── fetch_*.py                  # Benchmark data fetchers (19 files)
+├── update_*_mapping.py         # Mapping sync scripts (19 files)
+├── _*_mapping.py               # Mapping application modules (19 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 │

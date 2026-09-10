@@ -29,6 +29,7 @@ import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
+import fetch_vals
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _precedence import (
@@ -47,6 +48,7 @@ from _precedence import (
     SWE_MARATHON_SOURCE_URL,
     TBENCH_SOURCE_URL,
     TOOLATHLON_SOURCE_URL,
+    VALS_KEY_URLS,
     may_overwrite,
 )
 from _scores import round_score, score_source, stamp_score_source, stamp_score_updated
@@ -63,6 +65,7 @@ from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
+from _vals_mapping import load_vals_to_slug_mapping
 from _revisions import known_revision_key
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
 from _tbench_mapping import load_tbench_to_slug_mapping
@@ -89,6 +92,7 @@ AGENTS_LAST_EXAM_SCRIPT = Path(__file__).resolve().with_name("fetch_agents_last_
 FRONTIERCODE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontiercode.py")
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
+VALS_SCRIPT = Path(__file__).resolve().with_name("fetch_vals.py")
 SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py")
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
@@ -338,6 +342,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-evals-report",
         action="store_true",
         help="Skip fetching scores from evals.report.",
+    )
+    parser.add_argument(
+        "--skip-vals",
+        action="store_true",
+        help="Skip fetching scores from vals.ai.",
     )
     parser.add_argument(
         "--skip-swe-marathon",
@@ -1621,6 +1630,74 @@ def update_evals_report_scores(
     return matched, updated, changes
 
 
+def build_fetch_vals_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--benchmark", "all", "--format", "json"]
+
+
+def fetch_vals_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_vals_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_vals.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected vals JSON format: expected a list")
+
+    vals_to_slug = load_vals_to_slug_mapping(mapping_path)
+    # slug -> {benchmark_key -> best score across the rows that reach it}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        key = row.get("key")
+        score = row.get("score")
+        if not isinstance(name, str) or not isinstance(key, str):
+            continue
+        if isinstance(score, bool) or not isinstance(score, (int, float)):
+            continue
+        slug = vals_to_slug.get(name)
+        if not slug:
+            continue
+        scores = by_slug.setdefault(slug, {})
+        # Two Vals paths can map to one slug (a model served by more than one
+        # provider); keep the best, the same rule keep_best_row() applies
+        # within a single board.
+        if key not in scores or score > scores[key]:
+            scores[key] = score
+    return by_slug
+
+
+def update_vals_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        vals_scores = by_slug.get(slug)
+        if not vals_scores:
+            continue
+
+        matched += 1
+        for benchmark_key, new_value in vals_scores.items():
+            updated += apply_score(
+                doc, model, slug, benchmark_key, new_value,
+                VALS_KEY_URLS[benchmark_key], changes,
+                fill_urls_only=fill_urls_only,
+            )
+
+    return matched, updated, changes
+
+
 def build_fetch_swe_marathon_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -1885,6 +1962,7 @@ def main() -> int:
     frontiercode_path = FRONTIERCODE_SCRIPT
     swe_atlas_path = SWE_ATLAS_SCRIPT
     evals_report_path = EVALS_REPORT_SCRIPT
+    vals_path = VALS_SCRIPT
     swe_marathon_path = SWE_MARATHON_SCRIPT
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
@@ -1926,6 +2004,9 @@ def main() -> int:
     )
     evals_report_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-evals-report-to-artificialanalysis.json"
+    )
+    vals_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-vals-to-artificialanalysis.json"
     )
     swe_marathon_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-swe-marathon-to-artificialanalysis.json"
@@ -1989,6 +2070,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_swe_atlas_cmd(swe_atlas_path))}")
     if not args.skip_evals_report:
         print(f"  - {shlex.join(build_fetch_evals_report_cmd(evals_report_path))}")
+    if not args.skip_vals:
+        print(f"  - {shlex.join(build_fetch_vals_cmd(vals_path))}")
     if not args.skip_swe_marathon:
         print(f"  - {shlex.join(build_fetch_swe_marathon_cmd(swe_marathon_path))}")
     if not args.skip_mcp_atlas:
@@ -2176,6 +2259,16 @@ def main() -> int:
         )
         changes.extend(evals_report_changes)
 
+    vals_by_slug: dict[str, dict[str, Any]] = {}
+    vals_matched = 0
+    vals_updated = 0
+    if not args.skip_vals:
+        vals_by_slug = fetch_vals_data(vals_path, vals_mapping_path)
+        vals_matched, vals_updated, vals_changes = update_vals_scores(
+            doc, vals_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(vals_changes)
+
     # Runs after evals.report so the benchmark's own site wins on disagreement.
     frontiercode_by_slug: dict[str, dict[str, Any]] = {}
     frontiercode_matched = 0
@@ -2271,6 +2364,8 @@ def main() -> int:
         print(f"models returned by swe_atlas: {len(swe_atlas_by_slug)}")
     if not args.skip_evals_report:
         print(f"models returned by evals_report: {len(evals_report_by_slug)}")
+    if not args.skip_vals:
+        print(f"models returned by vals: {len(vals_by_slug)}")
     if not args.skip_swe_marathon:
         print(f"models returned by swe_marathon: {revision_model_count(swe_marathon_by_slug)}" + revision_breakdown(swe_marathon_by_slug))
     if not args.skip_mcp_atlas:
@@ -2321,6 +2416,8 @@ def main() -> int:
         print(f"models matched on swe_atlas: {swe_atlas_matched}")
     if not args.skip_evals_report:
         print(f"models matched on evals_report: {evals_report_matched}")
+    if not args.skip_vals:
+        print(f"models matched on vals: {vals_matched}")
     if not args.skip_swe_marathon:
         print(f"models matched on swe_marathon: {swe_marathon_matched}")
     if not args.skip_mcp_atlas:
@@ -2360,6 +2457,8 @@ def main() -> int:
         print(f"{action} from swe_atlas: {swe_atlas_updated}")
     if not args.skip_evals_report:
         print(f"{action} from evals_report: {evals_report_updated}")
+    if not args.skip_vals:
+        print(f"{action} from vals: {vals_updated}")
     if not args.skip_swe_marathon:
         print(f"{action} from swe_marathon: {swe_marathon_updated}")
     if not args.skip_mcp_atlas:

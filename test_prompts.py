@@ -273,6 +273,7 @@ class TestPromptHooks(CollectModeBase):
             ("update_frontiercode_mapping", "prompt_slug_for_frontiercode_name", (name, [])),
             ("update_swe_atlas_mapping", "prompt_slug_for_swe_atlas_name", (name, [])),
             ("update_evals_report_mapping", "prompt_slug_for_evals_report_name", (name, [])),
+            ("update_vals_mapping", "prompt_slug_for_vals_path", (name, [])),
             ("update_swe_marathon_mapping", "prompt_slug_for_swe_marathon_name", (name, [])),
             ("update_toolathlon_mapping", "prompt_slug_for_toolathlon_name", (name, [])),
             ("update_spheron_mapping", "prompt_slug_for_spheron_path", (name, [], None)),

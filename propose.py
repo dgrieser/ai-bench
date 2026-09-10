@@ -115,6 +115,9 @@ ROUTES: dict[str, dict[str, Route]] = {
             "_evals_report_mapping", "EVALS_REPORT_MAPPING", "add_evals_report_mapping", MODELS
         )
     },
+    "update_vals_mapping.py": {
+        "*": Route("_vals_mapping", "VALS_MAPPING", "add_vals_mapping", MODELS)
+    },
     "update_swe_marathon_mapping.py": {
         "*": Route(
             "_swe_marathon_mapping", "SWE_MARATHON_MAPPING", "add_swe_marathon_mapping", MODELS
@@ -207,9 +210,14 @@ def route_for(entry: dict[str, Any]) -> Route | None:
 
 
 def match_subject(entry: dict[str, Any], route: Route) -> str:
-    """What to match on. Spheron keys are org/model paths; match the model part."""
+    """What to match on.
+
+    Spheron keys are org/model paths and Vals keys provider/model ones; in both
+    the leading segment names where the weights were served from rather than the
+    model, so only the last segment is matched.
+    """
     subject = entry.get("subject") or ""
-    if route.module == "_spheron_mapping" and "/" in subject:
+    if route.module in {"_spheron_mapping", "_vals_mapping"} and "/" in subject:
         return subject.rsplit("/", 1)[-1]
     return subject
 

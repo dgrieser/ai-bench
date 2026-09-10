@@ -143,6 +143,27 @@ class TestAaCodingAgentsMerge(unittest.TestCase):
                 )
 
 
+class TestValsMerge(unittest.TestCase):
+    """Vals names a model by the provider it called, so one llm.json slug can
+    collect rows from two paths (fireworks/ and openai/ serving one open model),
+    each carrying several benchmark keys. The fold has to be per key, and the
+    best row has to win whichever order the payload arrives in."""
+
+    def test_best_path_wins_per_key_in_either_order(self) -> None:
+        mapping = write_json({"fireworks/model": "m", "together/model": "m"})
+        rows = [
+            {"model": "fireworks/model", "key": "mmlu_pro", "score": 30.0},
+            {"model": "fireworks/model", "key": "gpqa_diamond", "score": 80.0},
+            {"model": "together/model", "key": "mmlu_pro", "score": 45.0},
+            {"model": "together/model", "key": "gpqa_diamond", "score": 70.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_slug = update.fetch_vals_data(SCRIPT, mapping)
+                self.assertEqual(by_slug["m"], {"mmlu_pro": 45.0, "gpqa_diamond": 80.0})
+
+
 class TestRevisionRouting(unittest.TestCase):
     """DeepSWE, FrontierCode and SWE-Marathon keep a column per revision.
 
