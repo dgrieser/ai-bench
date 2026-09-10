@@ -1594,8 +1594,15 @@ response is cached on disk** (`~/.cache/artificialanalysis/response.json`) and
 a run costs one fetch — **4 requests, 32 a day**, comfortable on either tier.
 The window is one hour (`ARTIFICIAL_ANALYSIS_CACHE_TTL`, seconds), well inside
 the three-hourly cron, so no cron ever serves another's data; `--no-cache`
-forces a fresh read. On CI the container is new each run, so the cache only
-ever dedupes within a run — which is exactly the part that was over budget.
+forces a fresh read.
+
+On CI the container is new each run, so within-run deduplication — the part
+that was over budget — needs no configuration at all. The `update-benchmarks`
+workflow additionally restores the cache directory between runs with
+`actions/cache`, which buys nothing on the cron path (three hours apart, one
+hour of window) but takes a merge- or dispatch-triggered refresh landing
+shortly after a cron down to no requests at all. It cannot stale a cron either
+way: what was restored only matters if the TTL still accepts it.
 
 Rate limits are **100 requests/24h on free, 500 on Pro**; `--verbose` prints
 what each response reports as remaining. The model pages are not part of this
