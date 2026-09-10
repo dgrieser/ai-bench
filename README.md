@@ -1733,7 +1733,7 @@ are rendered from it:
 | Shape | What it is | Where it lands |
 |---|---|---|
 | **full** | the master as-is: dark tile, monogram, `INDEX` wordmark | `favicon_120/152/180/192/512.png`, `icons/openbenchindex_logo.png` |
-| **mark** | tile cropped square around the monogram, wordmark dropped | `icons/openbenchindex_mark.svg`, `favicon_16/32/48.png`, `favicon.ico` |
+| **mark** | tile cropped square around the monogram, wordmark dropped | `icons/openbenchindex_mark.svg`, `favicon_16/32/48.png`, `favicon.ico`, and base64 `<link>`s in `_admin/index.html` between its `brand-icons` markers |
 | **flat** | monogram only — no tile, no shadow, B painted in `currentColor` | injected into `llm.html` between its `brand-mark` markers |
 
 ```bash
@@ -1745,9 +1745,12 @@ python3 -m pip install cairosvg pillow   # build-only, not in requirements.txt
 Why three: the wordmark is unreadable much below 120px, so small icons take the
 crop. And the page header needs the monogram to sit directly on the page in the
 current text colour — an `<img>` cannot follow the theme toggle, so that variant
-is inlined into the HTML instead of linked. The crops are measured off a render
-rather than hand-typed, so moving the artwork does not leave a stale bounding
-box behind.
+is inlined into the HTML instead of linked. The admin page carries its two tab
+icons inlined too, for a different reason: `_admin/.htaccess` serves nothing in
+that directory but `index.html` and `api.php`, and it is deployed to a host with
+no copy of the icon set, so a linked `favicon_32.png` would 404. The crops are
+measured off a render rather than hand-typed, so moving the artwork does not
+leave a stale bounding box behind.
 
 ## Example Usage Patterns
 

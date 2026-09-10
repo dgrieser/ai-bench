@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import tempfile
 import unittest
 from datetime import date, timedelta
@@ -610,6 +611,23 @@ class TestBatches(AnswersTestCase):
         )
         self.assertEqual(answers, [])
         self.assertIn("at most", failures[0].message)
+
+    def test_the_cap_the_admin_page_shows_is_the_one_that_is_enforced(self) -> None:
+        """Three files carry the number, and only this one decides it.
+
+        The page greys out Send past the cap and says how many to un-answer, so
+        a page holding a bigger number than the endpoint would offer a batch
+        that cannot be dispatched -- and a smaller one would refuse a sitting
+        that was fine.
+        """
+        for path, pattern in (
+            (_answers.HERE / "_admin" / "api.php", r"const MAX_RECORDS = (\d+);"),
+            (_answers.HERE / "_admin" / "index.html", r"const MAX_RECORDS = (\d+);"),
+        ):
+            with self.subTest(path.name):
+                found = re.search(pattern, path.read_text(encoding="utf-8"))
+                self.assertIsNotNone(found, f"{path.name}: no MAX_RECORDS to check")
+                self.assertEqual(int(found.group(1)), _answers.MAX_RECORDS)
 
     def test_one_model_may_only_be_touched_once(self) -> None:
         """Records apply in order and roll back together, so an edit sent with a

@@ -183,6 +183,16 @@ tells you why.
   sets are the same on purpose: nothing is enterable once and then frozen.
   (`vram` is not among them; Spheron writes it, and a hand-typed figure would be
   recomputed away.)
+
+  `params`, `context` and `creator` offer what `llm.json` already holds — the
+  sizes and creator names in use, sorted by what they measure rather than
+  alphabetically, so `1m` follows `512k`. They stay free text: a creator or a
+  size the site has never seen still has to be typeable. Naming a creator it
+  does know fills in **creator url** as well, with the page most of that
+  creator's models point at — nine creators in `llm.json` currently have two
+  spellings of theirs, which is what this stops growing. A URL typed by hand is
+  never overwritten. The same three lists back **Add a model** above.
+
   Adding a score also asks when it was read and what page it was read from: the
   date defaults to today (yours, not the runner's — the run can start on the
   other side of midnight) and the page to nothing, which is what a hand edit has
@@ -204,9 +214,21 @@ The icon in the header cycles the theme: follow the system, force light, force
 dark. It is stored under the same `theme` key `llm.html` uses, so both pages
 agree on one device.
 
-Answers batch up and go in one dispatch, so a sitting is one commit.
+The tab icon is the site's, inlined as base64 between this page's
+`brand-icons` markers rather than linked: `.htaccess` serves nothing in this
+directory but `index.html` and `api.php`, and the host has no copy of the icon
+set to link to. `make_favicons.py` writes it — do not edit that block by hand.
 
-Two things worth knowing:
+Answers batch up and go in one dispatch, so a sitting is one commit — up to 25
+of them. The action bar starts naming that cap at 15 ("15 of 25 ready to send —
+room for 10 more", in amber) so it is known while there is still a choice about
+what belongs in this sitting; past 25 it turns red, says how many to un-answer,
+and greys out **Send**, because `api.php` and `answer.py` would both refuse the
+batch anyway — and 25 is their number (`_answers.MAX_RECORDS`), not the page's.
+The reason for it is the concurrency group described below: a sitting that
+needed two runs would evict its own second run.
+
+A few things worth knowing:
 
 **Reload after a run to confirm.** The run's summary is the record of what
 landed, not its colour: `update-all` is `continue-on-error`, so one dead scraper
@@ -217,6 +239,29 @@ has left the queue.
 one run plus one queued, and a third arrival cancels the queued one silently.
 `api.php` returns 409 rather than letting a second batch evict the first — wait
 for the run to start, then send.
+
+**An answered question can come back before the queue catches up.** The run
+pushes the re-rendered queue seconds before it reports completed, and
+`raw.githubusercontent` does not always serve that push straight away — so the
+read that follows a run can still return the queue as it was *before* it, every
+question the run just answered listed again. The page therefore keeps the keys
+of an applied batch after its in-flight lock lifts (`ai-bench-admin-applied` in
+`localStorage`, survives a reload): those cards stay disabled and marked
+*applied*, with an amber note saying the queue has not caught up. An entry
+clears itself on the first queue read that no longer asks its question, and
+after 30 minutes regardless — a new-model line is re-offered on every run until
+the model is dismissed, so that one has to stay answerable.
+
+Without this, answering one of them again is refused by `answer.py` as a
+question nothing asked, and a batch is all or nothing, so one duplicate takes
+the whole sitting down with it. Only the queue's own questions are held this
+way; a model edit or a rename is not answered against the queue, so re-sending
+one is simply a second edit.
+
+**A failed run says so on the page.** When the run carrying a batch ends as
+anything but success, nothing was applied — `answer.py` writes all of a batch or
+none of it — so the page says that and hands those questions back instead of
+reporting the run as finished. Its log names the record it refused.
 
 **Answered cards stay disabled until their run finishes.** The queue is only
 republished when the run pushes, so a question you have just answered is still
