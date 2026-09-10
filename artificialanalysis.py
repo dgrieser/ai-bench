@@ -367,10 +367,31 @@ def _published_models(models):
             }
         )
     # Case-insensitive, so "QwQ-32B-Preview" sits with its neighbours rather
-    # than above every lowercase slug; the slug itself breaks ties, so the
-    # order is total and the diff is stable.
-    published.sort(key=lambda entry: (entry["slug"].lower(), entry["slug"]))
-    return {"count": len(published), "models": published}
+    # than above every lowercase slug -- then the rest of the record, so the
+    # order is total even where two entries share a slug. Sorting on the slug
+    # alone would leave those two in whatever order the API happened to send,
+    # which is the one input to this file that is not stable run to run.
+    published.sort(
+        key=lambda entry: (
+            entry["slug"].lower(),
+            entry["slug"],
+            entry["name"],
+            entry["creator"],
+            entry["release_date"],
+        )
+    )
+
+    # And then one entry per slug. Offset paging can hand back the same model
+    # twice all by itself -- four page reads seconds apart, and a model
+    # inserted at AA's end between two of them shifts everything after it --
+    # so a duplicate here is a fetch artefact rather than news. The page keys
+    # its lookup by slug and would otherwise offer the same suggestion twice.
+    deduped = []
+    for entry in published:
+        if deduped and deduped[-1]["slug"] == entry["slug"]:
+            continue
+        deduped.append(entry)
+    return {"count": len(deduped), "models": deduped}
 
 
 def _write_published_models(models, path: str) -> int:

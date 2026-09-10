@@ -1622,9 +1622,14 @@ _aa/models.json` writes the slug, name, creator and release date of every model
 AA lists (~96 KiB), and the page reads it from the repository beside the queue
 and `llm.json`. Three things make that safe to commit on every refresh:
 
-- **No timestamp**, and a total, case-insensitive order — so a run where AA
-  published nothing new is an empty diff, not a rewrite. It is the churn rule
-  `pending_prompts.py` already applies to the queue.
+- **No timestamp**, and a total, case-insensitive order over the whole record
+  — so a run where AA published nothing new is an empty diff, not a rewrite.
+  It is the churn rule `pending_prompts.py` already applies to the queue.
+  Sorting on the slug alone would not be enough: offset paging can return one
+  model twice (four page reads seconds apart, and an insert at AA's end
+  between two of them shifts everything after it), and a tie left in API order
+  is the one input to this file that is not stable run to run. Duplicate slugs
+  are collapsed to one entry.
 - **Nothing that moves.** Scores, pricing and performance stay out; `llm.json`
   is where this project publishes those, and they would change every run.
 - **A floor.** It refuses to write fewer than 100 models, so a bad answer from

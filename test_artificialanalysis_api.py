@@ -502,6 +502,27 @@ class TestPublishedModelList(unittest.TestCase):
         order = [m["slug"] for m in aa._published_models(models)["models"]]
         self.assertEqual(order, ["Alpha", "alpha", "beta", "QwQ-32B"])
 
+    def test_two_records_for_one_slug_collapse_to_one(self) -> None:
+        # Offset paging can hand the same model back twice when AA inserts a
+        # model between two page reads.
+        payload = aa._published_models([
+            {"slug": "a", "name": "A", "release_date": "2026-01-01"},
+            {"slug": "a", "name": "A", "release_date": "2026-01-01"},
+            {"slug": "b"},
+        ])
+        self.assertEqual(payload["count"], 2)
+        self.assertEqual([m["slug"] for m in payload["models"]], ["a", "b"])
+
+    def test_a_shared_slug_resolves_the_same_way_whatever_order_it_arrives(self) -> None:
+        # Sorting on the slug alone would leave these two in API order, which
+        # is the one input to this file that is not stable run to run.
+        first = {"slug": "a", "name": "Zebra", "release_date": "2026-01-01"}
+        second = {"slug": "a", "name": "Alpha", "release_date": "2026-02-02"}
+        forwards = aa._published_models([first, second])
+        backwards = aa._published_models([second, first])
+        self.assertEqual(forwards, backwards)
+        self.assertEqual(forwards["models"][0]["name"], "Alpha")
+
     def test_records_without_a_slug_are_dropped(self) -> None:
         payload = aa._published_models([{"slug": "a"}, {"name": "no slug"}, {"slug": ""}])
         self.assertEqual(payload["count"], 1)
