@@ -41,38 +41,6 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to DeepSeek V4 Flash Vision Exp, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierSWE model 'DeepSeek V4 Flash Vision Exp' to llm.json model",
-      "route": "update_frontierswe_mapping.py",
-      "route_kind": "mapping",
-      "subject": "DeepSeek V4 Flash Vision Exp",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
           "option": "jamba-1-7-large",
           "reason": "exact to jamba-large-1.6, most components match"
         },
