@@ -11,6 +11,7 @@ have always read.
 
 from __future__ import annotations
 
+import json
 import tempfile
 import time
 import unittest
@@ -465,6 +466,69 @@ class TestPageFetchRetry(unittest.TestCase):
             metrics = aa._fetch_page_metrics("a")
         self.assertEqual(metrics["context_window"], "")
         self.assertIsNone(metrics["mmmu_pro"])
+
+
+class TestPublishedModelList(unittest.TestCase):
+    """The file the admin page reads instead of proxying a live AA request."""
+
+    def setUp(self) -> None:
+        self.out = Path(tempfile.mkdtemp()) / "_aa" / "models.json"
+
+    def models(self, count):
+        return [
+            {
+                "slug": f"model-{i:04d}",
+                "name": f"Model {i}",
+                "model_creator": {"id": "x", "name": "Some Lab"},
+                "release_date": "2026-01-01",
+                "evaluations": {"artificial_analysis_intelligence_index": 1.0},
+                "pricing": {"price_1m_input_tokens": 1.0},
+            }
+            for i in range(count)
+        ]
+
+    def test_it_carries_the_four_fields_and_nothing_else(self) -> None:
+        # Scores, pricing and performance stay out: llm.json is where this
+        # project publishes those, and they would churn the file every run.
+        payload = aa._published_models(self.models(1))
+        self.assertEqual(payload["count"], 1)
+        self.assertEqual(
+            payload["models"][0],
+            {"slug": "model-0000", "name": "Model 0", "creator": "Some Lab", "release_date": "2026-01-01"},
+        )
+
+    def test_the_order_is_total_and_case_insensitive(self) -> None:
+        models = [{"slug": s} for s in ("beta", "QwQ-32B", "Alpha", "alpha")]
+        order = [m["slug"] for m in aa._published_models(models)["models"]]
+        self.assertEqual(order, ["Alpha", "alpha", "beta", "QwQ-32B"])
+
+    def test_records_without_a_slug_are_dropped(self) -> None:
+        payload = aa._published_models([{"slug": "a"}, {"name": "no slug"}, {"slug": ""}])
+        self.assertEqual(payload["count"], 1)
+
+    def test_the_same_list_writes_the_same_bytes(self) -> None:
+        # Committed on every refresh, so an unchanged list must be an empty
+        # diff -- which is why there is no timestamp in it.
+        models = self.models(aa.MIN_PUBLISHED_MODELS)
+        self.assertEqual(aa._write_published_models(models, str(self.out)), 0)
+        first = self.out.read_bytes()
+        self.assertEqual(aa._write_published_models(list(reversed(models)), str(self.out)), 0)
+        self.assertEqual(self.out.read_bytes(), first)
+        self.assertTrue(first.endswith(b"\n"))
+
+    def test_a_short_list_is_refused_rather_than_committed(self) -> None:
+        # A bad answer from AA must leave yesterday's good list in place; an
+        # emptied file would silently take the page's suggestions away.
+        self.out.parent.mkdir(parents=True)
+        self.out.write_text('{"count": 644, "models": []}', encoding="utf-8")
+        rc = aa._write_published_models(self.models(aa.MIN_PUBLISHED_MODELS - 1), str(self.out))
+        self.assertEqual(rc, 1)
+        self.assertIn('"count": 644', self.out.read_text(encoding="utf-8"))
+
+    def test_the_directory_is_created_on_a_first_publish(self) -> None:
+        self.assertFalse(self.out.parent.exists())
+        self.assertEqual(aa._write_published_models(self.models(aa.MIN_PUBLISHED_MODELS), str(self.out)), 0)
+        self.assertEqual(json.loads(self.out.read_text())["count"], aa.MIN_PUBLISHED_MODELS)
 
 
 class TestCreatorSlug(unittest.TestCase):

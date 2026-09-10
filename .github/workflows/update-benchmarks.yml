@@ -297,6 +297,25 @@ jobs:
             cat "$RUNNER_TEMP/pending.md"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # The slug list the admin page offers when renaming a hand-added model
+      # onto the name AA publishes it under. Committed rather than proxied so
+      # the page reads it straight from the repo like the queue and llm.json:
+      # api.php used to fetch it live, which cost four API requests every
+      # sitting, on the interactive path, against a free key's hundred a day.
+      #
+      # Free: the response this run already fetched is still inside the cache
+      # window, so writing the file costs no request of its own. Gated on a
+      # wholly successful refresh for the same reason the queue is -- and
+      # artificialanalysis.py refuses to write a short list, so a bad answer
+      # from AA leaves yesterday's good one in place instead of emptying the
+      # page's suggestions.
+      - name: Publish the Artificial Analysis model list
+        if: ${{ steps.refresh.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+        run: ./artificialanalysis.py --publish-models _aa/models.json
+
       - name: Commit and push
         if: ${{ !inputs.dry_run }}
         env:

@@ -57,6 +57,11 @@ PRO_RETRY_INTERVAL = 86400
 # no response was not billed; an HTTP status is never retried, because it was.
 PAGE_RETRIES = 1
 PAGE_RETRY_DELAY = 2.0
+# --publish-models refuses to write fewer than this. AA lists ~644; a paged
+# walk fails whole rather than short, so a truncated list cannot reach the
+# writer -- this is the guard against the day AA answers 200 OK with almost
+# nothing in it, which would otherwise commit an empty list over a good one.
+MIN_PUBLISHED_MODELS = 100
 _PAGE_METRICS_CACHE = {}
 _CONTEXT_ENABLED = True
 _PARAMS_ENABLED = True
@@ -336,6 +341,57 @@ def _fetch_models(api_key: str, tier: str = "auto", timeout: int = 30, use_cache
         if _VERBOSE:
             print(f"< no Pro access; retrying on {MODELS_FREE_URL}", file=sys.stderr)
     return None, error
+
+
+def _published_models(models):
+    """The published list: what a page needs to offer a slug, and nothing else.
+
+    Sorted, and deliberately carrying no timestamp. This file is committed on
+    every refresh, and a wall clock in it would rewrite it on runs where AA
+    published nothing new -- the same churn pending_prompts.py keeps out of
+    the queue. The fields below change about as often as the list itself does,
+    so an unchanged list is an unchanged file and an empty diff.
+    """
+    published = []
+    for m in models:
+        slug = m.get("slug")
+        if not isinstance(slug, str) or not slug:
+            continue
+        creator = m.get("model_creator")
+        published.append(
+            {
+                "slug": slug,
+                "name": m.get("name") or "",
+                "creator": (creator or {}).get("name", "") if isinstance(creator, dict) else "",
+                "release_date": m.get("release_date") or "",
+            }
+        )
+    # Case-insensitive, so "QwQ-32B-Preview" sits with its neighbours rather
+    # than above every lowercase slug; the slug itself breaks ties, so the
+    # order is total and the diff is stable.
+    published.sort(key=lambda entry: (entry["slug"].lower(), entry["slug"]))
+    return {"count": len(published), "models": published}
+
+
+def _write_published_models(models, path: str) -> int:
+    payload = _published_models(models)
+    if payload["count"] < MIN_PUBLISHED_MODELS:
+        # Leave whatever is already committed in place. A page with a stale
+        # list still offers the right slugs for every model AA had yesterday;
+        # a page with an empty one offers nothing at all.
+        print(
+            f"refusing to publish {payload['count']} models (under {MIN_PUBLISHED_MODELS});"
+            " leaving the existing file alone",
+            file=sys.stderr,
+        )
+        return 1
+
+    out = os.path.abspath(path)
+    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
+    print(f"published {payload['count']} models to {path}", file=sys.stderr)
+    return 0
 
 
 def _format_headers(labels, style):
@@ -1027,6 +1083,11 @@ def main():
         help="which endpoint to read (auto falls back to free without Pro access)",
     )
     parser.add_argument(
+        "--publish-models",
+        metavar="FILE",
+        help="write the slug list the admin page reads to FILE, and stop",
+    )
+    parser.add_argument(
         "--no-cache",
         action="store_true",
         help="re-read the API even if a recent response is cached",
@@ -1067,7 +1128,7 @@ def main():
             args.release_date,
         ]
     )
-    if not args.list_models and not has_filters:
+    if not args.list_models and not args.publish_models and not has_filters:
         parser.print_usage(sys.stderr)
         return 2
 
@@ -1083,6 +1144,9 @@ def main():
 
     models = payload.get("data", [])
     _save_cache(models)
+
+    if args.publish_models:
+        return _write_published_models(models, args.publish_models)
 
     if args.list_models:
         for m in models:

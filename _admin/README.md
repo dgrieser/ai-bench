@@ -112,10 +112,6 @@ above itself, since hosts disagree about the shape above the docroot. Set
 `AI_BENCH_ADMIN_CONFIG` if yours sits somewhere else. When it finds nothing it
 logs every path it tried and returns a 500 — it never falls back to a default.
 
-The config takes an optional third value, `aa_api_key`: an Artificial Analysis
-key, which is what lets the Models tab list AA slugs for a rename. Leave it
-empty and that one control says so; everything else works untouched.
-
 Keep it above the docroot rather than beside `api.php`. If PHP ever stops
 running — a bad `.htaccess`, a module falling over — a file inside the docroot is
 served as plain text, and that file holds the token.
@@ -144,10 +140,6 @@ A **fine-grained** personal access token:
 | Repository access | only `dgrieser/ai-bench` |
 | Permissions | **Actions → Read and write**, nothing else |
 
-(The optional `aa_api_key` beside it is an Artificial Analysis key, not a GitHub
-one. It is read-only against a public leaderboard's API, and the worst it can do
-is list model slugs.)
-
 That scope is the point, not an inconvenience. A `Contents: write` token would
 bypass the branch ruleset outright — the repository owner is on its bypass list —
 which would turn an internet-facing endpoint into arbitrary-write-to-`main`. With
@@ -165,7 +157,7 @@ tells you why.
   match is outlined in green. `__unmappable__` declines the name. The search box
   falls back to the full list — of models, of benchmark keys, or, for the
   "which AA slug is this model" question, of Artificial Analysis' own slugs,
-  which needs the `aa_api_key` below.
+  read from `_aa/models.json`.
 - **New models** — *Add it* runs `add.py` and records the answer; *Ignore it*
   writes `__ignored__`, which removes the entry and stops the slug being offered.
   (These are genuinely different records, not two values of one field — see the
@@ -330,18 +322,21 @@ moves all of them at once, reading the file list off `propose.ROUTES` so a
 source added there is never quietly forgotten, and `./rename.py old new` does
 the same job from a terminal.
 
-**The slug list needs a key.** The suggestions come from AA's own model list,
-which `api.php` fetches with the `aa_api_key` in its config — the same key
-`artificialanalysis.py` reads from `ARTIFICIAL_ANALYSIS_API_KEY`, against the
-documented V2 endpoint (`/api/v2/language/models`, paged, falling back to
-`/models/free` for a key without a Pro subscription) now that the legacy
-`/api/v2/data/*` route it used to call has retired. It is proxied
-rather than fetched by the page because the AA API authenticates with a header,
-so a browser request preflights and AA answers no CORS headers; keeping it
-server-side also keeps the key out of every browser that opens the page. Without
-a key the page says the list is unavailable and nothing else changes — the
-endpoint reports whether it has one, so an older `api.php` costs the
-suggestions rather than the whole page.
+**The slug list is committed, not proxied.** `_aa/models.json` — slug, name,
+creator and release date for every model AA lists — is written by
+`artificialanalysis.py --publish-models` on every successful refresh and read
+by the page from the repository, beside the queue and `llm.json`. So the
+suggestions need no key and no API request: `api.php` used to fetch the list
+live, which after AA's V2 endpoints began paging cost **four API requests every
+sitting**, on the interactive path, against a free key's hundred a day.
+
+Writing the file costs nothing either — the refresh has already fetched that
+response and it is still inside the cache window (see
+[Artificial Analysis API](../README.md#artificial-analysis-api)). And a bad
+answer from AA cannot empty it: `--publish-models` refuses to write a list
+shorter than 100 models, leaving the last good one in place. Before the first
+refresh publishes it the page says so and points at `./rename.py`, the same way
+it does for the queue.
 
 ## When the page is down
 

@@ -220,6 +220,7 @@ Output: llm.json (unified dataset)
 ./artificialanalysis.py --open          # every open-weights model AA lists
 ./artificialanalysis.py --tier free -m gpt-oss-20b   # pin the free endpoint
 ./artificialanalysis.py --list-models --no-cache     # bypass the cached response
+./artificialanalysis.py --publish-models _aa/models.json  # the admin page's slug list
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -1576,8 +1577,9 @@ is retried once, since a request that got no response was not billed.
 
 The list endpoints **page** at 200 records, so a fetch walks
 `?page=1,2,…` until one says `"has_more": false` and hands back a single
-payload whose `data` holds the lot. `_admin/api.php` does the same for its slug
-suggestions.
+payload whose `data` holds the lot. `_admin/api.php` no longer reads AA at
+all: the admin page's slug suggestions come from a committed file instead (see
+below).
 
 ### The request budget, and why the response is cached
 
@@ -1607,6 +1609,33 @@ way: what was restored only matters if the TTL still accepts it.
 Rate limits are **100 requests/24h on free, 500 on Pro**; `--verbose` prints
 what each response reports as remaining. The model pages are not part of this
 budget — they are unauthenticated page reads, not API calls.
+
+### `_aa/models.json`, and why the admin page no longer proxies
+
+The admin page offers AA's slugs when renaming a hand-added model onto the name
+AA publishes it under. It used to read them live through `api.php`, which after
+paging cost **four API requests every sitting** — on the interactive path,
+where running out is a human waiting on a `429`.
+
+So the list is committed instead. `./artificialanalysis.py --publish-models
+_aa/models.json` writes the slug, name, creator and release date of every model
+AA lists (~96 KiB), and the page reads it from the repository beside the queue
+and `llm.json`. Three things make that safe to commit on every refresh:
+
+- **No timestamp**, and a total, case-insensitive order — so a run where AA
+  published nothing new is an empty diff, not a rewrite. It is the churn rule
+  `pending_prompts.py` already applies to the queue.
+- **Nothing that moves.** Scores, pricing and performance stay out; `llm.json`
+  is where this project publishes those, and they would change every run.
+- **A floor.** It refuses to write fewer than 100 models, so a bad answer from
+  AA leaves the last good list in place rather than emptying the page's
+  suggestions — the failure `pending_prompts.py` names in its own docstring as
+  the reason the AA universe was kept out of `pending.json`.
+
+Publishing costs no API request of its own: the refresh has already fetched
+that response and it is still inside the cache window. The page reads the file
+from `raw.githubusercontent.com`, like the queue — **not** from the Pages site,
+which runs Jekyll and would not serve an underscore-prefixed directory.
 
 The V2 contract also renamed a number of fields. Everything downstream — the
 table, `update.py`'s `SCORE_MAPPINGS`, and the model pages this script still

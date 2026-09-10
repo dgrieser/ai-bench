@@ -763,7 +763,7 @@ const state = {
   /* Artificial Analysis model slugs, for renaming a hand-added entry onto one.
      `offered` is what api.php says it can serve; the list itself is fetched
      once, and only when the Models tab is opened. */
-  aa: { offered: false, slugs: null, error: "", asked: false },
+  aa: { slugs: null, models: null, error: "", asked: false },
   modelSearch: "",      // kept here so a re-render does not empty the tab
   newModel: null,       // the hand-added model being typed: { name, fields }
   error: "",
@@ -1227,25 +1227,42 @@ async function tick() {
 
 /* --------------------------------------------------- artificial analysis */
 
-/* Asked for once, and only when something needs it: the AA payload dwarfs
-   everything else the page reads, and most sittings never rename anything.
+/* Asked for once, and only when something needs it: this is the largest thing
+   the page reads and most sittings never rename anything.
 
-   It comes through api.php rather than from the browser because the AA API
-   authenticates with a header -- the request would preflight, and AA sends no
-   CORS headers -- and because the key belongs on the server beside the GitHub
-   token, not in every browser that opens this page. */
+   Read from the repo, beside the queue and llm.json, rather than proxied live
+   through api.php. The proxy had to exist while this came from the AA API --
+   which authenticates with a header, so a browser request preflights and AA
+   sends no CORS headers -- but the list is now committed on every refresh, so
+   the page reads the file directly: no key, no proxy, and none of the four API
+   requests a live read costs against a hundred-a-day budget. */
 async function ensureAaSlugs() {
-  if (!state.aa.offered || state.aa.asked) return;
+  // state.raw is api.php's answer to where the data lives, and loadRuns() is
+  // awaited before anything renders -- but a render that beat it would fetch
+  // "undefined/_aa/models.json" and cache the failure under asked.
+  if (!state.raw || state.aa.asked) return;
   state.aa.asked = true;
   try {
-    const response = await fetch(bust("api.php?aa=slugs"), { cache: "no-store" });
+    const response = await fetch(bust(`${state.raw}/_aa/models.json`), { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.json();
-    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
-    state.aa.slugs = (body.slugs || []).filter((slug) => typeof slug === "string");
+    const models = (body.models || []).filter((m) => m && typeof m.slug === "string");
+    state.aa.models = new Map(models.map((m) => [m.slug, m]));
+    state.aa.slugs = models.map((m) => m.slug);
   } catch (error) {
     state.aa.error = String(error.message);
   }
   render();
+}
+
+/* What is known about a slug beyond the slug itself, as a short trailing
+   phrase -- the creator and the release date are what separate two slugs whose
+   names read alike. Empty when the list carries neither. */
+function aaSlugDetail(slug) {
+  const model = state.aa.models && state.aa.models.get(slug);
+  if (!model) return "";
+  const parts = [model.creator, model.release_date].filter(Boolean);
+  return parts.length ? ` (${parts.join(", ")})` : "";
 }
 
 /* AA slugs worth offering for a model of this name, best first. The ranking is
@@ -1314,7 +1331,6 @@ async function loadRuns() {
     state.runs = body.runs || [];
     /* Announced rather than required: an endpoint without an AA key -- or one
        older than this page -- costs the rename suggestions and nothing else. */
-    state.aa.offered = Boolean(body.aa);
     /* Announced rather than required, like the AA key above: without it the
        page cannot tell an applied batch from a refused one and keeps every
        answered card locked, which costs a wait rather than a rejected batch.
@@ -2000,15 +2016,12 @@ function renameBlock(model, renameKey, rename) {
     return block;
   }
 
-  if (!state.aa.offered) {
-    block.append(el("p", { className: "note-text" },
-      "No Artificial Analysis key in api.php's config, so the slug list is not "
-      + "available here. ./rename.py does the same job from a terminal."));
-    return block;
-  }
   if (state.aa.error) {
     block.append(el("p", { className: "note-text" },
-      `Could not read the Artificial Analysis slugs (${state.aa.error}).`));
+      String(state.aa.error).includes("404")
+        ? "No published Artificial Analysis list yet. It appears after the next "
+          + "refresh run. ./rename.py does the same job from a terminal."
+        : `Could not read the Artificial Analysis slugs (${state.aa.error}).`));
     return block;
   }
   if (state.aa.slugs === null) {
@@ -2025,7 +2038,7 @@ function renameBlock(model, renameKey, rename) {
   const suggestions = aaSuggestions(model.name);
   const options = el("div", { className: "options" });
   for (const { slug, why } of suggestions) {
-    options.append(option(slug, `rename to this -- ${why}`, {
+    options.append(option(slug, `rename to this -- ${why}${aaSlugDetail(slug)}`, {
       pressed: false,
       className: why.startsWith("the same name") ? "exact" : "",
       tag: why.startsWith("the same name") ? "best match" : "",
@@ -2053,7 +2066,8 @@ function renameBlock(model, renameKey, rename) {
       input,
       apply,
       el("datalist", { id: listId },
-        state.aa.slugs.slice(0, 2000).map((value) => el("option", { value }))),
+        state.aa.slugs.slice(0, 2000).map((value) =>
+          el("option", { value, label: `${value}${aaSlugDetail(value)}` }))),
     ]),
     el("p", { className: "note-text" },
       suggestions.length
