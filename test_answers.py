@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import tempfile
 import unittest
 from datetime import date, timedelta
@@ -611,6 +612,23 @@ class TestBatches(AnswersTestCase):
         self.assertEqual(answers, [])
         self.assertIn("at most", failures[0].message)
 
+    def test_the_cap_the_admin_page_shows_is_the_one_that_is_enforced(self) -> None:
+        """Three files carry the number, and only this one decides it.
+
+        The page greys out Send past the cap and says how many to un-answer, so
+        a page holding a bigger number than the endpoint would offer a batch
+        that cannot be dispatched -- and a smaller one would refuse a sitting
+        that was fine.
+        """
+        for path, pattern in (
+            (_answers.HERE / "_admin" / "api.php", r"const MAX_RECORDS = (\d+);"),
+            (_answers.HERE / "_admin" / "index.html", r"const MAX_RECORDS = (\d+);"),
+        ):
+            with self.subTest(path.name):
+                found = re.search(pattern, path.read_text(encoding="utf-8"))
+                self.assertIsNotNone(found, f"{path.name}: no MAX_RECORDS to check")
+                self.assertEqual(int(found.group(1)), _answers.MAX_RECORDS)
+
     def test_one_model_may_only_be_touched_once(self) -> None:
         """Records apply in order and roll back together, so an edit sent with a
         rename of the same model would look for a name that is no longer there."""
@@ -788,6 +806,40 @@ class TestWorkflowWiring(unittest.TestCase):
             s["run"] for s in self.steps() if s.get("name", "").startswith("Check collect mode")
         )
         self.assertIn("./test_answers.py", run)
+
+    def test_the_step_api_php_reads_is_the_step_that_applies_answers(self) -> None:
+        """The endpoint reports that step's outcome, and the page trusts it.
+
+        The run's own conclusion cannot stand in for it: `Fail if a step of
+        update-all failed` reds a run whose answers were applied, committed and
+        pushed minutes earlier. If the name here drifts, api.php reports no step
+        at all -- which the page reads as "cannot tell" and keeps the answered
+        cards locked, so the safe half; but the message it shows is then wrong
+        about why.
+        """
+        api = (_answers.HERE / "_admin" / "api.php").read_text(encoding="utf-8")
+        found = re.search(r"const ANSWER_STEP = '([^']+)';", api)
+        self.assertIsNotNone(found, "api.php: no ANSWER_STEP to check")
+        self.assertIn(
+            found.group(1),
+            [step.get("name") for step in self.steps()],
+            "api.php names a workflow step that does not exist",
+        )
+
+    def test_the_answer_step_runs_before_anything_that_can_red_the_run(self) -> None:
+        """Which is why the step's outcome and the run's conclusion differ.
+
+        Nothing about this ordering is wrong -- an answer should be recorded
+        even when the refresh after it falls over -- but the admin page reads
+        the step rather than the run precisely because of it, and a reordering
+        that made the run's conclusion authoritative again would leave that
+        indirection looking pointless.
+        """
+        names = [step.get("name") for step in self.steps()]
+        self.assertLess(
+            names.index("Apply the answers"),
+            names.index("Fail if a step of update-all failed"),
+        )
 
     def test_the_admin_page_stays_off_the_published_site(self) -> None:
         """Pages runs Jekyll, which does not copy _-prefixed paths into the site.

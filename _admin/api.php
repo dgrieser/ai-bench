@@ -27,9 +27,12 @@ declare(strict_types=1);
 // refuses to run below NEEDS_API; anything added since is announced in the GET
 // payload instead, so a newer page against an older endpoint loses the new
 // thing rather than the whole queue.
-const API_VERSION = 3;
+const API_VERSION = 4;
 
 const WORKFLOW = 'update-benchmarks.yml';
+// The workflow step that applies a dispatched batch, by name. The run's own
+// conclusion cannot stand in for it: see answer_step() below.
+const ANSWER_STEP = 'Apply the answers';
 const AA_MODELS_URL = 'https://artificialanalysis.ai/api/v2/data/llms/models';
 const REF      = 'main';           // never taken from the client: see the workflow
 const MAX_RECORDS = 25;
@@ -204,6 +207,37 @@ function aa_slugs(array $config): array
     return $slugs;
 }
 
+/**
+ * What the run's own answer step concluded, if that run has one.
+ *
+ * The run's conclusion cannot answer this. `Fail if a step of update-all
+ * failed` runs last and reds a run whose answers were applied, committed and
+ * pushed minutes earlier, while a batch answer.py refused fails a run that
+ * wrote nothing at all. Only the step separates the two, and the page has to
+ * know which happened: re-sending an answer that did land is refused as a
+ * question nothing asked, and a batch is all or nothing, so one duplicate
+ * costs the whole next sitting.
+ *
+ * `conclusion` is null when this run carried no answers -- a scheduled refresh,
+ * or one whose input was empty -- which is not the same as a failure and is
+ * reported as its own case.
+ */
+function answer_step(array $config, string $run): array
+{
+    [$status, $body] = github($config, 'GET', '/actions/runs/' . $run . '/jobs?per_page=30');
+    if ($status >= 400) {
+        fail($status, $body['message'] ?? 'GitHub rejected the request.');
+    }
+    foreach ($body['jobs'] ?? [] as $job) {
+        foreach ($job['steps'] ?? [] as $step) {
+            if (($step['name'] ?? '') === ANSWER_STEP) {
+                return ['step' => ANSWER_STEP, 'conclusion' => $step['conclusion']];
+            }
+        }
+    }
+    return ['step' => ANSWER_STEP, 'conclusion' => null];
+}
+
 function recent_runs(array $config): array
 {
     [$status, $body] = github(
@@ -237,6 +271,15 @@ if ($method === 'GET') {
     if (($_GET['aa'] ?? '') === 'slugs') {
         ok(['api' => API_VERSION, 'slugs' => aa_slugs($config)]);
     }
+    // Asked for once per dispatched batch, when its run finishes. Digits only:
+    // the value is pasted into a GitHub path.
+    $answered = (string) ($_GET['answered'] ?? '');
+    if ($answered !== '') {
+        if (preg_match('/^[0-9]{1,20}$/', $answered) !== 1) {
+            fail(400, 'answered must be a run id.');
+        }
+        ok(['api' => API_VERSION] + answer_step($config, $answered));
+    }
     ok([
         'api'  => API_VERSION,
         'repo' => $config['repo'],
@@ -245,6 +288,10 @@ if ($method === 'GET') {
         // Whether the slug list above can be served at all, so the page can
         // offer the control or explain its absence instead of failing at it.
         'aa'   => !empty($config['aa_api_key']),
+        // Whether ?answered=<run id> can be served. A page against an older
+        // endpoint keeps every answered card locked rather than guessing from
+        // the run's conclusion, which is the safe half of the choice.
+        'steps' => true,
         'runs' => recent_runs($config),
     ]);
 }
