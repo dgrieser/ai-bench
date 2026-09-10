@@ -35,7 +35,11 @@ The rungs, strongest first:
      evals.report qualifies because it keeps only Official and Verified rows
      (``fetch_evals_report.TRUSTED_STATUSES``); benchlm.ai republishes without
      a status of its own, and is here because it is a compiler of results
-     rather than a lab reporting on itself.
+     rather than a lab reporting on itself. Vals AI qualifies on the other
+     half of the definition: it runs every model itself, on its own harness and
+     its own held-out sets, so its numbers are measurements rather than
+     republished ones -- but of benchmarks it does not own, which is what keeps
+     it off rung 2 next to the boards themselves.
   4. ``RANK_AA_CODING_AGENTS`` -- AA's Coding Agent Index. AA-published, but
      these are AA's *own harness* over someone else's benchmark, and they
      disagree systematically with that benchmark's board, so the index does not
@@ -80,6 +84,7 @@ import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
+import fetch_vals
 from fill_source_urls import canonical
 
 RANK_AA = 1
@@ -92,7 +97,7 @@ RANK_HAND_ENTERED = 6
 # Per-score source pages, stamped into models[].scores_source alongside every
 # score write, and the identities the ranks below are hung on. Stored
 # canonicalized like every URL in llm.json. AA and Hugging Face pages are
-# per-model and resolved where the score is written; SWE Atlas and evals.report
+# per-model and resolved where the score is written; SWE Atlas, evals.report and Vals AI
 # resolve per benchmark key.
 AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
@@ -120,6 +125,10 @@ SWE_ATLAS_KEY_URLS = {
 EVALS_REPORT_KEY_URLS = {
     key: canonical(fetch_evals_report.BASE_URL.format(slug=slug))
     for slug, key in fetch_evals_report.BENCHMARKS.items()
+}
+VALS_KEY_URLS = {
+    key: canonical(fetch_vals.benchmark_url(slug))
+    for slug, key in fetch_vals.BENCHMARKS.items()
 }
 
 # The two per-model families, which are ranked by the path they live under
@@ -151,6 +160,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
+        *((url, RANK_CURATED) for url in VALS_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
         (AA_CODING_AGENTS_SOURCE_URL, RANK_AA_CODING_AGENTS),
         (LLMSTATS_SOURCE_URL, RANK_AGGREGATE),

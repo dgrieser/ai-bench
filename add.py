@@ -58,6 +58,11 @@ from _evals_report_mapping import (
     fetch_evals_report_model_names,
     load_evals_report_to_slug_mapping,
 )
+from _vals_mapping import (
+    add_vals_mapping,
+    fetch_vals_model_names,
+    load_vals_to_slug_mapping,
+)
 from _swe_marathon_mapping import (
     add_swe_marathon_mapping,
     fetch_swe_marathon_model_names,
@@ -174,6 +179,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-evals-report",
         action="store_true",
         help="Skip the evals.report mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-vals",
+        action="store_true",
+        help="Skip the vals.ai mapping prompt.",
     )
     parser.add_argument(
         "--skip-swe-marathon",
@@ -500,6 +510,31 @@ def maybe_add_evals_report_mapping(model_name: str, interactive: bool) -> None:
 
     add_evals_report_mapping(evals_report_name, model_name)
     print(f"Added evals.report mapping '{evals_report_name}' -> '{model_name}'")
+
+
+def maybe_add_vals_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_vals_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        vals_names = fetch_vals_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping vals.ai mapping prompt: {exc}")
+        return
+
+    if not vals_names:
+        return
+
+    vals_name = prompt_select_or_new("vals.ai model path", vals_names)
+    if not vals_name:
+        return
+
+    add_vals_mapping(vals_name, model_name)
+    print(f"Added vals.ai mapping '{vals_name}' -> '{model_name}'")
 
 
 def maybe_add_swe_marathon_mapping(model_name: str, interactive: bool) -> None:
@@ -955,6 +990,8 @@ def main() -> int:
         maybe_add_aa_coding_agents_mapping(model["name"], interactive)
     if not args.skip_evals_report:
         maybe_add_evals_report_mapping(model["name"], interactive)
+    if not args.skip_vals:
+        maybe_add_vals_mapping(model["name"], interactive)
     if not args.skip_swe_marathon:
         maybe_add_swe_marathon_mapping(model["name"], interactive)
     if not args.skip_spheron:

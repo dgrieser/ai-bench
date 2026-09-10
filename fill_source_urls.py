@@ -44,6 +44,7 @@ import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
+import fetch_vals
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -148,6 +149,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         items.append((fetch_evals_report.BASE_URL.format(slug=slug), (key,)))
     for track, key in fetch_swe_atlas.TRACKS.items():
         items.append((fetch_swe_atlas.BASE_URL.format(track=track), (key,)))
+    for slug, key in fetch_vals.BENCHMARKS.items():
+        items.append((fetch_vals.benchmark_url(slug), (key,)))
     return items
 
 

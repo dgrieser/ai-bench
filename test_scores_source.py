@@ -309,9 +309,10 @@ class TestHandEditProvenance(unittest.TestCase):
 
 
 class TestPerBenchmarkUrls(unittest.TestCase):
-    def test_swe_atlas_and_evals_report_resolve_specific_pages(self) -> None:
+    def test_swe_atlas_evals_report_and_vals_resolve_specific_pages(self) -> None:
         import fetch_evals_report
         import fetch_swe_atlas
+        import fetch_vals
 
         self.assertEqual(
             set(update.SWE_ATLAS_KEY_URLS), set(fetch_swe_atlas.TRACKS.values())
@@ -320,8 +321,12 @@ class TestPerBenchmarkUrls(unittest.TestCase):
             set(update.EVALS_REPORT_KEY_URLS),
             set(fetch_evals_report.BENCHMARKS.values()),
         )
+        self.assertEqual(
+            set(update.VALS_KEY_URLS), set(fetch_vals.BENCHMARKS.values())
+        )
         for url in (*update.SWE_ATLAS_KEY_URLS.values(),
-                    *update.EVALS_REPORT_KEY_URLS.values()):
+                    *update.EVALS_REPORT_KEY_URLS.values(),
+                    *update.VALS_KEY_URLS.values()):
             self.assertNotIn("?", url)
             self.assertFalse(url.endswith("/"))
 
