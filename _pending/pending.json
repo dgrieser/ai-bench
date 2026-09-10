@@ -656,28 +656,6 @@
       "route_kind": "mapping",
       "subject": "mistralai/mistral-small-2503",
       "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'openai/gpt-5.5-codex' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "openai/gpt-5.5-codex",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'openai/gpt-5.5-factory' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "openai/gpt-5.5-factory",
-      "universe": "models"
     }
   ]
 }
