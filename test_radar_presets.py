@@ -101,6 +101,18 @@ class TestRadarPresets(unittest.TestCase):
                     "raise RADAR_MAX_AXES or the picker cannot reproduce this preset",
                 )
 
+    def test_ids_and_keys_survive_a_url(self) -> None:
+        """A preset travels in the address as its id, a custom set as its keys
+        (see withRadarParam in llm.html), and both are written into the hash
+        unescaped -- so neither may contain a character that would need
+        encoding or that would end the parameter."""
+        safe = re.compile(r"^[A-Za-z0-9_.~-]+$")
+        for pid, axes in self.presets.items():
+            with self.subTest(preset=pid):
+                self.assertRegex(pid, safe)
+                for key in axes:
+                    self.assertRegex(key, safe)
+
     def test_no_preset_repeats_an_axis(self) -> None:
         for pid, axes in self.presets.items():
             with self.subTest(preset=pid):
