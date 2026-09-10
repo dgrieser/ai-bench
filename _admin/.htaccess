@@ -11,7 +11,17 @@ Require valid-user
 # Only the page and its one endpoint are reachable. Anything else that ends up
 # in this directory -- a stray config, an editor backup, a copy of a mapping
 # file -- is not served even if the auth above is ever misconfigured.
-<FilesMatch "^(?!index\.html$|api\.php$).*$">
+#
+# The empty alternative in the lookahead is not cosmetic. A request for the
+# directory itself leaves a trailing slash on the filename, so the name this
+# pattern is matched against is the empty string -- which the deny below would
+# otherwise swallow, and /admin/ would 403 before mod_dir ever looked for an
+# index. Letting the empty name through costs nothing: the directory request is
+# still behind the auth above, and DirectoryIndex hands it the same index.html
+# that /admin/index.html serves.
+DirectoryIndex index.html
+
+<FilesMatch "^(?!index\.html$|api\.php$|$).*$">
     Require all denied
 </FilesMatch>
 
