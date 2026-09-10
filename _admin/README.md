@@ -240,28 +240,49 @@ one run plus one queued, and a third arrival cancels the queued one silently.
 `api.php` returns 409 rather than letting a second batch evict the first — wait
 for the run to start, then send.
 
-**An answered question can come back before the queue catches up.** The run
-pushes the re-rendered queue seconds before it reports completed, and
-`raw.githubusercontent` does not always serve that push straight away — so the
-read that follows a run can still return the queue as it was *before* it, every
-question the run just answered listed again. The page therefore keeps the keys
-of an applied batch after its in-flight lock lifts (`ai-bench-admin-applied` in
-`localStorage`, survives a reload): those cards stay disabled and marked
-*applied*, with an amber note saying the queue has not caught up. An entry
-clears itself on the first queue read that no longer asks its question, and
-after 30 minutes regardless — a new-model line is re-offered on every run until
-the model is dismissed, so that one has to stay answerable.
+**An answered question can come back before the queue catches up.** Two ways
+that happens. The run pushes the re-rendered queue seconds before it reports
+completed, and `raw.githubusercontent` does not always serve that push straight
+away — so the read that follows a run can return the queue as it was *before*
+it, every question the run just answered listed again. And **record only**
+skips the refresh, so it does not republish the queue at all: those answers stay
+listed until the next scheduled refresh, hours later.
+
+The page therefore keeps the keys of an applied batch after its in-flight lock
+lifts (`ai-bench-admin-applied` in `localStorage`, survives a reload): those
+cards stay disabled and marked *answered*, with an amber note. An entry clears
+itself on the first queue read that no longer asks its question — that read is
+the only proof there is, so a clock does not clear it. The two exceptions are a
+new-model line, which the site re-offers on every run until the model is
+dismissed and which therefore expires after 30 minutes, and a 7-day backstop
+against a lock nothing can clear.
 
 Without this, answering one of them again is refused by `answer.py` as a
 question nothing asked, and a batch is all or nothing, so one duplicate takes
 the whole sitting down with it. Only the queue's own questions are held this
-way; a model edit or a rename is not answered against the queue, so re-sending
-one is simply a second edit.
+way — they are recorded when the batch is *sent*, not when it settles, because
+settling happens inside the run-list read, before the queue has been read at
+all. A model edit or a rename is not answered against the queue, so re-sending
+one is simply a second edit and is never held.
 
-**A failed run says so on the page.** When the run carrying a batch ends as
-anything but success, nothing was applied — `answer.py` writes all of a batch or
-none of it — so the page says that and hands those questions back instead of
-reporting the run as finished. Its log names the record it refused.
+**What a failed run means depends on which step failed.** `answer.py` writes all
+of a batch or none of it, so a batch it refused leaves nothing behind and its
+questions must come back. But the answers are applied, committed and pushed
+*before* `update-all` runs, and `Fail if a step of update-all failed` is the last
+step in the workflow — so a dead scraper reds a run whose answers are already in
+`main`, and handing those cards back would offer the duplicate this whole
+mechanism exists to refuse.
+
+The run's conclusion cannot tell those apart, so the page asks
+`api.php?answered=<run id>` for the outcome of the workflow's own *Apply the
+answers* step (`API_VERSION` 4; `ANSWER_STEP` in `api.php` names the step, and
+`test_answers.py` checks that name against the workflow). Step failed: the page
+says the batch was refused, in red, and unlocks its questions. Step succeeded
+but the run failed later: amber, the answers landed, cards stay locked. No
+answer — an `api.php` older than this page, or a read that failed: the cards
+stay locked and the note says the page could not tell, which is the safe half of
+the choice. **Upload `api.php` together with `index.html`**; `./_admin/deploy`
+sends both.
 
 **Answered cards stay disabled until their run finishes.** The queue is only
 republished when the run pushes, so a question you have just answered is still

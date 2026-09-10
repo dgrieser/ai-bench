@@ -755,9 +755,11 @@ const state = {
   runs: [],
   answers: new Map(),   // key -> record
   sent: null,           // the batch a run is applying: { at, keys }
-  applied: [],          // keys a run has applied: [{ key, at }] -- see APPLIED_KEY
+  applied: [],          // answered keys: [{ key, at, recurring }] -- see APPLIED_KEY
   stale: 0,             // questions the queue still lists that are already answered
-  failed: null,         // a batch whose run failed: { run, count }
+  settled: null,        // the batch whose run just finished: { run, applied, count }
+  warn: "",             // something to know about, but nothing that failed here
+  steps: false,         // whether api.php can report a run's answer step
   /* Artificial Analysis model slugs, for renaming a hand-added entry onto one.
      `offered` is what api.php says it can serve; the list itself is fetched
      once, and only when the Models tab is opened. */
@@ -1006,19 +1008,51 @@ const SKEW_MS = 60000;
    hypothetical -- it is what happened on 2026-09-10, six answers of one batch
    coming back in the next.
 
-   So the keys outlive the lock. An entry is dropped as soon as a queue read
-   comes back without its question, which is the page seeing the run's own push,
-   and after APPLIED_TTL_MS regardless: a new-model line is re-offered on every
-   run until the model is dismissed, and that question has to stay answerable in
-   the same sitting. */
+   So the keys outlive the lock. An entry is dropped when a queue read comes
+   back without its question, which is the page seeing the run's own push, and
+   otherwise only on the clocks below. */
 const APPLIED_KEY = "ai-bench-admin-applied";
-const APPLIED_TTL_MS = 30 * 60 * 1000;
+/* A new-model line is the one question the site means to keep asking: for a
+   slug it has added, apply_decisions() clears the line without dismissing it,
+   so the next run offers it again. Its lock has to expire by itself.
+
+   Nothing else is asked twice, so nothing else expires by time: a record-only
+   run does not republish the queue at all, and the next scheduled refresh can
+   be hours away, which is exactly how long those answers stay listed. Expiring
+   them on a clock would hand back the duplicate this whole mechanism exists to
+   refuse. */
+const RECURRING_TTL_MS = 30 * 60 * 1000;
+/* Backstop for an entry nothing can clear -- a question that leaves the queue
+   while the page is closed for a week, say. Long enough that it can only ever
+   fire on a lock that is already wrong. */
+const LOCK_MAX_MS = 7 * 24 * 60 * 60 * 1000;
+
+/* Which of a batch's keys were the queue's own questions, decided when the
+   batch is built rather than when it settles.
+
+   Settling happens inside the run list read, which on a fresh page runs before
+   the queue has been read at all -- so asking `state.questions` there found
+   nothing, kept nothing, and dropped the lock on every answer of a batch that
+   was dispatched before the page was last closed. The answer to which
+   questions a batch answered is known at dispatch and is stored with it. */
+const queueKeys = (keys) => {
+  const asked = new Set(state.questions.map(KEY));
+  return keys.filter((key) => asked.has(key));
+};
+
+/* A record written before `queued` existed. The three kinds that are not queue
+   questions all name themselves, so the rest are the questions. */
+const inferQueued = (keys) => keys.filter((key) => !/^model-(create|edit|rename) /.test(key));
 
 function readSent() {
   try {
     const stored = JSON.parse(localStorage.getItem(SENT_KEY) || "null");
     if (!stored || !Number.isFinite(stored.at) || !Array.isArray(stored.keys)) return null;
-    return { at: stored.at, keys: stored.keys.filter((k) => typeof k === "string") };
+    const keys = stored.keys.filter((k) => typeof k === "string");
+    const queued = Array.isArray(stored.queued)
+      ? stored.queued.filter((k) => typeof k === "string" && keys.includes(k))
+      : inferQueued(keys);
+    return { at: stored.at, keys, queued };
   } catch { return null; }   // private mode, blocked storage, half-written value
 }
 
@@ -1048,15 +1082,27 @@ function writeApplied(entries) {
 
 const isApplied = (key) => state.applied.some((entry) => entry.key === key);
 
+/* The question kind the site asks again after it has been answered. Read off
+   the key, whose first field is the route that asked. */
+const isRecurring = (key) => key.startsWith(`${NEW_MODEL_ROUTE} `);
+
+function rememberApplied(keys) {
+  if (!keys.length) return;
+  const at = Date.now();
+  writeApplied([
+    ...state.applied.filter((entry) => !keys.includes(entry.key)),
+    ...keys.map((key) => ({ key, at, recurring: isRecurring(key) })),
+  ]);
+}
+
 /* Called on every queue read. A question that is gone is the page seeing the
-   run's push, which is the only proof that matters; the age is the backstop for
-   a question the site means to keep asking. */
+   run's push, which is the only proof there is; a clock is not proof, so only
+   the kind that is deliberately asked again expires by one. */
 function pruneApplied(questions) {
   const asked = new Set(questions.map(KEY));
   const now = Date.now();
-  const kept = state.applied.filter(
-    (entry) => asked.has(entry.key) && now - entry.at < APPLIED_TTL_MS
-  );
+  const kept = state.applied.filter((entry) => asked.has(entry.key)
+    && now - entry.at < (entry.recurring ? RECURRING_TTL_MS : LOCK_MAX_MS));
   if (kept.length !== state.applied.length) writeApplied(kept);
   return kept.length;
 }
@@ -1072,39 +1118,89 @@ const applyingRun = () => batchRun(true);
 const locked = () => state.sent !== null;
 const isSent = (key) => locked() && state.sent.keys.includes(key);
 
+/* Whether the run wrote the batch: "yes", "no", or "unsure".
+
+   The run's own conclusion cannot say. `Fail if a step of update-all failed`
+   runs last, so a run that applied, committed and pushed a batch and then hit
+   a dead scraper reports failure -- and reading that as "nothing landed" hands
+   back every card of a batch that is already in main, which is the duplicate
+   this mechanism exists to refuse. A batch answer.py refused also fails its
+   run, and those cards do have to come back. Only the answer step's own
+   outcome separates the two, which is what api.php's ?answered= serves.
+
+   Unsure is the safe half everywhere it appears: an endpoint too old to answer,
+   a read that failed, a run that carried no answer step at all. The cards stay
+   locked and the queue clears them when it catches up. */
+async function batchApplied(run) {
+  if (!run) return "unsure";                        // never appeared: no outcome to read
+  if (run.conclusion === "success") return "yes";
+  if (!state.steps) return "unsure";                // endpoint predates ?answered=
+  try {
+    const response = await fetch(bust(`api.php?answered=${encodeURIComponent(run.id)}`),
+      { cache: "no-store" });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+    return body.conclusion === "success" ? "yes"
+      : body.conclusion === null ? "unsure"         // this run carried no answers
+        : "no";
+  } catch {
+    return "unsure";
+  }
+}
+
 /* Drops the lock once the run applying the batch is done with it. Called only
    from a fresh run list, never from a failed read: while the page cannot see
    GitHub it cannot know the run has finished, and unlocking on a network blip
-   is how the same answer gets sent twice. */
-function settleSent() {
+   is how the same answer gets sent twice.
+
+   Only the queue's own questions are remembered as applied: a model edit or a
+   rename is not answered against the queue, so re-sending one is a second edit
+   rather than a record answer.py refuses, and locking those cards would cost
+   the person an edit for no gain. */
+async function settleSent() {
   if (!state.sent || applyingRun()) return;
   if (Date.now() - state.sent.at < GRACE_MS) return;
   const run = batchRun();
-  /* A run that failed applied nothing -- answer.py writes all of a batch or
-     none of it -- so its cards have to come back rather than be marked
-     answered. A dispatch whose run never appeared is treated as applied: the
-     cost of being wrong there is a card that waits out APPLIED_TTL_MS, against
-     a whole sitting rejected for one duplicate. */
-  if (!run || run.conclusion === "success") {
-    /* Only the queue's own questions: a model edit or a rename is not answered
-       against the queue, so re-sending one is a second edit rather than a
-       record answer.py refuses, and locking those cards would cost the person
-       an edit for no gain. The queue here is the pre-run one -- the very copy
-       that still lists what the run just answered. */
-    const asked = new Set(state.questions.map(KEY));
-    const at = Date.now();
-    const keys = state.sent.keys.filter((key) => asked.has(key));
-    if (keys.length) {
-      writeApplied([
-        ...state.applied.filter((entry) => !keys.includes(entry.key)),
-        ...keys.map((key) => ({ key, at })),
-      ]);
-    }
-  }
-  state.failed = run && run.conclusion !== "success"
-    ? { run, count: state.sent.keys.length }
-    : null;
+  const applied = await batchApplied(run);
+  if (applied !== "no") rememberApplied(state.sent.queued);
+  state.settled = { run, applied, count: state.sent.keys.length };
+  noteSettled(state.settled);
   writeSent(null);
+}
+
+/* What became of the batch, in words. Set here rather than where the poll
+   notices the lock lift, because a reload settles too -- and the reload after a
+   run is the page's own advice. */
+function noteSettled({ run, applied, count }) {
+  if (applied === "no") {
+    /* Worth saying rather than leaving to the run log: a batch is all or
+       nothing, so a refused record took every other answer of that sitting
+       with it, and those questions are answerable again. */
+    state.error = `The run carrying ${count} answer(s) refused the batch: its `
+      + "own answer step failed, so nothing was written and those questions "
+      + "are open again. Its log names the record it would not take.";
+  } else if (run && run.conclusion !== "success") {
+    /* The case that must not read as "nothing landed": the answers are
+       applied, committed and pushed before update-all runs, and the workflow's
+       last step reds the run when a scraper fell over. */
+    /* Amber, not red: the answers are in main either way, so nothing here
+       failed that this page can do anything about. */
+    state.warn = applied === "yes"
+      ? `That run applied its ${count} answer(s) and then ended as `
+        + `${run.conclusion}: the refresh after them failed, not the answers. `
+        + "Those questions stay locked -- they are answered."
+      : `That run ended as ${run.conclusion}, and this page cannot tell whether `
+        + "its answers were applied: api.php did not report the step outcome. "
+        + "They stay locked until the queue stops listing them; the run's log "
+        + "says what happened.";
+  } else {
+    /* It used to add that anything still listed is a question the run did not
+       answer. That is only true once the queue it pushed has propagated, which
+       is what the note under this one says when it has not. */
+    state.ok = "That run has finished and the queue has just been re-read. Its "
+      + "own summary is the record of what landed, not its colour: a dead "
+      + "scraper reds a run whose answers applied perfectly.";
+  }
 }
 
 let poll = null;
@@ -1123,23 +1219,6 @@ async function tick() {
     return;
   }
   if (wasLocked && !locked()) {
-    if (state.failed) {
-      /* Worth saying rather than leaving to the run log: a batch is all or
-         nothing, so a refused record took every other answer of that sitting
-         with it, and those questions are answerable again. */
-      const { run, count } = state.failed;
-      state.error = `The run carrying ${count} answer(s) ended as `
-        + `${run.conclusion || run.status}. answer.py writes all of a batch or `
-        + "none of it, so nothing was applied and those questions are open "
-        + "again. Its log says which record it refused.";
-    } else {
-      /* It used to add that anything still listed is a question the run did
-         not answer. That is only true once the queue it pushed has propagated,
-         which is what the note under this one says when it has not. */
-      state.ok = "That run has finished and the queue below has just been "
-        + "re-read. Its own summary is the record of what landed, not its "
-        + "colour: a dead scraper reds a run whose answers applied perfectly.";
-    }
     await loadData();
     return;
   }
@@ -1233,10 +1312,15 @@ async function loadRuns() {
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.runs = body.runs || [];
-    settleSent();
     /* Announced rather than required: an endpoint without an AA key -- or one
        older than this page -- costs the rename suggestions and nothing else. */
     state.aa.offered = Boolean(body.aa);
+    /* Announced rather than required, like the AA key above: without it the
+       page cannot tell an applied batch from a refused one and keeps every
+       answered card locked, which costs a wait rather than a rejected batch.
+       Read before settling, which is what asks. */
+    state.steps = Boolean(body.steps);
+    await settleSent();
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
     if (!state.raw || (body.api || 1) < NEEDS_API) {
@@ -1368,6 +1452,7 @@ function render() {
   const notice = document.getElementById("notice");
   notice.replaceChildren();
   if (state.error) notice.append(el("div", { className: "note bad" }, state.error));
+  if (state.warn) notice.append(el("div", { className: "note busy" }, state.warn));
   if (state.ok) notice.append(el("div", { className: "note good" }, state.ok));
   if (locked()) notice.append(inFlightNote());
   else if (state.stale) notice.append(staleQueueNote());
@@ -1407,7 +1492,7 @@ function lockCard(card, applied = false) {
   card.classList.remove("answered");
   card.querySelectorAll("button, input, select").forEach((node) => { node.disabled = true; });
   card.prepend(el("div", { className: "sent-mark" }, applied ? [
-    el("span", { className: "pill success" }, [el("span", { className: "dot" }), "applied"]),
+    el("span", { className: "pill success" }, [el("span", { className: "dot" }), "answered"]),
     "answered in an earlier batch -- the queue has not caught up yet",
   ] : [
     el("span", { className: "pill running" }, [el("span", { className: "dot" }), "sent"]),
@@ -1422,18 +1507,20 @@ const guard = (card, key) => (
       : card
 );
 
-/* The queue read after a run can predate the run's own push: it pushes the
-   re-rendered queue seconds before it reports completed, and raw serves the
-   previous blob for a while yet. The cards are locked either way; this says
-   why, so the answer is to wait rather than to look for what went wrong. */
+/* Why a card is locked when nothing is in flight. Two ways the queue comes back
+   still listing an answered question: the run pushes the re-rendered queue
+   seconds before it reports completed and raw serves the previous blob for a
+   while yet, and a record-only run does not republish it at all -- so this can
+   mean a minute or the wait for the next scheduled refresh. */
 function staleQueueNote() {
   return el("div", { className: "note busy" }, el("span", {}, [
     state.stale === 1
-      ? "1 question below has already been answered and applied"
-      : `${state.stale} questions below have already been answered and applied`,
-    ", but the queue republished by that run has not reached this page yet. They "
-    + "are locked until it does -- answering one again would be refused as a "
-    + "question nothing asked, and a batch is all or nothing. Reload in a minute.",
+      ? "1 question below has already been answered and sent"
+      : `${state.stale} questions below have already been answered and sent`,
+    ", and the queue has not caught up: a run republishes it only after a "
+    + "successful refresh, and a record-only run skips that entirely. They stay "
+    + "locked until it does -- answering one again would be refused as a "
+    + "question nothing asked, and a batch is all or nothing.",
   ]));
 }
 
@@ -2011,7 +2098,7 @@ async function send() {
   const answers = [...state.answers.values()];
   const keys = [...state.answers.keys()];
   document.getElementById("send").disabled = true;
-  state.error = state.ok = "";
+  state.error = state.warn = state.ok = "";
   try {
     const response = await fetch("api.php", {
       method: "POST",
@@ -2023,7 +2110,10 @@ async function send() {
     state.answers.clear();
     /* Before the run list is refreshed, so nothing can settle the batch before
        it is even recorded. */
-    writeSent({ at: Date.now(), keys });
+    /* `queued` is read off the queue as it stands now, because settling cannot:
+       it happens inside the run list read, which on a fresh page runs before
+       the queue has been read at all. */
+    writeSent({ at: Date.now(), keys, queued: queueKeys(keys) });
     state.ok = `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
       + "Watch it under Runs; the questions it answers are disabled until it "
       + "finishes, and its own summary is what counts, not its colour, since a "

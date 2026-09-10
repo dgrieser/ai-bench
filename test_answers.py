@@ -807,6 +807,40 @@ class TestWorkflowWiring(unittest.TestCase):
         )
         self.assertIn("./test_answers.py", run)
 
+    def test_the_step_api_php_reads_is_the_step_that_applies_answers(self) -> None:
+        """The endpoint reports that step's outcome, and the page trusts it.
+
+        The run's own conclusion cannot stand in for it: `Fail if a step of
+        update-all failed` reds a run whose answers were applied, committed and
+        pushed minutes earlier. If the name here drifts, api.php reports no step
+        at all -- which the page reads as "cannot tell" and keeps the answered
+        cards locked, so the safe half; but the message it shows is then wrong
+        about why.
+        """
+        api = (_answers.HERE / "_admin" / "api.php").read_text(encoding="utf-8")
+        found = re.search(r"const ANSWER_STEP = '([^']+)';", api)
+        self.assertIsNotNone(found, "api.php: no ANSWER_STEP to check")
+        self.assertIn(
+            found.group(1),
+            [step.get("name") for step in self.steps()],
+            "api.php names a workflow step that does not exist",
+        )
+
+    def test_the_answer_step_runs_before_anything_that_can_red_the_run(self) -> None:
+        """Which is why the step's outcome and the run's conclusion differ.
+
+        Nothing about this ordering is wrong -- an answer should be recorded
+        even when the refresh after it falls over -- but the admin page reads
+        the step rather than the run precisely because of it, and a reordering
+        that made the run's conclusion authoritative again would leave that
+        indirection looking pointless.
+        """
+        names = [step.get("name") for step in self.steps()]
+        self.assertLess(
+            names.index("Apply the answers"),
+            names.index("Fail if a step of update-all failed"),
+        )
+
     def test_the_admin_page_stays_off_the_published_site(self) -> None:
         """Pages runs Jekyll, which does not copy _-prefixed paths into the site.
 
