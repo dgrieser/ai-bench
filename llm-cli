@@ -21,6 +21,12 @@ Piped output always contains every column.
 Best-in-table scores are shown in bold (TTY only, or force with --color) — the
 smallest value for a "lower_is_better" benchmark, the largest otherwise.
 Models added within the last 7 days are marked with *.
+
+The closed frontier models llm.json marks "reference" are left out: this is an
+open-weights index and they are the yardstick beside it, not part of it. Pass
+--reference to include them, marked with ° and printed in teal; the sort then
+ranks them alongside everything else, the way the web page's "Include closed
+frontier models for reference" does.
 """
 
 import argparse
@@ -39,6 +45,9 @@ LEFT_ALIGNED = {"name", "creator"}
 
 BOLD = "\033[1m"
 DIM = "\033[2m"
+# The teal llm.html gives a closed reference model's name, as near as a
+# 256-colour terminal gets to it.
+TEAL = "\033[38;5;30m"
 RESET = "\033[0m"
 
 
@@ -53,6 +62,15 @@ def to_number(value):
         except ValueError:
             return math.nan
     return math.nan
+
+
+def is_reference(model):
+    """A closed model the index carries only as a reference point.
+
+    Read off llm.json rather than reference-models.json, so this stays a
+    single-file script that works on any copy of the data.
+    """
+    return model.get("reference") is True
 
 
 def nearly_equal(a, b):
@@ -187,13 +205,32 @@ def default_sort_group(doc):
     return group
 
 
+def group_composite_ranked_in(models, group, doc):
+    """The default sort's composite, with reference rows ranked in, not joined.
+
+    The same split derive_indexes.index_values() makes, for the same reason:
+    the field is the open-weight one, so a closed reference model in the table
+    must not move an open model's position. It is then ranked a second time in
+    the combined field, which is the only way it has a position at all.
+    """
+    open_models = [m for m in models if not is_reference(m)]
+    if len(open_models) == len(models):
+        return compute_group_composite(models, group, doc)
+    composite = compute_group_composite(open_models, group, doc)
+    combined = compute_group_composite(models, group, doc)
+    for model in models:
+        if is_reference(model):
+            composite[model["name"]] = combined.get(model["name"])
+    return composite
+
+
 def sort_models(models, doc):
     group = default_sort_group(doc)
     configured = doc.get("defaultSort")
 
     flipped = False
     if group is not None:
-        composite = compute_group_composite(models, group, doc)
+        composite = group_composite_ranked_in(models, group, doc)
         sort_label = group.get("label") or group.get("key")
         keyed = [(composite.get(m["name"]), m) for m in models]
     else:
@@ -338,7 +375,10 @@ def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color,
     for model in models:
         vram = model.get("vram") or {}
         name = model.get("name") or "Unknown"
-        marker = " *" if is_recent(model, today) else ""
+        reference = is_reference(model)
+        # Never both: a reference model is closed for good, where "new" is true
+        # for a week, so the mark that keeps meaning something wins the space.
+        marker = " °" if reference else (" *" if is_recent(model, today) else "")
         if "name" in caps:
             name = truncate(name, caps["name"] - len(marker))
         creator = (model.get("creator") or {}).get("name") or ""
@@ -355,14 +395,16 @@ def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color,
         }
         cells = [fixed_cells[key] for key in fixed_keys]
         bold_flags = [False] * len(cells)
+        teal_flags = [reference and key == "name" for key in fixed_keys]
         for key in shown_keys:
             value = to_number((model.get("scores") or {}).get(key))
             cells.append(format_score(value, score_decimals(doc, key)))
             bold_flags.append(math.isfinite(value) and key in best and nearly_equal(value, best[key]))
-        rows.append((cells, bold_flags))
+            teal_flags.append(False)
+        rows.append((cells, bold_flags, teal_flags))
 
     widths = [len(header) for header in headers]
-    for cells, _ in rows:
+    for cells, _, _ in rows:
         for i, cell in enumerate(cells):
             widths[i] = max(widths[i], len(cell))
 
@@ -373,11 +415,13 @@ def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color,
     lines = [f"{title} — {len(models)} models, sorted by {sort_label}"]
     lines.append("│".join(pad(header, i) for i, header in enumerate(headers)))
     lines.append("┼".join("─" * width for width in widths))
-    for cells, bold_flags in rows:
+    for cells, bold_flags, teal_flags in rows:
         out = []
         for i, cell in enumerate(cells):
             padded = pad(cell, i)
-            if use_color and bold_flags[i]:
+            if use_color and teal_flags[i]:
+                padded = f"{TEAL}{padded}{RESET}"
+            elif use_color and bold_flags[i]:
                 padded = f"{BOLD}{padded}{RESET}"
             elif use_color and cell == "—":
                 padded = f"{DIM}{padded}{RESET}"
@@ -385,7 +429,10 @@ def render_table(doc, models, sort_label, benchmark_keys, shown_keys, use_color,
         lines.append("│".join(out))
 
     lines.append("")
-    lines.append("* added within the last 7 days; bold = best score in table")
+    legend = "* added within the last 7 days; bold = best score in table"
+    if any(is_reference(model) for model in models):
+        legend += "; ° closed weights, carried for reference only"
+    lines.append(legend)
     hidden = (len(benchmark_keys) - len(shown_keys)) + (len(FIXED_COLUMNS) - len(fixed_keys))
     if hidden:
         total = len(benchmark_keys) + len(FIXED_COLUMNS)
@@ -414,6 +461,13 @@ def main() -> int:
         action="store_true",
         help="Show every benchmark column (paged through `less -RS` on a terminal).",
     )
+    parser.add_argument(
+        "--reference",
+        "-r",
+        action="store_true",
+        help="Also show the closed frontier models the index carries for reference "
+        "(hidden by default, since this is an open-weights index).",
+    )
     color_group = parser.add_mutually_exclusive_group()
     color_group.add_argument("--color", action="store_true", help="Force ANSI styling even when piped.")
     color_group.add_argument("--no-color", action="store_true", help="Disable ANSI styling.")
@@ -421,6 +475,8 @@ def main() -> int:
 
     doc = json.loads(Path(args.json_file).read_text(encoding="utf-8"))
     models = doc.get("models") or []
+    if not args.reference:
+        models = [model for model in models if not is_reference(model)]
     benchmarks = doc.get("benchmarks") or {}
     benchmark_keys = list(benchmarks)
 

@@ -76,6 +76,11 @@ Each model object contains:
   Added** filter narrows on — its relative windows count calendar days back from
   today, so "Last 7 days" holds exactly the models the table badges as new
 - **`params`** / **`context`** / **`vram`** / **`creator`**: model metadata
+- **`reference`**: present, and `true`, only on the closed frontier models the
+  index carries as a yardstick for the open field — see [Closed Reference
+  Models](#closed-reference-models). `reference-models.json` is what decides it;
+  the flag is a copy of that decision for the consumers that read nothing but
+  `llm.json`
 
 The three score maps carry the full benchmark key set with null placeholders;
 `update.py` stamps date and source URL together whenever it writes a score.
@@ -260,6 +265,11 @@ Output: llm.json (unified dataset)
 # (dry-run; -w to persist)
 ./rename.py glm-5.3 glm-5-3
 ./rename.py glm-5.3 glm-5-3 -w
+
+# Render the table in the terminal (open-weight models only)
+./llm-cli
+./llm-cli --reference          # ... with the closed reference models too
+./llm-cli --all                # every benchmark column, paged
 
 # Remove models or prune invalid entries
 ./prune.py llm.json
@@ -1551,6 +1561,62 @@ This information is stored in each model's `weights` metadata and affects aggreg
 `licensing.is_open_weights`, falling back to whether the model page links a
 weights repo for the free-tier records that carry no licensing block.
 
+## Closed Reference Models
+
+The index tracks open-weight models. It also carries a handful of closed
+frontier models, because "how far behind is the open field?" is the question
+every number on the page is really answering, and that cannot be read off a
+table holding one side of it.
+
+`reference-models.json` is the whole list, and it holds nothing but Artificial
+Analysis slugs:
+
+```json
+["claude-fable-5-1", "claude-opus-5", "claude-sonnet-5",
+ "gpt-5-6-luna", "gpt-5-6-sol", "gpt-5-6-terra", "gpt-6-astra"]
+```
+
+A reference model is added exactly the way an open one is — `./add.py --name
+<aa-slug>`, with the entry named after the slug, so `update.resolve_aa_slugs()`
+finds it by identity and every scraper's mapping file resolves onto it (see
+[A hand-added model meets Artificial Analysis](#a-hand-added-model-meets-artificial-analysis)).
+Adding the slug to the list does **not** create the entry: `update.py` warns
+about a listed slug `llm.json` has no model for.
+
+Four things read the list:
+
+| Where | What it does |
+| --- | --- |
+| `llm.html` | Hides these rows until **Include closed frontier models for reference** (under the search box) is ticked. Ticked, they filter, sort, count and export like any other row, with their names in teal and a `closed` tag beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
+| `llm-cli` | Same default, same reason. `--reference` includes them, marked `°`. |
+| `derive_indexes.py` | Ranks the open field among itself and ranks the reference rows *into* it, so a closed model never moves an open model's index. See below. |
+| `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |
+
+`_reference.py` is the one loader behind all of them, and
+`apply_reference_flags()` is what keeps the `reference` flag in `llm.json` in
+step with the list — `update.py` and `derive_indexes.py` both call it before
+they write.
+
+### Why a reference model is ranked in, not counted in
+
+Percentile ranks are relative to the model set, so seven models landing at the
+top of the table would otherwise nudge every open model's index down on the day
+they arrived, for reasons having nothing to do with the open field. So
+`derive_indexes.index_values()` computes each index twice: the open models are
+ranked among themselves, exactly as they were before the list existed, and the
+reference models take their value from a second pass over the combined field.
+
+That keeps two properties worth having: an open model's index is unaffected by
+the closed rows entirely, and the reference rows still hold numbers that can be
+compared — with the open field, and with each other. `llm-cli` and `llm.html`
+make the same split for the sort composite and the radar percentiles
+(`percentileMaps`), so the page, the CLI and the stored columns agree.
+
+The cost is at the ceiling: the best open model and a reference model above it
+can both sit near the top of a column, because each is measured against the
+field it is ranked in. The raw benchmark columns are where the gap is read
+exactly, and they are not ranks.
+
 ## Artificial Analysis API
 
 `artificialanalysis.py` reads AA's documented V2 endpoints. The legacy
@@ -1833,6 +1899,8 @@ ai-bench/
 ├── _revisions.py               # Benchmark revisions: labels, order, and the column each feeds
 ├── _selector.py                # Type-to-search prompt: drawing + Tab completion
 ├── _openness.py                # Model openness classification
+├── _reference.py               # The closed reference models: the list, the flag, the split
+├── reference-models.json       # AA slugs of the closed models carried for reference
 ├── _params.py                  # params field: AA counts, HF fallback (see below)
 ├── _context.py                 # context field: token counts → advertised sizes
 ├── check_new.py                # Detect new/dismissed models

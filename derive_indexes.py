@@ -46,6 +46,11 @@ result here, so -- unlike the scrapers, which never overwrite a value with null
 because a source can drop out for a day -- this script does clear a value (and
 its date) when a model no longer qualifies.
 
+The field being ranked is the open-weight one. The closed models the index
+carries for reference (see _reference.py) are ranked *into* it rather than
+made part of it, so an open model's value never moves because a closed one was
+added -- index_values() has the detail.
+
 No leaderboard publishes these columns, so a value is attributed to the page
 that documents how it is derived: the first URL the column declares in llm.json
 (a section of this repository's README).
@@ -63,6 +68,7 @@ import sys
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from _reference import apply_reference_flags, split_models
 from _scores import stamp_score_updated
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -379,6 +385,34 @@ def compute_index(
     return result
 
 
+def index_values(
+    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
+) -> dict[str, int | None]:
+    """One index for every model, with the reference rows ranked in, not joined.
+
+    The field these columns rank is the open-weight one. A closed reference
+    model (see _reference.py) is carried for comparison and must not move the
+    ranking it is being compared against -- adding seven models at the top of
+    the table would otherwise nudge every open model's value down on the day
+    they arrived, for reasons that have nothing to do with the open field.
+
+    So the open models are ranked among themselves, exactly as before there was
+    a reference list, and the reference models are ranked a second time in the
+    combined field -- which is what gives them comparable numbers, and keeps
+    them told apart from each other rather than all pinned to the ceiling.
+    """
+    open_models, reference = split_models(models)
+    if not reference:
+        return compute_index(models, doc, index)
+    values = compute_index(open_models, doc, index)
+    combined = compute_index(models, doc, index)
+    for model in reference:
+        name = model.get("name")
+        if isinstance(name, str) and name in combined:
+            values[name] = combined[name]
+    return values
+
+
 def scored_count(model: dict[str, Any], index: IndexDef) -> int:
     """How many contributing benchmarks this model actually has a score on.
 
@@ -494,6 +528,10 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     models = doc.get("models")
     if not isinstance(models, list):
         raise ValueError('"models" is missing or not a list')
+    # The reference rows decide which field each index is computed over, so the
+    # flag is brought in step with reference-models.json before anything is
+    # ranked -- a slug added to that list takes effect on the next refresh.
+    apply_reference_flags(doc)
     changes: list[tuple[str, str, int | None, int | None]] = []
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
@@ -501,7 +539,7 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
         changes.extend(
             (index.key, name, old, new)
             for name, old, new in apply_index(
-                doc, index, compute_index(models, doc, index)
+                doc, index, index_values(models, doc, index)
             )
         )
     return changes
@@ -583,10 +621,16 @@ def main() -> int:
         model["name"]: model for model in models if isinstance(model.get("name"), str)
     }
 
+    # Same step refresh() takes, for the same reason: which rows are reference
+    # rows decides the field each index is ranked over, so the flag is brought
+    # in step with reference-models.json before anything is computed.
+    for name, marked in apply_reference_flags(doc):
+        print(f"{name}: {'now' if marked else 'no longer'} a reference model")
+
     all_changes: list[tuple[str, str, int | None, int | None]] = []
     restamped = 0
     for index in reversed(INDEXES):
-        values = compute_index(models, doc, index)
+        values = index_values(models, doc, index)
 
         ranked = sum(1 for value in values.values() if value is not None)
         print(

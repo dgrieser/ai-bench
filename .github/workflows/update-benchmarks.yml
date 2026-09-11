@@ -170,6 +170,12 @@ jobs:
       # test_artificialanalysis_api.py is here on the same grounds: AA is a
       # locked rank-1 source, so a field this run reads under the wrong name
       # writes a wrong number that only a later AA number can replace.
+      #
+      # test_reference.py guards the same kind of quiet write: the closed
+      # models the index carries for reference are ones every source correctly
+      # calls closed, so a regression in that exception has this run bury them
+      # as __closed_weights__ in the mapping files -- with nobody prompted,
+      # and the rows left in llm.json with no scores arriving ever again.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -178,6 +184,7 @@ jobs:
           ./test_answers.py
           ./test_model_admin.py
           ./test_pending_json.py
+          ./test_reference.py
           ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,
