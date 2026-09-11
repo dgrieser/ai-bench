@@ -882,6 +882,72 @@ class TestWorkflowWiring(unittest.TestCase):
         doc = yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
         self.assertNotIn("push", doc[True])
 
+    def test_a_refresh_asked_for_by_hand_is_a_dispatch_with_no_answers(self) -> None:
+        """The Runs tab's button, and what the workflow has to accept for it.
+
+        It sends `{"refresh": true}`; api.php turns that into a dispatch whose
+        `answers` is empty and whose `skip_refresh` is false. Both halves matter:
+        an `answers` the workflow did not default to empty would make every
+        automatic run carry a payload, and a `skip_refresh` left true would
+        produce a run that applies nothing and then skips the refresh too --
+        a green run that did nothing at all.
+        """
+        import yaml
+
+        doc = yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
+        inputs = doc[True]["workflow_dispatch"]["inputs"]
+        self.assertEqual(inputs["answers"]["default"], "")
+        self.assertIs(inputs["skip_refresh"]["default"], False)
+
+        api = (_answers.HERE / "_admin" / "api.php").read_text(encoding="utf-8")
+        # Every input api.php sends is one the workflow declares, refresh or not.
+        for name in ("answers", "skip_refresh"):
+            self.assertIn(name, inputs, f"api.php sends an input {name} the workflow has no use for")
+        # A refresh never carries answers, and never skips the refresh.
+        self.assertIn("!$refresh && !empty($request['skip_refresh'])", api)
+
+    def test_both_pages_cycle_the_same_three_themes_under_the_same_key(self) -> None:
+        """The index and the admin page are one setting on one device.
+
+        They are separate deployments -- the admin page is served from a host of
+        its own -- so nothing but this check keeps the two from drifting into a
+        two-state toggle on one and a three-state cycle on the other, which is
+        how "system" stopped being reachable the last time.
+        """
+        import re
+
+        for name in ("llm.html", "_admin/index.html"):
+            page = (_answers.HERE / name).read_text(encoding="utf-8")
+            with self.subTest(name):
+                # Every copy, not the first: llm.html states the list twice,
+                # once in the head script that paints before anything else runs
+                # and once in the handler, and the two have to agree.
+                lists = re.findall(r"THEMES = \[([^\]]+)\]", page)
+                self.assertTrue(lists, f"{name}: no THEMES to check")
+                for themes in lists:
+                    self.assertEqual(
+                        re.findall(r'"([a-z]+)"', themes),
+                        ["system", "light", "dark"],
+                        f"{name}: the cycle has to start at the default and reach it again",
+                    )
+                self.assertIn('localStorage.getItem("theme")', page)
+                self.assertIn('localStorage.setItem("theme"', page)
+
+    def test_the_admin_page_is_not_linked_from_the_published_one(self) -> None:
+        """It is behind HTTP auth on another host, and unlisted is the point.
+
+        The admin page links out to the index and to the repository; nothing
+        points the other way. A link would put the endpoint's address on a
+        public page for no gain -- whoever can use it already knows it.
+        """
+        import re
+
+        page = (_answers.HERE / "llm.html").read_text(encoding="utf-8")
+        # Link targets only. Prose may name the admin page -- the theme cycle
+        # comment says where its twin lives -- and that is not a link to it.
+        targets = re.findall(r'(?:href|src|action)="([^"]*)"', page)
+        self.assertEqual([t for t in targets if "admin" in t.lower()], [], "linked from the index")
+
 
 class TestShapes(AnswersTestCase):
     def test_a_record_must_be_an_object_of_a_known_kind(self) -> None:

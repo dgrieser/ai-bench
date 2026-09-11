@@ -200,11 +200,43 @@ tells you why.
   like it. Picking one is a *rename*, not a mapping — see below. A rename is
   sent on its own: one record per model per run, so the fields above grey out
   while one is drafted.
-- **Runs** — the last few runs of the workflow.
+- **Runs** — the last few runs of the workflow, and a button that asks for one.
+  **Run the refresh now** dispatches `update-benchmarks.yml` against `main`
+  carrying no answers: the same run the schedule makes every three hours, which
+  re-reads every source, commits the scores that moved, and republishes the
+  queue this page answers. Worth having by hand, because a new score can be
+  hours from the next cron and the queue is only ever re-collected by a run.
 
-The icon in the header cycles the theme: follow the system, force light, force
-dark. It is stored under the same `theme` key `llm.html` uses, so both pages
-agree on one device.
+  It greys out with the reason written beside it. A queued run is one reason:
+  the workflow's concurrency group holds one run plus one queued, and a third
+  arrival cancels the queued one, so there is nothing a second refresh would
+  add. So is **a batch of answers in flight**, which is the less obvious one — a
+  batch is matched to its run by "the newest run created after the batch was
+  sent", since the dispatch is answered before the run exists, so a refresh
+  queued behind that batch would *become* the run the page reads the answer step
+  off. It carries no answers, the step reports nothing, and the batch would
+  settle as "cannot tell" while its real run was still going. The button waits.
+
+The three round buttons in the header are the repository, the published index
+(`openbench.david-grieser.de`) and the theme — the first two open in a new tab.
+Nothing points the other way: the index does not link here, and should not. The
+repository button is pointed at whatever `api.php` reports, which is the one
+place the repository is named; it is hidden rather than guessed while the
+endpoint has not answered.
+
+The theme button cycles three states: follow the system, force light, force
+dark. Same three values, same `theme` key, same round control as `llm.html`, so
+the two pages behave identically — not the same stored *value*, though: this
+page is served from a host of its own, and `localStorage` does not cross an
+origin. A choice made here is a choice about this page.
+
+The two resolve "system" differently, and have to. This page's stylesheet
+carries a `prefers-color-scheme` block, so "system" is simply the absence of
+`data-theme` and follows the OS with no JavaScript at all; `llm.html` hangs its
+dark rules off `[data-theme="dark"]` alone, so it resolves the media query in
+JavaScript and listens for it to change. Both set `data-theme-choice`, which is
+what the icon is keyed off — under "system" the page may well be painted dark,
+and showing the moon there would claim a setting nobody made.
 
 The tab icon is the site's, inlined as base64 between this page's
 `brand-icons` markers rather than linked: `.htaccess` serves nothing in this
@@ -267,11 +299,17 @@ mechanism exists to refuse.
 
 The run's conclusion cannot tell those apart, so the page asks
 `api.php?answered=<run id>` for the outcome of the workflow's own *Apply the
-answers* step (`API_VERSION` 4; `ANSWER_STEP` in `api.php` names the step, and
-`test_answers.py` checks that name against the workflow). Step failed: the page
-says the batch was refused, in red, and unlocks its questions. Step succeeded
-but the run failed later: amber, the answers landed, cards stay locked. No
-answer — an `api.php` older than this page, or a read that failed: the cards
+answers* step. It is announced as `steps` in the GET payload rather than gated
+on a version number, the way the Runs tab's button is announced as `refresh`: a
+newer page against an older endpoint then loses the one feature instead of the
+whole queue, and here keeps every answered card locked, which is the safe half.
+(`ANSWER_STEP` in `api.php` names the step, and `test_answers.py` checks that
+name against the workflow.)
+
+Step failed: the page says the batch was refused, in red, and unlocks its
+questions. Step succeeded but the run failed later: amber, the answers landed,
+cards stay locked. No answer — an `api.php` older than this page, or a read
+that failed: the cards
 stay locked and the note says the page could not tell, which is the safe half of
 the choice. **Upload `api.php` together with `index.html`**; `./_admin/deploy`
 sends both.
