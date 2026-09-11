@@ -1587,7 +1587,7 @@ Four things read the list:
 
 | Where | What it does |
 | --- | --- |
-| `llm.html` | Hides these rows until **Include closed frontier models for reference** (under the search box) is ticked. Ticked, they filter, sort, count and export like any other row, with their names in teal and a `closed` tag beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
+| `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a `closed` tag beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
 | `llm-cli` | Same default, same reason. `--reference` includes them, marked `°`. |
 | `derive_indexes.py` | Ranks the open field among itself and ranks the reference rows *into* it, so a closed model never moves an open model's index. See below. |
 | `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |

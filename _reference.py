@@ -14,10 +14,10 @@ entry after its AA slug and every scraper's mapping lands on it (see
 
 What the list changes, wherever it is read:
 
-  * llm.html / llm-cli hide these rows unless the reader asks for them
-    ("Include closed frontier models for reference"), and colour their names
-    apart when shown. A model's own page and a comparison always carry them --
-    that is the whole point of having them.
+  * llm.html / llm-cli hide these rows unless the reader asks for them (the
+    "Closed models" checkbox in the filter panel's head band), and colour their
+    names apart when shown. A model's own page and a comparison always carry
+    them -- that is the whole point of having them.
   * derive_indexes.py ranks the open field among itself, so a reference model
     never moves an open model's index. The reference rows are then ranked into
     the combined field, which is what makes them comparable at all.

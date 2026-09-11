@@ -25,8 +25,8 @@ Models added within the last 7 days are marked with *.
 The closed frontier models llm.json marks "reference" are left out: this is an
 open-weights index and they are the yardstick beside it, not part of it. Pass
 --reference to include them, marked with ° and printed in teal; the sort then
-ranks them alongside everything else, the way the web page's "Include closed
-frontier models for reference" does.
+ranks them alongside everything else, the way the web page's "Closed models"
+checkbox does.
 """
 
 import argparse

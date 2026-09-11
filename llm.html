@@ -359,11 +359,27 @@
       border-bottom: 1px solid var(--line);
     }
 
+    /* The head band: the collapse button, the reference checkbox, the chevron.
+       Clicking anywhere in it folds the panel (the handler skips the checkbox),
+       so the band keeps the full-width hit area the button used to have while
+       the chevron sits past the checkbox at the far right. */
+    .filters-head {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+
+    .filters-head:hover {
+      background: var(--surface-alt);
+    }
+
     .filters-toggle {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       min-height: 0;
       padding: 13px 20px;
       border: 0;
@@ -372,11 +388,10 @@
       color: var(--subtle);
       cursor: pointer;
       text-align: left;
-      transition: color 120ms ease, background-color 120ms ease;
+      transition: color 120ms ease;
     }
 
-    .filters-toggle:hover {
-      background: var(--surface-alt);
+    .filters-head:hover .filters-toggle {
       color: var(--text);
       border: 0;
     }
@@ -414,8 +429,48 @@
     .filters-chevron {
       width: 12px;
       height: 8px;
-      margin-left: auto;
+      flex-shrink: 0;
+      margin: 0 20px 0 12px;
+      color: var(--subtle);
       transform: rotate(180deg);
+    }
+
+    /* The reference checkbox, right-aligned in the head band beside the
+       chevron. Off, it is as quiet as the band it sits in; on, it takes the
+       same accent every other engaged filter takes -- see "Active filter
+       glow". Nothing here is its own visual language. */
+    .reference-toggle {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      padding: 13px 0;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--subtle);
+      white-space: nowrap;
+      transition: color 120ms ease;
+    }
+
+    /* display:flex above would otherwise beat the UA's [hidden] rule, and the
+       toggle hides itself on data that carries no reference rows at all. */
+    .reference-toggle[hidden] {
+      display: none;
+    }
+
+    .reference-toggle:hover {
+      color: var(--text);
+    }
+
+    .reference-toggle input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
     }
 
     .filters.collapsed .filters-chevron {
@@ -1317,6 +1372,13 @@
       text-shadow: 0 0 16px rgba(91, 138, 247, 0.55);
     }
 
+    /* The head-band checkbox takes the label half of that treatment and none
+       of the border glow: it is a checkbox in a band, not a field in a grid,
+       and "slightly lit" is the whole brief. */
+    .reference-toggle.filter-on {
+      color: var(--accent);
+    }
+
     /* Reset button hints when any filter is active */
     button.filter-on {
       color: var(--accent);
@@ -1705,54 +1767,6 @@
       padding: 1px 5px;
       line-height: 1.4;
       user-select: none;
-    }
-
-    /* The toggle that lets those rows in, sitting under the search box it
-       shares a slot with. A checkbox rather than another picker: it is one
-       yes/no about the whole table, and it is off until asked, because the
-       index is an open-weights index and the closed rows are the reference
-       against it, not part of it.
-
-       Selected as `.field label.reference-toggle`, not by the class alone:
-       `.field label` (small-caps mono, for the field titles) is the more
-       specific of the two, and this label is a sentence. */
-    .field label.reference-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-      cursor: pointer;
-      /* .field label is small-caps mono; this one is a sentence. */
-      font-family: var(--font-ui);
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0;
-      text-transform: none;
-      color: var(--muted);
-    }
-
-    /* display:flex above would otherwise beat the UA's [hidden] rule, and the
-       toggle hides itself on data that carries no reference rows at all. */
-    .field label.reference-toggle[hidden] {
-      display: none;
-    }
-
-    .field label.reference-toggle:hover {
-      color: var(--text);
-    }
-
-    .field label.reference-toggle input {
-      width: 15px;
-      height: 15px;
-      margin: 0;
-      flex-shrink: 0;
-      accent-color: var(--reference-ink);
-      cursor: pointer;
-    }
-
-    .field label.reference-toggle.is-on {
-      color: var(--reference-ink);
-      font-weight: 600;
     }
 
     .model-name-wrap {
@@ -4359,6 +4373,10 @@
         padding-right: 16px;
       }
 
+      .filters-chevron {
+        margin-right: 16px;
+      }
+
       .benchmarks-panel {
         padding-left: 16px;
         padding-right: 16px;
@@ -4663,13 +4681,26 @@
     </section>
 
     <section class="filters" id="filtersPanel" hidden>
-      <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
-        <span class="filters-eyebrow">Filters</span>
-        <span class="filters-count" id="filtersCount" hidden></span>
+      <!-- The head band stays put when the fields fold away, which is why the
+           reference checkbox lives here and not among them: it is the one
+           control that says what the table *is* rather than narrowing it, and
+           it has to be readable at a glance whether the panel is open or not.
+           The collapse click is bound to the band rather than the button, so
+           the chevron can sit at the far right, past the checkbox, and the
+           whole strip still folds the panel. -->
+      <div class="filters-head" id="filtersHead">
+        <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
+          <span class="filters-eyebrow">Filters</span>
+          <span class="filters-count" id="filtersCount" hidden></span>
+        </button>
+        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden from the table by default; switch them on and they filter, sort and export like any other row, with their names in teal. A model's own page and a comparison always offer them.">
+          <input id="includeReference" type="checkbox">
+          <span>Closed models</span>
+        </label>
         <svg class="filters-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
+      </div>
       <div class="controls-collapse" id="controlsCollapse">
         <div class="controls-inner">
         <div class="controls" id="controls">
@@ -4773,10 +4804,6 @@
           <input id="search" type="text" placeholder="Model or creator">
           <button id="clearSearch" class="clear-compare" type="button" data-tip="Clear the search box." aria-label="Clear search">×</button>
         </div>
-        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden here by default; switch them on and they filter, sort and export like any other row, with their names in teal. A model's own page and a comparison always offer them.">
-          <input id="includeReference" type="checkbox">
-          <span>Include closed frontier models for reference</span>
-        </label>
       </div>
         </div>
         <section class="toolbar" id="toolbar">
@@ -4969,6 +4996,7 @@
         title: document.getElementById("title"),
         subtitle: document.getElementById("subtitle"),
         filtersPanel: document.getElementById("filtersPanel"),
+        filtersHead: document.getElementById("filtersHead"),
         filtersToggle: document.getElementById("filtersToggle"),
         filtersCount: document.getElementById("filtersCount"),
         controlsCollapse: document.getElementById("controlsCollapse"),
@@ -5165,7 +5193,7 @@
         // visible and hide only the toggle and filter fields — otherwise the
         // import pills/button would be hidden along with the panel.
         ui.filtersPanel.hidden = false;
-        ui.filtersToggle.style.display = "none";
+        ui.filtersHead.style.display = "none";
         ui.controls.style.display = "none";
         ui.toolbar.hidden = false;
         ui.status.classList.add("error");
@@ -5843,7 +5871,13 @@
       }
 
       function bindEvents() {
-        ui.filtersToggle.addEventListener("click", () => {
+        // On the band, not the button: the chevron and the strip between them
+        // fold the panel too, and the button's own click simply bubbles here.
+        // The checkbox is the one thing in the band that is not a collapse.
+        ui.filtersHead.addEventListener("click", (event) => {
+          if (event.target.closest(".reference-toggle")) {
+            return;
+          }
           setFiltersCollapsed(!ui.filtersPanel.classList.contains("collapsed"), true);
         });
 
@@ -5979,9 +6013,10 @@
         const vendorOn = state.gpu.vendor !== "all";
         const reserveOn = state.gpu.reserve > 0;
         const addedOn = Boolean(state.filters.addedFrom || state.filters.addedTo);
-        // Counted with the rest even though it widens the table rather than
-        // narrowing it: what the count is really reporting is "this table is
-        // not the default one", and a table carrying closed models is not.
+        // Not counted in the "N active" badge below: that badge stands for
+        // the constraints the collapsed panel is hiding, and this checkbox
+        // sits in the band beside it, visible either way. It does light itself
+        // up, and it does arm Reset Filters.
         const referenceOn = state.filters.includeReference;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
@@ -5993,13 +6028,13 @@
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
-        ui.referenceToggleLabel?.classList.toggle("is-on", referenceOn);
+        ui.referenceToggleLabel?.classList.toggle("filter-on", referenceOn);
         ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn || referenceOn);
         updateReserveHint();
         syncHostingPresets();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
-        const activeCount = [searchOn, compareOn, benchmarksOn, addedOn, sortOn, referenceOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
+        const activeCount = [searchOn, compareOn, benchmarksOn, addedOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
         ui.filtersCount.textContent = `${activeCount} active`;
         ui.filtersCount.hidden = activeCount === 0;
 
@@ -6071,7 +6106,7 @@
         if (ui.includeReference) {
           ui.includeReference.checked = state.filters.includeReference;
         }
-        ui.referenceToggleLabel?.classList.toggle("is-on", state.filters.includeReference);
+        ui.referenceToggleLabel?.classList.toggle("filter-on", state.filters.includeReference);
         populateFilters();
       }
 
