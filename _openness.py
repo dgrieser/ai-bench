@@ -25,6 +25,11 @@ mislabelled source from silently dropping a model:
     auto-recorded, and
   * auto-recorded entries get their own CLOSED_WEIGHTS sentinel, so
     ``--recheck-closed`` can put them back in front of a human.
+
+The one deliberate blind spot is the reference list (see _reference.py): those
+models are closed, every source says so correctly, and the index carries them
+anyway. reference_model_for() is checked before any verdict, so a source
+telling the truth cannot bury a row that is in the file on purpose.
 """
 
 from __future__ import annotations
@@ -35,6 +40,8 @@ import re
 import sys
 import time
 from typing import Any, Iterable
+
+from _reference import load_reference_slugs
 
 # Sentinel stored for source names a human reviewed and deliberately left
 # unmapped. Never used as a real llm.json model slug.
@@ -247,6 +254,29 @@ def _resembles_tracked_model(name: str, tracked: Iterable[str]) -> str | None:
     return None
 
 
+def reference_model_for(name: str) -> str | None:
+    """The reference model `name` names, if any (see _reference.py).
+
+    These models *are* closed, so every source is right to say so and the
+    verdict would be acted on -- which is exactly why the exception has to be
+    checked before it. Matching is looser than anywhere else here because a
+    board spells them the way a reader does ("Opus 5") while the AA slug they
+    are named after carries the creator ("claude-opus-5"), so a trailing match
+    counts as well as an exact one. The looseness is bounded by the list: it is
+    a handful of hand-written names, not a rule let loose on the index.
+    """
+    key = normalize(name)
+    if not key:
+        return None
+    for slug in load_reference_slugs():
+        ref = normalize(slug)
+        if not ref:
+            continue
+        if ref == key or ref.endswith(" " + key) or key.startswith(ref + " "):
+            return slug
+    return None
+
+
 def is_closed_weights(
     name: str,
     *,
@@ -261,6 +291,8 @@ def is_closed_weights(
     Callers should warm the index with open_index() first, so its fetches do
     not interleave with per-name output.
     """
+    if reference_model_for(name):
+        return False
     if _resembles_tracked_model(name, guard_names):
         return False
     if open_weights is not None:

@@ -48,6 +48,7 @@ from _artificialanalysis_mapping import (
     write_ignored_aa_suggestions,
     write_llm_to_aa_mapping,
 )
+from _reference import REFERENCE_MODELS, load_reference_slugs, rename_reference_slug
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_LLM_JSON = HERE / "llm.json"
@@ -101,6 +102,7 @@ def touched_paths(llm_path: Path = DEFAULT_LLM_JSON) -> list[Path]:
         llm_path,
         AA_MODEL_MAPPING,
         AA_MODEL_IGNORES,
+        REFERENCE_MODELS,
         _new_models.DECISIONS_FILE,
         *(route_path(route) for route in value_routes()),
     }
@@ -155,6 +157,10 @@ def plan(old: str, new: str, llm_path: Path = DEFAULT_LLM_JSON) -> list[Change]:
         changes.append(Change(AA_MODEL_IGNORES, f"rejected AA suggestions move to {new!r}"))
     if old in _new_models.load_decisions():
         changes.append(Change(_new_models.DECISIONS_FILE, f"pending decision moves to {new!r}"))
+    if old in load_reference_slugs():
+        changes.append(
+            Change(REFERENCE_MODELS, f"reference model {old!r} -> {new!r}")
+        )
 
     return changes
 
@@ -205,6 +211,12 @@ def rename(old: str, new: str, llm_path: Path = DEFAULT_LLM_JSON) -> list[str]:
         decisions[new] = decisions.pop(old)
         _new_models.write_decisions(decisions)
         log.append(f"{_new_models.DECISIONS_FILE.name}: key {old!r} -> {new!r}")
+
+    # The reference list is keyed by model name too, and a name left behind
+    # there does not fail: the row simply stops being a reference row and
+    # rejoins the ranking it is supposed to stand outside of.
+    if rename_reference_slug(old, new):
+        log.append(f"{REFERENCE_MODELS.name}: {old!r} -> {new!r}")
 
     return log
 

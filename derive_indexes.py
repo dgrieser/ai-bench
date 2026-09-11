@@ -46,6 +46,15 @@ result here, so -- unlike the scrapers, which never overwrite a value with null
 because a source can drop out for a day -- this script does clear a value (and
 its date) when a model no longer qualifies.
 
+The field being ranked is every model in the file, the closed reference rows
+(see _reference.py) included. They are hidden from the table by default but
+they are not hidden from the arithmetic: an index is "how good is this model
+among the ones we have measured", and a reader comparing an open model with the
+frontier is asking about one field, not two. So a reference row moves the
+ranking exactly as any other model does, and an open model's value can move
+when one is added -- which is already true whenever any model is added, and is
+the paragraph above.
+
 No leaderboard publishes these columns, so a value is attributed to the page
 that documents how it is derived: the first URL the column declares in llm.json
 (a section of this repository's README).
@@ -63,6 +72,7 @@ import sys
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from _reference import apply_reference_flags
 from _scores import stamp_score_updated
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -494,6 +504,10 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     models = doc.get("models")
     if not isinstance(models, list):
         raise ValueError('"models" is missing or not a list')
+    # The reference rows decide which field each index is computed over, so the
+    # flag is brought in step with reference-models.json before anything is
+    # ranked -- a slug added to that list takes effect on the next refresh.
+    apply_reference_flags(doc)
     changes: list[tuple[str, str, int | None, int | None]] = []
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
@@ -582,6 +596,12 @@ def main() -> int:
     by_name = {
         model["name"]: model for model in models if isinstance(model.get("name"), str)
     }
+
+    # Same step refresh() takes, for the same reason: which rows are reference
+    # rows decides the field each index is ranked over, so the flag is brought
+    # in step with reference-models.json before anything is computed.
+    for name, marked in apply_reference_flags(doc):
+        print(f"{name}: {'now' if marked else 'no longer'} a reference model")
 
     all_changes: list[tuple[str, str, int | None, int | None]] = []
     restamped = 0

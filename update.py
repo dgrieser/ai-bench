@@ -51,6 +51,7 @@ from _precedence import (
     VALS_KEY_URLS,
     may_overwrite,
 )
+from _reference import apply_reference_flags, missing_reference_models
 from _scores import round_score, score_source, stamp_score_source, stamp_score_updated
 from fill_source_urls import canonical
 
@@ -2028,6 +2029,20 @@ def main() -> int:
     models = doc.get("models", [])
     if not isinstance(models, list):
         raise RuntimeError("Invalid JSON: models must be a list")
+
+    # Which rows are closed reference models is decided by
+    # reference-models.json, and carried in llm.json for the consumers that
+    # read nothing else (llm.html, llm-cli, an export). Brought in step here,
+    # before any score is written, so a slug added to the list is a reference
+    # row from this run on rather than the next one.
+    for name, marked in apply_reference_flags(doc):
+        print(f"{name}: {'now' if marked else 'no longer'} a reference model")
+    for slug in missing_reference_models(doc):
+        print(
+            f"Warning: reference model '{slug}' has no entry in {llm_path.name}; "
+            f"add it with ./add.py --name {slug}",
+            file=sys.stderr,
+        )
 
     if args.fill_source_urls:
         # Materialize the map for every model so the file ends up with the

@@ -200,6 +200,29 @@ tells you why.
   like it. Picking one is a *rename*, not a mapping — see below. A rename is
   sent on its own: one record per model per run, so the fields above grey out
   while one is drafted.
+- **Reference** — the closed frontier models the index carries as a yardstick for
+  the open field, which is `reference-models.json` and nothing else: a list of
+  Artificial Analysis slugs. *Carry another model* takes a slug AA publishes —
+  the picker offers every one not already carried — and adds both halves at once,
+  the list entry and the `llm.json` row behind it, because a slug with no row is
+  inert and nothing would ever fill one in. *Stop carrying it* drops both, for
+  the same reason from the other end: a row left behind is a closed model with
+  its flag cleared, which the table then shows as an open-weight one. Its
+  scores go with it, and come back on the next refresh if the model is added
+  again.
+
+  *Rename* is the third thing, and it is the Models tab's `model-rename`: the
+  same model under a new slug, which AA does do now and then. The name moves
+  through `llm.json`, this list and every mapping file at once, and the scores
+  stay — so it is for a slug that changed, where remove-then-add is for a model
+  that did.
+
+  **There is always at least one.** The last *Stop carrying it* greys out, and
+  `answer.py` refuses a batch that would empty the list however it was built: an
+  index with nothing to be measured against is the state these rows exist to
+  end. Swapping the final model is still one sitting — queue its replacement and
+  the removal is offered again, since the floor is about what the batch leaves
+  behind rather than about each record.
 - **Runs** — the last few runs of the workflow, and a button that asks for one.
   **Run the refresh now** dispatches `update-benchmarks.yml` against `main`
   carrying no answers: the same run the schedule makes every three hours, which
@@ -386,6 +409,13 @@ and `answer.py` works from a terminal:
 ./answer.py tbench "Fable 5.1" __unmappable__ -w
 ./answer.py --stdin -w < answers.json
 ./rename.py glm-5.3 glm-5-3 -w        # what the Models tab's rename does
+```
+
+The Reference tab's two records go the same way, through `--stdin`:
+
+```sh
+echo '[{"kind": "reference-add", "name": "gpt-6-astra"}]' | ./answer.py --stdin -w
+echo '[{"kind": "reference-remove", "name": "gpt-5-6-sol"}]' | ./answer.py --stdin -w
 ```
 
 The proposal PR is the other way back, and it is now **opt-in** — nothing

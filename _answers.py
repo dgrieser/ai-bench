@@ -42,7 +42,9 @@ from typing import Any, Iterable, Sequence
 
 import _new_models
 import _prompts
+import _reference
 import _rename
+import derive_indexes
 import edit
 import propose
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
@@ -66,15 +68,35 @@ MODEL_ADD = "model-add"
 MODEL_CREATE = "model-create"
 MODEL_EDIT = "model-edit"
 MODEL_RENAME = "model-rename"
+# The reference list (see _reference.py). Both kinds move reference-models.json
+# *and* llm.json together, because the two are one decision: a slug on the list
+# with no entry behind it is inert, and an entry left behind after its slug
+# goes is a closed model the table shows as an open-weight one. Editing a
+# reference model is not a third kind -- it is MODEL_RENAME, which already
+# carries the name through every mapping file and the list with it.
+REFERENCE_ADD = "reference-add"
+REFERENCE_REMOVE = "reference-remove"
 KINDS = frozenset(
-    {MAPPING, AA_IGNORE, NEW_MODEL, MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME}
+    {
+        MAPPING,
+        AA_IGNORE,
+        NEW_MODEL,
+        MODEL_ADD,
+        MODEL_CREATE,
+        MODEL_EDIT,
+        MODEL_RENAME,
+        REFERENCE_ADD,
+        REFERENCE_REMOVE,
+    }
 )
 
 # The kinds that act on one entry in llm.json. A batch may touch each entry
 # once: the records are applied in order and rolled back together, so an edit
 # that follows a rename of the same model looks for a name that is no longer
 # there and takes every other answer down with it.
-MODEL_KINDS = frozenset({MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME})
+MODEL_KINDS = frozenset(
+    {MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME, REFERENCE_ADD, REFERENCE_REMOVE}
+)
 
 # The route whose mapping file runs the other way round: its keys are llm.json
 # model names and its values are Artificial Analysis slugs, one or a list.
@@ -131,6 +153,10 @@ class Answer:
             return f"create model {self.subject!r}" + (f" ({named})" if named else "")
         if self.kind == MODEL_RENAME:
             return f"rename model {self.subject!r} -> {self.value!r}"
+        if self.kind == REFERENCE_ADD:
+            return f"carry {self.subject!r} as a reference model"
+        if self.kind == REFERENCE_REMOVE:
+            return f"stop carrying {self.subject!r} as a reference model"
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -285,7 +311,7 @@ def needs_aa_slugs(records: Sequence[dict[str, Any]]) -> bool:
     for record in records:
         if not isinstance(record, dict):
             continue
-        if record.get("kind") == AA_IGNORE:
+        if record.get("kind") in (AA_IGNORE, REFERENCE_ADD):
             return True
         if record.get("kind") == MAPPING and record.get("route") == AA_ROUTE:
             return True
@@ -365,7 +391,41 @@ def validate(
                 reported.add(answer.index)
             touched.setdefault(name, answer.kind)
 
+    failures.extend(_reference_floor_failures(answers, reported))
+
     return answers, failures
+
+
+def _reference_floor_failures(
+    answers: Sequence[Answer], reported: set[int]
+) -> list[Failure]:
+    """Refuse a batch that would leave no reference models at all.
+
+    Per-record validation cannot see this: each remove is legal on its own, and
+    it is only the last one that empties the list. The count is taken over the
+    whole batch -- adds included, so swapping the final model for another in
+    one sitting is allowed, which is the one shape this floor must not block.
+    Reported against the last remove, because that is the record to drop.
+    """
+    removes = [a for a in answers if a.kind == REFERENCE_REMOVE]
+    if not removes:
+        return []
+    slugs = set(_reference.load_reference_slugs())
+    slugs.difference_update(a.subject for a in removes)
+    slugs.update(a.subject for a in answers if a.kind == REFERENCE_ADD)
+    if len(slugs) >= _reference.MIN_REFERENCE_MODELS:
+        return []
+    last = removes[-1]
+    if last.index in reported:
+        return []
+    return [
+        Failure(
+            last.index,
+            "this batch would leave no reference models; the index needs at "
+            "least one closed model to be measured against, so keep one or add "
+            "its replacement in the same batch",
+        )
+    ]
 
 
 def _validate_one(
@@ -402,6 +462,8 @@ def _validate_one(
         return _validate_model_create(index, record, model_names)
     if kind == MODEL_RENAME:
         return _validate_model_rename(index, record, model_names)
+    if kind in (REFERENCE_ADD, REFERENCE_REMOVE):
+        return _validate_reference(index, record, kind, universes)
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -732,6 +794,43 @@ def _validate_model_rename(
     return Answer(index=index, kind=MODEL_RENAME, subject=old, value=new)
 
 
+def _validate_reference(
+    index: int,
+    record: dict[str, Any],
+    kind: str,
+    universes: dict[str, list[str]],
+) -> Answer:
+    """Put an Artificial Analysis slug on the reference list, or take it off.
+
+    The list is AA slugs by definition (that is what makes a reference model
+    resolvable without a mapping), so an add is checked against AA's own list
+    -- softly, because build_universes leaves it empty when AA cannot be
+    reached and a dead source must not refuse a batch it has no opinion about.
+
+    Nothing is checked against the queue: nobody queues these. The guards are
+    the slug shape, AA knowing the name, and the list's own before-and-after
+    state -- including the floor, which validate() applies to the batch as a
+    whole because two removes are only too many together.
+    """
+    slug = _model_slug(record)
+    on_list = _reference.load_reference_slugs()
+
+    if kind == REFERENCE_REMOVE:
+        if slug not in on_list:
+            raise AnswerError(f"{slug!r} is not a reference model")
+        return Answer(index=index, kind=REFERENCE_REMOVE, subject=slug)
+
+    if slug in on_list:
+        raise AnswerError(f"{slug!r} is already a reference model")
+    aa_slugs = universes.get(propose.AA_SLUGS) or []
+    if aa_slugs and slug not in aa_slugs:
+        raise AnswerError(
+            f"{slug!r} is not an Artificial Analysis slug; a reference model is "
+            "named after one so every source's mapping resolves onto it"
+        )
+    return Answer(index=index, kind=REFERENCE_ADD, subject=slug)
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -783,7 +882,12 @@ def _validate_model_edit(
 
 def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
     """Every file a batch could write, for the rollback snapshot."""
-    paths = {llm_path, _new_models.DECISIONS_FILE, _new_models.DISMISSED_FILE}
+    paths = {
+        llm_path,
+        _new_models.DECISIONS_FILE,
+        _new_models.DISMISSED_FILE,
+        _reference.REFERENCE_MODELS,
+    }
     aa_module = importlib.import_module(AA_MODULE)
     for answer in answers:
         if answer.kind == MAPPING:
@@ -854,14 +958,14 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         return [f"{_new_models.DECISIONS_FILE.name}: {answer.subject!r} -> {answer.value}"]
 
     if answer.kind == MODEL_ADD:
-        _add_model(answer, llm_path)
+        _add_model(answer.subject, answer.fields, llm_path)
         # The half that stops check_new.py offering the slug again: without it
         # the model is in llm.json but nothing says the question was answered.
         _new_models.record_proposed(answer.subject)
         return [f"{llm_path.name}: added {answer.subject!r} (scores land on the next refresh)"]
 
     if answer.kind == MODEL_CREATE:
-        _add_model(answer, llm_path)
+        _add_model(answer.subject, answer.fields, llm_path)
         # No record_proposed here, unlike model-add: that line answers a
         # question check_new.py asked about an AA slug, and nobody asked this
         # one. If AA does turn out to publish the same slug, the entry is
@@ -872,10 +976,79 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
     if answer.kind == MODEL_RENAME:
         return _rename.rename(answer.subject, answer.value, llm_path)
 
+    if answer.kind == REFERENCE_ADD:
+        return _add_reference(answer, llm_path)
+
+    if answer.kind == REFERENCE_REMOVE:
+        return _remove_reference(answer, llm_path)
+
     return _apply_edit(answer, llm_path)
 
 
-def _add_model(answer: Answer, llm_path: Path) -> None:
+def _add_reference(answer: Answer, llm_path: Path) -> list[str]:
+    """Carry one more closed model: the list, then the entry behind it.
+
+    add.py fills the entry from Artificial Analysis, which for these models is
+    the source that has the numbers -- the creator and the context window come
+    back, the parameter count does not, because nobody published one. The URL
+    is passed rather than left to AA: a closed model has no weights repository,
+    so the model page its scores are read off is what the row is checked
+    against.
+    """
+    _reference.add_reference_slug(answer.subject)
+    log = [f"{_reference.REFERENCE_MODELS.name}: carrying {answer.subject!r}"]
+
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    if answer.subject not in {m.get("name") for m in doc.get("models", [])}:
+        _add_model(
+            answer.subject, {"url": _reference.aa_model_page(answer.subject)}, llm_path
+        )
+        log.append(f"{llm_path.name}: added {answer.subject!r} (scores land on the next refresh)")
+    return log + _sync_reference_flags(llm_path)
+
+
+def _remove_reference(answer: Answer, llm_path: Path) -> list[str]:
+    """Stop carrying one: the slug, and the entry with it.
+
+    The entry goes too, on purpose. llm.json holds open-weight models plus
+    exactly this list; an entry left behind would be a closed model with its
+    flag cleared -- shown in the table as an open-weight one, exported as one,
+    and offered as one to a reader filtering for what they can host. Its scores
+    are scraped, so a row added back later fills in again on the next refresh.
+    """
+    _reference.remove_reference_slug(answer.subject)
+    log = [f"{_reference.REFERENCE_MODELS.name}: no longer carrying {answer.subject!r}"]
+
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    models = doc.get("models") or []
+    kept = [m for m in models if not (isinstance(m, dict) and m.get("name") == answer.subject)]
+    if len(kept) != len(models):
+        doc["models"] = kept
+        llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        log.append(f"{llm_path.name}: dropped {answer.subject!r}")
+    return log + _sync_reference_flags(llm_path)
+
+
+def _sync_reference_flags(llm_path: Path) -> list[str]:
+    """Bring llm.json's `reference` flags and derived indexes back in step.
+
+    update.py and derive_indexes.py both do this on a refresh, but a record-only
+    run never reaches either -- so without this an added model would sit in the
+    table as an open-weight row, and a removed one would leave the indexes
+    ranked against a field that no longer exists, for as long as the next
+    scheduled refresh takes.
+    """
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    changes = _reference.apply_reference_flags(doc)
+    derive_indexes.refresh_and_report(doc)
+    llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return [
+        f"{llm_path.name}: {name} is {'now' if marked else 'no longer'} a reference model"
+        for name, marked in changes
+    ]
+
+
+def _add_model(name: str, fields: dict[str, Any], llm_path: Path) -> None:
     """Run add.py for one model, with whatever metadata the record carried.
 
     add.py fills anything left out from Artificial Analysis, and leaves it null
@@ -885,13 +1058,13 @@ def _add_model(answer: Answer, llm_path: Path) -> None:
     really, nothing here", which would suppress that prefill. Same argv rules as
     the edit below: --flag=VALUE, and the path after a bare --.
     """
-    argv = [sys.executable, str(ADD_SCRIPT), f"--name={answer.subject}"]
-    for key, value in sorted(answer.fields.items()):
+    argv = [sys.executable, str(ADD_SCRIPT), f"--name={name}"]
+    for key, value in sorted(fields.items()):
         if value is None:
             continue
         argv.append(f"--{key.replace('_', '-')}={value}")
     argv += ["--", str(llm_path)]
-    _run(argv, f"add.py failed for {answer.subject!r}")
+    _run(argv, f"add.py failed for {name!r}")
 
 
 def _apply_edit(answer: Answer, llm_path: Path) -> list[str]:

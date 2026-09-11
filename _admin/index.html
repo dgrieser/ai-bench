@@ -871,6 +871,11 @@ const state = {
   aa: { slugs: null, models: null, error: "", asked: false },
   modelSearch: "",      // kept here so a re-render does not empty the tab
   newModel: null,       // the hand-added model being typed: { name, fields }
+  /* The closed models the index carries for reference: reference-models.json,
+     read from the repository like everything else. null until it is read, and
+     [] is a state the file cannot be in -- the list may never be emptied. */
+  reference: { slugs: null, error: "" },
+  referenceDraft: "",   // the slug being typed into "carry another model"
   error: "",
   ok: "",
 };
@@ -1154,7 +1159,8 @@ const queueKeys = (keys) => {
 
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
-const inferQueued = (keys) => keys.filter((key) => !/^model-(create|edit|rename) /.test(key));
+const inferQueued = (keys) =>
+  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)) /.test(key));
 
 function readSent() {
   try {
@@ -1377,6 +1383,17 @@ function aaSlugDetail(slug) {
   return parts.length ? ` (${parts.join(", ")})` : "";
 }
 
+/* The same row in prose, for a card that is about the model rather than about
+   a slug being suggested: AA's own name for it, then who made it and when.
+   Empty when the published list has never heard of the slug, which for a
+   reference model is worth saying out loud. */
+function aaSlugSummary(slug) {
+  const model = state.aa.models && state.aa.models.get(slug);
+  if (!model) return "";
+  const tail = [model.creator, model.release_date].filter(Boolean).join(", ");
+  return [model.name || slug, tail].filter(Boolean).join(" -- ");
+}
+
 /* AA slugs worth offering for a model of this name, best first. The ranking is
    deliberately shallow -- these are suggestions to click, and the click sends a
    slug from AA's own list either way. */
@@ -1410,9 +1427,10 @@ async function load() {
 async function loadData() {
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-  const [queue, llm] = await Promise.allSettled([
+  const [queue, llm, reference] = await Promise.allSettled([
     json(`${state.raw}/_pending/pending.json`),
     json(`${state.raw}/llm.json`),
+    json(`${state.raw}/reference-models.json`),
   ]);
 
   if (queue.status === "fulfilled") {
@@ -1431,6 +1449,17 @@ async function loadData() {
   }
   if (llm.status === "fulfilled") state.llm = llm.value;
   else state.error = `Could not read llm.json (${llm.reason.message}).`;
+
+  /* Its own error rather than the page's: the list is one tab, and a
+     repository that predates it should not red the whole page. */
+  if (reference.status === "fulfilled" && Array.isArray(reference.value)) {
+    state.reference = { slugs: reference.value.filter((s) => typeof s === "string"), error: "" };
+  } else {
+    const why = reference.status === "fulfilled"
+      ? "the file is not a JSON array of slugs"
+      : reference.reason.message;
+    state.reference = { slugs: null, error: String(why) };
+  }
 
   render();
 }
@@ -1605,7 +1634,8 @@ function render() {
     state.tab === "queue" ? renderQueue()
       : state.tab === "new" ? renderNew()
         : state.tab === "models" ? renderModels()
-          : renderRuns()
+          : state.tab === "reference" ? renderReference()
+            : renderRuns()
   );
 
   refreshFooter();
@@ -1675,6 +1705,7 @@ function renderTabs() {
     ["queue", "Queue", mappingCount],
     ["new", "New models", newCount],
     ["models", "Models", null],
+    ["reference", "Reference", state.reference.slugs?.length ?? null],
     ["runs", "Runs", null],
   ];
   document.getElementById("tabs").replaceChildren(
@@ -1936,6 +1967,264 @@ function renderNewQuestion(question) {
     }),
   ]));
   return guard(card, KEY(question));
+}
+
+/* ── Reference models ──
+   The closed frontier models the index carries as a yardstick for the open
+   field (reference-models.json). The list is Artificial Analysis slugs, which
+   is what makes them resolvable: the llm.json entry is named after the slug,
+   so every source's mapping lands on it without one being written.
+
+   Three things can be done to a row, and they are three different records.
+   Adding one carries the slug *and* creates the entry behind it; removing one
+   drops both, because an entry left behind is a closed model the table shows
+   as an open-weight one; renaming one is the ordinary model-rename the Models
+   tab sends, which moves the name through every mapping file and the list with
+   it -- and keeps the scores, which remove-then-add would not. */
+
+const REFERENCE_ADD_KEY = (slug) => `reference-add  ${slug}`;
+const REFERENCE_REMOVE_KEY = (slug) => `reference-remove  ${slug}`;
+
+const answerKeys = (prefix) => [...state.answers.keys()].filter((key) => key.startsWith(prefix));
+
+/* How many reference models this batch would leave behind. The floor is
+   answer.py's (at least one), applied here as well so the last Remove is
+   simply not offered rather than taking a whole sitting down with it. */
+const referenceRemaining = () => (state.reference.slugs?.length || 0)
+  - answerKeys("reference-remove  ").length
+  + answerKeys("reference-add  ").length;
+
+function renderReference() {
+  ensureAaSlugs();
+  const box = el("div", { className: "stack" });
+
+  if (state.reference.slugs === null) {
+    box.append(el("p", { className: "empty" },
+      !state.reference.error
+        ? "The reference list has not been read yet."
+        : state.reference.error.includes("404")
+          ? "This repository has no reference-models.json yet."
+          : `Could not read the reference list (${state.reference.error}).`));
+    return box;
+  }
+
+  box.append(el("p", { className: "note-text" },
+    "The closed models the index carries so the open field has something to be "
+    + "measured against. The table hides them behind its Closed models "
+    + "checkbox; a model's own page and a comparison always offer them. Each is "
+    + "named after an Artificial Analysis slug, which is what lets every "
+    + "source's scores find it. There is always at least one."));
+
+  box.append(renderReferenceAdd());
+  box.append(...state.reference.slugs.map(renderReferenceCard));
+  return box;
+}
+
+/* Carry one more. The slug has to be one AA publishes -- answer.py checks the
+   same thing on the runner -- because a name AA does not know collects nothing
+   and would sit in the table empty forever. */
+function renderReferenceAdd() {
+  const card = el("div", { className: "card" });
+  card.append(el("div", { className: "subject" }, "Carry another model"));
+
+  /* Locked only while the slug *in the form* is the one in flight, so the way
+     out is to clear it -- same shape as Add a model on the New models tab. */
+  const sentSlug = state.referenceDraft.trim();
+  const sent = Boolean(sentSlug) && isSent(REFERENCE_ADD_KEY(sentSlug));
+
+  const status = el("div", { className: "chips" });
+  const listId = "reference-aa-slugs";
+  const input = el("input", {
+    type: "text", placeholder: "gpt-6-astra", value: state.referenceDraft, disabled: sent,
+  });
+  input.setAttribute("list", listId);
+
+  const commit = () => {
+    for (const key of answerKeys("reference-add  ")) state.answers.delete(key);
+    const slug = state.referenceDraft.trim();
+    const shaped = SLUG_RE.test(slug);
+    const carried = (state.reference.slugs || []).includes(slug);
+    const known = state.aa.slugs === null || state.aa.slugs.includes(slug);
+    const sent = isSent(REFERENCE_ADD_KEY(slug));
+
+    status.replaceChildren(...(!slug ? [] : [
+      !shaped
+        ? chip("", "not a slug: lowercase words joined by single dots or dashes",
+          { prose: true, className: "now" })
+        : carried
+          ? chip("", "already carried -- it is one of the cards below", { prose: true, className: "now" })
+          : sent
+            ? chip("", "already sent -- the run is adding it", { prose: true, className: "now" })
+            : !known
+              ? chip("", "Artificial Analysis does not publish this slug, so nothing would "
+                + "find the model", { prose: true, className: "now" })
+              : chip("", [aaSlugSummary(slug), "the entry is created with it and "
+                + "scores land on the next refresh"].filter(Boolean).join(" -- "),
+                { prose: true }),
+    ]));
+
+    if (shaped && !carried && known && !sent) {
+      state.answers.set(REFERENCE_ADD_KEY(slug), { kind: "reference-add", name: slug });
+    }
+    card.classList.toggle("answered", shaped && !carried && known && !sent);
+    refreshFooter();
+  };
+
+  input.oninput = () => {
+    state.referenceDraft = input.value;
+    input.classList.remove("unknown");
+    commit();
+  };
+  card.append(el("div", { className: "field" }, [
+    el("label", {}, "artificial analysis slug"),
+    input,
+    referenceSlugList(listId),
+  ]), status);
+
+  if (state.aa.error) {
+    card.append(el("p", { className: "note-text" },
+      `The slug list could not be read (${state.aa.error}), so nothing is suggested `
+      + "here. A slug typed in full is still checked on the runner."));
+  }
+  commit();
+  if (sent) {
+    /* Appended after the lock, not before it: lockCard() disables every control
+       it finds, and this one is the way out of the locked state. */
+    const locked = guard(card, REFERENCE_ADD_KEY(sentSlug));
+    const another = el("button", { className: "btn ghost tiny", type: "button" }, "Carry another");
+    another.onclick = () => { state.referenceDraft = ""; render(); };
+    locked.append(el("div", { className: "field" }, another));
+    return locked;
+  }
+  return card;
+}
+
+/* Every AA slug the page knows, minus the ones already carried. Capped the way
+   the Models tab's rename list is: a datalist of 700 is a browser problem. */
+function referenceSlugList(listId) {
+  const carried = new Set(state.reference.slugs || []);
+  const offered = (state.aa.slugs || []).filter((slug) => !carried.has(slug));
+  return el("datalist", { id: listId },
+    offered.slice(0, 2000).map((value) =>
+      el("option", { value, label: `${value}${aaSlugDetail(value)}` })));
+}
+
+function renderReferenceCard(slug) {
+  const removeKey = REFERENCE_REMOVE_KEY(slug);
+  const renameKey = `model-rename  ${slug}`;
+  const removing = state.answers.has(removeKey);
+  const rename = state.answers.get(renameKey);
+  const card = el("div", { className: `card${removing || rename ? " answered" : ""}` });
+  const model = (state.llm?.models || []).find((m) => m.name === slug);
+
+  card.append(el("div", { className: "subject" }, slug));
+  const summary = aaSlugSummary(slug);
+  card.append(el("div", { className: "chips" }, [
+    chip("", summary || (state.aa.slugs === null
+      ? "reading the Artificial Analysis list..."
+      : "Artificial Analysis no longer publishes this slug"),
+      { prose: true, className: summary || state.aa.slugs === null ? "" : "now" }),
+    model
+      ? chip("scores", String(Object.values(model.scores || {}).filter((v) => v !== null).length))
+      : chip("", "no llm.json entry yet -- the next refresh cannot fill one either",
+        { prose: true, className: "now" }),
+  ]));
+
+  if (rename) {
+    card.append(
+      el("div", { className: "chips" }, chip("rename to", rename.new_name)),
+      el("div", { className: "options" }, option("Cancel the rename", "keep this slug", {
+        pressed: false,
+        className: "decline",
+        onclick: () => { state.answers.delete(renameKey); render(); },
+      })),
+      el("p", { className: "note-text" },
+        `${slug} becomes ${rename.new_name} in llm.json, in the reference list and in `
+        + "every mapping file that names it. The scores come along; a different model "
+        + "is Stop carrying plus Carry another instead."),
+    );
+    return guard(card, renameKey);
+  }
+
+  const last = referenceRemaining() <= 1 && !removing;
+  card.append(el("div", { className: "options" }, [
+    option("Stop carrying it", removing
+      ? "the slug and its entry go on the next run"
+      : last
+        ? "not while it is the only one left -- add its replacement first"
+        : "drops the slug and its llm.json entry, scores and all", {
+      pressed: removing,
+      className: "decline",
+      onclick: () => {
+        if (removing) state.answers.delete(removeKey);
+        else {
+          /* One record per entry per run: a rename of a model this batch also
+             removes is refused on the runner, and the removal is the thing
+             just clicked. */
+          state.answers.delete(renameKey);
+          state.answers.set(removeKey, { kind: "reference-remove", name: slug });
+        }
+        render();
+      },
+    }),
+  ]));
+  if (last) {
+    card.querySelectorAll(".options button").forEach((button) => { button.disabled = true; });
+  }
+
+  card.append(referenceRenameBlock(slug, renameKey));
+  /* Whichever of the two is in flight: a reload drops the drafted record but
+     not the lock, and a rename sent from here has to keep its card disabled
+     just as a removal does. Same choice renderModelCard makes. */
+  return guard(card, isSent(renameKey) ? renameKey : removeKey);
+}
+
+/* Rename, for the slug that moved rather than the model that did: AA renames
+   one of these now and then, and the entry has to follow or its scores stop
+   arriving. Simpler than the Models tab's block, which also has to work out
+   whether AA knows the name at all -- here it does, by construction. */
+function referenceRenameBlock(slug, renameKey) {
+  const block = el("div", { className: "provenance aa" });
+  block.append(el("div", { className: "field" }, el("label", {}, "rename")));
+
+  if (state.aa.slugs === null) {
+    block.append(el("p", { className: "note-text" },
+      state.aa.error
+        ? `The Artificial Analysis slugs could not be read (${state.aa.error}).`
+        : "Reading the Artificial Analysis slugs..."));
+    return block;
+  }
+
+  const listId = `reference-rename-${slug}`;
+  const input = el("input", { type: "text", placeholder: "the slug AA uses now" });
+  input.setAttribute("list", listId);
+  const apply = el("button", { className: "btn ghost tiny", type: "button" }, "Rename");
+  apply.onclick = () => {
+    const value = input.value.trim();
+    const taken = (state.llm?.models || []).some((m) => m.name === value);
+    if (value === slug || taken || !state.aa.slugs.includes(value)) {
+      input.classList.add("unknown");
+      return;
+    }
+    state.answers.delete(REFERENCE_REMOVE_KEY(slug));
+    state.answers.delete(`model-edit  ${slug}`);
+    state.answers.set(renameKey, { kind: "model-rename", name: slug, new_name: value });
+    render();
+  };
+  input.oninput = () => input.classList.remove("unknown");
+
+  block.append(
+    el("div", { className: "score-row" }, [
+      el("label", {}, `one of ${state.aa.slugs.length} AA slugs`),
+      input,
+      apply,
+      referenceSlugList(listId),
+    ]),
+    el("p", { className: "note-text" },
+      "For the same model under a new slug -- the name moves through llm.json, the "
+      + "reference list and every mapping file at once, and the scores stay."),
+  );
+  return block;
 }
 
 function renderModels() {

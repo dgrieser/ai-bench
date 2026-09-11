@@ -40,6 +40,17 @@
          a fresh score overrides in the cell they share. */
       --fresh-ink: #991b1b;
       --fresh-glow: rgba(153, 27, 27, 0.3);
+      /* Closed reference models (reference-models.json): the handful of closed
+         frontier models the index carries so the open field has something to be
+         measured against. Their names are set in this teal wherever they
+         appear, because a row that is not open-weights is not the same kind of
+         row as the ones around it and nothing else on the page says so. Teal
+         because the three inks already spoken for are blue (--accent, links),
+         red (--fresh-ink, new) and gold (the grouped-sort diamond); it clears
+         4.5:1 on --surface in both themes, and it is never the only cue — the
+         name also carries a "closed" tag and the rows are hidden until asked
+         for. */
+      --reference-ink: #0f766e;
       /* Comparison series: a neon ramp -- cyan, magenta, lime, amber, violet --
          spread roughly evenly around the wheel so no two sit next to each
          other. A true neon is a light source, and this paper is white, so the
@@ -348,11 +359,27 @@
       border-bottom: 1px solid var(--line);
     }
 
+    /* The head band: the collapse button, the reference checkbox, the chevron.
+       Clicking anywhere in it folds the panel (the handler skips the checkbox),
+       so the band keeps the full-width hit area the button used to have while
+       the chevron sits past the checkbox at the far right. */
+    .filters-head {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+
+    .filters-head:hover {
+      background: var(--surface-alt);
+    }
+
     .filters-toggle {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       min-height: 0;
       padding: 13px 20px;
       border: 0;
@@ -361,11 +388,10 @@
       color: var(--subtle);
       cursor: pointer;
       text-align: left;
-      transition: color 120ms ease, background-color 120ms ease;
+      transition: color 120ms ease;
     }
 
-    .filters-toggle:hover {
-      background: var(--surface-alt);
+    .filters-head:hover .filters-toggle {
       color: var(--text);
       border: 0;
     }
@@ -403,8 +429,48 @@
     .filters-chevron {
       width: 12px;
       height: 8px;
-      margin-left: auto;
+      flex-shrink: 0;
+      margin: 0 20px 0 12px;
+      color: var(--subtle);
       transform: rotate(180deg);
+    }
+
+    /* The reference checkbox, right-aligned in the head band beside the
+       chevron. Off, it is as quiet as the band it sits in; on, it takes the
+       same accent every other engaged filter takes -- see "Active filter
+       glow". Nothing here is its own visual language. */
+    .reference-toggle {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      padding: 13px 0;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--subtle);
+      white-space: nowrap;
+      transition: color 120ms ease;
+    }
+
+    /* display:flex above would otherwise beat the UA's [hidden] rule, and the
+       toggle hides itself on data that carries no reference rows at all. */
+    .reference-toggle[hidden] {
+      display: none;
+    }
+
+    .reference-toggle:hover {
+      color: var(--text);
+    }
+
+    .reference-toggle input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
     }
 
     .filters.collapsed .filters-chevron {
@@ -1306,6 +1372,13 @@
       text-shadow: 0 0 16px rgba(91, 138, 247, 0.55);
     }
 
+    /* The head-band checkbox takes the label half of that treatment and none
+       of the border glow: it is a checkbox in a band, not a field in a grid,
+       and "slightly lit" is the whole brief. */
+    .reference-toggle.filter-on {
+      color: var(--accent);
+    }
+
     /* Reset button hints when any filter is active */
     button.filter-on {
       color: var(--accent);
@@ -1668,6 +1741,32 @@
 
     .model-new {
       color: #991b1b !important;
+    }
+
+    /* ── Closed reference model ─────────────────────
+       The teal a reference model's name is set in, wherever it is named. It
+       never has to out-rank .model-new above it: isRecentModel() answers no
+       for these rows on purpose, since "closed" is the thing worth saying
+       about them and it stays true after the week "new" would have lasted. */
+    .model-reference {
+      color: var(--reference-ink) !important;
+    }
+
+    /* Colour is never the only cue. The tag is what a reader who cannot see
+       the teal (or is looking at a printout) reads instead. */
+    .reference-tag {
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--reference-ink);
+      border: 1px solid color-mix(in srgb, var(--reference-ink) 45%, transparent);
+      border-radius: 999px;
+      padding: 1px 5px;
+      line-height: 1.4;
+      user-select: none;
     }
 
     .model-name-wrap {
@@ -4095,6 +4194,9 @@
          rest of the palette — the same red .model-new switches to here. */
       --fresh-ink: #f87171;
       --fresh-glow: rgba(248, 113, 113, 0.28);
+      /* Teal-700 is as good as black on this paper; the reference ink lightens
+         with the rest of the palette, same as the red above it. */
+      --reference-ink: #2dd4bf;
       /* The same five hues at full neon on near-black paper, which is the
          ground they were picked for -- every one clears 5.5:1 against
          --surface. Hue order is what carries across the themes: a series keeps
@@ -4269,6 +4371,10 @@
       .toolbar {
         padding-left: 16px;
         padding-right: 16px;
+      }
+
+      .filters-chevron {
+        margin-right: 16px;
       }
 
       .benchmarks-panel {
@@ -4575,13 +4681,26 @@
     </section>
 
     <section class="filters" id="filtersPanel" hidden>
-      <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
-        <span class="filters-eyebrow">Filters</span>
-        <span class="filters-count" id="filtersCount" hidden></span>
+      <!-- The head band stays put when the fields fold away, which is why the
+           reference checkbox lives here and not among them: it is the one
+           control that says what the table *is* rather than narrowing it, and
+           it has to be readable at a glance whether the panel is open or not.
+           The collapse click is bound to the band rather than the button, so
+           the chevron can sit at the far right, past the checkbox, and the
+           whole strip still folds the panel. -->
+      <div class="filters-head" id="filtersHead">
+        <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
+          <span class="filters-eyebrow">Filters</span>
+          <span class="filters-count" id="filtersCount" hidden></span>
+        </button>
+        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden from the table by default; switch them on and they filter, sort and export like any other row, with their names in teal. A model's own page and a comparison always offer them.">
+          <input id="includeReference" type="checkbox">
+          <span>Closed models</span>
+        </label>
         <svg class="filters-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
+      </div>
       <div class="controls-collapse" id="controlsCollapse">
         <div class="controls-inner">
         <div class="controls" id="controls">
@@ -4730,6 +4849,14 @@
           // Benchmarks are opt-out: an empty list means every column shows, so
           // benchmarks added to llm.json later appear without extra bookkeeping.
           hiddenBenchmarks: [],
+          // Whether the closed frontier models llm.json marks `reference` are
+          // in the table at all. Off by default: this is an open-weights index
+          // and those rows are the yardstick beside it. On, they behave like
+          // every other row — filtered, sorted, counted, exported. It is a
+          // question about what is *shown*, not about what counts: every index
+          // and every percentile ranks them either way. A model's own page and
+          // a comparison ignore it entirely.
+          includeReference: false,
           // Date-added window. addedWindow is where the picker sits; addedFrom
           // and addedTo are the inclusive ISO bounds it resolves to, "" for an
           // open end, and they are what actually filters.
@@ -4870,6 +4997,7 @@
         title: document.getElementById("title"),
         subtitle: document.getElementById("subtitle"),
         filtersPanel: document.getElementById("filtersPanel"),
+        filtersHead: document.getElementById("filtersHead"),
         filtersToggle: document.getElementById("filtersToggle"),
         filtersCount: document.getElementById("filtersCount"),
         controlsCollapse: document.getElementById("controlsCollapse"),
@@ -4892,6 +5020,8 @@
         compareBtn: document.getElementById("compareBtn"),
         clearBenchmarks: document.getElementById("clearBenchmarks"),
         clearSearch: document.getElementById("clearSearch"),
+        includeReference: document.getElementById("includeReference"),
+        referenceToggleLabel: document.getElementById("referenceToggleLabel"),
         hostingPresets: document.getElementById("hostingPresets"),
         presetChips: document.getElementById("presetChips"),
         presetsNote: document.getElementById("presetsNote"),
@@ -5064,7 +5194,7 @@
         // visible and hide only the toggle and filter fields — otherwise the
         // import pills/button would be hidden along with the panel.
         ui.filtersPanel.hidden = false;
-        ui.filtersToggle.style.display = "none";
+        ui.filtersHead.style.display = "none";
         ui.controls.style.display = "none";
         ui.toolbar.hidden = false;
         ui.status.classList.add("error");
@@ -5444,7 +5574,14 @@
       }
 
       function populateFilters() {
-        const modelNames = [...new Set(state.data.models.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
+        // The same set the table is showing: a model the reader cannot have in
+        // the table is not offered as a way to narrow it. The comparison
+        // picker is the other way round and lists everything — see
+        // renderCompareMenuBody.
+        const pickable = state.filters.includeReference
+          ? state.data.models
+          : openModels();
+        const modelNames = [...new Set(pickable.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
         ui.modelCompare.innerHTML = modelNames.map((name) => {
           const sel = state.filters.selectedModels.includes(name);
           return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(name)}" role="option" aria-selected="${sel}">
@@ -5452,6 +5589,12 @@
             <span>${escapeHtml(name)}</span>
           </div>`;
         }).join("");
+
+        // An llm.json with no reference rows -- an older file, an import --
+        // should not carry a switch that does nothing.
+        if (ui.referenceToggleLabel) {
+          ui.referenceToggleLabel.hidden = referenceModelCount() === 0;
+        }
 
         decorateMultiSelectWidget(ui.modelCompare, "Filter models", {
           label: "Unselect all models",
@@ -5729,7 +5872,13 @@
       }
 
       function bindEvents() {
-        ui.filtersToggle.addEventListener("click", () => {
+        // On the band, not the button: the chevron and the strip between them
+        // fold the panel too, and the button's own click simply bubbles here.
+        // The checkbox is the one thing in the band that is not a collapse.
+        ui.filtersHead.addEventListener("click", (event) => {
+          if (event.target.closest(".reference-toggle")) {
+            return;
+          }
           setFiltersCollapsed(!ui.filtersPanel.classList.contains("collapsed"), true);
         });
 
@@ -5762,6 +5911,11 @@
         ui.clearSearch.addEventListener("click", () => {
           ui.search.value = "";
           state.filters.search = "";
+          applyAndRender();
+        });
+
+        ui.includeReference.addEventListener("change", (event) => {
+          setIncludeReference(event.target.checked);
           applyAndRender();
         });
 
@@ -5802,6 +5956,10 @@
           state.sort.direction = "desc";
 
           ui.search.value = "";
+          // Back to the open field, which is what this table is. It
+          // repopulates the model picker on its way out; the widget syncing
+          // below then runs over the list it just rebuilt.
+          setIncludeReference(false);
 
           ui.modelCompare.classList.remove("open");
           ui.benchmarkPick.classList.remove("open");
@@ -5856,6 +6014,11 @@
         const vendorOn = state.gpu.vendor !== "all";
         const reserveOn = state.gpu.reserve > 0;
         const addedOn = Boolean(state.filters.addedFrom || state.filters.addedTo);
+        // Not counted in the "N active" badge below: that badge stands for
+        // the constraints the collapsed panel is hiding, and this checkbox
+        // sits in the band beside it, visible either way. It does light itself
+        // up, and it does arm Reset Filters.
+        const referenceOn = state.filters.includeReference;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
         ui.modelCompare.closest(".field")?.classList.toggle("filter-on", compareOn);
@@ -5866,7 +6029,8 @@
         ui.gpuModel.closest(".field")?.classList.toggle("filter-on", gpuOn && Boolean(state.gpu.selected));
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn);
+        ui.referenceToggleLabel?.classList.toggle("filter-on", referenceOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn || referenceOn);
         updateReserveHint();
         syncHostingPresets();
 
@@ -5882,10 +6046,83 @@
         return model.creator?.name || "Unknown";
       }
 
+      /* ── Closed reference models ──
+         llm.json marks a handful of closed frontier models `reference` (the
+         list itself lives in reference-models.json, next to it). They are here
+         so the open field has something to be measured against, which means
+         two things the rest of the page has to keep straight: the table hides
+         them until asked, and they are never part of the field a rank is
+         measured in. */
+
+      function isReferenceModel(model) {
+        return Boolean(model && model.reference === true);
+      }
+
+      // The open-weight field: what the table shows, and what the model picker
+      // offers, until the reader asks for the closed rows too. Not a ranking
+      // field -- every index and every percentile is computed over all of
+      // state.data.models, reference rows included, whether they are on screen
+      // or not.
+      function openModels() {
+        return state.data.models.filter((model) => !isReferenceModel(model));
+      }
+
+      // The word beside a reference model's name, wherever one is named. Its
+      // own tooltip, because "closed" on its own is a claim a reader is
+      // entitled to see spelled out.
+      function referenceTag() {
+        return `<span class="reference-tag"${tipAttrs({
+          title: "Closed weights",
+          body: "No published weights, so this model cannot be run on your own hardware. It is in the index as a reference point for the open field, and it is ranked alongside it: every index and every percentile counts this row, whether or not the table is showing it."
+        })}>closed</span>`;
+      }
+
+      function referenceModelCount() {
+        return state.data.models.length - openModels().length;
+      }
+
+      // The set the table, its counts and an export all treat as "everything":
+      // the open field, or that plus the reference rows once they are asked
+      // for. The toggle decides what the table *is*, rather than narrowing it,
+      // which is why it is read here and not in exportFilters' list of active
+      // filters -- a default export drops the closed rows without that
+      // counting as a filtered download.
+      function modelPool() {
+        return state.filters.includeReference ? state.data.models : openModels();
+      }
+
+      // The reader's answer to "show me the closed models too". Kept in one
+      // place because three things move together: the checkbox, the selection
+      // it may be about to orphan, and the model picker's contents.
+      function setIncludeReference(on) {
+        state.filters.includeReference = Boolean(on);
+        if (!state.filters.includeReference) {
+          // A reference model left selected here would filter the table down
+          // to a row that is no longer in it — an empty table with no visible
+          // reason. Dropping the selection is the only reading that leaves the
+          // two controls agreeing.
+          state.filters.selectedModels = state.filters.selectedModels
+            .filter((name) => !isReferenceModel(state.modelsBySlug.get(modelSlug(name))));
+        }
+        if (ui.includeReference) {
+          ui.includeReference.checked = state.filters.includeReference;
+        }
+        ui.referenceToggleLabel?.classList.toggle("filter-on", state.filters.includeReference);
+        populateFilters();
+      }
+
       // Runs both over the decorated on-screen rows and over raw upstream
       // models (see filterModelsDocument), so it must not rely on creatorName
       // having been attached already.
       function modelPassesFilters(model) {
+        // First, because it decides whether the row exists for this table at
+        // all: a hidden reference model is not a filtered-out one, it is a row
+        // the reader has not asked to see. Also why it runs before the search
+        // — typing "opus" must not conjure one up.
+        if (!state.filters.includeReference && isReferenceModel(model)) {
+          return false;
+        }
+
         if (state.filters.search) {
           const haystack = `${model.name || ""} ${creatorNameOf(model)}`.toLowerCase();
           if (!haystack.includes(state.filters.search)) {
@@ -6814,6 +7051,14 @@
       }
 
       function isRecentModel(model) {
+        // A reference model is never "new", whatever its date says. It is
+        // closed for good and the teal says so; NEW is true for a week and
+        // would be the louder of the two marks for exactly that week. Also
+        // keeps the Recently Added panel about the open field, which is what a
+        // reader watching that panel is watching.
+        if (isReferenceModel(model)) {
+          return false;
+        }
         const age = daysSince(model.date_added);
         return age !== null && age >= 0 && age < NEW_DAYS;
       }
@@ -6862,6 +7107,7 @@
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
+        const isReference = isReferenceModel(model);
         const modelTip = tipAttrs(modelTipFields(model));
         const scoreCells = benchKeys.map((key) => {
           const value = toNumber(model.scores?.[key]);
@@ -6889,7 +7135,7 @@
 
         return `
           <tr>
-            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}">${modelName}</a></span></td>
+            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}${isReference ? ' model-reference' : ""}">${modelName}</a>${isReference ? referenceTag() : ""}</span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
@@ -7306,7 +7552,7 @@
           <section class="detail-head">
             <div class="detail-head-main">
               <a class="detail-back" href="#">&larr; Leaderboard</a>
-              <h2 class="detail-name">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}</h2>
+              <h2 class="detail-name${isReferenceModel(model) ? " model-reference" : ""}">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}${isReferenceModel(model) ? ` ${referenceTag()}` : ""}</h2>
               <p class="detail-byline">${creatorUrl
                 ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
                 : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
@@ -7420,6 +7666,12 @@
         }
       ];
 
+      // One map per benchmark, over every model in the index — the closed
+      // reference rows included. They are hidden from the table by default and
+      // not from the arithmetic: a rank answers "among the models this index
+      // holds", and a reader comparing an open model with the frontier is
+      // asking about one field, not two. Same field derive_indexes.py ranks
+      // the stored index columns over.
       const detailPercentiles = new Map();
 
       function percentileFor(model, key) {
@@ -7533,6 +7785,9 @@
       // single-model drawing exactly as it was.
       function renderRadarSection(models) {
         const axes = state.radar.axes;
+        // Every model the index holds, which is the field percentileFor ranks
+        // against: the closed reference rows take part in the ranking whether
+        // or not the table is showing them.
         const total = state.data.models.length;
         const single = models.length === 1;
         return `
@@ -7541,7 +7796,8 @@
             ${renderAxisPicker(models, axes)}
             <div class="radar-figure${single ? "" : " is-multi"}">${renderRadarChart(models, axes)}${single ? "" : radarLegend(radarSeries(models, axes))}</div>
             <p class="radar-note">Each axis is ${single ? "this model's" : "each model's"} percentile rank across all ${total} indexed
-              models — the rim is the best recorded result, the hub the worst. Lower-is-better
+              models, the closed reference ones included — the rim is the best recorded result, the hub
+              the worst. Lower-is-better
               benchmarks are flipped, so outward always means better. An axis without a recorded
               score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
@@ -8196,6 +8452,10 @@
             (slot ? `<span class="compare-vs">vs</span>` : "") +
             `${compareSwatch(slot)}` +
             `<span class="compare-name-text">${escapeHtml(name)}</span>` +
+            // The swatch already owns this name's colour here, so the teal
+            // would be a second claim on the same word: the tag carries it
+            // instead, which is the cue that works without colour anyway.
+            (isReferenceModel(model) ? referenceTag() : "") +
             `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(modelSlug(name))}"` +
             ` aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
             `</span>`;
@@ -8355,6 +8615,12 @@
           const model = state.modelsBySlug.get(modelSlug(row.name));
           if (model) push(model);
         });
+        // Then the closed reference models, whether or not the table is
+        // showing them. Comparing against the frontier is the reason they are
+        // in the index, so this picker never asks the reader to switch a
+        // filter on first -- and putting them here, rather than leaving them
+        // in the alphabetical tail, is what makes that true in practice.
+        state.data.models.filter(isReferenceModel).forEach(push);
         [...state.data.models]
           .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
           .forEach(push);
@@ -8366,8 +8632,8 @@
             const disabled = !on && atMax;
             return `<button type="button" class="axis-menu-item${on ? " on" : ""}" data-action="compare-pick" data-slug="${escapeAttr(slug)}"${disabled ? " disabled" : ""}>` +
               `<span class="axis-menu-check" aria-hidden="true">&#10003;</span>` +
-              `<span class="axis-menu-name">${escapeHtml(model.name || "Unknown")}</span>` +
-              `<span class="axis-menu-score">${escapeHtml(creatorNameOf(model))}</span>` +
+              `<span class="axis-menu-name${isReferenceModel(model) ? " model-reference" : ""}">${escapeHtml(model.name || "Unknown")}</span>` +
+              `<span class="axis-menu-score">${escapeHtml(isReferenceModel(model) ? "closed" : creatorNameOf(model))}</span>` +
               `</button>`;
           }).join("");
 
@@ -9036,10 +9302,15 @@
 
       function updateMeta() {
         const shown = state.filteredModels.length;
-        const total = state.data.models.length;
+        // "of" counts the table the filters are working on, which is the open
+        // field until the reference toggle says otherwise. Counting the closed
+        // rows in the total while hiding them would read as seven models
+        // filtered out by something the reader never set.
+        const pool = modelPool();
+        const total = pool.length;
         ui.resultCount.textContent = `${shown} of ${total} models`;
         const shownCreators = new Set(state.filteredModels.map((m) => m.creatorName)).size;
-        const totalCreators = new Set(state.data.models.map(creatorNameOf)).size;
+        const totalCreators = new Set(pool.map(creatorNameOf)).size;
         ui.creatorCount.textContent = `${shownCreators} of ${totalCreators} creators`;
         const shownBenchmarks = visibleBenchmarkKeys().length;
         const totalBenchmarks = state.benchmarkKeys.length;
@@ -9196,14 +9467,19 @@
       // details are checked against.
       function modelTipFields(model) {
         const url = model.url || "";
+        // A reference row says so before it says anything else: everything
+        // below reads differently once you know the weights are closed.
+        const reference = isReferenceModel(model)
+          ? "Closed weights — carried as a reference point, not part of the open field it is ranked against. "
+          : "";
         return {
           eyebrow: model.creatorName || "",
           eyebrowVerbatim: true,
           eyebrowUrl: model.creator?.url || "",
           title: model.name || "Unknown",
           body: url
-            ? "Click for the model's detail page: every recorded score, and a radar profile you can shape. The link below is the creator's own page for it."
-            : "Click for the model's detail page: every recorded score, and a radar profile you can shape.",
+            ? `${reference}Click for the model's detail page: every recorded score, and a radar profile you can shape. The link below is the creator's own page for it.`
+            : `${reference}Click for the model's detail page: every recorded score, and a radar profile you can shape.`,
           meta: model.date_added ? `Added ${model.date_added}` : "Date added unknown",
           url
         };
@@ -9421,6 +9697,12 @@
 
         // ?export= can run before the data has loaded; exportFilters() reports
         // nothing active until then, so such an export is the full document.
+        //
+        // "Full document" includes the closed reference models the table hides
+        // by default, and deliberately: an unfiltered export is the file, byte
+        // for byte, and every one of those rows carries `"reference": true` to
+        // say what it is. A filtered export is the table instead, so there
+        // they come along only when the toggle is on.
         const filtered = dataset === "llm" && exportFilters().active;
         const stem = filtered ? `${dataset}-filtered` : dataset;
         const refine = filtered ? filterModelsDocument : (data) => data;
@@ -9448,7 +9730,7 @@
       // re-sorting the table must not advertise a filtered download. Neither is
       // the GPU vendor picker, which only narrows the GPU list, not the models.
       function exportFilters() {
-        const totalModels = state.data?.models?.length || 0;
+        const totalModels = state.data ? modelPool().length : 0;
         const totalBenchmarks = state.benchmarkKeys.length;
         const loaded = Boolean(state.data);
         const hiddenBenchmarks = loaded ? state.filters.hiddenBenchmarks.length : 0;
