@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>OpenBench admin</title>
+<title>OpenBench Admin</title>
 <!-- The site's own tab icon, carried as base64 because this directory serves
      nothing but this page and api.php. make_favicons.py fills it in; see the
      note in its docstring. -->
@@ -212,21 +212,72 @@ h1 .light { color: var(--muted); font-weight: 400; }
   text-align: left;
 }
 
-#theme {
+/* The corner: source, site, theme. Copied from llm.html's hero buttons so the
+   two pages wear the same control -- 36px circles, line-art icons, a nudge of
+   scale on hover -- with the tokens of this page's palette standing in for
+   that one's. */
+.corner {
   flex: none;
-  display: grid;
-  place-items: center;
-  width: var(--tap);
-  height: var(--tap);
-  margin-right: -.4rem;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: none;
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  margin-right: -.15rem;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  /* Inert here -- nothing in this file gives a bare button a minimum -- and
+     kept anyway, so the rule stays a copy of llm.html's rather than a variant
+     of it that has to be diffed by eye. */
+  min-width: unset;
+  min-height: unset;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
   color: var(--muted);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The two links are <a>, so the UA underline has to go for them to read as
+     buttons. */
+  text-decoration: none;
+  transition: background-color 120ms ease, color 120ms ease,
+              border-color 120ms ease, transform 120ms ease;
 }
-#theme:hover { background: var(--surface-2); color: var(--text); }
-#theme svg { width: 1.15rem; height: 1.15rem; }
+
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--line-strong);
+  transform: scale(1.08);
+}
+
+.icon-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* The GitHub mark is a solid glyph, not the line art the others are drawn in,
+   so it fills instead of strokes. */
+.icon-btn.repo svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  stroke: none;
+}
+
+/* Only the chosen state's icon is drawn; see applyTheme(). */
+#theme svg { display: none; }
+#theme svg.on { display: block; }
 
 /* Tabs scroll sideways rather than wrapping onto a second ragged line. */
 nav {
@@ -554,7 +605,8 @@ select {
   cursor: not-allowed;
 }
 .btn.ghost { background: var(--surface); border-color: var(--line-strong); color: var(--muted); }
-.btn.ghost:hover { color: var(--text); border-color: var(--faint); }
+.btn.ghost:hover:not([disabled]) { color: var(--text); border-color: var(--faint); }
+.btn.ghost[disabled] { background: var(--surface-2); color: var(--faint); cursor: not-allowed; }
 .btn.tiny { min-height: 2.25rem; padding: 0 .7rem; font-size: .8125rem; }
 
 /* ------------------------------------------------------------ action bar */
@@ -648,6 +700,23 @@ select {
 
 /* ------------------------------------------------------------------ runs */
 
+/* The bar above the list: one button, and the sentence saying what it will do
+   or why it will not. */
+.runs-bar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: .75rem;
+}
+.runs-bar p {
+  flex: 1 1 16rem;
+  min-width: 0;
+  color: var(--muted);
+  font-size: .8125rem;
+  line-height: 1.45;
+}
+
 ul.runs { list-style: none; }
 ul.runs li {
   display: grid;
@@ -705,9 +774,43 @@ ul.runs time {
 <header>
   <div class="wrap">
     <div class="brand">
-      <h1>OpenBench <span class="light">admin</span></h1>
+      <h1>OpenBench <span class="light">Admin</span></h1>
       <span id="repo"></span>
-      <button id="theme" type="button" title="Theme" aria-label="Change theme"></button>
+      <div class="corner">
+        <!-- Href set from api.php's `repo`, which is the one place the
+             repository is named; hidden until it answers rather than
+             hardcoded here a second time. See setRepoLink(). -->
+        <a class="icon-btn repo" id="repoLink" href="#" target="_blank" rel="noreferrer"
+           title="Repository" aria-label="Open the GitHub repository (new tab)" hidden>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+        </a>
+        <!-- The published site, per the repository's CNAME. This page is served
+             from another host entirely, so there is nothing to derive it from. -->
+        <a class="icon-btn" href="https://openbench.david-grieser.de/" target="_blank"
+           rel="noreferrer" title="The index" aria-label="Open the published index (new tab)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3.3 9h17.4M3.3 15h17.4"/>
+            <path d="M12 3c2.5 2.4 3.8 5.5 3.8 9S14.5 18.6 12 21C9.5 18.6 8.2 15.5 8.2 12S9.5 5.4 12 3z"/>
+          </svg>
+        </a>
+        <button class="icon-btn" id="theme" type="button" title="Theme" aria-label="Change theme">
+          <!-- `on` on the default state, so the button is never blank before
+               applyTheme() has run. -->
+          <svg class="icon-system on" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 4.5h18v11H3z"/><path d="M8 20h8M12 15.5V20"/>
+          </svg>
+          <svg class="icon-light" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M19.78 4.22l-1.42 1.42M5.64 18.36l-1.42 1.42"/>
+          </svg>
+          <svg class="icon-dark" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <nav id="tabs"></nav>
   </div>
@@ -760,6 +863,8 @@ const state = {
   settled: null,        // the batch whose run just finished: { run, applied, count }
   warn: "",             // something to know about, but nothing that failed here
   steps: false,         // whether api.php can report a run's answer step
+  refreshable: false,   // whether api.php can dispatch a run that carries no answers
+  refreshing: false,    // a hand-asked run is being dispatched right now
   /* Artificial Analysis model slugs, for renaming a hand-added entry onto one.
      `offered` is what api.php says it can serve; the list itself is fetched
      once, and only when the Models tab is opened. */
@@ -940,14 +1045,13 @@ const el = (tag, props = {}, kids = []) => {
 /* ------------------------------------------------------------------ theme */
 
 /* Three states, not two: following the system is the default and has to stay
-   reachable, so the button cycles rather than flips. Stored under llm.html's
-   key and applied the same way, so both pages agree on one device. */
+   reachable, so the button cycles rather than flips. The same three values
+   under the same key, drawn with the same round button, as llm.html -- that
+   page resolves "system" in JS because its dark rules hang off
+   [data-theme="dark"] alone; here the stylesheet has a
+   prefers-color-scheme block of its own, so "system" is simply the absence of
+   the attribute and needs no listener to follow a change. */
 const THEMES = ["system", "light", "dark"];
-const ICONS = {
-  system: '<path d="M3 4.5h18v11H3zM8 20h8M12 15.5V20"/>',
-  light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>',
-  dark: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
-};
 
 function readTheme() {
   try {
@@ -959,12 +1063,16 @@ function readTheme() {
 function applyTheme(theme) {
   if (theme === "system") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.setAttribute("data-theme-choice", theme);
   const button = document.getElementById("theme");
-  button.innerHTML =
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-          stroke-linecap="round" stroke-linejoin="round">${ICONS[theme]}</svg>`;
-  button.title = `Theme: ${theme}`;
-  button.setAttribute("aria-label", `Theme: ${theme}. Change it.`);
+  /* The three icons are in the markup; only one is shown. Swapping a class
+     rather than rewriting innerHTML keeps them there to be swapped back. */
+  for (const icon of button.querySelectorAll("svg")) {
+    icon.classList.toggle("on", icon.classList.contains(`icon-${theme}`));
+  }
+  const label = theme === "system" ? "following the system" : theme;
+  button.title = `Theme: ${label}`;
+  button.setAttribute("aria-label", `Theme: ${label}. Change it.`);
 }
 
 function cycleTheme() {
@@ -992,6 +1100,10 @@ const POLL_MS = 20000;
 /* A dispatch answers 204 before the run exists. Until it shows up there is
    nothing in the list to wait for, which must not read as "finished". */
 const GRACE_MS = 90000;
+/* How long the Runs tab waits before re-reading the list once it has asked for
+   a run of its own, for the same reason: the dispatch is answered before the
+   run is created. One read, not a poll -- nothing depends on this run. */
+const RUN_APPEARS_MS = 5000;
 /* Clock skew between here and GitHub, so the run this batch created is not
    mistaken for one that predates it. */
 const SKEW_MS = 60000;
@@ -1336,6 +1448,9 @@ async function loadRuns() {
        answered card locked, which costs a wait rather than a rejected batch.
        Read before settling, which is what asks. */
     state.steps = Boolean(body.steps);
+    /* Announced too, so an older endpoint costs the Runs tab its button rather
+       than offering one that 400s. */
+    state.refreshable = Boolean(body.refresh);
     await settleSent();
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
@@ -1349,6 +1464,7 @@ async function loadRuns() {
     return true;
   } catch (error) {
     state.runs = [];
+    state.refreshable = false;
     state.error = `Could not reach api.php (${error.message}). `
       + "Nothing can be read or sent until it answers -- check the host config "
       + "and the error log; see _admin/README.md.";
@@ -1460,9 +1576,21 @@ function mappingRecord(question, value) {
 
 /* --------------------------------------------------------------- rendering */
 
+/* The corner's GitHub button, pointed at whichever repository api.php names.
+   Hidden until it does: a link to the wrong repository is worse than no link,
+   and an endpoint that has not answered is a state the page already reports
+   loudly enough elsewhere. */
+function setRepoLink() {
+  const link = document.getElementById("repoLink");
+  link.href = state.repo ? `https://github.com/${state.repo}` : "#";
+  link.hidden = !state.repo;
+  if (state.repo) link.title = `Repository: ${state.repo}`;
+}
+
 function render() {
   /* Named, so it is obvious which repository a batch is about to be sent to. */
   document.getElementById("repo").textContent = state.repo || "";
+  setRepoLink();
   renderTabs();
 
   const notice = document.getElementById("notice");
@@ -2093,17 +2221,105 @@ const runLabel = (run) => (run.status === "completed"
   ? (run.conclusion || "done")
   : run.status.replace(/_/g, " "));
 
+/* Why the run this tab can ask for is not always available.
+
+   `locked()` is the one that is not obvious. A batch in flight is matched to
+   its run by "the newest run created after the batch was sent" -- there is
+   nothing else to match on, since the dispatch answers 204 without a run id --
+   so a refresh queued behind that batch would *become* the run the page reads
+   the answer step off. It carries no answers, the step reports nothing, and the
+   batch would settle as "cannot tell" while its real run was still going. The
+   button therefore waits for the batch, which costs a few minutes and keeps
+   the one piece of state that must not be wrong.
+
+   A queued run is api.php's own refusal restated: the workflow's concurrency
+   group holds one run plus one queued, and a third arrival cancels the queued
+   one, so there is nothing a second refresh would add. */
+function refreshBlocked() {
+  if (!state.refreshable) {
+    return "api.php is older than this page and cannot start a run on its own. "
+      + "Upload _admin/api.php alongside index.html -- ./_admin/deploy sends both.";
+  }
+  if (state.refreshing) return "Asking GitHub to queue the run.";
+  if (locked()) {
+    return "Not while a batch of answers is in flight: the run this would queue "
+      + "sits behind that one, and the page identifies a batch's run by when it "
+      + "started. Wait for the batch to finish.";
+  }
+  if (state.runs.some((run) => run.status === "queued")) {
+    return "A run is already queued; there is nothing a refresh would add.";
+  }
+  return "";
+}
+
+/* One button: the run the cron would have made, asked for now. No answers, no
+   proposal PR -- just re-scrape the sources, commit whatever moved, and
+   republish the queue. Worth having by hand because a new score can be hours
+   from the next cron, and because the queue is only re-collected by a run. */
+function renderRunNow() {
+  const blocked = refreshBlocked();
+  const button = el("button", {
+    className: "btn ghost",
+    type: "button",
+    disabled: Boolean(blocked),
+    title: blocked || "Dispatch update-benchmarks.yml with no answers",
+  }, state.refreshing ? "Starting..." : "Run the refresh now");
+  if (!blocked) button.onclick = refreshNow;
+  return el("div", { className: "runs-bar" }, [
+    button,
+    el("p", {}, blocked || "Runs update-benchmarks.yml against main with no answers "
+      + "attached: the same refresh the schedule makes every three hours. It "
+      + "re-reads every source, commits the scores that moved, and republishes "
+      + "the queue this page answers."),
+  ]);
+}
+
 function renderRuns() {
-  if (!state.runs.length) return el("p", { className: "empty" }, "No runs to show.");
-  return el("ul", { className: "runs" }, state.runs.map((run) => {
-    const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
-    const when = new Date(run.created_at);
-    return el("li", {}, [
-      el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), runLabel(run)]),
-      el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)),
-      el("time", { dateTime: run.created_at }, when.toLocaleString()),
-    ]);
-  }));
+  return el("div", {}, [
+    renderRunNow(),
+    state.runs.length
+      ? el("ul", { className: "runs" }, state.runs.map((run) => {
+        const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
+        const when = new Date(run.created_at);
+        return el("li", {}, [
+          el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), runLabel(run)]),
+          el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)),
+          el("time", { dateTime: run.created_at }, when.toLocaleString()),
+        ]);
+      }))
+      : el("p", { className: "empty" }, "No runs to show."),
+  ]);
+}
+
+/* Dispatches it. Nothing is locked afterwards: the run carries no answers, so
+   there is no card whose state depends on how it ends, and the list below is
+   the whole of what there is to watch. */
+async function refreshNow() {
+  state.refreshing = true;
+  state.error = state.warn = state.ok = "";
+  render();
+  try {
+    const response = await fetch("api.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-AI-Bench-Admin": "1" },
+      body: JSON.stringify({ refresh: true }),
+    });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+    state.ok = "Queued a refresh. It takes a few minutes and shows up in the list "
+      + "below in a moment. Nothing on this page is waiting on it -- reload once "
+      + "it has finished to see the scores it committed and the queue it "
+      + "republished.";
+    /* A dispatch answers 204 before the run exists, so the read below will not
+       have it yet and there is nothing here to poll for: no card's state
+       depends on this run. One delayed re-read is what puts it in the list. */
+    setTimeout(() => { loadRuns().finally(render); }, RUN_APPEARS_MS);
+  } catch (error) {
+    state.error = `Could not start a run: ${error.message}`;
+  }
+  state.refreshing = false;
+  await loadRuns();
+  render();
 }
 
 /* ---------------------------------------------------------------- sending */

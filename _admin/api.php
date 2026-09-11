@@ -8,6 +8,10 @@
  * live here is the credential, and the only thing it may do is dispatch this
  * one workflow and read its runs.
  *
+ * Two shapes of dispatch: a batch of answers to apply, and a bare refresh that
+ * carries none -- the same run the cron makes, asked for by hand. Neither can
+ * name a workflow, a ref, or anything else the client chooses.
+ *
  * The token is a fine-grained PAT scoped to the one repository with Actions:
  * read and write and nothing else. That matters more than it looks: a
  * contents-write token would bypass the branch ruleset outright, because the
@@ -27,7 +31,7 @@ declare(strict_types=1);
 // refuses to run below NEEDS_API; anything added since is announced in the GET
 // payload instead, so a newer page against an older endpoint loses the new
 // thing rather than the whole queue.
-const API_VERSION = 4;
+const API_VERSION = 5;
 
 const WORKFLOW = 'update-benchmarks.yml';
 // The workflow step that applies a dispatched batch, by name. The run's own
@@ -230,6 +234,10 @@ if ($method === 'GET') {
         // endpoint keeps every answered card locked rather than guessing from
         // the run's conclusion, which is the safe half of the choice.
         'steps' => true,
+        // Whether a bare {"refresh": true} can be dispatched. Announced rather
+        // than required, like `steps`: a page against an older endpoint hides
+        // the button instead of offering one that 400s.
+        'refresh' => true,
         'runs' => recent_runs($config),
     ]);
 }
@@ -254,38 +262,64 @@ if (strlen($raw) > MAX_BYTES) {
     fail(413, 'That batch is too large; send it in smaller pieces.');
 }
 $request = json_decode($raw, true);
-if (!is_array($request) || !isset($request['answers']) || !is_array($request['answers'])) {
-    fail(400, 'Expected {"answers": [...]}.');
+if (!is_array($request)) {
+    fail(400, 'Expected a JSON object.');
 }
-$answers = array_values($request['answers']);
-if ($answers === []) {
-    fail(400, 'No answers to send.');
-}
-// Enforced here as well as in the page, because the page is not the boundary --
-// and again in answer.py, which is the one that actually counts.
-if (count($answers) > MAX_RECORDS) {
-    fail(400, 'At most ' . MAX_RECORDS . ' answers per batch.');
+
+/* A refresh dispatched by hand: no answers, nothing to validate, and the same
+ * run the cron would have made three hours later. Kept as its own flag rather
+ * than inferred from an empty `answers`, so a page bug that drops a batch on
+ * the floor is refused as "no answers to send" instead of quietly refreshing
+ * and reporting success. The two are exclusive for the same reason. */
+$refresh = !empty($request['refresh']);
+$answers = [];
+
+if ($refresh) {
+    if (!empty($request['answers'])) {
+        fail(400, 'A refresh carries no answers; send one or the other.');
+    }
+} else {
+    if (!isset($request['answers']) || !is_array($request['answers'])) {
+        fail(400, 'Expected {"answers": [...]} or {"refresh": true}.');
+    }
+    $answers = array_values($request['answers']);
+    if ($answers === []) {
+        fail(400, 'No answers to send.');
+    }
+    // Enforced here as well as in the page, because the page is not the
+    // boundary -- and again in answer.py, which is the one that actually counts.
+    if (count($answers) > MAX_RECORDS) {
+        fail(400, 'At most ' . MAX_RECORDS . ' answers per batch.');
+    }
 }
 
 // The workflow's concurrency group holds one run plus one queued; a third
 // arrival cancels the queued one, silently, before it does any work. Refusing
-// while one is already waiting is what stops a second batch evicting the first.
+// while one is already waiting is what stops a second batch evicting the first
+// -- and, for a hand-asked refresh, what stops an idle click doing it.
 foreach (recent_runs($config) as $run) {
     if ($run['status'] === 'queued') {
-        fail(409, 'A run is already queued; wait for it to start, then send this batch.');
+        fail(409, $refresh
+            ? 'A run is already queued; there is nothing a refresh would add.'
+            : 'A run is already queued; wait for it to start, then send this batch.');
     }
 }
 
-$payload = json_encode($answers, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+// Empty for a refresh: the workflow's own default, which is what the cron and
+// the merge paths pass. `skip_refresh` has to stay false there or the run would
+// apply no answers and skip the refresh too, doing nothing at all.
+$payload = $refresh
+    ? ''
+    : json_encode($answers, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 [$status, $body] = github($config, 'POST', '/actions/workflows/' . WORKFLOW . '/dispatches', [
     'ref'    => REF,
     'inputs' => [
         'answers'      => $payload,
-        'skip_refresh' => !empty($request['skip_refresh']) ? 'true' : 'false',
+        'skip_refresh' => (!$refresh && !empty($request['skip_refresh'])) ? 'true' : 'false',
     ],
 ]);
 if ($status >= 400) {
     fail($status, $body['message'] ?? 'GitHub rejected the dispatch.');
 }
 
-ok(['dispatched' => count($answers)]);
+ok(['dispatched' => count($answers), 'refresh' => $refresh]);

@@ -3625,10 +3625,17 @@
       right: 82px;
     }
 
-    .theme-toggle .icon-sun { display: block; }
-    .theme-toggle .icon-moon { display: none; }
-    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
-    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+    /* Keyed off the *choice*, not the resolved theme: under "system" the page
+       may well be painted dark, and showing the moon there would claim a
+       setting that was never made. */
+    .theme-toggle svg { display: none; }
+    /* The unattributed case is the head script not having run -- scripting off,
+       or a parse error in it. "System" is the default it would have set, so
+       that is the honest icon to show. */
+    html:not([data-theme-choice]) .theme-toggle .icon-system,
+    [data-theme-choice="system"] .theme-toggle .icon-system { display: block; }
+    [data-theme-choice="light"] .theme-toggle .icon-sun { display: block; }
+    [data-theme-choice="dark"] .theme-toggle .icon-moon { display: block; }
 
     /* ── Export menu ───────────────────────────────── */
 
@@ -4299,13 +4306,29 @@
     }
   </style>
   <script>
-    // Set theme before first paint to avoid FOUC
+    // Set theme before first paint to avoid FOUC.
+    //
+    // Three states, not two: "system" follows the OS and is the default, so it
+    // has to stay reachable rather than being the thing you fall out of the
+    // moment you touch the button. The choice and the theme it resolves to are
+    // two different attributes, because they answer different questions --
+    // data-theme-choice is what the button shows, data-theme is what the CSS
+    // paints, and under "system" the second one moves on its own.
+    //
+    // The admin page (_admin/index.html) cycles the same three values under the
+    // same storage key and draws the same button.
     (function () {
-      const saved = localStorage.getItem("theme");
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (saved === "dark" || (!saved && prefersDark)) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
+      const THEMES = ["system", "light", "dark"];
+      let saved = null;
+      // Blocked storage in private mode throws on read, not just on write.
+      try { saved = localStorage.getItem("theme"); } catch (err) { /* follow the system */ }
+      const choice = THEMES.includes(saved) ? saved : "system";
+      const root = document.documentElement;
+      root.setAttribute("data-theme-choice", choice);
+      const dark = choice === "dark"
+        || (choice === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      if (dark) root.setAttribute("data-theme", "dark");
+      else root.removeAttribute("data-theme");
     })();
   </script>
 </head>
@@ -4329,7 +4352,10 @@
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
         </svg>
       </a>
-      <button id="themeToggle" class="theme-toggle" type="button" data-tip="Switch between the light and dark theme." data-tip-title="Toggle dark mode" aria-label="Toggle dark mode">
+      <button id="themeToggle" class="theme-toggle" type="button" data-tip="Cycle the theme: follow the system, light, dark." data-tip-title="Theme" aria-label="Theme">
+        <svg class="icon-system" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 4.5h18v11H3z"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="15.5" x2="12" y2="20"/>
+        </svg>
         <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle cx="12" cy="12" r="4"/>
           <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
@@ -4952,19 +4978,52 @@
         exportData(requestedExport);
       }
 
-      // Theme toggle
+      // Theme toggle. Three states, so it cycles rather than flips: the
+      // default is to follow the system, and a two-state toggle has no way
+      // back to it once you have touched it. The pre-paint script in <head>
+      // reads the same key and resolves the same way; the admin page cycles
+      // the same three values.
+      const THEMES = ["system", "light", "dark"];
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function readTheme() {
+        try {
+          const saved = localStorage.getItem("theme");
+          return THEMES.includes(saved) ? saved : "system";
+        } catch (err) {
+          return "system";   // private mode, blocked storage: follow the system
+        }
+      }
+
+      function applyTheme(choice) {
+        const root = document.documentElement;
+        root.setAttribute("data-theme-choice", choice);
+        const dark = choice === "dark" || (choice === "system" && systemDark.matches);
+        if (dark) root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        const toggle = document.getElementById("themeToggle");
+        const label = choice === "system" ? "following the system" : choice;
+        toggle.setAttribute("aria-label", `Theme: ${label}. Change it.`);
+        toggle.dataset.tipTitle = `Theme: ${label}`;
+        toggle.dataset.tip = "Cycle the theme: follow the system, light, dark.";
+      }
+
       document.getElementById("themeToggle").addEventListener("click", () => {
-        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        const next = THEMES[(THEMES.indexOf(readTheme()) + 1) % THEMES.length];
         document.documentElement.classList.add("theme-transitioning");
         setTimeout(() => document.documentElement.classList.remove("theme-transitioning"), 400);
-        if (isDark) {
-          document.documentElement.removeAttribute("data-theme");
-          localStorage.setItem("theme", "light");
-        } else {
-          document.documentElement.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "dark");
-        }
+        try { localStorage.setItem("theme", next); } catch (err) { /* not worth failing over */ }
+        applyTheme(next);
       });
+
+      // Under "system" the theme is not a stored value but a live one, so a
+      // reader flipping their OS appearance has to be followed without a
+      // reload. Ignored outright once a choice has been made.
+      systemDark.addEventListener("change", () => {
+        if (readTheme() === "system") applyTheme("system");
+      });
+
+      applyTheme(readTheme());
 
       async function loadData() {
         try {
