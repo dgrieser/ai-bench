@@ -15,64 +15,106 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to deepseek-v4.1-flash, exact match"
+          "option": "glm-5-3",
+          "reason": "exact to glm 5.3, exact match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "exact to deepseek-v4.1-flash, most components match"
+          "option": "glm-5-3-flash",
+          "reason": "exact to glm 5.3, substring match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to deepseek-v4.1-flash, most components match"
+          "option": "glm-4.5",
+          "reason": "exact to glm 5.3, most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "glm-5-2",
+          "reason": "exact to glm 5.3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "exact to glm 5.3, most components match"
         }
       ],
-      "default": "deepseek-v4-1-flash",
+      "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'deepseek-v4.1-flash'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "subject": "deepseek-v4.1-flash",
+      "question": "Map SWE Atlas model 'glm 5.3' to llm.json model",
+      "route": "update_swe_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "glm 5.3",
       "universe": "models"
     },
     {
       "candidates": [
         {
           "confidence": "exact",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to deepseek-v4.1-flash, exact match"
+          "option": "kimi-k3",
+          "reason": "exact to kimi k3, exact match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "exact to deepseek-v4.1-flash, most components match"
+          "option": "kimi-k2-5",
+          "reason": "drop short code to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to deepseek-v4.1-flash, most components match"
+          "option": "kimi-k2-6",
+          "reason": "drop short code to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "kimi-k2-7-code",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-thinking",
+          "reason": "drop short code to a variant, substring match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Vals AI path 'deepseek/deepseek-v4.1-flash' to llm.json model",
-      "route": "update_vals_mapping.py",
+      "question": "Map SWE Atlas model 'kimi k3' to llm.json model",
+      "route": "update_swe_atlas_mapping.py",
       "route_kind": "mapping",
-      "subject": "deepseek/deepseek-v4.1-flash",
+      "subject": "kimi k3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "minimax-m3",
+          "reason": "exact to minimax m3, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "drop short code to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE Atlas model 'minimax m3' to llm.json model",
+      "route": "update_swe_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "minimax m3",
       "universe": "models"
     }
   ]
