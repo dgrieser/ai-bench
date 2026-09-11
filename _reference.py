@@ -37,19 +37,42 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
+# Every reader and writer below resolves this at call time rather than binding
+# it as a default argument, so a caller -- a test, a second checkout -- can
+# point the whole module at another file by rebinding the name.
 REFERENCE_MODELS = Path(__file__).resolve().with_name("reference-models.json")
 
 # The llm.json field that carries the verdict to consumers which read only
 # llm.json -- the web page, the CLI, an export.
 REFERENCE_FIELD = "reference"
 
+# The list may never be emptied. Not an arbitrary floor: with none of these
+# rows the open field is back to being measured against nothing, which is the
+# state this file exists to end -- and the page would carry a toggle, a colour
+# and a tab about a set with no members. Taking the last one off is therefore
+# refused rather than obeyed; deleting the file is the way to mean it.
+MIN_REFERENCE_MODELS = 1
 
-def load_reference_slugs(path: Path = REFERENCE_MODELS) -> list[str]:
+# The page a reference row is checked against. A closed model has no weights
+# repository, so the Hugging Face card every open row links to does not exist;
+# Artificial Analysis' model page is where its numbers are published and is
+# what `url` means for these entries. Spelled out rather than imported because
+# this module deliberately pulls in nothing -- test_reference.py holds it to
+# artificialanalysis.MODEL_PAGE_URL so the two cannot drift.
+AA_MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
+
+
+def aa_model_page(slug: str) -> str:
+    return AA_MODEL_PAGE_URL.format(slug)
+
+
+def load_reference_slugs(path: Path | None = None) -> list[str]:
     """Every Artificial Analysis slug the reference list names, in file order.
 
     A missing file is an empty list rather than an error: the list is an
     addition to the index, and nothing here should stop working without it.
     """
+    path = path or REFERENCE_MODELS
     if not path.exists():
         return []
     raw: Any = json.loads(path.read_text(encoding="utf-8"))
@@ -62,19 +85,56 @@ def load_reference_slugs(path: Path = REFERENCE_MODELS) -> list[str]:
     return slugs
 
 
-def reference_slug_set(path: Path = REFERENCE_MODELS) -> set[str]:
+def reference_slug_set(path: Path | None = None) -> set[str]:
     return set(load_reference_slugs(path))
 
 
-def write_reference_slugs(slugs: list[str], path: Path = REFERENCE_MODELS) -> None:
+def write_reference_slugs(slugs: list[str], path: Path | None = None) -> None:
     """Rewrite the list, keeping the file's shape (one slug per line)."""
+    path = path or REFERENCE_MODELS
     path.write_text(
         json.dumps(slugs, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
 
+def add_reference_slug(slug: str, path: Path | None = None) -> bool:
+    """Put an AA slug on the list. False if it was already there.
+
+    Sorted on the way in, because the file is read by people as often as by
+    scripts and an append-ordered list of seven turns into an unreadable one of
+    twenty. Adding the slug does not create the llm.json entry -- see
+    missing_reference_models(); _answers.py is what does both at once.
+    """
+    slugs = load_reference_slugs(path)
+    if slug in slugs:
+        return False
+    write_reference_slugs(sorted([*slugs, slug]), path)
+    return True
+
+
+def remove_reference_slug(slug: str, path: Path | None = None) -> bool:
+    """Take an AA slug off the list. False if it was not on it.
+
+    Refuses to empty the list (MIN_REFERENCE_MODELS). The caller is expected to
+    have said so first -- _answers.validate() refuses the batch, with the
+    message the sender reads -- so reaching the ValueError here means something
+    bypassed that, and a raise beats quietly leaving an index with nothing to
+    be measured against.
+    """
+    slugs = load_reference_slugs(path)
+    if slug not in slugs:
+        return False
+    kept = [s for s in slugs if s != slug]
+    if len(kept) < MIN_REFERENCE_MODELS:
+        raise ValueError(
+            f"{slug!r} is the last reference model; the list may not be emptied"
+        )
+    write_reference_slugs(kept, path)
+    return True
+
+
 def rename_reference_slug(
-    old: str, new: str, path: Path = REFERENCE_MODELS
+    old: str, new: str, path: Path | None = None
 ) -> bool:
     """Follow a renamed model onto the list. True if the list held `old`.
 

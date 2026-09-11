@@ -14,9 +14,10 @@ properties make that safe, and each one has a way of failing quietly:
     correctly -- does not bury it, while every other closed name is still
     skipped without prompting.
 
-The last of the four cases below is about llm.json itself: a slug on the list
-with no entry behind it is inert, and the list, the flag and the mapping files
-have to keep agreeing about which rows these are.
+The last class is about llm.json as it actually stands: a slug on the list with
+no entry behind it is inert, and the list, the flag and the mapping files have
+to keep agreeing about which rows these are. Editing the list from the admin
+page is answer.py's business, and tested there (test_answers.py).
 """
 
 from __future__ import annotations
@@ -84,6 +85,32 @@ class TestList(unittest.TestCase):
                 _reference.load_reference_slugs(path), ["c-model", "b-model"]
             )
             self.assertFalse(_reference.rename_reference_slug("nobody", "x", path))
+
+    def test_add_and_remove_keep_the_list_sorted_and_non_empty(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "reference-models.json"
+            _reference.write_reference_slugs(["b-model"], path)
+            self.assertTrue(_reference.add_reference_slug("a-model", path))
+            self.assertEqual(_reference.load_reference_slugs(path), ["a-model", "b-model"])
+            self.assertFalse(_reference.add_reference_slug("a-model", path))
+
+            self.assertTrue(_reference.remove_reference_slug("a-model", path))
+            self.assertFalse(_reference.remove_reference_slug("a-model", path))
+            # The floor: the list may never be emptied.
+            with self.assertRaises(ValueError):
+                _reference.remove_reference_slug("b-model", path)
+            self.assertEqual(_reference.load_reference_slugs(path), ["b-model"])
+
+    def test_the_aa_page_url_matches_the_scraper(self) -> None:
+        """Spelled out in _reference.py to keep the module import-free; this is
+        what stops the two spellings drifting apart."""
+        import artificialanalysis
+
+        self.assertEqual(
+            _reference.AA_MODEL_PAGE_URL, artificialanalysis.MODEL_PAGE_URL
+        )
 
     def test_rename_is_wired_into_rename_py(self) -> None:
         import _rename

@@ -25,6 +25,7 @@ import _answers
 import edit
 import _new_models
 import _prompts
+import _reference
 import propose
 import _rename
 from _answers import (
@@ -35,6 +36,8 @@ from _answers import (
     MODEL_EDIT,
     MODEL_RENAME,
     NEW_MODEL,
+    REFERENCE_ADD,
+    REFERENCE_REMOVE,
     Answer,
     AnswerError,
 )
@@ -82,10 +85,10 @@ class AnswersTestCase(unittest.TestCase):
         self.addCleanup(patcher.stop)
 
     def check(self, record, **kwargs):
-        """(answers, failures) for one record."""
-        return _answers.validate(
-            [record], llm_path=self.llm, universes=UNIVERSES, queue=self.queue, **kwargs
-        )
+        """(answers, failures) for one record. `universes` is overridable, for
+        the questions whose answer set is what is being measured."""
+        kwargs.setdefault("universes", UNIVERSES)
+        return _answers.validate([record], llm_path=self.llm, queue=self.queue, **kwargs)
 
     def refused(self, record, needle: str, **kwargs) -> None:
         answers, failures = self.check(record, **kwargs)
@@ -601,6 +604,139 @@ class TestModelRename(AnswersTestCase):
             log = _answers._apply_one(answer, self.llm)
         renamed.assert_called_once_with("devstral-2", "devstral-2-0512", self.llm)
         self.assertEqual(log, ["did it"])
+
+
+class TestReferenceModels(AnswersTestCase):
+    """The closed models the index carries, edited from the admin page.
+
+    Both kinds move reference-models.json and llm.json together, so the tests
+    that matter are about the pair: an added slug that has no entry behind it
+    is inert, and an entry left behind after its slug goes is a closed model
+    back in the open field's ranking.
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.list_path = self.tmp / "reference-models.json"
+        self.list_path.write_text(json.dumps(["aa-one", "aa-two"]), encoding="utf-8")
+        patcher = mock.patch.object(_reference, "REFERENCE_MODELS", self.list_path)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def carried(self) -> list[str]:
+        return json.loads(self.list_path.read_text(encoding="utf-8"))
+
+    def test_an_add_has_to_be_a_slug_aa_publishes(self) -> None:
+        answer = self.accepted({"kind": REFERENCE_ADD, "name": "aa-three"},
+                               universes={**UNIVERSES, propose.AA_SLUGS: ["aa-three"]})
+        self.assertEqual((answer.kind, answer.subject), (REFERENCE_ADD, "aa-three"))
+        self.refused({"kind": REFERENCE_ADD, "name": "not-on-aa"},
+                     "not an Artificial Analysis slug")
+        self.refused({"kind": REFERENCE_ADD, "name": "Not A Slug"}, "slug")
+
+    def test_an_unreachable_aa_does_not_refuse_an_add(self) -> None:
+        """build_universes leaves the list empty when AA is down, and a dead
+        source must not refuse a batch it has no opinion about."""
+        self.accepted({"kind": REFERENCE_ADD, "name": "whatever-1"},
+                      universes={**UNIVERSES, propose.AA_SLUGS: []})
+
+    def test_a_slug_is_added_once(self) -> None:
+        self.refused({"kind": REFERENCE_ADD, "name": "aa-one"}, "already a reference model")
+
+    def test_a_remove_names_one_that_is_carried(self) -> None:
+        answer = self.accepted({"kind": REFERENCE_REMOVE, "name": "aa-two"})
+        self.assertEqual((answer.kind, answer.subject), (REFERENCE_REMOVE, "aa-two"))
+        self.refused({"kind": REFERENCE_REMOVE, "name": "aa-three"}, "not a reference model")
+
+    def test_the_last_one_cannot_be_removed(self) -> None:
+        records = [{"kind": REFERENCE_REMOVE, "name": slug} for slug in ("aa-one", "aa-two")]
+        answers, failures = _answers.validate(
+            records, llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertEqual(len(answers), 2)
+        self.assertEqual(len(failures), 1)
+        self.assertIn("would leave no reference models", failures[0].message)
+        self.assertEqual(failures[0].index, 1)
+
+    def test_the_last_one_can_be_swapped_in_one_batch(self) -> None:
+        """The floor is about the batch's result, not about each record: the
+        one shape it must not block is replacing the final model."""
+        records = [
+            {"kind": REFERENCE_REMOVE, "name": "aa-one"},
+            {"kind": REFERENCE_REMOVE, "name": "aa-two"},
+            {"kind": REFERENCE_ADD, "name": "aa-three"},
+        ]
+        answers, failures = _answers.validate(
+            records, llm_path=self.llm,
+            universes={**UNIVERSES, propose.AA_SLUGS: ["aa-three"]}, queue=self.queue
+        )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual(len(answers), 3)
+
+    def test_a_reference_record_and_an_edit_cannot_share_a_model(self) -> None:
+        """Both write llm.json, and a batch is applied in order: an edit of a
+        model the same batch removes would be looking for a row that is gone."""
+        self.list_path.write_text(json.dumps(["devstral-2", "aa-two"]), encoding="utf-8")
+        records = [
+            {"kind": REFERENCE_REMOVE, "name": "devstral-2"},
+            {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"params": "1B"}},
+        ]
+        _, failures = _answers.validate(
+            records, llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertTrue(any("touched twice" in f.message for f in failures), failures)
+
+    def test_the_rollback_snapshot_covers_the_list(self) -> None:
+        answer = Answer(index=0, kind=REFERENCE_REMOVE, subject="aa-one")
+        self.assertIn(self.list_path, _answers.touchable_paths([answer], self.llm))
+
+    def test_adding_carries_the_slug_and_creates_the_entry(self) -> None:
+        answer = Answer(index=0, kind=REFERENCE_ADD, subject="aa-three")
+        with mock.patch.object(_answers, "_add_model") as added, \
+                mock.patch.object(_answers.derive_indexes, "refresh_and_report"):
+            _answers._apply_one(answer, self.llm)
+        self.assertIn("aa-three", self.carried())
+        name, fields, path = added.call_args.args
+        self.assertEqual((name, path), ("aa-three", self.llm))
+        # A closed model has no weights repository, so the row is checked
+        # against the page its numbers are published on.
+        self.assertEqual(fields["url"], _reference.aa_model_page("aa-three"))
+
+    def test_adding_a_model_already_in_llm_json_does_not_run_add_py(self) -> None:
+        answer = Answer(index=0, kind=REFERENCE_ADD, subject="devstral-2")
+        with mock.patch.object(_answers, "_add_model") as added, \
+                mock.patch.object(_answers.derive_indexes, "refresh_and_report"):
+            _answers._apply_one(answer, self.llm)
+        added.assert_not_called()
+        self.assertIn("devstral-2", self.carried())
+
+    def test_an_added_model_is_flagged_without_waiting_for_a_refresh(self) -> None:
+        """A record-only run never reaches update.py or derive_indexes.py, so
+        the flag has to be stamped here or the row sits in the table as an
+        open-weight one until the next scheduled refresh."""
+        answer = Answer(index=0, kind=REFERENCE_ADD, subject="devstral-2")
+        with mock.patch.object(_answers.derive_indexes, "refresh_and_report"):
+            _answers._apply_one(answer, self.llm)
+        doc = json.loads(self.llm.read_text(encoding="utf-8"))
+        flagged = {m["name"] for m in doc["models"] if m.get("reference") is True}
+        self.assertEqual(flagged, {"devstral-2"})
+
+    def test_removing_drops_the_slug_and_the_entry(self) -> None:
+        self.list_path.write_text(json.dumps(["devstral-2", "aa-two"]), encoding="utf-8")
+        answer = Answer(index=0, kind=REFERENCE_REMOVE, subject="devstral-2")
+        with mock.patch.object(_answers.derive_indexes, "refresh_and_report"):
+            _answers._apply_one(answer, self.llm)
+        self.assertEqual(self.carried(), ["aa-two"])
+        doc = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual([m["name"] for m in doc["models"]], ["glm-5-3"])
+
+    def test_the_writer_refuses_to_empty_the_list_too(self) -> None:
+        """validate() is the gate that reports it; this is the backstop under
+        anything that reached the writer another way."""
+        self.list_path.write_text(json.dumps(["aa-one"]), encoding="utf-8")
+        with self.assertRaises(ValueError):
+            _reference.remove_reference_slug("aa-one")
+        self.assertEqual(self.carried(), ["aa-one"])
 
 
 class TestBatches(AnswersTestCase):

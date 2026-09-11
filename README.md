@@ -1597,6 +1597,35 @@ Four things read the list:
 step with the list — `update.py` and `derive_indexes.py` both call it before
 they write.
 
+### Editing the list
+
+The admin page's **Reference** tab (see `_admin/README.md`), or the same two
+records from a terminal:
+
+```bash
+echo '[{"kind": "reference-add",    "name": "gpt-6-astra"}]'  | ./answer.py --stdin -w
+echo '[{"kind": "reference-remove", "name": "gpt-5-6-sol"}]'  | ./answer.py --stdin -w
+./rename.py claude-opus-5 claude-opus-5-1 -w   # the same model under a new slug
+```
+
+Each record moves `reference-models.json` and `llm.json` together, because the
+two halves are one decision:
+
+| | |
+| --- | --- |
+| `reference-add` | Puts the slug on the list and, when nothing in `llm.json` carries that name yet, runs `add.py` to create the row. AA fills in what it knows; the `url` is the model's AA page, since a closed model has no weights card to link. The slug is checked against AA's own list — a name AA does not publish would collect nothing. |
+| `reference-remove` | Takes the slug off and drops the row with it. Deliberately: `llm.json` holds the open-weight models plus exactly this list, so a row left behind would be a closed model with its flag cleared, counting toward the ranking every other row is measured by. Its scores are scraped, so adding it back refills them on the next refresh. |
+| `model-rename` | Not a third kind — the ordinary rename, which `_rename.py` carries through `llm.json`, this list and every mapping file at once. For the slug that changed rather than the model that did; the scores stay. |
+
+Both write the `reference` flag and recompute the indexes on the spot, so a
+**record only** run — which never reaches `update.py` or `derive_indexes.py` —
+leaves the table correct rather than off by one refresh.
+
+The list may never be emptied (`_reference.MIN_REFERENCE_MODELS`). `answer.py`
+refuses the batch that would, counting adds and removes together so the final
+model can still be swapped in one sitting, and the page greys out the last
+*Stop carrying it* before it is ever sent.
+
 ### Why a reference model is ranked in, not counted in
 
 Percentile ranks are relative to the model set, so seven models landing at the
