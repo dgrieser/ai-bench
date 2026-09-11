@@ -27393,9 +27393,9 @@
       "params": "124B-A5.5B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 272,
+        "int8": 136,
+        "int4": 68
       },
       "creator": {
         "name": "InclusionAI",
@@ -27562,6 +27562,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-flash-VL/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-flash-VL/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.0-flash-VL/"
       }
     }
   ],
