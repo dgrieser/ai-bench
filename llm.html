@@ -48,8 +48,7 @@
          because the three inks already spoken for are blue (--accent, links),
          red (--fresh-ink, new) and gold (the grouped-sort diamond); it clears
          4.5:1 on --surface in both themes, and it is never the only cue — the
-         name also carries a "closed" tag and the rows are hidden until asked
-         for. */
+         name also carries a padlock and the rows are hidden until asked for. */
       --reference-ink: #0f766e;
       /* Comparison series: a neon ramp -- cyan, magenta, lime, amber, violet --
          spread roughly evenly around the wheel so no two sit next to each
@@ -1752,21 +1751,25 @@
       color: var(--reference-ink) !important;
     }
 
-    /* Colour is never the only cue. The tag is what a reader who cannot see
-       the teal (or is looking at a printout) reads instead. */
+    /* Colour is never the only cue. The padlock is the shape a reader who
+       cannot see the teal (or is looking at a printout) reads instead -- and
+       unlike a word it cannot be mistaken for part of the model's name. */
     .reference-tag {
+      display: inline-flex;
+      align-items: center;
       flex-shrink: 0;
-      font-family: var(--font-mono);
-      font-size: 0.56rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
       color: var(--reference-ink);
-      border: 1px solid color-mix(in srgb, var(--reference-ink) 45%, transparent);
-      border-radius: 999px;
-      padding: 1px 5px;
-      line-height: 1.4;
       user-select: none;
+    }
+
+    /* Sized in em, so the lock scales with whatever it is standing next to --
+       a 0.82rem table row, a clamp()ed detail heading, a comparison's column
+       head -- instead of turning into a speck on the largest of them. Roughly
+       the cap height of the text beside it. */
+    .reference-tag svg {
+      display: block;
+      width: 0.62em;
+      height: 0.72em;
     }
 
     .model-name-wrap {
@@ -6067,14 +6070,23 @@
         return state.data.models.filter((model) => !isReferenceModel(model));
       }
 
-      // The word beside a reference model's name, wherever one is named. Its
-      // own tooltip, because "closed" on its own is a claim a reader is
-      // entitled to see spelled out.
+      // The mark beside a reference model's name, wherever one is named: a
+      // padlock, because it sits in a column of model names where a word would
+      // read as part of the name. Drawn rather than a glyph so it follows
+      // currentColor into both themes and needs no font. It keeps its own
+      // tooltip and an aria-label, since a lock on its own is a claim a reader
+      // is entitled to see spelled out -- and the only thing a screen reader
+      // would otherwise get is the name.
       function referenceTag() {
         return `<span class="reference-tag"${tipAttrs({
           title: "Closed weights",
           body: "No published weights, so this model cannot be run on your own hardware. It is in the index as a reference point for the open field, and it is ranked alongside it: every index and every percentile counts this row, whether or not the table is showing it."
-        })}>closed</span>`;
+        })}>` +
+          `<svg viewBox="0 0 12 14" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Closed weights">` +
+          `<path d="M3.25 6V4a2.75 2.75 0 0 1 5.5 0v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>` +
+          `<rect x="1.5" y="6" width="9" height="7" rx="1.6" fill="currentColor"/>` +
+          `</svg>` +
+          `</span>`;
       }
 
       function referenceModelCount() {

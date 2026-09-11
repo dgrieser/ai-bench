@@ -1587,7 +1587,7 @@ Four things read the list:
 
 | Where | What it does |
 | --- | --- |
-| `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a `closed` tag beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
+| `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a padlock beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
 | `llm-cli` | Same default, same reason. `--reference` includes them, marked `°`. |
 | `derive_indexes.py` | Nothing, by design: these rows are ranked with every other model. Hiding a row from the table does not take it out of the field the indexes measure against. See below. |
 | `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |
