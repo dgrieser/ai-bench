@@ -2,14 +2,12 @@
 """Tests for the closed reference models. Run with ./test_reference.py
 
 The index is an open-weights index that carries a few closed frontier models so
-the open field has something to be measured against (see _reference.py). Three
-properties make that safe, and each one has a way of failing quietly:
+the open field has something to be measured against (see _reference.py). Two
+properties make that work, and each has a way of failing quietly:
 
-  * a reference model never moves an open model's index -- percentile ranks are
-    relative to the model set, so joining the pool would have re-ranked the
-    whole table the day the list was written;
-  * a reference model still gets a number, and a different one from its
-    neighbours, or it could not be compared with anything;
+  * a reference model is ranked with every other model rather than beside them
+    -- it is hidden from the table, not from the arithmetic, so one index
+    number means one thing wherever it is read;
   * a source calling one of these models closed -- which every source does,
     correctly -- does not bury it, while every other closed name is still
     skipped without prompting.
@@ -125,7 +123,7 @@ class TestList(unittest.TestCase):
 
 
 class TestIndexValues(unittest.TestCase):
-    """index_values() ranks reference rows into the open field, not onto it."""
+    """Reference rows are ranked with every other model, not beside them."""
 
     def setUp(self) -> None:
         self.index = di.IndexDef(
@@ -137,53 +135,46 @@ class TestIndexValues(unittest.TestCase):
             model("high", b1=90, b2=90),
         ]
 
-    def test_open_values_do_not_move(self) -> None:
-        before = di.index_values(self.open_models, DOC, self.index)
-        after = di.index_values(
-            self.open_models + [model("closed", reference=True, b1=99, b2=99)],
-            DOC,
-            self.index,
-        )
-        for name, value in before.items():
-            self.assertEqual(value, after[name], f"{name} moved when a closed model arrived")
+    def values(self, *extra: dict) -> dict:
+        return di.compute_index(self.open_models + list(extra), DOC, self.index)
 
-    def test_reference_model_is_ranked(self) -> None:
-        """It gets a value, and never a lower one than the field it beats.
-
-        Not a *higher* one, though, and this is the price of the split: each is
-        measured against the field it is ranked in, so a model topping the open
-        field and a closed model above it both reach the ceiling. The raw
-        benchmark columns are where that gap is read exactly.
-        """
-        values = di.index_values(
-            self.open_models + [model("closed", reference=True, b1=99, b2=99)],
-            DOC,
-            self.index,
+    def test_a_reference_model_takes_part_in_the_ranking(self) -> None:
+        """A rank answers "among the models this index holds". Hiding a row
+        from the table does not take it out of that set, so the open models'
+        values move exactly as they would for any other model added."""
+        before = self.values()
+        after = self.values(model("closed", reference=True, b1=99, b2=99))
+        self.assertEqual(
+            after["closed"], di.SCALE, "the best model in the field tops the column"
         )
-        self.assertIsNotNone(values["closed"])
-        self.assertGreaterEqual(values["closed"], values["high"])
-        self.assertGreater(values["closed"], values["mid"])
+        self.assertLess(after["high"], before["high"])
+        self.assertLess(after["high"], after["closed"])
+
+    def test_one_field_means_one_ceiling(self) -> None:
+        """The property the split used to cost: the top open model and a closed
+        model above it cannot both sit at the top of the same column."""
+        values = self.values(model("closed", reference=True, b1=99, b2=99))
+        tops = [name for name, value in values.items() if value == di.SCALE]
+        self.assertEqual(tops, ["closed"])
 
     def test_reference_models_are_told_apart(self) -> None:
-        """Past the top of the open field they would otherwise all tie at the
-        ceiling, which is the whole reason for the second pass."""
-        values = di.index_values(
-            self.open_models
-            + [
-                model("closed-a", reference=True, b1=95, b2=95),
-                model("closed-b", reference=True, b1=99, b2=99),
-            ],
-            DOC,
-            self.index,
+        values = self.values(
+            model("closed-a", reference=True, b1=95, b2=95),
+            model("closed-b", reference=True, b1=99, b2=99),
         )
-        self.assertNotEqual(values["closed-a"], values["closed-b"])
         self.assertGreater(values["closed-b"], values["closed-a"])
+        self.assertGreater(values["closed-a"], values["high"])
 
-    def test_no_reference_models_is_the_old_behaviour(self) -> None:
-        self.assertEqual(
-            di.index_values(self.open_models, DOC, self.index),
-            di.compute_index(self.open_models, DOC, self.index),
+    def test_the_flag_does_not_reach_the_arithmetic(self) -> None:
+        """Nothing in the index math reads `reference`: the same scores rank
+        the same way whether or not the row is one."""
+        marked = di.compute_index(
+            self.open_models + [model("x", reference=True, b1=70, b2=70)], DOC, self.index
         )
+        plain = di.compute_index(
+            self.open_models + [model("x", b1=70, b2=70)], DOC, self.index
+        )
+        self.assertEqual(marked, plain)
 
 
 class TestOpennessGuard(unittest.TestCase):

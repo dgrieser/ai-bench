@@ -4850,11 +4850,12 @@
           // benchmarks added to llm.json later appear without extra bookkeeping.
           hiddenBenchmarks: [],
           // Whether the closed frontier models llm.json marks `reference` are
-          // in the table at all. Off by default: this is an open-weights index,
-          // and those rows are the yardstick beside it, not part of it. On,
-          // they behave like every other row — filtered, sorted, counted,
-          // exported. A model's own page and a comparison ignore this
-          // entirely; see rankedModels().
+          // in the table at all. Off by default: this is an open-weights index
+          // and those rows are the yardstick beside it. On, they behave like
+          // every other row — filtered, sorted, counted, exported. It is a
+          // question about what is *shown*, not about what counts: every index
+          // and every percentile ranks them either way. A model's own page and
+          // a comparison ignore it entirely.
           includeReference: false,
           // Date-added window. addedWindow is where the picker sits; addedFrom
           // and addedTo are the inclusive ISO bounds it resolves to, "" for an
@@ -5579,7 +5580,7 @@
         // renderCompareMenuBody.
         const pickable = state.filters.includeReference
           ? state.data.models
-          : rankedModels();
+          : openModels();
         const modelNames = [...new Set(pickable.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
         ui.modelCompare.innerHTML = modelNames.map((name) => {
           const sel = state.filters.selectedModels.includes(name);
@@ -6057,12 +6058,12 @@
         return Boolean(model && model.reference === true);
       }
 
-      // The models a percentile ranks against: the open-weight ones. A
-      // reference model is ranked *into* this field by percentileMap rather
-      // than joining it, so switching the table's toggle cannot move an open
-      // model's rank, and neither could adding a reference model at all. The
-      // same split derive_indexes.py makes for the index columns.
-      function rankedModels() {
+      // The open-weight field: what the table shows, and what the model picker
+      // offers, until the reader asks for the closed rows too. Not a ranking
+      // field -- every index and every percentile is computed over all of
+      // state.data.models, reference rows included, whether they are on screen
+      // or not.
+      function openModels() {
         return state.data.models.filter((model) => !isReferenceModel(model));
       }
 
@@ -6072,12 +6073,12 @@
       function referenceTag() {
         return `<span class="reference-tag"${tipAttrs({
           title: "Closed weights",
-          body: "No published weights, so this model cannot be run on your own hardware. It is in the index as a reference point for the open field — it is ranked into that field without being part of it, so it never moves an open model's rank."
+          body: "No published weights, so this model cannot be run on your own hardware. It is in the index as a reference point for the open field, and it is ranked alongside it: every index and every percentile counts this row, whether or not the table is showing it."
         })}>closed</span>`;
       }
 
       function referenceModelCount() {
-        return state.data.models.length - rankedModels().length;
+        return state.data.models.length - openModels().length;
       }
 
       // The set the table, its counts and an export all treat as "everything":
@@ -6087,7 +6088,7 @@
       // filters -- a default export drops the closed rows without that
       // counting as a filtered download.
       function modelPool() {
-        return state.filters.includeReference ? state.data.models : rankedModels();
+        return state.filters.includeReference ? state.data.models : openModels();
       }
 
       // The reader's answer to "show me the closed models too". Kept in one
@@ -7665,38 +7666,26 @@
         }
       ];
 
-      // Two maps per benchmark, not one. `open` ranks the open-weight field
-      // among itself and is what every open model reads — so a rank on this
-      // page is the same number it would have been before the index carried a
-      // closed model at all. `all` ranks the same field with the reference
-      // models mixed in, and only they read it: it is the only way to place
-      // them at all, and the only way to tell them apart from each other once
-      // they are past the top of the open field. Same split
-      // derive_indexes.index_values() makes for the index columns.
+      // One map per benchmark, over every model in the index — the closed
+      // reference rows included. They are hidden from the table by default and
+      // not from the arithmetic: a rank answers "among the models this index
+      // holds", and a reader comparing an open model with the frontier is
+      // asking about one field, not two. Same field derive_indexes.py ranks
+      // the stored index columns over.
       const detailPercentiles = new Map();
 
-      function percentileMaps(key) {
-        if (!detailPercentiles.has(key)) {
-          const open = percentileMap(rankedModels(), key);
-          detailPercentiles.set(key, {
-            open,
-            all: referenceModelCount() ? percentileMap(state.data.models, key) : open
-          });
-        }
-        return detailPercentiles.get(key);
-      }
-
       function percentileFor(model, key) {
-        const maps = percentileMaps(key);
-        const map = isReferenceModel(model) ? maps.all : maps.open;
+        if (!detailPercentiles.has(key)) {
+          detailPercentiles.set(key, percentileMap(state.data.models, key));
+        }
+        const map = detailPercentiles.get(key);
         const pct = map ? map.get(model) : null;
         return Number.isFinite(pct) ? pct : null;
       }
 
-      // How many models a benchmark's rank is measured against: the open
-      // field, which is the field being described either way.
+      // How many models a benchmark's rank is measured against.
       function rankedCount(key) {
-        return detailPercentiles.get(key)?.open?.size || 0;
+        return detailPercentiles.get(key)?.size || 0;
       }
 
       // A preset's axes as this data set can actually chart them: a key the
@@ -7796,24 +7785,21 @@
       // single-model drawing exactly as it was.
       function renderRadarSection(models) {
         const axes = state.radar.axes;
-        // The open-weight field, because that is what an axis ranks against
-        // (percentileFor). A closed reference model on the chart is placed in
-        // that field without joining it, so it can sit on the rim -- which is
-        // the honest drawing of "past everything open that has been measured".
-        const total = rankedModels().length;
+        // Every model the index holds, which is the field percentileFor ranks
+        // against: the closed reference rows take part in the ranking whether
+        // or not the table is showing them.
+        const total = state.data.models.length;
         const single = models.length === 1;
-        const hasReference = models.some(isReferenceModel);
         return `
           <section class="detail-card radar-panel" id="radarBlock" aria-label="Benchmark radar chart">
             <h2>Benchmark profile</h2>
             ${renderAxisPicker(models, axes)}
             <div class="radar-figure${single ? "" : " is-multi"}">${renderRadarChart(models, axes)}${single ? "" : radarLegend(radarSeries(models, axes))}</div>
-            <p class="radar-note">Each axis is ${single ? "this model's" : "each model's"} percentile rank across the ${total} open-weight
-              models in the index — the rim is the best recorded result, the hub the worst. Lower-is-better
+            <p class="radar-note">Each axis is ${single ? "this model's" : "each model's"} percentile rank across all ${total} indexed
+              models, the closed reference ones included — the rim is the best recorded result, the hub
+              the worst. Lower-is-better
               benchmarks are flipped, so outward always means better. An axis without a recorded
-              score keeps its place and stays empty. ${hasReference ? `A closed reference model is ranked
-              into that field rather than counted in it, so it never moves an open model's rank and
-              can sit on the rim once it is past the best open result. ` : ""}${single ? "" : `Each legend entry carries the
+              score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
               bigger. `}Hover an axis for what it measures. Pick a preset above
               &mdash; the five indexes, or the benchmarks one index is built from &mdash; or edit

@@ -46,10 +46,14 @@ result here, so -- unlike the scrapers, which never overwrite a value with null
 because a source can drop out for a day -- this script does clear a value (and
 its date) when a model no longer qualifies.
 
-The field being ranked is the open-weight one. The closed models the index
-carries for reference (see _reference.py) are ranked *into* it rather than
-made part of it, so an open model's value never moves because a closed one was
-added -- index_values() has the detail.
+The field being ranked is every model in the file, the closed reference rows
+(see _reference.py) included. They are hidden from the table by default but
+they are not hidden from the arithmetic: an index is "how good is this model
+among the ones we have measured", and a reader comparing an open model with the
+frontier is asking about one field, not two. So a reference row moves the
+ranking exactly as any other model does, and an open model's value can move
+when one is added -- which is already true whenever any model is added, and is
+the paragraph above.
 
 No leaderboard publishes these columns, so a value is attributed to the page
 that documents how it is derived: the first URL the column declares in llm.json
@@ -68,7 +72,7 @@ import sys
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from _reference import apply_reference_flags, split_models
+from _reference import apply_reference_flags
 from _scores import stamp_score_updated
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -385,34 +389,6 @@ def compute_index(
     return result
 
 
-def index_values(
-    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
-) -> dict[str, int | None]:
-    """One index for every model, with the reference rows ranked in, not joined.
-
-    The field these columns rank is the open-weight one. A closed reference
-    model (see _reference.py) is carried for comparison and must not move the
-    ranking it is being compared against -- adding seven models at the top of
-    the table would otherwise nudge every open model's value down on the day
-    they arrived, for reasons that have nothing to do with the open field.
-
-    So the open models are ranked among themselves, exactly as before there was
-    a reference list, and the reference models are ranked a second time in the
-    combined field -- which is what gives them comparable numbers, and keeps
-    them told apart from each other rather than all pinned to the ceiling.
-    """
-    open_models, reference = split_models(models)
-    if not reference:
-        return compute_index(models, doc, index)
-    values = compute_index(open_models, doc, index)
-    combined = compute_index(models, doc, index)
-    for model in reference:
-        name = model.get("name")
-        if isinstance(name, str) and name in combined:
-            values[name] = combined[name]
-    return values
-
-
 def scored_count(model: dict[str, Any], index: IndexDef) -> int:
     """How many contributing benchmarks this model actually has a score on.
 
@@ -539,7 +515,7 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
         changes.extend(
             (index.key, name, old, new)
             for name, old, new in apply_index(
-                doc, index, index_values(models, doc, index)
+                doc, index, compute_index(models, doc, index)
             )
         )
     return changes
@@ -630,7 +606,7 @@ def main() -> int:
     all_changes: list[tuple[str, str, int | None, int | None]] = []
     restamped = 0
     for index in reversed(INDEXES):
-        values = index_values(models, doc, index)
+        values = compute_index(models, doc, index)
 
         ranked = sum(1 for value in values.values() if value is not None)
         print(

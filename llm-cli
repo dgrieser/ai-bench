@@ -22,11 +22,12 @@ Best-in-table scores are shown in bold (TTY only, or force with --color) — the
 smallest value for a "lower_is_better" benchmark, the largest otherwise.
 Models added within the last 7 days are marked with *.
 
-The closed frontier models llm.json marks "reference" are left out: this is an
-open-weights index and they are the yardstick beside it, not part of it. Pass
---reference to include them, marked with ° and printed in teal; the sort then
-ranks them alongside everything else, the way the web page's "Closed models"
-checkbox does.
+The closed frontier models llm.json marks "reference" are not printed: this is
+an open-weights index and they are the yardstick beside it. Pass --reference to
+show them, marked with ° and printed in teal, the way the web page's "Closed
+models" checkbox does. Either way they are part of the ranking -- hiding a row
+does not take it out of the field the sort and the index columns measure
+against.
 """
 
 import argparse
@@ -205,32 +206,21 @@ def default_sort_group(doc):
     return group
 
 
-def group_composite_ranked_in(models, group, doc):
-    """The default sort's composite, with reference rows ranked in, not joined.
+def sort_models(models, doc, pool=None):
+    """Order `models` for display, ranking them against `pool`.
 
-    The same split derive_indexes.index_values() makes, for the same reason:
-    the field is the open-weight one, so a closed reference model in the table
-    must not move an open model's position. It is then ranked a second time in
-    the combined field, which is the only way it has a position at all.
+    The two differ when the closed reference rows are hidden: they are left out
+    of the table and stay in the ranking, the same way derive_indexes.py counts
+    them in the stored index columns. Ranking the visible rows among themselves
+    instead would have the sort disagree with the Coding column beside it.
     """
-    open_models = [m for m in models if not is_reference(m)]
-    if len(open_models) == len(models):
-        return compute_group_composite(models, group, doc)
-    composite = compute_group_composite(open_models, group, doc)
-    combined = compute_group_composite(models, group, doc)
-    for model in models:
-        if is_reference(model):
-            composite[model["name"]] = combined.get(model["name"])
-    return composite
-
-
-def sort_models(models, doc):
     group = default_sort_group(doc)
     configured = doc.get("defaultSort")
+    pool = models if pool is None else pool
 
     flipped = False
     if group is not None:
-        composite = group_composite_ranked_in(models, group, doc)
+        composite = compute_group_composite(pool, group, doc)
         sort_label = group.get("label") or group.get("key")
         keyed = [(composite.get(m["name"]), m) for m in models]
     else:
@@ -474,15 +464,15 @@ def main() -> int:
     args = parser.parse_args()
 
     doc = json.loads(Path(args.json_file).read_text(encoding="utf-8"))
-    models = doc.get("models") or []
-    if not args.reference:
-        models = [model for model in models if not is_reference(model)]
+    # The whole file is the ranking field; `models` is only what gets printed.
+    pool = doc.get("models") or []
+    models = pool if args.reference else [m for m in pool if not is_reference(m)]
     benchmarks = doc.get("benchmarks") or {}
     benchmark_keys = list(benchmarks)
 
     is_tty = sys.stdout.isatty()
     use_color = args.color or (not args.no_color and is_tty)
-    models, sort_label = sort_models(models, doc)
+    models, sort_label = sort_models(models, doc, pool)
 
     shown_keys = benchmark_keys
     fixed_keys = None

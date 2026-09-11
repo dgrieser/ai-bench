@@ -1589,7 +1589,7 @@ Four things read the list:
 | --- | --- |
 | `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a `closed` tag beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
 | `llm-cli` | Same default, same reason. `--reference` includes them, marked `°`. |
-| `derive_indexes.py` | Ranks the open field among itself and ranks the reference rows *into* it, so a closed model never moves an open model's index. See below. |
+| `derive_indexes.py` | Nothing, by design: these rows are ranked with every other model. Hiding a row from the table does not take it out of the field the indexes measure against. See below. |
 | `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |
 
 `_reference.py` is the one loader behind all of them, and
@@ -1614,7 +1614,7 @@ two halves are one decision:
 | | |
 | --- | --- |
 | `reference-add` | Puts the slug on the list and, when nothing in `llm.json` carries that name yet, runs `add.py` to create the row. AA fills in what it knows; the `url` is the model's AA page, since a closed model has no weights card to link. The slug is checked against AA's own list — a name AA does not publish would collect nothing. |
-| `reference-remove` | Takes the slug off and drops the row with it. Deliberately: `llm.json` holds the open-weight models plus exactly this list, so a row left behind would be a closed model with its flag cleared, counting toward the ranking every other row is measured by. Its scores are scraped, so adding it back refills them on the next refresh. |
+| `reference-remove` | Takes the slug off and drops the row with it. Deliberately: `llm.json` holds the open-weight models plus exactly this list, so a row left behind would be a closed model with its flag cleared — shown in the table as an open-weight one, exported as one, offered as one to a reader filtering for what they can host. Its scores are scraped, so adding it back refills them on the next refresh. |
 | `model-rename` | Not a third kind — the ordinary rename, which `_rename.py` carries through `llm.json`, this list and every mapping file at once. For the slug that changed rather than the model that did; the scores stay. |
 
 Both write the `reference` flag and recompute the indexes on the spot, so a
@@ -1626,25 +1626,26 @@ refuses the batch that would, counting adds and removes together so the final
 model can still be swapped in one sitting, and the page greys out the last
 *Stop carrying it* before it is ever sent.
 
-### Why a reference model is ranked in, not counted in
+### Hidden from the table, not from the ranking
 
-Percentile ranks are relative to the model set, so seven models landing at the
-top of the table would otherwise nudge every open model's index down on the day
-they arrived, for reasons having nothing to do with the open field. So
-`derive_indexes.index_values()` computes each index twice: the open models are
-ranked among themselves, exactly as they were before the list existed, and the
-reference models take their value from a second pass over the combined field.
+The reference rows take part in every index. `derive_indexes.py` ranks them
+with everything else, `llm.html` ranks them in its radar percentiles and
+`llm-cli` ranks them in its sort composite — in the CLI's case over the whole
+file even when the rows themselves are not printed, so the order of the open
+models is the same either way and the sort cannot disagree with the Coding
+column beside it.
 
-That keeps two properties worth having: an open model's index is unaffected by
-the closed rows entirely, and the reference rows still hold numbers that can be
-compared — with the open field, and with each other. `llm-cli` and `llm.html`
-make the same split for the sort composite and the radar percentiles
-(`percentileMaps`), so the page, the CLI and the stored columns agree.
+That is what makes an index number mean one thing. A rank answers "among the
+models this index holds", and a reader comparing an open model with the
+frontier is asking about one field, not two; splitting it would put the best
+open model and a closed model above it at the same end of the same column, each
+measured against a different set.
 
-The cost is at the ceiling: the best open model and a reference model above it
-can both sit near the top of a column, because each is measured against the
-field it is ranked in. The raw benchmark columns are where the gap is read
-exactly, and they are not ranks.
+The cost is the one every model addition has: percentile ranks are relative to
+the model set, so adding a reference model moves the open models' values, and
+adding one at the top of the table moves them down. That is the paragraph above
+about `null` being a real result, not a new property — it is simply more
+visible when the models arriving are frontier ones.
 
 ## Artificial Analysis API
 

@@ -71,7 +71,7 @@ MODEL_RENAME = "model-rename"
 # The reference list (see _reference.py). Both kinds move reference-models.json
 # *and* llm.json together, because the two are one decision: a slug on the list
 # with no entry behind it is inert, and an entry left behind after its slug
-# goes is a closed model quietly rejoining the open field's ranking. Editing a
+# goes is a closed model the table shows as an open-weight one. Editing a
 # reference model is not a third kind -- it is MODEL_RENAME, which already
 # carries the name through every mapping file and the list with it.
 REFERENCE_ADD = "reference-add"
@@ -1012,9 +1012,9 @@ def _remove_reference(answer: Answer, llm_path: Path) -> list[str]:
 
     The entry goes too, on purpose. llm.json holds open-weight models plus
     exactly this list; an entry left behind would be a closed model with its
-    flag cleared, sitting in the open field and counting toward the ranking
-    every other row is measured by. Its scores are scraped, so a row added back
-    later fills in again on the next refresh.
+    flag cleared -- shown in the table as an open-weight one, exported as one,
+    and offered as one to a reader filtering for what they can host. Its scores
+    are scraped, so a row added back later fills in again on the next refresh.
     """
     _reference.remove_reference_slug(answer.subject)
     log = [f"{_reference.REFERENCE_MODELS.name}: no longer carrying {answer.subject!r}"]

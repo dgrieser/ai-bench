@@ -18,9 +18,9 @@ What the list changes, wherever it is read:
     "Closed models" checkbox in the filter panel's head band), and colour their
     names apart when shown. A model's own page and a comparison always carry
     them -- that is the whole point of having them.
-  * derive_indexes.py ranks the open field among itself, so a reference model
-    never moves an open model's index. The reference rows are then ranked into
-    the combined field, which is what makes them comparable at all.
+  * derive_indexes.py ranks every model in the file together, these included:
+    they are hidden from the table, not from the arithmetic, so an index and a
+    percentile mean the same thing on a reference row as on an open one.
   * _openness.py never lets a source's "this model is closed" verdict bury a
     name that belongs to one of these models -- that verdict is right, and for
     every other closed model it is also the correct action, which is exactly
@@ -140,9 +140,9 @@ def rename_reference_slug(
 
     The list is keyed by model name like every mapping file, so a rename that
     skipped it would leave the entry silently no longer a reference row --
-    still in llm.json, still closed, but back in the open field's ranking. This
-    is what _rename.py calls so that cannot happen; the flag itself is fixed by
-    the next apply_reference_flags().
+    still in llm.json, still closed, but shown in the table as an open-weight
+    model and exported as one. This is what _rename.py calls so that cannot
+    happen; the flag itself is fixed by the next apply_reference_flags().
     """
     slugs = load_reference_slugs(path)
     if old not in slugs:

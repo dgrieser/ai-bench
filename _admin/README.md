@@ -207,9 +207,9 @@ tells you why.
   the list entry and the `llm.json` row behind it, because a slug with no row is
   inert and nothing would ever fill one in. *Stop carrying it* drops both, for
   the same reason from the other end: a row left behind is a closed model with
-  its flag cleared, sitting in the open field and counting toward the ranking
-  every other row is measured by. Its scores go with it, and come back on the
-  next refresh if the model is added again.
+  its flag cleared, which the table then shows as an open-weight one. Its
+  scores go with it, and come back on the next refresh if the model is added
+  again.
 
   *Rename* is the third thing, and it is the Models tab's `model-rename`: the
   same model under a new slug, which AA does do now and then. The name moves
