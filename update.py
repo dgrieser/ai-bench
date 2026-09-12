@@ -40,6 +40,7 @@ from _precedence import (
     DEEPSWE_SOURCE_URL,
     EVALS_REPORT_KEY_URLS,
     FRONTIERCODE_SOURCE_URL,
+    FRONTIERSWE_KEY_URLS,
     FRONTIERSWE_SOURCE_URL,
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
@@ -616,12 +617,17 @@ def apply_revision_scores(
     doc: dict[str, Any],
     by_key: dict[str, dict[str, dict[str, Any]]],
     url: str,
+    key_urls: dict[str, str] | None = None,
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    """Write every revision column one source filled, sharing its source page.
+    """Write every revision column one source filled, with its source page.
 
-    Both revisions of a benchmark are published by the same leaderboard, so
-    they are credited to the same page; the column keeps them apart.
+    Most split boards publish both revisions on one page -- Cognition toggles
+    between them, Datacurve swaps the artifact behind the same leaderboard --
+    so they are credited to that page and the column is what keeps them apart.
+    FrontierSWE is the exception: its V1 board is preserved at its own URL, and
+    a score cites the page that carries it, so `key_urls` names the page per
+    column and `url` covers the rest.
     """
     models = doc.get("models", [])
     matched = 0
@@ -639,7 +645,8 @@ def apply_revision_scores(
                 continue
             hit = True
             updated += apply_score(
-                doc, model, slug, key, row.get("score"), url, changes,
+                doc, model, slug, key, row.get("score"),
+                (key_urls or {}).get(key, url), changes,
                 fill_urls_only=fill_urls_only,
             )
         matched += 1 if hit else 0
@@ -1212,7 +1219,15 @@ def build_fetch_frontierswe_cmd(script: Path) -> list[str]:
 
 def fetch_frontierswe_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """FrontierSWE's boards, one column per revision the site publishes.
+
+    The scraper reports V2 and the preserved V1 board without merging them, so
+    a model on both arrives twice; each row goes to its own revision's column
+    and is ranked only against that revision. The two do not share a metric --
+    V2 is a mean@5 task percentage, V1 a pairwise win rate -- so a blend would
+    not even be a blend of like numbers.
+    """
     cmd = build_fetch_frontierswe_cmd(script)
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
@@ -1223,7 +1238,8 @@ def fetch_frontierswe_data(
         raise RuntimeError("Unexpected frontierswe JSON format: expected a list")
 
     frontierswe_to_slug = load_frontierswe_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1233,35 +1249,25 @@ def fetch_frontierswe_data(
         slug = frontierswe_to_slug.get(frontierswe_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        if not keep_best_by_revision(by_key, "frontierswe", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} frontierswe row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_frontierswe_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        frontierswe_model = by_slug.get(slug)
-        if frontierswe_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "frontierswe", frontierswe_model.get("score"),
-            FRONTIERSWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, FRONTIERSWE_SOURCE_URL,
+        key_urls=FRONTIERSWE_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_tbench_cmd(script: Path) -> list[str]:
@@ -2218,7 +2224,7 @@ def main() -> int:
         )
         changes.extend(datacurve_changes)
 
-    frontierswe_by_slug: dict[str, dict[str, Any]] = {}
+    frontierswe_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     frontierswe_matched = 0
     frontierswe_updated = 0
     if not args.skip_frontierswe:
@@ -2368,7 +2374,7 @@ def main() -> int:
     if not args.skip_datacurve:
         print(f"models returned by datacurve: {revision_model_count(datacurve_by_slug)}" + revision_breakdown(datacurve_by_slug))
     if not args.skip_frontierswe:
-        print(f"models returned by frontierswe: {len(frontierswe_by_slug)}")
+        print(f"models returned by frontierswe: {revision_model_count(frontierswe_by_slug)}" + revision_breakdown(frontierswe_by_slug))
     if not args.skip_tbench:
         print(f"models returned by tbench: {len(tbench_by_slug)}")
     if not args.skip_agents_last_exam:

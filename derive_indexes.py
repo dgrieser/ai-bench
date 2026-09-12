@@ -100,16 +100,16 @@ INDEXES: list[IndexDef] = [
         key="coding_index",
         fallback_source_url="https://github.com/dgrieser/ai-bench#coding-index",
         contributing=[
-            # DeepSWE, FrontierCode and SWE-Marathon each keep a column per
-            # published revision, and only the current one is aggregated --
-            # the same treatment terminal_bench_2_0 already gets beside
-            # terminal_bench_2_1. A superseded revision measured a different
-            # task set, so its percentile ranks a model against a field that
-            # no longer exists; aggregating both would also count the
-            # benchmark twice for whoever was re-run and once for everyone
+            # DeepSWE, FrontierSWE, FrontierCode and SWE-Marathon each keep a
+            # column per published revision, and only the current one is
+            # aggregated -- the same treatment terminal_bench_2_0 already gets
+            # beside terminal_bench_2_1. A superseded revision measured a
+            # different task set, so its percentile ranks a model against a
+            # field that no longer exists; aggregating both would also count
+            # the benchmark twice for whoever was re-run and once for everyone
             # else. The archived columns stay visible in the table.
             ("deepswe_1_1", 1.0),
-            ("frontierswe", 0.9),
+            ("frontierswe_2_0", 0.9),
             ("frontiercode_1_1", 0.9),
             ("swe_marathon_1_1", 0.9),
             ("terminal_bench_2_1", 0.85),
@@ -239,6 +239,13 @@ REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
     # FrontierCode 1.1 reads higher: the mean of the two open-weight models
     # published on both boards (GLM 5.2 19.2 -> 24.5, Kimi K2.7 22.0 -> 30.06).
     "frontiercode_1_1": ("frontiercode_1_0", 1.32),
+    # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
+    # score from one scale onto another, and 1.0 published no score on 2.0's
+    # scale to carry: its column is a pairwise win rate over a 17-model field,
+    # 2.0's a mean@5 task percentage. A factor fitted on the three models on
+    # both boards would be fitting the two metrics' relationship to each other,
+    # not a revision's drift, and would rank a model on the shape of a field it
+    # was never measured against. A model on 1.0 alone is imputed instead.
 }
 
 

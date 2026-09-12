@@ -22,6 +22,7 @@ import unittest
 from pathlib import Path
 
 import derive_indexes as di
+from _revisions import KNOWN_REVISIONS, revision_key, revision_rank
 
 
 def model(name: str, **scores) -> dict:
@@ -125,6 +126,32 @@ class TestLiveRegistry(unittest.TestCase):
         contributing = {k for index in di.INDEXES for k, _ in index.contributing}
         for _key, (older, _f) in di.REVISION_FALLBACKS.items():
             self.assertNotIn(older, contributing, older)
+
+    def test_only_the_current_revision_of_a_split_benchmark_is_aggregated(self) -> None:
+        """Each split benchmark enters an index once, through its current board.
+
+        An archived revision's percentile ranks a model against a field that no
+        longer exists, and admitting both columns would count the benchmark
+        twice for whoever was re-run and once for everyone else.
+        """
+        contributing = {k for index in di.INDEXES for k, _ in index.contributing}
+        for base, labels in KNOWN_REVISIONS.items():
+            current = revision_key(base, max(labels, key=revision_rank))
+            self.assertIn(current, contributing, current)
+            for label in labels:
+                key = revision_key(base, label)
+                if key != current:
+                    self.assertNotIn(key, contributing, key)
+
+    def test_frontierswe_is_deliberately_left_without_a_fallback(self) -> None:
+        """There is no scale to convert from: 1.0 published a pairwise win rate.
+
+        Every other archive measures the same kind of thing as its current
+        board, so an overlap gives a factor. FrontierSWE 1.0 ranked a different
+        task set by dominance over a 17-model field, so a factor fitted on the
+        models on both boards would be fitting the two metrics to each other.
+        """
+        self.assertNotIn("frontierswe_2_0", di.REVISION_FALLBACKS)
 
     def test_the_conversion_does_not_write_to_llm_json(self) -> None:
         """Columns keep exactly what each board published."""

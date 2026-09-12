@@ -19,7 +19,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **AA Coding Agent Index** | Commercial (AA agents leaderboard) | RSC page payload |
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research (benchlm.ai mirror) | JSON API |
-| **FrontierSWE** | Research | RSC flight payload |
+| **FrontierSWE** | Research | RSC flight payload, one page per revision |
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
@@ -200,7 +200,8 @@ Output: llm.json (unified dataset)
 ./fetch_aa_coding_agents.py              # SWE-Atlas-QnA, Terminal-Bench 2.1 as run by AA
 ./fetch_huggingface.py --repo owner/model-name
 ./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
-./fetch_frontierswe.py
+./fetch_frontierswe.py                  # both published boards, V2 and V1
+./fetch_frontierswe.py --revision v1    # or pin one revision
 ./fetch_osworld.py
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
@@ -598,7 +599,7 @@ why, is in that section's table.
 
 ### Benchmarks that publish more than one revision
 
-Three benchmarks in this table have re-run themselves, and in every case the
+Four benchmarks in this table have re-run themselves, and in every case the
 re-run changed the task set, the verification or the scoring — so a 1.0 number
 and a 1.1 number are two different measurements that happen to share a name.
 Each revision gets its own column, the way `terminal_bench_2_0` and
@@ -610,6 +611,7 @@ cannot disagree about which column a row belongs in.
 | --- | --- | --- |
 | **DeepSWE** | `deepswe_1_1`, `deepswe_1_0` | Datacurve serves one JSON artifact per revision and toggles between them. The re-run moved DeepSeek V4 Pro from 7.5 to 62.8, and 1.0 is the only revision that ever scored the dozen models retired before it. |
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. |
+| **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
 
 Only the current revision feeds the [Coding index](#coding-index), as one
@@ -627,13 +629,18 @@ rather than a second index member:
 | --- | --- | --- | --- |
 | `deepswe_1_1` | `deepswe_1_0` | ÷ 1.069 | 1.1 reads lower than 1.0 for the same model |
 | `frontiercode_1_1` | `frontiercode_1_0` | × 1.32 | mean of the two open-weight models published on both boards (GLM 5.2 19.2 → 24.5, Kimi K2.7 22.0 → 30.06) |
+| `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone is imputed. |
 
 A model absent from the current revision has its archived score carried onto
 the current scale and joins that revision's population, so it is ranked against
 today's field like everyone else instead of being imputed. A model published on
 both keeps the current board's own number — the conversion only ever fills a
 hole, it never displaces a measurement. `swe_marathon` needs no factor: both
-models on its archive alone scored 0.0, which converts to 0.0 either way.
+models on its archive alone scored 0.0, which converts to 0.0 either way. Where
+there is no shared scale to convert along — `frontierswe`, whose two boards
+report different quantities — the hole stays open and the model is imputed: a
+fitted factor there would be inventing a number, which is worse than admitting
+one is missing.
 
 **The conversion lives in the index and nowhere else.** `llm.json`'s columns
 keep exactly what each board published, so nothing in the table ever shows a
@@ -649,6 +656,11 @@ already get, applied consistently:
   appear in the served HTML, because the client requests them only on click.
 - `fetch_deepswe.py` (benchlm.ai) mirrors one artifact and names it in the
   page's metadata; that path is what its rows are labelled with.
+- `fetch_frontierswe.py` reads a page per revision — the root board is V2, and
+  `/v1` is V1 — so a row's revision is the page it came from. Each board's
+  payload shape is read only for the revision that publishes it (V2 nests its
+  views under a score mode, V1 does not), so a site restructure raises instead
+  of moving one board's numbers into the other's column.
 - `fetch_swe_marathon.py` reads both boards the bundle ships. Only the archive
   is stored as a leaderboard; the current board exists solely as the per-task
   trial log the page aggregates in the browser, so the scraper reproduces that
@@ -665,7 +677,11 @@ already get, applied consistently:
 - In `huggingface-benchmark-name-mapping.json`, `DeepSWE (v1.1)` and
   `Agentic coding DeepSWE 1.1` map onto `deepswe_1_1` and a bare `DeepSWE` is
   unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1`. llm-stats'
-  `swe_marathon` column is unmapped for the same reason.
+  `swe_marathon` column is unmapped for the same reason. Both FrontierSWE names
+  there stay unmapped: a bare `FrontierSWE` names no revision, and
+  `FrontierSWE (Dominance)` names 1.0's *metric* without saying whether the
+  card reports it as a fraction or a percentage — the board itself is the only
+  place that is unambiguous.
 
 ### Vision
 

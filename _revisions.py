@@ -1,6 +1,6 @@
 """Benchmark revisions: their labels, their order, and the column each feeds.
 
-Three benchmarks in this table have published more than one revision of
+Four benchmarks in this table have published more than one revision of
 themselves, and in every case the revisions are *not* comparable -- a re-run
 changes the task set, the verification or the scoring, so a 1.0 number and a
 1.1 number are two different measurements that happen to share a name:
@@ -11,6 +11,10 @@ changes the task set, the verification or the scoring, so a 1.0 number and a
     scored a dozen models retired before the re-run.
   * **FrontierCode** -- Cognition's payload carries one block per revision
     ("v1_1", "v1"), the current one covering only what was re-run.
+  * **FrontierSWE** -- frontierswe.com serves V2 at its root and keeps V1 at
+    /v1 "preserved as published". The revisions do not even share a metric: V2
+    scores 34 tasks as a mean@5 percentage, V1 ranked 17 tasks by average rank
+    and by dominance, a pairwise win rate.
   * **SWE-Marathon** -- swe-marathon.org ships a "v1.0 Archive" board beside
     the "v1.1 Current" one; 1.1 updated all 20 tasks with tighter verification
     and closed-internet execution, and its leader sits 21 points above the
@@ -40,6 +44,9 @@ _REVISION_NUM_RE = re.compile(r"\d+")
 KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     "deepswe": ("1.0", "1.1"),
     "frontiercode": ("1.0", "1.1"),
+    # FrontierSWE numbered its re-run V2, not 1.1; a bare major fills out to
+    # ".0" the same way, so the columns are frontierswe_1_0 and frontierswe_2_0.
+    "frontierswe": ("1.0", "2.0"),
     "swe_marathon": ("1.0", "1.1"),
 }
 
@@ -59,9 +66,10 @@ def revision_rank(name: str) -> tuple[int, ...]:
 def revision_label(name: str) -> str:
     """The label a revision is known by, from whatever spelling a source uses.
 
-    The three sources spell the same revision three ways -- Cognition's payload
-    key "v1_1", DeepSWE's artifact directory "v1.1", SWE-Marathon's "v1.0" --
-    and all of them reduce to the digits, with a bare major filled out to ".0":
+    The sources spell the same revision several ways -- Cognition's payload
+    key "v1_1", DeepSWE's artifact directory "v1.1", SWE-Marathon's "v1.0",
+    FrontierSWE's "v1" -- and all of them reduce to the digits, with a bare
+    major filled out to ".0":
 
         "v1_1" -> "1.1"    "v1.1" -> "1.1"    "1.1" -> "1.1"
         "v1"   -> "1.0"    "v1.0" -> "1.0"

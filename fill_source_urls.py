@@ -133,7 +133,10 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         # publishes both.
         (fetch_deepswe.URL, ("deepswe_1_0", "deepswe_1_1")),
         (fetch_datacurve.SITE_URL, ("deepswe_1_0", "deepswe_1_1")),
-        (fetch_frontierswe.URL, ("frontierswe",)),
+        # FrontierSWE keeps its revisions on two pages rather than behind one
+        # toggle, so each board covers its own column.
+        (fetch_frontierswe.URL, ("frontierswe_2_0",)),
+        (fetch_frontierswe.V1_URL, ("frontierswe_1_0",)),
         (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode_1_0", "frontiercode_1_1")),
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_toolathlon.URL, ("toolathlon",)),
