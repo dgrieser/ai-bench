@@ -85,6 +85,7 @@ import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
 import fetch_vals
+from _revisions import revision_key
 from fill_source_urls import canonical
 
 RANK_AA = 1
@@ -110,6 +111,14 @@ DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
 # The leaderboard page, not the JSON artifact it hydrates from.
 DATACURVE_SOURCE_URL = canonical(fetch_datacurve.SITE_URL)
 FRONTIERSWE_SOURCE_URL = canonical(fetch_frontierswe.URL)
+# FrontierSWE is the one split source whose revisions live on different pages:
+# the root board publishes V2 and /v1 the preserved V1 board, so each column
+# cites the page that actually carries its number. Both rank as the benchmark's
+# own site through the root prefix below, which /v1 matches on a path boundary.
+FRONTIERSWE_KEY_URLS = {
+    revision_key("frontierswe", label): canonical(url)
+    for label, url in fetch_frontierswe.BOARD_URLS.items()
+}
 # The leaderboard page, not the JSON it loads: the page is what a reader opens.
 FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
 SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)

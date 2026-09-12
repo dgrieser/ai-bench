@@ -81,18 +81,21 @@ class TestRowFetchers(unittest.TestCase):
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
-        ("frontierswe", "score", "fetch_frontierswe_data"),
         ("tbench", "score", "fetch_tbench_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
     ]
 
     # The revision-split sources file rows under a column per revision, so the
-    # same collision resolves one level down.
+    # same collision resolves one level down. The current revision is named per
+    # source: FrontierSWE numbered its re-run 2.0 where the others went to 1.1,
+    # and a row naming a revision its benchmark has no column for is refused
+    # rather than filed (see TestRevisionRouting).
     REVISION_CASES = [
-        ("deepswe", "fetch_deepswe_data", "deepswe"),
-        ("datacurve", "fetch_datacurve_data", "deepswe"),
-        ("frontiercode", "fetch_frontiercode_data", "frontiercode"),
-        ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon"),
+        ("deepswe", "fetch_deepswe_data", "deepswe", "1.1"),
+        ("datacurve", "fetch_datacurve_data", "deepswe", "1.1"),
+        ("frontiercode", "fetch_frontiercode_data", "frontiercode", "1.1"),
+        ("frontierswe", "fetch_frontierswe_data", "frontierswe", "2.0"),
+        ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon", "1.1"),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:
@@ -109,17 +112,18 @@ class TestRowFetchers(unittest.TestCase):
                     self.assertEqual(by_slug["m"][score_key], 45.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
-        for source, func_name, base in self.REVISION_CASES:
+        for source, func_name, base, revision in self.REVISION_CASES:
             mapping = write_json({"Model": "m", "Model [high]": "m"})
             rows = [
-                {"model": "Model", "revision": "1.1", "score": 30.0},
-                {"model": "Model [high]", "revision": "1.1", "score": 45.0},
+                {"model": "Model", "revision": revision, "score": 30.0},
+                {"model": "Model [high]", "revision": revision, "score": 45.0},
             ]
+            key = f"{base}_{revision.replace('.', '_')}"
             for order in (rows, list(reversed(rows))):
                 with self.subTest(source=source, first=order[0]["model"]):
                     with stub_run(order):
                         by_key = getattr(update, func_name)(SCRIPT, mapping)
-                    self.assertEqual(by_key[f"{base}_1_1"]["m"]["score"], 45.0)
+                    self.assertEqual(by_key[key]["m"]["score"], 45.0)
 
 
 class TestAaCodingAgentsMerge(unittest.TestCase):
@@ -165,7 +169,7 @@ class TestValsMerge(unittest.TestCase):
 
 
 class TestRevisionRouting(unittest.TestCase):
-    """DeepSWE, FrontierCode and SWE-Marathon keep a column per revision.
+    """DeepSWE, FrontierCode, FrontierSWE and SWE-Marathon keep a column per revision.
 
     A row therefore has to say which revision it measured before it can be
     written anywhere, and rows compete only against their own revision -- the
@@ -221,10 +225,23 @@ class TestRevisionRouting(unittest.TestCase):
         self.assertEqual(by_key, {})
 
     def test_every_split_benchmark_routes_the_same_way(self) -> None:
-        for base in ("deepswe", "frontiercode", "swe_marathon"):
+        for base in ("deepswe", "frontiercode", "frontierswe", "swe_marathon"):
             with self.subTest(base=base):
                 by_key = self.route({"revision": "1.0", "score": 1.0}, base=base)
                 self.assertEqual(list(by_key), [f"{base}_1_0"])
+
+    def test_a_benchmark_only_takes_the_revisions_it_published(self) -> None:
+        """FrontierSWE numbered its re-run 2.0; the others went to 1.1.
+
+        Each base knows its own labels, so the row a sibling's numbering would
+        produce is refused rather than landing in a column nothing renders.
+        """
+        self.assertEqual(
+            list(self.route({"revision": "2.0", "score": 1.0}, base="frontierswe")),
+            ["frontierswe_2_0"],
+        )
+        self.assertEqual(self.route({"revision": "1.1", "score": 1.0}, base="frontierswe"), {})
+        self.assertEqual(self.route({"revision": "2.0", "score": 1.0}, base="frontiercode"), {})
 
     def test_fetch_routes_a_folded_name_by_revision(self) -> None:
         """Two leaderboard names folding onto one slug, one per revision."""
