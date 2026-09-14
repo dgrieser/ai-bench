@@ -20,6 +20,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Hugging Face** | Community | Model card READMEs + Hub eval metadata (evalResults / model-index) |
 | **DeepSWE** | Research (benchlm.ai mirror) | JSON API |
 | **FrontierSWE** | Research | RSC flight payload, one page per revision |
+| **Real-SWE (Specific Labs)** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
@@ -202,6 +203,7 @@ Output: llm.json (unified dataset)
 ./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
 ./fetch_frontierswe.py                  # both published boards, V2 and V1
 ./fetch_frontierswe.py --revision v1    # or pin one revision
+./fetch_real_swe.py                     # Real-SWE, from Specific Labs' own board
 ./fetch_osworld.py
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
@@ -234,6 +236,7 @@ Output: llm.json (unified dataset)
 ./update_bfcl_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
+./update_real_swe_mapping.py
 ./update_tbench_mapping.py
 ./update_agents_last_exam_mapping.py
 ./update_frontiercode_mapping.py
@@ -488,7 +491,7 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. |
 | 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its DeepSWE rows are not ingested at all: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
@@ -898,7 +901,7 @@ How a value is produced:
    an index score can be compared at all. A `lower_is_better` benchmark is inverted,
    so a percentile always means "how good".
 2. **Weight by reliability.** The ranks are averaged with the per-benchmark weights
-   the index declares in `INDEXES` (1.0 for DeepSWE 1.1, the highest, down to 0.15
+   the index declares in `INDEXES` (1.0 for Real-SWE, the highest, down to 0.15
    for SWE-bench Verified, the lowest), so
    the benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
    Weights are relative — scaling them all leaves the ranking unchanged.
@@ -948,7 +951,9 @@ Two consequences worth knowing (they hold for every derived index):
   at 0.30 on 26 scored models, unseated the same four — and they came back when
   the SWE Atlas trio was collapsed to one track, which took more weight out of
   the denominator than the new column put in. Both moves are worked through
-  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track).
+  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track) — as is the largest instance of
+  it so far, [Real-SWE's admission at 1.0](#why-real-swe-leads-the-coding-group-and-what-it-cost),
+  which cost 21 models their rank.
 - **Terminal-Bench 4.0 and Agents' Last Exam are out of `INDEXES` for the same
   reason**, and they are the clearest illustration of it. Terminal-Bench 4.0 is
   the better-run board of the Terminal-Bench pair — 4.0 removed the saturated
@@ -986,9 +991,84 @@ The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGr
 in `llm.json`), which is what this column replaced — that machinery is still in
 place, just with no group configured.
 
+### Why Real-SWE leads the coding group, and what it cost
+
+The newest member, and the one that took the top of the ladder: **Real-SWE at 1.0**,
+the weight DeepSWE 1.1 held. Measured on the current file (5 scored models, 8 on the
+board):
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| Contamination | The decisive axis, and the one nothing else in the group can match. Every task is lifted from a *private* production codebase licensed from a real company, so the code, the ticket and the reference solution are nowhere on the public internet — there is no fix to have read. DeepSWE buys the same property by writing tasks from scratch against public repositories; Real-SWE buys it by keeping the repository itself out of reach, which is the stronger form of the guarantee and does not decay as a board ages. | **up** |
+| What it tests | Production engineering rather than issue-shaped puzzles: billing that has to price tax per business rule, a customer-identity migration, an entitlement overage line — work that was assigned to a salaried engineer. The reference solution touches a median of **11 files** against 6 for DeepSWE and FrontierCode on Cognition's published comparison, from an instruction of median 1,742 characters, so the discovery is the task. Grading is execution-based: verifiers built from each repository's own test suite, injected at grading time. | **up** |
+| Run quality | **Eight independent rollouts per task**, reported as pass@1 averaged over them, with a 95% confidence interval per model — the only column in this group that publishes per-model uncertainty at all (FrontierSWE 2.0's whiskers are a worst-to-best range over five trials, not an interval). Every number is the maintainers' own run, and uniquely in this group there is no self-report to drop, because nobody else can run the benchmark. | **up** |
+| Saturation | Max **38.8**, median 26.3 across the published board, and **6 of its 10 tasks resolve below 15%** for the whole field, one of them at 0.0% for all eight models. Not merely unsaturated — the only coding column whose *floor* is still the live question. | **up** |
+| Head resolution | Top model minus fifth is **15.0 points** across the published board of eight — behind only FrontierSWE 2.0 (40.5) and SWE-bench Pro (15.5), and an order above DeepSWE 1.1 (4.6) or Terminal-Bench 2.1 (3.4), those three measured over this file's much larger populations. It separates the leaders, which is what the group's top weight is for. | **up** |
+| Reproducibility | Nobody outside Specific Labs can re-run it, and the tasks are shown but not released (sample access is by request). Trust here is trust in the maintainer rather than in a harness anyone can check — the opposite trade from BFCL, and the direct cost of the contamination property above. | down |
+| What a row is | A model **and its native harness** — Fable 5.1 under Claude Code, GLM 5.3 under Claude Code, Kimi K3 under Kimi Code — so harness quality sits inside the score, and two models are never compared under one scaffold. | down |
+| Coverage | **5 of 158 models**, the thinnest column in the group (DeepSWE 1.1 18, SWE-Marathon 1.1 12, FrontierSWE 2.0 7). Three of the five are closed [reference rows](#closed-reference-models), leaving exactly two open-weight models — `glm-5-3` and `kimi-k3` — carrying a Real-SWE score of their own. | down, hard |
+| Redundancy | **Not measurable yet.** Every overlap is five models or fewer, where a Spearman is noise: −0.3 against DeepSWE 1.1 and 0.8 against SWE Atlas Q&A over the same five rows, which is the spread you get from reshuffling five numbers. Reported here to say it carries no information, not as evidence either way. | — |
+
+**On the task count**, which the site does not state outright: the published board is
+scored over the **ten** tasks its analysis section names, and that is checkable rather
+than assumed — each model's per-task passes sum exactly to its headline rate (Fable
+5.1: 7+8+8+3+3+1+0+0+1+0 = 31 of 80 = 38.75%, printed 38.8%), and the page's own
+rollout split, 98 short plus 542 long, is 640 = 8 models x 10 tasks x 8 runs. The full
+task set is larger and unpublished; the numbers in this file come from those ten.
+
+**The case, and the case against.** For 1.0: this is the only column in the group
+whose contamination guarantee is structural rather than temporal, it is graded by
+execution, it is unsaturated at both ends, it resolves the head far better than the
+column it displaces (15.0 points against DeepSWE 1.1's 4.6), and every value is a
+first-party eight-rollout mean with an interval attached. Against: five scored models is thinner than **Agents' Last Exam**, which
+this file [declines to aggregate at all](#coding-index) on eight — so the same
+coverage argument that keeps that column out would keep this one out, and the weight
+is a judgement about what the benchmark measures rather than something the current
+overlap can corroborate. The honest summary is that 1.0 prices the design and takes
+the coverage on credit. It is worth re-checking against the redundancy row above once
+the board covers enough open-weight models for a correlation to mean anything.
+
+**What it cost on admission, measured.** The ranking of everyone who stays ranked is
+essentially untouched — Spearman **0.999** against the pre-addition index over the 85
+models ranked in both, mean 0.4 places, max 4. The whole cost is the
+[evidence bar](#why-the-evidence-bar-is-18): 1.0 of new weight takes the coding
+group's denominator from 6.40 to 7.30 and the bar from 1.152 to **1.314**, and
+**21 of 106 ranked models drop to `null`**. None of them lost a score; the bar moved
+past them. They sit at exactly two scored weights, and those two clusters are the
+reason the number is 21 rather than 4:
+
+| Scored weight | What they carry | Models |
+| --- | --- | --- |
+| 1.20 | Terminal-Bench 2.1 + SciCode (0.85 + 0.35) | 15 — `qwen3-5-2b`, `granite-4-1-3b`/`-8b`/`-30b`, `nemotron-3-nano-omni-30b-a3b`, `command-a-plus`, `g9v3-3b`, `g9v3-39a5b`, `ling-3-0-tiny`, `ling-3-0-flash-vl`, `k2-horizon-375b-a23b`, `k2-1b-final`, `k2-4b-ph1`, `k2-7b-ph2`, `k2-mova-36b-mid5` |
+| 1.20 | LiveCodeBench + SciCode + SWE-bench Multilingual + SWE-bench Verified (0.4 + 0.35 + 0.3 + 0.15) | 2 — `deepseek-v3-2-0925`, `kimi-k2-thinking` |
+| 1.30 | SWE-bench Pro + LiveCodeBench + SciCode + SWE-bench Verified (0.4 + 0.4 + 0.35 + 0.15) | 4 — `glm-4-6`, `glm-4-7-flash`, `qwen3-5-27b`, `qwen3-coder-480b-a35b-instruct` |
+
+The next model up sits at **1.35**, so any bar in (1.30, 1.35] costs exactly these 21
+and no more. The 1.20 cluster was never savable: added to the group as it stood, any
+new coding column above 0.27 unseats it, whatever that column is worth. The 1.30 cluster is the one the weight
+actually decides — the four are the same models
+[SWE-bench Multilingual unseated](#why-swe-bench-multilingual-sits-at-030) and the
+18% threshold gave back — and they survive at Real-SWE 0.9 (bar 1.296, 17 dropped
+instead of 21) and fall at 1.0. Spending them is a deliberate choice: a model whose entire coding evidence is
+four public, largely self-reported columns is exactly the case the bar exists to
+report as unknown, and the alternative is shading the weight to protect four rows
+rather than to describe the benchmark — the mistake the ladder exists to prevent,
+[in the other direction](#why-swe-bench-multilingual-sits-at-030).
+
+**Why DeepSWE 1.1 moves to 0.9 and not 0.85.** It gives up the top of the ladder,
+not its tier. DeepSWE 1.1 is still the best-evidenced board in the group — 18 scored
+models against Real-SWE's 5, hand-written contamination-free tasks over 91
+repositories in 5 languages, and a judge that disagrees with an audit on 1.4% of
+rollouts — and 0.85 would put it *below* FrontierSWE 2.0, FrontierCode 1.1 and
+SWE-Marathon 1.1, which is a claim about DeepSWE that nothing measured here supports.
+0.9 says only what happened: a board with a stronger contamination guarantee and a
+sharper head arrived above it, and DeepSWE joins the tier immediately below at the
+top of it. The choice is also nearly free — at DeepSWE 1.0 the bar would be 1.332
+and the same 21 models drop, so 0.9 costs no coverage relative to leaving it alone.
+
 ### Why SWE-bench Multilingual sits at 0.30
 
-The newest member of the coding group, and the worked example of how a weight on the
+The member admitted before Real-SWE, and the worked example of how a weight on the
 ladder gets chosen. Measured on the current file (26 scored models):
 
 | Axis | Measurement | Pull |
@@ -1935,9 +2015,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (19 files)
-├── update_*_mapping.py         # Mapping sync scripts (19 files)
-├── _*_mapping.py               # Mapping application modules (19 files)
+├── fetch_*.py                  # Benchmark data fetchers (20 files)
+├── update_*_mapping.py         # Mapping sync scripts (20 files)
+├── _*_mapping.py               # Mapping application modules (20 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 │

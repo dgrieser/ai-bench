@@ -39,6 +39,7 @@ import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_osworld
+import fetch_real_swe
 import fetch_spheron
 import fetch_swe_atlas
 import fetch_swe_marathon
@@ -139,6 +140,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_frontierswe.V1_URL, ("frontierswe_1_0",)),
         (fetch_frontiercode.LEADERBOARD_URL, ("frontiercode_1_0", "frontiercode_1_1")),
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
+        (fetch_real_swe.URL, ("real_swe",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),

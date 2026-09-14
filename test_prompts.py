@@ -276,6 +276,7 @@ class TestPromptHooks(CollectModeBase):
             ("update_vals_mapping", "prompt_slug_for_vals_path", (name, [])),
             ("update_swe_marathon_mapping", "prompt_slug_for_swe_marathon_name", (name, [])),
             ("update_toolathlon_mapping", "prompt_slug_for_toolathlon_name", (name, [])),
+            ("update_real_swe_mapping", "prompt_slug_for_real_swe_name", (name, [])),
             ("update_spheron_mapping", "prompt_slug_for_spheron_path", (name, [], None)),
         ]
         for module_name, func_name, args in cases:

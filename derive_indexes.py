@@ -108,7 +108,8 @@ INDEXES: list[IndexDef] = [
             # field that no longer exists; aggregating both would also count
             # the benchmark twice for whoever was re-run and once for everyone
             # else. The archived columns stay visible in the table.
-            ("deepswe_1_1", 1.0),
+            ("real_swe", 1.0),
+            ("deepswe_1_1", 0.9),
             ("frontierswe_2_0", 0.9),
             ("frontiercode_1_1", 0.9),
             ("swe_marathon_1_1", 0.9),
