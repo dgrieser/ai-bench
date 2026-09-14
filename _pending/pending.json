@@ -1,3 +1,15 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'inception/mercury-2.5' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "inception/mercury-2.5",
+      "universe": "models"
+    }
+  ]
 }
