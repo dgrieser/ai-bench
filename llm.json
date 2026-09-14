@@ -29301,9 +29301,9 @@
       "params": "900M",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 2.4,
+        "int8": 1.2,
+        "int4": 0.6
       },
       "creator": {
         "name": "MBZUAI Institute of Foundation Models",
@@ -29473,6 +29473,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-0.9B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-0.9B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-0.9B/"
       }
     },
     {
@@ -29663,9 +29668,9 @@
       "params": "7B",
       "context": "512k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 20,
+        "int8": 9.8,
+        "int4": 4.9
       },
       "creator": {
         "name": "MBZUAI Institute of Foundation Models",
@@ -29835,6 +29840,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-7B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-7B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-7B/"
       }
     },
     {
@@ -29844,9 +29854,9 @@
       "params": "36B-A4B",
       "context": "512k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 82,
+        "int8": 41,
+        "int4": 20
       },
       "creator": {
         "name": "MBZUAI Institute of Foundation Models",
@@ -30016,6 +30026,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-MoVA-36B-A4B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-MoVA-36B-A4B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/IFM/K2-Horizon-MoVA-36B-A4B/"
       }
     }
   ],
