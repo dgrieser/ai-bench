@@ -80,6 +80,7 @@ import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_osworld
+import fetch_real_swe
 import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
@@ -105,6 +106,7 @@ OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
+REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
@@ -160,6 +162,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (OSWORLD_SOURCE_URL, RANK_BENCHMARK_SITE),
         (TOOLATHLON_SOURCE_URL, RANK_BENCHMARK_SITE),
         (MCP_ATLAS_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (REAL_SWE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (BFCL_SOURCE_URL, RANK_BENCHMARK_SITE),
         (DATACURVE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (FRONTIERSWE_SOURCE_URL, RANK_BENCHMARK_SITE),

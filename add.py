@@ -43,6 +43,11 @@ from _frontierswe_mapping import (
     fetch_frontierswe_model_names,
     load_frontierswe_to_slug_mapping,
 )
+from _real_swe_mapping import (
+    add_real_swe_mapping,
+    fetch_real_swe_model_names,
+    load_real_swe_to_slug_mapping,
+)
 from _aa_coding_agents_mapping import (
     add_aa_coding_agents_mapping,
     fetch_aa_coding_agents_model_names,
@@ -159,6 +164,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip the FrontierSWE mapping prompt.",
+    )
+    parser.add_argument(
+        "--skip-real-swe",
+        action="store_true",
+        help="Skip the Real-SWE mapping prompt.",
     )
     parser.add_argument(
         "--skip-frontiercode",
@@ -408,6 +418,31 @@ def maybe_add_frontierswe_mapping(model_name: str, interactive: bool) -> None:
 
     add_frontierswe_mapping(frontierswe_name, model_name)
     print(f"Added FrontierSWE mapping '{frontierswe_name}' -> '{model_name}'")
+
+
+def maybe_add_real_swe_mapping(model_name: str, interactive: bool) -> None:
+    if not interactive:
+        return
+
+    existing_mapping = load_real_swe_to_slug_mapping()
+    if model_name in existing_mapping.values():
+        return
+
+    try:
+        real_swe_names = fetch_real_swe_model_names()
+    except RuntimeError as exc:
+        print(f"Skipping Real-SWE mapping prompt: {exc}")
+        return
+
+    if not real_swe_names:
+        return
+
+    real_swe_name = prompt_select_or_new("Real-SWE model", real_swe_names)
+    if not real_swe_name:
+        return
+
+    add_real_swe_mapping(real_swe_name, model_name)
+    print(f"Added Real-SWE mapping '{real_swe_name}' -> '{model_name}'")
 
 
 def maybe_add_frontiercode_mapping(model_name: str, interactive: bool) -> None:
@@ -982,6 +1017,8 @@ def main() -> int:
         maybe_add_deepswe_mapping(model["name"], interactive)
     if not args.skip_frontierswe:
         maybe_add_frontierswe_mapping(model["name"], interactive)
+    if not args.skip_real_swe:
+        maybe_add_real_swe_mapping(model["name"], interactive)
     if not args.skip_frontiercode:
         maybe_add_frontiercode_mapping(model["name"], interactive)
     if not args.skip_swe_atlas:

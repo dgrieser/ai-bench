@@ -25,6 +25,7 @@ import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_osworld
+import fetch_real_swe
 import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
@@ -45,6 +46,7 @@ from _precedence import (
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
     OSWORLD_SOURCE_URL,
+    REAL_SWE_SOURCE_URL,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
     TBENCH_SOURCE_URL,
@@ -63,6 +65,7 @@ from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _toolathlon_mapping import load_toolathlon_to_slug_mapping
+from _real_swe_mapping import load_real_swe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
@@ -87,6 +90,7 @@ DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
+REAL_SWE_SCRIPT = Path(__file__).resolve().with_name("fetch_real_swe.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
 TBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_tbench.py")
@@ -319,6 +323,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip fetching scores from frontierswe.",
+    )
+    parser.add_argument(
+        "--skip-real-swe",
+        action="store_true",
+        help="Skip fetching scores from the Real-SWE leaderboard.",
     )
     parser.add_argument(
         "--skip-tbench",
@@ -1037,6 +1046,66 @@ def update_toolathlon_scores(
         updated += apply_score(
             doc, model, slug, "toolathlon", toolathlon_model.get("score"),
             TOOLATHLON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_real_swe_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_real_swe_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_real_swe_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_real_swe.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected real-swe JSON format: expected a list")
+
+    real_swe_to_slug = load_real_swe_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        real_swe_name = row.get("model")
+        if not isinstance(real_swe_name, str) or not real_swe_name:
+            continue
+        slug = real_swe_to_slug.get(real_swe_name)
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_real_swe_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        real_swe_model = by_slug.get(slug)
+        if real_swe_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "real_swe", real_swe_model.get("score"),
+            REAL_SWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
     return matched, updated, changes
@@ -1964,6 +2033,7 @@ def main() -> int:
     mcp_atlas_path = MCP_ATLAS_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
+    real_swe_path = REAL_SWE_SCRIPT
     tbench_path = TBENCH_SCRIPT
     agents_last_exam_path = AGENTS_LAST_EXAM_SCRIPT
     frontiercode_path = FRONTIERCODE_SCRIPT
@@ -1987,6 +2057,9 @@ def main() -> int:
     )
     toolathlon_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-toolathlon-to-artificialanalysis.json"
+    )
+    real_swe_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-real-swe-to-artificialanalysis.json"
     )
     mcp_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-mcp-atlas-to-artificialanalysis.json"
@@ -2073,6 +2146,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
     if not args.skip_toolathlon:
         print(f"  - {shlex.join(build_fetch_toolathlon_cmd(toolathlon_path))}")
+    if not args.skip_real_swe:
+        print(f"  - {shlex.join(build_fetch_real_swe_cmd(real_swe_path))}")
     if not args.skip_deepswe:
         print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
     if not args.skip_datacurve:
@@ -2202,6 +2277,16 @@ def main() -> int:
             doc, toolathlon_by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(toolathlon_changes)
+
+    real_swe_by_slug: dict[str, dict[str, Any]] = {}
+    real_swe_matched = 0
+    real_swe_updated = 0
+    if not args.skip_real_swe:
+        real_swe_by_slug = fetch_real_swe_data(real_swe_path, real_swe_mapping_path)
+        real_swe_matched, real_swe_updated, real_swe_changes = update_real_swe_scores(
+            doc, real_swe_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(real_swe_changes)
 
     deepswe_by_slug: dict[str, dict[str, Any]] = {}
     deepswe_matched = 0
@@ -2369,6 +2454,8 @@ def main() -> int:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_toolathlon:
         print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
+    if not args.skip_real_swe:
+        print(f"models returned by real-swe: {len(real_swe_by_slug)}")
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {revision_model_count(deepswe_by_slug)}" + revision_breakdown(deepswe_by_slug))
     if not args.skip_datacurve:
@@ -2421,6 +2508,8 @@ def main() -> int:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_toolathlon:
         print(f"models matched on toolathlon: {toolathlon_matched}")
+    if not args.skip_real_swe:
+        print(f"models matched on real-swe: {real_swe_matched}")
     if not args.skip_deepswe:
         print(f"models matched on deepswe: {deepswe_matched}")
     if not args.skip_datacurve:
@@ -2462,6 +2551,8 @@ def main() -> int:
             print(f"params values filled from huggingface: {hf_params_filled}")
     if not args.skip_toolathlon:
         print(f"{action} from toolathlon: {toolathlon_updated}")
+    if not args.skip_real_swe:
+        print(f"{action} from real-swe: {real_swe_updated}")
     if not args.skip_deepswe:
         print(f"{action} from deepswe: {deepswe_updated}")
     if not args.skip_datacurve:

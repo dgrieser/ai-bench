@@ -120,7 +120,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: DeepSWE 1.0, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Each becomes a percentile rank, averaged with the reliability weights below; missing scores are imputed toward the median. Whole index points, median near 50,000, relative to the models currently in the table. Based on: Real-SWE 1.0, DeepSWE 0.9, FrontierSWE 0.9, FrontierCode 0.9, SWE-Marathon 0.9, Terminal-Bench 2.1 0.85, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -261,6 +261,15 @@
         "https://labs.scale.com/papers/sweatlas",
         "https://github.com/scaleapi/SWE-Atlas",
         "https://artificialanalysis.ai/agents/coding-agents"
+      ]
+    },
+    "real_swe": {
+      "name": "Real-SWE",
+      "short_name": "RealSWE",
+      "category": "Software Engineering",
+      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time; the reference solution touches a median of 11 files. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
+      "urls": [
+        "https://realswe.withspecific.com"
       ]
     },
     "deepswe_1_1": {
@@ -715,7 +724,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 43589,
+        "coding_index": 44247,
         "tooling_index": 44566,
         "knowledge_index": 30268,
         "vision_index": null,
@@ -728,6 +737,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -901,7 +911,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 40969,
+        "coding_index": 41896,
         "tooling_index": 42965,
         "knowledge_index": 20686,
         "vision_index": 27033,
@@ -914,6 +924,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -1087,7 +1098,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 44280,
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 33620,
         "vision_index": 34863,
@@ -1100,6 +1111,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -1142,7 +1154,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -1197,7 +1209,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -1286,6 +1298,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -1459,7 +1472,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 39286,
+        "coding_index": 40290,
         "tooling_index": null,
         "knowledge_index": 57354,
         "vision_index": null,
@@ -1472,6 +1485,7 @@
         "swe_atlas_rf": 19.5,
         "swe_atlas_tw": 18.6,
         "swe_atlas_qna": 10.3,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -1658,6 +1672,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -1831,7 +1846,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 43859,
+        "coding_index": 44482,
         "tooling_index": 39507,
         "knowledge_index": 40696,
         "vision_index": null,
@@ -1844,6 +1859,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2017,7 +2033,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 37664,
+        "coding_index": 38974,
         "tooling_index": 25591,
         "knowledge_index": 36857,
         "vision_index": null,
@@ -2030,6 +2046,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2203,7 +2220,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 45766,
+        "coding_index": 46215,
         "tooling_index": 32174,
         "knowledge_index": 53088,
         "vision_index": null,
@@ -2216,6 +2233,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2389,7 +2407,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 58329,
+        "coding_index": 57302,
         "tooling_index": 57247,
         "knowledge_index": 67479,
         "vision_index": 69585,
@@ -2402,6 +2420,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2575,7 +2594,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 52870,
+        "coding_index": 52516,
         "tooling_index": 61653,
         "knowledge_index": 59628,
         "vision_index": 50206,
@@ -2588,6 +2607,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2761,7 +2781,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 51452,
+        "coding_index": null,
         "tooling_index": 57896,
         "knowledge_index": 58613,
         "vision_index": 56136,
@@ -2774,6 +2794,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2816,7 +2837,7 @@
         "charxiv_reasoning": 79.5
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-11",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -2871,7 +2892,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -2960,6 +2981,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3133,7 +3155,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 45187,
+        "coding_index": 45706,
         "tooling_index": 48351,
         "knowledge_index": 43491,
         "vision_index": 30774,
@@ -3146,6 +3168,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3319,7 +3342,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 40521,
+        "coding_index": 41543,
         "tooling_index": 44993,
         "knowledge_index": 40921,
         "vision_index": 25712,
@@ -3332,6 +3355,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3505,7 +3529,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 35090,
+        "coding_index": null,
         "tooling_index": 21788,
         "knowledge_index": 14835,
         "vision_index": 16599,
@@ -3518,6 +3542,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3560,7 +3585,7 @@
         "charxiv_reasoning": 58.8
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -3615,7 +3640,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -3704,6 +3729,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3877,7 +3903,7 @@
       },
       "context": "1m",
       "scores": {
-        "coding_index": 47843,
+        "coding_index": 48064,
         "tooling_index": 43067,
         "knowledge_index": 63355,
         "vision_index": null,
@@ -3890,6 +3916,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4076,6 +4103,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4250,7 +4278,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "coding_index": 45257,
+        "coding_index": 45761,
         "tooling_index": 38752,
         "knowledge_index": 40977,
         "vision_index": null,
@@ -4263,6 +4291,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4437,7 +4466,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "coding_index": 44082,
+        "coding_index": 44682,
         "tooling_index": 44303,
         "knowledge_index": 54455,
         "vision_index": null,
@@ -4450,6 +4479,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4623,7 +4653,7 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "coding_index": 40571,
+        "coding_index": 41572,
         "tooling_index": 35901,
         "knowledge_index": 49363,
         "vision_index": null,
@@ -4636,6 +4666,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4809,7 +4840,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 45571,
+        "coding_index": 46049,
         "tooling_index": 34280,
         "knowledge_index": 47978,
         "vision_index": 36951,
@@ -4822,6 +4853,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4995,7 +5027,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 40168,
+        "coding_index": 41715,
         "tooling_index": 51195,
         "knowledge_index": 70954,
         "vision_index": null,
@@ -5008,6 +5040,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 0.2,
         "frontierswe_2_0": null,
@@ -5194,6 +5227,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5380,6 +5414,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5553,7 +5588,7 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "coding_index": 35812,
+        "coding_index": 37342,
         "tooling_index": 29921,
         "knowledge_index": 51820,
         "vision_index": null,
@@ -5566,6 +5601,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5739,7 +5775,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 51158,
+        "coding_index": 51015,
         "tooling_index": 56313,
         "knowledge_index": 57558,
         "vision_index": 49478,
@@ -5752,6 +5788,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5925,7 +5962,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 51254,
+        "coding_index": 51099,
         "tooling_index": 45382,
         "knowledge_index": 53027,
         "vision_index": 45824,
@@ -5938,6 +5975,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6111,7 +6149,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 35300,
+        "coding_index": 36885,
         "tooling_index": 24455,
         "knowledge_index": 34497,
         "vision_index": 31731,
@@ -6124,6 +6162,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6297,7 +6336,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 32739,
+        "coding_index": 34601,
         "tooling_index": 19612,
         "knowledge_index": 36047,
         "vision_index": 27033,
@@ -6310,6 +6349,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6483,7 +6523,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 50023,
+        "coding_index": 50020,
         "tooling_index": 41164,
         "knowledge_index": 57893,
         "vision_index": 54610,
@@ -6496,6 +6536,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6669,7 +6710,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 55326,
+        "coding_index": 54670,
         "tooling_index": 61260,
         "knowledge_index": 63560,
         "vision_index": 55505,
@@ -6682,6 +6723,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6855,7 +6897,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 54625,
+        "coding_index": 54283,
         "tooling_index": 67659,
         "knowledge_index": 79507,
         "vision_index": null,
@@ -6868,6 +6910,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 38.7,
+        "real_swe": null,
         "deepswe_1_1": 53.3,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7041,7 +7084,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "coding_index": 53921,
+        "coding_index": 53438,
         "tooling_index": 65050,
         "knowledge_index": 68952,
         "vision_index": null,
@@ -7054,6 +7097,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7227,7 +7271,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 37179,
+        "coding_index": null,
         "tooling_index": 27501,
         "knowledge_index": 15337,
         "vision_index": null,
@@ -7240,6 +7284,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7282,7 +7327,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -7337,7 +7382,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -7413,7 +7458,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 34489,
+        "coding_index": null,
         "tooling_index": 16655,
         "knowledge_index": 8590,
         "vision_index": null,
@@ -7426,6 +7471,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7468,7 +7514,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -7523,7 +7569,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -7599,7 +7645,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 37308,
+        "coding_index": null,
         "tooling_index": 24304,
         "knowledge_index": 16355,
         "vision_index": null,
@@ -7612,6 +7658,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7654,7 +7701,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -7709,7 +7756,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -7785,7 +7832,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "coding_index": 41437,
+        "coding_index": 42251,
         "tooling_index": 57681,
         "knowledge_index": 49283,
         "vision_index": 42171,
@@ -7798,6 +7845,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7971,7 +8019,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "coding_index": 37064,
+        "coding_index": 38459,
         "tooling_index": 30691,
         "knowledge_index": 21026,
         "vision_index": 30687,
@@ -7984,6 +8032,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8157,7 +8206,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 40350,
+        "coding_index": null,
         "tooling_index": 36530,
         "knowledge_index": 32420,
         "vision_index": 33819,
@@ -8170,6 +8219,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8212,7 +8262,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -8267,7 +8317,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -8356,6 +8406,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8529,7 +8580,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 46352,
+        "coding_index": null,
         "tooling_index": 42590,
         "knowledge_index": 59286,
         "vision_index": 41127,
@@ -8542,6 +8593,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8584,7 +8636,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -8639,7 +8691,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -8715,7 +8767,7 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "coding_index": 51940,
+        "coding_index": 51701,
         "tooling_index": 53880,
         "knowledge_index": 56319,
         "vision_index": 55423,
@@ -8728,6 +8780,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8914,6 +8967,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -9087,7 +9141,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 45559,
+        "coding_index": 46009,
         "tooling_index": 41062,
         "knowledge_index": 40640,
         "vision_index": null,
@@ -9100,6 +9154,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -9273,7 +9328,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 49622,
+        "coding_index": 50003,
         "tooling_index": 75952,
         "knowledge_index": 87352,
         "vision_index": null,
@@ -9286,6 +9341,7 @@
         "swe_atlas_rf": 42.4,
         "swe_atlas_tw": 41.5,
         "swe_atlas_qna": 48.1,
+        "real_swe": null,
         "deepswe_1_1": 43.8,
         "deepswe_1_0": 41.5,
         "frontierswe_2_0": null,
@@ -9459,7 +9515,7 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "coding_index": 48422,
+        "coding_index": 49333,
         "tooling_index": 63714,
         "knowledge_index": 79305,
         "vision_index": 64482,
@@ -9472,6 +9528,7 @@
         "swe_atlas_rf": 28.1,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 20.4,
         "frontierswe_2_0": null,
@@ -9658,6 +9715,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -9834,6 +9892,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10006,7 +10065,7 @@
       },
       "context": "10m",
       "scores": {
-        "coding_index": 34082,
+        "coding_index": 35799,
         "tooling_index": 16423,
         "knowledge_index": 24909,
         "vision_index": 20686,
@@ -10019,6 +10078,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10192,7 +10252,7 @@
       },
       "context": "1m",
       "scores": {
-        "coding_index": 38760,
+        "coding_index": 39972,
         "tooling_index": 21623,
         "knowledge_index": 38116,
         "vision_index": 28210,
@@ -10205,6 +10265,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10391,6 +10452,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10576,6 +10638,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10763,6 +10826,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10949,6 +11013,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11135,6 +11200,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11321,6 +11387,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11507,6 +11574,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11680,7 +11748,7 @@
       },
       "context": "512k",
       "scores": {
-        "coding_index": 45730,
+        "coding_index": 46202,
         "tooling_index": 39034,
         "knowledge_index": 56677,
         "vision_index": null,
@@ -11693,6 +11761,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11879,6 +11948,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12065,6 +12135,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12251,6 +12322,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12437,6 +12509,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12610,7 +12683,7 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 47064,
+        "coding_index": null,
         "tooling_index": 42321,
         "knowledge_index": 46760,
         "vision_index": null,
@@ -12623,6 +12696,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12665,7 +12739,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-11",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -12720,7 +12794,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -12809,6 +12883,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12995,6 +13070,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13181,6 +13257,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13354,7 +13431,7 @@
       },
       "context": "200k",
       "scores": {
-        "coding_index": 41976,
+        "coding_index": null,
         "tooling_index": 54630,
         "knowledge_index": 43544,
         "vision_index": null,
@@ -13367,6 +13444,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13409,7 +13487,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-11",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -13464,7 +13542,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -13540,7 +13618,7 @@
       },
       "context": "200k",
       "scores": {
-        "coding_index": 54077,
+        "coding_index": 53574,
         "tooling_index": 52051,
         "knowledge_index": 68434,
         "vision_index": null,
@@ -13553,6 +13631,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13739,6 +13818,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13925,6 +14005,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14111,6 +14192,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14297,6 +14379,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14483,6 +14566,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14669,6 +14753,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14842,7 +14927,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 50305,
+        "coding_index": 50267,
         "tooling_index": 44719,
         "knowledge_index": 41660,
         "vision_index": null,
@@ -14855,6 +14940,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15040,6 +15126,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15226,6 +15313,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15413,6 +15501,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15599,6 +15688,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15785,6 +15875,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15971,6 +16062,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16157,6 +16249,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16343,6 +16436,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16516,7 +16610,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 47267,
+        "coding_index": 47561,
         "tooling_index": 38378,
         "knowledge_index": 60298,
         "vision_index": null,
@@ -16529,6 +16623,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16702,7 +16797,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 44403,
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 42487,
         "vision_index": null,
@@ -16715,6 +16810,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16757,7 +16853,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -16812,7 +16908,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -16901,6 +16997,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17087,6 +17184,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17273,6 +17371,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17459,6 +17558,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17645,6 +17745,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17818,7 +17919,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 39946,
+        "coding_index": 41013,
         "tooling_index": 32497,
         "knowledge_index": 38956,
         "vision_index": 35907,
@@ -17831,6 +17932,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18004,7 +18106,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 34211,
+        "coding_index": 35914,
         "tooling_index": 22793,
         "knowledge_index": 16909,
         "vision_index": 28599,
@@ -18017,6 +18119,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18203,6 +18306,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18389,6 +18493,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18562,7 +18667,7 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 33615,
+        "coding_index": 35382,
         "tooling_index": 14661,
         "knowledge_index": 16683,
         "vision_index": 29643,
@@ -18575,6 +18680,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18748,7 +18854,7 @@
       },
       "context": "128k",
       "scores": {
-        "coding_index": 28943,
+        "coding_index": 31214,
         "tooling_index": 13492,
         "knowledge_index": 11131,
         "vision_index": 21292,
@@ -18761,6 +18867,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18947,6 +19054,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19133,6 +19241,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19319,6 +19428,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19496,6 +19606,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19661,7 +19772,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "coding_index": 48202,
+        "coding_index": 48396,
         "tooling_index": 43606,
         "knowledge_index": 46273,
         "vision_index": 47390,
@@ -19674,6 +19785,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19847,7 +19959,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 41177,
+        "coding_index": 42093,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -19860,6 +19972,7 @@
         "swe_atlas_rf": 16.6,
         "swe_atlas_tw": 15.3,
         "swe_atlas_qna": 17.9,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20033,7 +20146,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 51408,
+        "coding_index": 51235,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -20046,6 +20159,7 @@
         "swe_atlas_rf": 29.7,
         "swe_atlas_tw": 27.8,
         "swe_atlas_qna": 37.1,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20219,7 +20333,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 58488,
+        "coding_index": 57442,
         "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
@@ -20232,6 +20346,7 @@
         "swe_atlas_rf": 42.6,
         "swe_atlas_tw": 39.1,
         "swe_atlas_qna": 41.2,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20405,7 +20520,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 50140,
+        "coding_index": 50123,
         "tooling_index": 53378,
         "knowledge_index": 74897,
         "vision_index": null,
@@ -20418,6 +20533,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20601,7 +20717,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "coding_index": 43475,
+        "coding_index": 44178,
         "tooling_index": 36563,
         "knowledge_index": 33285,
         "vision_index": 44258,
@@ -20614,6 +20730,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20800,6 +20917,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20973,7 +21091,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 43323,
+        "coding_index": 43824,
         "tooling_index": 58245,
         "knowledge_index": 79505,
         "vision_index": 49976,
@@ -20986,6 +21104,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 4.1,
@@ -21159,7 +21278,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 53549,
+        "coding_index": 53079,
         "tooling_index": 74551,
         "knowledge_index": 86198,
         "vision_index": null,
@@ -21172,6 +21291,7 @@
         "swe_atlas_rf": 53.8,
         "swe_atlas_tw": 27.1,
         "swe_atlas_qna": 27.2,
+        "real_swe": null,
         "deepswe_1_1": 62.8,
         "deepswe_1_0": 7.5,
         "frontierswe_2_0": null,
@@ -21345,7 +21465,7 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "coding_index": 53650,
+        "coding_index": 53200,
         "tooling_index": 53325,
         "knowledge_index": 63526,
         "vision_index": null,
@@ -21358,6 +21478,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -21531,7 +21652,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 51905,
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 70423,
         "vision_index": null,
@@ -21544,6 +21665,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -21586,7 +21708,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -21641,7 +21763,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -21717,7 +21839,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 44296,
+        "coding_index": 44758,
         "tooling_index": 45941,
         "knowledge_index": 79606,
         "vision_index": 59527,
@@ -21730,6 +21852,7 @@
         "swe_atlas_rf": 21,
         "swe_atlas_tw": 25.8,
         "swe_atlas_qna": 13.1,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -21903,7 +22026,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 52058,
+        "coding_index": 52293,
         "tooling_index": 65150,
         "knowledge_index": 84110,
         "vision_index": 66938,
@@ -21916,6 +22039,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 15.9,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 23.9,
         "frontierswe_2_0": null,
@@ -22089,7 +22213,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 53262,
+        "coding_index": 53284,
         "tooling_index": 64698,
         "knowledge_index": 73642,
         "vision_index": null,
@@ -22102,6 +22226,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 30.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -22275,7 +22400,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 74520,
+        "coding_index": 67778,
         "tooling_index": 81454,
         "knowledge_index": 91274,
         "vision_index": 80319,
@@ -22288,6 +22413,7 @@
         "swe_atlas_rf": 46.2,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 23.0,
+        "real_swe": 18.8,
         "deepswe_1_1": 68.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": 25.9,
@@ -22382,7 +22508,8 @@
         "osworld_verified": "2026-07-27",
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-09"
+        "charxiv_reasoning": "2026-09-09",
+        "real_swe": "2026-09-14"
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -22437,7 +22564,8 @@
         "osworld_verified": "https://huggingface.co/moonshotai/Kimi-K3",
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3"
+        "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3",
+        "real_swe": "https://realswe.withspecific.com"
       }
     },
     {
@@ -22461,7 +22589,7 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
-        "coding_index": 37848,
+        "coding_index": null,
         "tooling_index": 35684,
         "knowledge_index": 48748,
         "vision_index": null,
@@ -22474,6 +22602,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -22516,7 +22645,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -22571,7 +22700,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -22647,7 +22776,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 55804,
+        "coding_index": 55089,
         "tooling_index": 54150,
         "knowledge_index": 70499,
         "vision_index": 56380,
@@ -22660,6 +22789,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -22833,7 +22963,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 50757,
+        "coding_index": 51283,
         "tooling_index": 62832,
         "knowledge_index": 76524,
         "vision_index": 59888,
@@ -22846,6 +22976,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 19.5,
         "frontierswe_2_0": null,
@@ -23019,7 +23150,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 56768,
+        "coding_index": 55934,
         "tooling_index": 60323,
         "knowledge_index": 77261,
         "vision_index": 50957,
@@ -23032,6 +23163,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23205,7 +23337,7 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
-        "coding_index": 48583,
+        "coding_index": null,
         "tooling_index": 56535,
         "knowledge_index": 59417,
         "vision_index": null,
@@ -23218,6 +23350,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23260,7 +23393,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -23315,7 +23448,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -23386,7 +23519,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 60504,
+        "coding_index": 59307,
         "tooling_index": 70805,
         "knowledge_index": 89051,
         "vision_index": 77719,
@@ -23399,6 +23532,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 57.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": 15.8,
@@ -23572,7 +23706,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 56178,
+        "coding_index": 55416,
         "tooling_index": 55216,
         "knowledge_index": 63123,
         "vision_index": null,
@@ -23585,6 +23719,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23758,7 +23893,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 44017,
+        "coding_index": null,
         "tooling_index": 51447,
         "knowledge_index": 53101,
         "vision_index": null,
@@ -23771,6 +23906,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23813,7 +23949,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -23868,7 +24004,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -23944,7 +24080,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
-        "coding_index": 36274,
+        "coding_index": 37754,
         "tooling_index": 36828,
         "knowledge_index": 50478,
         "vision_index": null,
@@ -23957,6 +24093,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24130,7 +24267,7 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "coding_index": 52473,
+        "coding_index": 52168,
         "tooling_index": 58246,
         "knowledge_index": 58588,
         "vision_index": 52600,
@@ -24143,6 +24280,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24316,7 +24454,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 40050,
+        "coding_index": 41118,
         "tooling_index": 45684,
         "knowledge_index": 57007,
         "vision_index": null,
@@ -24329,6 +24467,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24502,7 +24641,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 71789,
+        "coding_index": 68744,
         "tooling_index": 71998,
         "knowledge_index": 88263,
         "vision_index": null,
@@ -24515,6 +24654,7 @@
         "swe_atlas_rf": 51.4,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 59.4,
+        "real_swe": 28.8,
         "deepswe_1_1": 69,
         "deepswe_1_0": null,
         "frontierswe_2_0": 30.2,
@@ -24609,7 +24749,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "2026-09-14"
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -24664,7 +24805,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "https://realswe.withspecific.com"
       },
       "vram_source": {
         "fp16": "https://www.spheron.network/tools/gpu-recommender/zai-org/GLM-5.3/",
@@ -24688,7 +24830,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 56803,
+        "coding_index": 56323,
         "tooling_index": 67604,
         "knowledge_index": 75593,
         "vision_index": 70781,
@@ -24701,6 +24843,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 42.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24874,7 +25017,7 @@
         "url": "https://www.upstage.ai"
       },
       "scores": {
-        "coding_index": 55096,
+        "coding_index": 54468,
         "tooling_index": 56048,
         "knowledge_index": 77193,
         "vision_index": null,
@@ -24887,6 +25030,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25060,7 +25204,7 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "coding_index": 52785,
+        "coding_index": 52442,
         "tooling_index": 57595,
         "knowledge_index": 71866,
         "vision_index": null,
@@ -25073,6 +25217,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25259,6 +25404,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25432,7 +25578,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 61878,
+        "coding_index": 60414,
         "tooling_index": 61879,
         "knowledge_index": 64785,
         "vision_index": null,
@@ -25445,6 +25591,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 55.6,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25618,7 +25765,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 56070,
+        "coding_index": 55322,
         "tooling_index": 47028,
         "knowledge_index": 59063,
         "vision_index": null,
@@ -25631,6 +25778,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 39.8,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25804,7 +25952,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 44144,
+        "coding_index": 44752,
         "tooling_index": 33552,
         "knowledge_index": 56073,
         "vision_index": null,
@@ -25817,6 +25965,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 20.6,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25990,7 +26139,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 51269,
+        "coding_index": 51113,
         "tooling_index": 70604,
         "knowledge_index": 72202,
         "vision_index": 60853,
@@ -26003,6 +26152,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 14.8,
@@ -26176,7 +26326,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 61599,
+        "coding_index": 60071,
         "tooling_index": 74926,
         "knowledge_index": 85354,
         "vision_index": 73270,
@@ -26189,6 +26339,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 63.4,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -26362,7 +26513,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 64436,
+        "coding_index": 62689,
         "tooling_index": 73435,
         "knowledge_index": 75806,
         "vision_index": 68102,
@@ -26375,6 +26526,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 58.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -26548,7 +26700,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 41880,
+        "coding_index": 42756,
         "tooling_index": 35367,
         "knowledge_index": 48685,
         "vision_index": null,
@@ -26561,6 +26713,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -26734,7 +26887,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 35347,
+        "coding_index": 36778,
         "tooling_index": 43037,
         "knowledge_index": 47406,
         "vision_index": null,
@@ -26747,6 +26900,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -26920,7 +27074,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 40181,
+        "coding_index": 41140,
         "tooling_index": 52748,
         "knowledge_index": 53129,
         "vision_index": null,
@@ -26933,6 +27087,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27106,7 +27261,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "coding_index": 62296,
+        "coding_index": 60780,
         "tooling_index": 70949,
         "knowledge_index": 70059,
         "vision_index": null,
@@ -27119,6 +27274,7 @@
         "swe_atlas_rf": 53.3,
         "swe_atlas_tw": 57.8,
         "swe_atlas_qna": 64,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27292,7 +27448,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 55200,
+        "coding_index": null,
         "tooling_index": 63182,
         "knowledge_index": 72530,
         "vision_index": null,
@@ -27305,6 +27461,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27347,7 +27504,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -27402,7 +27559,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -27478,7 +27635,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "coding_index": 34608,
+        "coding_index": 36170,
         "tooling_index": 55433,
         "knowledge_index": 47620,
         "vision_index": null,
@@ -27491,6 +27648,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27664,7 +27822,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 64261,
+        "coding_index": 61818,
         "tooling_index": 58903,
         "knowledge_index": 76376,
         "vision_index": 64338,
@@ -27677,6 +27835,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 74.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27850,7 +28009,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 54441,
+        "coding_index": null,
         "tooling_index": 55889,
         "knowledge_index": 58518,
         "vision_index": 61802,
@@ -27863,6 +28022,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -27905,7 +28065,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -27960,7 +28120,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
@@ -28037,7 +28197,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 95836,
+        "coding_index": 89565,
         "tooling_index": 75478,
         "knowledge_index": 92791,
         "vision_index": 73541,
@@ -28050,6 +28210,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": 62.2,
         "swe_atlas_qna": 63.2,
+        "real_swe": null,
         "deepswe_1_1": 73.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": 52,
@@ -28219,7 +28380,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 62068,
+        "coding_index": 60744,
         "tooling_index": 61457,
         "knowledge_index": 88408,
         "vision_index": 64386,
@@ -28232,6 +28393,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 53.9,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -28401,7 +28563,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 88989,
+        "coding_index": 90803,
         "tooling_index": 75447,
         "knowledge_index": 93682,
         "vision_index": 68182,
@@ -28414,6 +28576,7 @@
         "swe_atlas_rf": 56.7,
         "swe_atlas_tw": 67,
         "swe_atlas_qna": 60,
+        "real_swe": 38.8,
         "deepswe_1_1": 67.4,
         "deepswe_1_0": null,
         "frontierswe_2_0": 56.3,
@@ -28456,7 +28619,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-11",
+        "coding_index": "2026-09-14",
         "tooling_index": "2026-09-11",
         "knowledge_index": "2026-09-14",
         "vision_index": "2026-09-11",
@@ -28508,7 +28671,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "2026-09-14"
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -28563,7 +28727,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "https://realswe.withspecific.com"
       }
     },
     {
@@ -28583,7 +28748,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 59379,
+        "coding_index": 58060,
         "tooling_index": 59393,
         "knowledge_index": 71930,
         "vision_index": 60845,
@@ -28596,6 +28761,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 67.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -28765,7 +28931,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 70262,
+        "coding_index": 67340,
         "tooling_index": 64968,
         "knowledge_index": 76564,
         "vision_index": 64354,
@@ -28778,6 +28944,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": 69.6,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -28947,7 +29114,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 76436,
+        "coding_index": 65838,
         "tooling_index": 69093,
         "knowledge_index": 81573,
         "vision_index": 65630,
@@ -28960,6 +29127,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": 45.9,
         "swe_atlas_qna": 46,
+        "real_swe": 16.2,
         "deepswe_1_1": 72.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29054,7 +29222,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "2026-09-14"
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -29109,7 +29278,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "https://realswe.withspecific.com"
       }
     },
     {
@@ -29129,7 +29299,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 75923,
+        "coding_index": 75597,
         "tooling_index": 60831,
         "knowledge_index": 75260,
         "vision_index": 67544,
@@ -29142,6 +29312,7 @@
         "swe_atlas_rf": 59.1,
         "swe_atlas_tw": 50.7,
         "swe_atlas_qna": 59.1,
+        "real_swe": 33.8,
         "deepswe_1_1": 73.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29236,7 +29407,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "2026-09-14"
       },
       "scores_source": {
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
@@ -29291,7 +29463,8 @@
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "real_swe": "https://realswe.withspecific.com"
       }
     },
     {
@@ -29310,7 +29483,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 34011,
+        "coding_index": null,
         "tooling_index": 29276,
         "knowledge_index": 30298,
         "vision_index": null,
@@ -29323,6 +29496,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29365,7 +29539,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -29420,7 +29594,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -29496,7 +29670,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 44055,
+        "coding_index": null,
         "tooling_index": 48298,
         "knowledge_index": 52896,
         "vision_index": null,
@@ -29509,6 +29683,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29551,7 +29726,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -29606,7 +29781,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -29677,7 +29852,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 48534,
+        "coding_index": null,
         "tooling_index": 51967,
         "knowledge_index": 49457,
         "vision_index": null,
@@ -29690,6 +29865,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29732,7 +29908,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -29787,7 +29963,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -29863,7 +30039,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 53156,
+        "coding_index": null,
         "tooling_index": 55289,
         "knowledge_index": 56935,
         "vision_index": null,
@@ -29876,6 +30052,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
+        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29918,7 +30095,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-14",
+        "coding_index": null,
         "tooling_index": "2026-09-14",
         "knowledge_index": "2026-09-14",
         "vision_index": null,
@@ -29973,7 +30150,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -30093,6 +30270,7 @@
     "https://www.vals.ai/benchmarks/mmlu_pro",
     "https://www.vals.ai/benchmarks/mmmu",
     "https://www.vals.ai/benchmarks/aime",
-    "https://www.frontierswe.com/v1"
+    "https://www.frontierswe.com/v1",
+    "https://realswe.withspecific.com"
   ]
 }
