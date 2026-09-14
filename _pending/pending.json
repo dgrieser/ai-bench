@@ -1,48 +1,82 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "k2-1b-final",
       "if_previous": null,
-      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-0.9B",
-      "question": "Add newly released model 'k2-1b-final' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "k2-1b-final",
-      "universe": null
+      "note": null,
+      "question": "Map Spheron path 'IFM/K2-Horizon-0.9B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFM/K2-Horizon-0.9B",
+      "universe": "models"
     },
     {
-      "candidates": [],
-      "default": null,
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "drop suffix to a variant, substring match"
+        }
+      ],
+      "default": "k2-4b-ph1",
       "if_previous": null,
-      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-3.7B",
-      "question": "Add newly released model 'k2-4b-ph1' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "k2-4b-ph1",
-      "universe": null
+      "note": null,
+      "question": "Map Spheron path 'IFM/K2-Horizon-3.7B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFM/K2-Horizon-3.7B",
+      "universe": "models"
     },
     {
-      "candidates": [],
-      "default": null,
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "k2-7b-ph2",
+          "reason": "exact to K2-Horizon-7B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "exact to K2-Horizon-7B, most components match"
+        }
+      ],
+      "default": "k2-7b-ph2",
       "if_previous": null,
-      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-7B",
-      "question": "Add newly released model 'k2-7b-ph2' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "k2-7b-ph2",
-      "universe": null
+      "note": null,
+      "question": "Map Spheron path 'IFM/K2-Horizon-7B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFM/K2-Horizon-7B",
+      "universe": "models"
     },
     {
-      "candidates": [],
-      "default": null,
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "k2-mova-36b-mid5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "k2-mova-36b-mid5",
       "if_previous": null,
-      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B",
-      "question": "Add newly released model 'k2-mova-36b-mid5' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "k2-mova-36b-mid5",
-      "universe": null
+      "note": null,
+      "question": "Map Spheron path 'IFM/K2-Horizon-MoVA-36B-A4B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFM/K2-Horizon-MoVA-36B-A4B",
+      "universe": "models"
     }
   ]
 }
