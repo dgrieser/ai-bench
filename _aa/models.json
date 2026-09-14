@@ -1,5 +1,5 @@
 {
-  "count": 645,
+  "count": 650,
   "models": [
     {
       "creator": "SK Telecom",
@@ -264,6 +264,12 @@
       "name": "Claude Opus 4.7 (Non-reasoning, High Effort)",
       "release_date": "2026-04-16",
       "slug": "claude-opus-4-7-non-reasoning"
+    },
+    {
+      "creator": "Anthropic",
+      "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+      "release_date": "2026-05-28",
+      "slug": "claude-opus-4-8"
     },
     {
       "creator": "Anthropic",
@@ -2109,9 +2115,33 @@
     },
     {
       "creator": "MBZUAI Institute of Foundation Models",
+      "name": "K2 Horizon 0.9B",
+      "release_date": "2026-09-03",
+      "slug": "k2-1b-final"
+    },
+    {
+      "creator": "MBZUAI Institute of Foundation Models",
+      "name": "K2 Horizon 3.7B",
+      "release_date": "2026-09-03",
+      "slug": "k2-4b-ph1"
+    },
+    {
+      "creator": "MBZUAI Institute of Foundation Models",
+      "name": "K2 Horizon 7B",
+      "release_date": "2026-09-03",
+      "slug": "k2-7b-ph2"
+    },
+    {
+      "creator": "MBZUAI Institute of Foundation Models",
       "name": "K2 Horizon 375B A23B",
       "release_date": "2026-09-03",
       "slug": "k2-horizon-375b-a23b"
+    },
+    {
+      "creator": "MBZUAI Institute of Foundation Models",
+      "name": "K2 Horizon MoVA 36B A4B",
+      "release_date": "2026-09-03",
+      "slug": "k2-mova-36b-mid5"
     },
     {
       "creator": "MBZUAI Institute of Foundation Models",

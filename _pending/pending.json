@@ -1,3 +1,48 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-0.9B",
+      "question": "Add newly released model 'k2-1b-final' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-1b-final",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-3.7B",
+      "question": "Add newly released model 'k2-4b-ph1' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-4b-ph1",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-7B",
+      "question": "Add newly released model 'k2-7b-ph2' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-7b-ph2",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - MBZUAI Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B",
+      "question": "Add newly released model 'k2-mova-36b-mid5' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-mova-36b-mid5",
+      "universe": null
+    }
+  ]
 }
