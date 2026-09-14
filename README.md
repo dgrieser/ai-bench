@@ -1683,7 +1683,7 @@ Four things read the list:
 
 | Where | What it does |
 | --- | --- |
-| `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a padlock beside them. A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
+| `llm.html` | Hides these rows until the **Closed models** checkbox is ticked — it sits at the right of the filter panel's head band, so it stays visible when the fields are folded away. Ticked, they filter, sort, count and export like any other row, with their names in teal and a padlock in front of them — leading, like the NEW sticker, and on every surface that names a model rather than in the table alone (see [The padlock](#the-padlock)). A model's own page and a comparison always offer them — no toggle there, since comparing against the frontier is what they are for. |
 | `llm-cli` | Same default, same reason. `--reference` includes them, marked `°`. |
 | `derive_indexes.py` | Nothing, by design: these rows are ranked with every other model. Hiding a row from the table does not take it out of the field the indexes measure against. See below. |
 | `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |
@@ -1692,6 +1692,46 @@ Four things read the list:
 `apply_reference_flags()` is what keeps the `reference` flag in `llm.json` in
 step with the list — `update.py` and `derive_indexes.py` both call it before
 they write.
+
+### The padlock
+
+Two things mark a closed row in `llm.html`: its name is set in teal, and a
+padlock stands in front of it. Only the second is load-bearing — a printout, a
+colour-blind reader or a forced-colours theme loses the teal — so the lock has
+to be on every surface that names a model, and it has to be read *before* the
+name rather than found after it. A mark that trails is a beat too late when what
+it says is "you cannot run this one", and in an ellipsised cell it is the first
+thing to be cut.
+
+Nine renderers name a model, and they now all carry it:
+
+| Surface | Renderer |
+| --- | --- |
+| A table row | `renderRow` |
+| The table's own model filter | `populateFilters` |
+| The "what's new" panel | `renderRecentModelName` |
+| A model's own page | `renderDetailHead` |
+| "A vs B" above a comparison | `renderCompareHead` |
+| The comparison chart's legend | `radarLegend` |
+| The comparison's details table | `renderCompareSpecs` |
+| The comparison's benchmark table | `renderCompareBenchTable` |
+| The comparison's model picker | `renderCompareMenuBody` |
+
+Name and lock are composed in exactly one place, `withReferenceLock()`, and
+`referenceTag()` — which draws the lock as an inline SVG, so it follows
+`currentColor` into both themes and needs no font — is called from nowhere else.
+That is what keeps the order from drifting: a renderer is never in a position to
+pick a side for the mark. `test_reference_lock.py` pins both halves, and fails on
+a tenth surface that names a model without going through the helper.
+
+One thing the lock replaced rather than joined: the comparison's model picker
+used to print the word `closed` in the column that shows every other row's
+creator. The lock makes that claim now, so the column says for a reference row
+what it says everywhere else.
+
+`llm-cli` is unchanged. It has no padlock to move — it marks a reference row
+with a trailing `°`, beside the trailing `*` a new model gets, and the two are a
+pair.
 
 ### Editing the list
 

@@ -47,8 +47,9 @@
          row as the ones around it and nothing else on the page says so. Teal
          because the three inks already spoken for are blue (--accent, links),
          red (--fresh-ink, new) and gold (the grouped-sort diamond); it clears
-         4.5:1 on --surface in both themes, and it is never the only cue — the
-         name also carries a padlock and the rows are hidden until asked for. */
+         4.5:1 on --surface in both themes, and it is never the only cue — a
+         padlock leads the name wherever one is shown, and the rows are hidden
+         until asked for. */
       --reference-ink: #0f766e;
       /* Comparison series: a neon ramp -- cyan, magenta, lime, amber, violet --
          spread roughly evenly around the wheel so no two sit next to each
@@ -4696,7 +4697,7 @@
           <span class="filters-eyebrow">Filters</span>
           <span class="filters-count" id="filtersCount" hidden></span>
         </button>
-        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden from the table by default; switch them on and they filter, sort and export like any other row, with their names in teal. A model's own page and a comparison always offer them.">
+        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden from the table by default; switch them on and they filter, sort and export like any other row, with a padlock in front of their names and the names themselves in teal. A model's own page and a comparison always offer them.">
           <input id="includeReference" type="checkbox">
           <span>Closed models</span>
         </label>
@@ -5584,12 +5585,16 @@
         const pickable = state.filters.includeReference
           ? state.data.models
           : openModels();
-        const modelNames = [...new Set(pickable.map((m) => m.name || "Unknown"))].sort((a, b) => a.localeCompare(b));
+        // This list picks by name rather than by model, so the model behind
+        // each name is looked up again for the padlock. Names are unique in
+        // llm.json, so the first match is the only match.
+        const byName = new Map(pickable.map((m) => [m.name || "Unknown", m]));
+        const modelNames = [...byName.keys()].sort((a, b) => a.localeCompare(b));
         ui.modelCompare.innerHTML = modelNames.map((name) => {
           const sel = state.filters.selectedModels.includes(name);
           return `<div class="model-compare-item${sel ? " selected" : ""}" data-value="${escapeHtml(name)}" role="option" aria-selected="${sel}">
             <span class="model-compare-check"></span>
-            <span>${escapeHtml(name)}</span>
+            ${withReferenceLock(byName.get(name), `<span>${escapeHtml(name)}</span>`)}
           </div>`;
         }).join("");
 
@@ -6070,9 +6075,9 @@
         return state.data.models.filter((model) => !isReferenceModel(model));
       }
 
-      // The mark beside a reference model's name, wherever one is named: a
-      // padlock, because it sits in a column of model names where a word would
-      // read as part of the name. Drawn rather than a glyph so it follows
+      // The mark in front of a reference model's name, wherever one is named:
+      // a padlock, because it sits among model names where a word would read
+      // as part of the name. Drawn rather than a glyph so it follows
       // currentColor into both themes and needs no font. It keeps its own
       // tooltip and an aria-label, since a lock on its own is a claim a reader
       // is entitled to see spelled out -- and the only thing a screen reader
@@ -6087,6 +6092,17 @@
           `<rect x="1.5" y="6" width="9" height="7" rx="1.6" fill="currentColor"/>` +
           `</svg>` +
           `</span>`;
+      }
+
+      // A model's name with its padlock, and the only place the two are put in
+      // that order. The lock *leads* the name, the way the NEW sticker does: a
+      // mark that follows is read after the thing it qualifies, which is a
+      // beat too late when what it says is "you cannot run this one" -- and in
+      // an ellipsised cell a trailing mark is the first thing to be cut. Every
+      // renderer that names a model goes through here, so no surface can end
+      // up with the lock on the wrong side, or without one.
+      function withReferenceLock(model, nameHtml) {
+        return (isReferenceModel(model) ? referenceTag() : "") + nameHtml;
       }
 
       function referenceModelCount() {
@@ -6674,13 +6690,14 @@
       }
 
       // A model's name as it appears in this panel: the same slip the table row
-      // carries, the same red when the model itself is the new thing, and the
-      // same destination — the model's detail page.
+      // carries, the same red when the model itself is the new thing, the same
+      // padlock when it is closed, and the same destination — the model's
+      // detail page.
       function renderRecentModelName(model, isNew) {
         const name = escapeHtml(model.name || "Unknown");
         const tip = tipAttrs(modelTipFields(model));
-        const className = `recent-model${isNew ? " model-new" : ""}`;
-        return `<a class="${className}" href="#model/${escapeAttr(modelSlug(model.name))}"${tip}>${name}</a>`;
+        const className = `recent-model${isNew ? " model-new" : ""}${isReferenceModel(model) ? " model-reference" : ""}`;
+        return withReferenceLock(model, `<a class="${className}" href="#model/${escapeAttr(modelSlug(model.name))}"${tip}>${name}</a>`);
       }
 
       // The chips for one entry: each benchmark, its value, and a link to the
@@ -7147,7 +7164,7 @@
 
         return `
           <tr>
-            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}${isReference ? ' model-reference' : ""}">${modelName}</a>${isReference ? referenceTag() : ""}</span></td>
+            <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${withReferenceLock(model, `<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}${isReference ? ' model-reference' : ""}">${modelName}</a>`)}</span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
             <td class="mono">${formatContext(model.context)}</td>
@@ -7564,7 +7581,7 @@
           <section class="detail-head">
             <div class="detail-head-main">
               <a class="detail-back" href="#">&larr; Leaderboard</a>
-              <h2 class="detail-name${isReferenceModel(model) ? " model-reference" : ""}">${isNew ? renderNewBadge(model.date_added) : ""}${escapeHtml(model.name || "Unknown")}${isReferenceModel(model) ? ` ${referenceTag()}` : ""}</h2>
+              <h2 class="detail-name${isReferenceModel(model) ? " model-reference" : ""}">${isNew ? renderNewBadge(model.date_added) : ""}${withReferenceLock(model, escapeHtml(model.name || "Unknown"))}</h2>
               <p class="detail-byline">${creatorUrl
                 ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
                 : creatorName}${added ? ` &middot; Added ${escapeHtml(added)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : ""}</p>
@@ -8138,7 +8155,7 @@
               `<line class="radar-line radar-series" data-series="${s.slot}" x1="1" y1="6" x2="25" y2="6"/>` +
               radarMarker(s.slot, 13, 6, 3.5) +
             `</svg>` +
-            `<a class="radar-legend-name" href="#model/${escapeAttr(encodeURIComponent(slug))}">${escapeHtml(name)}</a>` +
+            withReferenceLock(s.model, `<a class="radar-legend-name" href="#model/${escapeAttr(encodeURIComponent(slug))}">${escapeHtml(name)}</a>`) +
             `<span class="radar-legend-mean"${tipAttrs({ eyebrow: "Mean rank", title: name, body: meanTip })}>${meanText}</span>` +
             `<button type="button" class="radar-legend-x" data-action="compare-remove" data-slug="${escapeAttr(slug)}" aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
             `</li>`;
@@ -8464,11 +8481,10 @@
           return `<span class="compare-name-item">` +
             (slot ? `<span class="compare-vs">vs</span>` : "") +
             `${compareSwatch(slot)}` +
-            `<span class="compare-name-text">${escapeHtml(name)}</span>` +
             // The swatch already owns this name's colour here, so the teal
-            // would be a second claim on the same word: the tag carries it
+            // would be a second claim on the same word: the lock carries it
             // instead, which is the cue that works without colour anyway.
-            (isReferenceModel(model) ? referenceTag() : "") +
+            withReferenceLock(model, `<span class="compare-name-text">${escapeHtml(name)}</span>`) +
             `<button type="button" class="compare-name-x" data-action="compare-remove" data-slug="${escapeAttr(modelSlug(name))}"` +
             ` aria-label="${escapeAttr(`Drop ${name} from the comparison`)}">&times;</button>` +
             `</span>`;
@@ -8645,8 +8661,10 @@
             const disabled = !on && atMax;
             return `<button type="button" class="axis-menu-item${on ? " on" : ""}" data-action="compare-pick" data-slug="${escapeAttr(slug)}"${disabled ? " disabled" : ""}>` +
               `<span class="axis-menu-check" aria-hidden="true">&#10003;</span>` +
-              `<span class="axis-menu-name${isReferenceModel(model) ? " model-reference" : ""}">${escapeHtml(model.name || "Unknown")}</span>` +
-              `<span class="axis-menu-score">${escapeHtml(isReferenceModel(model) ? "closed" : creatorNameOf(model))}</span>` +
+              withReferenceLock(model, `<span class="axis-menu-name${isReferenceModel(model) ? " model-reference" : ""}">${escapeHtml(model.name || "Unknown")}</span>`) +
+              // The lock says "closed" now, so this column can say for a
+              // reference row what it says for every other one.
+              `<span class="axis-menu-score">${escapeHtml(creatorNameOf(model))}</span>` +
               `</button>`;
           }).join("");
 
@@ -8693,7 +8711,8 @@
         const heads = models.map((model, slot) => {
           const name = model.name || "Unknown";
           return `<th scope="col"><span class="compare-head-cell">${compareSwatch(slot)}` +
-            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span></th>`;
+            withReferenceLock(model, `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a>`) +
+            `</span></th>`;
         }).join("");
 
         const row = (label, cells) =>
@@ -8822,7 +8841,8 @@
         const heads = models.map((model, slot) => {
           const name = model.name || "Unknown";
           return `<th scope="col"><span class="compare-head-cell">${compareSwatch(slot)}` +
-            `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a></span></th>`;
+            withReferenceLock(model, `<a href="#model/${escapeAttr(encodeURIComponent(modelSlug(name)))}">${escapeHtml(name)}</a>`) +
+            `</span></th>`;
         }).join("");
 
         const rows = benchmarkKeysByCategory().map(({ category, keys }) => {
