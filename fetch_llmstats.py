@@ -20,7 +20,7 @@ it), and tools are worth a median +11.5 points on this benchmark -- so taking
 the flat field would blend two measurements a third of the way apart. See
 docs/hle-tool-mode-audit-2026-09.md.
 
-``resolve_hle_no_tools()`` therefore re-reads HLE per model from
+``resolve_tool_modes()`` therefore re-reads HLE per model from
 ``MODEL_URL``, where ``analysis_method`` says what was run, and emits it under
 the label ``hle (no tools)``:
 
@@ -31,6 +31,9 @@ the label ``hle (no tools)``:
     entirely. An unverified number is not a no-tools number.
 
 The bare ``hle`` label is never emitted, so it cannot be ingested by accident.
+The same pass holds the other no-tools columns llm-stats feeds -- AIME 2025,
+GPQA, MMMU-Pro, SciCode -- to a no-tools run, dropping only the entries whose
+``analysis_method`` says tools were used; see ``NO_TOOL_FIELDS``.
 """
 
 from __future__ import annotations
@@ -60,13 +63,70 @@ _SCORE_SUFFIX = "_score"
 # resolve_hle_no_tools() puts in its place.
 HLE_LABEL = "hle"
 HLE_NO_TOOLS_LABEL = "hle (no tools)"
-# llm-stats' benchmark_id for the full 2,500-question board. Its sibling
-# "hle-verified" is a different question set and never feeds hle_score.
-HLE_BENCHMARK_ID = "humanity\u2019s-last-exam".replace("\u2019", "'")
 
+# The other flat fields whose llm.json column is a no-tools column, mapped to
+# the detail board their analysis_method lives on. HLE gets the stricter
+# treatment above -- verify a no-tools run or publish nothing -- because its
+# population really is a coin flip: labs lead with the tools number and 38 of
+# 104 entries say so. On these four the no-tools run is the default and tools
+# are the exception that gets labelled, so rejecting the labelled exceptions is
+# proportionate and keeps the coverage. Today that rejects three AIME 2025
+# entries (nemotron-3-nano at 99.2 against a 89.1 no-tools run, and both Sarvam
+# models at 96.7 against a card reporting 88.3 "w/ Tools") and one MMMU-Pro
+# ("w/ python"). See docs/hle-tool-mode-audit-2026-09.md.
+NO_TOOL_FIELDS = {
+    "aime_2025": "aime-2025",
+    "gpqa": "gpqa-diamond",
+    "mmmu_pro": "mmmu-pro",
+    "scicode": "scicode",
+}
+
+# BrowseComp has no tool mode to police -- a browsing agent is the benchmark --
+# but it does have a scaffold, and two of them are not the default: a swarm of
+# agents, and an explicit context manager bolted onto one. Where a card reports
+# both, the gap is the same size as HLE's tool gap: Kimi K2.5 60.6 plain against
+# 74.9 with a context manager and 78.4 as a swarm, Step 3.5 Flash 51.6 against
+# 69.0, MiMo V2 Flash 45.4 against 58.3. Those are the runs to refuse.
+#
+# Context *compaction* is not context management: it is how a single agent
+# stays inside its window, which every long-horizon run does, so Claude Sonnet
+# 5 ("Single-agent ... context compaction at 200k tokens. Multi-agent reaches
+# 86.6%") keeps its 84.7 -- the note names the multi-agent number precisely
+# because it is not the one being reported.
+BROWSECOMP_FIELD = "browsecomp"
+BROWSECOMP_BENCHMARK_ID = "browsecomp"
+_NON_DEFAULT_SCAFFOLD_RE = re.compile(
+    r"\bagent swarm\b|\bswarm\b|\bmulti-?agent (?:setup|harness|system)\b"
+    r"|\bcontext manag(?:er|ement)\b",
+    re.IGNORECASE,
+)
+
+
+def non_default_scaffold(method: str | None) -> bool:
+    """True when the note says the run used a swarm or an explicit context manager."""
+    if not isinstance(method, str) or not method.strip():
+        return False
+    if re.search(r"\bsingle-?agent\b", method, re.IGNORECASE):
+        return False
+    return bool(_NON_DEFAULT_SCAFFOLD_RE.search(method))
+# llm-stats' benchmark_id for the full 2,500-question board, which is what
+# hle_score is drawn from. Its sibling "hle-verified" is a different question
+# set and never feeds it.
+HLE_BENCHMARK_ID = "humanity\u2019s-last-exam".replace("\u2019", "'")
+# And the board that is our column exactly: no tools, on the text-only subset,
+# which is the question set Artificial Analysis runs and 93% of the column is.
+# Where llm-stats has a model on this board its score is preferred outright --
+# the flat field is the full multimodal set, so a no-tools headline from it is
+# still a different question set, worth 2-3 points on the cards reporting both
+# (DeepSeek-V4.1-Flash: 36.8 full against 39.1 text-only).
+HLE_TEXT_ONLY_BENCHMARK_ID = HLE_BENCHMARK_ID + "-(no-tools,-text-only)"
+
+# A code interpreter is a tool, so the python spellings belong here too: it is
+# what separates MMMU-Pro "w/ python" from the run AA publishes.
 _WITH_TOOLS_RE = re.compile(
-    r"\bwith(?:\s+|-)(?:tools?|search|browsing|retrieval)\b"
-    r"|\bw/\s*tools?\b|\bsearch agent\b|\btool[- ]augmented\b",
+    r"\bwith(?:\s+|-)(?:tools?|search|browsing|retrieval|python)\b"
+    r"|\bw/\s*(?:tools?|python)\b|\bsearch agent\b|\btool[- ]augmented\b"
+    r"|\bcode (?:execution|interpreter)\b",
     re.IGNORECASE,
 )
 _NO_TOOLS_RE = re.compile(
@@ -87,29 +147,46 @@ def fetch_json(url: str, timeout: int = 60) -> object:
         return json.loads(resp.read().decode("utf-8", errors="replace"))
 
 
-def _hle_analysis_method(model_id: str, timeout: int = 30) -> str | None:
-    """The ``analysis_method`` llm-stats records for this model's HLE run.
+def _benchmark_entries(model_id: str, timeout: int = 30) -> dict[str, dict]:
+    """benchmark_id -> that board's entry, from one per-model request.
 
-    Returns None when the model has no HLE entry, when the entry carries no
-    method, or when the request fails -- all of which end the same way at the
-    call site: the score is dropped rather than guessed at.
+    The flat leaderboard endpoint drops this prose; it is the only place
+    llm-stats says how a score was produced. An empty result -- no entry, no
+    method, or a failed request -- ends the same way at every call site: the
+    score is dropped or kept on its own merits, never guessed at.
     """
     url = MODEL_URL.format(model_id=urllib.parse.quote(model_id, safe=""))
     try:
         payload = fetch_json(url, timeout=timeout)
     except (urllib.error.URLError, OSError, ValueError) as exc:
-        print(f"warning: {model_id}: HLE detail fetch failed: {exc}", file=sys.stderr)
-        return None
+        print(f"warning: {model_id}: detail fetch failed: {exc}", file=sys.stderr)
+        return {}
     if not isinstance(payload, dict):
-        return None
+        return {}
+    out: dict[str, dict] = {}
     for entry in payload.get("benchmarks") or []:
         if not isinstance(entry, dict):
             continue
-        if entry.get("benchmark_id") != HLE_BENCHMARK_ID:
-            continue
-        method = entry.get("analysis_method")
-        return method if isinstance(method, str) and method.strip() else None
-    return None
+        bid = entry.get("benchmark_id")
+        if isinstance(bid, str):
+            out.setdefault(bid, entry)
+    return out
+
+
+def _method(entries: dict[str, dict], bid: str) -> str | None:
+    m = (entries.get(bid) or {}).get("analysis_method")
+    return m if isinstance(m, str) and m.strip() else None
+
+
+def used_tools(method: str | None) -> bool:
+    """True when the note says tools were used and does not also deny it.
+
+    A note naming both modes describes two runs; it is handled where the
+    headline's mode matters, not here.
+    """
+    if not isinstance(method, str) or not method.strip():
+        return False
+    return bool(_WITH_TOOLS_RE.search(method)) and not bool(_NO_TOOLS_RE.search(method))
 
 
 def hle_no_tools_score(headline: float, method: str | None) -> float | None:
@@ -138,35 +215,58 @@ def hle_no_tools_score(headline: float, method: str | None) -> float | None:
     return None
 
 
-def resolve_hle_no_tools(results: list[dict], timeout: int = 30) -> None:
-    """Replace every record's raw ``hle`` label with a verified ``hle (no tools)``.
+def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
+    """Hold every no-tools column to a no-tools run. Mutates ``results``.
 
-    Mutates ``results`` in place. Only models carrying an HLE score are looked
-    up, so this costs one extra request per scored model rather than per model.
+    HLE is republished as a verified ``hle (no tools)`` or not at all; the other
+    no-tools fields keep their label and lose only the entries whose note says
+    tools were used. One request per model that carries any gated score, not one
+    per model.
     """
-    scored = [r for r in results if r["scores"].get(HLE_LABEL) is not None]
+    gated = (HLE_LABEL, *NO_TOOL_FIELDS, BROWSECOMP_FIELD)
+    scored = [r for r in results if any(r["scores"].get(f) is not None for f in gated)]
     if scored:
-        print(
-            f"Resolving HLE tool mode for {len(scored)} model(s) ...",
-            file=sys.stderr,
-        )
-    kept = 0
+        print(f"Resolving tool mode for {len(scored)} model(s) ...", file=sys.stderr)
+    hle_seen = hle_kept = rejected = 0
     for record in results:
+        if not any(record["scores"].get(f) is not None for f in gated):
+            continue
+        entries = _benchmark_entries(record["model"], timeout=timeout)
+
         headline = record["scores"].pop(HLE_LABEL, None)
-        if headline is None:
-            continue
-        method = _hle_analysis_method(record["model"], timeout=timeout)
-        value = hle_no_tools_score(headline, method)
-        if value is None:
-            continue
-        record["scores"][HLE_NO_TOOLS_LABEL] = value
-        kept += 1
+        exact = (entries.get(HLE_TEXT_ONLY_BENCHMARK_ID) or {}).get("score")
+        if not isinstance(exact, (int, float)) or isinstance(exact, bool):
+            exact = None
+        # The exact board is worth publishing even where the flat field is null,
+        # which costs nothing: these details are already fetched.
+        if headline is not None or exact is not None:
+            hle_seen += 1
+            value = float(exact) if exact is not None else hle_no_tools_score(
+                headline, _method(entries, HLE_BENCHMARK_ID)
+            )
+            if value is not None:
+                record["scores"][HLE_NO_TOOLS_LABEL] = value
+                hle_kept += 1
+
+        for field, board in NO_TOOL_FIELDS.items():
+            if record["scores"].get(field) is None:
+                continue
+            if used_tools(_method(entries, board)):
+                del record["scores"][field]
+                rejected += 1
+
+        if record["scores"].get(BROWSECOMP_FIELD) is not None and non_default_scaffold(
+            _method(entries, BROWSECOMP_BENCHMARK_ID)
+        ):
+            del record["scores"][BROWSECOMP_FIELD]
+            rejected += 1
     if scored:
         print(
-            f"  kept {kept} of {len(scored)} as no-tools runs; "
-            f"dropped {len(scored) - kept} run with tools or not stated",
+            f"  HLE: kept {hle_kept} of {hle_seen} as no-tools runs; "
+            f"dropped {hle_seen - hle_kept} run with tools or not stated",
             file=sys.stderr,
         )
+        print(f"  other gated columns: dropped {rejected} run with tools or a non-default scaffold", file=sys.stderr)
 
 
 def get_scores(resolve_hle: bool = True) -> list[dict]:
@@ -177,10 +277,10 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
     None when the record carries no licence. Records without any non-null score
     are dropped.
 
-    ``resolve_hle`` re-reads HLE per model so only verified no-tools runs are
-    published, under the label ``hle (no tools)``; see the module docstring. It
-    costs one request per model carrying an HLE score, so callers that only
-    want model ids or licences turn it off.
+    ``resolve_hle`` re-reads the tool-mode-sensitive columns per model so only
+    no-tools runs are published; see the module docstring. It costs one request
+    per model carrying a gated score, so callers that only want model ids or
+    licences turn it off.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     payload = fetch_json(URL)
@@ -215,8 +315,15 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
         )
 
     if resolve_hle:
-        resolve_hle_no_tools(results)
-        results = [r for r in results if r["scores"]]
+        resolve_tool_modes(results)
+    else:
+        # The gated columns only exist in a publishable form once the tool mode
+        # is known, so the cheap path drops them rather than letting an
+        # unverified number out by a different door.
+        for record in results:
+            for field in (HLE_LABEL, *NO_TOOL_FIELDS, BROWSECOMP_FIELD):
+                record["scores"].pop(field, None)
+    results = [r for r in results if r["scores"]]
 
     results.sort(key=lambda r: r["model"])
     return results
@@ -242,8 +349,8 @@ def parse_args() -> argparse.Namespace:
         "--no-hle-detail",
         action="store_true",
         help=(
-            "Skip the per-model HLE tool-mode lookup and drop the column instead. "
-            "For callers that only need model ids or licences."
+            "Skip the per-model tool-mode lookup, dropping the gated columns "
+            "instead. For callers that only need model ids or licences."
         ),
     )
     return parser.parse_args()

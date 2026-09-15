@@ -93,6 +93,19 @@ class TestNoWithToolsLabelIsMapped(unittest.TestCase):
             "HLE-Full (w/ tools)",
             "HLE-Verified¹",
             "cais/hle (with tools)",
+            # Parked in the provenance pass: each had produced a stored value
+            # that was not this column's measurement.
+            "ZeroBench (Pass@5)",
+            "BrowseComp Top100",
+            "BrowseComp+ (OpenClaw)",
+            "BrowseComp (\u226410 searches)",
+            "open-agent-leaderboard/results (browsecomp_plus)",
+            "AIME 25 (w/ Tools)",
+            "AIME25 (with tools)",
+            "AIME 2026 I",
+            "MMLU-Pro (EM)",
+            "IFBench (prompt)",
+            "IFBench (loose)",
         ):
             with self.subTest(label=label):
                 self.assertEqual(mapping.get(label), "__unmappable__")
@@ -109,6 +122,111 @@ class TestNoWithToolsLabelIsMapped(unittest.TestCase):
         # fetch_llmstats never emits it any more; parked so that a shape change
         # upstream reinstating it is refused rather than ingested.
         self.assertEqual(load(LLMSTATS_MAPPING).get("hle"), "__unmappable__")
+
+
+class TestNoMappedLabelContradictsItsColumn(unittest.TestCase):
+    """The general rule the individual parkings are instances of.
+
+    A label is a claim about what was run. These are the claims that cannot be
+    true of the column they were mapped onto, checked over the whole mapping so
+    a future card's spelling is caught on the way in rather than after it has
+    filled a cell.
+    """
+
+    # Columns llm.json defines as no-tools runs.
+    NO_TOOL_COLUMNS = {
+        "hle", "aime_2025", "aime_2026", "gpqa_diamond", "mmlu_pro", "mmmu_pro",
+        "scicode", "zerobench", "charxiv_reasoning", "mathvista_mini", "critpt",
+    }
+    TOOLS = re.compile(
+        r"w/\s*(?:tools?|python)|with\s+tools?|with\s+search|search\s+agent"
+        r"|tool[- ]augmented|code interpreter",
+        re.IGNORECASE,
+    )
+    # A maximum over harnesses is not a measurement of one.
+    BEST_OF = re.compile(r"best[- ]reported|best[- ]of\b|\b4\*10\b", re.IGNORECASE)
+
+    def test_no_tools_columns_take_no_tools_labels(self) -> None:
+        for label, key in load(HF_MAPPING).items():
+            if key not in self.NO_TOOL_COLUMNS:
+                continue
+            with self.subTest(label=label, column=key):
+                self.assertIsNone(self.TOOLS.search(label))
+
+    def test_no_column_takes_a_best_over_configurations_label(self) -> None:
+        for label, key in load(HF_MAPPING).items():
+            if key.startswith("__"):
+                continue
+            with self.subTest(label=label, column=key):
+                self.assertIsNone(self.BEST_OF.search(label))
+
+    def test_the_provenance_parkings_hold(self) -> None:
+        mapping = load(HF_MAPPING)
+        for label in (
+            # a different question set
+            "GPQA", "MMMU", "MMMU-PRO (Vision Only)", "Toolathlon", "OSWorld",
+            "\u03c4\u00b3-bench",
+            # a different date window on a versioned benchmark
+            "LiveCodeBench (2408-2505)", "LiveCodeBench *(24/8~25/5)",
+            "LiveCodeBench (8/1/24-2/1/25) (Avg@4)", "LiveCodeBench (8/1/24\u20132/1/25)",
+            # a different metric or estimator
+            "MMMU-Pro (EM)", "SciCode (subtask)", "SciCode (sub/main)",
+            "SWE-Bench Verified (AgentLess 4*10)",
+            "Terminal Bench 2.1 (Best Reported Harness)",
+            # tools on a no-tools column
+            "GPQA (with tools)",
+            # a scaffold the benchmark does not default to
+            "BrowseComp (Agent Swarm)", "BrowseComp (w/ Context Manager)",
+            "BrowseComp (w/ Context Manage)", "BrowseComp (w/ctx manage)",
+            # a harness other than the column's leading source's
+            "Terminal-Bench 2.1 (Claude Code)", "Terminal-Bench 4.0 (Claude Code)",
+            "Terminal-Bench 4.0 (Terminus-2)",
+            # ambiguous, and it disagrees with AA
+            "Telecom",
+            # scale-unsafe: Ministral cards report it 0-1
+            "LiveCodeBench",
+        ):
+            with self.subTest(label=label):
+                self.assertEqual(mapping.get(label), "__unmappable__")
+
+    def test_the_spellings_that_do_name_the_column_survive(self) -> None:
+        # Parking must not have taken the ordinary labels with it.
+        mapping = load(HF_MAPPING)
+        for label, key in (
+            ("GPQA Diamond", "gpqa_diamond"), ("GPQA (no tools)", "gpqa_diamond"),
+            ("MMMU-Pro", "mmmu_pro"), ("MMMU-PRO (10 choice)", "mmmu_pro"),
+            ("SciCode", "scicode"), ("SciCode (wbg)", "scicode"),
+            ("LiveCodeBench v6", "livecodebench"), ("BrowseComp", "browsecomp"),
+            ("Toolathlon-Verified", "toolathlon"), ("OSWorld-Verified", "osworld_verified"),
+            ("Terminal-Bench 2.1 (Terminus-2)", "terminal_bench_2_1"),
+            ("\u03c4\u00b3-Banking", "tau3_bench_banking"),
+        ):
+            with self.subTest(label=label):
+                self.assertEqual(mapping.get(label), key)
+
+
+class TestBrowseCompScaffold(unittest.TestCase):
+    """BrowseComp has no tool mode to police -- the agent is the benchmark --
+    but a swarm and a bolted-on context manager are not the default, and the
+    gap is HLE-sized."""
+
+    def test_a_swarm_or_a_context_manager_is_refused(self) -> None:
+        for method in ("Agent Swarm", "With Context Management",
+                       "With Context Manager", "with context management"):
+            with self.subTest(method=method):
+                self.assertTrue(fetch_llmstats.non_default_scaffold(method))
+
+    def test_compaction_inside_one_agent_is_not(self) -> None:
+        # Claude Sonnet 5's note names the multi-agent number precisely because
+        # it is not the one being reported; Kimi K3 compacts within one agent.
+        for method in (
+            "Agentic search. Single-agent with web search, web fetch, code "
+            "execution, context compaction at 200k tokens. Multi-agent reaches 86.6%.",
+            "Context compaction at 300K tokens; max reasoning effort",
+            "Agentic search.", "Pass@1", "", None,
+        ):
+            with self.subTest(method=method):
+                self.assertFalse(fetch_llmstats.non_default_scaffold(method))
 
 
 class TestHuggingFaceNotes(unittest.TestCase):
@@ -187,6 +305,19 @@ class TestHuggingFaceNotes(unittest.TestCase):
 class TestLlmStatsResolution(unittest.TestCase):
     """Door three: one `hle_score` field over three different measurements."""
 
+    @staticmethod
+    def _run(payload, detail_for):
+        def fake_fetch_json(url, timeout=60):
+            if url == fetch_llmstats.URL:
+                return payload
+            return detail_for(url.rsplit("/", 1)[-1])
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = fake_fetch_json
+        try:
+            return {r["model"]: r["scores"] for r in fetch_llmstats.get_scores()}
+        finally:
+            fetch_llmstats.fetch_json = original
+
     def test_a_no_tools_note_keeps_the_headline(self) -> None:
         self.assertEqual(
             fetch_llmstats.hle_no_tools_score(0.252, "text-only, without tools"), 0.252
@@ -259,6 +390,72 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertAlmostEqual(by_model["both-modes-model"]["hle (no tools)"], 0.432)
         # Nothing left to report once its one score is refused.
         self.assertNotIn("unstated-model", by_model)
+
+    def test_the_exact_board_wins_over_the_flat_field(self) -> None:
+        # llm-stats runs a board that IS this column -- no tools, text-only --
+        # and the flat field is the full multimodal set even when its note says
+        # no tools, which is a different question set worth 2-3 points.
+        payload = [{"model_id": "m", "license": "mit", "hle_score": 0.368}]
+        detail = {"benchmarks": [
+            {"benchmark_id": fetch_llmstats.HLE_BENCHMARK_ID,
+             "analysis_method": "full multimodal evaluation, no tools", "score": 0.368},
+            {"benchmark_id": fetch_llmstats.HLE_TEXT_ONLY_BENCHMARK_ID,
+             "analysis_method": "text-only subset, no tools", "score": 0.391},
+        ]}
+        got = self._run(payload, lambda _mid: detail)
+        self.assertAlmostEqual(got["m"]["hle (no tools)"], 0.391)
+
+    def test_the_exact_board_is_published_without_a_flat_score(self) -> None:
+        # Free: the detail request has already been made for this model.
+        payload = [{"model_id": "m", "license": "mit", "gpqa_score": 0.9}]
+        detail = {"benchmarks": [
+            {"benchmark_id": fetch_llmstats.HLE_TEXT_ONLY_BENCHMARK_ID,
+             "analysis_method": "No tools, text-only", "score": 0.434},
+        ]}
+        got = self._run(payload, lambda _mid: detail)
+        self.assertAlmostEqual(got["m"]["hle (no tools)"], 0.434)
+
+    def test_the_other_no_tools_columns_reject_a_tools_run(self) -> None:
+        # Same defect as HLE, smaller: three AIME 2025 entries and one MMMU-Pro
+        # on the live board say tools were used.
+        payload = [{"model_id": "m", "license": "mit",
+                    "aime_2025_score": 0.967, "mmmu_pro_score": 0.801,
+                    "scicode_score": 0.5, "gpqa_score": 0.9}]
+        detail = {"benchmarks": [
+            {"benchmark_id": "aime-2025", "analysis_method": "With tools"},
+            {"benchmark_id": "mmmu-pro", "analysis_method": "w/ python"},
+            {"benchmark_id": "scicode", "analysis_method": "no tools"},
+            {"benchmark_id": "gpqa-diamond", "analysis_method": "Accuracy"},
+        ]}
+        got = self._run(payload, lambda _mid: detail)
+        self.assertNotIn("aime_2025", got["m"])
+        self.assertNotIn("mmmu_pro", got["m"])
+        # A silent note is not a tools note: these columns keep their coverage.
+        self.assertEqual(got["m"]["scicode"], 0.5)
+        self.assertEqual(got["m"]["gpqa"], 0.9)
+
+    def test_used_tools_reads_a_code_interpreter_as_a_tool(self) -> None:
+        for method in ("w/ python", "with python", "code execution", "code interpreter"):
+            with self.subTest(method=method):
+                self.assertTrue(fetch_llmstats.used_tools(method))
+        for method in ("no tools", "Pass@1", "", None):
+            with self.subTest(method=method):
+                self.assertFalse(fetch_llmstats.used_tools(method))
+
+    def test_skipping_the_lookup_drops_the_gated_columns(self) -> None:
+        # The cheap path must not become a second door for an unverified number.
+        payload = [{"model_id": "m", "license": "mit", "hle_score": 0.6,
+                    "aime_2025_score": 0.9, "swe_bench_verified_score": 0.7}]
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = lambda url, timeout=60: payload
+        try:
+            results = fetch_llmstats.get_scores(resolve_hle=False)
+        finally:
+            fetch_llmstats.fetch_json = original
+        scores = results[0]["scores"]
+        self.assertNotIn("hle", scores)
+        self.assertNotIn("aime_2025", scores)
+        self.assertEqual(scores["swe_bench_verified"], 0.7)
 
     def test_the_benchmark_id_is_the_full_board(self) -> None:
         # Its sibling "hle-verified" is a different question set; reading it
