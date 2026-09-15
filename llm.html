@@ -350,6 +350,42 @@
       }
     }
 
+    /* The same band once more, a row down: the hardware someone already owns
+       rather than a plan they would rent. Stacked under the tier strip it pulls
+       up over the grid's row gap (.controls' own 16px) and drops its top border,
+       so the two meet on the one line the band above draws and read as a single
+       block of shortcuts rather than two panels. */
+    .presets-devices.is-stacked {
+      margin-top: -16px;
+      border-top: 0;
+    }
+
+    /* The tier band leads with a wordmark; this one has no brand to carry, so a
+       plain eyebrow in the Filters row's own stamp says what the chips are. */
+    .presets-eyebrow {
+      flex: none;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Device chips carry a name rather than a tier letter, so the label sits in
+       the UI face at the spec's size instead of the mono tier stamp. */
+    .preset-name {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .preset-chip.is-active .preset-name {
+      color: var(--accent);
+    }
+
     /* ── Controls ─────────────────────────────────── */
 
     /* ── Filters panel (collapsible) ──────────────── */
@@ -4735,6 +4771,16 @@
         <div class="presets-chips" id="presetChips" role="group" aria-label="mittwald hosting tier presets"></div>
         <p class="presets-note" id="presetsNote"></p>
       </div>
+      <!-- Device presets: the same shortcut pointed the other way — hardware
+           someone already has rather than a plan they would rent, from a
+           desk-side Spark down to a phone. Some chips name a card out of
+           gpu.json, the unified-memory ones a flat VRAM figure; either way all
+           they do is fill the fields below. -->
+      <div class="presets presets-devices" id="devicePresets" hidden>
+        <span class="presets-eyebrow">Run it yourself</span>
+        <div class="presets-chips" id="devicePresetChips" role="group" aria-label="Local hardware presets"></div>
+        <p class="presets-note" id="devicePresetsNote"></p>
+      </div>
       <div class="gpu-fields" id="gpuBar" hidden aria-label="GPU VRAM filter">
         <div class="field">
           <label for="gpuVendor">GPU Vendor</label>
@@ -4910,7 +4956,8 @@
           reserve: 0,
           activeIndex: -1,
           eventsBound: false,
-          presetsBound: false
+          presetsBound: false,
+          devicePresetsBound: false
         }
       };
 
@@ -5029,6 +5076,9 @@
         hostingPresets: document.getElementById("hostingPresets"),
         presetChips: document.getElementById("presetChips"),
         presetsNote: document.getElementById("presetsNote"),
+        devicePresets: document.getElementById("devicePresets"),
+        devicePresetChips: document.getElementById("devicePresetChips"),
+        devicePresetsNote: document.getElementById("devicePresetsNote"),
         gpuBar: document.getElementById("gpuBar"),
         gpuVendor: document.getElementById("gpuVendor"),
         gpuModel: document.getElementById("gpuModel"),
@@ -6041,6 +6091,7 @@
         ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn || referenceOn);
         updateReserveHint();
         syncHostingPresets();
+        syncDevicePresets();
 
         // Active-constraint count, surfaced in the toggle bar when collapsed.
         const activeCount = [searchOn, compareOn, benchmarksOn, addedOn, sortOn, gpuOn || vendorOn || reserveOn].filter(Boolean).length;
@@ -8912,6 +8963,7 @@
         ui.gpuBar.hidden = false;
         ui.controls.classList.add("has-gpu");
         initHostingPresets();
+        initDevicePresets();
         updateFilterColumns();
         if (!state.gpu.eventsBound) {
           bindGpuEvents();
@@ -9007,6 +9059,181 @@
         }
         ui.presetChips.querySelectorAll(".preset-chip").forEach((chip) => {
           const active = hostingPresetActive(Number(chip.dataset.cards));
+          chip.classList.toggle("is-active", active);
+          chip.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+
+      // ── Device presets ───────────────────────────────────────────────
+
+      // The same shortcut aimed at hardware someone already owns, so "does this
+      // model fit on the thing in front of me" is one click as well. An entry
+      // either names a card in gpu.json (vendor + model + count), or carries a
+      // flat `vram` figure for the devices the catalogue has no card for —
+      // unified-memory machines, where the pool is the whole story. The flat
+      // ones land in the filter by exactly the path a hand-typed VRAM figure
+      // takes, so nothing downstream can tell the difference.
+      const DEVICE_PRESETS = [
+        {
+          key: "spark",
+          name: "DGX Spark",
+          vendor: "NVIDIA",
+          gpu: "GB10 (Project DIGITS)",
+          cards: 1,
+          tip: "NVIDIA's desk-side Grace Blackwell box — 128 GB of unified memory the GPU addresses as its own, which is what puts a 100B-class model on a desk."
+        },
+        {
+          key: "mac-mini",
+          name: "Mac mini",
+          vram: 64,
+          note: "M4 Pro · 64 GB unified",
+          tip: "A top-specified Mac mini. Apple silicon shares one memory pool between CPU and GPU, and macOS keeps a slice of it for itself — Reserve is where you say how much."
+        },
+        {
+          key: "gaming-pc",
+          name: "Gaming PC",
+          vendor: "NVIDIA",
+          gpu: "RTX 5090",
+          cards: 1,
+          tip: "One current-generation consumer flagship in a desktop — 32 GB, the most VRAM a single gaming card carries."
+        },
+        {
+          key: "old-gpu",
+          name: "Old GPU",
+          vendor: "NVIDIA",
+          gpu: "RTX 3050 (8 GB)",
+          cards: 1,
+          tip: "An entry-level card a couple of generations back, and 8 GB with it — which is still what most GPUs sitting under desks have."
+        },
+        {
+          key: "phone",
+          name: "Phone",
+          vram: 4,
+          note: "flagship handset, ~4 GB free",
+          tip: "What a flagship phone can actually hand a model: a few GB out of the 12–16 GB it shares with everything else running. This is the ceiling the phone-sized models are built to."
+        }
+      ];
+
+      function devicePresetGpu(preset) {
+        if (!preset.gpu) {
+          return null;
+        }
+        return state.gpu.list.find((gpu) =>
+          gpu.manufacturer === preset.vendor && gpu.model === preset.gpu) || null;
+      }
+
+      // The budget a chip stands for: the card's VRAM times its count, or the
+      // flat figure a catalogue-less device carries.
+      function devicePresetBudget(preset) {
+        const gpu = devicePresetGpu(preset);
+        if (gpu) {
+          return gpu.vram_gb * clampGpuCount(preset.cards || 1);
+        }
+        return Number.isFinite(preset.vram) && preset.vram > 0 ? preset.vram : null;
+      }
+
+      // Card-backed chips are rendered from gpu.json the way the tier chips
+      // are, so the catalogue stays the one source of the totals — and a chip
+      // whose card is not in it is dropped rather than offered as a preset that
+      // cannot be applied.
+      function initDevicePresets() {
+        if (!ui.devicePresets || !ui.devicePresetChips) {
+          return;
+        }
+        const entries = DEVICE_PRESETS
+          .map((preset) => ({ preset, budget: devicePresetBudget(preset) }))
+          .filter((entry) => entry.budget);
+        if (!entries.length) {
+          ui.devicePresets.hidden = true;
+          return;
+        }
+        ui.devicePresetChips.innerHTML = entries.map(({ preset, budget }) => {
+          const gpu = devicePresetGpu(preset);
+          const cards = clampGpuCount(preset.cards || 1);
+          const source = gpu
+            ? `${cards > 1 ? `${cards} × ` : ""}${gpu.manufacturer} ${gpu.model}`
+            : preset.note;
+          const tip = `${preset.tip} Sets the GPU filter to ${source} — a VRAM budget of ${formatGb(budget)} GB. Click again to clear it.`;
+          return `<button type="button" class="preset-chip" data-preset="${escapeHtml(preset.key)}" aria-pressed="false" data-tip-title="${escapeHtml(preset.name)}" data-tip="${escapeHtml(tip)}">
+            <span class="preset-name">${escapeHtml(preset.name)}</span>
+            <span class="preset-spec">${escapeHtml(`${formatGb(budget)} GB`)}</span>
+          </button>`;
+        }).join("");
+        ui.devicePresetsNote.textContent = "Unified memory is shared with the OS — trim it with Reserve";
+        ui.devicePresets.hidden = false;
+        // One line between the two bands, not two: the strip above draws it
+        // whenever it is there to draw.
+        ui.devicePresets.classList.toggle("is-stacked", Boolean(ui.hostingPresets) && !ui.hostingPresets.hidden);
+
+        if (!state.gpu.devicePresetsBound) {
+          ui.devicePresetChips.addEventListener("click", (event) => {
+            const chip = event.target.closest(".preset-chip");
+            if (chip) {
+              applyDevicePreset(chip.dataset.preset);
+            }
+          });
+          state.gpu.devicePresetsBound = true;
+        }
+        syncDevicePresets();
+      }
+
+      function applyDevicePreset(key) {
+        const preset = DEVICE_PRESETS.find((entry) => entry.key === key);
+        if (!preset || !devicePresetBudget(preset)) {
+          return;
+        }
+        if (devicePresetActive(preset)) {
+          gpuResetBar();
+          applyAndRender();
+          return;
+        }
+        const gpu = devicePresetGpu(preset);
+        if (gpu) {
+          // As in applyHostingPreset: the count goes in directly so gpuSelect
+          // derives the budget from it and renders once, not twice.
+          state.gpu.count = clampGpuCount(preset.cards || 1);
+          ui.gpuCount.value = String(state.gpu.count);
+          setGpuCountDisabled(false);
+          gpuSelect(gpu);
+          return;
+        }
+        // No card to point at: the same state the VRAM box leaves behind when a
+        // figure is typed into it by hand, set here instead of typed.
+        state.gpu.custom = true;
+        state.gpu.selected = null;
+        state.gpu.vendor = "custom";
+        state.gpu.count = 1;
+        ui.gpuVendor.value = "custom";
+        ui.gpuModel.value = "";
+        ui.gpuCount.value = "1";
+        ui.gpuVram.value = String(preset.vram);
+        setGpuCountDisabled(true);
+        closeGpuList();
+        gpuSetBudget(preset.vram);
+      }
+
+      // Armed only while the filter still holds what the chip put there, so
+      // editing the fields by hand unarms it — and a custom device is judged on
+      // its budget, since that is all it ever set.
+      function devicePresetActive(preset) {
+        if (!state.gpu.budget) {
+          return false;
+        }
+        const gpu = devicePresetGpu(preset);
+        if (gpu) {
+          return state.gpu.selected?.model === gpu.model
+            && state.gpu.count === clampGpuCount(preset.cards || 1);
+        }
+        return state.gpu.custom && state.gpu.budget === preset.vram;
+      }
+
+      function syncDevicePresets() {
+        if (!ui.devicePresetChips) {
+          return;
+        }
+        ui.devicePresetChips.querySelectorAll(".preset-chip").forEach((chip) => {
+          const preset = DEVICE_PRESETS.find((entry) => entry.key === chip.dataset.preset);
+          const active = Boolean(preset) && devicePresetActive(preset);
           chip.classList.toggle("is-active", active);
           chip.setAttribute("aria-pressed", active ? "true" : "false");
         });
