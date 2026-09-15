@@ -5,6 +5,17 @@
       "default": null,
       "if_previous": null,
       "note": null,
+      "question": "Which llm.json model is llm-stats id 'atria-dawn-preview'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "atria-dawn-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
       "question": "Map Vals AI path 'inception/mercury-2.5' to llm.json model",
       "route": "update_vals_mapping.py",
       "route_kind": "mapping",
