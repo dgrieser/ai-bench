@@ -634,9 +634,10 @@
       "name": "Humanity's Last Exam",
       "short_name": "HLE",
       "category": "Reasoning & Knowledge",
-      "description": "Humanity's Last Exam: multi-modal benchmark with 2,500 expert-level questions across many subjects, designed to resist internet retrieval.",
+      "description": "Humanity's Last Exam, run without tools: 2,500 expert-level questions across mathematics, the humanities and the natural sciences, written to resist internet retrieval. This column is the no-tools variant only. Tool use changes the answer rather than sharpening it -- across the models whose publisher states both, search and a code interpreter are worth a median +11.5 points and up to +27 -- so with-tools and search-agent runs are rejected rather than blended in here. Most values are Artificial Analysis' own run of the 2,158-question text-only subset, pass@1, and track AA's current implementation of it.",
       "urls": [
-        "https://lastexam.ai/"
+        "https://lastexam.ai/",
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
     },
     "mmlu_pro": {
@@ -726,7 +727,7 @@
       "scores": {
         "coding_index": 44247,
         "tooling_index": 44566,
-        "knowledge_index": 30268,
+        "knowledge_index": 30284,
         "vision_index": null,
         "trust_index": 46655,
         "aa_intelligence_index": 9.4,
@@ -782,7 +783,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -913,7 +914,7 @@
       "scores": {
         "coding_index": 41896,
         "tooling_index": 42965,
-        "knowledge_index": 20686,
+        "knowledge_index": 20699,
         "vision_index": 27033,
         "trust_index": 32490,
         "aa_intelligence_index": 8.4,
@@ -969,7 +970,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -1100,7 +1101,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33620,
+        "knowledge_index": 33697,
         "vision_index": 34863,
         "trust_index": 30828,
         "aa_intelligence_index": 14.9,
@@ -1156,7 +1157,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -1287,7 +1288,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 64752,
+        "knowledge_index": 64879,
         "vision_index": null,
         "trust_index": 48883,
         "aa_intelligence_index": 17,
@@ -1343,7 +1344,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -1474,7 +1475,7 @@
       "scores": {
         "coding_index": 40290,
         "tooling_index": null,
-        "knowledge_index": 57354,
+        "knowledge_index": 57468,
         "vision_index": null,
         "trust_index": 60027,
         "aa_intelligence_index": 22.8,
@@ -1530,7 +1531,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -1661,7 +1662,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 25116,
+        "knowledge_index": 25138,
         "vision_index": null,
         "trust_index": 44365,
         "aa_intelligence_index": 9.6,
@@ -1717,7 +1718,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -1848,7 +1849,7 @@
       "scores": {
         "coding_index": 44482,
         "tooling_index": 39507,
-        "knowledge_index": 40696,
+        "knowledge_index": 40802,
         "vision_index": null,
         "trust_index": 27369,
         "aa_intelligence_index": 10.1,
@@ -1904,7 +1905,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2035,7 +2036,7 @@
       "scores": {
         "coding_index": 38974,
         "tooling_index": 25591,
-        "knowledge_index": 36857,
+        "knowledge_index": 36939,
         "vision_index": null,
         "trust_index": 45655,
         "aa_intelligence_index": 9.8,
@@ -2091,7 +2092,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2222,7 +2223,7 @@
       "scores": {
         "coding_index": 46215,
         "tooling_index": 32174,
-        "knowledge_index": 53088,
+        "knowledge_index": 53187,
         "vision_index": null,
         "trust_index": 51321,
         "aa_intelligence_index": 11.2,
@@ -2278,7 +2279,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2409,7 +2410,7 @@
       "scores": {
         "coding_index": 57302,
         "tooling_index": 57247,
-        "knowledge_index": 67479,
+        "knowledge_index": 67616,
         "vision_index": 69585,
         "trust_index": 63317,
         "aa_intelligence_index": 19.1,
@@ -2465,7 +2466,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2596,7 +2597,7 @@
       "scores": {
         "coding_index": 52516,
         "tooling_index": 61653,
-        "knowledge_index": 59628,
+        "knowledge_index": 59757,
         "vision_index": 50206,
         "trust_index": 61225,
         "aa_intelligence_index": 16.2,
@@ -2652,7 +2653,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2783,7 +2784,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 57896,
-        "knowledge_index": 58613,
+        "knowledge_index": 58739,
         "vision_index": 56136,
         "trust_index": 67137,
         "aa_intelligence_index": 22.9,
@@ -2839,7 +2840,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -2970,7 +2971,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 52359,
-        "knowledge_index": 54773,
+        "knowledge_index": 54889,
         "vision_index": 38432,
         "trust_index": 60140,
         "aa_intelligence_index": 19.3,
@@ -3026,7 +3027,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -3157,7 +3158,7 @@
       "scores": {
         "coding_index": 45706,
         "tooling_index": 48351,
-        "knowledge_index": 43491,
+        "knowledge_index": 43605,
         "vision_index": 30774,
         "trust_index": 53484,
         "aa_intelligence_index": 13.7,
@@ -3213,7 +3214,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -3344,7 +3345,7 @@
       "scores": {
         "coding_index": 41543,
         "tooling_index": 44993,
-        "knowledge_index": 40921,
+        "knowledge_index": 41021,
         "vision_index": 25712,
         "trust_index": 43733,
         "aa_intelligence_index": 13.1,
@@ -3400,7 +3401,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -3531,7 +3532,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 21788,
-        "knowledge_index": 14835,
+        "knowledge_index": 14840,
         "vision_index": 16599,
         "trust_index": 34680,
         "aa_intelligence_index": 6.9,
@@ -3587,7 +3588,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -3905,7 +3906,7 @@
       "scores": {
         "coding_index": 48064,
         "tooling_index": 43067,
-        "knowledge_index": 63355,
+        "knowledge_index": 63470,
         "vision_index": null,
         "trust_index": 57397,
         "aa_intelligence_index": 13.6,
@@ -3961,7 +3962,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -4092,7 +4093,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 30634,
+        "knowledge_index": 30697,
         "vision_index": null,
         "trust_index": 18826,
         "aa_intelligence_index": 11.5,
@@ -4148,7 +4149,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -4280,7 +4281,7 @@
       "scores": {
         "coding_index": 45761,
         "tooling_index": 38752,
-        "knowledge_index": 40977,
+        "knowledge_index": 41068,
         "vision_index": null,
         "trust_index": 29182,
         "aa_intelligence_index": 9,
@@ -4336,7 +4337,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -4468,7 +4469,7 @@
       "scores": {
         "coding_index": 44682,
         "tooling_index": 44303,
-        "knowledge_index": 54455,
+        "knowledge_index": 54567,
         "vision_index": null,
         "trust_index": 47065,
         "aa_intelligence_index": 12.3,
@@ -4524,7 +4525,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -4655,7 +4656,7 @@
       "scores": {
         "coding_index": 41572,
         "tooling_index": 35901,
-        "knowledge_index": 49363,
+        "knowledge_index": 49460,
         "vision_index": null,
         "trust_index": 50354,
         "aa_intelligence_index": 8.9,
@@ -4711,7 +4712,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -4842,7 +4843,7 @@
       "scores": {
         "coding_index": 46049,
         "tooling_index": 34280,
-        "knowledge_index": 47978,
+        "knowledge_index": 48068,
         "vision_index": 36951,
         "trust_index": 62115,
         "aa_intelligence_index": 11.5,
@@ -4898,7 +4899,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5029,7 +5030,7 @@
       "scores": {
         "coding_index": 41715,
         "tooling_index": 51195,
-        "knowledge_index": 70954,
+        "knowledge_index": 71092,
         "vision_index": null,
         "trust_index": 83166,
         "aa_intelligence_index": 23.2,
@@ -5085,7 +5086,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5216,7 +5217,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 32345,
+        "knowledge_index": 32412,
         "vision_index": null,
         "trust_index": 10654,
         "aa_intelligence_index": 6.6,
@@ -5272,7 +5273,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5403,7 +5404,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 47816,
+        "knowledge_index": 47921,
         "vision_index": null,
         "trust_index": 26502,
         "aa_intelligence_index": 8.8,
@@ -5459,7 +5460,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5590,7 +5591,7 @@
       "scores": {
         "coding_index": 37342,
         "tooling_index": 29921,
-        "knowledge_index": 51820,
+        "knowledge_index": 51908,
         "vision_index": null,
         "trust_index": 47224,
         "aa_intelligence_index": 8.4,
@@ -5646,7 +5647,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5777,7 +5778,7 @@
       "scores": {
         "coding_index": 51015,
         "tooling_index": 56313,
-        "knowledge_index": 57558,
+        "knowledge_index": 57680,
         "vision_index": 49478,
         "trust_index": 60210,
         "aa_intelligence_index": 15.4,
@@ -5833,7 +5834,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -5964,7 +5965,7 @@
       "scores": {
         "coding_index": 51099,
         "tooling_index": 45382,
-        "knowledge_index": 53027,
+        "knowledge_index": 53137,
         "vision_index": 45824,
         "trust_index": 55915,
         "aa_intelligence_index": 16.7,
@@ -6020,7 +6021,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -6151,7 +6152,7 @@
       "scores": {
         "coding_index": 36885,
         "tooling_index": 24455,
-        "knowledge_index": 34497,
+        "knowledge_index": 34518,
         "vision_index": 31731,
         "trust_index": 50998,
         "aa_intelligence_index": 8.9,
@@ -6207,7 +6208,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -6338,7 +6339,7 @@
       "scores": {
         "coding_index": 34601,
         "tooling_index": 19612,
-        "knowledge_index": 36047,
+        "knowledge_index": 36097,
         "vision_index": 27033,
         "trust_index": 43444,
         "aa_intelligence_index": 7.8,
@@ -6394,7 +6395,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -6525,7 +6526,7 @@
       "scores": {
         "coding_index": 50020,
         "tooling_index": 41164,
-        "knowledge_index": 57893,
+        "knowledge_index": 58013,
         "vision_index": 54610,
         "trust_index": 68482,
         "aa_intelligence_index": 18.8,
@@ -6581,7 +6582,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-10",
@@ -6712,7 +6713,7 @@
       "scores": {
         "coding_index": 54670,
         "tooling_index": 61260,
-        "knowledge_index": 63560,
+        "knowledge_index": 63681,
         "vision_index": 55505,
         "trust_index": 72441,
         "aa_intelligence_index": 21.9,
@@ -6768,7 +6769,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -6899,7 +6900,7 @@
       "scores": {
         "coding_index": 54283,
         "tooling_index": 67659,
-        "knowledge_index": 79507,
+        "knowledge_index": 79833,
         "vision_index": null,
         "trust_index": 61590,
         "aa_intelligence_index": 34.5,
@@ -6955,7 +6956,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -7086,7 +7087,7 @@
       "scores": {
         "coding_index": 53438,
         "tooling_index": 65050,
-        "knowledge_index": 68952,
+        "knowledge_index": 69097,
         "vision_index": null,
         "trust_index": 72602,
         "aa_intelligence_index": 25.8,
@@ -7142,7 +7143,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -7273,7 +7274,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 27501,
-        "knowledge_index": 15337,
+        "knowledge_index": 15361,
         "vision_index": null,
         "trust_index": 27733,
         "aa_intelligence_index": 6.6,
@@ -7329,7 +7330,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -7460,7 +7461,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 16655,
-        "knowledge_index": 8590,
+        "knowledge_index": 8602,
         "vision_index": null,
         "trust_index": 9506,
         "aa_intelligence_index": 5.9,
@@ -7516,7 +7517,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -7647,7 +7648,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 24304,
-        "knowledge_index": 16355,
+        "knowledge_index": 16386,
         "vision_index": null,
         "trust_index": 20440,
         "aa_intelligence_index": 7.4,
@@ -7703,7 +7704,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -7834,7 +7835,7 @@
       "scores": {
         "coding_index": 42251,
         "tooling_index": 57681,
-        "knowledge_index": 49283,
+        "knowledge_index": 49401,
         "vision_index": 42171,
         "trust_index": 64639,
         "aa_intelligence_index": 14.9,
@@ -7890,7 +7891,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8021,7 +8022,7 @@
       "scores": {
         "coding_index": 38459,
         "tooling_index": 30691,
-        "knowledge_index": 21026,
+        "knowledge_index": 21069,
         "vision_index": 30687,
         "trust_index": 20286,
         "aa_intelligence_index": 6,
@@ -8077,7 +8078,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8208,7 +8209,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 36530,
-        "knowledge_index": 32420,
+        "knowledge_index": 32471,
         "vision_index": 33819,
         "trust_index": 43244,
         "aa_intelligence_index": 10.3,
@@ -8264,7 +8265,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8395,7 +8396,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 31660,
-        "knowledge_index": 17626,
+        "knowledge_index": 17689,
         "vision_index": 23380,
         "trust_index": 4564,
         "aa_intelligence_index": 5.7,
@@ -8451,7 +8452,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8582,7 +8583,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 42590,
-        "knowledge_index": 59286,
+        "knowledge_index": 59384,
         "vision_index": 41127,
         "trust_index": 65310,
         "aa_intelligence_index": 13.9,
@@ -8638,7 +8639,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8769,7 +8770,7 @@
       "scores": {
         "coding_index": 51701,
         "tooling_index": 53880,
-        "knowledge_index": 56319,
+        "knowledge_index": 56437,
         "vision_index": 55423,
         "trust_index": 64048,
         "aa_intelligence_index": 19.5,
@@ -8825,7 +8826,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -8956,7 +8957,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 18477,
-        "knowledge_index": 11426,
+        "knowledge_index": 11458,
         "vision_index": 22336,
         "trust_index": 9468,
         "aa_intelligence_index": 3.8,
@@ -9012,7 +9013,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -9143,7 +9144,7 @@
       "scores": {
         "coding_index": 46009,
         "tooling_index": 41062,
-        "knowledge_index": 40640,
+        "knowledge_index": 40757,
         "vision_index": null,
         "trust_index": 50984,
         "aa_intelligence_index": 12.8,
@@ -9199,7 +9200,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -9330,7 +9331,7 @@
       "scores": {
         "coding_index": 50003,
         "tooling_index": 75952,
-        "knowledge_index": 87352,
+        "knowledge_index": 87683,
         "vision_index": null,
         "trust_index": 84678,
         "aa_intelligence_index": 34,
@@ -9386,7 +9387,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-14",
@@ -9517,7 +9518,7 @@
       "scores": {
         "coding_index": 49333,
         "tooling_index": 63714,
-        "knowledge_index": 79305,
+        "knowledge_index": 79632,
         "vision_index": 64482,
         "trust_index": 84855,
         "aa_intelligence_index": 29.6,
@@ -9573,7 +9574,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -9704,7 +9705,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36748,
+        "knowledge_index": 36822,
         "vision_index": null,
         "trust_index": 52544,
         "aa_intelligence_index": 7.2,
@@ -9760,7 +9761,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -9881,7 +9882,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16241,
+        "knowledge_index": 16309,
         "vision_index": null,
         "trust_index": 14579,
         "aa_intelligence_index": 5.2,
@@ -9937,7 +9938,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -10067,7 +10068,7 @@
       "scores": {
         "coding_index": 35799,
         "tooling_index": 16423,
-        "knowledge_index": 24909,
+        "knowledge_index": 24931,
         "vision_index": 20686,
         "trust_index": 44221,
         "aa_intelligence_index": 6.5,
@@ -10123,7 +10124,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -10254,7 +10255,7 @@
       "scores": {
         "coding_index": 39972,
         "tooling_index": 21623,
-        "knowledge_index": 38116,
+        "knowledge_index": 38163,
         "vision_index": 28210,
         "trust_index": 48565,
         "aa_intelligence_index": 9.3,
@@ -10310,7 +10311,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -10441,7 +10442,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 21958,
+        "knowledge_index": 21981,
         "vision_index": null,
         "trust_index": 39725,
         "aa_intelligence_index": 5.9,
@@ -10497,7 +10498,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -10627,7 +10628,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36029,
+        "knowledge_index": 36100,
         "vision_index": null,
         "trust_index": 42037,
         "aa_intelligence_index": 6.5,
@@ -10683,7 +10684,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -10815,7 +10816,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33432,
+        "knowledge_index": 33487,
         "vision_index": null,
         "trust_index": 46697,
         "aa_intelligence_index": 6.5,
@@ -10871,7 +10872,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11002,7 +11003,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 25410,
+        "knowledge_index": 25476,
         "vision_index": null,
         "trust_index": 20220,
         "aa_intelligence_index": 5.6,
@@ -11058,7 +11059,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11189,7 +11190,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 18506,
+        "knowledge_index": 18570,
         "vision_index": null,
         "trust_index": 18932,
         "aa_intelligence_index": 5.2,
@@ -11245,7 +11246,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11376,7 +11377,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 15846,
+        "knowledge_index": 15864,
         "vision_index": null,
         "trust_index": 25478,
         "aa_intelligence_index": 6.1,
@@ -11432,7 +11433,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11563,7 +11564,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 9801,
+        "knowledge_index": 9839,
         "vision_index": null,
         "trust_index": 12081,
         "aa_intelligence_index": 5.2,
@@ -11619,7 +11620,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11750,7 +11751,7 @@
       "scores": {
         "coding_index": 46202,
         "tooling_index": 39034,
-        "knowledge_index": 56677,
+        "knowledge_index": 56783,
         "vision_index": null,
         "trust_index": 50460,
         "aa_intelligence_index": 10.9,
@@ -11806,7 +11807,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -11937,7 +11938,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 31725,
+        "knowledge_index": 31757,
         "vision_index": null,
         "trust_index": 52429,
         "aa_intelligence_index": 7.4,
@@ -11993,7 +11994,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -12124,7 +12125,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 21373,
+        "knowledge_index": 21388,
         "vision_index": null,
         "trust_index": 38212,
         "aa_intelligence_index": 6.7,
@@ -12180,7 +12181,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -12311,7 +12312,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 19690,
+        "knowledge_index": 19728,
         "vision_index": null,
         "trust_index": 23735,
         "aa_intelligence_index": 5.6,
@@ -12367,7 +12368,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -12498,7 +12499,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 39022,
+        "knowledge_index": 39109,
         "vision_index": 29494,
         "trust_index": 39135,
         "aa_intelligence_index": 13.4,
@@ -12554,7 +12555,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -12685,7 +12686,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 42321,
-        "knowledge_index": 46760,
+        "knowledge_index": 46834,
         "vision_index": null,
         "trust_index": 39817,
         "aa_intelligence_index": 13.9,
@@ -12741,7 +12742,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -12872,7 +12873,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 60726,
+        "knowledge_index": 60832,
         "vision_index": null,
         "trust_index": 57428,
         "aa_intelligence_index": 13.1,
@@ -12928,7 +12929,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13059,7 +13060,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 60061,
+        "knowledge_index": 60162,
         "vision_index": null,
         "trust_index": 64077,
         "aa_intelligence_index": 12.8,
@@ -13115,7 +13116,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13246,7 +13247,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40567,
+        "knowledge_index": 40642,
         "vision_index": null,
         "trust_index": 29310,
         "aa_intelligence_index": 11.1,
@@ -13302,7 +13303,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13433,7 +13434,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 54630,
-        "knowledge_index": 43544,
+        "knowledge_index": 43603,
         "vision_index": null,
         "trust_index": 54107,
         "aa_intelligence_index": 14.9,
@@ -13489,7 +13490,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13620,7 +13621,7 @@
       "scores": {
         "coding_index": 53574,
         "tooling_index": 52113,
-        "knowledge_index": 68434,
+        "knowledge_index": 68567,
         "vision_index": null,
         "trust_index": 49361,
         "aa_intelligence_index": 22.2,
@@ -13676,7 +13677,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-15",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13807,7 +13808,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 18077,
+        "knowledge_index": 18080,
         "vision_index": null,
         "trust_index": 31520,
         "aa_intelligence_index": 7.3,
@@ -13863,7 +13864,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -13994,7 +13995,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 37488,
+        "knowledge_index": 37497,
         "vision_index": null,
         "trust_index": 49408,
         "aa_intelligence_index": 7.5,
@@ -14050,7 +14051,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -14181,7 +14182,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 47809,
+        "knowledge_index": 47901,
         "vision_index": null,
         "trust_index": 47438,
         "aa_intelligence_index": 12.1,
@@ -14237,7 +14238,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -14368,7 +14369,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34102,
+        "knowledge_index": 34171,
         "vision_index": null,
         "trust_index": 26879,
         "aa_intelligence_index": 7.8,
@@ -14424,7 +14425,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -14555,7 +14556,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 37131,
+        "knowledge_index": 37207,
         "vision_index": null,
         "trust_index": 33769,
         "aa_intelligence_index": 7.2,
@@ -14611,7 +14612,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -14742,7 +14743,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20810,
+        "knowledge_index": 20862,
         "vision_index": null,
         "trust_index": 5660,
         "aa_intelligence_index": 5.5,
@@ -14798,7 +14799,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -14929,7 +14930,7 @@
       "scores": {
         "coding_index": 50267,
         "tooling_index": 44719,
-        "knowledge_index": 41660,
+        "knowledge_index": 41741,
         "vision_index": null,
         "trust_index": 47327,
         "aa_intelligence_index": 16,
@@ -14985,7 +14986,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -15302,7 +15303,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 63741,
+        "knowledge_index": 63869,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -15358,7 +15359,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -15490,7 +15491,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 45910,
+        "knowledge_index": 45993,
         "vision_index": null,
         "trust_index": 42520,
         "aa_intelligence_index": 11.7,
@@ -15546,7 +15547,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -15677,7 +15678,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 25047,
+        "knowledge_index": 25082,
         "vision_index": null,
         "trust_index": 34327,
         "aa_intelligence_index": 7.3,
@@ -15733,7 +15734,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -15864,7 +15865,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 40755,
-        "knowledge_index": 20434,
+        "knowledge_index": 20461,
         "vision_index": null,
         "trust_index": 18626,
         "aa_intelligence_index": 6.7,
@@ -15920,7 +15921,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -16051,7 +16052,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 39749,
-        "knowledge_index": 10005,
+        "knowledge_index": 10006,
         "vision_index": null,
         "trust_index": 11541,
         "aa_intelligence_index": 6,
@@ -16107,7 +16108,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -16238,7 +16239,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20101,
+        "knowledge_index": 20113,
         "vision_index": null,
         "trust_index": 38427,
         "aa_intelligence_index": 6.6,
@@ -16294,7 +16295,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -16425,7 +16426,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 36720,
-        "knowledge_index": 54236,
+        "knowledge_index": 54330,
         "vision_index": null,
         "trust_index": 53092,
         "aa_intelligence_index": 12,
@@ -16481,7 +16482,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -16612,7 +16613,7 @@
       "scores": {
         "coding_index": 47561,
         "tooling_index": 38378,
-        "knowledge_index": 60298,
+        "knowledge_index": 60406,
         "vision_index": null,
         "trust_index": 52168,
         "aa_intelligence_index": 12.7,
@@ -16668,7 +16669,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -16799,7 +16800,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 42487,
+        "knowledge_index": 42528,
         "vision_index": null,
         "trust_index": 56183,
         "aa_intelligence_index": 11.9,
@@ -16855,7 +16856,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-04",
@@ -16986,7 +16987,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 37090,
+        "knowledge_index": 37185,
         "vision_index": null,
         "trust_index": 34342,
         "aa_intelligence_index": 9.5,
@@ -17042,7 +17043,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -17173,7 +17174,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 27639,
+        "knowledge_index": 27688,
         "vision_index": null,
         "trust_index": 31312,
         "aa_intelligence_index": 6.3,
@@ -17229,7 +17230,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -17360,7 +17361,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 14893,
+        "knowledge_index": 14954,
         "vision_index": null,
         "trust_index": 13685,
         "aa_intelligence_index": 5.2,
@@ -17416,7 +17417,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -17547,7 +17548,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40910,
+        "knowledge_index": 41028,
         "vision_index": null,
         "trust_index": 42560,
         "aa_intelligence_index": 10.4,
@@ -17603,7 +17604,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -17734,7 +17735,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34775,
+        "knowledge_index": 34866,
         "vision_index": null,
         "trust_index": 31405,
         "aa_intelligence_index": 7.8,
@@ -17790,7 +17791,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -17921,7 +17922,7 @@
       "scores": {
         "coding_index": 41013,
         "tooling_index": 32497,
-        "knowledge_index": 38956,
+        "knowledge_index": 38988,
         "vision_index": 35907,
         "trust_index": 47908,
         "aa_intelligence_index": 9.7,
@@ -17977,7 +17978,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -18108,7 +18109,7 @@
       "scores": {
         "coding_index": 35914,
         "tooling_index": 22793,
-        "knowledge_index": 16909,
+        "knowledge_index": 16944,
         "vision_index": 28599,
         "trust_index": 16040,
         "aa_intelligence_index": 5.5,
@@ -18164,7 +18165,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -18295,7 +18296,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 30023,
-        "knowledge_index": 18577,
+        "knowledge_index": 18634,
         "vision_index": 24424,
         "trust_index": 32044,
         "aa_intelligence_index": 4.8,
@@ -18351,7 +18352,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -18482,7 +18483,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36416,
+        "knowledge_index": 36475,
         "vision_index": null,
         "trust_index": 39412,
         "aa_intelligence_index": 11.4,
@@ -18538,7 +18539,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -18669,7 +18670,7 @@
       "scores": {
         "coding_index": 35382,
         "tooling_index": 14661,
-        "knowledge_index": 16683,
+        "knowledge_index": 16721,
         "vision_index": 29643,
         "trust_index": 17282,
         "aa_intelligence_index": 4.9,
@@ -18725,7 +18726,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -18856,7 +18857,7 @@
       "scores": {
         "coding_index": 31214,
         "tooling_index": 13492,
-        "knowledge_index": 11131,
+        "knowledge_index": 11186,
         "vision_index": 21292,
         "trust_index": 3961,
         "aa_intelligence_index": 4.8,
@@ -18912,7 +18913,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -19043,7 +19044,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 11636,
+        "knowledge_index": 11691,
         "vision_index": null,
         "trust_index": 28911,
         "aa_intelligence_index": 4.8,
@@ -19099,7 +19100,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -19230,7 +19231,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 22629,
+        "knowledge_index": 22644,
         "vision_index": null,
         "trust_index": 46631,
         "aa_intelligence_index": 5.1,
@@ -19286,7 +19287,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -19417,7 +19418,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 17116,
+        "knowledge_index": 17123,
         "vision_index": null,
         "trust_index": 38427,
         "aa_intelligence_index": 5.3,
@@ -19473,7 +19474,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -19595,7 +19596,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 18927,
+        "knowledge_index": 18936,
         "vision_index": 37995,
         "trust_index": 38427,
         "aa_intelligence_index": 7.1,
@@ -19651,7 +19652,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -19774,7 +19775,7 @@
       "scores": {
         "coding_index": 48396,
         "tooling_index": 43606,
-        "knowledge_index": 46273,
+        "knowledge_index": 46405,
         "vision_index": 47390,
         "trust_index": 56311,
         "aa_intelligence_index": 14.2,
@@ -19830,7 +19831,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -20522,7 +20523,7 @@
       "scores": {
         "coding_index": 50123,
         "tooling_index": 53378,
-        "knowledge_index": 74897,
+        "knowledge_index": 75031,
         "vision_index": null,
         "trust_index": 85718,
         "aa_intelligence_index": 23.4,
@@ -20578,7 +20579,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -20719,7 +20720,7 @@
       "scores": {
         "coding_index": 44178,
         "tooling_index": 36563,
-        "knowledge_index": 33285,
+        "knowledge_index": 33381,
         "vision_index": 44258,
         "trust_index": 32915,
         "aa_intelligence_index": 9.5,
@@ -20775,7 +20776,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -20906,7 +20907,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 61482,
+        "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -20951,7 +20952,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "hle": 47.6,
+        "hle": null,
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
@@ -20962,7 +20963,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -21006,7 +21007,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "hle": "2026-07-06",
+        "hle": "2026-09-15",
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
@@ -21017,7 +21018,7 @@
       "scores_source": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
+        "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -21061,7 +21062,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": null,
-        "hle": "https://huggingface.co/InternScience/Agents-A1",
+        "hle": null,
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
@@ -21093,7 +21094,7 @@
       "scores": {
         "coding_index": 43824,
         "tooling_index": 58245,
-        "knowledge_index": 79505,
+        "knowledge_index": 79646,
         "vision_index": 49976,
         "trust_index": 80275,
         "aa_intelligence_index": 25.5,
@@ -21149,7 +21150,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -21280,7 +21281,7 @@
       "scores": {
         "coding_index": 53079,
         "tooling_index": 74551,
-        "knowledge_index": 86198,
+        "knowledge_index": 86527,
         "vision_index": null,
         "trust_index": 57953,
         "aa_intelligence_index": 36.3,
@@ -21336,7 +21337,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -21467,7 +21468,7 @@
       "scores": {
         "coding_index": 53200,
         "tooling_index": 53325,
-        "knowledge_index": 63526,
+        "knowledge_index": 63672,
         "vision_index": null,
         "trust_index": 66569,
         "aa_intelligence_index": 19.7,
@@ -21523,7 +21524,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -21654,7 +21655,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 70423,
+        "knowledge_index": 70548,
         "vision_index": null,
         "trust_index": 71541,
         "aa_intelligence_index": 22,
@@ -21710,7 +21711,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -21841,7 +21842,7 @@
       "scores": {
         "coding_index": 44758,
         "tooling_index": 45941,
-        "knowledge_index": 79606,
+        "knowledge_index": 79746,
         "vision_index": 59527,
         "trust_index": 78262,
         "aa_intelligence_index": 23.5,
@@ -21897,7 +21898,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -22028,7 +22029,7 @@
       "scores": {
         "coding_index": 52293,
         "tooling_index": 65027,
-        "knowledge_index": 84110,
+        "knowledge_index": 84433,
         "vision_index": 66938,
         "trust_index": 86138,
         "aa_intelligence_index": 27.5,
@@ -22084,7 +22085,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-15",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-15",
@@ -22215,7 +22216,7 @@
       "scores": {
         "coding_index": 53284,
         "tooling_index": 64759,
-        "knowledge_index": 73642,
+        "knowledge_index": 73792,
         "vision_index": null,
         "trust_index": 70174,
         "aa_intelligence_index": 26.3,
@@ -22271,7 +22272,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-15",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -22402,7 +22403,7 @@
       "scores": {
         "coding_index": 67778,
         "tooling_index": 81454,
-        "knowledge_index": 91274,
+        "knowledge_index": 91782,
         "vision_index": 80319,
         "trust_index": 81376,
         "aa_intelligence_index": 43.8,
@@ -22458,7 +22459,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -22591,7 +22592,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 35684,
-        "knowledge_index": 48748,
+        "knowledge_index": 48798,
         "vision_index": null,
         "trust_index": 57436,
         "aa_intelligence_index": 10.8,
@@ -22647,7 +22648,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -22778,7 +22779,7 @@
       "scores": {
         "coding_index": 55089,
         "tooling_index": 54150,
-        "knowledge_index": 70499,
+        "knowledge_index": 70631,
         "vision_index": 56380,
         "trust_index": 71473,
         "aa_intelligence_index": 22.3,
@@ -22834,7 +22835,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -22965,7 +22966,7 @@
       "scores": {
         "coding_index": 51283,
         "tooling_index": 62832,
-        "knowledge_index": 76524,
+        "knowledge_index": 76675,
         "vision_index": 59888,
         "trust_index": 87817,
         "aa_intelligence_index": 26.4,
@@ -23021,7 +23022,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -23152,7 +23153,7 @@
       "scores": {
         "coding_index": 55934,
         "tooling_index": 60323,
-        "knowledge_index": 77261,
+        "knowledge_index": 77404,
         "vision_index": 50957,
         "trust_index": 74050,
         "aa_intelligence_index": 26.1,
@@ -23208,7 +23209,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -23339,7 +23340,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 56535,
-        "knowledge_index": 59417,
+        "knowledge_index": 59526,
         "vision_index": null,
         "trust_index": 68983,
         "aa_intelligence_index": 21.8,
@@ -23395,7 +23396,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -23521,7 +23522,7 @@
       "scores": {
         "coding_index": 59307,
         "tooling_index": 70805,
-        "knowledge_index": 89051,
+        "knowledge_index": 89384,
         "vision_index": 77719,
         "trust_index": 81032,
         "aa_intelligence_index": 40,
@@ -23577,7 +23578,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -23708,7 +23709,7 @@
       "scores": {
         "coding_index": 55416,
         "tooling_index": 55216,
-        "knowledge_index": 63123,
+        "knowledge_index": 63246,
         "vision_index": null,
         "trust_index": 67540,
         "aa_intelligence_index": 20.6,
@@ -23764,7 +23765,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-15",
@@ -23895,7 +23896,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 51447,
-        "knowledge_index": 53101,
+        "knowledge_index": 53175,
         "vision_index": null,
         "trust_index": 56584,
         "aa_intelligence_index": 11.9,
@@ -23951,7 +23952,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -24082,7 +24083,7 @@
       "scores": {
         "coding_index": 37754,
         "tooling_index": 36828,
-        "knowledge_index": 50478,
+        "knowledge_index": 50537,
         "vision_index": null,
         "trust_index": 50007,
         "aa_intelligence_index": 8.4,
@@ -24138,7 +24139,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -24269,7 +24270,7 @@
       "scores": {
         "coding_index": 52168,
         "tooling_index": 58246,
-        "knowledge_index": 58588,
+        "knowledge_index": 58707,
         "vision_index": 52600,
         "trust_index": 74674,
         "aa_intelligence_index": 18.1,
@@ -24325,7 +24326,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -24456,7 +24457,7 @@
       "scores": {
         "coding_index": 41118,
         "tooling_index": 45684,
-        "knowledge_index": 57007,
+        "knowledge_index": 57092,
         "vision_index": null,
         "trust_index": 63118,
         "aa_intelligence_index": 13.6,
@@ -24512,7 +24513,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -24643,7 +24644,7 @@
       "scores": {
         "coding_index": 68744,
         "tooling_index": 71998,
-        "knowledge_index": 88263,
+        "knowledge_index": 88594,
         "vision_index": null,
         "trust_index": 84965,
         "aa_intelligence_index": 44.9,
@@ -24699,7 +24700,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -24832,7 +24833,7 @@
       "scores": {
         "coding_index": 56323,
         "tooling_index": 67665,
-        "knowledge_index": 75593,
+        "knowledge_index": 75740,
         "vision_index": 70781,
         "trust_index": 78374,
         "aa_intelligence_index": 33.9,
@@ -24888,7 +24889,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-15",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -25019,7 +25020,7 @@
       "scores": {
         "coding_index": 54468,
         "tooling_index": 56048,
-        "knowledge_index": 77193,
+        "knowledge_index": 77328,
         "vision_index": null,
         "trust_index": 75203,
         "aa_intelligence_index": 24.7,
@@ -25075,7 +25076,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -25206,7 +25207,7 @@
       "scores": {
         "coding_index": 52442,
         "tooling_index": 57595,
-        "knowledge_index": 71866,
+        "knowledge_index": 72004,
         "vision_index": null,
         "trust_index": 74396,
         "aa_intelligence_index": 22.7,
@@ -25262,7 +25263,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -25580,7 +25581,7 @@
       "scores": {
         "coding_index": 60414,
         "tooling_index": 61879,
-        "knowledge_index": 64785,
+        "knowledge_index": 65291,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -25636,7 +25637,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -25767,7 +25768,7 @@
       "scores": {
         "coding_index": 55322,
         "tooling_index": 47028,
-        "knowledge_index": 59063,
+        "knowledge_index": 59194,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -25823,7 +25824,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -25954,7 +25955,7 @@
       "scores": {
         "coding_index": 44752,
         "tooling_index": 33552,
-        "knowledge_index": 56073,
+        "knowledge_index": 56186,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -26010,7 +26011,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-11",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -26141,7 +26142,7 @@
       "scores": {
         "coding_index": 51113,
         "tooling_index": 70604,
-        "knowledge_index": 72202,
+        "knowledge_index": 72351,
         "vision_index": 60853,
         "trust_index": 57294,
         "aa_intelligence_index": 35,
@@ -26197,7 +26198,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -26328,7 +26329,7 @@
       "scores": {
         "coding_index": 60071,
         "tooling_index": 74926,
-        "knowledge_index": 85354,
+        "knowledge_index": 85683,
         "vision_index": 73270,
         "trust_index": 84016,
         "aa_intelligence_index": 41.9,
@@ -26384,7 +26385,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -26515,7 +26516,7 @@
       "scores": {
         "coding_index": 62689,
         "tooling_index": 73435,
-        "knowledge_index": 75806,
+        "knowledge_index": 76131,
         "vision_index": 68102,
         "trust_index": 81630,
         "aa_intelligence_index": 39.9,
@@ -26571,7 +26572,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-10",
@@ -26702,7 +26703,7 @@
       "scores": {
         "coding_index": 42756,
         "tooling_index": 35367,
-        "knowledge_index": 48685,
+        "knowledge_index": 48757,
         "vision_index": null,
         "trust_index": 57410,
         "aa_intelligence_index": 9.1,
@@ -26758,7 +26759,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -26889,7 +26890,7 @@
       "scores": {
         "coding_index": 36778,
         "tooling_index": 43037,
-        "knowledge_index": 47406,
+        "knowledge_index": 47482,
         "vision_index": null,
         "trust_index": 61463,
         "aa_intelligence_index": 11.8,
@@ -26945,7 +26946,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-10",
@@ -27076,7 +27077,7 @@
       "scores": {
         "coding_index": 41140,
         "tooling_index": 52748,
-        "knowledge_index": 53129,
+        "knowledge_index": 53225,
         "vision_index": null,
         "trust_index": 64556,
         "aa_intelligence_index": 14.8,
@@ -27132,7 +27133,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-08",
@@ -27263,7 +27264,7 @@
       "scores": {
         "coding_index": 60780,
         "tooling_index": 70949,
-        "knowledge_index": 70059,
+        "knowledge_index": 70564,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -27319,7 +27320,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -27450,7 +27451,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": 63182,
-        "knowledge_index": 72530,
+        "knowledge_index": 72673,
         "vision_index": null,
         "trust_index": 77196,
         "aa_intelligence_index": 30.8,
@@ -27506,7 +27507,7 @@
       "scores_updated": {
         "coding_index": null,
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-12",
@@ -27637,7 +27638,7 @@
       "scores": {
         "coding_index": 36170,
         "tooling_index": 55433,
-        "knowledge_index": 47620,
+        "knowledge_index": 47691,
         "vision_index": null,
         "trust_index": 62037,
         "aa_intelligence_index": 13.1,
@@ -27693,7 +27694,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": null,
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-10",
@@ -27824,7 +27825,7 @@
       "scores": {
         "coding_index": 61818,
         "tooling_index": 58903,
-        "knowledge_index": 76376,
+        "knowledge_index": 74147,
         "vision_index": 64338,
         "trust_index": 37927,
         "aa_intelligence_index": 39.5,
@@ -27869,7 +27870,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 90.9,
-        "hle": 63.9,
+        "hle": 36.8,
         "mmlu_pro": 74.1,
         "mmmu_pro": 77,
         "osworld_verified": null,
@@ -27880,7 +27881,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-10",
@@ -27924,7 +27925,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "2026-09-10",
-        "hle": "2026-09-10",
+        "hle": "2026-09-15",
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-09-10",
         "osworld_verified": null,
@@ -28199,7 +28200,7 @@
       "scores": {
         "coding_index": 89565,
         "tooling_index": 75478,
-        "knowledge_index": 92791,
+        "knowledge_index": 92789,
         "vision_index": 73541,
         "trust_index": 71743,
         "aa_intelligence_index": 50.7,
@@ -28244,7 +28245,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 93.4,
-        "hle": 64.7,
+        "hle": 56.6,
         "mmlu_pro": 91.6,
         "mmmu_pro": 84.7,
         "osworld_verified": 83.4,
@@ -28255,7 +28256,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-11",
@@ -28299,7 +28300,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "2026-09-11",
-        "hle": "2026-09-11",
+        "hle": "2026-09-15",
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": "2026-09-11",
@@ -28354,7 +28355,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "https://www.vals.ai/benchmarks/gpqa",
-        "hle": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "hle": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-opus-5",
         "osworld_verified": "https://os-world.github.io",
@@ -28382,7 +28383,7 @@
       "scores": {
         "coding_index": 60744,
         "tooling_index": 61457,
-        "knowledge_index": 88408,
+        "knowledge_index": 88062,
         "vision_index": 64386,
         "trust_index": 73667,
         "aa_intelligence_index": 38.4,
@@ -28427,7 +28428,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 88.9,
-        "hle": 57.4,
+        "hle": 43.2,
         "mmlu_pro": 87.6,
         "mmmu_pro": 77.3,
         "osworld_verified": 81.2,
@@ -28438,7 +28439,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-14",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-11",
@@ -28482,7 +28483,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "2026-09-11",
-        "hle": "2026-09-11",
+        "hle": "2026-09-15",
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": "2026-09-11",
@@ -28537,7 +28538,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "https://www.vals.ai/benchmarks/gpqa",
-        "hle": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "hle": "https://www.anthropic.com/news/claude-sonnet-5",
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-sonnet-5",
         "osworld_verified": "https://www.anthropic.com/news/claude-sonnet-5",
@@ -28610,7 +28611,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": 93.4,
-        "hle": 65,
+        "hle": 60.9,
         "mmlu_pro": 92.4,
         "mmmu_pro": 90.6,
         "osworld_verified": null,
@@ -28621,7 +28622,7 @@
       "scores_updated": {
         "coding_index": "2026-09-14",
         "tooling_index": "2026-09-11",
-        "knowledge_index": "2026-09-14",
+        "knowledge_index": "2026-09-15",
         "vision_index": "2026-09-11",
         "trust_index": "2026-09-14",
         "aa_intelligence_index": "2026-09-11",
@@ -28665,7 +28666,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "2026-09-11",
-        "hle": "2026-09-11",
+        "hle": "2026-09-15",
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
@@ -28721,7 +28722,7 @@
         "aime_2025": null,
         "aime_2026": null,
         "gpqa_diamond": "https://www.vals.ai/benchmarks/gpqa",
-        "hle": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "hle": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://www.vals.ai/benchmarks/mmmu",
         "osworld_verified": null,
@@ -30271,6 +30272,8 @@
     "https://www.vals.ai/benchmarks/mmmu",
     "https://www.vals.ai/benchmarks/aime",
     "https://www.frontierswe.com/v1",
-    "https://realswe.withspecific.com"
+    "https://realswe.withspecific.com",
+    "https://www.anthropic.com/claude-fable-and-mythos-5-1",
+    "https://www.anthropic.com/news/claude-sonnet-5"
   ]
 }

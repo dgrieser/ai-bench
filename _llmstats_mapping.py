@@ -4,6 +4,23 @@ llm-stats is a general (multi-benchmark) source identified by model name, so it
 needs two mappings: model_id -> llm.json model slug, and benchmark label ->
 llm.json benchmark key. The two halves mirror _deepswe_mapping.py (model names)
 and _huggingface_mapping.py (benchmark names).
+
+Two labels are parked for the same reason, and it is worth stating once: the
+flat leaderboard endpoint publishes one field per benchmark, and for a
+benchmark with a tool mode that field is a blend rather than a measurement.
+
+  * ``charxiv_r`` serves the with-tools number for the models that report both,
+    and the HF ingest runs after this one, so mapping it would take the null
+    that column wants for the no-tool value.
+  * ``hle`` is the same defect, larger: llm-stats' own ``analysis_method``
+    splits the 104 models carrying an HLE score into roughly 38 run with tools,
+    29 without, and 37 that never say, and tools are worth a median +11.5
+    points on this benchmark. ``fetch_llmstats.py`` no longer publishes the
+    bare label at all -- it re-reads HLE per model and emits only what it can
+    verify, under ``hle (no tools)``, which is the spelling mapped here. The
+    bare ``hle`` stays parked so that a shape change upstream reinstating it is
+    refused rather than quietly ingested. See
+    docs/hle-tool-mode-audit-2026-09.md.
 """
 
 from __future__ import annotations
@@ -59,7 +76,8 @@ def _add_mapping(key: str, value: str, path: Path) -> None:
 
 def fetch_llmstats_model_names() -> list[str]:
     proc = subprocess.run(
-        [sys.executable, str(LLMSTATS_SCRIPT), "--format", "names", "--names", "models"],
+        [sys.executable, str(LLMSTATS_SCRIPT), "--format", "names", "--names", "models",
+         "--no-hle-detail"],
         capture_output=True,
         text=True,
     )
@@ -73,7 +91,7 @@ def fetch_llmstats_model_names() -> list[str]:
 def fetch_llmstats_model_openness() -> dict[str, bool | None]:
     """llm-stats model_id -> has open weights, as read from its licence field."""
     proc = subprocess.run(
-        [sys.executable, str(LLMSTATS_SCRIPT), "--format", "json"],
+        [sys.executable, str(LLMSTATS_SCRIPT), "--format", "json", "--no-hle-detail"],
         capture_output=True,
         text=True,
     )

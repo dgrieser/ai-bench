@@ -467,6 +467,52 @@ def _eval_results_label(dataset: dict[str, Any]) -> str | None:
     return dataset_id
 
 
+# Datasets whose score means a different thing with tools than without, where
+# one card routinely carries both runs under the same dataset id. Only the
+# entry's free-text ``notes`` says which is which, so for these -- and only for
+# these -- the mode is folded into the label, splitting one ambiguous key into
+# ``cais/hle (no tools)`` and ``cais/hle (with tools)`` that the benchmark-name
+# mapping can answer separately. Kept to a named set rather than applied to
+# every dataset because a note is free text: a general rule would mint a new
+# label for every phrasing a card author invents, and flood the mapping queue
+# with questions nobody needs to answer. Tool use is the *point* of an agentic
+# benchmark, so nothing agentic belongs here.
+#
+# HLE qualifies on the numbers: across the 25 models where one publisher states
+# both modes, tools are worth a median +11.5 points and up to +27.1. See
+# docs/hle-tool-mode-audit-2026-09.md.
+TOOL_MODE_SENSITIVE_DATASETS = {"cais/hle"}
+
+_WITH_TOOLS_RE = re.compile(
+    r"\bwith(?:\s+|-)(?:tools?|search|browsing|retrieval)\b|\bw/\s*tools?\b|\btool[- ]augmented\b",
+    re.IGNORECASE,
+)
+_NO_TOOLS_RE = re.compile(
+    r"\bno\s+tools?\b|\bwithout\s+tools?\b|\bw/o\s+tools?\b|\btool[- ]free\b",
+    re.IGNORECASE,
+)
+
+
+def _tool_mode(notes: Any) -> str | None:
+    """'no tools', 'with tools', or None when the note does not say.
+
+    A note carrying both phrasings ("With tools: 57.4%. Without tools: 43.2%")
+    describes two runs and names neither as its own value, so it says nothing
+    about *this* entry and returns None.
+    """
+    if not isinstance(notes, str) or not notes:
+        return None
+    with_tools = bool(_WITH_TOOLS_RE.search(notes))
+    no_tools = bool(_NO_TOOLS_RE.search(notes))
+    if with_tools and no_tools:
+        return None
+    if no_tools:
+        return "no tools"
+    if with_tools:
+        return "with tools"
+    return None
+
+
 def extract_eval_results(payload: dict[str, Any]) -> dict[str, float]:
     """Scores from the Hub's 'Evaluation results' widget (evalResults)."""
     out: dict[str, float] = {}
@@ -486,6 +532,10 @@ def extract_eval_results(payload: dict[str, Any]) -> dict[str, float]:
         value = _coerce_score(data.get("value"))
         if label is None or value is None:
             continue
+        if dataset.get("id") in TOOL_MODE_SENSITIVE_DATASETS:
+            mode = _tool_mode(data.get("notes"))
+            if mode is not None:
+                label = f"{label} ({mode})"
         out.setdefault(label, value)
     return out
 

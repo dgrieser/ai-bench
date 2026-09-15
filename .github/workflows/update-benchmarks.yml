@@ -176,6 +176,13 @@ jobs:
       # calls closed, so a regression in that exception has this run bury them
       # as __closed_weights__ in the mapping files -- with nobody prompted,
       # and the rows left in llm.json with no scores arriving ever again.
+      #
+      # test_hle_no_tools.py is the third of that kind. hle is a no-tools
+      # column that two fill-only aggregates write into, and a with-tools
+      # number is worth a median +11.5 points there -- so a label re-mapped or
+      # a mode filter relaxed has this run fill a null with a measurement from
+      # a different benchmark, at the top of the column, where nothing
+      # overwrites it. Offline and instant; no key, no network.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -185,6 +192,7 @@ jobs:
           ./test_model_admin.py
           ./test_pending_json.py
           ./test_reference.py
+          ./test_hle_no_tools.py
           ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,
