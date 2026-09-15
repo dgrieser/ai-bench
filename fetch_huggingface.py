@@ -108,7 +108,13 @@ def clean_cell(text: str) -> str:
     return s.strip()
 
 
-_NUMBER_RE = re.compile(r"[-+]?\d+(?:\.\d+)?")
+# The grouped form has to come first: against "1,441" the bare alternative
+# matches at the same position and stops at the "1", so an Elo-scale column
+# (GDPval-AA, AA-Briefcase) would store a value three orders of magnitude off
+# rather than miss it. Only strict three-digit groups qualify, so a card
+# writing a decimal comma ("63,1") still falls to the bare branch and reads as
+# it did before.
+_NUMBER_RE = re.compile(r"[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?|[-+]?\d+(?:\.\d+)?")
 _PLACEHOLDERS = {"", "-", "—", "–", "n/a", "na", "/", "?", "—%", "tbd"}
 
 
@@ -125,7 +131,7 @@ def parse_score(text: str) -> float | None:
     if not match:
         return None
     try:
-        return float(match.group(0))
+        return float(match.group(0).replace(",", ""))
     except ValueError:
         return None
 
@@ -232,10 +238,17 @@ _LABEL_DENY_EXACT = {
 }
 _LABEL_DENY_SUB = (
     "parameter", "totalparam", "activatedparam", "activeparam", "contextlength",
-    "embedding", "attentionhead", "headsize", "kvhead", "mamba", "expert",
+    "embedding", "attentionhead", "headsize", "kvhead", "mamba",
     "activation", "sequencelength", "positionembedding", "hiddensize", "vocab",
     "statesize", "numberoflayers", "numlayers", "layers",
 )
+# "expert" is an architecture word ("# Experts", "Experts per Token") and also
+# the opening of a benchmark's own caption ("HLE — Expert-level reasoning"), so
+# it is matched as a whole word rather than as a substring: the spec rows write
+# it on its own, a caption hyphenates it into the next one. As a substring it
+# ate every HLE row on IFM's cards, which caption each benchmark inside its
+# label cell.
+_LABEL_DENY_WORDS = {"expert", "experts"}
 # Context-length column labels like "4k", "128k", "1000k", "2m".
 _CONTEXT_LEN_RE = re.compile(r"^\d+(?:\.\d+)?[km]$")
 
@@ -244,6 +257,8 @@ def _is_metadata_label(label: str) -> bool:
     """True for non-benchmark labels (model specs/metadata) that should not be scored."""
     n = _norm_for_match(label)
     if not n or n in _LABEL_DENY_EXACT or _CONTEXT_LEN_RE.match(n):
+        return True
+    if any(word.strip(".:,#()") in _LABEL_DENY_WORDS for word in label.lower().split()):
         return True
     return any(sub in n for sub in _LABEL_DENY_SUB)
 
@@ -364,6 +379,44 @@ def select_row(table: Table, repo: str) -> int | None:
     return scored[1] if scored else None
 
 
+def _promote_header_band(table: Table, repo: str) -> Table:
+    """Re-read a table whose header row is a caption band over the real header.
+
+    Cards increasingly group their comparison columns under a caption first --
+    an empty cell or two, then one `colspan` cell reading "Reference models" or
+    "Open-weight models" -- and put the model names in the row below it. Read
+    literally the caption becomes the header, nothing names the model, and the
+    table is dropped whole: that is why every benchmark on IFM's K2-Horizon
+    cards was invisible here.
+
+    Which row is the header cannot be read off the markup, because the shape
+    that says "caption band" and the shape that says "two-row header" are the
+    same colspan. MiniCPM5's card leads with `rowspan` header cells and puts
+    the *rest* of its comparison columns in the second row -- promote there and
+    the model's own column is lost. So the rows decide: a table is re-read one
+    row down only when nothing in it names the model as it stands, and the row
+    below does name it, as a column beside the labels rather than as a row of
+    its own. Anything this parser already matched is returned untouched.
+    """
+    if _select_column_scored(table, repo) is not None or _select_row_scored(table, repo) is not None:
+        return table
+    if len(table.rows) < 2:
+        return table
+    # A caption band labels groups of columns, so it names fewer than half of
+    # them; a header row that fills its own width is a header, however little
+    # it matched. Without this an artifact table ("Model card | Hugging Face
+    # <link> | Available") promotes too, because the link cell carries the repo
+    # name and the row above it never mentions the model either.
+    captions = [cell for cell in table.headers if cell.strip()]
+    if len(captions) * 2 > len(table.rows[0]):
+        return table
+    candidate = Table(headers=table.rows[0], rows=table.rows[1:])
+    scored = _select_column_scored(candidate, repo)
+    if scored is None or scored[1] == _find_label_column(candidate):
+        return table
+    return candidate
+
+
 def extract_scores_from_tables(tables: list[Table], repo: str) -> dict[str, float]:
     # Each table is extracted independently, then merged best-name-match first:
     # a table naming the model exactly must beat one that only matched loosely
@@ -373,6 +426,7 @@ def extract_scores_from_tables(tables: list[Table], repo: str) -> dict[str, floa
     for table in tables:
         if not table.headers or not table.rows:
             continue
+        table = _promote_header_band(table, repo)
         scored_col = _select_column_scored(table, repo)
         label_col = _find_label_column(table)
         if scored_col is not None and scored_col[1] != label_col and scored_col[1] < len(table.headers):
