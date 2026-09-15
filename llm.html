@@ -200,6 +200,12 @@
        the panel like every other control. */
     .presets {
       grid-column: 1 / -1;
+      /* Width of the label column each band leads with — the brand lockup up
+         top, the eyebrow below. Fixed rather than each label's own width, so
+         the two rows of chips start on the same line instead of wherever their
+         labels happen to end. Wide enough for the longer of the two (the
+         lockup, in the licensed face or its fallback) with room to spare. */
+      --presets-label: 19rem;
       /* Cancels the grid's own top padding and side padding, so the band meets
          the panel edges and sits flush under the Filters row. */
       margin: -4px -20px 0;
@@ -226,7 +232,7 @@
       display: flex;
       align-items: baseline;
       gap: 0.7em;
-      min-width: 0;
+      min-width: var(--presets-label);
       text-decoration: none;
       color: inherit;
     }
@@ -343,6 +349,10 @@
     }
 
     @media (max-width: 860px) {
+      .presets {
+        --presets-label: 0;
+      }
+
       .presets-note {
         margin-left: 0;
         text-align: left;
@@ -364,6 +374,7 @@
        plain eyebrow in the Filters row's own stamp says what the chips are. */
     .presets-eyebrow {
       flex: none;
+      min-width: var(--presets-label);
       font-family: var(--font-mono);
       font-size: 0.7rem;
       font-weight: 700;
@@ -9159,7 +9170,7 @@
             <span class="preset-spec">${escapeHtml(`${formatGb(budget)} GB`)}</span>
           </button>`;
         }).join("");
-        ui.devicePresetsNote.textContent = "Unified memory is shared with the OS — trim it with Reserve";
+        ui.devicePresetsNote.textContent = "Unified memory is shared — trim it with Reserve";
         ui.devicePresets.hidden = false;
         // One line between the two bands, not two: the strip above draws it
         // whenever it is there to draw.
