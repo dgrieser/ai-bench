@@ -1963,6 +1963,38 @@ VRAM there is the single source of truth for the labels. Tiers live in
 `HOSTING_PRESET_VENDOR`/`HOSTING_PRESET_GPU`. If that card is missing from
 `gpu.json`, the strip stays hidden rather than offering a preset it cannot apply.
 
+### Device Presets
+
+A second band sits directly under the tier strip, aimed the other way: hardware
+someone already owns rather than a plan they would rent, so "does this model fit on
+the thing in front of me" is one click too. The chips behave exactly like the tier
+chips — arm, unarm on a hand edit, clear on a second click — and span the range the
+question is usually asked across.
+
+| Chip | Sets | Budget |
+|---|---|---|
+| **Spark** | 1 × NVIDIA GB10 (Project DIGITS) | 128 GB |
+| **Mac mini** | M4 Pro, unified memory | 64 GB |
+| **New GPU** | 1 × NVIDIA RTX 5090 | 32 GB |
+| **Old GPU** | 1 × NVIDIA RTX 3050 (8 GB) | 8 GB |
+| **Phone** | flagship handset, free share of its RAM | 4 GB |
+
+Every chip in both bands is one fixed size — 118 × 32 px, the width of the widest
+of them (the XL tier) rounded up to an even number — so the two rows read as rows
+rather than as eight differently sized pills, and the leading label of each band
+takes a fixed column so both rows start on the same line. A name that would outgrow
+the box is shortened rather than allowed to stretch it; the full one is in the chip's
+tooltip (`title`, where an entry carries one).
+
+Entries live in `DEVICE_PRESETS` in `llm.html` and come in two kinds. One names a
+card in `gpu.json` (`vendor` + `gpu` + `cards`) and is rendered from the catalogue's
+VRAM like a tier chip, so a card missing there drops that chip instead of offering a
+preset it cannot apply. The other carries a flat `vram` figure, for the
+unified-memory devices the catalogue has no card for; those take the same path
+through the filter as a VRAM figure typed in by hand, which is why they leave the
+GPU model empty and the card count disabled. Unified memory is shared with the
+OS — **Reserve** is where that share comes off.
+
 ## Data Quality Features
 
 - **Model deduplication**: Same model across multiple benchmarks merged under one slug
