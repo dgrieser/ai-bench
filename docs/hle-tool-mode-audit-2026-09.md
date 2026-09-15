@@ -240,6 +240,98 @@ would be a self-report board with no spine.
 
 ---
 
+## 8. Resolution — what was changed
+
+All of §7 was applied except the `hle_tools` column, which stays unbuilt for the
+reason given there.
+
+**The five values (§3.2).** Each now stores its publisher's no-tools figure, or nothing:
+
+| model | was | now | source of the new value |
+|---|---:|---:|---|
+| `claude-fable-5-1` | 65.0 | **60.9** | vendor table, "60.9% no tools" |
+| `claude-opus-5` | 64.7 | **56.6** | same table, Opus 5 column — see below |
+| `claude-sonnet-5` | 57.4 | **43.2** | Sonnet 5 launch page, "Without tools: 43.2%" |
+| `deepseek-v4-1-flash` | 63.9 | **36.8** | card's own `HLE (Pass@1)` row |
+| `agents-a1` | 47.6 | **null** | no no-tools run is published anywhere |
+
+`claude-opus-5`'s figure was recovered from the Fable 5.1 announcement's
+four-column comparison table (`Fable 5.1 | Fable 5 | Opus 5 | GPT-5.6 Sol`),
+whose column order is confirmed independently by the prose above it quoting the
+Terminal-Bench-Science leaderboard for columns 2 and 3. That table also restates
+Fable 5 and Opus 5 below the figures llm-stats still carries from their own
+launch pages (63.8 / 63.6 with tools against 64.5 / 64.7), which is Anthropic
+re-reporting after a grader change — the same note they published for Sonnet 4.6.
+
+The column's top five is no longer the five with-tools values:
+
+```
+before: fable-5-1 65.0 | opus-5 64.7 | deepseek-v4-1-flash 63.9 | sonnet-5 57.4 | agents-a1 47.6
+after:  fable-5-1 60.9 | opus-5 56.6 | kimi-k3 46.9 | ornith-1-5-397b 44.6 | hy4-preview 43.4
+```
+
+**Door one — labels (§5.1).** The six with-tools spellings and `HLE-Verified¹`
+are `__unmappable__` in `huggingface-benchmark-name-mapping.json`; the bare
+`hle` is parked in `llmstats-benchmark-name-mapping.json`. `HLE w/ CoT` stays
+mapped — chain of thought is not a tool.
+
+**Door two — the Hub's `notes` (§5.2).** `fetch_huggingface.py` now folds the
+tool mode into the label for the datasets in `TOOL_MODE_SENSITIVE_DATASETS`
+(currently `cais/hle` alone), splitting the ambiguous id into
+`cais/hle (no tools)` (mapped) and `cais/hle (with tools)` (parked). Restricted
+to a named set on purpose: a note is free text, so a general rule would mint a
+label per phrasing and flood the mapping queue, and tools are the *point* of an
+agentic benchmark. A note describing both runs ("With tools: 57.4%. Without
+tools: 43.2%") claims neither mode, so the entry stays unqualified.
+
+Re-running the full corpus through the new ingest moves eleven cards and adds
+exactly two labels, both already answered, so nothing is queued:
+
+```
+agents-a1 47.6→none   glm-5-3 62.5→none      glm-5-3-flash 55.3→none
+step-3-7-flash 48.1→none   mimo-v2-5-pro 48.0→none
+kimi-k2-thinking 44.9→23.9   kimi-k2-5 50.2→30.1   gemma-4-31b 26.5→19.5
+gemma-4-26b-a4b 17.2→8.7   gpt-oss-120b 11.3→8.6   gpt-oss-20b 8.8→7.0
+```
+
+**Door three — llm-stats (§5.3).** `fetch_llmstats.py` no longer publishes the
+bare `hle` field. It re-reads HLE per model from the detail endpoint, where
+`analysis_method` states the mode, and emits `hle (no tools)` only where it can
+verify one: a both-modes note has its without-tools figure parsed out and used,
+a no-tools note keeps the headline, and a with-tools or silent note is dropped.
+On the live board that keeps **36 of 104** — including `claude-sonnet-5` at
+0.432, recovered from a both-modes note, and `deepseek-v4.1-flash` at 0.368 —
+and drops 68. The lookup costs one request per scored model, so callers that
+only need ids or licences pass `--no-hle-detail`.
+
+**What this does not close.** An unqualified `cais/hle` stays mapped, and one
+card in the corpus abuses that: Kimi K3 publishes 56.0 under the bare id with no
+note, which llm-stats' own `analysis_method` identifies as "HLE-Full with
+tools", against the 43.5 the same card prints as `HLE-Full`. Nothing in the HF
+payload distinguishes the two, so the best-value rule still picks 56.0. It is
+inert — AA scores kimi-k3 at 46.9 and the HF ingest is fill-only — and the
+alternative, refusing every `cais/hle` that does not state a mode, would throw
+away some 50 correct values to catch it. Recorded here rather than fixed: if a
+model ever depends on the bare id for its HLE value, this is the case to check.
+
+**AA (§2, and the requirement that it keeps the column).** No change was needed
+and none was made — AA is `RANK_AA`, the ingest is not fill-only, and rank
+blocks a write only from a *strictly* better source, so AA over AA is allowed
+and a regrade lands on the next refresh. What was missing was anything holding
+that true. `test_hle_no_tools.py` now pins it, along with all three doors, and
+runs in the update workflow's gate.
+
+No version number is pinned anywhere. The column tracks whatever AA's current
+HLE implementation says, which is what let the v4.1.1 grader change land without
+anyone doing anything, and the description says so rather than naming a version
+that would go stale.
+
+**The column description.** Now states the tool mode, the size of the effect,
+and that with-tools runs are refused rather than blended — and cites AA's
+methodology page alongside lastexam.ai.
+
+---
+
 ## Appendix A — method
 
 - Values, sources and dates read from `llm.json` at `6cff0ea` (144 non-null `hle` values,

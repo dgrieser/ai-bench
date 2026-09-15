@@ -99,6 +99,36 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 #     the with-tools number for those models, and its ingest runs before this
 #     one, so mapping it would take the null this column wants for the no-tool
 #     value. See README, "Vision".
+# HLE is the third column with a tool-mode split, and the worst of the three,
+# which is why it gets a mechanism rather than a parking note. Across the 25
+# models whose publisher states both, tools are worth a median +11.5 points and
+# up to +27.1 (DeepSeek-V4.1-Flash reports 36.8 plain against 63.9 with tools) --
+# and the best-value rule above means a card printing both hands the column the
+# tools number every time. Five with-tools values did land, and they were the
+# whole of the column's top five; see docs/hle-tool-mode-audit-2026-09.md.
+#
+#   * Six label spellings are parked for naming the tools run outright:
+#     "HLE (w/ Tools)", "HLE (with tools)", "HLE w/ Tools", "HLE w/ tool",
+#     "HLE with search" and "HLE-Full (w/ tools)". "HLE w/ CoT" stays mapped --
+#     chain of thought is not a tool -- as do the text-only and no-tools
+#     spellings, which name the same run AA publishes.
+#   * "HLE-Verified\u00b9" is parked for the other reason: it is a different
+#     question set, not a different mode, and scores about 9 points above the
+#     full set on the one card reporting both (Qwen3.5-397B, 37.6 against 28.7).
+#     llm-stats runs it as a board of its own.
+#   * The labels alone are not enough, because the structured channel reports
+#     both runs under the bare dataset id. fetch_huggingface.py folds the
+#     entry's `notes` into the label for the datasets in its
+#     TOOL_MODE_SENSITIVE_DATASETS set, which splits `cais/hle` into
+#     "cais/hle (no tools)" (mapped) and "cais/hle (with tools)" (parked).
+#     Unqualified "cais/hle" stays mapped: a card that says nothing about tools
+#     is not a card that used them. That is a rule with a known exception --
+#     Kimi K3 files 56.0 under the bare id with no note, which llm-stats reads
+#     as its with-tools run, against the 43.5 the same card prints as
+#     "HLE-Full" -- and it is left standing anyway, because refusing every
+#     unqualified entry would drop some 50 correct values to catch that one.
+#     AA covers kimi-k3, so nothing lands; see the audit's section 8.
+
 UNMAPPABLE = "__unmappable__"
 
 
