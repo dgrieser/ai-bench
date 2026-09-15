@@ -277,12 +277,18 @@
     .preset-chip {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      /* Overrides the full-width default every other button on the page wants. */
-      width: auto;
+      justify-content: center;
+      gap: 6px;
+      /* One size for every chip in both bands, and not the full-width default
+         every other button on the page wants: the widest of them — the XL tier,
+         117.75px, rounded up to an even 118 — sets it, so the two rows read as
+         rows rather than as eight differently sized pills. A label that would
+         outgrow the box is shortened instead of stretching it; what is left
+         over is air, since the content is centred rather than padded out. */
+      width: 118px;
       flex: none;
       height: 32px;
-      padding: 0 13px;
+      padding: 0 8px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: var(--surface);
@@ -9087,7 +9093,8 @@
       const DEVICE_PRESETS = [
         {
           key: "spark",
-          name: "DGX Spark",
+          name: "Spark",
+          title: "NVIDIA DGX Spark",
           vendor: "NVIDIA",
           gpu: "GB10 (Project DIGITS)",
           cards: 1,
@@ -9102,11 +9109,12 @@
         },
         {
           key: "gaming-pc",
-          name: "Gaming PC",
+          name: "New GPU",
+          title: "Current consumer GPU",
           vendor: "NVIDIA",
           gpu: "RTX 5090",
           cards: 1,
-          tip: "One current-generation consumer flagship in a desktop — 32 GB, the most VRAM a single gaming card carries."
+          tip: "One current-generation consumer flagship — an RTX 5090 in a desktop, and 32 GB, the most VRAM a single gaming card carries."
         },
         {
           key: "old-gpu",
@@ -9165,7 +9173,7 @@
             ? `${cards > 1 ? `${cards} × ` : ""}${gpu.manufacturer} ${gpu.model}`
             : preset.note;
           const tip = `${preset.tip} Sets the GPU filter to ${source} — a VRAM budget of ${formatGb(budget)} GB. Click again to clear it.`;
-          return `<button type="button" class="preset-chip" data-preset="${escapeHtml(preset.key)}" aria-pressed="false" data-tip-title="${escapeHtml(preset.name)}" data-tip="${escapeHtml(tip)}">
+          return `<button type="button" class="preset-chip" data-preset="${escapeHtml(preset.key)}" aria-pressed="false" data-tip-title="${escapeHtml(preset.title || preset.name)}" data-tip="${escapeHtml(tip)}">
             <span class="preset-name">${escapeHtml(preset.name)}</span>
             <span class="preset-spec">${escapeHtml(`${formatGb(budget)} GB`)}</span>
           </button>`;

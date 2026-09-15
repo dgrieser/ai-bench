@@ -1973,11 +1973,18 @@ question is usually asked across.
 
 | Chip | Sets | Budget |
 |---|---|---|
-| **DGX Spark** | 1 × NVIDIA GB10 (Project DIGITS) | 128 GB |
+| **Spark** | 1 × NVIDIA GB10 (Project DIGITS) | 128 GB |
 | **Mac mini** | M4 Pro, unified memory | 64 GB |
-| **Gaming PC** | 1 × NVIDIA RTX 5090 | 32 GB |
+| **New GPU** | 1 × NVIDIA RTX 5090 | 32 GB |
 | **Old GPU** | 1 × NVIDIA RTX 3050 (8 GB) | 8 GB |
 | **Phone** | flagship handset, free share of its RAM | 4 GB |
+
+Every chip in both bands is one fixed size — 118 × 32 px, the width of the widest
+of them (the XL tier) rounded up to an even number — so the two rows read as rows
+rather than as eight differently sized pills, and the leading label of each band
+takes a fixed column so both rows start on the same line. A name that would outgrow
+the box is shortened rather than allowed to stretch it; the full one is in the chip's
+tooltip (`title`, where an entry carries one).
 
 Entries live in `DEVICE_PRESETS` in `llm.html` and come in two kinds. One names a
 card in `gpu.json` (`vendor` + `gpu` + `cards`) and is rendered from the catalogue's
