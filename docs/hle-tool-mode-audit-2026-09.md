@@ -332,6 +332,110 @@ methodology page alongside lastexam.ai.
 
 ---
 
+## 9. Provenance pass — does the cited page say what the column measures?
+
+The tool-mode work above asks what a *label* means. This pass asks the prior
+question of every score in the file: **does the page it is cited to still carry
+that number, under a label the column's main source would recognise?** Method:
+match each of the 341 scores cited to a Hugging Face card back to the label on
+that exact card carrying that value, then read the column's main-source
+methodology (AA's page, or the benchmark's board) and compare.
+
+28 failed. Two corrections to the tool-mode list came out of it first:
+
+- **SciCode was backwards.** AA "test[s] with scientist-annotated background
+  information included in the prompt" and "report[s] sub-problem level scoring",
+  so `SciCode (subtask)` and `SciCode (wbg)` *match* the column and the plain
+  `SciCode` label is the loose one. Nothing was parked.
+- **`avg@k` is not a different measurement.** AA scores AIME 2025 as "pass@1
+  with 10 repeats" and τ²-Telecom as "pass@1 as the average of 3 attempts", so
+  `AIME25(avg@32)` and `τ²-Bench (telecom) avg@4` are the same estimator at a
+  different *n*.
+
+### 9.1 Corrected (5)
+
+| model | column | was | now | why |
+|---|---|---:|---:|---|
+| `qwen3-5-397b-a17b` | `browsecomp` | 78.6 | **69.0** | 78.6 was the with-context half of the card's `69.0/78.6` pair |
+| `apriel-v1-6-15b-thinker` | `swe_bench_verified` | 16.0 | **23.0** | 16 is the **Apriel-1.5** column; the card's header puts Apriel-1.6 first |
+| `deepseek-v4-1-flash` | `hle` | 36.8 | **39.1** | the card's `†` figure: the text-only subset, which is AA's question set |
+| `hy4-preview` | `gdpval_aa`, `critpt`, `mcp_atlas` | — | — | values right, re-cited to the llm-stats page that carries them |
+| `glm-5-3-flash` / `deepseek-v4-flash` | `deepswe_1_1` / `terminal_bench_2_0` | — | — | same: re-cited from a card that does not carry the number |
+
+### 9.2 Nulled (23)
+
+No valid measurement exists for these, so the cell is empty rather than wrong:
+
+- **A different question set.** `minicpm5-2b` browsecomp (`Top100`, 100 of
+  1,266), `lfm2-5-2-6b` browsecomp (`BrowseComp+`, another dataset, reported
+  0-1), `a-x-k2` browsecomp (`≤10 searches`), `nanbeige4-1-3b` aime_2026
+  (`AIME 2026 I`, one of the two papers — and the stored 81.5 was a competitor
+  column; the model's own figure is 87.4).
+- **A different budget.** `deepseek-v4-flash-vision` and `deepseek-v4-1-flash`
+  zerobench, both pass@5 where the column is main-set pass@1 — and the DeepSeek
+  row is `ZeroBench-main w/ tools (Pass@5)`, run on the Claude Code harness.
+- **Tools on.** `sarvam-30b` and `sarvam-105b` aime_2025 (`AIME 25 (w/ Tools)`).
+- **A different metric.** `deepseek-v4-1-flash` mmlu_pro (`(EM)` against AA's
+  10-option regex extraction); `granite-4-2-3b/8b/30b` and
+  `nemotron-3-5-lightning` ifbench (`(prompt)` / `(loose)`, which put an 8B
+  granite above Qwen3.5-397B — not the score AA reports).
+- **A different harness entirely.** `mimo-v2-5-pro` aime_2025 (`AIME 24&25`,
+  2-shot, off a base-model pretraining table); `agents-a1` scicode (the card's
+  own agentic framework).
+- **Nowhere on the cited page, nor on any board.** `agents-a1`
+  tau2_bench_telecom (the card has no τ² row at all), `hy4-preview`
+  swe_atlas_rf/tw/qna, `hy3` livecodebench, `qwen3-coder-30b-a3b-instruct`
+  swe_bench_verified and terminal_bench_2_0.
+- **Right number, wrong version.** `nvidia-nemotron-3-super-120b-a12b`
+  livecodebench: llm-stats has 81.2, noted "v5 2024-07 to 2024-12"; the column
+  is v6.
+
+Coverage cost is 23 values across 14 columns — one or two each, except
+zerobench (13 → 11).
+
+### 9.3 Kept, with the reason stated
+
+Not every difference is an error. A **harness** difference on SWE-bench or
+Terminal-Bench has no neutral alternative — every published number is
+harness-conditioned, vals.ai's own included — so `nemotron-3-super` and
+`seed-oss-36b-instruct` keep their OpenHands numbers. Likewise BrowseComp
+context management (`inkling`, `inkling-small`, `agents-a1`): the whole column
+is scaffold-varied, and scaffolding is not a different question set. These stay
+as the column-wide caveats §1 records, not as per-value fixes.
+
+### 9.4 What was changed so the fixes hold
+
+The HF ingest is fill-only, so a nulled cell is refilled on the next refresh
+unless the label that produced it is parked. Eleven were:
+`ZeroBench (Pass@5)` (its twin `ZeroBench (pass@5)` was already parked — a
+capitalisation escape), `BrowseComp Top100`, `BrowseComp+ (OpenClaw)`,
+`open-agent-leaderboard/results (browsecomp_plus)`, `BrowseComp (≤10 searches)`,
+`AIME 25 (w/ Tools)`, `AIME25 (with tools)`, `AIME 2026 I`, `MMLU-Pro (EM)`,
+`IFBench (prompt)`, `IFBench (loose)`.
+
+Two `fetch_llmstats.py` changes were needed for the same reason:
+
+- **The tool-mode gate now covers every no-tools column llm-stats feeds**, not
+  just HLE. AIME 2025, GPQA, MMMU-Pro and SciCode lose only the entries whose
+  `analysis_method` says tools were used — proportionate, because on those the
+  no-tools run is the default and tools are the labelled exception, unlike HLE
+  where the tools headline is the norm. Today that rejects 9, including the
+  96.7 llm-stats would otherwise have put back on both Sarvam models. A code
+  interpreter counts as a tool, which is what catches MMMU-Pro "w/ python".
+- **llm-stats' own exact board now wins.** It runs
+  `humanity's-last-exam-(no-tools,-text-only)` — no tools, text-only subset,
+  which *is* this column — so where a model is on it that score is used instead
+  of the flat field, which is the full multimodal set even when its note says
+  no tools. Published HLE coverage goes from 36 to 42 models, and
+  `deepseek-v4-1-flash` resolves to 39.1, matching the hand fix above. The
+  board is read even where the flat field is null, which costs nothing: the
+  detail request has already been made.
+
+`--no-hle-detail` now drops the gated columns rather than passing them through
+ungated, so the cheap path cannot become a second door.
+
+---
+
 ## Appendix A — method
 
 - Values, sources and dates read from `llm.json` at `6cff0ea` (144 non-null `hle` values,
