@@ -80,6 +80,35 @@ NO_TOOL_FIELDS = {
     "mmmu_pro": "mmmu-pro",
     "scicode": "scicode",
 }
+
+# BrowseComp has no tool mode to police -- a browsing agent is the benchmark --
+# but it does have a scaffold, and two of them are not the default: a swarm of
+# agents, and an explicit context manager bolted onto one. Where a card reports
+# both, the gap is the same size as HLE's tool gap: Kimi K2.5 60.6 plain against
+# 74.9 with a context manager and 78.4 as a swarm, Step 3.5 Flash 51.6 against
+# 69.0, MiMo V2 Flash 45.4 against 58.3. Those are the runs to refuse.
+#
+# Context *compaction* is not context management: it is how a single agent
+# stays inside its window, which every long-horizon run does, so Claude Sonnet
+# 5 ("Single-agent ... context compaction at 200k tokens. Multi-agent reaches
+# 86.6%") keeps its 84.7 -- the note names the multi-agent number precisely
+# because it is not the one being reported.
+BROWSECOMP_FIELD = "browsecomp"
+BROWSECOMP_BENCHMARK_ID = "browsecomp"
+_NON_DEFAULT_SCAFFOLD_RE = re.compile(
+    r"\bagent swarm\b|\bswarm\b|\bmulti-?agent (?:setup|harness|system)\b"
+    r"|\bcontext manag(?:er|ement)\b",
+    re.IGNORECASE,
+)
+
+
+def non_default_scaffold(method: str | None) -> bool:
+    """True when the note says the run used a swarm or an explicit context manager."""
+    if not isinstance(method, str) or not method.strip():
+        return False
+    if re.search(r"\bsingle-?agent\b", method, re.IGNORECASE):
+        return False
+    return bool(_NON_DEFAULT_SCAFFOLD_RE.search(method))
 # llm-stats' benchmark_id for the full 2,500-question board, which is what
 # hle_score is drawn from. Its sibling "hle-verified" is a different question
 # set and never feeds it.
@@ -194,7 +223,7 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
     tools were used. One request per model that carries any gated score, not one
     per model.
     """
-    gated = (HLE_LABEL, *NO_TOOL_FIELDS)
+    gated = (HLE_LABEL, *NO_TOOL_FIELDS, BROWSECOMP_FIELD)
     scored = [r for r in results if any(r["scores"].get(f) is not None for f in gated)]
     if scored:
         print(f"Resolving tool mode for {len(scored)} model(s) ...", file=sys.stderr)
@@ -225,13 +254,19 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
             if used_tools(_method(entries, board)):
                 del record["scores"][field]
                 rejected += 1
+
+        if record["scores"].get(BROWSECOMP_FIELD) is not None and non_default_scaffold(
+            _method(entries, BROWSECOMP_BENCHMARK_ID)
+        ):
+            del record["scores"][BROWSECOMP_FIELD]
+            rejected += 1
     if scored:
         print(
             f"  HLE: kept {hle_kept} of {hle_seen} as no-tools runs; "
             f"dropped {hle_seen - hle_kept} run with tools or not stated",
             file=sys.stderr,
         )
-        print(f"  other no-tools columns: dropped {rejected} run with tools", file=sys.stderr)
+        print(f"  other gated columns: dropped {rejected} run with tools or a non-default scaffold", file=sys.stderr)
 
 
 def get_scores(resolve_hle: bool = True) -> list[dict]:
@@ -286,7 +321,7 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
         # is known, so the cheap path drops them rather than letting an
         # unverified number out by a different door.
         for record in results:
-            for field in (HLE_LABEL, *NO_TOOL_FIELDS):
+            for field in (HLE_LABEL, *NO_TOOL_FIELDS, BROWSECOMP_FIELD):
                 record["scores"].pop(field, None)
     results = [r for r in results if r["scores"]]
 

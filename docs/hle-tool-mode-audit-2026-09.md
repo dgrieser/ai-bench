@@ -436,6 +436,96 @@ ungated, so the cheap path cannot become a second door.
 
 ---
 
+## 10. Mapping sweep — every label, not just the ones that landed
+
+§9 fixed labels caught in the act. This pass reads all **223 mapped labels**
+against the column each one feeds, whether or not it has produced a value,
+because a label that is wrong and idle today is wrong and active the first time
+a card uses that spelling. The test was empirical rather than nominal: where a
+card reports a label, compare it to what AA (or the column's leading source)
+records for the same model.
+
+**That test corrected §9 again.** AA's prose says it "report[s] sub-problem
+level scoring" for SciCode, which §9 read as making `SciCode (subtask)` the
+matching label. The numbers say otherwise — the cards' explicit "(subtask)"
+figures run 4–6 points *above* AA (nemotron-3-super 42.05 against 36.2,
+nemotron-3-nano 33.3 against 30.6) while plain `SciCode` tracks it within a
+point (kimi-k2-6 52.2 against 51.5) and `SciCode (wbg)` matches it exactly
+(minicpm5-2b 26.3). So the qualified label is the one that is parked, and the
+prose alone was the wrong test. Where evidence and wording disagree, the
+evidence decides.
+
+**26 labels parked**, by what they name:
+
+| what the label names | labels | evidence |
+|---|---|---|
+| a different question set | `GPQA`, `MMMU`, `MMMU-PRO (Vision Only)`, `Toolathlon`, `OSWorld`, `τ³-bench` | `GPQA` is the full 448 rather than Diamond (+17.1 over AA on glm-4-7-flash); `MMMU` is not MMMU-Pro (+6 to +19 across ten Qwen cards); bare `τ³-bench` is the cross-domain aggregate — **51.0–68.1 on the granite cards against AA's 5.6–14.4** |
+| a different date window | `LiveCodeBench (2408-2505)`, `*(24/8~25/5)`, and the two `8/1/24–2/1/25` spellings | deepseek-r1 60.5 against AA 77.0; minimax-m1-80k 65.0 against 71.1. The column is v6 |
+| a different metric | `MMMU-Pro (EM)`, `SciCode (subtask)`, `SciCode (sub/main)`, `SWE-Bench Verified (AgentLess 4*10)`, `Terminal Bench 2.1 (Best Reported Harness)` | EM gives deepseek-v4-1-flash 56.5 against AA 77.0; AgentLess 4×10 is best-of-40; "best reported harness" is a maximum over configurations by construction |
+| tools on a no-tools column | `GPQA (with tools)`, `MMMU-Pro (w/ python)` | +2.7 and +0.7 over the plain run on the cards reporting both |
+| a scaffold the benchmark does not default to | `BrowseComp (Agent Swarm)` and the three context-manager spellings | Kimi K2.5: 60.6 plain, 74.9 with a context manager, **78.4 as a swarm** |
+| a harness other than the leading source's | `Terminal-Bench 2.1 (Claude Code)`, `Terminal-Bench 4.0 (Claude Code)`, `(Terminus-2)` | AA runs Terminus 2 on 2.1 and mini-SWE-agent v2.4.6 on 4.0 |
+| ambiguous, and it disagrees | `Telecom` | one bare word for a benchmark with several variants; nemotron-3-super 64.36 against AA 67.8 |
+| scale-unsafe | `LiveCodeBench` | three Ministral cards report it as a 0–1 fraction (0.646, 0.616, 0.548), which the repo's standing rule already forbids, and deepseek-v3-2 reports 74.1 against AA's 55.4 |
+
+None of the 26 was the sole support for a stored value, so nothing was orphaned.
+
+Two are worth naming as near-misses rather than finds. `τ³-bench` is the same
+escape as `ZeroBench (Pass@5)`: `_huggingface_mapping.py` already explains why
+`TAU3-Bench` is parked, and a lowercase sibling was mapped anyway — a 10×
+inflation waiting for the next card to use that spelling. And
+`MMMU-Pro (w/ python)` was missed by hand and caught by the new structural test
+below, which is the point of having one.
+
+### 10.1 Kept on evidence, against the name
+
+`MMMU/MMMU_Pro (mmmu_pro_vision)` stays mapped even though its task id says
+vision: on all 14 cards carrying it the value equals the card's own `MMMU-Pro`
+figure and tracks AA within 0–2.4 points, so these cards are filing one number
+under two ids rather than reporting the vision split. The README label that
+*does* report that split, `MMMU-PRO (Vision Only)`, is parked — on the one card
+reporting both it is 52.89 against 60.28.
+
+`BrowseComp with Search`, `SWE-Bench (OpenHands)` and the other SWE-bench
+harness labels also stay: search is what BrowseComp *is*, and every published
+SWE-bench number is harness-conditioned with no neutral alternative to move to.
+
+### 10.2 BrowseComp values, and a matching gate
+
+Parking the scaffold labels without touching the values they justify would have
+been incoherent, so four were moved to the plain run the same card publishes —
+`step-3-5-flash` 69.0 → **51.6**, `mimo-v2-flash` 58.3 → **45.4**, `kimi-k2-5`
+74.9 → **60.6**, `kimi-k2-6` 86.3 → **83.2** — and three nulled where the card
+publishes only the scaffolded run (`inkling`, `inkling-small`, `agents-a1`).
+
+llm-stats carries the same scaffolds, so `fetch_llmstats.py` now refuses
+BrowseComp entries whose `analysis_method` names a swarm or an explicit context
+manager. The line is drawn at **context compaction, which is not context
+management**: compaction is how one agent stays inside its window, so Claude
+Sonnet 5 keeps its 84.7 — its note reads "Single-agent … context compaction at
+200k tokens. Multi-agent reaches 86.6%", naming the multi-agent number
+precisely because it is not the one being reported. Six entries are refused;
+two of them had no plain counterpart anywhere and were nulled
+(`minimax-m2-5`, `mistral-medium-3-5`).
+
+### 10.3 The rule, as a test
+
+The individual parkings are instances of three rules, and
+`test_hle_no_tools.py` now asserts them over the whole mapping rather than over
+a list:
+
+- no label mapped onto a **no-tools column** may carry a with-tools marker;
+- no label mapped onto **any** column may name a best-over-configurations
+  statistic;
+- the parkings above hold, and the ordinary spellings they sit next to
+  (`GPQA Diamond`, `MMMU-Pro`, `SciCode`, `LiveCodeBench v6`, `BrowseComp`,
+  `Toolathlon-Verified`, `OSWorld-Verified`, `Terminal-Bench 2.1 (Terminus-2)`,
+  `τ³-Banking`) are still mapped.
+
+The first rule is what caught `MMMU-Pro (w/ python)`.
+
+---
+
 ## Appendix A — method
 
 - Values, sources and dates read from `llm.json` at `6cff0ea` (144 non-null `hle` values,
