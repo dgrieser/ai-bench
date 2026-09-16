@@ -1,15 +1,41 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "ling-3-0-flash-fin",
+          "reason": "exact to Ling-3.0-flash-Fin, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "exact to Ling-3.0-flash-Fin, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "exact to Ling-3.0-flash-Fin, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-flash-2-0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "ling-3-0-flash-fin",
       "if_previous": null,
-      "note": "released 2026-09-11 - InclusionAI - https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin",
-      "question": "Add newly released model 'ling-3-0-flash-fin' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "ling-3-0-flash-fin",
-      "universe": null
+      "note": null,
+      "question": "Map Spheron path 'inclusionAI/Ling-3.0-flash-Fin' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "inclusionAI/Ling-3.0-flash-Fin",
+      "universe": "models"
     }
   ]
 }
