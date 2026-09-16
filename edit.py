@@ -13,6 +13,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import _history
 import derive_indexes
 from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
 from _selector import (
@@ -615,6 +616,10 @@ def refresh_derived_scores(doc: dict[str, Any]) -> None:
 
 
 def write_doc(path: Path, doc: dict[str, Any]) -> None:
+    # A hand edit is a score change like any other, and --score-date makes it
+    # one that can land on a day the history already carries; _history.sync
+    # knows what to do with either, so both edit paths get it from here.
+    _history.sync(doc)
     path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 

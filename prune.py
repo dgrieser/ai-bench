@@ -11,6 +11,7 @@ import json
 import sys
 from pathlib import Path
 
+import _history
 import derive_indexes
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -72,6 +73,7 @@ def main() -> int:
     # that carried a contributing score re-ranks the survivors even though none
     # their own scores moved. Refreshed after the drop, before the write.
     derive_indexes.refresh_and_report(doc)
+    _history.sync(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     print(f"\nWrote {path}")
     return 0

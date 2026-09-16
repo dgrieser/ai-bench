@@ -2126,6 +2126,66 @@
       font-weight: 700;
     }
 
+    /* What a score used to be, on a chip that records a change. Set back in
+       the muted ink and struck through: the new number is the reading, the old
+       one is the context it is read against. */
+    .recent-score-prev {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    /* Direction, as a shape. No colour of its own — see deltaArrow — so it
+       reads the same in greyscale as it does in either theme. */
+    .recent-score-arrow {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .recent-score-arrow.is-better,
+    .recent-score-arrow.is-worse {
+      color: var(--text);
+    }
+
+    /* A chip that records a change carries three numbers' worth of content, so
+       it gets the room and a solid edge; an arrival keeps the lighter one. */
+    .recent-score.is-update {
+      border-color: var(--line-soft);
+      background: var(--surface);
+    }
+
+    /* The panel's window. A button, not a link: it changes how much of the
+       list is drawn, it does not go anywhere. */
+    .recent-window {
+      width: auto;
+      min-height: 0;
+      margin-top: 16px;
+      padding: 5px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+
+    .recent-window:hover {
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .recent-window[aria-pressed="true"] {
+      border-color: var(--accent);
+    }
+
     /* The tail of a long day. Styled as a link rather than a control: it opens
        more of the same list, it does not act on the table. */
     .recent-more > summary {
@@ -2160,6 +2220,65 @@
 
     .recent-more > .recent-entries {
       padding-top: 8px;
+    }
+
+    .detail-history-lead {
+      margin: 0 0 14px;
+      max-width: 82ch;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* A benchmark's later entries hang off its first: the name column is
+       empty on them, so the rule that separates benchmarks is drawn only above
+       the row that names one. */
+    .detail-history-table tr.history-first + tr.history-cont td,
+    .detail-history-table tr.history-cont + tr.history-cont td {
+      border-top-color: transparent;
+    }
+
+    /* The change column reads as prose beside three columns of data, so it is
+       set in the body face rather than the mono the numbers use. */
+    .detail-history-table .history-change {
+      color: var(--text);
+      font-size: 0.78rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .detail-history-table .history-age {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    /* One line per recorded change, in the dialog's own dl. */
+    .bench-dialog-event {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .bench-dialog-event-date {
+      color: var(--subtle);
+    }
+
+    .bench-dialog-event-kind {
+      color: var(--muted);
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+    }
+
+    .bench-dialog-event-more {
+      display: block;
+      margin-top: 2px;
+      color: var(--subtle);
+      font-size: 0.7rem;
     }
 
     /* ── Benchmarks panel ─────────────────────────── */
@@ -4944,6 +5063,11 @@
         modelsBySlug: new Map(),
         // Where the table was scrolled when a detail page took over.
         tableScroll: 0,
+        // The Recently Added panel's window. It opens on the last
+        // HISTORY_DAYS days and "Show all history" widens it to everything
+        // llm.json records; not an address, because it is a way of reading one
+        // panel rather than a different view of the index.
+        history: { showAll: false },
         radar: {
           axes: [],
           pickerOpen: false
@@ -6561,6 +6685,23 @@
 
         ui.content.innerHTML = tableHtml;
 
+        // Widening the Recently Added panel to the whole history, and back.
+        // The table is rebuilt around it, which is cheap and keeps the panel
+        // built by exactly one path; the scroll position is restored so the
+        // page does not jump out from under the button that was just pressed.
+        const historyToggle = ui.content.querySelector("[data-history-toggle]");
+        if (historyToggle) {
+          historyToggle.addEventListener("click", () => {
+            const anchor = historyToggle.getBoundingClientRect().top;
+            state.history.showAll = !state.history.showAll;
+            renderTable();
+            const moved = ui.content.querySelector("[data-history-toggle]");
+            if (moved) {
+              window.scrollBy(0, moved.getBoundingClientRect().top - anchor);
+            }
+          });
+        }
+
         ui.content.querySelectorAll("th[data-sort-key]").forEach((th) => {
           th.addEventListener("click", () => {
             const key = th.dataset.sortKey;
@@ -6692,29 +6833,48 @@
         return `${count} ${noun}${count === 1 ? "" : "s"}`;
       }
 
-      // The scores a model brought with it: every visible column holding a
-      // number, in table order. Derived columns are left out, the same
-      // exclusion scoreFreshness makes for a model already here — an index
-      // recomputed from the other columns is arithmetic, not a measurement,
-      // whether it lands with a new model or a day later.
+      // The scores a model brought with it, for a model whose history is not
+      // recorded — a hand-written llm.json, or one from before scores_history
+      // existed. Every visible column holding a number, in table order, each
+      // dressed as the arrival it must have been. Derived columns are left
+      // out, the same exclusion scoreFreshness makes for a model already here:
+      // an index recomputed from the other columns is arithmetic, not a
+      // measurement, whether it lands with a new model or a day later.
       function arrivedScores(model) {
         return visibleBenchmarkKeys()
           .filter((key) => !isDerivedBenchmark(key))
-          .map((key) => ({ key, value: toNumber(model.scores?.[key]) }))
+          .map((key) => ({
+            key,
+            value: toNumber(model.scores?.[key]),
+            previous: null,
+            kind: "added",
+            source: model.scores_source?.[key] || "",
+            date: model.date_added || ""
+          }))
           .filter(({ value }) => Number.isFinite(value));
       }
 
-      // Everything the table is currently marking, gathered by the day it was
-      // stamped: models added inside the window, and single scores stamped
-      // inside it on models older than that. Membership is decided by the very
-      // tests the marks use — isRecentModel and scoreFreshness — so the list
-      // and the table cannot disagree about what is new, down to the one case
-      // they skip, a derived column. Both kinds of row carry their scores the
-      // same way, {model, entries}, so one renderer draws either.
-      // Reads state.filteredModels and the visible benchmark keys, so it
-      // describes the table on screen rather than the whole file.
+      // Everything that happened inside the window, gathered by the day it
+      // happened: models that arrived, and scores that were added or moved on
+      // models already here. The source is scores_history, so this is the
+      // recorded past rather than the last stamp — a score that changed twice
+      // is listed twice, on both of its days, which is the thing the panel
+      // could never say while a date was all it had.
+      //
+      // A model that arrived inside the window is still listed once, on its
+      // own day, with the scores it came with: thirty of its cells listed
+      // separately would be the same news thirty times over, and the badge
+      // beside its name already says the whole row is new. Anything that
+      // happened to it *after* it arrived is listed on its own day like any
+      // other model's. Withdrawals are recorded in llm.json but not drawn
+      // here — the panel is about what the table gained.
+      //
+      // Both kinds of row carry their entries the same way, {model, entries},
+      // so one renderer draws either. Reads state.filteredModels and the
+      // visible benchmark keys, so it describes the table on screen rather
+      // than the whole file.
       function recentAdditions() {
-        const benchKeys = visibleBenchmarkKeys();
+        const benchKeys = visibleBenchmarkKeys().filter((key) => !isDerivedBenchmark(key));
         const byDate = new Map();
         const dayFor = (date) => {
           if (!byDate.has(date)) {
@@ -6724,24 +6884,48 @@
         };
 
         state.filteredModels.forEach((model) => {
-          if (isRecentModel(model)) {
-            dayFor(model.date_added).models.push({ model, entries: arrivedScores(model) });
-            return;
-          }
-          // A model can hold scores from several days at once, so its cells are
-          // split by their own stamp rather than filed under the newest of them.
+          // isRecentModel is the table's own test, so a model wears the badge
+          // in this panel exactly when it wears it in the table; past that
+          // week the arrival is still an event, just an unbadged one. A
+          // reference model is never an arrival either way — it is closed and
+          // carried as a yardstick, which is not news about the open field.
+          const arrival = !isReferenceModel(model) && inHistoryWindow(model.date_added)
+            ? model.date_added
+            : "";
+          const arrived = [];
+          // A model can hold changes from several days at once, so its entries
+          // are split by their own date rather than filed under the newest.
           const byStamp = new Map();
+
           benchKeys.forEach((key) => {
-            const value = toNumber(model.scores?.[key]);
-            if (!Number.isFinite(value) || !scoreFreshness(model, key)) {
-              return;
-            }
-            const stamp = model.scores_updated[key];
-            if (!byStamp.has(stamp)) {
-              byStamp.set(stamp, []);
-            }
-            byStamp.get(stamp).push({ key, value });
+            scoreHistory(model, key).forEach((event) => {
+              if (event.kind === "removed" || !inHistoryWindow(event.date)) {
+                return;
+              }
+              // Dated no later than the model itself: it came with it. A
+              // score first seen after that is its own piece of news even
+              // though the model is still new.
+              if (arrival && event.kind === "added" && event.date <= arrival) {
+                arrived.push({ key, ...event });
+                return;
+              }
+              if (!byStamp.has(event.date)) {
+                byStamp.set(event.date, []);
+              }
+              byStamp.get(event.date).push({ key, ...event });
+            });
           });
+
+          if (arrival) {
+            // A model whose history is recorded is described by it, even when
+            // that comes to nothing; only a model with no history at all falls
+            // back to reading its arrival off the scores it is holding.
+            const recorded = model.scores_history && typeof model.scores_history === "object";
+            dayFor(arrival).models.push({
+              model,
+              entries: recorded ? arrived : arrivedScores(model)
+            });
+          }
           byStamp.forEach((entries, stamp) => dayFor(stamp).scores.push({ model, entries }));
         });
 
@@ -6768,23 +6952,54 @@
         return withReferenceLock(model, `<a class="${className}" href="#model/${escapeAttr(modelSlug(model.name))}"${tip}>${name}</a>`);
       }
 
-      // The chips for one entry: each benchmark, its value, and a link to the
-      // page the value was read from. A score that arrived with a new model is
-      // drawn and hovers exactly like one restamped on a model already here —
-      // the day means the same thing in both cases, so one renderer says it
-      // once.
+      // Which way a score moved, for a reader who cannot be asked to remember
+      // that AA-Omniscience counts hallucinations and GPQA counts answers.
+      // Better is better whichever direction the number itself went.
+      function scoreDelta(key, value, previous) {
+        if (!Number.isFinite(value) || !Number.isFinite(previous) || value === previous) {
+          return "";
+        }
+        const rose = value > previous;
+        return rose === !isLowerBetter(key) ? "is-better" : "is-worse";
+      }
+
+      // Direction as a shape rather than a colour. The three inks on this page
+      // are spoken for -- blue is a link, red is "new", teal is a closed
+      // reference model -- and a fourth pair saying "better/worse" would put
+      // green beside a red that already means something else. The arrow tilts
+      // instead, which reads in greyscale and at any zoom.
+      function deltaArrow(key, value, previous) {
+        const direction = scoreDelta(key, value, previous);
+        if (direction === "is-better") return "&nearr;";
+        if (direction === "is-worse") return "&searr;";
+        return "&rarr;";
+      }
+
+      // The chips for one entry: each benchmark, what it is now, and — where
+      // the score replaced one — what it was. A score that arrived with a new
+      // model is drawn and hovers exactly like one that landed on a model
+      // already here; the difference the panel draws is between a score
+      // arriving and a score moving, not between the rows they sit in.
       function renderRecentScoreChips(row, day) {
         const model = row.model;
-        const chips = row.entries.map(({ key, value }) => {
-          const source = recentLinkUrl(model.scores_source?.[key]);
-          // The slip carries the same provenance the table cell's slip does.
+        const chips = row.entries.map(({ key, value, previous, kind, source: stamped }) => {
+          // The page the score was read from on the day it was read, which is
+          // not always the page the model cites now.
+          const source = recentLinkUrl(stamped || model.scores_source?.[key] || "");
+          const moved = kind === "updated" && Number.isFinite(previous);
+          // The slip carries the same provenance the table cell's slip does,
+          // and says in words what the arrow says in shape.
           const tip = tipAttrs({
             eyebrow: model.name || "",
             eyebrowVerbatim: true,
             title: getBenchmarkFullName(key),
             body: scoreTipBody(key),
             meta: [
-              `Added ${day.date} · ${describeAge(day.age)}`,
+              moved
+                ? `Updated ${day.date} · ${describeAge(day.age)} — was ${formatScore(previous, key)}`
+                : kind === "recorded"
+                  ? `First recorded ${day.date} · ${describeAge(day.age)} — the index kept no history before ${state.data?.history_since || "it began"}, so this is the day the score was last written, not necessarily the day it arrived`
+                  : `Added ${day.date} · ${describeAge(day.age)}`,
               source ? "" : "No source recorded for this score."
             ].filter(Boolean).join("\n"),
             url: source
@@ -6792,10 +7007,17 @@
           // Column headers wear short_name because a table column has a fixed
           // width to live in; a chip here has none, so it can say which
           // benchmark it is outright instead of asking for a hover.
-          const label = `<span class="recent-score-name">${escapeHtml(getBenchmarkFullName(key))}</span><span class="recent-score-value">${formatScore(value, key)}</span>`;
+          const label = [
+            `<span class="recent-score-name">${escapeHtml(getBenchmarkFullName(key))}</span>`,
+            moved
+              ? `<span class="recent-score-prev">${formatScore(previous, key)}</span><span class="recent-score-arrow ${scoreDelta(key, value, previous) || "is-flat"}" aria-hidden="true">${deltaArrow(key, value, previous)}</span>`
+              : "",
+            `<span class="recent-score-value">${formatScore(value, key)}</span>`
+          ].join("");
+          const className = `recent-score${moved ? " is-update" : ""}`;
           return source
-            ? `<a class="recent-score" href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tip}>${label}</a>`
-            : `<span class="recent-score"${tip}>${label}</span>`;
+            ? `<a class="${className}" href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tip}>${label}</a>`
+            : `<span class="${className}"${tip}>${label}</span>`;
         }).join("");
         return chips ? `<span class="recent-scores">${chips}</span>` : "";
       }
@@ -6820,9 +7042,20 @@
       }
 
       function renderRecentScoreEntry(row, day) {
+        const added = row.entries.filter((entry) => entry.kind !== "updated").length;
+        const moved = row.entries.length - added;
+        const firstSeen = row.entries.every((entry) => entry.kind === "recorded");
+        // Counted before the chips rather than left to be counted off them:
+        // the note is what a reader scanning the column reads, and a day with
+        // both kinds on one model would otherwise need the arrows counting.
+        const note = [
+          added ? (firstSeen ? `${countLabel(added, "score")} first recorded` : `${countLabel(added, "new score")}`) : "",
+          moved ? `${countLabel(moved, "score")} updated` : ""
+        ].filter(Boolean).join(", ");
         return `
           <div class="recent-entry">
             <span class="recent-entry-head">${renderRecentModelName(row.model, false)}</span>
+            ${note ? `<span class="recent-note">${escapeHtml(note)}</span>` : ""}
             ${renderRecentScoreChips(row, day)}
           </div>
         `;
@@ -6830,24 +7063,52 @@
 
       function renderRecentPanel() {
         const days = recentAdditions();
+        const showAll = state.history.showAll;
         const modelCount = days.reduce((total, day) => total + day.models.length, 0);
-        // Every score the panel lists, whichever kind of row carries it: the
-        // ones restamped on models already here and the ones a new model
-        // arrived with. The lead counts what is on screen, so a reader can
-        // check it against the chips below rather than being told that a new
-        // model's scores are somewhere in the model count.
-        const scoreCount = days.reduce((total, day) =>
-          total + [...day.models, ...day.scores]
-            .reduce((sum, row) => sum + row.entries.length, 0), 0);
+        // Every score the panel lists, split by what happened to it: the ones
+        // that arrived (with a new model or on a model already here) and the
+        // ones that replaced a number the table used to show. The lead counts
+        // what is on screen, so a reader can check it against the chips below
+        // rather than being told that a new model's scores are somewhere in
+        // the model count.
+        const counts = days.reduce((totals, day) => {
+          [...day.models, ...day.scores].forEach((row) => {
+            row.entries.forEach((entry) => {
+              if (entry.kind === "updated") {
+                totals.updated += 1;
+              } else if (entry.kind === "recorded") {
+                totals.recorded += 1;
+              } else {
+                totals.added += 1;
+              }
+            });
+          });
+          return totals;
+        }, { added: 0, recorded: 0, updated: 0 });
 
-        const lead = modelCount || scoreCount
-          ? `<span class="recent-count">${countLabel(modelCount, "model")}</span> and <span class="recent-count">${countLabel(scoreCount, "score")}</span> arrived in the last ${NEW_DAYS} days — the window the table marks, across the models and columns it is showing now. A date records only the last write, so a score measured again is listed like a first one. A new model's scores are listed beside it, since they arrived with it, and a derived column is left out, exactly as in the table.`
-          : `Nothing has been added in the last ${NEW_DAYS} days.`;
+        const span = showAll
+          ? "since the index started keeping one"
+          : `in the last ${HISTORY_DAYS} days`;
+        const since = state.data?.history_since || "";
+        const lead = modelCount || counts.added || counts.recorded || counts.updated
+          ? [
+              `<span class="recent-count">${countLabel(modelCount, "model")}</span>, `,
+              `<span class="recent-count">${countLabel(counts.added + counts.recorded, "score")}</span> added and `,
+              `<span class="recent-count">${countLabel(counts.updated, "updated score")}</span> ${span}, `,
+              `across the models and columns the table is showing now. An updated score is drawn with the number it replaced, `,
+              `so a measurement that moved reads as a move rather than as a fresh arrival. A new model's scores are listed beside it, `,
+              `since they arrived with it; a derived column is left out, exactly as in the table; and a score that was withdrawn is `,
+              `kept in the data but not drawn here.`,
+              counts.recorded && since
+                ? ` ${counts.recorded === counts.added + counts.recorded ? "These" : `${counts.recorded} of them`} are marked <em>first recorded</em>: the index began keeping this history on ${escapeHtml(since)}, and a score last written before that day carries the date of that write without what it replaced.`
+                : ""
+            ].join("")
+          : `Nothing has changed ${showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.`;
 
         const items = days.map((day) => {
-          // The dot fades across the same window the table marks in red, off
-          // the same arithmetic — it just still has a gradient to spend.
-          const fresh = ((NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
+          // The dot fades across the window the table marks in red — the
+          // panel's own window is longer, so most days sit at its faintest.
+          const fresh = Math.max(0, (NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
           const entries = [
             ...day.models.map((row) => renderRecentModelEntry(row, day)),
             ...day.scores.map((row) => renderRecentScoreEntry(row, day))
@@ -6861,7 +7122,7 @@
           const head = entries.slice(0, RECENT_DAY_PREVIEW).join("");
           const tail = entries.slice(RECENT_DAY_PREVIEW);
           const more = tail.length
-            ? `<details class="recent-more"><summary>${countLabel(tail.length, "more model")}</summary><div class="recent-entries">${tail.join("")}</div></details>`
+            ? `<details class="recent-more"><summary>${tail.length} more ${tail.length === 1 ? "entry" : "entries"}</summary><div class="recent-entries">${tail.join("")}</div></details>`
             : "";
           return `
             <li class="recent-day" style="--fresh:${fresh}">
@@ -6874,11 +7135,22 @@
           `;
         }).join("");
 
+        // The window is a button rather than a <details> holding both lists:
+        // the full history is thousands of entries, and building it into every
+        // filter change to keep it one click away would cost every reader who
+        // never opens it.
+        const toggle = `
+          <button type="button" class="recent-window" data-history-toggle aria-pressed="${showAll ? "true" : "false"}">
+            ${showAll ? `Show the last ${HISTORY_DAYS} days` : "Show all history"}
+          </button>
+        `;
+
         return `
-          <section class="recent-panel" aria-label="Recently added models and scores">
-            <h2>Recently Added</h2>
+          <section class="recent-panel" aria-label="Recently added and updated scores">
+            <h2>${showAll ? "Score History" : "Recently Added"}</h2>
             <p class="recent-lead">${lead}</p>
             ${items ? `<ol class="recent-days">${items}</ol>` : ""}
+            ${toggle}
           </section>
         `;
       }
@@ -7178,6 +7450,73 @@
         const age = daysSince(model.scores_updated?.[key]);
         if (age === null || age < 0 || age >= NEW_DAYS) return 0;
         return (NEW_DAYS - age) / NEW_DAYS;
+      }
+
+      // How far back the Recently Added panel looks, against NEW_DAYS for
+      // what the table marks in red. A month is long enough to see a score
+      // land and be measured again, which is the thing a single stamp could
+      // never show; "Show all history" opens the rest.
+      const HISTORY_DAYS = 30;
+
+      // One score's recorded past, oldest first: every entry of
+      // scores_history with the kind of change it was and, for an update, the
+      // number it replaced. llm.json stores neither -- the list itself says
+      // it, and deriving it here is what keeps a stored label from ever
+      // disagreeing with the values around it (see _history.py).
+      function scoreHistory(model, key) {
+        const log = model?.scores_history?.[key];
+        if (!Array.isArray(log)) {
+          return [];
+        }
+        // The day the history starts. An entry older than that is the file as
+        // it stood when recording began: one per score, dated by the stamp it
+        // was carrying, and that stamp moved when the score *changed*, so the
+        // write it stands for may have replaced a number nobody kept. Such an
+        // entry is a first sighting, not an arrival, and the panel says so
+        // rather than claiming a score was new when it may not have been.
+        const since = state.data?.history_since || "";
+        let previous = null;
+        return log
+          .filter((entry) => entry && typeof entry === "object" && entry.date)
+          .map((entry) => {
+            const score = toNumber(entry.score);
+            const value = Number.isFinite(score) ? score : null;
+            // A score with nothing before it is an arrival, whether it is the
+            // first entry or the first after the column emptied; a null is the
+            // column emptying; anything else replaced the number before it.
+            const seeded = previous === null && since && entry.date < since;
+            const kind = value === null
+              ? "removed"
+              : (previous === null ? (seeded ? "recorded" : "added") : "updated");
+            const event = {
+              date: entry.date,
+              value,
+              previous: kind === "updated" ? previous : null,
+              // The page the score was read from *then*, which is not always
+              // the one the model cites now.
+              source: typeof entry.source === "string" ? entry.source : "",
+              kind
+            };
+            previous = value;
+            return event;
+          });
+      }
+
+      // Newest first, which is the order both readers of a single score's past
+      // want: the detail page lists it that way, and the slip quotes its head.
+      function scoreHistoryDesc(model, key) {
+        return scoreHistory(model, key).slice().reverse();
+      }
+
+      // Whether a stamp falls inside the panel's window. Future dates stay out
+      // the way they do everywhere else here: a date ahead of today is a data
+      // error, not news.
+      function inHistoryWindow(date) {
+        const age = daysSince(date);
+        if (age === null || age < 0) {
+          return false;
+        }
+        return state.history.showAll || age < HISTORY_DAYS;
       }
 
       function renderNewBadge(dateAdded) {
@@ -7621,6 +7960,7 @@
             ${renderRadarSection([model])}
           </div>
           ${renderDetailBenchTable(model)}
+          ${renderDetailHistory(model)}
         `;
       }
 
@@ -8315,6 +8655,8 @@
         const source = recentLinkUrl(model.scores_source?.[key]);
         const benchUrl = recentLinkUrl(benchmarkLinks(bench)[0] || "");
         const fresh = scored && scoreFreshness(model, key) > 0;
+        // Newest first, because the head of the list is what the dialog quotes.
+        const history = scoreHistoryDesc(model, key);
 
         ui.benchDialog.innerHTML = `
           <button type="button" class="bench-dialog-close" aria-label="Close">&times;</button>
@@ -8328,6 +8670,10 @@
             <dd>${Number.isFinite(pct) ? `p${Math.round(pct * 100)} of ${rankedCount(key)} ranked` : '<span class="na">&mdash;</span>'}</dd>
             <dt>Updated</dt>
             <dd${fresh ? ' class="fresh"' : ""}>${updated ? `${escapeHtml(updated)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : '<span class="na">&mdash;</span>'}</dd>
+            <dt>History</dt>
+            <dd>${history.length
+              ? history.slice(0, 4).map((event) => `<span class="bench-dialog-event"><span class="bench-dialog-event-date">${escapeHtml(event.date)}</span>${event.value === null ? "&mdash;" : escapeHtml(formatScore(event.value, key))} <span class="bench-dialog-event-kind">${escapeHtml(describeScoreEvent(key, event))}</span></span>`).join("")
+              : '<span class="na">&mdash;</span>'}${history.length > 4 ? `<span class="bench-dialog-event-more">${escapeHtml(`${history.length - 4} earlier`)}</span>` : ""}</dd>
             <dt>Source</dt>
             <dd>${source ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceHost(source))}</a>` : '<span class="na">&mdash;</span>'}</dd>
             <dt>About</dt>
@@ -8414,6 +8760,97 @@
                     <th class="num">Score</th>
                     <th class="num">Percentile</th>
                     <th class="num">Updated</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }
+
+      // What one change reads as, in words, on the detail page and in the
+      // benchmark dialog: the table above says when a score was last written,
+      // this says what that write did.
+      function describeScoreEvent(key, event) {
+        if (event.kind === "removed") {
+          return "withdrawn";
+        }
+        if (event.kind === "updated" && Number.isFinite(event.previous)) {
+          return `updated from ${formatScore(event.previous, key)}`;
+        }
+        // Not "added": all that is known about a score written before the
+        // history began is the day it was written.
+        return event.kind === "recorded" ? "first recorded" : "added";
+      }
+
+      // Every score this model has on record, benchmark by benchmark, newest
+      // change first. The table above is the model as it stands; this is how
+      // it got there — the days a number moved, and what it moved from. A
+      // benchmark with one entry is still listed: that entry is the day the
+      // score entered the index, which is a fact about it, and leaving it out
+      // would make a short history look like a missing one.
+      //
+      // Benchmarks come in the index's own order, the same walk the table
+      // above makes, and the whole model is shown rather than a window: a
+      // model's own page is where the long view belongs, and no model carries
+      // enough history for that to be long.
+      function renderDetailHistory(model) {
+        const groups = benchmarkKeysByCategory()
+          .flatMap(({ keys }) => keys)
+          .map((key) => ({ key, events: scoreHistoryDesc(model, key) }))
+          .filter(({ events }) => events.length);
+
+        if (!groups.length) {
+          return "";
+        }
+
+        const changes = groups.reduce((total, { events }) => total + events.length - 1, 0);
+        const seeded = groups.some(({ events }) => events.some((event) => event.kind === "recorded"));
+
+        // One row per recorded change, with the benchmark named on the first
+        // of its rows and left blank on the rest. A grouped header per
+        // benchmark would be half the table's rows on a model whose scores
+        // have mostly been written once, which is most of them.
+        const rows = groups.map(({ key, events }) => {
+          const bench = state.data?.benchmarks?.[key] || {};
+          return events.map((event, index) => {
+            const source = recentLinkUrl(event.source);
+            const age = daysSince(event.date);
+            const moved = event.kind === "updated" && Number.isFinite(event.previous);
+            const name = index === 0
+              ? `<span class="bench-name-cell"${tipAttrs(benchmarkTipFields(key))}>${renderBenchmarkIcon(key)}<span class="bench-name-text">${escapeHtml(bench.name || getBenchmarkLabel(key))}</span></span>`
+              : "";
+            return `
+              <tr class="${index === 0 ? "history-first" : "history-cont"}${event.kind === "removed" ? " bench-missing" : ""}">
+                <td>${name}</td>
+                <td class="num">${escapeHtml(event.date)}</td>
+                <td class="num">${event.value === null ? '<span class="num na">&mdash;&nbsp;</span>' : formatScore(event.value, key)}</td>
+                <td class="history-change">${moved ? `<span class="recent-score-arrow ${scoreDelta(key, event.value, event.previous) || "is-flat"}" aria-hidden="true">${deltaArrow(key, event.value, event.previous)}</span> ` : ""}${escapeHtml(describeScoreEvent(key, event))}${age !== null && age >= 0 ? ` <span class="history-age">${escapeHtml(describeAge(age))}</span>` : ""}</td>
+                <td class="bench-source">${source
+                  ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer"${tipAttrs({ eyebrow: "Source", body: "Where this score was read on the day it was recorded.", url: source })}>${escapeHtml(sourceHost(source))}</a>`
+                  : '<span class="na">&mdash;</span>'}</td>
+              </tr>`;
+          }).join("");
+        }).join("");
+
+        return `
+          <section class="detail-bench-panel" aria-label="Score history for this model">
+            <h2>Score history</h2>
+            <p class="detail-history-lead">${changes
+              ? `${countLabel(changes, "score")} ${changes === 1 ? "has" : "have"} moved since first being recorded here; every other benchmark carries a single entry, the day its score was written.`
+              : "Every benchmark here carries a single entry, the day its score was written — nothing has been measured again since."}${seeded
+              ? ` A score marked <em>first recorded</em> was written before this index began keeping history on ${escapeHtml(state.data?.history_since || "")}, so its entry is the day of that write rather than the day the score arrived.`
+              : ""} Derived index columns keep no history: they are recomputed whenever their inputs move.</p>
+            <div class="detail-bench-card">
+              <table class="detail-bench-table detail-history-table">
+                <thead>
+                  <tr>
+                    <th>Benchmark</th>
+                    <th class="num">Date</th>
+                    <th class="num">Score</th>
+                    <th>Change</th>
                     <th>Source</th>
                   </tr>
                 </thead>

@@ -183,6 +183,14 @@ jobs:
       # a mode filter relaxed has this run fill a null with a measurement from
       # a different benchmark, at the top of the column, where nothing
       # overwrites it. Offline and instant; no key, no network.
+      #
+      # test_history.py guards the one thing in llm.json this run can damage
+      # beyond repair: scores_history is the only record of what a score used
+      # to be, and a writer that stops recording -- or records the wrong thing
+      # -- loses that past for good, because the next run overwrites the number
+      # it would have been reconstructed from. It also checks the committed
+      # llm.json against the same rules, so a file edited by hand is caught
+      # here rather than on the site.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -193,6 +201,7 @@ jobs:
           ./test_pending_json.py
           ./test_reference.py
           ./test_hle_no_tools.py
+          ./test_history.py
           ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,

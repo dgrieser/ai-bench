@@ -72,6 +72,7 @@ import sys
 from pathlib import Path
 from typing import Any, NamedTuple
 
+import _history
 from _reference import apply_reference_flags
 from _scores import stamp_score_updated
 
@@ -671,6 +672,7 @@ def main() -> int:
         print("\ndry-run only, pass --write to persist changes")
         return 0
 
+    _history.sync(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     print(f"\nWrote {path}")
     return 0
