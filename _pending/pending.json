@@ -1,21 +1,3 @@
 {
-  "questions": [
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "atria-dawn-preview",
-          "reason": "exact to Atria-Dawn-Previe, substring match"
-        }
-      ],
-      "default": "atria-dawn-preview",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'internlm/Atria-Dawn-Previe' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "subject": "internlm/Atria-Dawn-Previe",
-      "universe": "models"
-    }
-  ]
+  "questions": []
 }
