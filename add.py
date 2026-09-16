@@ -16,6 +16,7 @@ from typing import Any
 
 import _history
 import _prompts
+import _remap
 from _params import fetch_hf_params, normalize_params
 from _selector import (
     clear_selector,
@@ -983,6 +984,37 @@ def ensure_unique_name(models: list[dict[str, Any]], name: str) -> None:
             raise ValueError(f"Model '{name}' already exists.")
 
 
+def report_repointed_mappings(doc: dict[str, Any], name: str) -> None:
+    """Move mappings that named the nearest model onto the one just added.
+
+    A source name is asked about once and the answer is never revisited, so a
+    row mapped onto the closest model while this one did not exist stays there
+    -- feeding its scores to the wrong model, and failing test_propose.py on
+    the next run, which is the only thing that would ever have noticed. Only a
+    normalized-equality match moves; see _remap.py for why nothing weaker does.
+
+    Ordered after the write so a failure here leaves the model added rather
+    than half-added: the mappings can be fixed by hand or by the next add, and
+    the test says so loudly either way.
+    """
+    try:
+        repointed, reported = _remap.repoint(doc, name)
+    except Exception as exc:  # noqa: BLE001 - a mapping sweep must not sink the add
+        print(f"Could not re-point mappings onto '{name}': {exc}", file=sys.stderr)
+        return
+
+    for stale in repointed:
+        print(f"Re-pointed {stale}")
+    for stale in reported:
+        # A closed-weights verdict is _openness.py's, not a naming mistake, so
+        # it is said out loud and left alone.
+        print(
+            f"{stale.path.name}: {stale.source_name!r} is parked as {stale.was} but now "
+            f"names '{name}'; leaving it, since that is a licence verdict, not a mapping",
+            file=sys.stderr,
+        )
+
+
 def write_doc(path: Path, doc: dict[str, Any]) -> None:
     _history.sync(doc)
     path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -1013,6 +1045,7 @@ def main() -> int:
     ensure_unique_name(models, model["name"])
     models.append(model)
     write_doc(path, doc)
+    report_repointed_mappings(doc, model["name"])
     if not args.skip_osworld:
         maybe_add_osworld_mapping(model["name"], interactive)
     if not args.skip_deepswe:

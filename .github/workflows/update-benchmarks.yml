@@ -191,6 +191,13 @@ jobs:
       # it would have been reconstructed from. It also checks the committed
       # llm.json against the same rules, so a file edited by hand is caught
       # here rather than on the site.
+      #
+      # test_remap.py is the other side of test_propose.py's ground truth: that
+      # one refuses a proposal contradicting a mapping, this one refuses a
+      # mapping contradicting a model already in the index, and names the model
+      # that would fix it. A regression in the sweep is silent -- the mapping
+      # simply stays wrong, feeding one model's scores to another until the
+      # next run goes red.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           ./test_prompts.py
@@ -202,6 +209,7 @@ jobs:
           ./test_reference.py
           ./test_hle_no_tools.py
           ./test_history.py
+          ./test_remap.py
           ./test_artificialanalysis_api.py
 
       # Two combinations that are silently destructive rather than merely wrong,
