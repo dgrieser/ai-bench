@@ -31,6 +31,7 @@ import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
 import fetch_vals
+import fetch_zerobench
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _precedence import (
@@ -52,6 +53,7 @@ from _precedence import (
     TBENCH_SOURCE_URL,
     TOOLATHLON_SOURCE_URL,
     VALS_KEY_URLS,
+    ZEROBENCH_SOURCE_URL,
     may_overwrite,
 )
 from _reference import apply_reference_flags, missing_reference_models
@@ -61,6 +63,7 @@ from fill_source_urls import canonical
 from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
 from _bfcl_mapping import load_bfcl_to_slug_mapping
 from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
+from _zerobench_mapping import load_zerobench_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -90,6 +93,7 @@ DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
+ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
 REAL_SWE_SCRIPT = Path(__file__).resolve().with_name("fetch_real_swe.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
@@ -303,6 +307,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-mcp-atlas",
         action="store_true",
         help="Skip fetching scores from the Scale Labs MCP-Atlas leaderboard.",
+    )
+    parser.add_argument(
+        "--skip-zerobench",
+        action="store_true",
+        help="Skip fetching scores from the ZeroBench leaderboard.",
     )
     parser.add_argument(
         "--skip-bfcl",
@@ -1171,6 +1180,66 @@ def update_mcp_atlas_scores(
     return matched, updated, changes
 
 
+def build_fetch_zerobench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_zerobench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_zerobench_cmd(script)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_zerobench.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected zerobench JSON format: expected a list")
+
+    zerobench_to_slug = load_zerobench_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        zerobench_name = row.get("model")
+        if not isinstance(zerobench_name, str) or not zerobench_name:
+            continue
+        slug = zerobench_to_slug.get(zerobench_name)
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_zerobench_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        zerobench_model = by_slug.get(slug)
+        if zerobench_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "zerobench", zerobench_model.get("score"),
+            ZEROBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
 def build_fetch_bfcl_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -2031,6 +2100,7 @@ def main() -> int:
     datacurve_path = DATACURVE_SCRIPT
     toolathlon_path = TOOLATHLON_SCRIPT
     mcp_atlas_path = MCP_ATLAS_SCRIPT
+    zerobench_path = ZEROBENCH_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     real_swe_path = REAL_SWE_SCRIPT
@@ -2063,6 +2133,9 @@ def main() -> int:
     )
     mcp_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-mcp-atlas-to-artificialanalysis.json"
+    )
+    zerobench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-zerobench-to-artificialanalysis.json"
     )
     bfcl_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-bfcl-to-artificialanalysis.json"
@@ -2172,6 +2245,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_swe_marathon_cmd(swe_marathon_path))}")
     if not args.skip_mcp_atlas:
         print(f"  - {shlex.join(build_fetch_mcp_atlas_cmd(mcp_atlas_path))}")
+    if not args.skip_zerobench:
+        print(f"  - {shlex.join(build_fetch_zerobench_cmd(zerobench_path))}")
     if not args.skip_bfcl:
         print(f"  - {shlex.join(build_fetch_bfcl_cmd(bfcl_path))}")
     if not args.skip_spheron and spheron_paths:
@@ -2410,6 +2485,19 @@ def main() -> int:
         )
         changes.extend(mcp_atlas_changes)
 
+    # And again for ZeroBench: the maintainers' own board over the model-card
+    # and evals.report readings of it, which is the whole point of reading it --
+    # the board has Maverick at 0.4 and Scout at 1.6 where evals.report has 0.0.
+    zerobench_by_slug: dict[str, dict[str, Any]] = {}
+    zerobench_matched = 0
+    zerobench_updated = 0
+    if not args.skip_zerobench:
+        zerobench_by_slug = fetch_zerobench_data(zerobench_path, zerobench_mapping_path)
+        zerobench_matched, zerobench_updated, zerobench_changes = update_zerobench_scores(
+            doc, zerobench_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(zerobench_changes)
+
     # And again: BFCL's own leaderboard over evals.report's mirror of it.
     bfcl_by_slug: dict[str, dict[str, Any]] = {}
     bfcl_matched = 0
@@ -2478,6 +2566,8 @@ def main() -> int:
         print(f"models returned by swe_marathon: {revision_model_count(swe_marathon_by_slug)}" + revision_breakdown(swe_marathon_by_slug))
     if not args.skip_mcp_atlas:
         print(f"models returned by mcp_atlas: {len(mcp_atlas_by_slug)}")
+    if not args.skip_zerobench:
+        print(f"models returned by zerobench: {len(zerobench_by_slug)}")
     if not args.skip_bfcl:
         print(f"models returned by bfcl: {len(bfcl_by_slug)}")
     if not args.skip_spheron:
@@ -2532,6 +2622,8 @@ def main() -> int:
         print(f"models matched on swe_marathon: {swe_marathon_matched}")
     if not args.skip_mcp_atlas:
         print(f"models matched on mcp_atlas: {mcp_atlas_matched}")
+    if not args.skip_zerobench:
+        print(f"models matched on zerobench: {zerobench_matched}")
     if not args.skip_bfcl:
         print(f"models matched on bfcl: {bfcl_matched}")
     if not args.skip_spheron:
@@ -2575,6 +2667,8 @@ def main() -> int:
         print(f"{action} from swe_marathon: {swe_marathon_updated}")
     if not args.skip_mcp_atlas:
         print(f"{action} from mcp_atlas: {mcp_atlas_updated}")
+    if not args.skip_zerobench:
+        print(f"{action} from zerobench: {zerobench_updated}")
     if not args.skip_bfcl:
         print(f"{action} from bfcl: {bfcl_updated}")
     if not args.skip_spheron:
