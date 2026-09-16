@@ -15,10 +15,19 @@ same flight-payload row shape, so the extraction mirrors fetch_swe_atlas.py.
 Row labels mix display names and API ids, with the harness or reasoning effort
 in a parenthetical and decimal points sometimes spelled "p": "Muse Spark 1.1",
 "Inkling (xHigh)", "glm-5p2", "kimi-k2p5". The reported `model` is therefore a
-normalized base name -- parenthetical stripped, "5p2" restored to "5.2",
-separators unified, lowercased -- so one name -> slug mapping covers a model's
-variants and the key reads like the other Scale Labs mapping files' keys;
-`raw` and `harness` keep the original label.
+normalized base name -- run-setting parenthetical stripped, "5p2" restored to
+"5.2", separators unified, lowercased -- so one name -> slug mapping covers a
+model's reasoning-effort variants and the key reads like the other Scale Labs
+mapping files' keys; `raw` and `harness` keep the original label.
+
+A parenthetical is only dropped when every token in it is a *run setting* --
+"(xHigh)", "(max)", "(medium reasoning)". Scale also uses the same slot to name
+which *model* of a family was run: "gpt-5.6 (sol)" is GPT-5.6 Sol, a different
+model from GPT-5.6 Luna and GPT-5.6 Terra, each of which llm.json tracks under
+its own slug. Stripping that collapsed all three onto one key, "gpt 5.6", which
+cannot be mapped to any one slug and so was recorded as __unmappable__ -- the
+board's Sol row could not reach llm.json at all. Tokens outside the modifier
+list are therefore kept in the key ("gpt 5.6 sol"), which is mappable.
 """
 
 from __future__ import annotations
@@ -46,6 +55,27 @@ _PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
 _ROW_RE = re.compile(r'\{[^{}]*"score":[^{}]*\}')
 # Reasoning-effort modifiers that trail a model name (case-insensitive).
 _EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
+# Every token a parenthetical may contain and still be a run setting rather
+# than a model name. A parenthetical holding anything else names the model --
+# "gpt-5.6 (sol)" -- and is kept in the normalized key.
+_MODIFIER_TOKENS = frozenset(
+    {
+        "xhigh",
+        "x-high",
+        "high",
+        "medium",
+        "low",
+        "max",
+        "min",
+        "default",
+        "effort",
+        "reasoning",
+        "non-reasoning",
+        "thinking",
+        "non-thinking",
+        "extended",
+    }
+)
 # Scale spells a version's decimal point as "p" in its API ids ("glm-5p2").
 _DECIMAL_P_RE = re.compile(r"(?<=[0-9])p(?=[0-9])")
 
@@ -120,18 +150,37 @@ def split_harness(raw: str) -> tuple[str, str | None]:
     return without, harness
 
 
+def is_run_setting(parenthetical: str | None) -> bool:
+    """Whether a parenthetical describes how a model was run, not which one.
+
+    "(xHigh)", "(max)" and "(medium reasoning)" are settings; "(sol)" is the
+    model. An empty parenthetical is not a setting -- there is nothing in it to
+    recognise, so it is kept rather than silently dropped.
+    """
+    if not parenthetical:
+        return False
+    tokens = [token for token in re.split(r"[\s,/]+", parenthetical.strip().lower()) if token]
+    return bool(tokens) and all(token in _MODIFIER_TOKENS for token in tokens)
+
+
 def normalize_model(raw: str) -> str:
     """Normalize a leaderboard label to a base model name for mapping.
 
-    Strips the parenthetical and reasoning-effort modifiers, restores Scale's
-    "p" decimal spelling, unifies separators and lowercases, so the key matches
-    the shape the other Scale Labs mapping files use: "glm-5p2" -> "glm 5.2",
-    "Inkling (xHigh)" -> "inkling".
+    Strips reasoning-effort modifiers, restores Scale's "p" decimal spelling,
+    unifies separators and lowercases, so the key matches the shape the other
+    Scale Labs mapping files use: "glm-5p2" -> "glm 5.2", "Inkling (xHigh)" ->
+    "inkling". A parenthetical that names the model rather than the run is
+    folded into the key instead: "gpt-5.6 (sol)" -> "gpt 5.6 sol".
     """
-    without, _ = split_harness(raw)
+    without, harness = split_harness(raw)
+    if not is_run_setting(harness):
+        without = f"{without} {harness}" if harness is not None else without
     without = _EFFORT_RE.sub(" ", without)
     without = _DECIMAL_P_RE.sub(".", without)
-    without = without.replace("-", " ").replace("_", " ")
+    # Commas and slashes only ever separate tokens inside a parenthetical
+    # ("sol, max"), so they go the way of the other separators rather than
+    # trailing the key once the effort beside them is stripped.
+    without = re.sub(r"[-_,/]", " ", without)
     return re.sub(r"\s+", " ", without).strip().lower()
 
 

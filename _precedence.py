@@ -86,6 +86,7 @@ import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
 import fetch_vals
+import fetch_zerobench
 from _revisions import revision_key
 from fill_source_urls import canonical
 
@@ -107,6 +108,9 @@ LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
 REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
+# The board's own run only. The same page's externally-reported table is model
+# cards under another roof, which is rung 5; fetch_zerobench.py never reads it.
+ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
@@ -170,6 +174,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (SWE_MARATHON_SOURCE_URL, RANK_BENCHMARK_SITE),
         (TBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in VALS_KEY_URLS.values()),

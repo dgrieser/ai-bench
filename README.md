@@ -169,6 +169,7 @@ rather than to even, and an integral result is stored as an int (`34`, not
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
 │  fetch_tbench.py          │ fetch_vals.py               │
+│  fetch_zerobench.py       │                             │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -210,6 +211,7 @@ Output: llm.json (unified dataset)
 ./fetch_swe_marathon.py                 # both published boards, 1.0 and 1.1
 ./fetch_swe_marathon.py --revision 1.1  # or pin one
 ./fetch_mcp_atlas.py                    # MCP-Atlas, from Scale's own leaderboard
+./fetch_zerobench.py                    # ZeroBench, the maintainers' own board only
 ./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
 ./fetch_evals_report.py
@@ -583,6 +585,16 @@ hoping the labels agree:
 - **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
+- **A parenthetical on a Scale row is not always the effort.** Scale labels a
+  row `claude-opus-5 (xhigh)` but also `gpt-5.6 (sol)`, and only the first is a
+  run setting: Sol, Luna and Terra are three models with three slugs here.
+  `fetch_mcp_atlas.py` therefore drops a parenthetical only when every token in
+  it is a known modifier, and keeps the rest in the key (`gpt 5.6 sol`).
+  Stripping it collapsed all three onto `gpt 5.6`, which maps to no one slug
+  and so was answered `__unmappable__` — the board's Sol row could not reach
+  llm.json at all. `fetch_zerobench.py` applies the same rule to the same
+  problem. A label that names the variant nowhere, as FrontierSWE's bare
+  `GPT-5.6` row does, stays unmappable, and correctly so.
 - **Terminal-Bench is four columns, and only a versioned label picks one.**
   `terminal_bench_4_0`, `terminal_bench_2_1`, `terminal_bench_2_0` and
   `terminal_bench_hard` are separate series — 4.0 alone removed 8 tasks and
@@ -693,20 +705,25 @@ Analysis runs itself, plus three assembled the same way the tool-use columns are
 
 | Column | Leading source | Gap fillers |
 | --- | --- | --- |
-| **ZeroBench** (`zerobench`) | evals.report's `zerobench` table | Hugging Face model cards |
+| **ZeroBench** (`zerobench`) | `fetch_zerobench.py`, the maintainers' own board | evals.report's `zerobench` table, then Hugging Face model cards |
 | **MathVista-mini** (`mathvista_mini`) | evals.report's `mathvista` table | Hugging Face model cards |
 | **CharXiv Reasoning** (`charxiv_reasoning`) | Hugging Face model cards | evals.report's `charxiv` table, where it also overwrites |
 
-None of the three leads from its own leaderboard, which is unusual here and
-worth saying why. MathVista's board stopped at the 2024 field — nothing on it is
-in this index. ZeroBench's is alive and first-party, but its *official* table is
-almost entirely closed-weight (Llama 4 Maverick and Scout are the only open rows
-we carry), and the open-weight numbers it does publish sit on its *externally
-reported* board, which is the same lab self-reports the model cards give us. So
-evals.report leads both and the cards fill gaps ahead of it. Scraping
-zerobench.github.io directly is the obvious next step, and it would pay off
-immediately: the official board has Maverick at 0.4 and Scout at 1.6 where
-evals.report reports 0.0 for both.
+Two of the three still lead from an aggregator, which is unusual here and worth
+saying why. MathVista's board stopped at the 2024 field — nothing on it is in
+this index.
+
+ZeroBench was the third until `fetch_zerobench.py` was written, and it is worth
+recording what that changed. Its page carries three tables. The *official* one
+is the maintainers' own run and is almost entirely closed-weight — Llama 4
+Maverick and Scout are the only open rows we carry off it — while the
+open-weight numbers it publishes sit on its *externally reported* table, which
+is the same lab self-reports the model cards already give us, many of them
+explicitly with tools. So the scraper reads the official table by id and
+nothing else, ranks as the benchmark's own site, and the aggregators keep the
+rows it does not reach. It paid off immediately on the rows it does: the board
+has Maverick at 0.4 and Scout at 1.6 where evals.report reports 0.0 for both,
+and it is the only source that carries the 2026-H2 frontier field at all.
 
 CharXiv is the far end of the same problem, and the reason its order is
 inverted. Its board is a plain CSV
