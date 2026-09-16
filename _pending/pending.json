@@ -1,3 +1,87 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Context' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Context",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepResearch Bench II' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "DeepResearch Bench II",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MLE-bench Lite' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MLE-bench Lite",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SkillsBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "SkillsBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Workspace-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Workspace-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Workspace-Bench-Lite' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Workspace-Bench-Lite",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "atria-dawn-preview",
+          "reason": "exact to Atria-Dawn-Preview, exact match"
+        }
+      ],
+      "default": "atria-dawn-preview",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'internlm/Atria-Dawn-Preview' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "internlm/Atria-Dawn-Preview",
+      "universe": "models"
+    }
+  ]
 }
