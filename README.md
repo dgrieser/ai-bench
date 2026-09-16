@@ -392,6 +392,35 @@ Interactive prompt guides you through:
 - Openness classification
 - Optional manual score entries
 
+Every add also sweeps the mapping files for rows that should have named this
+model all along, interactive or not — `_remap.py`, and it is the one part of
+the add that an unattended answer from the admin page gets too. A source name
+is asked about once and the answer is never revisited, so a row mapped onto the
+nearest model while the right one did not exist stays there: llm-stats
+publishes `ling-3.0-flash-fin`, the index had no Fin model, the row went to
+`ling-3-0-flash`, and when `ling-3-0-flash-fin` was added months later nothing
+went back to look. Two models' scores folded into one row — `keep_best_row`
+takes the higher of them, and llm-stats writes fill-only, so the wrong number
+would never have been overwritten — and the next run turned red, because
+`test_propose.py` replays every mapping through the matcher and refuses a
+proposal that contradicts one.
+
+The sweep moves a row only when its source name matches the new model by
+normalized equality **and** it currently names a different model: that is the
+case the test forbids outright, so it is wrong by construction. A name that
+merely looks similar is somebody's judgement and is left alone. So is a row
+parked on `__unmappable__`, `__pending__` or `__closed_weights__`, which is an
+answer about whether the row belongs here at all — SWE-Rebench maps its
+`gpt-oss-120b-high` row onto `gpt-oss-120b` and parks the plain one, and
+whether that keeps two rows from folding into one model or is an oversight is
+not for a sweep to guess. Those are printed instead, so a human can look.
+
+Which files are searched is `_rename.value_routes()`, the same reading of
+`propose.ROUTES` a rename goes by, so a source added to that table is covered
+the day it is added; each file is written through its own `add_*_mapping`
+writer, so it keeps its own formatting and stays frozen in collect mode like
+every other mapping write.
+
 ### 2b. Deciding a New Model Unattended
 
 `check_new.py` asks one question per newly released Artificial Analysis model:
