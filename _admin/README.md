@@ -195,6 +195,16 @@ tells you why.
   every score in the card, which is how a sitting goes — a second leaderboard is
   a second batch.
 
+  Under each score is what `llm.json` already records of it — the last three
+  entries of its `scores_history`, newest first, each saying what that write
+  did: `2026-09-15 · 51.6 · was 69`. The number typed above becomes the next
+  entry in that list, so what it replaces is legible without opening the site in
+  another tab. It is a readout, not a field: the history is written by the
+  runner, from the scores, and no part of it is sent with the answer. An entry
+  dated before the file's `history_since` reads *first recorded* rather than
+  *added* — the index kept no history then, so all that is known about it is the
+  day the score was last written.
+
   At the foot of the card is **artificial analysis**, which says whether AA
   publishes this exact slug and, when it does not, offers the slugs that look
   like it. Picking one is a *rename*, not a mapping — see below. A rename is

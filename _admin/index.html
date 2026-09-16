@@ -580,6 +580,21 @@ select {
   .score-row > label { grid-column: 1; }
 }
 
+/* What is already recorded for the score above: a hint, not a control, so it
+   is set back in the muted ink the labels use and never takes the eye off the
+   box being typed into. Spans the row in both layouts -- it belongs to the
+   whole row rather than to any one of its columns. */
+.score-past {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .15rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--muted);
+}
+.score-past > .more { opacity: .7; }
+
 /* --------------------------------------------------------------- buttons */
 
 .btn {
@@ -1506,6 +1521,31 @@ async function loadRuns() {
    would rewrite pending.json on runs where no question changed. answer.py
    revalidates everything regardless, which is the check that counts. */
 const models = () => (state.llm?.models || []).map((m) => m.name).filter(Boolean).sort();
+
+/* What llm.json records of one score's past, newest first, each entry saying
+   what that write did. The kind is derived from the list rather than stored --
+   the same rule _history.py writes by and llm.html reads by, so the three
+   cannot drift: nothing before it is an arrival, a null is a withdrawal,
+   anything else replaced the number in the entry before it. An entry older
+   than history_since is a first sighting: the index kept no history then, so
+   all that is known is the day the score was last written. */
+function recordedHistory(model, key) {
+  const log = model?.scores_history?.[key];
+  if (!Array.isArray(log)) return [];
+  const since = state.llm?.history_since || "";
+  let previous = null;
+  const events = log.filter((entry) => entry && entry.date).map((entry) => {
+    const value = typeof entry.score === "number" ? entry.score : null;
+    const seeded = previous === null && since && entry.date < since;
+    const kind = value === null ? "withdrawn"
+      : previous === null ? (seeded ? "first recorded" : "added")
+      : `was ${previous}`;
+    const event = { date: entry.date, value, kind };
+    previous = value;
+    return event;
+  });
+  return events.reverse();
+}
 const benchmarks = () =>
   Object.entries(state.llm?.benchmarks || {})
     .filter(([, b]) => b?.derived !== true)
@@ -2382,7 +2422,26 @@ function renderModelCard(model) {
         disabled: Boolean(rename),
         onclick: () => { delete draft.scores[bench]; drawScores(); commit(); },
       }, "Remove");
-      return el("div", { className: "score-row" }, [el("label", {}, bench), input, drop]);
+      /* What is already on record for this score, under the box about to
+         overwrite it: the number typed here becomes the next entry in that
+         list, and whoever types it should be able to see what it replaces
+         without opening the site in another tab. Read-only -- the history is
+         written by the runner, from the scores, and is not an answer to send.
+         Three entries is the whole past of almost every score; the rest is
+         counted rather than listed, since this is a hint beside a form and not
+         the model's page. */
+      const past = recordedHistory(model, bench);
+      const shown = past.slice(0, 3).map((event) =>
+        el("span", {}, `${event.date} · ${event.value === null ? "\u2014" : event.value} · ${event.kind}`));
+      if (past.length > shown.length) {
+        shown.push(el("span", { className: "more" }, `+${past.length - shown.length} earlier`));
+      }
+      return el("div", { className: "score-row" }, [
+        el("label", {}, bench),
+        input,
+        drop,
+        past.length ? el("div", { className: "score-past" }, shown) : null,
+      ]);
     }));
   };
 
