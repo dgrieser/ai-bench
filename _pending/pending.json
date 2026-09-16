@@ -1,3 +1,480 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-11 - InclusionAI - https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin",
+      "question": "Add newly released model 'ling-3-0-flash-fin' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "ling-3-0-flash-fin",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 5.6 sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 5.6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 5.6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'gpt 5.6 sol' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 5.6 sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'claude 3.5 sonnet v2' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "claude 3.5 sonnet v2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude fable 5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to claude fable 5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude fable 5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'claude fable 5' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "claude fable 5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-opus-5",
+          "reason": "exact to claude opus 5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude opus 5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude opus 5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'claude opus 5' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "claude opus 5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'claude sonnet 3.7' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "claude sonnet 3.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude sonnet 5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to claude sonnet 5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude sonnet 5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'claude sonnet 5' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "claude sonnet 5",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gemini 1 pro vision' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gemini 1 pro vision",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gemini 2 flash' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gemini 2 flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gemini 2 flash thinking' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gemini 2 flash thinking",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 5, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 5' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 5.6 luna, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 5.6 luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 5.6 luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 5.6 luna' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 5.6 luna",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 5.6 sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 5.6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 5.6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 5.6 sol' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 5.6 sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 5.6 terra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 5.6 terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 5.6 terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 5.6 terra' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 5.6 terra",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'grok 4.20' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok 4.20",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'llama 3.2 90b' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "llama 3.2 90b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "llama-4-maverick",
+          "reason": "exact to llama 4 maverick, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "llama-4-scout",
+          "reason": "exact to llama 4 maverick, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "exact to llama 4 maverick, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "exact to llama 4 maverick, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'llama 4 maverick' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "llama 4 maverick",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "llama-4-scout",
+          "reason": "exact to llama 4 scout, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "llama-4-maverick",
+          "reason": "exact to llama 4 scout, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "exact to llama 4 scout, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "exact to llama 4 scout, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'llama 4 scout' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "llama 4 scout",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'nvlm d 72b' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nvlm d 72b",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'pixtral large' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "pixtral large",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'qvq' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "qvq",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'qwen2 vl 72b instruct' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "qwen2 vl 72b instruct",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'reka edge' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "reka edge",
+      "universe": "models"
+    }
+  ]
 }
