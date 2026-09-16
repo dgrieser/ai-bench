@@ -3,23 +3,6 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "atria-dawn-preview",
-          "reason": "exact to atria-dawn-preview, exact match"
-        }
-      ],
-      "default": "atria-dawn-preview",
-      "if_previous": null,
-      "note": null,
-      "question": "Which llm.json model is llm-stats id 'atria-dawn-preview'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "subject": "atria-dawn-preview",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
           "option": "atria-dawn-preview",
           "reason": "exact to Atria-Dawn-Previe, substring match"
@@ -32,17 +15,6 @@
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
       "subject": "internlm/Atria-Dawn-Previe",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'inception/mercury-2.5' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "inception/mercury-2.5",
       "universe": "models"
     }
   ]
