@@ -30223,9 +30223,9 @@
       "params": "744B-A40B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 1642,
+        "int8": 821,
+        "int4": 411
       },
       "creator": {
         "name": "InternLM",
@@ -30398,6 +30398,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/internlm/Atria-Dawn-Preview/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/internlm/Atria-Dawn-Preview/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/internlm/Atria-Dawn-Preview/"
       }
     }
   ],
