@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
+import _history
 import artificialanalysis
 import derive_indexes
 import fetch_aa_coding_agents
@@ -2526,6 +2527,10 @@ def main() -> int:
         # moves no score, and skipping the refresh keeps its diff pure.
         if not args.fill_source_urls:
             derive_indexes.refresh_and_report(doc)
+        # Every score this run wrote is now in place with its date and source
+        # page; the history is brought level with them in one pass rather than
+        # each ingest remembering to log its own writes.
+        _history.sync(doc)
         llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
 
     print(f"models in {llm_path}: {len(slugs)}")

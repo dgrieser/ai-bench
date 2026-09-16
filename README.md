@@ -53,6 +53,12 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
       "scores":         { "deepswe": 92.3, "swe_bench_verified": 72.2, ... },
       "scores_updated": { "deepswe": "2026-07-25", "swe_bench_verified": "2026-02-13", ... },
       "scores_source":  { "deepswe": "https://benchlm.ai/benchmarks/deepSwe", ... },
+      "scores_history": {
+        "deepswe": [
+          { "date": "2026-05-02", "score": 88.1, "source": "https://benchlm.ai/benchmarks/deepSwe" },
+          { "date": "2026-07-25", "score": 92.3, "source": "https://benchlm.ai/benchmarks/deepSwe" }
+        ], ...
+      },
       "vram": { "fp16": 273, "int8": 136, "int4": 68 }
     }
   ],
@@ -72,6 +78,20 @@ Each model object contains:
 - **`scores_source`**: Same key set → URL of the page the score was read from
   (null for hand edits; a derived index column cites this repository, which is
   where it is computed)
+- **`scores_history`**: benchmark key → the list of changes recorded for that
+  score, oldest first, each `{ date, score, source }`. The three maps above are
+  the score as it stands; this is how it got there, and it is what lets the
+  site say a number *moved* — and from what — rather than only that it was
+  written. The rules, which `_history.py` enforces and `test_history.py` pins:
+  the last entry mirrors `scores`, `scores_updated` and `scores_source`
+  exactly; `"score": null` records a score being withdrawn; the kind of change
+  is read off the list rather than stored, so the first entry (or one after a
+  null) is an arrival, a null is a removal, and anything else replaced the
+  entry before it; there is at most one entry per key per day, since dates are
+  day-granular and the refresh runs every three hours; derived index columns
+  are not tracked at all, because their dates move when their inputs are
+  recomputed; and the map is sparse — unlike the other three it holds only keys
+  that have carried a value
 - **`date_added`**: ISO date the index first listed the model. It drives the `NEW`
   badge and the **Recently Added** panel, and it is what `llm.html`'s **Date
   Added** filter narrows on — its relative windows count calendar days back from
@@ -83,26 +103,47 @@ Each model object contains:
   the flag is a copy of that decision for the consumers that read nothing but
   `llm.json`
 
+Top-level **`history_since`** is the first day `scores_history` was recorded
+from — the earliest committed revision of `llm.json` that
+`backfill_history.py` replayed. An entry older than that day is the file as it
+stood when recording began: one per score, dated by the stamp it was carrying.
+That stamp moved when the score *changed*, so such an entry is the day the
+score was last written and not necessarily the day it arrived — the site labels
+those **first recorded** rather than calling them additions. From that day on,
+an entry with nothing before it really is a score arriving.
+
 The three score maps carry the full benchmark key set with null placeholders;
-`update.py` stamps date and source URL together whenever it writes a score.
+`update.py` stamps date and source URL together whenever it writes a score, and
+every writer calls `_history.sync()` before saving, so the history is kept by
+one rule set rather than by each writer remembering to log itself.
 Values no scraper wrote (hand edits, rows that have since moved) keep a null
 date or source; `fill_missing_source_urls.py` asks for those, plus a missing
 `vram_source`, model or creator URL.
 
-Underneath the table, `llm.html` writes those same seven days out as a
-**Recently Added** panel: a timeline of the days something landed, each holding
-the models added that day and the individual scores stamped that day on models
-already in the index. Either way the scores are spelled out the same, one chip
-per benchmark carrying its name, its value and a link to the source it was read
-from; a new model's chips follow its arrival count, since every one of them
-arrived with the model. Membership is decided by the same tests as the marks in
-the table, over the models and columns the table is currently showing, so the two
-cannot disagree — including the one thing they both leave out, a derived column,
-whose date moves when its inputs are recomputed rather than when anything new is
-measured. A day longer than twelve models folds its tail behind a disclosure,
-since one fetch can restamp a hundred rows at once. Everything reads as *added*:
-a date records only the last write, so a score measured a second time cannot be
-told from a first one.
+Underneath the table, `llm.html` writes the last **30 days** out as a
+**Recently Added** panel: a timeline of the days something happened, each
+holding the models that arrived that day and the scores added or moved that day
+on models already in the index. It reads `scores_history`, not the stamps, so a
+score that changed appears on every day it changed and is drawn with the number
+it replaced — `715 ↘ 695` — while a score that arrived is drawn with its value
+alone. Direction is a shape rather than a colour: the three inks on that page
+are spoken for (blue is a link, red is *new*, teal is a closed reference model),
+so the arrow tilts instead, which also survives greyscale. Withdrawals are kept
+in the data but not drawn here, and a derived column is left out, the one thing
+the panel and the table's own marking both skip. A new model is still listed
+once, with the scores it arrived with, since thirty chips would be the same news
+thirty times over; anything that happens to it afterwards is listed on its own
+day. A day longer than twelve entries folds its tail behind a disclosure, since
+one fetch can restamp a hundred rows at once, and **Show all history** widens
+the panel from 30 days to everything on record. A score written before
+`history_since` reads as *first recorded* rather than *added*, for the reason
+that field exists.
+
+A model's own page carries the same thing for one model: a **Score history**
+table under **All benchmarks**, every benchmark it has ever held a number for,
+each entry naming the day, the value, what the change was (`updated from 78.6`,
+`added`, `first recorded`, `withdrawn`) and the page the score was read from on
+that day. The benchmark dialog quotes the head of the same list.
 
 ### Score Precision
 
@@ -280,8 +321,16 @@ Output: llm.json (unified dataset)
 # Remove models or prune invalid entries
 ./prune.py llm.json
 
-# Synchronize score update timestamps and per-score source URLs
+# Synchronize score update timestamps, per-score source URLs and the history
 ./sync_score_dates.py llm.json
+
+# One-time: seed models[].scores_history from llm.json's own git history
+# (dry-run; -w to persist). Every committed revision is replayed through the
+# same _history.sync() the writers use, so the entries it lays down obey the
+# same rules. Already run; it is idempotent, and re-running it rebuilds the
+# history from the revisions git still holds.
+./backfill_history.py llm.json
+./backfill_history.py llm.json -w
 ```
 
 ### Utilities

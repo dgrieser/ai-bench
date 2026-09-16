@@ -31,6 +31,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Callable
 
+import _history
 import _prompts
 import fetch_spheron
 from _scores import editable_benchmarks, stamp_score_source, stamp_score_updated
@@ -519,6 +520,7 @@ def main() -> int:
         print("dry-run only, pass --write to persist changes")
         return 0
 
+    _history.sync(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     print(f"Wrote {path}")
     return 0

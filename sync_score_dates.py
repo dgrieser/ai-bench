@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep scores_updated and scores_source in sync with scores in llm.json.
+"""Keep scores_updated, scores_source and scores_history in sync with scores.
 
 A benchmark whose score is null must have a null date and a null source URL; a
 stale date left behind after a score is reverted makes the model look freshly
@@ -7,6 +7,10 @@ evaluated, and a stale URL attributes a score that no longer exists. Also
 reports the reverse cases (score set but date or URL missing), which need real
 values this script cannot invent -- a missing URL is what
 `update.py --fill-source-urls` backfills.
+
+scores_history is brought level with the same three maps and then checked
+against them: its last entry per benchmark is the current score, so a history
+that ends anywhere else is a writer that did not record what it wrote.
 
 Default is a dry-run; pass -w/--write to persist changes (same convention as
 prune.py and update.py).
@@ -16,6 +20,8 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+import _history
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -73,12 +79,20 @@ def main() -> int:
     for name, key, value in missing_urls:
         print(f"WARN  {name:36s} {key:20s} score {value} has no source URL", file=sys.stderr)
 
+    # Ordered after the clears above: a score reverted to null has just had its
+    # date and URL cleared, and the history is what records that it went away.
+    recorded = _history.sync(doc)
+    problems = _history.validate(doc)
+    for problem in problems:
+        print(f"WARN  history {problem}", file=sys.stderr)
+
     print(
         f"\n{len(cleared)} stale date(s) cleared, {len(cleared_urls)} stale URL(s) cleared, "
-        f"{len(missing)} score(s) missing a date, {len(missing_urls)} score(s) missing a source URL"
+        f"{len(missing)} score(s) missing a date, {len(missing_urls)} score(s) missing a source URL, "
+        f"{recorded} model(s) with history to record, {len(problems)} history problem(s)"
     )
 
-    if not cleared and not cleared_urls:
+    if not cleared and not cleared_urls and not recorded:
         return 0
     if not args.write:
         print("\ndry-run only, pass --write to persist changes")

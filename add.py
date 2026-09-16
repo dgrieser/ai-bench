@@ -14,6 +14,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import _history
 import _prompts
 from _params import fetch_hf_params, normalize_params
 from _selector import (
@@ -983,6 +984,7 @@ def ensure_unique_name(models: list[dict[str, Any]], name: str) -> None:
 
 
 def write_doc(path: Path, doc: dict[str, Any]) -> None:
+    _history.sync(doc)
     path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 

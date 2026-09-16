@@ -26,6 +26,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+import _history
 import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
@@ -282,6 +283,7 @@ def main() -> int:
         entry.pop("url", None)
         entry["urls"] = merged
 
+    _history.sync(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     print(f"\nWrote {path}")
     return 0
