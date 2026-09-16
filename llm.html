@@ -10477,8 +10477,13 @@
           .map((model) => {
             if (!hidden.size) return model;
             const pruned = { ...model };
-            if (pruned.scores) pruned.scores = withoutKeys(pruned.scores, hidden);
-            if (pruned.scores_updated) pruned.scores_updated = withoutKeys(pruned.scores_updated, hidden);
+            // Every per-benchmark map, not only the two the table reads: an
+            // export whose benchmarks map has lost a key must not still carry
+            // that key's source URL or its history, or the document describes
+            // a column it no longer declares.
+            ["scores", "scores_updated", "scores_source", "scores_history"].forEach((field) => {
+              if (pruned[field]) pruned[field] = withoutKeys(pruned[field], hidden);
+            });
             return pruned;
           });
 
