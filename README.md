@@ -240,7 +240,7 @@ Output: llm.json (unified dataset)
 ./update.py --fill-source-urls -w
 
 # Fetch from specific benchmarks
-./fetch_aa_coding_agents.py              # SWE-Atlas-QnA, Terminal-Bench 2.1 as run by AA
+./fetch_aa_coding_agents.py              # DeepSWE 1.1, SWE-Atlas-QnA, Terminal-Bench 4.0 as run by AA
 ./fetch_huggingface.py --repo owner/model-name
 ./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
 ./fetch_frontierswe.py                  # both published boards, V2 and V1
@@ -579,7 +579,7 @@ already gives row collisions inside a single source.
 | 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. |
-| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its DeepSWE rows are not ingested at all: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
+| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its three datasets are versioned now, so all three are ingested: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
@@ -771,9 +771,14 @@ already get, applied consistently:
   table is **not** ingested: seven rows are the 1.0 archive verbatim, beside a
   Kimi K3 that is on neither published board, with nothing saying which is
   which.
-- The AA Coding Agent Index's `deep-swe` rows are **not** ingested, because its
-  dataset id carries no revision the way `terminal-bench-v2.1` does. Versioning
-  the id upstream would make re-enabling it a one-line change.
+- The AA Coding Agent Index's `deep-swe` rows **are** ingested now, into
+  `deepswe_1_1`. They were not, for as long as the dataset id carried no
+  revision to pick a column with; AA has since re-cut the index on
+  `deep-swe-v1.1` and `terminal-bench-v4`, and the reader follows the ids. That
+  rename is also a warning: an id `fetch_aa_coding_agents.py` does not know is
+  skipped with one line on stderr, so both columns went quietly unfed between
+  the rename and this change — `test_aa_coding_agents.py` pins the ids the page
+  publishes today against the columns they are mapped to.
 - In `huggingface-benchmark-name-mapping.json`, `DeepSWE (v1.1)` and
   `Agentic coding DeepSWE 1.1` map onto `deepswe_1_1` and a bare `DeepSWE` is
   unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1`. llm-stats'
@@ -1103,9 +1108,15 @@ Two consequences worth knowing (they hold for every derived index):
   reason**, and they are the clearest illustration of it. Terminal-Bench 4.0 is
   the better-run board of the Terminal-Bench pair — 4.0 removed the saturated
   tasks and the ones with public solutions and calibrated every task's resource
-  budget — but it is scored on one model of 144, so it carries no rank at all and
-  any weight for it would be an assertion from release notes rather than a
-  measurement. Agents' Last Exam is scored on eight, and that was enough: admitted
+  budget — but it was scored on one model of 144 when that was written, so it
+  carried no rank at all and any weight for it would have been an assertion from
+  release notes rather than a measurement. **That is the bar it is now clearing.**
+  AA has since run 4.0 itself across its whole field and publishes it on the
+  model pages, so the column no longer depends on what the board's own
+  submissions cover: 163 AA models carry a 4.0 number, 67 of them slugs this
+  file already tracks. Re-check the admission after the refresh that lands them
+  — the case against it was coverage, and coverage is what changed. Agents' Last
+  Exam is scored on eight, and that was enough: admitted
   to both groups it moved *every* ranked value, all 92 Coding and 93 Tooling. Eight
   overlapping models is too thin a base to re-rank the whole table on, and the
   weight it could carry was being chosen around the bar rather than around what it
@@ -2188,6 +2199,21 @@ but AA-Briefcase, IT-Bench SRE, Apex Agents, the Harvey and AutomationBench
 rows, the openness breakdown and the creator's own url appear on the pages
 only. A page value is used where the API sent none; it never overrides one that
 arrived.
+
+**The page's own field names drift, and a stale one fails silently.** The page
+payload is read by name (`_PAGE_FLOAT_FIELDS`), and a name that matches nothing
+is not an error — the field is simply absent from the parsed block, so the
+column keeps whatever it last held and nothing in the run says why. That is
+what happened to Terminal-Bench: AA renamed `terminalbenchV21` to
+`terminalBench21` when it added `terminalBench40` beside it, and from then on
+the v2.1 column had only whatever the API sent it, with the page fallback the
+free tier runs on feeding it nothing at all. Both live revisions are read under
+today's names now, and `test_artificialanalysis_api.py` pins them against the
+payload. Terminal-Bench 4.0 is AA's own harness over the 4.0 task set — the same
+column [tbench.ai's board](https://www.tbench.ai/leaderboard/terminal-bench/4.0)
+publishes, which AA outranks, and the two differ by a few points on every model
+they share because they are different harnesses, not different measurements of
+one.
 
 **On the free tier the pages carry nearly everything.** Its `evaluations` block
 holds three composite indices — Intelligence, Coding and Agentic — and its

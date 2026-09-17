@@ -581,7 +581,13 @@ _PAGE_FLOAT_FIELDS = [
     ("critpt", "critpt"),
     ("apexAgents", "apex_agents"),
     ("mmmuPro", "mmmu_pro"),
-    ("terminalbenchV21", "terminalbench_v2_1"),
+    # AA renamed the page's Terminal-Bench field when it added the 4.0 run, and
+    # the old spelling matched nothing from then on: the v2.1 column kept the
+    # numbers the API had already sent and quietly lost the page fallback the
+    # free tier depends on entirely. Both revisions are read here, under the
+    # names the payload uses today.
+    ("terminalBench40", "terminalbench_4_0"),
+    ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     ("ifbench", "ifbench"),
     ("harveyLabCriteriaPass", "harvey_lab_criteria_pass"),
@@ -806,6 +812,7 @@ _PAGE_EVALS = [
     "harvey_lab_criteria_pass",
     "automation_bench_partial_score",
     "enterprise_ops_gym",
+    "terminalbench_4_0",
     "terminalbench_v2_1",
     "terminalbench_hard",
     "ifbench",
@@ -1004,6 +1011,7 @@ def _print_table(models, output):
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
         ("Agentic Index", lambda m: _extract_metric(m, "agentic_index")),
         ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
+        ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0"], "terminalbench_4_0")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
         ("tau^2 Bench Telecom", lambda m: _extract_eval_any(m, ["tau2"])),
         ("AA-LCR", lambda m: _extract_eval_any(m, ["lcr"])),
@@ -1029,6 +1037,7 @@ def _print_table(models, output):
     headers = _format_headers([c[0] for c in columns], output)
     rows = []
     percent_cols = {
+        "Terminal-Bench 4.0",
         "Terminal-Bench v2.1",
         "tau^2 Bench Telecom",
         "AA-LCR",
