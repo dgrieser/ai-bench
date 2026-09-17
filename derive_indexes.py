@@ -190,26 +190,30 @@ INDEXES: list[IndexDef] = [
             ("livecodebench", 0.4),
             ("scicode", 0.35),
             ("swe_bench_multilingual", 0.3),
-            # SWE Atlas contributes its Codebase Q&A track only: every model
-            # scored on Refactoring or Test Writing is also scored on Q&A, so
-            # the other two tracks add no coverage, correlate 0.87 with each
-            # other and 0.75-0.95 with Q&A, and their weight only raised the
-            # MIN_SCORED_FRACTION bar. One track at 0.25 instead of three at
-            # 0.17 -- see README, "Why SWE Atlas contributes one track".
-            ("swe_atlas_qna", 0.25),
+            # SWE Atlas contributes two of its three tracks, at 0.75 each.
+            # Test Writing is the one left out, and the correlations pick it:
+            # it ranks the field 0.955 with Codebase Q&A over the 11 models on
+            # both, which is a second copy of a column already here, where
+            # Refactoring sits at 0.755 -- the loosest pair in the family -- and
+            # is the only track scoring a model Q&A does not (MiniMax M3). So
+            # the family votes 1.5 on two tracks that disagree rather than 0.51
+            # on three that do not, and Test Writing stays a column nothing
+            # aggregates. See README, "Why SWE Atlas contributes two tracks".
+            ("swe_atlas_qna", 0.75),
+            ("swe_atlas_rf", 0.75),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, level with tooling since Terminal-Bench 4.0
-        # joined both groups: coding benchmarks predict each other well. Hold
-        # one out and the rest miss it by a sixty-second of the spread between
-        # models, so a fully measured model keeps 98.4% of its distance from
-        # the middle and one at the 18% bar keeps 92%. That is the data's
-        # verdict rather than a preference: a model placing top-decile on three
-        # coding benchmarks really is unlikely to be mid-field on the rest.
-        # Re-measured by --calibrate after the 4.0 admission, 0.015 -> 0.016,
-        # and unmoved by the FrontierCode Main -> Extended swap, which changed
-        # which board the group reads rather than how much it reads.
-        transfer_ratio=0.016,
+        # The lowest of the five, a hair under tooling: coding benchmarks
+        # predict each other well. Hold one out and the rest miss it by a
+        # sixty-seventh of the spread between models, so a fully measured model
+        # keeps 98.5% of its distance from the middle and one at the 18% bar
+        # keeps 92%. That is the data's verdict rather than a preference: a
+        # model placing top-decile on three coding benchmarks really is
+        # unlikely to be mid-field on the rest. Re-measured by --calibrate
+        # after the SWE Atlas promotion, 0.016 -> 0.015; the FrontierCode
+        # Main -> Extended swap before it moved nothing, which is what swapping
+        # one board for a near-identical one should do.
+        transfer_ratio=0.015,
     ),
     IndexDef(
         key="tooling_index",
@@ -229,9 +233,10 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # Level with the coding group, over the widest group here, so this
+        # A hair above the coding group, over the widest group here, so this
         # shrinks little: 98.4% kept when fully measured, 92% at the 18% bar.
-        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016.
+        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016,
+        # and unmoved since: the changes after it were all coding-group ones.
         transfer_ratio=0.016,
     ),
     IndexDef(
