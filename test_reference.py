@@ -145,7 +145,9 @@ class TestIndexValues(unittest.TestCase):
         before = self.values()
         after = self.values(model("closed", reference=True, b1=99, b2=99))
         self.assertEqual(
-            after["closed"], di.SCALE, "the best model in the field tops the column"
+            max(after, key=lambda name: after[name]),
+            "closed",
+            "the best model in the field tops the column",
         )
         self.assertLess(after["high"], before["high"])
         self.assertLess(after["high"], after["closed"])
@@ -154,7 +156,8 @@ class TestIndexValues(unittest.TestCase):
         """The property the split used to cost: the top open model and a closed
         model above it cannot both sit at the top of the same column."""
         values = self.values(model("closed", reference=True, b1=99, b2=99))
-        tops = [name for name, value in values.items() if value == di.SCALE]
+        ceiling = max(values.values())
+        tops = [name for name, value in values.items() if value == ceiling]
         self.assertEqual(tops, ["closed"])
 
     def test_reference_models_are_told_apart(self) -> None:

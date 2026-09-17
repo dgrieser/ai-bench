@@ -166,12 +166,12 @@ is a no-op unless the printed number actually moved.
 
 `round_to` is the escape hatch for a benchmark that moves on its own.
 **GDPval-AA** is the one that needs it: it is an Elo (1000 = human expert)
-spanning roughly -120 to 1740, and Artificial Analysis re-anchors the whole
+spanning roughly -175 to 1765, and Artificial Analysis re-anchors the whole
 field by a point or two whenever it re-runs the pairwise judging — in the
 history of this file, refreshes that moved all 62 scored models by a mean
 -1.5 Elo and then straight back by +1.5. At `"decimals": 0, "round_to": 5` a
 value is recorded in 5-Elo steps, below the movement the metric shows on its
-own and far below the 21-Elo median gap between neighbouring models, which
+own and far below the 15-Elo median gap between neighbouring models, which
 takes about three quarters of that churn out of the file.
 
 Rounding is quantization, not a filter on how much a score has to move to be
@@ -341,6 +341,12 @@ Output: llm.json (unified dataset)
 # (dry-run; -w to persist)
 ./derive_indexes.py llm.json
 ./derive_indexes.py llm.json -w
+
+# Re-measure how far one benchmark speaks for the rest of its index, by
+# leave-one-benchmark-out. Prints a transfer_ratio per index to paste into
+# INDEXES; writes nothing, and takes a few minutes. Worth re-running whenever a
+# group gains or loses a member.
+./derive_indexes.py --calibrate
 
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
@@ -709,12 +715,13 @@ cannot disagree about which column a row belongs in.
 
 Only the current revision feeds the [Coding index](#coding-index), as one
 member at one weight. Admitting both would count the benchmark twice for
-whoever was re-run and once for everyone else, and an archived revision's
-percentile ranks a model against a field that no longer exists.
+whoever was re-run and once for everyone else, and an archived revision
+compares a model against a field that no longer exists.
 
 That would leave a hole, though: a model measured **only** on the retired board
-contributes nothing to the benchmark it was actually measured on, so the index
-imputes it at the median — which flatters a model that scored near zero there.
+contributes nothing to the benchmark it was actually measured on, so it takes
+part in no comparison there at all — which flatters a model that scored near
+zero there.
 `REVISION_FALLBACKS` in `derive_indexes.py` closes it with a scale conversion
 rather than a second index member:
 
@@ -722,18 +729,18 @@ rather than a second index member:
 | --- | --- | --- | --- |
 | `deepswe_1_1` | `deepswe_1_0` | ÷ 1.069 | 1.1 reads lower than 1.0 for the same model |
 | `frontiercode_1_1` | `frontiercode_1_0` | × 1.32 | mean of the two open-weight models published on both boards (GLM 5.2 19.2 → 24.5, Kimi K2.7 22.0 → 30.06) |
-| `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone is imputed. |
+| `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone simply supports no comparison there. |
 
 A model absent from the current revision has its archived score carried onto
 the current scale and joins that revision's population, so it is ranked against
-today's field like everyone else instead of being imputed. A model published on
+today's field like everyone else instead of sitting the benchmark out. A model published on
 both keeps the current board's own number — the conversion only ever fills a
 hole, it never displaces a measurement. `swe_marathon` needs no factor: both
 models on its archive alone scored 0.0, which converts to 0.0 either way. Where
 there is no shared scale to convert along — `frontierswe`, whose two boards
-report different quantities — the hole stays open and the model is imputed: a
-fitted factor there would be inventing a number, which is worse than admitting
-one is missing.
+report different quantities — the hole stays open and the model is simply not
+compared there: a fitted factor would be inventing a number, which is worse than
+admitting one is missing.
 
 **The conversion lives in the index and nowhere else.** `llm.json`'s columns
 keep exactly what each board published, so nothing in the table ever shows a
@@ -991,34 +998,77 @@ different contributing benchmarks.
 
 How a value is produced:
 
-1. **Rank, don't average raw numbers.** Every contributing benchmark is turned into
-   a tie-averaged percentile rank across the models scored on it, so a pass rate and
-   an index score can be compared at all. A `lower_is_better` benchmark is inverted,
-   so a percentile always means "how good".
-2. **Weight by reliability.** The ranks are averaged with the per-benchmark weights
-   the index declares in `INDEXES` (1.0 for Real-SWE, the highest, down to 0.15
-   for SWE-bench Verified, the lowest), so
-   the benchmarks worth trusting lead and the weaker ones fill gaps and break ties.
-   Weights are relative — scaling them all leaves the ranking unchanged.
-3. **Impute blanks instead of zeroing them.** A missing score is filled between the
-   median (50) and the level the model has actually demonstrated, trusting the
-   latter in proportion to the weight it was measured on — but never *above* the
-   median. A gap counts as an unknown opponent, and an unknown opponent is never
-   assumed better than the median model: a blank can hold a strong model back or
-   drag a weak one down, yet it can never lift anyone, so a sparsely measured
-   model cannot outrank a well-tested one on imputed strength alone.
-4. **Refuse to guess.** A benchmark with fewer than two scored models carries no
-   rank and is dropped from the total weight. A model measured on less than
-   `MIN_SCORED_FRACTION` (18%, see [below](#why-the-evidence-bar-is-18)) of that
-   weight is left unranked (`null`) rather than reported as a mostly-imputed number.
+1. **Compare, don't average raw numbers.** For every contributing benchmark, each
+   pair of models that *both* carry a score on it is compared head to head. Values
+   equal to within the file's rounding split the comparison; a `lower_is_better`
+   benchmark is read the other way round. That comparison is the only use a raw
+   score is put to, and it is what makes the columns commensurable: "beat it on
+   SciCode" needs no common unit, whereas a percentile quietly asserts one.
+2. **Weight by reliability.** A benchmark's weight from `INDEXES` (1.0 for Real-SWE,
+   the highest, down to 0.15 for SWE-bench Verified, the lowest) is what its
+   comparisons *add up to*, not what each one is worth: the weight is divided by the
+   group total and again by the opponents available, so a model collects exactly that
+   benchmark's share of the index from it however wide the board. Weighting each pair
+   by the raw weight instead hands the vote to field size — measured on this group,
+   Real-SWE at 1.0 supplied **1.4%** of the likelihood and SciCode at 0.35 supplied
+   **17.9%**, because 5 models offer 4 comparisons each and 147 offer 146. Dividing
+   by the total is also what keeps the weights relative: scale them all and the
+   ranking does not move.
+3. **Fit one ability per model.** A weighted [Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model)
+   model says the odds of A beating B are `exp(ability_A − ability_B)`, and the fit
+   is the set of abilities that best explains the comparisons actually observed,
+   penalised by a small symmetric prior (`BT_PRIOR`) that keeps a model which won or
+   lost *everything* finite and pulls a barely-compared model toward the middle.
+   That objective is strictly concave, so it has one maximum, and it is reached by
+   alternating two steps that each only ever climb: the standard MM iteration for
+   the shape, and a closed-form solve for the overall level, which the comparisons
+   say nothing about and the prior decides alone. The level is the one making a
+   zero-ability model win exactly half its comparisons against the field, so **zero
+   is the middle of the column's own scale** — which is what lets step 5 shrink
+   toward zero and mean "toward the middle of the field".
 
-The result is reported as **whole index points**, `SCALE` (100,000) per full
-percentile, so the median model sits near 50,000 and the current field spans roughly
-29,000–89,000. Points rather than a percentage for two reasons: these are ranks, not
-a share of tasks solved, so a number approaching 100 would read as a saturated score
-it isn't; and the wide scale is what keeps the ranking strict — neighbouring models
-can sit thousandths of a percentile apart (the closest pair in the current field is
-15 points), which a 0–100 value would round into a tie. The column carries
+   Renormalising the abilities after each MM step instead — the obvious way to pin
+   a scale that Bradley-Terry leaves free — is subtly wrong once there is a prior,
+   because the prior's opponent is pinned and sliding the field past it changes the
+   penalty. The iteration then settles somewhere no model's gradient is zero: on
+   this file it left the coding group with gradients of 4.5e-4 instead of 1e-10, and
+   moved models across each other. `test_index_math.py` checks the gradient directly
+   rather than trusting that the loop stopped moving.
+4. **Never impute.** A missing score produces no comparison at all. Nothing is
+   filled in, no stand-in value is invented, and a benchmark a model never ran
+   cannot move it in either direction. Models measured on disjoint benchmarks are
+   still placed on one scale, through the opponents they share — the same anchoring
+   that puts two candidates who sat different exam papers on one grade curve.
+5. **Believe a thin measurement less.** A benchmark is one draw from the construct
+   the index is named after, and its weight says how much that draw can be
+   trusted — so a weight is a precision, and the shares a model was measured on
+   add up. Its fitted ability is shrunk toward the middle of the field by
+   [Kelley's formula](https://en.wikipedia.org/wiki/Regression_toward_the_mean),
+   `Σshare / (Σshare + transfer_ratio)`: the share of the index measured is what
+   buys reliability, so one heavy benchmark can be worth more than three light
+   ones. It is the same quantity the fit weighs comparisons by and the same one
+   `MIN_SCORED_FRACTION` is a bar on. How hard it bites is measured, not chosen:
+   see [below](#how-far-one-benchmark-speaks-for-the-others).
+6. **Refuse to guess.** A benchmark with fewer than two scored models supports no
+   comparison and is dropped from the total weight. A model measured on less than
+   `MIN_SCORED_FRACTION` (18%, see [below](#why-the-evidence-bar-is-18)) of that
+   weight is left unranked (`null`) rather than reported at all.
+
+The value reported is **the share of head-to-head comparisons the model would be
+expected to win against the ranked field**, drawn one opponent at a time — which is
+what the fitted ability predicts, expressed as something with a scale of its own.
+0.5 is "as good as the middle of the field", 0.9 is "wins nine in ten", and it is
+the same quantity in every index, so Coding and Tooling can be read side by side.
+
+It is printed as **whole index points**, `SCALE` (100,000) per full win rate, so the
+median model sits near 50,000. Points rather than a percentage for two reasons: a
+number approaching 100 would read as a saturated score when it is really a win rate
+against this particular field; and the wide scale is what keeps the ranking strict —
+neighbouring models can sit millionths of a win rate apart, which a 0–100 value
+would round into a tie. Models do still share an integer, either because the fit
+gave them the same ability to machine precision or because they are closer than
+`SCALE` can separate — one part in a hundred thousand of a win rate is noise, and
+reporting an order there would invent precision rather than measure it. The column carries
 `"decimals": 0` in `llm.json`, which is how `llm.html` and `llm-cli` know to print it
 without the decimal every other benchmark gets.
 
@@ -1039,7 +1089,7 @@ Two consequences worth knowing (they hold for every derived index):
   from the other direction: its weight joins the denominator as soon as two models
   are scored on it, which lifts the `MIN_SCORED_FRACTION` bar every model has to
   clear, so a column measured on almost nobody can cost thinly measured models
-  their rank. That is why SWE-bench Multimodal, scored on two of 136 models, is
+  their rank. That is why SWE-bench Multimodal, scored on five of 160 models, is
   carried as a column but left out of `INDEXES` for now — admitting it at 0.15
   dropped four models from ranked to `null` and bought no discrimination in
   return. Worth adding once its coverage grows. SWE-bench Multilingual, admitted
@@ -1101,7 +1151,7 @@ board):
 | Head resolution | Top model minus fifth is **15.0 points** across the published board of eight — behind only FrontierSWE 2.0 (40.5) and SWE-bench Pro (15.5), and an order above DeepSWE 1.1 (4.6) or Terminal-Bench 2.1 (3.4), those three measured over this file's much larger populations. It separates the leaders, which is what the group's top weight is for. | **up** |
 | Reproducibility | Nobody outside Specific Labs can re-run it, and the tasks are shown but not released (sample access is by request). Trust here is trust in the maintainer rather than in a harness anyone can check — the opposite trade from BFCL, and the direct cost of the contamination property above. | down |
 | What a row is | A model **and its native harness** — Fable 5.1 under Claude Code, GLM 5.3 under Claude Code, Kimi K3 under Kimi Code — so harness quality sits inside the score, and two models are never compared under one scaffold. | down |
-| Coverage | **5 of 158 models**, the thinnest column in the group (DeepSWE 1.1 18, SWE-Marathon 1.1 12, FrontierSWE 2.0 7). Three of the five are closed [reference rows](#closed-reference-models), leaving exactly two open-weight models — `glm-5-3` and `kimi-k3` — carrying a Real-SWE score of their own. | down, hard |
+| Coverage | **5 of 160 models**, the thinnest column in the group (DeepSWE 1.1 18, SWE-Marathon 1.1 12, FrontierSWE 2.0 7). Three of the five are closed [reference rows](#closed-reference-models), leaving exactly two open-weight models — `glm-5-3` and `kimi-k3` — carrying a Real-SWE score of their own. | down, hard |
 | Redundancy | **Not measurable yet.** Every overlap is five models or fewer, where a Spearman is noise: −0.3 against DeepSWE 1.1 and 0.8 against SWE Atlas Q&A over the same five rows, which is the spread you get from reshuffling five numbers. Reported here to say it carries no information, not as evidence either way. | — |
 
 **On the task count**, which the site does not state outright: the published board is
@@ -1169,11 +1219,11 @@ ladder gets chosen. Measured on the current file (26 scored models):
 | Axis | Measurement | Pull |
 | --- | --- | --- |
 | What it tests | 300 real issue/PR pairs from 42 repositories in nine languages other than Python, graded by running the repository's own fail-to-pass and pass-to-pass tests. No judge, no algorithmic toy problems. The rest of the group is Python-heavy, so this is the only column that can tell a model that only writes Python from one that ships Go and Rust. | **up** |
-| Saturation | Median 68.0, max 79.6, **nothing above 80** — no ceiling problem, unlike SWE-bench Verified (93.4 max, saturated) or LiveCodeBench (4 models ≥ 90). | **up** |
-| Head resolution | Top model minus fifth is **3.1 points**, the tightest in the group (SWE-bench Verified 12.8, SWE-bench Pro 18.2). It separates the mid-field well and the leaders barely at all. | down |
-| Redundancy | Spearman **0.92** with SWE-bench Verified on the 23 models that have both — the strongest overlap of any pair here, which is what the shared collection pipeline predicts. Also 0.85 with Terminal-Bench 2.1 and 0.77 with SWE-bench Pro. | down |
-| Trust | The official leaderboard runs one standardized mini-SWE-agent, but only **3** of our 26 values come from a run we can check (evals.report, Official/Verified). The other 23 are Hugging Face card self-reports at each lab's harness of choice. Public since 2025 and built by the SWE-bench pipeline, so its contamination profile is SWE-bench Pro's, not DeepSWE's. | down |
-| Coverage | 26 of 136 models (19%), from 11 vendors — mid-pack for this group: ahead of DeepSWE and the SWE-Atlas tracks (6–14) and behind Terminal-Bench 2.1 (78), LiveCodeBench (94), SciCode (125). | — |
+| Saturation | Median 69.3, max 89.5 — a looser ceiling than SWE-bench Verified's (97.0 max, saturated), and LiveCodeBench still has 4 models ≥ 90. | **up** |
+| Head resolution | Top model minus fifth is **9.9 points**, mid-pack for the group (SWE-bench Verified 1.6, SWE-bench Pro 15.5). It separates the mid-field well and the leaders only moderately. | down |
+| Redundancy | Spearman **0.84** with SWE-bench Verified on the 30 models that have both, which is what the shared collection pipeline predicts. Also 0.92 with Terminal-Bench 2.1 and 0.85 with SWE-bench Pro. | down |
+| Trust | The official leaderboard runs one standardized mini-SWE-agent, but only **7** of our 34 values come from a run we can check (evals.report and benchlm.ai). The other 27 are Hugging Face card self-reports at each lab's harness of choice. Public since 2025 and built by the SWE-bench pipeline, so its contamination profile is SWE-bench Pro's, not DeepSWE's. | down |
+| Coverage | 34 of 160 models (21%), from 14 vendors — mid-pack for this group: ahead of DeepSWE (18) and SWE Atlas Q&A (19) and behind Terminal-Bench 2.1 (101), LiveCodeBench (118), SciCode (147). | — |
 
 0.30 is where those pull: below `swe_bench_pro` (0.4) because most values are
 self-reported rather than harness-controlled, above `swe_bench_verified` (0.15)
@@ -1208,8 +1258,8 @@ benchmark between them". Measured on the current file, that reasoning does not h
 - **The three tracks are not three populations.** Every model scored on Refactoring
   (6) or Test Writing (7) is also scored on Codebase Q&A (13). Dropping the first two
   removes **no model** from the index, and Q&A alone covers the family's whole roster.
-- **They are barely three measurements.** Spearman **0.94** between Refactoring and
-  Test Writing, 0.77 and 0.89 against Q&A. Three near-duplicate ranks over one
+- **They are barely three measurements.** Spearman **0.87** between Refactoring and
+  Test Writing, 0.75 and 0.95 against Q&A. Three near-duplicate ranks over one
   ≤13-model population is the same triple-count that got `aa_coding_index` removed
   from this group, one order of magnitude smaller.
 - **The redundant weight was not free.** Weight in the denominator raises the
@@ -1236,9 +1286,9 @@ below `MIN_SCORED_FRACTION × total group weight`, the model is `null` instead o
 ranked. It is a share of *weight*, not a count of benchmarks — three cheap columns can
 be worth less evidence than one expensive one.
 
-At **0.18** the bars are 1.152 of 6.40 (Coding, 92 of 144 models ranked), 1.107 of
-6.15 (Tooling, 93 ranked), 0.666 of 3.70 (Knowledge, 141 ranked), 0.495 of 2.75
-(Vision, 47 ranked) and 0.423 of 2.35 (Trust, 133 ranked, now that
+At **0.18** the bars are 1.314 of 7.30 (Coding, 89 of 160 models ranked), 1.107 of
+6.15 (Tooling, 111 ranked), 0.666 of 3.70 (Knowledge, 155 ranked), 0.495 of 2.75
+(Vision, 58 ranked) and 0.423 of 2.35 (Trust, 148 ranked, now that
 [AA-Omniscience Accuracy](#why-the-anchor-cannot-stand-alone) is fetched).
 
 Coverage does not spread evenly across models, it clusters, and the threshold should
@@ -1258,9 +1308,16 @@ fall between clusters rather than through one. Measured over the current file:
 20% (twelve today), so `kimi-k2-thinking` and `deepseek-v3-2-0925` (both scored on LiveCodeBench,
 SciCode, SWE-bench Multilingual and SWE-bench Verified) were unranked while models with
 the same amount of evidence were not. 0.18 takes the whole block and stops before the
-next one. Lowering the bar never changes a ranked model's *value* — the total weight is
-the same either way — it only decides who appears; previously ranked models move a mean
-of 3 places as the new arrivals slot in, and Tooling does not move at all.
+next one.
+
+**Where the bar sits now changes every value, not just who appears.** The old
+percentile method scored a model against a fixed total weight, so admitting more
+models left the incumbents' numbers alone. A win rate is taken against the ranked
+field, so enlarging that field moves everyone: dropping the Coding bar from 0.18 to
+0.12 moves **all 89** ranked values, by a mean of 4,233 points and 8.9 places, because
+the arrivals are weaker than the field they join and every incumbent now beats more of
+it. That makes the threshold a heavier decision than it was, and it is the reason
+`derive_indexes.py` recomputes every index whenever anything in `llm.json` moves.
 
 The exact fractions drift as members join and leave — every admission changes the
 denominator, so the same absolute evidence is a smaller share afterwards — but the
@@ -1273,12 +1330,20 @@ what may join, not just a historical note: it is one of the reasons Terminal-Ben
 
 Going further would change what the column means rather than how much of it is filled
 in. At 0.12, **90%** of ranked models would be measured on less than half the weight;
-at 0.10, 92%. The head stays safe at any setting — the imputation cap means a model
-measured on 12% of the weight cannot score above 56,000 even by topping every benchmark
-it has, and no model under 25% measured reaches the visible top 20 at any fraction I
-tested — but the mid-field crowds: the ten models measured on at least half the weight
-fall a mean 5 places at 0.12 and 11 places at 0.10, below models whose numbers are
-mostly imputation. 18% keeps the ranked field majority-measured; 12% does not.
+at 0.10, 92%. 18% keeps the ranked field majority-measured; 12% does not.
+
+**The bar now carries the whole load at the head, and it did not before.** Under the
+old method the imputation cap did half that work: a model measured on 12% of the
+weight could not score above 56,000 however well it did, because the missing 88% was
+filled at the median and never above it. There is no such cap any more — nothing is
+imputed, so there is nothing to cap. What replaces it is the coverage shrinkage, and
+at the coding group's calibrated `transfer_ratio` that is deliberately mild: a model
+on 12% of the weight keeps 89% of its distance from the middle and could in principle
+reach **96,654** by topping everything it ran, against 97,301 at 18% and 97,643 at 25%.
+Those three numbers being nearly equal is the point — the shrinkage is not a
+gatekeeper, because [the data says coding benchmarks transfer](#how-far-one-benchmark-speaks-for-the-others).
+Whether a thinly measured model is ranked at all is therefore decided here and nowhere
+else, which is an argument for holding 18% rather than lowering it.
 
 The setting is global to all five indexes today. They do not want the same thing —
 Tooling barely moves between 0.20 and 0.15 where Coding gains 11 models, Knowledge is
@@ -1298,9 +1363,9 @@ here](#why-the-evidence-bar-is-inert-here) and [The evidence bar is inert here
 too](#the-evidence-bar-is-inert-here-too).
 
 Knowledge is the column the threshold does the least for, at any setting: its members
-cover 40–97% of the table each, so 124 of the 133 models it ranks are measured on at
-least half its weight and the three it leaves out have no score in any of its six
-benchmarks. Nothing between 0.05 and 0.20 changes that — see
+cover 47–95% of the table each, so 142 of the 155 models it ranks are measured on at
+least half its weight and the five it leaves out have no score in any of its six
+benchmarks. Nothing between 0.05 and 0.30 changes that — see
 [Knowledge index](#knowledge-index).
 
 Effects, measured: total group weight 6.66 → 6.40, and with it the bar (1.332 → 1.280
@@ -1317,10 +1382,72 @@ justification for it, not the four models. Removing near-duplicate weight is rig
 its own; rescuing a rank is a lever, and [the threshold](#why-the-evidence-bar-is-18)
 is the honest one.
 
+### How far one benchmark speaks for the others
+
+Step 5 shrinks a thinly covered model toward the middle of the field by
+`Σw / (Σw + transfer_ratio)`. That constant is the only tuning parameter in the
+whole method, so it is measured rather than chosen, per index, by
+`./derive_indexes.py --calibrate`.
+
+**The measurement is leave-one-benchmark-out.** Fit the abilities with one
+benchmark removed, then ask what that benchmark *alone* would have said about each
+model. The gap between the two is what the rest of the index could not have
+predicted — which is exactly the exposure a model with gaps carries. Pooling those
+gaps, scaled by the held-out benchmark's share, gives the variance Kelley's formula
+needs once it is divided by the variance between models. Only models already
+measured on at least 30% of the *remaining* weight are asked, since the question is
+whether a benchmark agrees with a trustworthy estimate, not whether two thin
+estimates agree.
+
+Two things have to be true of "alone" for any of this to mean anything, and both
+are easy to get wrong:
+
+- **Held out, not measured in place.** The fit has already minimised the in-place
+  residual: on the coding group that reads 0.311 against a true 1.322, a fourfold
+  understatement that would have shrunk nobody.
+- **The held-out benchmark's comparisons and no others.** A `Comparisons` record
+  pools every benchmark a pair share, so handing the whole index to
+  `apparent_ability()` asks what the model did *overall* against the opponents that
+  happen to have run this benchmark — feeding the estimate being tested back into
+  its own target. That bug shipped in the first draft of this work and understated
+  every ratio by between two and nine times; `test_index_math.py` now pins it.
+
+| Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
+| --- | --- | --- | --- |
+| Coding | 0.015 | 92% | 98.5% |
+| Tooling | 0.019 | 90% | 98% |
+| Vision | 0.034 | 84% | 97% |
+| Knowledge | 0.072 | 71% | 93% |
+| **Trust** | **1.524** | **11%** | **40%** |
+
+The ratio is a share of the group, so these five are directly comparable with each
+other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
+them.
+
+**Trust is a hundred times the coding group, and that is the finding, not a
+quirk.** A hallucination rate, an accuracy, a long-context recall and an
+instruction-following score are nearly separate constructs; the models also sit
+close together on all of them, so the between-model variance the ratio is divided
+by is small while the disagreement above it is not. Past 1.0 it means one member
+says less about the next than the field's own spread does. The column pays for that
+honestly: even a model measured on all four keeps only 40% of its distance from the
+middle, which is why the Trust column is visibly more compressed than the other
+four. That is not a defect in the column, it is the column declining to extrapolate
+from evidence that does not support it.
+
+The other four are mild. Coding benchmarks agree well enough that three of the
+twelve really do say a good deal about a model — which is why `hy4-preview`,
+measured on Terminal-Bench 2.1, SWE-bench Pro and SWE-bench Multilingual and
+placing top-decile on all three, still ranks eighth. Under the old method it sat at
+59,096, held there by the imputation cap rather than by evidence. Whether that is
+right is now an empirical question with an answer on this page rather than a policy
+baked into the arithmetic, and the answer moves when the data does: re-run
+`--calibrate` after a group gains or loses a member.
+
 ## Tooling Index
 
 The second derived column, **Tooling**, is the Coding index's sibling for agentic
-tool use: same script (`derive_indexes.py`), same percentile-rank math, imputation
+tool use: same script (`derive_indexes.py`), same comparison-and-fit math, shrinkage
 and coverage rules as [above](#coding-index), computed over the tool-use
 benchmarks instead — plus one instruction-following column, see below — and
 written to each model's `scores.tooling_index`. Ranked values cite this
@@ -1333,20 +1460,20 @@ Contributing benchmarks and why they carry the weight they do:
 | --- | --- | --- |
 | τ³-Bench Banking | 1.0 | The most reliable measurement of the set: every score run independently by Artificial Analysis, execution-graded against backend state, far from saturation, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. |
 | Toolathlon-Verified | 0.9 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded and unsaturated. Below 1.0 because the leaderboard is run by the benchmark's own team with a mix of verified and self-reported entries, and it is young — two incompatible score series in under a year. |
-| MCP-Atlas | 0.85 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, and it correlates 0.72 with Toolathlon — close enough to be the same capability, far enough to still add information. Above Terminal-Bench 2.1 because it is far more tool-shaped; below Toolathlon because only 6 of its 17 stored scores are Scale's own runs and the rest are lab-reported, where the Toolathlon ingest drops self-reported rows outright. |
+| MCP-Atlas | 0.85 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, and it correlates 0.80 with Toolathlon — close enough to be the same capability, far enough to still add information. Above Terminal-Bench 2.1 because it is far more tool-shaped; below Toolathlon because only 9 of its 25 stored scores are Scale's own runs and the rest are lab-reported, where the Toolathlon ingest drops self-reported rows outright. |
 | Terminal-Bench 2.1 | 0.8 | Broad, widely trusted, mostly AA-run in this file — but the least tool-shaped of the set (terminal/CLI agency rather than structured tool calling, overlapping the Coding index), nearing its ceiling, with fully public tasks and documented harness variance. |
-| GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. AA tags the evaluation `agentic` and `tool-use`, the same pair Terminal-Bench 2.1, τ³ Banking and ITBench-AA carry. It has the best provenance of the set (70 of 71 scores AA-run) and the sharpest discrimination (210 Elo between the best model and the fifth against a ~21-Elo median gap between neighbours), over 220 tasks spanning 44 occupations, which is why it outranks the narrower ITBench-AA. Below Terminal-Bench 2.1 because the two largely measure the same shell-agency axis — they correlate 0.92 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality, so a polished artifact can be rewarded over a clean trajectory. |
+| GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. AA tags the evaluation `agentic` and `tool-use`, the same pair Terminal-Bench 2.1, τ³ Banking and ITBench-AA carry. It has the best provenance of the set (94 of 95 scores AA-run) and the sharpest discrimination (120 Elo between the best model and the fifth against a ~15-Elo median gap between neighbours), over 220 tasks spanning 44 occupations, which is why it outranks the narrower ITBench-AA. Below Terminal-Bench 2.1 because the two largely measure the same shell-agency axis — they correlate 0.94 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality, so a polished artifact can be rewarded over a clean trajectory. |
 | ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the ten and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
-| BFCL v4 | 0.5 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but it correlates 0.91 with τ³ Banking and 0.93 with Terminal-Bench Hard, so it buys coverage and stability rather than information. Its Overall Accuracy is an unweighted average dominated by AST-checked single-call categories, and the board refreshes slowly, so most frontier open-weight scores arrive as card self-reports. |
-| τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as a coverage backbone — 101 scored models, second only to IFBench — so it fills gaps and breaks mid-field ties without leading anything. |
-| Terminal-Bench Hard | 0.3 | Correlates ~0.94 with Terminal-Bench 2.1, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from floating up on imputation alone. |
-| IFBench | 0.2 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.73-0.74 with the Terminal-Bench columns and 0.60 with ITBench-AA, but only 0.13 with Toolathlon, the weakest link to the purest tool-use member of any contributor. It is also the second most saturated column after τ²-Telecom, 3.4 points between the best model and the fifth. What it brings is reach: 112 scored models, the widest of the ten and almost all AA-run, which keeps thinly measured models from floating up on imputation alone. |
+| BFCL v4 | 0.5 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but it correlates 0.85 with τ³ Banking and 0.93 with Terminal-Bench Hard, so it buys coverage and stability rather than information. Its Overall Accuracy is an unweighted average dominated by AST-checked single-call categories, and the board refreshes slowly, so most frontier open-weight scores arrive as card self-reports. |
+| τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as a coverage backbone — 101 scored models, behind only IFBench and level with Terminal-Bench 2.1 — so it fills gaps and breaks mid-field ties without leading anything. |
+| Terminal-Bench Hard | 0.3 | Correlates ~0.95 with Terminal-Bench 2.1, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from being ranked on a corner of the construct. |
+| IFBench | 0.2 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.74 with both Terminal-Bench columns and 0.32 with ITBench-AA, but only 0.28 with Toolathlon, the weakest link to the purest tool-use member of any contributor. It is also the second most saturated column after τ²-Telecom, 3.0 points between the best model and the fifth. What it brings is reach: 118 scored models, the widest of the ten and mostly AA-run (99 of them), which keeps thinly measured models from being ranked on a corner of the construct. |
 
 ## Knowledge Index
 
 The third derived column, **Knowledge**, is the Coding and Tooling indexes' sibling
 for what a model knows unaided (the fourth, [Vision](#vision-index), came later): same script (`derive_indexes.py`), same
-percentile-rank math, imputation and coverage rules as
+comparison-and-fit math, shrinkage and coverage rules as
 [above](#coding-index), computed over the knowledge, science and math benchmarks
 instead and written to each model's `scores.knowledge_index`. Ranked values cite
 this section (`https://github.com/dgrieser/ai-bench#knowledge-index`) the same way
@@ -1360,22 +1487,42 @@ over a document supplied in the prompt) are not members even though both are
 question-answering columns. See [what it leaves
 out](#what-the-knowledge-index-leaves-out).
 
-It is also not the other two indexes in a different hat. Against the models it
-shares with them, the Knowledge ranking agrees with Coding at Spearman **0.79** (81
-models) and with Tooling at **0.84** (85) — related, as one would expect of columns
-over the same field, but far from the 0.9x an index would show if it were
-re-measuring them.
+It overlaps its siblings more than this section used to claim. Against the models
+it shares with them, the Knowledge ranking agrees with Coding at Spearman **0.94**
+(86 models) and with Tooling at **0.94** (107). Those figures read 0.79 and 0.84
+when they were first written, and the argument built on them — that this is far
+from the 0.9x an index would show if it were re-measuring its siblings — no longer
+holds at face value.
+
+Most of the move came with the [Bradley-Terry rewrite](#coding-index): the old
+percentile math on today's data gives 0.82 and 0.87, so the table's growth
+accounts for a little and the new math for the rest. The likely reason is that
+the old median fill was itself index-specific noise — a model's imputed
+percentile depended on which benchmarks *that* index happened to be missing for
+it, which differed per column and pushed the indexes apart for reasons that had
+nothing to do with ability. Removing it did not make these columns measure the
+same thing; it stopped a measurement artifact from making them look more
+different than they are.
+
+Two things say the columns are still distinct rather than flattened. Inside the
+top 20 the agreement drops sharply — **0.66** against Coding and **0.59** against
+Tooling — so among the models a reader is actually choosing between, the ranking
+is its own. And [Trust](#trust-index) still stands apart from all four on a mean
+of 0.83 against 0.90–0.93, which a method that merely collapsed distinctions
+could not produce. What is honest to say now is that knowing what a model knows
+tells you a great deal about how well it codes, and rather less about which of
+the leaders to pick.
 
 Contributing benchmarks and why they carry the weight they do:
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| AA-Omniscience | 1.0 | The only member built to measure knowledge as such rather than to measure reasoning and read knowledge off it: 6,000 questions over 42 economically relevant topics in six domains, and a bounded −100…100 index that rewards correct recall, penalises confident wrong answers and credits abstention. Every one of its 120 values is an Artificial Analysis run — the best provenance in the set alongside CritPt — it is nowhere near its ceiling (best 19.7, median −48.0 on a scale that goes to 100), and it has by far the sharpest head resolution: 15.4 points between the best model and the fifth. It is also among the least redundant members: mean Spearman **0.61** against the other five (0.30 with AIME 2025 at the low end, 0.74 with GPQA Diamond at the high), against 0.83 for GPQA Diamond, so it leads on information as well as on trust. |
-| Humanity's Last Exam | 0.9 | The obscure-knowledge column: 2,500 expert-written questions across many subjects, built to resist retrieval, and the broadest coverage of any member (131 of 136 models, 43 creators, 126 values AA-run). Unsaturated with room to spare — best 60.9, median 10.6. **The column is the no-tools run only**, which is the same line the index draws at BrowseComp above: a model given web search and a code interpreter is being measured on what it can look up, not on what it knows. The distinction is not a rounding difference — across the models whose publisher states both, tools are worth a median +11.5 points and up to +27 — so with-tools and search-agent runs are refused at the ingest rather than blended in, and most of what remains is Artificial Analysis' 2,158-question text-only run ([audit](docs/hle-tool-mode-audit-2026-09.md)). Below AA-Omniscience because it is the second most redundant member of the set — mean Spearman **0.81** against the other five (0.91 with GPQA Diamond, 0.86 with CritPt, 0.81 with AIME 2025, 0.78 with MMLU-Pro), behind only GPQA Diamond itself — so a good part of its vote is already cast by the members below it, and because a single hard exam mixes knowledge with reasoning in a ratio nobody can read off the score. |
-| CritPt | 0.6 | The hardest science in the table and the cleanest measurement of it: 70 research-level physics problems, all 55 values AA-run, and the least saturated column anywhere in this index — best 23.4, median 1.7. High trust per measurement, and it separates the leaders (5.4 points between first and fifth). Held to 0.6 by what it cannot do: 70 problems in one discipline is the smallest and narrowest task set of the six, and the floor is crowded — 42 of its 55 values sit in a tie, 13 of them at 0.3 — so below the frontier it ranks almost nobody. Same profile, same weight as ITBench-AA in the [Tooling index](#tooling-index). |
-| MMLU-Pro | 0.5 | The breadth column: ~12,000 questions across 14 disciplines, ten options instead of four, the trivial and mislabelled items MMLU had accumulated filtered out. Nothing else here covers ordinary academic knowledge across that many fields, and at 95 scored models from 33 creators it is the widest member after HLE and GPQA. Below CritPt on two counts: only 51 of its 95 values are AA-run, the rest Hugging Face card self-reports at each lab's harness of choice; and the head is flat — 1.1 points between the best model and the fifth against a median of 77.6, so it sorts the mid-field and barely touches the leaders. |
-| AIME 2025 | 0.4 | The math column, and the member that overlaps the others least: mean Spearman **0.58**, the lowest of the six, and it owns the two weakest links in the set — 0.30 with AA-Omniscience and 0.27 with CritPt — because working out a competition problem is not recalling a fact. 77 scored models, 30 creators, 59 values AA-run. Weighted below MMLU-Pro because 15 integer-answer problems is a narrow instrument, the head is saturated (12 models at 90 or above, 2.6 points between first and fifth), and a 2025 exam has had a year of public exposure — the contamination risk the newer paper is written for. |
-| GPQA Diamond | 0.3 | The coverage backbone: 132 of 136 models, 42 creators, 126 of those values AA-run — the widest column in the index. It is here for reach and tie-breaking rather than for information, on both of the usual counts. Saturated: 9 models at 90 or above and **0.7 points** between the best model and the fifth, so it cannot separate the frontier at all. And redundant: mean Spearman **0.83** against the other five, the highest of the six, including 0.91 with HLE and 0.92 with MMLU-Pro — the two strongest links anywhere in this set — which is what a graduate-science multiple-choice test shares with a broad multiple-choice test and a hard mixed exam. What it buys is that almost nobody in the table is unmeasured, which keeps thinly measured models from floating up on imputation alone. |
+| AA-Omniscience | 1.0 | The only member built to measure knowledge as such rather than to measure reasoning and read knowledge off it: 6,000 questions over 42 economically relevant topics in six domains, and a bounded −100…100 index that rewards correct recall, penalises confident wrong answers and credits abstention. Every one of its 142 values is an Artificial Analysis run — the best provenance in the set — it is nowhere near its ceiling (best 43.5, median −41.5 on a scale that goes to 100), and it has by far the sharpest head resolution: 23.8 points between the best model and the fifth. It is also among the least redundant members: mean Spearman **0.67** against the other five (0.41 with AIME 2025 at the low end, 0.77 with GPQA Diamond at the high), second only to AIME 2025's 0.65 and well clear of GPQA Diamond's 0.86, so it leads on information as well as on trust. |
+| Humanity's Last Exam | 0.9 | The obscure-knowledge column: 2,500 expert-written questions across many subjects, built to resist retrieval, and the second-broadest coverage of any member behind GPQA Diamond (147 of 160 models, 44 creators, 138 values AA-run). Unsaturated with room to spare — best 60.9, median 10.8. **The column is the no-tools run only**, which is the same line the index draws at BrowseComp above: a model given web search and a code interpreter is being measured on what it can look up, not on what it knows. The distinction is not a rounding difference — across the models whose publisher states both, tools are worth a median +11.5 points and up to +27 — so with-tools and search-agent runs are refused at the ingest rather than blended in, and most of what remains is Artificial Analysis' 2,158-question text-only run ([audit](docs/hle-tool-mode-audit-2026-09.md)). Below AA-Omniscience because it is the second most redundant member of the set — mean Spearman **0.857** against the other five (0.93 with GPQA Diamond, 0.92 with CritPt, 0.88 with MMLU-Pro, 0.83 with AIME 2025), a hair behind GPQA Diamond's 0.860 — so a good part of its vote is already cast by the members below it, and because a single hard exam mixes knowledge with reasoning in a ratio nobody can read off the score. |
+| CritPt | 0.6 | The hardest science in the table and the cleanest measurement of it: 70 research-level physics problems, 74 of its 75 values AA-run, and the least saturated column anywhere in this index — best 32.3, median 2.3. High trust per measurement, and it separates the leaders (3.2 points between first and fifth). Held to 0.6 by what it cannot do: 70 problems in one discipline is the narrowest task set of the six and the second-thinnest coverage, and the floor is crowded — 50 of its 75 values sit in a tie, 17 of them at 0.3 — so below the frontier it ranks almost nobody. Same profile, same weight as ITBench-AA in the [Tooling index](#tooling-index). |
+| MMLU-Pro | 0.5 | The breadth column: ~12,000 questions across 14 disciplines, ten options instead of four, the trivial and mislabelled items MMLU had accumulated filtered out. Nothing else here covers ordinary academic knowledge across that many fields, and at 120 scored models from 37 creators it is the fourth-widest member, behind GPQA, HLE and AA-Omniscience. Below CritPt on two counts: only 55 of its 120 values are AA-run, the rest Hugging Face card self-reports at each lab's harness of choice; and the head is flat — 4.4 points between the best model and the fifth against a median of 79.4, so it sorts the mid-field and barely touches the leaders. |
+| AIME 2025 | 0.4 | The math column, and the member that overlaps the others least: mean Spearman **0.65**, the lowest of the six, and it owns the two weakest links in the set — 0.41 with AA-Omniscience and 0.51 with CritPt — because working out a competition problem is not recalling a fact. 81 scored models, 33 creators, 59 values AA-run. Weighted below MMLU-Pro because 15 integer-answer problems is a narrow instrument, the head is saturated (13 models at 90 or above, 3.5 points between first and fifth), and a 2025 exam has had a year of public exposure — the contamination risk the newer paper is written for. |
+| GPQA Diamond | 0.3 | The coverage backbone: 152 of 160 models, 44 creators, 134 of those values AA-run — the widest column in the index. It is here for reach and tie-breaking rather than for information, on both of the usual counts. Saturated: 20 models at 90 or above and **2.6 points** between the best model and the fifth, so it cannot separate the frontier at all. And redundant: mean Spearman **0.860** against the other five, narrowly the highest of the six, including 0.95 with MMLU-Pro and 0.93 with HLE — the two strongest links anywhere in this set — which is what a graduate-science multiple-choice test shares with a broad multiple-choice test and a hard mixed exam. What it buys is that almost nobody in the table is unmeasured, which keeps thinly measured models from being ranked on a corner of the construct. |
 
 ### What the Knowledge index leaves out
 
@@ -1387,27 +1534,32 @@ differ:
   AA-Omniscience, and the Omniscience Index is already defined over the behaviour it
   reports: correct recall rewarded, confident wrong answers penalised, abstention
   credited. Admitting it means one 6,000-question run casting **33%** of the index's
-  weight, and it buys 6 models of coverage (126 scored against 120). Measured, it is
-  not a second opinion either: Spearman **−0.79** against the column it duplicates,
+  weight, and it buys 6 models of coverage (148 scored against 142). Measured, it is
+  not a second opinion either: Spearman **−0.72** against the column it duplicates,
   and of the 20 best hallucination rates in the file, **none** sits below the
   Omniscience median — the two rank the field alike. It is the same triple-count
   argument as [SWE Atlas](#why-swe-atlas-contributes-one-track), and it is not free:
-  at 0.3 it moved the ranked field a mean of 3 places and pushed
-  `deepseek-v4-pro` from first to sixth on the strength of one re-counted run.
+  at 0.3 it moves the ranked field a mean of 3.6 places and reorders five of the top
+  six, on the strength of one re-counted run.
 - **AIME 2026** — the same exam one year on, and the fresher contamination profile is
-  real. Everything else about it is not ready: 28 scored models (21% of the table),
-  **19 of them at 90 or above** with a median of 93.0, so it cannot rank even the
-  field it covers, and 23 of its 28 values are Hugging Face card self-reports.
-  Admitted at 0.2 it reordered four of the top six, on imputed weight charged to the
-  108 models it does not measure — the failure mode the Coding index documents for
-  [SWE-bench Multimodal](#coding-index). Worth revisiting once AA's coverage arrives,
-  and then as AIME 2025's *replacement* rather than beside it.
+  real. Everything else about it is not ready: 29 scored models (18% of the table),
+  **19 of them at 90 or above** with a median of 92.7, so it cannot rank even the
+  field it covers, and 24 of its 29 values are Hugging Face card self-reports with
+  only 3 AA runs among them — the weakest provenance of any candidate here.
+  Admitted at 0.2 it now moves the ranked field a mean of 0.1 places and leaves the
+  top six untouched, so the case against it is no longer that it disrupts the
+  ranking; it is that it would buy nothing while ranking 29 models on self-reported
+  numbers and leaving the other 131 uncompared there — the failure mode the Coding
+  index documents for [SWE-bench Multimodal](#coding-index). Worth revisiting once
+  AA's coverage arrives, and then as AIME 2025's *replacement* rather than beside
+  it.
 - **MMMU Pro** — the most redundant candidate anywhere in the set: Spearman **0.96**
-  with GPQA Diamond on the 45 models that have both. It is also gated on modality —
-  only a multimodal model can be scored at all — so admitting it would charge
-  text-only models imputation weight for something other than knowledge. At 0.3 it
-  moved ranks a mean of 1.2 places and left the head untouched: nothing gained, a
-  modality tax paid. It is not unaggregated, though — it anchors the [Vision
+  with GPQA Diamond on the 57 models that have both. It is also gated on modality —
+  only a multimodal model can be scored at all — so admitting it would rank
+  multimodal models on something other than knowledge and leave text-only models
+  out of that weight entirely. At 0.3 it
+  moves ranks a mean of 0.3 places and swaps one adjacent pair at the head: nothing
+  gained, a modality tax paid. It is not unaggregated, though — it anchors the [Vision
   index](#vision-index) at 1.0, where the modality gate is the subject rather
   than a tax.
 - **AA-LCR and BrowseComp** — the retrieval axis this index is defined against.
@@ -1415,50 +1567,55 @@ differ:
   prompt*, and BrowseComp is scored with a browser in the loop, so a strong score can
   belong to a strong search agent rather than to a knowledgeable model. Both measure
   something worth measuring; neither measures what the model knows. (BrowseComp is
-  also the thinnest-provenance candidate: 43 values, 32 from llm-stats and 11 from
-  model cards, none from a run we control.)
+  also among the thinnest-provenance candidates: 46 values, 34 from llm-stats and 12
+  from model cards, none from a run we control.)
 - **AA Intelligence Index** — Artificial Analysis' own composite, over benchmarks in
   this very table with coding and agentic tool use among them. Including it would let
   one vendor's weighting vote a second time, and against the six members it would sit
-  beside it agrees at Spearman **0.93** (126 models) — close agreement being the
+  beside it agrees at Spearman **0.95** (148 models) — close agreement being the
   problem, not the reassurance. Exactly why `aa_coding_index` was dropped from the
   [Coding index](#coding-index).
 
 ### Why the coverage rules barely bite here
 
-The Knowledge group is the densely measured one. Its members cover 40–97% of the
-table each (GPQA Diamond 132, HLE 131, AA-Omniscience 120, MMLU-Pro 95, AIME 2025 77,
-CritPt 55), against a Coding group whose heaviest member is scored on 14 models. Three
-consequences, all different from the other two indexes:
+The Knowledge group is the densely measured one. Its members cover 47–95% of the
+table each (GPQA Diamond 152, HLE 147, AA-Omniscience 142, MMLU-Pro 120, AIME 2025 81,
+CritPt 75), against a Coding group whose heaviest member is scored on five models.
+Three consequences, all different from the other two indexes:
 
-- **133 of 136 models are ranked**, and the three that are not — the `ornith-1-0`
-  family — have no score in any of the six benchmarks, so no threshold rescues them.
-  The next-thinnest model, `agents-a1`, is measured on 24% of the weight. The
-  [18% evidence bar](#why-the-evidence-bar-is-18) is therefore doing almost nothing
-  for this column: it ranks 133 models at every setting from 0.05 to 0.20, and 132 at
-  0.25.
-- **The ranked field is measured, not imputed.** 124 of the 133 ranked models carry
-  at least half the group's weight in real scores, and 18 carry all six. That is the
-  property the evidence bar exists to protect elsewhere and gets for free here.
-- **The scale earns its width.** 133 ranked values inside one percentile range put the
-  closest pair **1 index point** apart (Coding's is 5, Tooling's 7) with no two values
-  colliding. On a 0–100 scale a good part of this mid-field would have rounded into
-  ties, which is the argument for `SCALE` made visible.
+- **155 of 160 models are ranked**, and the five that are not — the `ornith-1-0`
+  family, `agents-a1` and `atria-dawn-preview` — have no score in any of the six
+  benchmarks, so no threshold rescues them. The thinnest model that *is* ranked
+  carries 32% of the weight. The [18% evidence bar](#why-the-evidence-bar-is-18) is
+  therefore doing nothing at all for this column: it ranks the same 155 models at
+  every setting from 0.05 to 0.30.
+- **The ranked field is densely measured.** 142 of the ranked models carry
+  at least half the group's weight in real scores, and 20 carry all six. That is the
+  property the evidence bar exists to protect elsewhere and gets for free here, and
+  it is why the coverage shrinkage barely moves this column: almost everyone in it
+  has enough weight measured to be believed nearly in full.
+- **The scale earns its width.** 155 ranked values put the closest pair **1 index
+  point** apart (Coding's is 3) with no two colliding. On a 0–100 scale a good part
+  of this mid-field would have rounded into ties, which is the argument for `SCALE`
+  made visible.
 
-The flip side of that density is that the imputation rule does real work at the top.
-A model that leads the columns it is measured on can still finish behind one measured
-on more of them — `kimi-k3` is first on AA-Omniscience and CritPt, joint first on GPQA
-Diamond and second on HLE, and still places behind `deepseek-v4-pro`, which leads none
-of the six but is scored on five of them against `kimi-k3`'s four. That is the imputation
-cap behaving as designed (a blank is an unknown opponent, never a better one), and with
-this group's coverage it is a visible effect rather than a footnote.
+This is also the column where dropping the median fill is most visible, in both
+directions. `ornith-1-5-397b` is measured on two of the six and places 6th on HLE and
+8th on GPQA Diamond; it went from **37th to 6th** when the fill was removed, because
+its four blanks were previously dragging it back toward the middle. `k2-1b-final` is
+measured on three and placed 131st, 149th and 49th on them; it went from **124th to
+135th**, because its three blanks had been quietly lifting it *toward* the middle.
+Across the column, models measured on three members or fewer gained a mean of 4.9
+places and those measured on five or more lost 1.0 — which is the old fill's
+asymmetry being unwound rather than a new bias, and the reason a blank now does
+nothing in either direction.
 
 
 ## Vision Index
 
 The fourth derived column, **Vision**, is the Coding, Tooling and Knowledge
 indexes' sibling for what a model can do with an image: same script
-(`derive_indexes.py`), same percentile-rank math, imputation and coverage rules
+(`derive_indexes.py`), same comparison-and-fit math, shrinkage and coverage rules
 as [above](#coding-index), computed over the multimodal benchmarks instead and
 written to each model's `scores.vision_index`. Ranked values cite this section
 (`https://github.com/dgrieser/ai-bench#vision-index`) the same way the other
@@ -1472,33 +1629,34 @@ is why the column is not called "vision-language" — OSWorld measures visual
 *agency*, not visual question answering, and it is the member the other four
 cannot stand in for.
 
-**It ranks 47 of 145 models, and the 98 blanks are the point.** Only a
+**It ranks 58 of 160 models, and the 102 blanks are the point.** Only a
 multimodal model can be scored on any of these benchmarks, so a blank here says
 "this model has never been pointed at an image", which is exactly the question
 the column exists to answer. That modality gate is the reason MMMU Pro is
 [kept out of the Knowledge index](#what-the-knowledge-index-leaves-out) — there
-it would charge text-only models imputation weight for something other than
-knowledge. Here it is the subject.
+it would rank multimodal models on something other than knowledge and leave
+text-only models out of that weight entirely. Here it is the subject.
 
-It is the least independent of the five, and the number is worth stating rather
-than burying. Against the models it shares with them:
+It is among the least independent of the five, and the numbers are worth stating
+rather than burying. Against the models it shares with them:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | 0.91 (41 models) | **0.57** |
-| vs [Tooling](#tooling-index) | 0.87 (45) | **0.41** |
-| vs [Knowledge](#knowledge-index) | 0.93 (47) | 0.55 |
-| vs AA Intelligence Index | 0.92 (47) | 0.54 |
-| vs GPQA Diamond | 0.91 (47) | 0.58 |
+| vs [Coding](#coding-index) | 0.95 (45 models) | 0.74 |
+| vs [Tooling](#tooling-index) | 0.94 (55) | 0.83 |
+| vs [Knowledge](#knowledge-index) | 0.95 (58) | 0.79 |
+| vs AA Intelligence Index | 0.96 (58) | 0.86 |
+| vs GPQA Diamond | 0.96 (57) | 0.84 |
 
-Those full-field figures sit above the 0.79/0.84 the [Knowledge
-index](#knowledge-index) holds up as proof it is not re-measuring its siblings,
-and no amount of reweighting fixes that, because it is mostly a range effect:
-the 47 ranked models run from `qwen3-5-0-8b` to 400B-plus mixtures of experts,
-and across a spread that wide nearly every capability column agrees with nearly
-every other. Inside the top 20 — where a reader actually chooses between models
-— it loosens by a third to a half, to **0.41** against Tooling and 0.57 against
-Coding.
+On a mean of 0.92 against the other four it is second-least independent, a shade
+ahead of [Knowledge](#knowledge-index) at 0.93 and well behind
+[Trust](#trust-index) at 0.83. No amount of reweighting fixes that, because it is
+mostly a range effect: the 58 ranked models run from `qwen3-5-0-8b` to 400B-plus
+mixtures of experts, and across a spread that wide nearly every capability column
+agrees with nearly every other. Inside the top 20 — where a reader actually
+chooses between models — it loosens only to 0.74-0.86, and it used to read 0.41
+to 0.58: the [Bradley-Terry rewrite](#coding-index) removed the median fill, which
+was depressing these figures with coverage noise rather than with independence.
 
 So this column does not earn its place by being orthogonal to the other three.
 It earns it by covering a **modality** none of them touches, by saying so about
@@ -1510,11 +1668,11 @@ weight **2.75**):
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| MMMU Pro | 1.0 | The anchor, and the only member that ranks the field rather than a corner of it: **47 scored models across 15 creators**, against 11-18 and 3-5 creators for the rest. It also has the best provenance in the group by a distance — **46 of its 47 values are Artificial Analysis runs**, where the other four are dominated by Hugging Face card self-reports at each lab's harness of choice. Vision-centric by construction: MMMU Pro filters out the questions a text-only model could answer without the image, augments the candidate set so a lucky guess is worth less, and adds a vision-only setting where the question itself is embedded in the picture. Peer-reviewed (ACL 2025) and unsaturated, 25.8-82.3 with a median of 69.2. What it does *not* lead on is discrimination: 3.7 points between the best model and the fifth is a flatter head than OSWorld's, and it correlates 0.96 with MathVista-mini and 0.93 with ZeroBench, so it is the group's centre of gravity rather than its most independent voice. |
-| OSWorld-Verified | 0.7 | The highest-value *measurement* here and the least redundant member: mean Spearman **0.86** against the other four, including the group's weakest link at 0.78 with ZeroBench. A GUI agent driving a real Ubuntu desktop from screenshots is the only visual **agency** in the table, the Verified revision exists to repair task graders that were mis-scoring the original, and it is the least saturated member with by far the sharpest head — **13.0 points** between first and fifth against a 63.3 median, where the next best is ZeroBench's 4.0 on a benchmark whose entire observed range is 12 points. On design it would earn 0.85-0.90. It is discounted a full tier for two things it cannot currently do: **13 scored models from 4 creators**, the thinnest coverage of the five; and provenance no better than the coverage — only 3 of those 13 values come from the official board, 9 are card self-reports, and on a benchmark whose score moves with the step budget (this column takes the Foundation E2E GUI subset at a 100-step cap) mixing harnesses inside one percentile-normalized column is the trust hazard the weight scale exists to price. The weight is not load-bearing: moving it between 0.6 and 0.8 shifts the ranked field a mean of under one place and never touches the top three. |
+| MMMU Pro | 1.0 | The anchor, and the only member that ranks the field rather than a corner of it: **58 scored models across 19 creators**, against 14-21 and 4-7 creators for the rest. It also has the best provenance in the group by a distance — **54 of its 58 values are Artificial Analysis runs**, where the other four carry none at all and are dominated by Hugging Face card self-reports at each lab's harness of choice. Vision-centric by construction: MMMU Pro filters out the questions a text-only model could answer without the image, augments the candidate set so a lucky guess is worth less, and adds a vision-only setting where the question itself is embedded in the picture. Peer-reviewed (ACL 2025) and unsaturated, 22.6-90.6 with a median of 73.5. What it does *not* lead on is independence: it correlates 0.96 with MathVista-mini and 0.97 with ZeroBench for a mean of 0.92 against the other four, so it is the group's centre of gravity rather than its most independent voice. |
+| OSWorld-Verified | 0.7 | The highest-value *measurement* here and the least redundant member: mean Spearman **0.86** against the other four, including the group's weakest link at 0.80 with ZeroBench. A GUI agent driving a real Ubuntu desktop from screenshots is the only visual **agency** in the table, the Verified revision exists to repair task graders that were mis-scoring the original, and and its head is live — 4.9 points between first and fifth against a 65.9 median, where ZeroBench's 10.0 sits on a benchmark whose entire observed range is 20 points. On design it would earn 0.85-0.90. It is discounted a full tier for two things it cannot currently do: **15 scored models from 5 creators**, the second-thinnest coverage of the five; and provenance no better than the coverage — only 4 of those 15 values come from the official board, 9 are card self-reports, and on a benchmark whose score moves with the step budget (this column takes the Foundation E2E GUI subset at a 100-step cap) mixing harnesses inside one comparison-ranked column is the trust hazard the weight scale exists to price. The weight is not load-bearing: moving it between 0.6 and 0.8 shifts the ranked field a mean of under one place and never touches the top three. |
 | MathVista-mini | 0.35 | The saturated member, and the most redundant. Median **86.0**, p75 87.4, best 90.3 — the entire top of the field is packed inside three points, and **2.9 points** separate first from fifth, the flattest head anywhere in this index. It is also mean Spearman **0.94** against the other four, including **0.96 with MMMU Pro** and 0.97 with ZeroBench, so most of its vote is already cast by members that measure more. Public since 2023, so it carries the contamination profile three years of exposure buys, and 12 of its 14 values are card self-reports. Kept because the mid-field is where it still separates models — the coverage-backbone role GPQA Diamond plays at 0.30 in the [Knowledge index](#knowledge-index). |
 | ZeroBench | 0.35 | The opposite failure mode, which is why it lands on the same rung rather than above it. Its *design* is the best in the group: 100 hand-crafted multi-step questions built so that nothing solves them, which makes it the one member structurally immune to the saturation MathVista is already suffering. Its *measurement* is the weakest. Median **3.0**, best 12.0, three models tied at 0.0 — and at 100 questions the binomial standard error near p = 0.1 is about 3 points, so the whole observed 0-12 range is a few standard errors wide and a single question moves a rank. 11 scored models from 3 creators, 9 of them card self-reports. It is a headroom sentinel that will earn weight as models climb, not a discriminator today. Its exposure to a flattered variant slipping in through `update.py`'s best-value-wins Hugging Face ingest is handled in the benchmark-name mapping — see [Vision](#vision) above. |
-| CharXiv Reasoning | 0.35 | The same rung as the two small members, for the opposite reason to either: the *column* is the second best in the group and the *provenance* the weakest. It is the *second-widest* member — **18 scored models across 5 creators** on the first ingest, against MathVista's 14 and ZeroBench's 11 — and the only one that is neither saturated nor at the floor: median **78.1**, best 84.8, worst 41.3, nothing within five points of 90, and **4.4 points** between first and fifth, a head as live as ZeroBench's on a scale that actually resolves. Mean Spearman **0.90** against the other four, below MathVista's 0.94 and ZeroBench's 0.91, and **0.89 with MMMU Pro** where MathVista is 0.96 — so it re-votes less of the anchor than either. It also measures something no other member does: reading quantities off the figures of a real paper, which is the one visual task the models in this table are actually pointed at for work. What holds it to 0.35 is everything about where the numbers come from. **16 of the 18 are lab self-reports** and only two are vetted runs (evals.report's Verified rows for `muse-glimmer` and `inkling`); **12 of the 18 are one creator's** release family, so the column ranks Qwen against Qwen over two thirds of its field; the benchmark's own leaderboard is frozen at the 2024-25 field and cannot check any of it; and the same question set is published in two other forms — a descriptive split and a code-interpreter run — that a card may report under a near-identical label, worth 6 to 34 points, which is why one aggregator that carries it is deliberately not read (see [Vision](#vision) above). |
+| CharXiv Reasoning | 0.35 | The same rung as the two small members, for the opposite reason to either: the *column* is the second best in the group and the *provenance* the weakest. It is the *second-widest* member — **21 scored models across 7 creators**, against ZeroBench's 16, OSWorld's 15 and MathVista's 14 — and the only one that is neither saturated nor at the floor: median **78.1**, best 89.4, worst 41.3, and **8.6 points** between first and fifth, a head as live as ZeroBench's on a scale that actually resolves. Mean Spearman **0.89** against the other four, below MathVista's 0.94 and ZeroBench's 0.92, and **0.88 with MMMU Pro** where MathVista is 0.96 — so it re-votes less of the anchor than either. It also measures something no other member does: reading quantities off the figures of a real paper, which is the one visual task the models in this table are actually pointed at for work. What holds it to 0.35 is everything about where the numbers come from. **18 of the 21 are lab self-reports** and only one is a vetted run (an evals.report Verified row); **12 of the 21 are one creator's** release family, so the column ranks Qwen against Qwen over two thirds of its field; the benchmark's own leaderboard is frozen at the 2024-25 field and cannot check any of it; and the same question set is published in two other forms — a descriptive split and a code-interpreter run — that a card may report under a near-identical label, worth 6 to 34 points, which is why one aggregator that carries it is deliberately not read (see [Vision](#vision) above). |
 
 ### Why GDPval-AA is left out
 
@@ -1531,70 +1689,78 @@ measurements keep it out:
   quality — which is precisely what the [Tooling index](#tooling-index) already
   prices it for at 0.70. Admitting it here would let one run vote twice on two
   different axes.
-- **38 models carry it as their only score in this group** — models nothing has
+- **44 models carry it as their only score in this group** — models nothing has
   ever measured on an image. At its Tooling weight of 0.7 its share of a
   six-member group would be 0.203, over the [18% evidence
   bar](#why-the-evidence-bar-is-18), so it would not merely contribute: it would
-  *rank* all 38 on no visual evidence whatsoever, taking the column from 47
-  ranked models to 85 and turning two thirds of a vision ranking into a restated
-  GDPval ranking.
+  *rank* all 44 on no visual evidence whatsoever, taking the column from 58
+  ranked models to 102 and turning nearly half of a vision ranking into a
+  restated GDPval ranking.
 
 Holding it below the bar instead of dropping it was the other option — at 0.5 of
 a 3.25 total its share is 0.154, just under — and it was rejected as the wrong
 kind of clever: a weight chosen to sit under a threshold is one edit away from
-silently admitting 38 models, and the first objection above stands whatever the
+silently admitting 44 models, and the first objection above stands whatever the
 weight. GDPval-AA remains a column in the table and a member of the Tooling
 index; it is simply not evidence about vision.
 
 ### Why the evidence bar is inert here
 
 Coverage does not spread across this group, it **steps**, because every one of
-the 47 ranked models has MMMU Pro and nothing else is scored on a model MMMU Pro
+the 58 ranked models has MMMU Pro and nothing else is scored on a model MMMU Pro
 is not:
 
 | share of weight | models | what they have |
 | --- | --- | --- |
 | 1.000 | 7 | all five |
-| 0.745 | 6 | MMMU Pro + OSWorld + CharXiv, or + all three small members |
+| 0.745 | 8 | MMMU Pro + OSWorld + CharXiv, or + three of the small members |
 | 0.618 | 7 | MMMU Pro + two small members, or + OSWorld |
-| 0.491 | 2 | MMMU Pro + CharXiv |
-| 0.364 | 25 | MMMU Pro alone |
+| 0.491 | 8 | MMMU Pro + CharXiv, or + ZeroBench |
+| 0.364 | 28 | MMMU Pro alone |
 
 The floor of that ladder is 0.364, so `MIN_SCORED_FRACTION` would have to exceed
-**0.36** to cut anybody: Vision ranks the same 47 models at every setting from
-0.05 to 0.30. The [18% bar](#why-the-evidence-bar-is-18) is completely inert
+**0.36** to cut anybody: Vision ranks the same 58 models at every setting from
+0.05 to 0.36. The [18% bar](#why-the-evidence-bar-is-18) is completely inert
 here and **no per-index override is needed** — the modality gate is already
 doing the filtering the bar does elsewhere, and doing it on better evidence.
 
-The honest weakness that leaves is the mirror image of Knowledge's: **25 of the
-47 ranked models are measured on MMMU Pro alone**, and only 20 of 47 carry at
+The honest weakness that leaves is the mirror image of Knowledge's: **28 of the
+58 ranked models are measured on MMMU Pro alone**, and only 22 of 58 carry at
 least half the group's weight, where the Knowledge index gets that property for
-free from its own density. For most of this
-column's field, the ranking *is* MMMU Pro plus imputation, and it should be read
-that way — `--top` prints an `N/5 measured` column next to every value for
-exactly this reason.
+free from its own density. For most of this column's field the ranking *is*
+MMMU Pro, and it should be read that way — `--top` prints an `N/5 measured`
+column next to every value for exactly this reason.
 
-What keeps that safe is the imputation cap, and here it is legible in the
-numbers rather than a footnote. A model measured on MMMU Pro alone cannot score
-above **68,182** however well it does, because the 64% of the weight it is
-missing is filled at the median and never above it. So the head of the column is
-reserved for models measured on more of it, by construction.
-`qwen3-8-2-4t-a95b` sits at **80,909** — exactly its own cap at 61.8% coverage
-— because it tops both MMMU Pro (82.3) and OSWorld-Verified (86.1) and has no
-score on any small member. That cap is what CharXiv moved at the head: `kimi-k3`
-is measured on three of the five and now leads at **84,361**, where the same
-value under a four-member group put it second.
+**This is the column the redesign changed most, and not in its own favour.**
+The old method capped it: a model measured on MMMU Pro alone could not score
+above 68,182 however well it did, because the 64% of the weight it was missing
+was filled at the median and never above it, so the head was reserved for
+models measured on more of the group. That cap is gone with the imputation that
+produced it, and the coverage shrinkage does not replace it here — Vision's
+calibrated `transfer_ratio` is **0.010**, the lowest of the five, so a model on
+MMMU Pro alone keeps 99.0% of its distance from the middle and could reach
+**98,618**. `claude-fable-5-1` tops the column at **99,471** on that one
+benchmark.
+
+That is the calibration being believed rather than a hole in it: MMMU Pro
+correlates 0.96 with MathVista-mini and 0.93 with ZeroBench, and holding each
+member out shows the rest predicting it to within a hundredth of the spread
+between models — the same redundancy these members' weights are already
+discounted for. If the group's benchmarks really do agree that closely, ranking
+on one of them is nearly as good as ranking on all five, and the arithmetic
+should say so. But it means the top of this column rests on a single
+measurement in a way the other four do not, and a reader should treat the
+`N/5 measured` count as part of the value rather than a footnote to it. The
+[modality gate](#why-the-evidence-bar-is-inert-here), not the shrinkage, is
+what keeps unmeasured models out.
 
 Two other properties of the current field:
 
-- **47 ranked, 46 distinct values.** The one collision is not a rounding
-  artifact and no weighting can remove it: `devstral-small-2` and `gemma-4-e2b`
-  both score 44.6 on MMMU Pro and have no other score in the group, so their
-  evidence is byte-identical and the index is right to tie them at 28,656. Apart
-  from that pair the closest neighbours sit **107 index points** apart, the widest
-  margin of the five — a small ranked field spread over the full scale, where the
-  other four pack many more values into the same range.
-- **The range is the widest of the five**, 4,836 to 84,361, because the
+- **58 ranked, 57 distinct values.** The one tie is not a rounding artifact and
+  no weighting can remove it: `devstral-small-2` and `gemma-4-e2b` both score
+  44.6 on MMMU Pro and have no other score in the group, so their evidence is
+  byte-identical and the index is right to tie them at 12,126.
+- **The range is the widest of the five**, 168 to 99,629, because the
   multimodal field in this table runs from 0.8B models to frontier mixtures of
   experts with very little in between.
 
@@ -1603,7 +1769,7 @@ Two other properties of the current field:
 The fifth derived column, **Trust**, is the odd one out of the five, and
 deliberately so. Coding, Tooling, Knowledge and Vision all rank **capability** —
 what a model can do. This one ranks whether the answer can be believed. Same
-script (`derive_indexes.py`), same percentile-rank math, imputation and coverage
+script (`derive_indexes.py`), same comparison-and-fit math, shrinkage and coverage
 rules as [above](#coding-index), computed over the honesty, grounding and
 instruction-compliance benchmarks and written to each model's
 `scores.trust_index`. Ranked values cite this section
@@ -1619,45 +1785,66 @@ knows:
   document in front of it, or quietly ignoring the constraint you set. (AA-LCR,
   IFBench.)
 
-The single result that justifies the column: **`deepseek-v4-pro` ranks 1st on
-[Knowledge](#knowledge-index) and 80th on Trust.** It knows more than anything
-else in the table and hallucinates on 94.8% of what it gets wrong. `glm-4-7`
-goes 22nd to 89th, `deepseek-v4-flash` 13th to 63rd, `step-3-5-flash` 27th to
-87th. No other column in this file says that about a model, because no other
+The single result that justifies the column: **`deepseek-v4-1-flash` ranks 16th
+on [Knowledge](#knowledge-index) and 107th on Trust**, a fall of 91 places. It
+is in the top tenth of the table for what it knows and hallucinates on **96.5%**
+of what it gets wrong. `deepseek-v4-pro` goes 13th to 62nd at 94.8%,
+`gpt-5-6-luna` 17th to 63rd, `gpt-5-6-sol` 3rd to 47th, `deepseek-v4-flash` 22nd
+to 51st. No other column in this file says that about a model, because no other
 column is measuring it.
 
-**It ranks 132 of 143 models** — second only to Knowledge, because its anchor is
-one of the widest columns in the table. The 11 blanks are models Artificial
-Analysis has never run at all.
+**It ranks 148 of 160 models** — second only to Knowledge, because its anchor is
+one of the widest columns in the table. Eleven of the twelve blanks are models
+Artificial Analysis has never run at all; the twelfth, `agents-a1`, carries
+IFBench and nothing else.
 
 ### It is the most independent of the five
 
-The [Vision index](#vision-index) had to argue its way around a 0.94 correlation
-with Knowledge. This one has the opposite problem — none. Against the models it
-shares with each:
+Still true, but by a much narrower margin than this section used to claim, and
+the reason is worth keeping on the page. Against the models it shares with each:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | **0.44** (84 models) | **−0.17** |
-| vs [Tooling](#tooling-index) | 0.66 (88) | 0.13 |
-| vs [Knowledge](#knowledge-index) | 0.78 (132) | 0.05 |
-| vs [Vision](#vision-index) | 0.77 (47) | 0.13 |
-| vs AA Intelligence Index | 0.73 (132) | 0.19 |
-| vs GPQA Diamond | 0.67 (132) | 0.21 |
-| vs HLE | 0.64 (132) | 0.18 |
+| vs [Coding](#coding-index) | **0.76** (82 models) | **0.18** |
+| vs [Tooling](#tooling-index) | 0.84 (103) | **0.07** |
+| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.25 |
+| vs [Vision](#vision-index) | 0.85 (58) | 0.41 |
+| vs AA Intelligence Index | 0.86 (148) | 0.16 |
+| vs GPQA Diamond | 0.82 (145) | 0.16 |
+| vs HLE | 0.78 (142) | 0.20 |
 
-Every one of those sits below the 0.79/0.84 the [Knowledge
-index](#knowledge-index) holds up as proof it is not re-measuring its siblings,
-and 0.44 against Coding is the lowest figure any two of these five columns
-produce. Inside the top 20 the relationship is gone entirely — **0.05** against
-Knowledge, **−0.17** against Coding. Among models a reader would actually choose
-between, knowing which one is more capable tells you nothing about which one
-will make something up.
+Mean correlation with the other four indexes: **Trust 0.83**, against Coding
+0.90, Tooling 0.92, Vision 0.92 and Knowledge 0.93. Trust against Coding, 0.76,
+is still the lowest figure any two of these five columns produce. Inside the top
+20 the relationship all but disappears — **0.07** against Tooling, 0.16 against
+GPQA Diamond, 0.18 against Coding — so among the models a reader would actually
+choose between, knowing which is more capable tells you close to nothing about
+which will make something up. That head-on independence is sharper than it was
+before this column started shrinking partial evidence hard (see
+[below](#how-far-one-benchmark-speaks-for-the-others)): with a
+`transfer_ratio` of 1.524, a model measured on two of the four members is barely
+allowed to leave the middle of the field, and what survives at the top is the
+models that carry the whole group.
 
-That is not a reweighting trick. It is one benchmark doing the work: the
-hallucination rate is the most orthogonal column in this file by a wide margin
-(0.53 with the Knowledge index, 0.38 with Tooling, 0.18 with Coding, 0.09 with
-BrowseComp), and it is aggregated nowhere else.
+**These figures used to read 0.44 / 0.66 / 0.78 / 0.77, and the drop is mostly
+the cost of AA-Omniscience Accuracy landing.** Accuracy is the knowledge half of
+the pair, carried at 0.6 of the group's 2.35, so admitting it necessarily pulled
+the column toward capability — the exact trade its weight was chosen to make,
+argued in its row below, and now paid rather than predicted. Re-running the old
+percentile math on today's data gives 0.65 / 0.80 / 0.89 / 0.82, so most of the
+move is the new member and the growth of the table; switching to the
+[Bradley-Terry fit](#coding-index) added between nothing and 0.11 on top,
+depending on the sibling. The column still
+measures something the other four do not — `deepseek-v4-1-flash` falling 91
+places is not a capability ranking — but "no correlation at all" is no longer a
+claim this page can make.
+
+What independence remains is one benchmark doing the work. The hallucination
+rate is still the most orthogonal column in this file by a wide margin — 0.50
+with the Knowledge index, 0.44 with AA Intelligence, 0.36 with Tooling, 0.22
+with BrowseComp, 0.15 with Coding — and it is aggregated nowhere else. That is
+what the 1.0 weight is buying, and it is why the column keeps most of its value
+even with a knowledge-correlated member beside it.
 
 ### Why the anchor cannot stand alone
 
@@ -1686,24 +1873,30 @@ smooth monotone trade with no natural knee, so the choice is a judgement rather
 than a discovery: 0.60 is the point where the abstainers are clear of the top 40
 and the column still ranks trust rather than knowledge.
 
-> **The Accuracy column is declared but not yet fetched.** `update.py` maps it
-> and `artificialanalysis.py` already scrapes it, so it fills on the next AA run
-> (the `update-benchmarks` workflow, every three hours). Until then
-> `percentile_map()` returns `None` for it, `compute_index()` drops its weight
-> from the group total, and the index computes over the other three — the same
-> 132 models, at an effective group weight of 1.75 against the declared 2.35.
-> The independence figures above are measured in that state and will tighten
-> somewhat once Accuracy lands; the ranked field will not change.
+> **Accuracy has since landed, and it settled the argument above better than
+> expected.** It is now scraped on 148 models, level with the hallucination rate
+> itself, so the group runs at its full declared weight of 2.35 and the index
+> computes over all four members.
+>
+> This section used to carry a note predicting the independence figures would
+> *tighten* once Accuracy arrived. They did the opposite, and the reason is the
+> point of the pairing: Accuracy correlates **+0.02** with the hallucination
+> rate — as close to orthogonal as two columns in this file get, and they are
+> two halves of the same 6,000-question run. Adding it pulled the anchor's mean
+> Spearman against its fellow members *down* from 0.40 to **0.24**, making it
+> more independent rather than less. A model's honesty genuinely tells you
+> nothing about how much it knows, which is exactly why neither half means much
+> alone and why the anchor can carry 1.0.
 
 Contributing benchmarks and why they carry the weight they do (declared group
 weight **2.35**):
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| AA-Omniscience Hallucination Rate | 1.0 | The anchor, and the reason this column exists. It is the **widest member — 132 models across 41 creators — and every one of those 132 values is a first-party Artificial Analysis run**, with no self-reports mixed in; nothing else in this file combines that reach with that provenance. Unsaturated across essentially its whole definable range (11.7–98.2, median 84.3) with a live head, 6.7 points between first and fifth. And it is the least redundant member by a distance: mean Spearman **0.40** against the other two scored members, against 0.59 and 0.61 for them. `lower_is_better: true` is declared on the column, so `percentile_map()` inverts it and a low rate ranks at the 1.0 end. Its one weakness — that it can be gamed by abstaining — is what the accuracy below is for, not a reason to weight it lower. |
+| AA-Omniscience Hallucination Rate | 1.0 | The anchor, and the reason this column exists. It is the **widest member — 148 models across 43 creators — and every one of those 148 values is a first-party Artificial Analysis run**, with no self-reports mixed in; nothing else in this file combines that reach with that provenance. Unsaturated across essentially its whole definable range (11.7–98.2, median 83.3) with a live head, 6.7 points between first and fifth. And it is the least redundant member by a distance: mean Spearman **0.24** against the other three, against 0.45 for Accuracy, 0.61 for IFBench and 0.63 for AA-LCR. `lower_is_better: true` is declared on the column, so `comparisons()` reads it the other way round and a low rate wins the head-to-head. Its one weakness — that it can be gamed by abstaining — is what the accuracy below is for, not a reason to weight it lower. |
 | AA-Omniscience Accuracy | 0.6 | Not a discriminator in its own right so much as the **brake that lets the anchor carry 1.0**, for the reason argued above. Same run, same first-party provenance, and the [candidate audit](docs/benchmark-candidates-2026-08.md) measured its coverage at 91% of the table, level with the hallucination rate. Held well below parity because it is the knowledge half of a knowledge-and-honesty pair, and knowledge is already priced by the [Knowledge index](#knowledge-index) at 1.0 through `aa_omniscience` — the composite of this and the rate. Weighted for what it *prevents*, not what it measures. |
-| AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 112 models across 34 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
-| IFBench | 0.3 | The second reliability axis, and mostly its own: **0.41 against the anchor**, the lowest pair in the group. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 116 models across 36 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one percentile-normalised column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
+| AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 121 models across 36 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
+| IFBench | 0.3 | The second reliability axis, and largely its own: **0.37 against the anchor**. It was the group's most independent pair until Accuracy landed at 0.02 against the same column. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 118 models across 37 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one comparison-ranked column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
 
 ### What the Trust index leaves out
 
@@ -1730,12 +1923,13 @@ weight **2.35**):
 
 ### The evidence bar is inert here too
 
-At 18% the bar is 0.315 of the effective 1.75 (0.423 of 2.35 once Accuracy
-lands), and it cuts nobody at any setting in the [table
-above](#why-the-evidence-bar-is-18): Trust ranks the same 132 models from 0.25
-all the way down to 0.05. The anchor alone is 57% of today's effective weight
-(42.6% of the declared total), every model the column ranks has that score, and
-the 11 it leaves out have no score in any member. As with
+At 18% the bar is 0.423 of the group's 2.35, and it cuts almost nobody across
+the settings in the [table above](#why-the-evidence-bar-is-18): Trust ranks the
+same 148 models from 0.45 down to 0.18, and gains exactly one more at 0.05 —
+`agents-a1`, which carries IFBench alone, 12.8% of the weight. The anchor is
+42.6% of the group on its own, every one of the 148 ranked models has that
+score, and 11 of the 12 the column leaves out have no score in any member —
+`agents-a1` is the twelfth. As with
 [Vision](#why-the-evidence-bar-is-inert-here), what filters this column is the
 availability of the underlying run, not the threshold.
 
@@ -1872,8 +2066,8 @@ frontier is asking about one field, not two; splitting it would put the best
 open model and a closed model above it at the same end of the same column, each
 measured against a different set.
 
-The cost is the one every model addition has: percentile ranks are relative to
-the model set, so adding a reference model moves the open models' values, and
+The cost is the one every model addition has: a win rate is taken against the
+ranked field, so adding a reference model moves the open models' values, and
 adding one at the top of the table moves them down. That is the paragraph above
 about `null` being a real result, not a new property — it is simply more
 visible when the models arriving are frontier ones.

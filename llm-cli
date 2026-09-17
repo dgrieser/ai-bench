@@ -4,13 +4,21 @@
 Reads llm.json and prints the same table the web page shows: fixed columns
 (model, creator, params, context, VRAM estimates) followed by one column per
 benchmark, sorted the same way as the page's default sort (the "defaultSort"
-key from llm.json, e.g. the coding group composite). Sorting math mirrors
-llm.html exactly: tie-averaged percentile ranks, missing benchmarks imputed
-at or below percentile 0.5 (a gap can drag a model down, never lift it),
-division by the group's total weight, and models
-measured on less than "minScoredFraction" of that weight left unranked. A
-benchmark marked "lower_is_better" in llm.json has its percentile inverted and
-sorts smallest-value-first, so it still reads best-first.
+key from llm.json, today the stored "coding_index" column).
+
+The derived index columns are not computed here: derive_indexes.py fits them
+from head-to-head comparisons and writes them into llm.json, and this script
+sorts on the stored number like any other benchmark.
+
+What is computed here is a "sortGroups" composite, for any group llm.json
+defines (it defines none today). That math mirrors llm.html exactly, and it is
+the older percentile approach the index columns have since moved off:
+tie-averaged percentile ranks, missing benchmarks imputed at or below
+percentile 0.5 (a gap can drag a model down, never lift it), division by the
+group's total weight, and models measured on less than "minScoredFraction" of
+that weight left unranked. A benchmark marked "lower_is_better" in llm.json has
+its percentile inverted and sorts smallest-value-first, so it still reads
+best-first.
 
 On a terminal the table is fitted to the window: benchmark columns that don't
 fit are dropped, least important first (importance = weight in the default

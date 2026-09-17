@@ -4,7 +4,7 @@
 A benchmark that has re-run itself keeps a column per revision, because the two
 are not comparable as published. For the index that leaves a hole: a model
 measured only on the retired board contributes nothing to the benchmark it was
-actually measured on, so it is imputed at the median -- which flatters a model
+actually measured on, so nothing it did there can count -- which flatters a model
 that scored near zero there.
 
 REVISION_FALLBACKS closes the hole with a scale conversion, used inside the
@@ -65,7 +65,11 @@ class TestIndexScore(unittest.TestCase):
         self.assertEqual(di.index_score(model("m", b_1_0=10.0), "b_1_0"), 10.0)
 
 
-class TestPercentilePopulation(unittest.TestCase):
+class TestConvertedPopulation(unittest.TestCase):
+    INDEX = di.IndexDef(
+        key="idx", fallback_source_url="u", contributing=[("b_1_1", 1.0)]
+    )
+
     def setUp(self) -> None:
         self._saved = dict(di.REVISION_FALLBACKS)
         di.REVISION_FALLBACKS.clear()
@@ -76,16 +80,29 @@ class TestPercentilePopulation(unittest.TestCase):
         di.REVISION_FALLBACKS.update(self._saved)
 
     def test_converted_models_join_the_current_population(self) -> None:
+        """A converted score is compared against the current field like any
+        other, and lands where its converted value puts it."""
         models = [
             model("on-current-hi", b_1_1=90.0),
             model("on-current-lo", b_1_1=10.0),
             model("on-archive", b_1_0=25.0),      # -> 50.0, between the two
         ]
-        pct = di.percentile_map(models, "b_1_1", DOC)
-        self.assertEqual(sorted(pct), ["on-archive", "on-current-hi", "on-current-lo"])
-        self.assertEqual(pct["on-current-lo"], 0.0)
-        self.assertEqual(pct["on-archive"], 0.5)
-        self.assertEqual(pct["on-current-hi"], 1.0)
+        values = di.compute_index(models, DOC, self.INDEX)
+        self.assertEqual(
+            sorted(values, key=lambda n: -values[n]),
+            ["on-current-hi", "on-archive", "on-current-lo"],
+        )
+
+    def test_a_converted_model_is_compared_not_imputed(self) -> None:
+        """It takes part in real head-to-heads rather than sitting out."""
+        models = [
+            model("on-current", b_1_1=90.0),
+            model("on-archive", b_1_0=25.0),
+        ]
+        record = di.comparisons(models, DOC, self.INDEX)
+        self.assertEqual(record.pairs[("on-archive", "on-current")], 1.0)
+        self.assertEqual(record.wins[("on-current", "on-archive")], 1.0)
+        self.assertEqual(record.wins[("on-archive", "on-current")], 0.0)
 
     def test_a_weak_archive_score_ranks_last_rather_than_at_the_median(self) -> None:
         """The point of the whole mechanism: near-zero is evidence, not a gap."""
@@ -94,8 +111,9 @@ class TestPercentilePopulation(unittest.TestCase):
             model("mid", b_1_1=50.0),
             model("weak-on-archive", b_1_0=0.1),
         ]
-        pct = di.percentile_map(models, "b_1_1", DOC)
-        self.assertEqual(pct["weak-on-archive"], 0.0)
+        values = di.compute_index(models, DOC, self.INDEX)
+        self.assertEqual(min(values, key=lambda n: values[n]), "weak-on-archive")
+        self.assertLess(values["weak-on-archive"], values["mid"])
 
     def test_scored_count_counts_a_converted_benchmark_as_measured(self) -> None:
         index = di.IndexDef(key="i", fallback_source_url="u", contributing=[("b_1_1", 1.0)])
