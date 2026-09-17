@@ -4,16 +4,18 @@
 The payload nests model -> effort -> subset, carries two metrics per leaf
 (`new_score`, the site's Score column, and `correct`, the raw pass rate) and
 keeps every past revision alongside the current one. These tests pin the choices
-that decide which number reaches llm.json: subset, metric, which effort
-represents a model published at several, and the revision split -- every
-revision reported and labelled, never merged, because llm.json keeps a column
-per revision and a 1.0 number is not a 1.1 number. Ordering is read off the key
-so a future revision needs no code change.
+that decide which number reaches llm.json: metric, which effort represents a
+model published at several, and the two splits -- every revision and every task
+subset reported and labelled, never merged, because llm.json keeps a column per
+board and a 1.0 number is not a 1.1 number, nor a Main number an Extended one.
+Ordering is read off the key so a future revision needs no code change.
 """
 
 from __future__ import annotations
 
+import io
 import unittest
+from contextlib import redirect_stdout
 from unittest import mock
 
 import fetch_frontiercode as fc
@@ -100,6 +102,38 @@ class TestRevisionBlock(unittest.TestCase):
             fc.revision_block(PAYLOAD, "2.0")
 
 
+class TestBlockSubsets(unittest.TestCase):
+    """Which task sets one revision reports.
+
+    Main and Extended are two rankings of the same runs -- Extended adds back
+    the 50 tasks Main drops for being easy -- so they are split the way
+    revisions are, not picked between.
+    """
+
+    def test_reporting_every_subset_is_the_default(self) -> None:
+        self.assertEqual(fc.DEFAULT_SUBSET, fc.ALL_SUBSETS)
+
+    def test_all_takes_the_subsets_in_the_order_the_block_names_them(self) -> None:
+        self.assertEqual(
+            fc.block_subsets("v1_1", PAYLOAD["v1_1"], fc.ALL_SUBSETS),
+            ["main", "extended"],
+        )
+
+    def test_a_pinned_subset_is_the_only_one(self) -> None:
+        self.assertEqual(
+            fc.block_subsets("v1_1", PAYLOAD["v1_1"], "extended"), ["extended"]
+        )
+
+    def test_a_subset_the_block_does_not_publish_raises(self) -> None:
+        # A renamed subset must surface, not quietly report nothing.
+        with self.assertRaises(ValueError):
+            fc.block_subsets("v1_1", PAYLOAD["v1_1"], "diamond")
+
+    def test_a_block_naming_no_subsets_raises_under_all(self) -> None:
+        with self.assertRaises(ValueError):
+            fc.block_subsets("v1_1", {"data": {}}, fc.ALL_SUBSETS)
+
+
 class TestBestEffort(unittest.TestCase):
     def test_highest_metric_wins(self) -> None:
         efforts = PAYLOAD["v1_1"]["data"]["Multi Effort"]
@@ -121,14 +155,19 @@ class TestBestEffort(unittest.TestCase):
 
 
 class TestGetScores(unittest.TestCase):
-    def by_model(self, revision: str = "1.1", **kwargs) -> dict[str, dict]:
-        """Rows of one revision, keyed by model.
+    def by_model(
+        self, revision: str = "1.1", subset: str = "main", **kwargs
+    ) -> dict[str, dict]:
+        """Rows of one board, keyed by model.
 
-        Defaults to the current revision: every revision is reported now, so a
-        model published in both appears twice and a flat model index would be
-        ambiguous.
+        Defaults to the current revision's Main subset: every revision and every
+        subset is reported now, so a model published throughout appears four
+        times and a flat model index would be ambiguous.
         """
-        return {row["model"]: row for row in scores(revision=revision, **kwargs)}
+        return {
+            row["model"]: row
+            for row in scores(revision=revision, subset=subset, **kwargs)
+        }
 
     def test_score_is_the_percentage_of_new_score(self) -> None:
         # llm.json stores the site's Score column as a percentage; the payload
@@ -169,7 +208,11 @@ class TestGetScores(unittest.TestCase):
         revision lost, so a column mixed 1.0 and 1.1 numbers with nothing
         recording which was which.
         """
-        both = {r["revision"]: r["score"] for r in scores() if r["model"] == "Single Effort"}
+        both = {
+            r["revision"]: r["score"]
+            for r in scores(subset="main")
+            if r["model"] == "Single Effort"
+        }
         self.assertEqual(both, {"1.0": 19.0, "1.1": 24.5})
 
     def test_model_dropped_from_the_newest_revision_still_reports(self) -> None:
@@ -177,9 +220,10 @@ class TestGetScores(unittest.TestCase):
         self.assertEqual((row["revision"], row["score"]), ("1.0", 7.0))
 
     def test_every_revision_is_reported(self) -> None:
-        self.assertEqual({r["revision"] for r in scores()}, {"1.0", "1.1"})
+        rows = scores(subset="main")
+        self.assertEqual({r["revision"] for r in rows}, {"1.0", "1.1"})
         self.assertEqual(
-            {(r["revision"], r["model"]) for r in scores()},
+            {(r["revision"], r["model"]) for r in rows},
             {
                 ("1.1", "Multi Effort"), ("1.1", "Single Effort"),
                 ("1.0", "Single Effort"), ("1.0", "Retired"),
@@ -198,17 +242,38 @@ class TestGetScores(unittest.TestCase):
         # Newest first, so a consumer reading in order meets the current run first.
         self.assertEqual(rows[0]["revision"], "1.2")
 
-    def test_rows_are_ranked_within_their_own_revision(self) -> None:
-        """Ranking across revisions would compare two different task sets."""
+    def test_rows_are_ranked_within_their_own_board(self) -> None:
+        """Ranking across a revision or a subset compares two task sets."""
         rows = scores()
-        by_revision: dict[str, list[dict]] = {}
+        by_board: dict[tuple[str, str], list[dict]] = {}
         for row in rows:
-            by_revision.setdefault(row["revision"], []).append(row)
-        for revision, group in by_revision.items():
+            by_board.setdefault((row["revision"], row["subset"]), []).append(row)
+        self.assertEqual(len(by_board), 4)
+        for board, group in by_board.items():
             self.assertEqual(
-                [r["rank"] for r in group], list(range(1, len(group) + 1)), revision
+                [r["rank"] for r in group], list(range(1, len(group) + 1)), board
             )
         self.assertEqual(rows[0]["model"], "Multi Effort")
+
+    def test_a_model_in_both_subsets_reports_both_numbers(self) -> None:
+        """The second split: 24.5 Main and 30.0 Extended are two measurements.
+
+        They come from one set of runs, but they rank different task sets, and
+        llm.json keeps a column for each -- so a row has to say which board it
+        is from before the ingest can file it.
+        """
+        both = {
+            r["subset"]: r["score"]
+            for r in scores(revision="1.1")
+            if r["model"] == "Single Effort"
+        }
+        self.assertEqual(both, {"main": 24.5, "extended": 30.0})
+
+    def test_every_board_is_reported(self) -> None:
+        self.assertEqual(
+            {(r["revision"], r["subset"]) for r in scores()},
+            {("1.1", "main"), ("1.1", "extended"), ("1.0", "main"), ("1.0", "extended")},
+        )
 
     def test_harness_is_carried_through(self) -> None:
         self.assertEqual(self.by_model()["Single Effort"]["harness"], "mini-swe-agent")
@@ -220,6 +285,29 @@ class TestGetScores(unittest.TestCase):
     def test_unknown_revision_raises(self) -> None:
         with self.assertRaises(ValueError):
             scores(revision="9.9")
+
+
+class TestNamesOutput(unittest.TestCase):
+    """--format names feeds the mapping prompt, so it lists a model once.
+
+    A model published in both revisions and both subsets is four rows, and the
+    prompt would otherwise offer it four times over.
+    """
+
+    def names(self) -> list[str]:
+        out = io.StringIO()
+        with mock.patch.object(fc, "fetch_json", return_value=PAYLOAD), \
+                mock.patch("sys.argv", ["fetch_frontiercode.py", "--format", "names"]), \
+                redirect_stdout(out):
+            fc.main()
+        return out.getvalue().splitlines()
+
+    def test_each_model_is_named_once(self) -> None:
+        names = self.names()
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual(
+            set(names), {"Multi Effort", "Single Effort", "Partial", "Retired"}
+        )
 
 
 class TestSourceUrls(unittest.TestCase):

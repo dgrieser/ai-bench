@@ -166,6 +166,18 @@ INDEXES: list[IndexDef] = [
             ("deepswe_1_1", 0.75),
             ("frontierswe_2_0", 0.9),
             ("frontiercode_1_1", 0.9),
+            # FrontierCode's other 1.1 board, the full 150-task Extended set
+            # against Main's 100 hardest. It is not a superseded revision, so
+            # the rule above does not retire it: both are current, both are
+            # published, and Cognition reports them side by side. It is the one
+            # pair here scored from the same runs, though, and it ranks the
+            # same field almost identically (Spearman 0.99 over the 18 models
+            # on both, 3 discordant pairs in 153), so at equal weight the two
+            # columns give FrontierCode 1.8 of the group's 8.45 -- 21% of it,
+            # twice what any sibling carries, and voted twice by the 18 models
+            # that ran it. The weight is the lever if that is one time too many;
+            # see README, "FrontierCode Extended in the coding group".
+            ("frontiercode_extended_1_1", 0.9),
             ("swe_marathon_1_1", 0.9),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release and carries the weight 2.1 held; 2.1 stays in
@@ -189,15 +201,17 @@ INDEXES: list[IndexDef] = [
             ("swe_atlas_qna", 0.25),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, level with tooling since Terminal-Bench 4.0
-        # joined both groups: coding benchmarks predict each other well. Hold
-        # one out and the rest miss it by a sixty-second of the spread between
-        # models, so a fully measured model keeps 98.4% of its distance from
-        # the middle and one at the 18% bar keeps 92%. That is the data's
-        # verdict rather than a preference: a model placing top-decile on three
-        # coding benchmarks really is unlikely to be mid-field on the rest.
-        # Re-measured by --calibrate after the 4.0 admission, 0.015 -> 0.016.
-        transfer_ratio=0.016,
+        # The lowest of the five, a hair under tooling: coding benchmarks
+        # predict each other well. Hold one out and the rest miss it by a
+        # sixty-seventh of the spread between models, so a fully measured model
+        # keeps 98.5% of its distance from the middle and one at the 18% bar
+        # keeps 92%. That is the data's verdict rather than a preference: a
+        # model placing top-decile on three coding benchmarks really is
+        # unlikely to be mid-field on the rest. Re-measured by --calibrate
+        # after FrontierCode Extended joined, 0.016 -> 0.015 -- a column that
+        # agrees with one already in the group makes the group look slightly
+        # more self-predicting, which is exactly what it is.
+        transfer_ratio=0.015,
     ),
     IndexDef(
         key="tooling_index",
@@ -217,9 +231,11 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # Level with the coding group, over the widest group here, so this
+        # A hair above the coding group, over the widest group here, so this
         # shrinks little: 98.4% kept when fully measured, 92% at the 18% bar.
-        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016.
+        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016,
+        # and unmoved by the FrontierCode Extended admission, which is a coding
+        # column only.
         transfer_ratio=0.016,
     ),
     IndexDef(
@@ -341,6 +357,12 @@ REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
     # FrontierCode 1.1 reads higher: the mean of the two open-weight models
     # published on both boards (GLM 5.2 19.2 -> 24.5, Kimi K2.7 22.0 -> 30.06).
     "frontiercode_1_1": ("frontiercode_1_0", 1.32),
+    # frontiercode_extended_1_1 gets none. The six models on 1.0 alone were
+    # scored on its Extended board too, but llm.json keeps no column for it, so
+    # there is nothing stored to convert from; carrying their 1.0 *Main* score
+    # across would be fitting a subset gap and a revision gap at once and
+    # calling the product a revision's drift. They are compared on
+    # frontiercode_1_1 through the line above and simply sit this column out.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's
     # scale to carry: its column is a pairwise win rate over a 17-model field,

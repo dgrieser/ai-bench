@@ -259,8 +259,9 @@ Output: llm.json (unified dataset)
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
 ./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
 ./fetch_datacurve.py --revision 1.0     # one revision instead of every published one
-./fetch_frontiercode.py                 # every revision, each row labelled
+./fetch_frontiercode.py                 # every revision and subset, each row labelled
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
+./fetch_frontiercode.py --subset extended   # or one task subset (main, extended)
 ./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
@@ -710,14 +711,46 @@ cannot disagree about which column a row belongs in.
 | Benchmark | Columns | What changed between them |
 | --- | --- | --- |
 | **DeepSWE** | `deepswe_1_1`, `deepswe_1_0` | Datacurve serves one JSON artifact per revision and toggles between them. The re-run moved DeepSeek V4 Pro from 7.5 to 62.8, and 1.0 is the only revision that ever scored the dozen models retired before it. |
-| **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. |
+| **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
 
+#### FrontierCode's second split: Main and Extended
+
+FrontierCode is the one benchmark here that splits a column twice over. Every
+run is scored against two nested task sets and published as two leaderboards:
+**Extended** is all 150 tasks, **Main** the 100 hardest of those same tasks.
+(A third, Diamond — the 50 hardest — was
+[retired in 1.1](https://cognition.com/blog/frontier-code-1.1), because after
+the 1.1 changes it no longer held the 50 hardest and the solve rates on them
+were too low to separate models.) The two boards rank the same runs, so
+Extended is not a second measurement in the sense a revision is; it is the same
+measurement over a task set that includes the easy tasks Main drops, which puts
+it about **13 points higher** for the same model (Opus 5: 53.4 Main, 63.6
+Extended). Mixing them is what the split prevents, and `_revisions.py` spells
+Extended's columns with a base of their own (`SUBSET_BASES`), so
+`frontiercode_extended_1_1` is named the way every other revision column is.
+
+Only 1.1 Extended gets a column. 1.0's Extended board is published too, but it
+is a superseded run of a subset nothing aggregates, and a column no index and no
+reader looks at is a column nothing keeps honest.
+
+**Nothing else publishes Extended.** evals.report's `frontiercode` table is Main
+(its leader is Claude Fable 5 at 53.5, the Main number) and it serves no
+`frontiercode-extended` board; llm-stats carries no FrontierCode column at all;
+and a sweep of every Hugging Face card this file reads found 943 distinct
+benchmark labels and not one FrontierCode among them — no card self-reports it,
+in either subset. So Cognition's own JSON is the only source for both columns,
+and `update.py` reads them from the one fetch.
+
 Only the current revision feeds the [Coding index](#coding-index), as one
-member at one weight. Admitting both would count the benchmark twice for
-whoever was re-run and once for everyone else, and an archived revision
-compares a model against a field that no longer exists.
+member at one weight. Admitting an archived revision beside its current one
+would count that benchmark twice for whoever was re-run and once for everyone
+else, and the archived board compares a model against a field that no longer
+exists. FrontierCode's two *subsets* are the one place where a benchmark does
+hold two index slots, and only because both boards are current rather than one
+superseding the other — see
+[what that costs](#frontiercode-extended-in-the-coding-group).
 
 That would leave a hole, though: a model measured **only** on the retired board
 contributes nothing to the benchmark it was actually measured on, so it takes
@@ -730,6 +763,7 @@ rather than a second index member:
 | --- | --- | --- | --- |
 | `deepswe_1_1` | `deepswe_1_0` | ÷ 1.069 | 1.1 reads lower than 1.0 for the same model |
 | `frontiercode_1_1` | `frontiercode_1_0` | × 1.32 | mean of the two open-weight models published on both boards (GLM 5.2 19.2 → 24.5, Kimi K2.7 22.0 → 30.06) |
+| `frontiercode_extended_1_1` | — | none | the six models on 1.0 alone were scored on its Extended board too, but no column stores it, so there is nothing to convert *from*; carrying their 1.0 Main score across would fit a subset gap and a revision gap at once and call the product a revision's drift. They are compared on `frontiercode_1_1` through the row above and sit this column out. |
 | `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone simply supports no comparison there. |
 
 A model absent from the current revision has its archived score carried onto
@@ -768,7 +802,8 @@ already get, applied consistently:
   aggregation (pass@1 is the share of a configuration's trials scoring a full
   reward).
 - evals.report's `frontiercode` table is ingested into `frontiercode_1_1`,
-  because every row in it matches Cognition's 1.1 block. Its `swe-marathon`
+  because every row in it matches Cognition's 1.1 block — the Main one; it
+  publishes no Extended board, so it feeds nothing else. Its `swe-marathon`
   table is **not** ingested: seven rows are the 1.0 archive verbatim, beside a
   Kimi K3 that is on neither published board, with nothing saying which is
   which.
@@ -1104,8 +1139,9 @@ Two consequences worth knowing (they hold for every derived index):
   the denominator than the new column put in. Both moves are worked through
   below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track) — as is
   [Real-SWE's admission at 1.0](#why-real-swe-leads-the-coding-group-and-what-it-cost),
-  which cost 21 models their rank, and the Terminal-Bench 4.0 admission in the
-  next bullet, which cost 34.
+  which cost 21 models their rank, the Terminal-Bench 4.0 admission in the
+  next bullet, which cost 34, and [FrontierCode
+  Extended](#frontiercode-extended-in-the-coding-group), which cost 7.
 - **Terminal-Bench 4.0 is the worked example of a column admitted once its
   coverage arrived**, and of what that costs. It was out of `INDEXES` on
   coverage alone: the better-run board of the Terminal-Bench pair — 4.0 removed
@@ -1258,6 +1294,52 @@ looks like when it does not cross the evidence bar, and it is the contrast with 
 [Terminal-Bench 4.0 admission](#coding-index): that one moved a weight the same
 distance but added a member at the same time, so the denominator rose instead of
 falling and 34 models lost their rank.
+
+### FrontierCode Extended in the coding group
+
+**`frontiercode_extended_1_1` is aggregated at 0.9**, level with
+`frontiercode_1_1`, `frontierswe_2_0` and `swe_marathon_1_1`. It is the only
+place in this file where one benchmark holds two index slots at once, so it is
+worth being explicit about what that is and what it costs.
+
+It is *not* the superseded-revision case the section above retires. Both
+FrontierCode boards are current: Cognition scores Main and Extended from the
+same 1.1 runs and publishes them side by side, so neither supersedes the other
+and neither compares a model against a field that no longer exists. What they
+are instead is two rankings of one set of runs over nested task sets — which is
+a kind of redundancy the rest of the group does not have:
+
+| | Measured on the current file |
+| --- | --- |
+| Overlap | all 18 models scored on either are scored on both |
+| Agreement | Spearman **0.99**, Pearson 0.993; 3 discordant pairs out of 153 |
+| Level | Extended sits **13.3 points** above Main on average (Opus 5 53.4 → 63.6) |
+| Share of the group | the two together are **1.8 of 8.45**, 21% of the coding weight — the largest share any one benchmark holds here, 1.8× the 1.0 anchor and twice its own tier |
+
+So the pair votes twice on very nearly one construct, and the honest reading of
+0.99 is that Extended adds coverage of *tasks* rather than coverage of *models*:
+50 more tasks per run, the same 18 models, the same order. The case for
+admitting it anyway is that the 150-task board is the larger sample and the one
+Cognition now reports first, and the case against equal weight is the 0.99 —
+the same argument that put Terminal-Bench 2.1 at 0.4 beside 4.0's 0.85 rather
+than at parity. It is set at **0.9**, treating the 150-task board as a full
+member of the group. If the pair should count once rather than twice, this
+weight is the lever and nothing else has to change: 0.4–0.45 for Extended would
+put FrontierCode back in the 0.9–1.35 of group weight its siblings carry, and
+anything at **0.5 or below** returns all seven of the ranks the admission cost
+(measured: 59 models ranked at 0.5, 0.45 and 0.4 alike, 52 at 0.9).
+
+What it costs is paid, as always, by [the evidence
+bar](#why-the-evidence-bar-is-18). The new column is scored on 18 of 163
+models — the same 18 that carry Main — so the denominator rises **7.55 → 8.45**
+and the bar with it, **1.359 → 1.521**, while nobody outside those 18 gains a
+point of scored weight. **7 of 59 ranked models drop to `null`**: the six
+`ornith-*` entries, which carry exactly SWE-bench Pro + Verified + Multilingual
++ SWE Atlas Q&A + Terminal-Bench 2.1 (1.50, now short of 1.521), and
+`longcat-2-0` at 1.45. None of them lost a score; the bar simply moved past
+them. The 52 that stay rank almost identically — Spearman **0.9995**, mean
+movement 0.19 places, worst case 2 — which is the expected consequence of
+adding a column that agrees with one already in the group.
 
 ### Why SWE-bench Multilingual sits at 0.30
 
@@ -1470,7 +1552,7 @@ are easy to get wrong:
 
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.016 | 92% | 98.4% |
+| Coding | 0.015 | 92% | 98.5% |
 | Tooling | 0.016 | 92% | 98.4% |
 | Vision | 0.034 | 84% | 97% |
 | Knowledge | 0.072 | 71% | 93% |
@@ -1480,8 +1562,11 @@ The ratio is a share of the group, so these five are directly comparable with ea
 other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
 them. Coding and Tooling were 0.015 and 0.019 until
 [Terminal-Bench 4.0 joined both groups](#coding-index); re-running `--calibrate`
-afterwards put them on the same 0.016, which is what the instruction below to
-re-calibrate after a membership change is for.
+afterwards put them on the same 0.016, and again after
+[FrontierCode Extended joined Coding](#frontiercode-extended-in-the-coding-group)
+took Coding back to 0.015 — a member that agrees with one already in the group
+makes the group look slightly more self-predicting. That is what the instruction
+below to re-calibrate after a membership change is for.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an

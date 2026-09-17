@@ -76,7 +76,7 @@ from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _vals_mapping import load_vals_to_slug_mapping
-from _revisions import known_revision_key
+from _revisions import known_revision_key, subset_base
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
 from _tbench_mapping import load_tbench_to_slug_mapping
 from _agents_last_exam_mapping import load_agents_last_exam_to_slug_mapping
@@ -1631,11 +1631,17 @@ def build_fetch_frontiercode_cmd(script: Path) -> list[str]:
 def fetch_frontiercode_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, dict[str, Any]]]:
-    """Cognition's FrontierCode board, one column per revision it publishes.
+    """Cognition's FrontierCode boards, one column per revision and task subset.
 
-    The scraper reports every revision without merging them, so a model re-run
-    in 1.1 arrives twice; each row goes to its own revision's column and is
-    ranked only against that revision.
+    The scraper reports every revision and every subset without merging them,
+    so a model published throughout arrives four times -- 1.1 Main, 1.1
+    Extended, 1.0 Main, 1.0 Extended. Each row goes to the column for its own
+    board and is ranked only against that board: Extended reads about thirteen
+    points above Main for the same model, so letting the two compete for one
+    column would be the same blend the revision split exists to end.
+
+    A row whose subset has no column (1.0's Extended board) or whose revision
+    has none is counted and reported rather than folded into a neighbour's.
     """
     cmd = build_fetch_frontiercode_cmd(script)
     proc = run_fetch(cmd)
@@ -1648,7 +1654,7 @@ def fetch_frontiercode_data(
 
     frontiercode_to_slug = load_frontiercode_to_slug_mapping(mapping_path)
     by_key: dict[str, dict[str, dict[str, Any]]] = {}
-    unversioned = 0
+    uncolumned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1658,11 +1664,12 @@ def fetch_frontiercode_data(
         slug = frontiercode_to_slug.get(frontiercode_name)
         if not slug:
             continue
-        if not keep_best_by_revision(by_key, "frontiercode", slug, row):
-            unversioned += 1
-    if unversioned:
+        base = subset_base("frontiercode", row.get("subset"))
+        if base is None or not keep_best_by_revision(by_key, base, slug, row):
+            uncolumned += 1
+    if uncolumned:
         print(
-            f"  skipped {unversioned} frontiercode row(s) naming no known revision",
+            f"  skipped {uncolumned} frontiercode row(s) naming no known revision or subset",
             file=sys.stderr,
         )
     return by_key

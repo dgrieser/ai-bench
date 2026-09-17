@@ -15,6 +15,15 @@ Each leaf carries both metrics the site shows: `new_score` (the Score column,
 which is what llm.json stores in its FrontierCode columns) and `correct`
 (the raw pass rate, a few points higher), plus tokens and cost.
 
+Every leaf is also scored twice over, once per task subset: `main` is the 100
+hardest tasks the leaderboard opens on, `extended` all 150. Cognition publishes
+them as two leaderboards and says not to mix them -- a model's Extended number
+sits some thirteen points above its Main one, because Extended adds back the
+tasks Main drops for being easy. Subsets are therefore treated exactly like revisions
+here: every one is reported, each row names the `subset` it was measured on,
+rows are ranked within their own (revision, subset) board, and llm.json gives
+each its own column. --subset pins a single one.
+
 A model may be published at several reasoning efforts (Claude/GPT ship
 low..max); the best-scoring effort is reported, matching how the other
 harness-variant sources in this repo resolve one row per model. `effort` and
@@ -52,9 +61,13 @@ LEADERBOARD_URL = "https://cognition.com/frontiercode"
 ALL_REVISIONS = "all"
 DEFAULT_REVISION = ALL_REVISIONS
 
-# Task subset: "main" is the 100-task set the leaderboard opens on, "extended"
-# the 150-task superset.
-DEFAULT_SUBSET = "main"
+# Task subsets scored from the same run: "main" is the 100-task set the
+# leaderboard opens on, "extended" the 150-task superset. Like revisions, they
+# are reported all at once by default rather than picked between here -- which
+# subset feeds which llm.json column is the ingest's decision, not the
+# scraper's.
+ALL_SUBSETS = "all"
+DEFAULT_SUBSET = ALL_SUBSETS
 
 # Metric read off each leaf. "new_score" is the site's Score column; "correct"
 # is the raw pass rate, offered for comparison but not what llm.json stores.
@@ -124,17 +137,31 @@ def best_effort(
     return best_name, best_leaf
 
 
+def block_subsets(key: str, block: dict, subset: str) -> list[str]:
+    """The subsets to report for one revision, in the order the block names them.
+
+    subset="all" takes every subset the block publishes; any other value pins
+    that one and raises if the block does not carry it, so a renamed subset
+    surfaces instead of quietly reporting nothing.
+    """
+    published = block.get("subsets")
+    names = list(published) if isinstance(published, dict) else []
+    if subset == ALL_SUBSETS:
+        if not names:
+            raise ValueError(f"Revision {revision_label(key)} names no task subsets")
+        return names
+    if names and subset not in names:
+        available = ", ".join(sorted(names)) or "(none)"
+        raise ValueError(
+            f"Subset {subset!r} not in revision {revision_label(key)}; available: {available}"
+        )
+    return [subset]
+
+
 def revision_rows(
     key: str, block: dict, subset: str, metric: str
 ) -> list[dict]:
     """One row per model published in this revision for the given subset."""
-    subsets = block.get("subsets")
-    if isinstance(subsets, dict) and subset not in subsets:
-        available = ", ".join(sorted(subsets)) or "(none)"
-        raise ValueError(
-            f"Subset {subset!r} not in revision {revision_label(key)}; available: {available}"
-        )
-
     data = block.get("data")
     if not isinstance(data, dict):
         raise ValueError(f"Revision {revision_label(key)} has no 'data' object")
@@ -151,6 +178,7 @@ def revision_rows(
             {
                 "model": model,
                 "revision": revision_label(key),
+                "subset": subset,
                 "harness": harness.get(model),
                 "effort": effort,
                 "efforts": sorted(efforts),
@@ -169,7 +197,7 @@ def get_scores(
     subset: str = DEFAULT_SUBSET,
     metric: str = DEFAULT_METRIC,
 ) -> list[dict]:
-    """Return one dict per (model, revision): model, revision, harness, score, ...
+    """One dict per (model, revision, subset): model, revision, subset, score, ...
 
     score = metric * 100, i.e. the percentage the leaderboard prints; the payload
     stores fractions.
@@ -177,8 +205,15 @@ def get_scores(
     revision="all" (the default) reports every revision, newest first, without
     merging them: each row carries the revision it was measured under, and a
     model re-run in a later revision appears once per revision. Any other value
-    pins that single revision. Rows are ranked within their own revision, since
-    ranking across revisions would compare two different task sets.
+    pins that single revision.
+
+    subset="all" (the default) does the same for the task sets scored from one
+    run, so a model published in both revisions arrives four times -- 1.1 Main,
+    1.1 Extended, 1.0 Main, 1.0 Extended -- and the ingest files each under its
+    own column. Any other value pins that single subset.
+
+    Rows are ranked within their own (revision, subset) board, since ranking
+    across either would compare two different task sets.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     payload = fetch_json(URL)
@@ -191,18 +226,23 @@ def get_scores(
         blocks = [revision_block(payload, revision)]
 
     results: list[dict] = []
+    boards = 0
     for key, block in blocks:
-        rows = sorted(revision_rows(key, block, subset, metric), key=lambda r: -r["score"])
-        for i, row in enumerate(rows, 1):
-            row["rank"] = i
-        print(
-            f"  revision {revision_label(key)} ({key}): {len(rows)} model(s)",
-            file=sys.stderr,
-        )
-        results.extend(rows)
+        for name in block_subsets(key, block, subset):
+            rows = sorted(
+                revision_rows(key, block, name, metric), key=lambda r: -r["score"]
+            )
+            for i, row in enumerate(rows, 1):
+                row["rank"] = i
+            boards += 1
+            print(
+                f"  revision {revision_label(key)} ({key}) {name}: {len(rows)} model(s)",
+                file=sys.stderr,
+            )
+            results.extend(rows)
 
     print(
-        f"  parsed {len(results)} rows across {len(blocks)} revision(s) ({subset}, {metric})",
+        f"  parsed {len(results)} rows across {boards} board(s) ({metric})",
         file=sys.stderr,
     )
     return results
@@ -225,7 +265,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--subset",
         default=DEFAULT_SUBSET,
-        help=f"Task subset, e.g. main or extended (default: {DEFAULT_SUBSET}).",
+        help=f"Pin one task subset (main, extended), or {ALL_SUBSETS!r} to report "
+        f"every subset the payload carries (default: {DEFAULT_SUBSET}).",
     )
     parser.add_argument(
         "--metric",
@@ -243,19 +284,30 @@ def main() -> int:
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
     elif args.format == "names":
+        # One line per model, not per row: a model published in both revisions
+        # and both subsets is four rows, and the mapping prompt this feeds
+        # would otherwise offer it four times.
+        seen: set[str] = set()
         for entry in scores:
-            print(entry["model"])
+            if entry["model"] not in seen:
+                seen.add(entry["model"])
+                print(entry["model"])
     else:
         model_width = max([len("MODEL"), *(len(e["model"]) for e in scores)])
+        subset_width = max([len("SUBSET"), *(len(e.get("subset") or "") for e in scores)])
         harness_width = max([len("HARNESS"), *(len(e.get("harness") or "") for e in scores)])
-        fmt = f"{{:<{model_width}}}  {{:>6}}  {{:<4}}  {{:<{harness_width}}}  {{:<8}}"
-        print(fmt.format("MODEL", "SCORE", "REV", "HARNESS", "EFFORT"))
+        fmt = (
+            f"{{:<{model_width}}}  {{:>6}}  {{:<4}}  {{:<{subset_width}}}  "
+            f"{{:<{harness_width}}}  {{:<8}}"
+        )
+        print(fmt.format("MODEL", "SCORE", "REV", "SUBSET", "HARNESS", "EFFORT"))
         for entry in scores:
             print(
                 fmt.format(
                     entry["model"],
                     f"{entry['score']:.2f}",
                     entry.get("revision") or "",
+                    entry.get("subset") or "",
                     entry.get("harness") or "",
                     entry.get("effort") or "",
                 )
