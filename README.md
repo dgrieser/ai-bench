@@ -272,6 +272,7 @@ Output: llm.json (unified dataset)
 ./artificialanalysis.py --tier free -m gpt-oss-20b   # pin the free endpoint
 ./artificialanalysis.py --list-models --no-cache     # bypass the cached response
 ./artificialanalysis.py --publish-models _aa/models.json  # the admin page's slug list
+./artificialanalysis.py --audit-page-fields          # page field names vs. the ones read (no key needed)
 
 # Update model name mappings from source APIs
 ./update_aa_coding_agents_mapping.py
@@ -2214,6 +2215,23 @@ column [tbench.ai's board](https://www.tbench.ai/leaderboard/terminal-bench/4.0)
 publishes, which AA outranks, and the two differ by a few points on every model
 they share because they are different harnesses, not different measurements of
 one.
+
+Terminal-Bench was not the only one. An audit of every name the parser expects
+against five live pages found three more, all of which had been matching
+nothing:
+
+| Expected | What the payload has now |
+| --- | --- |
+| `terminalbenchV21` | `terminalBench21`, with `terminalBench40` beside it |
+| `harveyLabCriteriaPass` | `harveyLab` — read as `harvey_lab`, since the name no longer says the number is a criteria-pass rate and nothing on the page does either |
+| `agenticIndex` | *gone.* AA replaced the composite with a per-industry `capabilities` block (finance, strategy, legal, healthcare, engineering, economics) that `llm.json` has no column for. The Agentic Index column is API-only now |
+| `codingIndex` | *gone*, the same way — and nothing read it: the Coding Index column has always taken `artificial_analysis_coding_index` off the API record, and `coding_index` is this file's own derived column, not AA's |
+
+`./artificialanalysis.py --audit-page-fields` is that audit, kept: it reads a
+handful of model pages — which cost no API request, so it runs without a key —
+and exits non-zero if any name the parser expects is missing from all of them.
+It also lists the numbers the pages carry that nothing here reads, which is how
+a new evaluation like Terminal-Bench 4.0 announces itself.
 
 **On the free tier the pages carry nearly everything.** Its `evaluations` block
 holds three composite indices — Intelligence, Coding and Agentic — and its

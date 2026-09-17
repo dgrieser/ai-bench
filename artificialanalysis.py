@@ -572,8 +572,12 @@ def _parse_creator(text: str, expected_name: str = ""):
     return result
 
 
+# The page payload's own spellings, which drift. A name that matches nothing
+# is not an error here -- the field is simply absent from the parsed block, so
+# whatever reads it keeps its last value and the run says nothing. Three entries
+# had gone stale this way before anyone noticed; ``--audit-page-fields`` is the
+# check that finds the next one.
 _PAGE_FLOAT_FIELDS = [
-    ("agenticIndex", "agentic_index"),
     ("omniscience", "omniscience"),
     ("gdpval", "gdpval"),
     ("gdpvalNormalized", "gdpval_normalized"),
@@ -590,10 +594,9 @@ _PAGE_FLOAT_FIELDS = [
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     ("ifbench", "ifbench"),
-    ("harveyLabCriteriaPass", "harvey_lab_criteria_pass"),
+    ("harveyLab", "harvey_lab"),
     ("automationBenchPartialScore", "automation_bench_partial_score"),
     ("enterpriseOpsGym", "enterprise_ops_gym"),
-    ("codingIndex", "coding_index"),
     ("intelligenceIndex", "intelligence_index"),
     ("livecodebench", "livecodebench"),
     ("scicode", "scicode"),
@@ -681,17 +684,15 @@ def _parse_metrics_block(text: str, slug: str):
     return result
 
 
-def _fetch_page_metrics(slug: str, creator_name: str = ""):
-    if not slug:
-        return {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
-    if slug in _PAGE_METRICS_CACHE:
-        return _PAGE_METRICS_CACHE[slug]
+def _fetch_page_text(slug: str):
+    """A model page's payload, or None if it could not be read.
 
-    result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+    These pages are megabytes each and they carry most of a free-tier run's
+    columns, so a dropped connection is worth one retry: the alternative is a
+    model that silently reports none of them. They cost no API request, which
+    is what lets --audit-page-fields run without a key.
+    """
     url = MODEL_PAGE_URL.format(slug)
-    # These pages are megabytes each and they carry most of a free-tier run's
-    # columns, so a dropped connection is worth one retry: the alternative is a
-    # model that silently reports none of them.
     resp = None
     for attempt in range(PAGE_RETRIES + 1):
         try:
@@ -703,8 +704,7 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
             if attempt == PAGE_RETRIES:
                 if _VERBOSE:
                     print(f"< {exc}; giving up on {url}", file=sys.stderr)
-                _PAGE_METRICS_CACHE[slug] = result
-                return result
+                return None
             if _VERBOSE:
                 print(f"< {exc}; retrying {url}", file=sys.stderr)
             time.sleep(PAGE_RETRY_DELAY)
@@ -712,20 +712,120 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
     if _VERBOSE:
         print(f"< {resp.status_code} {url}", file=sys.stderr)
     if resp.status_code != 200:
+        return None
+    return resp.text
+
+
+def _fetch_page_metrics(slug: str, creator_name: str = ""):
+    if not slug:
+        return {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+    if slug in _PAGE_METRICS_CACHE:
+        return _PAGE_METRICS_CACHE[slug]
+
+    result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+    text = _fetch_page_text(slug)
+    if text is None:
         _PAGE_METRICS_CACHE[slug] = result
         return result
 
-    result["context_window"] = _parse_context_window(resp.text, slug)
-    result["params"] = _parse_params(resp.text, slug)
-    result["hugging_face_url"] = _parse_hugging_face_url(resp.text)
-    result["creator"] = _parse_creator(resp.text, creator_name)
-    metrics = _parse_metrics_block(resp.text, slug)
+    result["context_window"] = _parse_context_window(text, slug)
+    result["params"] = _parse_params(text, slug)
+    result["hugging_face_url"] = _parse_hugging_face_url(text)
+    result["creator"] = _parse_creator(text, creator_name)
+    metrics = _parse_metrics_block(text, slug)
     result.update(metrics)
     if "mmmu_pro" not in result:
         result["mmmu_pro"] = None
 
     _PAGE_METRICS_CACHE[slug] = result
     return result
+
+
+# Slugs --audit-page-fields reads when none are named. A handful of frontier
+# models from different creators, because AA runs a new evaluation on those
+# first: a field absent from every one of them is absent from the schema, not
+# merely unrun on the model that happened to be checked.
+AUDIT_SLUGS = ("claude-opus-5", "gpt-6-astra", "gemini-3-8-flash", "glm-5-3", "kimi-k3")
+# Structural and non-benchmark keys in the block: cost and token breakdowns,
+# per-prompt-type latencies, pricing, and the identity fields. The object
+# blocks' own sub-keys are not listed here -- they are derived from
+# _PAGE_OBJECT_FIELDS below, so a sub-field added there stops being reported
+# without anyone remembering to edit two lists.
+_AUDIT_IGNORED_PAGE_KEYS = frozenset(
+    {"id", "name", "slug", "logo", "color", "country", "url", "type",
+     "providerName", "hostModelCount", "performanceDataSource",
+     "weightedCostPerTask", "total", "input", "output", "answer", "reasoning",
+     "nonCacheInput", "cacheRead", "cacheWrite", "cost"}
+)
+
+
+def _audit_page_fields(slugs) -> int:
+    """Report where _PAGE_FLOAT_FIELDS and friends have drifted from the payload.
+
+    AA renames and retires the page payload's fields, and the parser answers a
+    name that matches nothing by leaving the field out of its result rather than
+    failing -- so a column stops being fed and the run says nothing. Three
+    entries went stale that way before anyone noticed (``terminalbenchV21``,
+    ``agenticIndex``, ``codingIndex``), which is what this is for: it reads the
+    pages, which cost no API request, and prints both halves of the drift --
+    names this file expects and the payload no longer has, and numbers the
+    payload carries that this file reads nothing from.
+
+    Exit status is non-zero on a stale name, so a cron can run it as a check.
+    The unread half is informational: most of what it lists is pricing and
+    latency this file deliberately leaves to the API record.
+    """
+    expected = {key: internal for key, internal in _PAGE_FLOAT_FIELDS}
+    expected.update({key: internal for key, internal in _PAGE_BOOL_FIELDS})
+    expected.update({key: key for key in _PAGE_OBJECT_FIELDS})
+    # The nested blocks are matched by their outer name; their sub-keys are read
+    # too, so they are known rather than unread.
+    nested = {sub for subs in _PAGE_OBJECT_FIELDS.values() for sub, _, _ in subs}
+
+    seen = {key: 0 for key in expected}
+    unread: dict[str, int] = {}
+    read: list[str] = []
+
+    for slug in slugs:
+        text = _fetch_page_text(slug)
+        if text is None:
+            print(f"  {slug}: page could not be read, skipped", file=sys.stderr)
+            continue
+        normalized = _normalize_page_text(text)
+        anchor = normalized.find(f'"slug":"{slug}"')
+        start = normalized.find('"microevalsEnabled"', anchor) if anchor != -1 else -1
+        if start == -1:
+            print(f"  {slug}: no metrics block on the page, skipped", file=sys.stderr)
+            continue
+        read.append(slug)
+        chunk = normalized[start : start + 5000]
+        for key in expected:
+            if f'"{key}"' in chunk:
+                seen[key] += 1
+        # Per page, not per occurrence: the nested blocks repeat their own key
+        # names, and a count above the page count reads as nonsense.
+        for key in set(re.findall(r'"([a-zA-Z0-9_]+)":(?:null|-?[0-9.]+)', chunk)):
+            if key in expected or key in nested or key in _AUDIT_IGNORED_PAGE_KEYS:
+                continue
+            unread[key] = unread.get(key, 0) + 1
+
+    if not read:
+        print("no pages could be read", file=sys.stderr)
+        return 1
+
+    stale = sorted(key for key, count in seen.items() if count == 0)
+    print(f"{len(read)} page(s) read: {', '.join(read)}\n")
+    if stale:
+        print("STALE — this file expects these and no page carries them:")
+        for key in stale:
+            print(f"  {key} -> {expected[key]}")
+    else:
+        print("no stale field names: every key this file expects is on the pages")
+    if unread:
+        print(f"\nUNREAD — the pages carry these and this file reads none:")
+        for key in sorted(unread):
+            print(f"  {key} (on {unread[key]} of {len(read)})")
+    return 1 if stale else 0
 
 
 def _api_context_window(m: dict):
@@ -799,7 +899,6 @@ def _extract_mmmu_pro(m: dict):
 # sent none, which is every one of them on the free tier and the handful below
 # that no endpoint carries at all.
 _PAGE_EVALS = [
-    "agentic_index",
     "omniscience",
     "omniscience_accuracy",
     "omniscience_hallucination_rate",
@@ -809,7 +908,7 @@ _PAGE_EVALS = [
     "briefcase",
     "critpt",
     "apex_agents",
-    "harvey_lab_criteria_pass",
+    "harvey_lab",
     "automation_bench_partial_score",
     "enterprise_ops_gym",
     "terminalbench_4_0",
@@ -1007,6 +1106,11 @@ def _print_table(models, output):
         ("Context Window", _extract_context_window),
         ("Hugging Face", _extract_hugging_face_url),
         ("Intelligence Index", lambda m: _extract_eval_any(m, ["artificial_analysis_intelligence_index"])),
+        # Both composites are API-only now. AA dropped them from the model
+        # pages when it replaced them with the per-industry "capabilities"
+        # block (finance, legal, engineering, ...), which llm.json has no
+        # column for, so these columns are blank on a tier whose response
+        # carries neither rather than falling back to a page that has neither.
         ("Coding Index", lambda m: _extract_eval_any(m, ["artificial_analysis_coding_index"])),
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
         ("Agentic Index", lambda m: _extract_metric(m, "agentic_index")),
@@ -1075,6 +1179,14 @@ def _print_table(models, output):
 def main():
     parser = argparse.ArgumentParser(prog="artificialanalysis")
     parser.add_argument("--list-models", action="store_true", help="list all model slugs")
+    parser.add_argument(
+        "--audit-page-fields",
+        action="store_true",
+        help=(
+            "check the model pages' field names against the ones this script "
+            "reads, and exit non-zero if any has gone stale (needs no API key)"
+        ),
+    )
     model_arg = parser.add_argument(
         "--model",
         "-m",
@@ -1158,6 +1270,9 @@ def main():
             args.release_date,
         ]
     )
+    if args.audit_page_fields:
+        return _audit_page_fields(list(args.model) or list(AUDIT_SLUGS))
+
     if not args.list_models and not args.publish_models and not has_filters:
         parser.print_usage(sys.stderr)
         return 2
