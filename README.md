@@ -1235,16 +1235,29 @@ report as unknown, and the alternative is shading the weight to protect four row
 rather than to describe the benchmark — the mistake the ladder exists to prevent,
 [in the other direction](#why-swe-bench-multilingual-sits-at-030).
 
-**Why DeepSWE 1.1 moves to 0.9 and not 0.85.** It gives up the top of the ladder,
-not its tier. DeepSWE 1.1 is still the best-evidenced board in the group — 18 scored
-models against Real-SWE's 5, hand-written contamination-free tasks over 91
-repositories in 5 languages, and a judge that disagrees with an audit on 1.4% of
-rollouts — and 0.85 would put it *below* FrontierSWE 2.0, FrontierCode 1.1 and
-SWE-Marathon 1.1, which is a claim about DeepSWE that nothing measured here supports.
-0.9 says only what happened: a board with a stronger contamination guarantee and a
-sharper head arrived above it, and DeepSWE joins the tier immediately below at the
-top of it. The choice is also nearly free — at DeepSWE 1.0 the bar would be 1.332
-and the same 21 models drop, so 0.9 costs no coverage relative to leaving it alone.
+**Why DeepSWE 1.1 sits at 0.75.** Real-SWE's admission moved it off the top of the
+ladder to 0.9, on the argument that it was giving up the top of the ladder and not
+its tier: 18 scored models against Real-SWE's 5, hand-written contamination-free
+tasks over 91 repositories in 5 languages, a judge that disagrees with an audit on
+1.4% of rollouts, and nothing measured that would put it below FrontierSWE 2.0,
+FrontierCode 1.1 or SWE-Marathon 1.1. **It now sits at 0.75, a tier below all
+three**, and the measurements that argue for it are the two the 0.9 case did not
+weigh:
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| Head resolution | **4.6 points** between the best model and the fifth (max 74.2, median 65.3) — the narrowest head of any column in the group, against Real-SWE's 15.0, SWE-bench Pro's 15.5 and FrontierSWE 2.0's 40.5. A column that cannot separate the leaders cannot be a leading weight, whatever its tasks are worth. | **down** |
+| Redundancy | The rest of the group predicts it: Spearman **0.85** with SWE-bench Verified (14 models), **0.82** with FrontierCode 1.1 (14), **0.81** with Terminal-Bench 4.0 (18), 0.74 with SWE-Marathon 1.1 (12). Its one low overlap is with Real-SWE (−0.3 on 5 models), which is noise rather than independence. | **down** |
+| Trust | 12 of its 18 values are the maintainers' own artifact; the other 6 arrive through Hugging Face cards, llm-stats, OpenAI's own page and the benchlm.ai mirror. Better provenance than SWE-bench Verified's, worse than it reads at first. | down |
+| What it tests | Unchanged and still the reason it is not lower: tasks written from scratch against public repositories, so the contamination guarantee holds, over a wider language and repository spread than anything else here. | up |
+
+The cost is nil in coverage and small in values: the group's denominator falls
+7.70 → 7.55 and the bar 1.386 → **1.359**, **no model changes ranked status in
+either direction**, and 57 values move. That is what a re-pricing inside the ladder
+looks like when it does not cross the evidence bar, and it is the contrast with the
+[Terminal-Bench 4.0 admission](#coding-index): that one moved a weight the same
+distance but added a member at the same time, so the denominator rose instead of
+falling and 34 models lost their rank.
 
 ### Why SWE-bench Multilingual sits at 0.30
 
