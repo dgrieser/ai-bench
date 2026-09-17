@@ -11,6 +11,8 @@ have always read.
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import tempfile
 import time
@@ -388,6 +390,10 @@ MODEL_PAGE = (
     '"name":"Claude Opus 5 (Adaptive Reasoning, Max Effort)",'
     '"shortName":"Claude Opus 5 (max)","effort":{"slug":"max","label":"max"},'
     '"microevalsEnabled":true,"intelligenceIndex":50.7001865797629,'
+    '"intelligenceIndexIsEstimated":false,'
+    '"capabilities":{"financeAndAccounting":54.879570063518685,'
+    '"legal":57.291863099419025,"engineering":54.014034523937966},'
+    '"mlcrOverall":0.555555555555556,"harveyLab":0.93457808655377,'
     '"itBenchSre":null,"tau2":null,"terminalbenchHard":null,'
     '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
     '"scicode":0.563657407407407,"hle":0.548656163113994}}'
@@ -426,6 +432,73 @@ class TestTerminalBenchOnTheModelPages(unittest.TestCase):
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
             aa._enrich_structured_metrics([model])
         self.assertAlmostEqual(model["evaluations"]["terminalbench_4_0"], 0.48989898989899)
+
+
+class TestPageFieldsThatWentStale(unittest.TestCase):
+    """The three names AA retired or renamed out from under the parser.
+
+    `agenticIndex` and `codingIndex` are gone from the payload outright — AA
+    replaced them with the per-industry `capabilities` block — and
+    `harveyLabCriteriaPass` is `harveyLab` now. None of that failed anything:
+    an unmatched name simply leaves the field out of the result.
+    """
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_harvey_is_read_under_the_shortened_name(self) -> None:
+        self.assertAlmostEqual(self.metrics()["harvey_lab"], 0.93457808655377)
+
+    def test_the_retired_composites_are_no_longer_expected(self) -> None:
+        # Listing a name the payload does not carry is not harmless: it reads as
+        # a fallback that exists, and hides that the column is API-only now.
+        expected = {key for key, _ in aa._PAGE_FLOAT_FIELDS}
+        self.assertNotIn("agenticIndex", expected)
+        self.assertNotIn("codingIndex", expected)
+        self.assertNotIn("harveyLabCriteriaPass", expected)
+
+    def test_nothing_is_listed_for_consumption_that_no_parser_fills(self) -> None:
+        # The drift that hid the rename: a name in _PAGE_EVALS with no entry
+        # producing it is a page fallback that silently never fires.
+        produced = {internal for _, internal in aa._PAGE_FLOAT_FIELDS}
+        produced |= {internal for _, internal in aa._PAGE_BOOL_FIELDS}
+        for subs in aa._PAGE_OBJECT_FIELDS.values():
+            produced |= {internal for _, internal, _ in subs}
+        for key in list(aa._PAGE_EVALS) + list(aa._PAGE_META_KEYS):
+            with self.subTest(key=key):
+                self.assertIn(key, produced)
+
+
+class TestPageFieldAudit(unittest.TestCase):
+    """--audit-page-fields, the check that would have caught all three."""
+
+    def audit(self, page: str | None) -> tuple[int, str]:
+        buf = io.StringIO()
+        with mock.patch.object(aa, "_fetch_page_text", return_value=page):
+            with contextlib.redirect_stdout(buf):
+                status = aa._audit_page_fields(["claude-opus-5"])
+        return status, buf.getvalue()
+
+    def test_a_payload_carrying_every_expected_name_passes(self) -> None:
+        keys = [f'"{key}":1' for key, _ in aa._PAGE_FLOAT_FIELDS]
+        keys += [f'"{key}":true' for key, _ in aa._PAGE_BOOL_FIELDS if key != "microevalsEnabled"]
+        keys += [f'"{name}":{{}}' for name in aa._PAGE_OBJECT_FIELDS]
+        page = '{"slug":"claude-opus-5","microevalsEnabled":true,' + ",".join(keys) + "}"
+        status, out = self.audit(page)
+        self.assertEqual(status, 0)
+        self.assertIn("no stale field names", out)
+
+    def test_a_retired_name_is_reported_and_exits_non_zero(self) -> None:
+        status, out = self.audit(MODEL_PAGE)
+        self.assertEqual(status, 1)
+        self.assertIn("STALE", out)
+        # MODEL_PAGE is a trimmed block, so most names are missing from it; the
+        # point is that a missing one is named against the key it would fill.
+        self.assertIn("gdpval -> gdpval", out)
+
+    def test_a_page_that_cannot_be_read_is_not_a_pass(self) -> None:
+        status, _ = self.audit(None)
+        self.assertEqual(status, 1)
 
 
 class TestPageFallback(unittest.TestCase):
