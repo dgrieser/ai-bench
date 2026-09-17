@@ -104,6 +104,17 @@ jobs:
        github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # Every step here runs Python against a pipe, so stdout is block-buffered
+    # by default and a step's output arrives in whichever chunks the buffer
+    # happens to flush -- most of it at exit. The timestamps Actions puts on
+    # those lines are when the runner read them, not when they were written,
+    # so a long step reads as a single stall parked against whatever line sat
+    # on the flush boundary. update.py's command listing is printed before any
+    # fetching, which made a 3.5-minute refresh look like the one fetcher
+    # named just above the boundary hanging. Job-level so the whole log is
+    # honest about when things happened, not just the refresh.
+    env:
+      PYTHONUNBUFFERED: "1"
     steps:
       # A pull_request event would otherwise check out the PR's merge ref; this
       # run wants the base branch it was just merged into.

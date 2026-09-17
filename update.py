@@ -9,6 +9,7 @@ import re
 import shlex
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Any, Callable
 
@@ -409,9 +410,39 @@ def build_fetch_data_cmd(aa_script: Path, slugs: list[str]) -> list[str]:
     return cmd
 
 
+def run_fetch(cmd: list[str], label: str | None = None) -> subprocess.CompletedProcess[str]:
+    """Run one fetcher, reporting on stderr what it cost.
+
+    The commands are all listed up front, before any of them runs, so the
+    listing says nothing about where a run's minutes went -- and a reader
+    watching a log sees a stall with no fetcher's name against it. Worse in
+    CI, where this script's stdout is a pipe and therefore block-buffered:
+    the listing arrives in whatever chunk the buffer flushes, so a gap after
+    one of those lines belongs to no particular source, though it reads
+    exactly like the fetcher named just above it hanging.
+
+    The timings go to stderr, which Python keeps line-buffered whether or not
+    it is a terminal, so they show up as each fetcher finishes rather than at
+    exit. That also leaves stdout as the report proper, for a run that pipes
+    it somewhere.
+
+    `label` is for the two commands that share a script name: the AA slug list
+    and the AA score fetch would otherwise both report as artificialanalysis.py.
+    """
+    started = time.monotonic()
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True)
+    finally:
+        # In a finally, so an interrupted or unlaunchable fetcher is timed
+        # too: how long a dead one took before giving up -- a timeout, a
+        # retry loop -- is exactly what a reader is after.
+        name = label or Path(cmd[1]).name
+        print(f"  {name}: {time.monotonic() - started:.1f}s", file=sys.stderr)
+
+
 def fetch_available_slugs(aa_script: Path) -> set[str]:
     cmd = build_list_models_cmd(aa_script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd, "artificialanalysis.py --list-models")
     if proc.returncode != 0:
         raise RuntimeError(f"artificialanalysis.py --list-models failed ({proc.returncode}): {proc.stderr.strip()}")
     return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
@@ -419,7 +450,7 @@ def fetch_available_slugs(aa_script: Path) -> set[str]:
 
 def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_data_cmd(aa_script, slugs)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd, "artificialanalysis.py -o json")
     if proc.returncode != 0:
         raise RuntimeError(f"artificialanalysis.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -768,7 +799,7 @@ def fetch_aa_coding_agents_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_aa_coding_agents_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_aa_coding_agents.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -843,7 +874,7 @@ def fetch_osworld_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_osworld_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_osworld.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -901,7 +932,7 @@ def fetch_huggingface_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_huggingface_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_huggingface.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1009,7 +1040,7 @@ def fetch_toolathlon_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_toolathlon_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_toolathlon.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -1069,7 +1100,7 @@ def fetch_real_swe_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_real_swe_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_real_swe.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -1129,7 +1160,7 @@ def fetch_mcp_atlas_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_mcp_atlas_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_mcp_atlas.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -1189,7 +1220,7 @@ def fetch_zerobench_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_zerobench_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_zerobench.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -1247,7 +1278,7 @@ def build_fetch_bfcl_cmd(script: Path) -> list[str]:
 
 def fetch_bfcl_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_bfcl_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_bfcl.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1312,7 +1343,7 @@ def fetch_deepswe_data(
     arrive without a revision are dropped rather than guessed into a column.
     """
     cmd = build_fetch_deepswe_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_deepswe.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1368,7 +1399,7 @@ def fetch_frontierswe_data(
     not even be a blend of like numbers.
     """
     cmd = build_fetch_frontierswe_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_frontierswe.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1415,7 +1446,7 @@ def build_fetch_tbench_cmd(script: Path) -> list[str]:
 
 def fetch_tbench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_tbench_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_tbench.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1475,7 +1506,7 @@ def fetch_agents_last_exam_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_agents_last_exam_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(
             f"fetch_agents_last_exam.py failed ({proc.returncode}): {proc.stderr.strip()}"
@@ -1546,7 +1577,7 @@ def fetch_datacurve_data(
     applied per revision so a 1.0 number can never outrank a 1.1 one.
     """
     cmd = build_fetch_datacurve_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_datacurve.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1600,7 +1631,7 @@ def fetch_frontiercode_data(
     ranked only against that revision.
     """
     cmd = build_fetch_frontiercode_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_frontiercode.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1648,7 +1679,7 @@ def fetch_swe_atlas_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_swe_atlas_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_swe_atlas.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1716,7 +1747,7 @@ def fetch_evals_report_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_evals_report_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_evals_report.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1782,7 +1813,7 @@ def build_fetch_vals_cmd(script: Path) -> list[str]:
 
 def fetch_vals_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_vals_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_vals.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1861,7 +1892,7 @@ def fetch_swe_marathon_data(
     uses, applied per revision.
     """
     cmd = build_fetch_swe_marathon_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_swe_marathon.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -1917,7 +1948,7 @@ def fetch_spheron_data(
         return {}
 
     cmd = build_fetch_spheron_cmd(script, paths)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_spheron.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
@@ -2010,7 +2041,7 @@ def fetch_llmstats_data(
     script: Path, model_mapping_path: Path, benchmark_mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_llmstats_cmd(script)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = run_fetch(cmd)
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_llmstats.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
