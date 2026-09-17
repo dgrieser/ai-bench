@@ -380,6 +380,54 @@ class TestFieldsThePagesUsedToCarry(unittest.TestCase):
         self.assertEqual(aa._extract_metric(model, "output_speed_p05"), 74.74)
 
 
+# A model page's metrics block, in the shape and the field order the live
+# payload uses. Trimmed to the neighbourhood the parser reads; the spellings are
+# what matter.
+MODEL_PAGE = (
+    '{"currentModel":{"id":"b8fc61f7","slug":"claude-opus-5",'
+    '"name":"Claude Opus 5 (Adaptive Reasoning, Max Effort)",'
+    '"shortName":"Claude Opus 5 (max)","effort":{"slug":"max","label":"max"},'
+    '"microevalsEnabled":true,"intelligenceIndex":50.7001865797629,'
+    '"itBenchSre":null,"tau2":null,"terminalbenchHard":null,'
+    '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
+    '"scicode":0.563657407407407,"hle":0.548656163113994}}'
+)
+
+
+class TestTerminalBenchOnTheModelPages(unittest.TestCase):
+    """The page's own spelling of the two live Terminal-Bench revisions.
+
+    AA renamed the v2.1 field when it added the 4.0 run, and a field name the
+    parser does not recognise is not an error here -- it is simply absent from
+    the result, so the column keeps whatever it last held and the page fallback
+    the free tier runs on stops feeding it without anything failing. That is the
+    one failure mode worth a test: these pin the names against the live payload.
+    """
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_both_revisions_are_read_under_the_names_the_page_uses(self) -> None:
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["terminalbench_4_0"], 0.48989898989899)
+        self.assertAlmostEqual(metrics["terminalbench_v2_1"], 0.891385767790262)
+
+    def test_a_revision_the_page_reports_as_null_stays_null(self) -> None:
+        # Distinct from "the page does not carry this field": null is AA saying
+        # it has not run the model, and it has to reach the column as None
+        # rather than leaving the last value in place.
+        self.assertIsNone(self.metrics()["terminalbench_hard"])
+
+    def test_the_4_0_number_reaches_the_evaluations_block(self) -> None:
+        # _PAGE_EVALS is what carries a page value into the dict update.py's
+        # SCORE_MAPPINGS reads; a field parsed but not listed there goes nowhere.
+        self.assertIn("terminalbench_4_0", aa._PAGE_EVALS)
+        model = {"slug": "claude-opus-5"}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        self.assertAlmostEqual(model["evaluations"]["terminalbench_4_0"], 0.48989898989899)
+
+
 class TestPageFallback(unittest.TestCase):
     def test_a_field_the_free_tier_drops_still_comes_off_the_page(self) -> None:
         free = {"slug": "gpt-oss-20b"}

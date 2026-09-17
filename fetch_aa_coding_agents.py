@@ -3,10 +3,16 @@
 Fetch Artificial Analysis Coding Agent Index benchmark scores.
 
 https://artificialanalysis.ai/agents/coding-agents publishes AA's own runs of
-the coding-agent benchmarks — DeepSWE, SWE-Atlas-QnA and Terminal-Bench v2.1 —
-one row per (agent harness, model) pair, e.g. "Claude Code - Opus 5 (xhigh)".
-This is the only AA surface carrying DeepSWE and SWE-Atlas numbers: the model
-pages and the v2 API report neither.
+the coding-agent benchmarks — DeepSWE v1.1, SWE-Atlas-QnA and Terminal-Bench
+v4 — one row per (agent harness, model) pair, e.g. "Claude Code - Opus 5
+(xhigh)". This is the only AA surface carrying DeepSWE and SWE-Atlas numbers:
+the model pages and the v2 API report neither.
+
+Terminal-Bench 4.0 it shares with the model pages, and the two disagree by
+design: here each model runs under its own vendor's agent (Claude Code, Codex,
+Opencode), on the model pages under AA's single harness, so Opus 5 scores 54.5
+here and 49.0 there. That is the gap _precedence.RANK_AA_CODING_AGENTS exists
+for, and update.py ingests this page fill-only because of it.
 
 The page is a Next.js App Router app; requesting it with an "RSC: 1" header
 returns the flight payload, in which every leaderboard row is a plain JSON
@@ -34,15 +40,17 @@ URL = "https://artificialanalysis.ai/agents/coding-agents"
 
 # datasetIndexName in the page's eval records -> llm.json benchmark key.
 #
-# "deep-swe" is deliberately absent. DeepSWE publishes two revisions whose
-# numbers are not comparable, llm.json keeps a column per revision, and AA
-# names no revision for the task set it ran -- its dataset id carries none, the
-# way "terminal-bench-v2.1" does. A number that cannot say which revision it
-# measured cannot pick a column, so it is not ingested; if AA ever versions the
-# id, adding "deep-swe-v1.1": "deepswe_1_1" here is the whole change.
+# AA re-cut the index on both versioned datasets at once: "terminal-bench-v2.1"
+# became "terminal-bench-v4", and "deep-swe" -- left out before because a
+# dataset id naming no revision cannot pick between llm.json's per-revision
+# columns -- now names one, so it is ingested as the comment here always said
+# it would be. An id this file does not know costs one line on stderr and
+# nothing else, so both columns went unfed between the rename and this change
+# while the page kept publishing them.
 DATASETS: dict[str, str] = {
+    "deep-swe-v1.1": "deepswe_1_1",
     "swe-atlas-qna": "swe_atlas_qna",
-    "terminal-bench-v2.1": "terminal_bench_2_1",
+    "terminal-bench-v4": "terminal_bench_4_0",
 }
 
 HEADERS = {

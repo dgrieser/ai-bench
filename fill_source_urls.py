@@ -129,7 +129,13 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
     the site).
     """
     items: list[tuple[str, tuple[str, ...]]] = [
-        (fetch_aa_coding_agents.URL, ("swe_atlas_qna", "terminal_bench_2_1")),
+        # Read off the scraper's own dataset map rather than repeated here: AA
+        # re-cuts the index on new dataset revisions, and a list spelled out
+        # again is a list that goes stale without failing.
+        (
+            fetch_aa_coding_agents.URL,
+            tuple(sorted(set(fetch_aa_coding_agents.DATASETS.values()))),
+        ),
         # Both DeepSWE readers can write either revision's column: benchlm
         # mirrors whichever artifact it names, and Datacurve's own board
         # publishes both.

@@ -211,6 +211,13 @@ def print_changes_table(changes: list[tuple[str, str, Any, Any]]) -> None:
 
 SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "terminal_bench_hard": (("terminalbench_hard",), to_percent),
+    # AA runs both live Terminal-Bench revisions itself, under its own harness,
+    # so each lands in the column its own board also publishes -- the 4.0 one
+    # beside fetch_tbench.py's, which AA outranks (_precedence.RANK_AA), and the
+    # two disagree by a few points because they are different harnesses over the
+    # same task set. The second spelling is the one the v2 API would use if it
+    # ever carries the field; the pages spell it the first way.
+    "terminal_bench_4_0": (("terminalbench_4_0", "terminal_bench_4_0"), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
     # AA reports the τ³ Banking domain under the version-less key "tau_banking".
     "tau3_bench_banking": (("tau_banking",), to_percent),
