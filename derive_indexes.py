@@ -151,7 +151,8 @@ INDEXES: list[IndexDef] = [
             # DeepSWE, FrontierSWE, FrontierCode and SWE-Marathon each keep a
             # column per published revision, and only the current one is
             # aggregated -- the same treatment terminal_bench_2_0 already gets
-            # beside terminal_bench_2_1. A superseded revision measured a
+            # beside terminal_bench_2_1 and terminal_bench_4_0. A superseded
+            # revision measured a
             # different task set, so it compares a model against a
             # field that no longer exists; aggregating both would also count
             # the benchmark twice for whoever was re-run and once for everyone
@@ -161,7 +162,15 @@ INDEXES: list[IndexDef] = [
             ("frontierswe_2_0", 0.9),
             ("frontiercode_1_1", 0.9),
             ("swe_marathon_1_1", 0.9),
-            ("terminal_bench_2_1", 0.85),
+            # Terminal-Bench is the one family aggregated twice over. 4.0 is
+            # the current release and carries the weight 2.1 held; 2.1 stays in
+            # at 0.4 because it is not a superseded revision in the sense above
+            # -- it is a separate series, scored on 105 models against 4.0's
+            # 32, and dropping it would take the group's coverage backbone out
+            # with it. The lower weight is what keeps the pair from voting
+            # twice on one construct.
+            ("terminal_bench_4_0", 0.85),
+            ("terminal_bench_2_1", 0.4),
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
@@ -175,13 +184,15 @@ INDEXES: list[IndexDef] = [
             ("swe_atlas_qna", 0.25),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five: coding benchmarks predict each other well.
-        # Hold one out and the rest miss it by a sixty-fifth of the spread
-        # between models, so a fully measured model keeps 98.5% of its distance
-        # from the middle and one at the 18% bar keeps 92%. That is the data's
+        # The lowest of the five, level with tooling since Terminal-Bench 4.0
+        # joined both groups: coding benchmarks predict each other well. Hold
+        # one out and the rest miss it by a sixty-second of the spread between
+        # models, so a fully measured model keeps 98.4% of its distance from
+        # the middle and one at the 18% bar keeps 92%. That is the data's
         # verdict rather than a preference: a model placing top-decile on three
         # coding benchmarks really is unlikely to be mid-field on the rest.
-        transfer_ratio=0.015,
+        # Re-measured by --calibrate after the 4.0 admission, 0.015 -> 0.016.
+        transfer_ratio=0.016,
     ),
     IndexDef(
         key="tooling_index",
@@ -190,7 +201,10 @@ INDEXES: list[IndexDef] = [
             ("tau3_bench_banking", 1.0),
             ("toolathlon", 0.9),
             ("mcp_atlas", 0.85),
-            ("terminal_bench_2_1", 0.8),
+            # Same swap as in the coding group, one rung down: 4.0 takes the
+            # weight 2.1 held, 2.1 stays as coverage at 0.3.
+            ("terminal_bench_4_0", 0.8),
+            ("terminal_bench_2_1", 0.3),
             ("gdpval_aa", 0.7),
             ("itbench_aa", 0.6),
             ("bfcl_v4", 0.5),
@@ -198,9 +212,10 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # Almost as low, over the widest group here, so this shrinks little:
-        # 98% kept when fully measured, 90% at the 18% bar.
-        transfer_ratio=0.019,
+        # Level with the coding group, over the widest group here, so this
+        # shrinks little: 98.4% kept when fully measured, 92% at the 18% bar.
+        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016.
+        transfer_ratio=0.016,
     ),
     IndexDef(
         key="knowledge_index",
@@ -334,11 +349,11 @@ REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
 
 # Below this share of an index's total weight a model is left unranked. 0.18
 # rather than a round 0.2 because model coverage clusters rather than spreading
-# evenly: the coding group has 11 models measured on 19% of its weight and none
-# between 19% and 20%, so 0.2 was cutting a natural block of two-benchmark
-# models in half. The next cluster sits at 13-14%, and admitting it would make
-# 90% of the ranked field less than half measured -- see README, "Why the
-# evidence bar is 18%".
+# evenly: the coding group has 7 models measured on 18.8-19.5% of its weight and
+# nothing between 16.9% and 20.8%, so 0.2 was cutting a natural block in half.
+# The next cluster sits at 15.6-16.9%, and going down far enough to admit the
+# 12-15% one would make 90% of the ranked field less than half measured -- see
+# README, "Why the evidence bar is 18%".
 MIN_SCORED_FRACTION = 0.18
 
 # The Bradley-Terry prior: pseudo-comparisons, half won and half lost, against
