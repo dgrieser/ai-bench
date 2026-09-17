@@ -157,8 +157,8 @@ INDEXES: list[IndexDef] = [
             ("swe_bench_multilingual", 0.3),
             # SWE Atlas contributes its Codebase Q&A track only: every model
             # scored on Refactoring or Test Writing is also scored on Q&A, so
-            # the other two tracks add no coverage, correlate 0.94 with each
-            # other and 0.77-0.89 with Q&A, and their weight only raised the
+            # the other two tracks add no coverage, correlate 0.87 with each
+            # other and 0.75-0.95 with Q&A, and their weight only raised the
             # MIN_SCORED_FRACTION bar. One track at 0.25 instead of three at
             # 0.17 -- see README, "Why SWE Atlas contributes one track".
             ("swe_atlas_qna", 0.25),
