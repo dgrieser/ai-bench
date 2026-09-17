@@ -1,3 +1,160 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-0.9B",
+      "question": "Add newly released model 'k2-horizon-0-9b' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-horizon-0-9b",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-3.7B",
+      "question": "Add newly released model 'k2-horizon-3-7b' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-horizon-3-7b",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-03 - Institute of Foundation Models - https://huggingface.co/IFM/K2-Horizon-7B",
+      "question": "Add newly released model 'k2-horizon-7b' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "k2-horizon-7b",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to fable 5.1, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'fable 5.1' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "fable 5.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "glm-5-3",
+          "reason": "exact to glm 5.3, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "exact to glm 5.3, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "exact to glm 5.3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "exact to glm 5.3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "exact to glm 5.3, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'glm 5.3' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "glm 5.3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
+          "reason": "exact to nemotron 3 ultra, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "exact to nemotron 3 ultra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-nano-omni-30b-a3b",
+          "reason": "exact to nemotron 3 ultra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "exact to nemotron 3 ultra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+          "reason": "exact to nemotron 3 ultra, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'nemotron 3 ultra' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nemotron 3 ultra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen3-8-2-4t-a95b",
+          "reason": "exact to qwen3.8 2.4t a95b, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-27b",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-flash-next",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8b-instruct",
+          "reason": "drop suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'qwen3.8 2.4t a95b' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "subject": "qwen3.8 2.4t a95b",
+      "universe": "models"
+    }
+  ]
 }
