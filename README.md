@@ -1726,45 +1726,59 @@ knows:
   document in front of it, or quietly ignoring the constraint you set. (AA-LCR,
   IFBench.)
 
-The single result that justifies the column: **`deepseek-v4-pro` ranks 1st on
-[Knowledge](#knowledge-index) and 80th on Trust.** It knows more than anything
-else in the table and hallucinates on 94.8% of what it gets wrong. `glm-4-7`
-goes 22nd to 89th, `deepseek-v4-flash` 13th to 63rd, `step-3-5-flash` 27th to
-87th. No other column in this file says that about a model, because no other
+The single result that justifies the column: **`deepseek-v4-1-flash` ranks 16th
+on [Knowledge](#knowledge-index) and 107th on Trust**, a fall of 91 places. It
+is in the top tenth of the table for what it knows and hallucinates on **96.5%**
+of what it gets wrong. `deepseek-v4-pro` goes 13th to 62nd at 94.8%,
+`gpt-5-6-luna` 17th to 63rd, `gpt-5-6-sol` 3rd to 47th, `deepseek-v4-flash` 22nd
+to 51st. No other column in this file says that about a model, because no other
 column is measuring it.
 
-**It ranks 132 of 143 models** — second only to Knowledge, because its anchor is
-one of the widest columns in the table. The 11 blanks are models Artificial
-Analysis has never run at all.
+**It ranks 148 of 160 models** — second only to Knowledge, because its anchor is
+one of the widest columns in the table. Eleven of the twelve blanks are models
+Artificial Analysis has never run at all; the twelfth, `agents-a1`, carries
+IFBench and nothing else.
 
 ### It is the most independent of the five
 
-The [Vision index](#vision-index) had to argue its way around a 0.94 correlation
-with Knowledge. This one has the opposite problem — none. Against the models it
-shares with each:
+Still true, but by a much narrower margin than this section used to claim, and
+the reason is worth keeping on the page. Against the models it shares with each:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | **0.44** (84 models) | **−0.17** |
-| vs [Tooling](#tooling-index) | 0.66 (88) | 0.13 |
-| vs [Knowledge](#knowledge-index) | 0.78 (132) | 0.05 |
-| vs [Vision](#vision-index) | 0.77 (47) | 0.13 |
-| vs AA Intelligence Index | 0.73 (132) | 0.19 |
-| vs GPQA Diamond | 0.67 (132) | 0.21 |
-| vs HLE | 0.64 (132) | 0.18 |
+| vs [Coding](#coding-index) | **0.76** (82 models) | **0.37** |
+| vs [Tooling](#tooling-index) | 0.83 (103) | 0.29 |
+| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.37 |
+| vs [Vision](#vision-index) | 0.85 (58) | 0.48 |
+| vs AA Intelligence Index | 0.86 (148) | 0.34 |
+| vs GPQA Diamond | 0.80 (145) | 0.26 |
+| vs HLE | 0.76 (142) | 0.32 |
 
-Every one of those sits below the 0.79/0.84 the [Knowledge
-index](#knowledge-index) holds up as proof it is not re-measuring its siblings,
-and 0.44 against Coding is the lowest figure any two of these five columns
-produce. Inside the top 20 the relationship is gone entirely — **0.05** against
-Knowledge, **−0.17** against Coding. Among models a reader would actually choose
-between, knowing which one is more capable tells you nothing about which one
+Mean correlation with the other four indexes: **Trust 0.83**, against Coding
+0.90, Tooling 0.92, Vision 0.92 and Knowledge 0.93. Trust against Coding, 0.76,
+is still the lowest figure any two of these five columns produce. Inside the top
+20 every relationship roughly halves — among models a reader would actually
+choose between, knowing which is more capable tells you much less about which
 will make something up.
 
-That is not a reweighting trick. It is one benchmark doing the work: the
-hallucination rate is the most orthogonal column in this file by a wide margin
-(0.53 with the Knowledge index, 0.38 with Tooling, 0.18 with Coding, 0.09 with
-BrowseComp), and it is aggregated nowhere else.
+**These figures used to read 0.44 / 0.66 / 0.78 / 0.77, and the drop is mostly
+the cost of AA-Omniscience Accuracy landing.** Accuracy is the knowledge half of
+the pair, carried at 0.6 of the group's 2.35, so admitting it necessarily pulled
+the column toward capability — the exact trade its weight was chosen to make,
+argued in its row below, and now paid rather than predicted. Re-running the old
+percentile math on today's data gives 0.65 / 0.80 / 0.89 / 0.82, so most of the
+move is the new member and the growth of the table; switching to the
+[Bradley-Terry fit](#coding-index) added roughly 0.03 on top. The column still
+measures something the other four do not — `deepseek-v4-1-flash` falling 91
+places is not a capability ranking — but "no correlation at all" is no longer a
+claim this page can make.
+
+What independence remains is one benchmark doing the work. The hallucination
+rate is still the most orthogonal column in this file by a wide margin — 0.50
+with the Knowledge index, 0.44 with AA Intelligence, 0.36 with Tooling, 0.22
+with BrowseComp, 0.15 with Coding — and it is aggregated nowhere else. That is
+what the 1.0 weight is buying, and it is why the column keeps most of its value
+even with a knowledge-correlated member beside it.
 
 ### Why the anchor cannot stand alone
 
@@ -1793,24 +1807,30 @@ smooth monotone trade with no natural knee, so the choice is a judgement rather
 than a discovery: 0.60 is the point where the abstainers are clear of the top 40
 and the column still ranks trust rather than knowledge.
 
-> **The Accuracy column is declared but not yet fetched.** `update.py` maps it
-> and `artificialanalysis.py` already scrapes it, so it fills on the next AA run
-> (the `update-benchmarks` workflow, every three hours). Until then
-> `comparisons()` records none for it, `compute_index()` drops its weight
-> from the group total, and the index computes over the other three — the same
-> 132 models, at an effective group weight of 1.75 against the declared 2.35.
-> The independence figures above are measured in that state and will tighten
-> somewhat once Accuracy lands; the ranked field will not change.
+> **Accuracy has since landed, and it settled the argument above better than
+> expected.** It is now scraped on 148 models, level with the hallucination rate
+> itself, so the group runs at its full declared weight of 2.35 and the index
+> computes over all four members.
+>
+> This section used to carry a note predicting the independence figures would
+> *tighten* once Accuracy arrived. They did the opposite, and the reason is the
+> point of the pairing: Accuracy correlates **+0.02** with the hallucination
+> rate — as close to orthogonal as two columns in this file get, and they are
+> two halves of the same 6,000-question run. Adding it pulled the anchor's mean
+> Spearman against its fellow members *down* from 0.40 to **0.24**, making it
+> more independent rather than less. A model's honesty genuinely tells you
+> nothing about how much it knows, which is exactly why neither half means much
+> alone and why the anchor can carry 1.0.
 
 Contributing benchmarks and why they carry the weight they do (declared group
 weight **2.35**):
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| AA-Omniscience Hallucination Rate | 1.0 | The anchor, and the reason this column exists. It is the **widest member — 132 models across 41 creators — and every one of those 132 values is a first-party Artificial Analysis run**, with no self-reports mixed in; nothing else in this file combines that reach with that provenance. Unsaturated across essentially its whole definable range (11.7–98.2, median 84.3) with a live head, 6.7 points between first and fifth. And it is the least redundant member by a distance: mean Spearman **0.40** against the other two scored members, against 0.59 and 0.61 for them. `lower_is_better: true` is declared on the column, so `comparisons()` reads it the other way round and a low rate wins the head-to-head. Its one weakness — that it can be gamed by abstaining — is what the accuracy below is for, not a reason to weight it lower. |
+| AA-Omniscience Hallucination Rate | 1.0 | The anchor, and the reason this column exists. It is the **widest member — 148 models across 43 creators — and every one of those 148 values is a first-party Artificial Analysis run**, with no self-reports mixed in; nothing else in this file combines that reach with that provenance. Unsaturated across essentially its whole definable range (11.7–98.2, median 83.3) with a live head, 6.7 points between first and fifth. And it is the least redundant member by a distance: mean Spearman **0.24** against the other three, against 0.45 for Accuracy, 0.61 for IFBench and 0.63 for AA-LCR. `lower_is_better: true` is declared on the column, so `comparisons()` reads it the other way round and a low rate wins the head-to-head. Its one weakness — that it can be gamed by abstaining — is what the accuracy below is for, not a reason to weight it lower. |
 | AA-Omniscience Accuracy | 0.6 | Not a discriminator in its own right so much as the **brake that lets the anchor carry 1.0**, for the reason argued above. Same run, same first-party provenance, and the [candidate audit](docs/benchmark-candidates-2026-08.md) measured its coverage at 91% of the table, level with the hallucination rate. Held well below parity because it is the knowledge half of a knowledge-and-honesty pair, and knowledge is already priced by the [Knowledge index](#knowledge-index) at 1.0 through `aa_omniscience` — the composite of this and the rate. Weighted for what it *prevents*, not what it measures. |
-| AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 112 models across 34 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
-| IFBench | 0.3 | The second reliability axis, and mostly its own: **0.41 against the anchor**, the lowest pair in the group. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 116 models across 36 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one comparison-ranked column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
+| AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 121 models across 36 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
+| IFBench | 0.3 | The second reliability axis, and largely its own: **0.37 against the anchor**. It was the group's most independent pair until Accuracy landed at 0.02 against the same column. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 118 models across 37 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one comparison-ranked column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
 
 ### What the Trust index leaves out
 
@@ -1837,12 +1857,13 @@ weight **2.35**):
 
 ### The evidence bar is inert here too
 
-At 18% the bar is 0.315 of the effective 1.75 (0.423 of 2.35 once Accuracy
-lands), and it cuts nobody at any setting in the [table
-above](#why-the-evidence-bar-is-18): Trust ranks the same 132 models from 0.25
-all the way down to 0.05. The anchor alone is 57% of today's effective weight
-(42.6% of the declared total), every model the column ranks has that score, and
-the 11 it leaves out have no score in any member. As with
+At 18% the bar is 0.423 of the group's 2.35, and it cuts almost nobody across
+the settings in the [table above](#why-the-evidence-bar-is-18): Trust ranks the
+same 148 models from 0.45 down to 0.18, and gains exactly one more at 0.05 —
+`agents-a1`, which carries IFBench alone, 12.8% of the weight. The anchor is
+42.6% of the group on its own, every one of the 148 ranked models has that
+score, and 11 of the 12 the column leaves out have no score in any member —
+`agents-a1` is the twelfth. As with
 [Vision](#why-the-evidence-bar-is-inert-here), what filters this column is the
 availability of the underlying run, not the threshold.
 
