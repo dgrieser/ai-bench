@@ -4,7 +4,8 @@
 Three sources spell the same revision three different ways, and every one of
 them has to land on the same llm.json column or the split leaks: a row filed
 under the wrong revision is the blend the columns exist to end, and one filed
-under no revision at all must be refused rather than guessed at.
+under no revision at all must be refused rather than guessed at. A task subset
+splits a column the same way, and gets the same treatment.
 """
 
 from __future__ import annotations
@@ -67,6 +68,39 @@ class TestKnownRevisionKey(unittest.TestCase):
 
     def test_an_unversioned_benchmark_has_no_revision_column(self) -> None:
         self.assertIsNone(rev.known_revision_key("livecodebench", "1.1"))
+
+
+class TestSubsetBase(unittest.TestCase):
+    """FrontierCode scores two task sets per run, and each gets its own base."""
+
+    def test_the_headline_subset_keeps_the_plain_base(self) -> None:
+        # Main is what frontiercode_1_1 and frontiercode_1_0 already hold, so
+        # nothing already stored moves.
+        self.assertEqual(rev.subset_base("frontiercode", "main"), "frontiercode")
+
+    def test_the_other_subset_gets_a_base_of_its_own(self) -> None:
+        self.assertEqual(
+            rev.subset_base("frontiercode", "extended"), "frontiercode_extended"
+        )
+        self.assertEqual(
+            rev.known_revision_key("frontiercode_extended", "v1_1"),
+            "frontiercode_extended_1_1",
+        )
+
+    def test_a_subset_without_a_column_is_refused(self) -> None:
+        # 1.0's Extended board is published but not stored, and a third task set
+        # must not be rounded into Main's column.
+        self.assertIsNone(rev.known_revision_key("frontiercode_extended", "1.0"))
+        self.assertIsNone(rev.subset_base("frontiercode", "diamond"))
+
+    def test_an_unnamed_subset_is_refused(self) -> None:
+        self.assertIsNone(rev.subset_base("frontiercode", None))
+        self.assertIsNone(rev.subset_base("frontiercode", ""))
+
+    def test_a_benchmark_scoring_one_task_set_is_unaffected(self) -> None:
+        # Its rows carry no subset to honour, so there is nothing to refuse.
+        self.assertEqual(rev.subset_base("deepswe", None), "deepswe")
+        self.assertEqual(rev.subset_base("deepswe", "main"), "deepswe")
 
 
 class TestColumnsExist(unittest.TestCase):

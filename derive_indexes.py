@@ -165,7 +165,17 @@ INDEXES: list[IndexDef] = [
             # 4.0 -- and 6 of its 18 values are not the maintainers' own runs.
             ("deepswe_1_1", 0.75),
             ("frontierswe_2_0", 0.9),
-            ("frontiercode_1_1", 0.9),
+            # FrontierCode enters through its Extended board, the full
+            # 150-task set, and not through Main, the 100 hardest of those same
+            # tasks. The two are one set of runs scored twice and they rank the
+            # same field almost identically (Spearman 0.99 over the 18 models on
+            # both, 3 discordant pairs in 153), so aggregating both would spend
+            # two slots on one measurement; Extended is the one kept because it
+            # is the larger sample of the two. frontiercode_1_1 stays a column
+            # in llm.json, scraped and rendered like any other -- it is simply
+            # not voted on here, the way frontiercode_1_0 is not. See README,
+            # "FrontierCode Extended in the coding group".
+            ("frontiercode_extended_1_1", 0.9),
             ("swe_marathon_1_1", 0.9),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release and carries the weight 2.1 held; 2.1 stays in
@@ -196,7 +206,9 @@ INDEXES: list[IndexDef] = [
         # the middle and one at the 18% bar keeps 92%. That is the data's
         # verdict rather than a preference: a model placing top-decile on three
         # coding benchmarks really is unlikely to be mid-field on the rest.
-        # Re-measured by --calibrate after the 4.0 admission, 0.015 -> 0.016.
+        # Re-measured by --calibrate after the 4.0 admission, 0.015 -> 0.016,
+        # and unmoved by the FrontierCode Main -> Extended swap, which changed
+        # which board the group reads rather than how much it reads.
         transfer_ratio=0.016,
     ),
     IndexDef(
@@ -338,9 +350,19 @@ INDEXES: list[IndexDef] = [
 REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
     # DeepSWE 1.1 reads lower than 1.0 for the same model.
     "deepswe_1_1": ("deepswe_1_0", 1 / 1.069),
-    # FrontierCode 1.1 reads higher: the mean of the two open-weight models
-    # published on both boards (GLM 5.2 19.2 -> 24.5, Kimi K2.7 22.0 -> 30.06).
-    "frontiercode_1_1": ("frontiercode_1_0", 1.32),
+    # FrontierCode is aggregated through Extended, so the conversion targets
+    # that column: x2.076, the mean of the two open-weight models carrying both
+    # (GLM 5.2 19.2 -> 40.1, Kimi K2.7 22.0 -> 45.4). It crosses a revision and
+    # a subset at once, which is one more gap than the others cross, but it is
+    # fitted the same way and on the same overlap -- and it is the whole of what
+    # keeps the four models published on 1.0 alone (both MiniMax M2 releases,
+    # Kimi K2.5 and K2.6) in this benchmark's comparisons at all. The factor
+    # decomposes about as expected: 1.32 of revision drift on Main times ~1.57
+    # of Main-to-Extended.
+    #
+    # frontiercode_1_1 needs no entry of its own now that it is not aggregated;
+    # a fallback only ever fills a hole in a column the index reads.
+    "frontiercode_extended_1_1": ("frontiercode_1_0", 2.076),
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's
     # scale to carry: its column is a pairwise win rate over a 17-model field,

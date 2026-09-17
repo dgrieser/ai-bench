@@ -90,13 +90,18 @@ class TestRowFetchers(unittest.TestCase):
     # same collision resolves one level down. The current revision is named per
     # source: FrontierSWE numbered its re-run 2.0 where the others went to 1.1,
     # and a row naming a revision its benchmark has no column for is refused
-    # rather than filed (see TestRevisionRouting).
+    # rather than filed (see TestRevisionRouting). `extra` carries whatever else
+    # a source needs on a row before it can be filed at all -- FrontierCode
+    # splits on its task subset as well, so its rows name one.
     REVISION_CASES = [
-        ("deepswe", "fetch_deepswe_data", "deepswe", "1.1"),
-        ("datacurve", "fetch_datacurve_data", "deepswe", "1.1"),
-        ("frontiercode", "fetch_frontiercode_data", "frontiercode", "1.1"),
-        ("frontierswe", "fetch_frontierswe_data", "frontierswe", "2.0"),
-        ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon", "1.1"),
+        ("deepswe", "fetch_deepswe_data", "deepswe", "1.1", {}),
+        ("datacurve", "fetch_datacurve_data", "deepswe", "1.1", {}),
+        (
+            "frontiercode", "fetch_frontiercode_data", "frontiercode", "1.1",
+            {"subset": "main"},
+        ),
+        ("frontierswe", "fetch_frontierswe_data", "frontierswe", "2.0", {}),
+        ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon", "1.1", {}),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:
@@ -113,11 +118,11 @@ class TestRowFetchers(unittest.TestCase):
                     self.assertEqual(by_slug["m"][score_key], 45.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
-        for source, func_name, base, revision in self.REVISION_CASES:
+        for source, func_name, base, revision, extra in self.REVISION_CASES:
             mapping = write_json({"Model": "m", "Model [high]": "m"})
             rows = [
-                {"model": "Model", "revision": revision, "score": 30.0},
-                {"model": "Model [high]", "revision": revision, "score": 45.0},
+                {"model": "Model", "revision": revision, "score": 30.0, **extra},
+                {"model": "Model [high]", "revision": revision, "score": 45.0, **extra},
             ]
             key = f"{base}_{revision.replace('.', '_')}"
             for order in (rows, list(reversed(rows))):
@@ -248,8 +253,8 @@ class TestRevisionRouting(unittest.TestCase):
         """Two leaderboard names folding onto one slug, one per revision."""
         mapping = write_json({"Model": "m", "Model Redux": "m"})
         rows = [
-            {"model": "Model", "revision": "1.0", "score": 45.0},
-            {"model": "Model Redux", "revision": "1.1", "score": 30.0},
+            {"model": "Model", "revision": "1.0", "subset": "main", "score": 45.0},
+            {"model": "Model Redux", "revision": "1.1", "subset": "main", "score": 30.0},
         ]
         for order in (rows, list(reversed(rows))):
             with self.subTest(first=order[0]["model"]):
@@ -258,10 +263,45 @@ class TestRevisionRouting(unittest.TestCase):
                 self.assertEqual(by_key["frontiercode_1_0"]["m"]["score"], 45.0)
                 self.assertEqual(by_key["frontiercode_1_1"]["m"]["score"], 30.0)
 
+    def test_fetch_routes_the_task_subsets_apart(self) -> None:
+        """Main and Extended are one run scored twice, ten points apart.
+
+        Letting them compete for one column would be the same blend the
+        revision split exists to end, so each lands in its own.
+        """
+        mapping = write_json({"Model": "m"})
+        rows = [
+            {"model": "Model", "revision": "1.1", "subset": "main", "score": 30.0},
+            {"model": "Model", "revision": "1.1", "subset": "extended", "score": 43.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["subset"]):
+                with stub_run(order):
+                    by_key = update.fetch_frontiercode_data(SCRIPT, mapping)
+                self.assertEqual(by_key["frontiercode_1_1"]["m"]["score"], 30.0)
+                self.assertEqual(
+                    by_key["frontiercode_extended_1_1"]["m"]["score"], 43.0
+                )
+
     def test_fetch_drops_rows_naming_no_revision(self) -> None:
         mapping = write_json({"Model": "m"})
-        with stub_run([{"model": "Model", "score": 45.0}]):
+        with stub_run([{"model": "Model", "subset": "main", "score": 45.0}]):
             self.assertEqual(update.fetch_frontiercode_data(SCRIPT, mapping), {})
+
+    def test_fetch_drops_rows_whose_subset_has_no_column(self) -> None:
+        # No subset named at all, a subset nothing tracks, and the one board
+        # published without a column of its own: 1.0's Extended.
+        mapping = write_json({"Model": "m"})
+        for row in (
+            {"model": "Model", "revision": "1.1", "score": 45.0},
+            {"model": "Model", "revision": "1.1", "subset": "diamond", "score": 45.0},
+            {"model": "Model", "revision": "1.0", "subset": "extended", "score": 45.0},
+        ):
+            with self.subTest(subset=row.get("subset")):
+                with stub_run([row]):
+                    self.assertEqual(
+                        update.fetch_frontiercode_data(SCRIPT, mapping), {}
+                    )
 
 
 class TestLlmstatsMerge(unittest.TestCase):
