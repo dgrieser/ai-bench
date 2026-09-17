@@ -36,14 +36,17 @@ def index(*contributing, ratio: float = 0.0) -> di.IndexDef:
 
 
 class TestComparisons(unittest.TestCase):
-    def test_a_pair_is_worth_the_benchmark_weight(self) -> None:
+    def test_a_pair_is_worth_the_benchmarks_share(self) -> None:
         record = di.comparisons(
             [model("hi", b=90.0), model("lo", b=10.0)], DOC, index(("b", 0.7))
         )
-        self.assertEqual(record.wins[("hi", "lo")], 0.7)
+        # One benchmark, so its share of the index is all of it, and the pair
+        # is the only comparison there is to carry it.
+        self.assertEqual(record.weight, {"b": 1.0})
+        self.assertEqual(record.wins[("hi", "lo")], 1.0)
         self.assertEqual(record.wins[("lo", "hi")], 0.0)
-        self.assertEqual(record.pairs[("hi", "lo")], 0.7)
-        self.assertEqual(record.pairs[("lo", "hi")], 0.7)
+        self.assertEqual(record.pairs[("hi", "lo")], 1.0)
+        self.assertEqual(record.pairs[("lo", "hi")], 1.0)
 
     def test_equal_values_split_the_comparison(self) -> None:
         record = di.comparisons(
@@ -51,6 +54,51 @@ class TestComparisons(unittest.TestCase):
         )
         self.assertEqual(record.wins[("a", "c")], 0.5)
         self.assertEqual(record.wins[("c", "a")], 0.5)
+
+    def test_a_benchmark_gives_each_model_its_share_whatever_the_field_size(
+        self,
+    ) -> None:
+        """The property that makes a weight mean what INDEXES says it means.
+
+        Weighting every pair equally would let a wide board outvote a heavy
+        one: a model on a 100-model benchmark collects 99 comparisons where one
+        on a 3-model benchmark collects 2.
+        """
+        spec = index(("wide", 1.0), ("narrow", 1.0))
+        models = [model(f"w{i}", wide=float(i)) for i in range(20)]
+        models += [model(f"n{i}", narrow=float(i)) for i in range(3)]
+        models += [model("both", wide=5.0, narrow=1.0)]
+        record = di.comparisons(models, DOC, spec)
+
+        def mass(name: str, peers: list[str]) -> float:
+            return sum(record.pairs.get((name, p), 0.0) for p in peers)
+
+        wide = [m["name"] for m in models if "wide" in m["scores"]]
+        narrow = [m["name"] for m in models if "narrow" in m["scores"]]
+        self.assertAlmostEqual(mass("w0", wide), 0.5)
+        self.assertAlmostEqual(mass("n0", narrow), 0.5)
+        # The model on both collects a full share from each.
+        self.assertAlmostEqual(
+            mass("both", wide + narrow), 1.0
+        )
+
+    def test_comparison_mass_equals_the_coverage_share(self) -> None:
+        """The fit and the shrinkage read the same quantity."""
+        spec = index(("a", 1.0), ("b", 0.5), ("c", 0.5))
+        models = [
+            model("full", a=90.0, b=90.0, c=90.0),
+            model("mid", a=50.0, b=50.0, c=50.0),
+            model("partial", a=70.0),
+        ]
+        record = di.comparisons(models, DOC, spec)
+        peers = ["full", "mid", "partial"]
+        for name in peers:
+            covered = sum(
+                w for k, w in record.weight.items()
+                if k in next(m for m in models if m["name"] == name)["scores"]
+            )
+            got = sum(record.pairs.get((name, p), 0.0) for p in peers)
+            self.assertAlmostEqual(got, covered, msg=name)
 
     def test_a_lower_is_better_column_compares_the_other_way(self) -> None:
         record = di.comparisons(
@@ -126,8 +174,9 @@ class TestFieldStrength(unittest.TestCase):
             )
             for name in ("x-last-among-strong", "y-last-among-weak")
         }
-        self.assertEqual(covered["x-last-among-strong"], 2.0)
-        self.assertEqual(covered["y-last-among-weak"], 2.0)
+        # Two of the three equally weighted benchmarks, as a share.
+        self.assertAlmostEqual(covered["x-last-among-strong"], 2 / 3)
+        self.assertAlmostEqual(covered["y-last-among-weak"], 2 / 3)
 
 
 class TestCoverageReliability(unittest.TestCase):
@@ -204,9 +253,12 @@ class TestUnranked(unittest.TestCase):
         self.assertIsNone(di.compute_index(models, DOC, spec)["sliver"])
 
         record = di.comparisons(models, DOC, spec)
-        self.assertEqual(record.pairs[("sliver", "full")], 0.1)
+        # e is 0.1 of a declared 4.1, split over the two comparisons it
+        # supports, so each pair on it carries share/(n-1).
+        per_pair = (0.1 / 4.1) / 2
+        self.assertAlmostEqual(record.pairs[("sliver", "full")], per_pair)
         self.assertEqual(record.wins[("sliver", "full")], 0.0)
-        self.assertEqual(record.wins[("sliver", "also-full")], 0.1)
+        self.assertAlmostEqual(record.wins[("sliver", "also-full")], per_pair)
         self.assertIn("sliver", di.bradley_terry(record))
 
 
@@ -248,6 +300,130 @@ class TestScale(unittest.TestCase):
         # The middle of a symmetric three-model field wins about half of its
         # head-to-heads.
         self.assertAlmostEqual(values["mid"] / di.SCALE, 0.5, places=2)
+
+
+class TestOnlyRatiosMatter(unittest.TestCase):
+    """IndexDef's contract: scaling every weight leaves the ranking alone.
+
+    It is worth a test rather than a comment because two constants are read
+    against the weights -- BT_PRIOR and transfer_ratio -- and if the weights
+    reached them unnormalised, scaling would quietly change both the
+    data-to-prior balance and how hard a partly covered model is shrunk. With
+    ragged coverage that moves models past each other, not just their scores.
+    """
+
+    MODELS = [
+        model("a", x=90.0, y=20.0, z=70.0),
+        model("b", x=60.0, y=80.0),
+        model("c", x=30.0, z=40.0),
+        model("d", y=50.0, z=10.0),
+        model("e", x=75.0, y=65.0, z=55.0),
+        model("f", x=10.0),
+    ]
+    SPEC = [("x", 1.0), ("y", 0.6), ("z", 0.3)]
+
+    def values(self, factor: float) -> dict:
+        return di.compute_index(
+            self.MODELS,
+            DOC,
+            index(*[(k, w * factor) for k, w in self.SPEC], ratio=0.4),
+        )
+
+    def test_scaling_every_weight_changes_nothing(self) -> None:
+        base = self.values(1.0)
+        for factor in (0.01, 0.5, 10.0, 1000.0):
+            with self.subTest(factor=factor):
+                self.assertEqual(self.values(factor), base)
+
+    def test_the_shares_are_what_reaches_the_arithmetic(self) -> None:
+        for factor in (1.0, 10.0):
+            record = di.comparisons(
+                self.MODELS,
+                DOC,
+                index(*[(k, w * factor) for k, w in self.SPEC]),
+            )
+            self.assertAlmostEqual(sum(record.weight.values()), 1.0)
+            self.assertAlmostEqual(record.weight["x"], 1.0 / 1.9)
+
+
+class TestCalibrationIsHeldOut(unittest.TestCase):
+    """`--calibrate` asks what one benchmark alone would have said.
+
+    The trap is that a Comparisons record pools every benchmark a pair share,
+    so handing apparent_ability the whole index would score the rest of the
+    index against a target it had already been folded into, and read the
+    benchmarks as far more mutually predictive than they are.
+    """
+
+    # `a` needs a mixed record on `held`: a model that loses every comparison
+    # there has no finite ability, and apparent_ability rightly says so.
+    MODELS = [
+        model("a", held=50.0, other=40.0),
+        model("b", held=90.0, other=50.0),
+        model("c", held=70.0, other=60.0),
+        model("d", held=30.0, other=20.0),
+    ]
+    SPEC = index(("held", 1.0), ("other", 1.0))
+
+    def held_out_only(self) -> di.Comparisons:
+        return di.comparisons(self.MODELS, DOC, index(("held", 1.0)))
+
+    def field(self) -> dict:
+        return di.bradley_terry(
+            di.comparisons(self.MODELS, DOC, index(("other", 1.0)))
+        )
+
+    def test_a_non_held_out_score_cannot_move_the_measurement(self) -> None:
+        field = self.field()
+        base = di.apparent_ability(
+            "a", "held", self.MODELS, field, self.held_out_only()
+        )
+        self.assertIsNotNone(base)
+        for other_score in (1.0, 99.0):
+            moved = [
+                model("a", held=50.0, other=other_score),
+                *self.MODELS[1:],
+            ]
+            record = di.comparisons(moved, DOC, index(("held", 1.0)))
+            got = di.apparent_ability("a", "held", moved, field, record)
+            self.assertEqual(got, base, f"other={other_score} leaked in")
+
+    def test_the_whole_index_record_would_have_leaked(self) -> None:
+        """Pins why the held-out record is built, so the call site is not
+        'simplified' back to passing `full`."""
+        field = self.field()
+        seen = set()
+        for other_score in (1.0, 99.0):
+            moved = [
+                model("a", held=50.0, other=other_score),
+                *self.MODELS[1:],
+            ]
+            whole = di.comparisons(moved, DOC, self.SPEC)
+            seen.add(di.apparent_ability("a", "held", moved, field, whole))
+        self.assertEqual(
+            len(seen), 2, "expected the pooled record to leak; it did not"
+        )
+
+    def test_calibrate_reports_a_ratio_and_a_sample(self) -> None:
+        models = [
+            model("a", p=90.0, q=85.0, r=80.0),
+            model("b", p=70.0, q=40.0, r=60.0),
+            model("c", p=50.0, q=60.0, r=20.0),
+            model("d", p=30.0, q=20.0, r=55.0),
+            model("e", p=10.0, q=75.0, r=35.0),
+        ]
+        spec = index(("p", 1.0), ("q", 0.8), ("r", 0.5))
+        measured = di.calibrate(models, DOC, spec)
+        self.assertIsNotNone(measured)
+        ratio, sample = measured
+        self.assertGreater(ratio, 0.0)
+        self.assertGreater(sample, 0)
+
+    def test_an_index_too_small_to_hold_one_out_returns_none(self) -> None:
+        models = [model("a", p=90.0, q=10.0), model("b", p=10.0, q=90.0)]
+        self.assertIsNone(
+            di.calibrate(models, DOC, index(("p", 1.0), ("q", 1.0)))
+        )
 
 
 class TestLiveIndexes(unittest.TestCase):

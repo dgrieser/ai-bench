@@ -1004,11 +1004,16 @@ How a value is produced:
    benchmark is read the other way round. That comparison is the only use a raw
    score is put to, and it is what makes the columns commensurable: "beat it on
    SciCode" needs no common unit, whereas a percentile quietly asserts one.
-2. **Weight by reliability.** Each comparison is worth the benchmark's weight from
-   `INDEXES` (1.0 for Real-SWE, the highest, down to 0.15 for SWE-bench Verified,
-   the lowest), so a win on the benchmark worth trusting counts for more than a win
-   on the weaker one. Weights are relative — scaling them all leaves the ranking
-   unchanged.
+2. **Weight by reliability.** A benchmark's weight from `INDEXES` (1.0 for Real-SWE,
+   the highest, down to 0.15 for SWE-bench Verified, the lowest) is what its
+   comparisons *add up to*, not what each one is worth: the weight is divided by the
+   group total and again by the opponents available, so a model collects exactly that
+   benchmark's share of the index from it however wide the board. Weighting each pair
+   by the raw weight instead hands the vote to field size — measured on this group,
+   Real-SWE at 1.0 supplied **1.4%** of the likelihood and SciCode at 0.35 supplied
+   **17.9%**, because 5 models offer 4 comparisons each and 147 offer 146. Dividing
+   by the total is also what keeps the weights relative: scale them all and the
+   ranking does not move.
 3. **Fit one ability per model.** A weighted [Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model)
    model says the odds of A beating B are `exp(ability_A − ability_B)`, and the fit
    is the set of abilities that best explains the comparisons actually observed. It
@@ -1022,13 +1027,14 @@ How a value is produced:
    that puts two candidates who sat different exam papers on one grade curve.
 5. **Believe a thin measurement less.** A benchmark is one draw from the construct
    the index is named after, and its weight says how much that draw can be
-   trusted — so a weight is a precision, and the weights a model was measured on
+   trusted — so a weight is a precision, and the shares a model was measured on
    add up. Its fitted ability is shrunk toward the middle of the field by
    [Kelley's formula](https://en.wikipedia.org/wiki/Regression_toward_the_mean),
-   `Σw / (Σw + transfer_ratio)`: total weight measured is what buys reliability,
-   so one heavy benchmark can be worth more than three light ones. How hard that
-   bites is measured, not chosen: see
-   [below](#how-far-one-benchmark-speaks-for-the-others).
+   `Σshare / (Σshare + transfer_ratio)`: the share of the index measured is what
+   buys reliability, so one heavy benchmark can be worth more than three light
+   ones. It is the same quantity the fit weighs comparisons by and the same one
+   `MIN_SCORED_FRACTION` is a bar on. How hard it bites is measured, not chosen:
+   see [below](#how-far-one-benchmark-speaks-for-the-others).
 6. **Refuse to guess.** A benchmark with fewer than two scored models supports no
    comparison and is dropped from the total weight. A model measured on less than
    `MIN_SCORED_FRACTION` (18%, see [below](#why-the-evidence-bar-is-18)) of that
@@ -1294,7 +1300,7 @@ next one.
 percentile method scored a model against a fixed total weight, so admitting more
 models left the incumbents' numbers alone. A win rate is taken against the ranked
 field, so enlarging that field moves everyone: dropping the Coding bar from 0.18 to
-0.12 moves **all 89** ranked values, by a mean of 4,284 points and 8.8 places, because
+0.12 moves **all 89** ranked values, by a mean of 4,233 points and 8.9 places, because
 the arrivals are weaker than the field they join and every incumbent now beats more of
 it. That makes the threshold a heavier decision than it was, and it is the reason
 `derive_indexes.py` recomputes every index whenever anything in `llm.json` moves.
@@ -1318,8 +1324,8 @@ weight could not score above 56,000 however well it did, because the missing 88%
 filled at the median and never above it. There is no such cap any more — nothing is
 imputed, so there is nothing to cap. What replaces it is the coverage shrinkage, and
 at the coding group's calibrated `transfer_ratio` that is deliberately mild: a model
-on 12% of the weight keeps 94% of its distance from the middle and could in principle
-reach **96,603** by topping everything it ran, against 96,979 at 18% and 97,182 at 25%.
+on 12% of the weight keeps 89% of its distance from the middle and could in principle
+reach **96,654** by topping everything it ran, against 97,301 at 18% and 97,643 at 25%.
 Those three numbers being nearly equal is the point — the shrinkage is not a
 gatekeeper, because [the data says coding benchmarks transfer](#how-far-one-benchmark-speaks-for-the-others).
 Whether a thinly measured model is ranked at all is therefore decided here and nowhere
@@ -1373,45 +1379,56 @@ whole method, so it is measured rather than chosen, per index, by
 benchmark removed, then ask what that benchmark *alone* would have said about each
 model. The gap between the two is what the rest of the index could not have
 predicted — which is exactly the exposure a model with gaps carries. Pooling those
-gaps gives the variance of a unit weight's worth of one benchmark, and dividing by
-the variance between models puts it in the units Kelley's formula needs. Only
-models already measured on at least 30% of the *remaining* weight are asked, since
-the question is whether a benchmark agrees with a trustworthy estimate, not whether
-two thin estimates agree.
+gaps, scaled by the held-out benchmark's share, gives the variance Kelley's formula
+needs once it is divided by the variance between models. Only models already
+measured on at least 30% of the *remaining* weight are asked, since the question is
+whether a benchmark agrees with a trustworthy estimate, not whether two thin
+estimates agree.
 
-Held out rather than measured in place, because the fit has already minimised the
-in-place residual: on the coding group that reads 0.311 against a true 1.322, a
-fourfold understatement that would have shrunk nobody.
+Two things have to be true of "alone" for any of this to mean anything, and both
+are easy to get wrong:
 
-| Index | `transfer_ratio` | Group weight | A model on the 1.0 anchor alone keeps | Fully measured keeps |
-| --- | --- | --- | --- | --- |
-| Vision | 0.010 | 2.75 | 99.0% | 99.6% |
-| Tooling | 0.022 | 6.15 | 97.8% | 99.6% |
-| Knowledge | 0.029 | 3.70 | 97.2% | 99.2% |
-| Coding | 0.053 | 7.30 | 95.0% | 99.2% |
-| **Trust** | **0.693** | **2.35** | **59.1%** | **77.2%** |
+- **Held out, not measured in place.** The fit has already minimised the in-place
+  residual: on the coding group that reads 0.311 against a true 1.322, a fourfold
+  understatement that would have shrunk nobody.
+- **The held-out benchmark's comparisons and no others.** A `Comparisons` record
+  pools every benchmark a pair share, so handing the whole index to
+  `apparent_ability()` asks what the model did *overall* against the opponents that
+  happen to have run this benchmark — feeding the estimate being tested back into
+  its own target. That bug shipped in the first draft of this work and understated
+  every ratio by between two and nine times; `test_index_math.py` now pins it.
 
-**Trust is thirteen times the coding group and seventy times Vision, and that is
-the finding, not a quirk.** A hallucination rate, an accuracy, a long-context
-recall and an instruction-following score are nearly separate constructs; the
-models also sit close together on all of them, so the between-model variance the
-ratio is divided by is small — an eighth of the coding group's. Both effects push
-the same way: on Trust, one member says little about the next, and a model measured
-on two of the four is being over-claimed unless it is shrunk hard. It is.
+| Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
+| --- | --- | --- | --- |
+| Coding | 0.015 | 92% | 98.5% |
+| Tooling | 0.019 | 90% | 98% |
+| Vision | 0.034 | 84% | 97% |
+| Knowledge | 0.072 | 71% | 93% |
+| **Trust** | **1.522** | **11%** | **40%** |
 
-The other four are mild, and that is equally a finding. Coding benchmarks agree
-well enough that three of the twelve really do say a good deal about a model — which
-is why `hy4-preview`, measured on Terminal-Bench 2.1, SWE-bench Pro and SWE-bench
-Multilingual and placing top-decile on all three, ranks fourth. Under the old
-method it sat at 59,096, held there by the imputation cap rather than by evidence.
-Whether that is right is now an empirical question with an answer on this page
-rather than a policy baked into the arithmetic, and the answer moves when the data
-does: re-run `--calibrate` after a group gains or loses a member.
+The ratio is a share of the group, so these five are directly comparable with each
+other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
+them.
 
-One consequence worth stating plainly: because the ratio is in units of weight, it
-is read against the group's total. The same 0.053 would be severe in a group whose
-weights summed to 1 and negligible in one summing to 50. That is deliberate — it is
-what makes "measured on more weight" and "believed more" the same statement.
+**Trust is a hundred times the coding group, and that is the finding, not a
+quirk.** A hallucination rate, an accuracy, a long-context recall and an
+instruction-following score are nearly separate constructs; the models also sit
+close together on all of them, so the between-model variance the ratio is divided
+by is small while the disagreement above it is not. Past 1.0 it means one member
+says less about the next than the field's own spread does. The column pays for that
+honestly: even a model measured on all four keeps only 40% of its distance from the
+middle, which is why the Trust column is visibly more compressed than the other
+four. That is not a defect in the column, it is the column declining to extrapolate
+from evidence that does not support it.
+
+The other four are mild. Coding benchmarks agree well enough that three of the
+twelve really do say a good deal about a model — which is why `hy4-preview`,
+measured on Terminal-Bench 2.1, SWE-bench Pro and SWE-bench Multilingual and
+placing top-decile on all three, still ranks eighth. Under the old method it sat at
+59,096, held there by the imputation cap rather than by evidence. Whether that is
+right is now an empirical question with an answer on this page rather than a policy
+baked into the arithmetic, and the answer moves when the data does: re-run
+`--calibrate` after a group gains or loses a member.
 
 ## Tooling Index
 
@@ -1457,7 +1474,7 @@ question-answering columns. See [what it leaves
 out](#what-the-knowledge-index-leaves-out).
 
 It overlaps its siblings more than this section used to claim. Against the models
-it shares with them, the Knowledge ranking agrees with Coding at Spearman **0.95**
+it shares with them, the Knowledge ranking agrees with Coding at Spearman **0.94**
 (86 models) and with Tooling at **0.94** (107). Those figures read 0.79 and 0.84
 when they were first written, and the argument built on them — that this is far
 from the 0.9x an index would show if it were re-measuring its siblings — no longer
@@ -1474,7 +1491,7 @@ same thing; it stopped a measurement artifact from making them look more
 different than they are.
 
 Two things say the columns are still distinct rather than flattened. Inside the
-top 20 the agreement drops sharply — **0.78** against Coding and **0.61** against
+top 20 the agreement drops sharply — **0.67** against Coding and **0.59** against
 Tooling — so among the models a reader is actually choosing between, the ranking
 is its own. And [Trust](#trust-index) still stands apart from all four on a mean
 of 0.83 against 0.90–0.93, which a method that merely collapsed distinctions
@@ -1563,8 +1580,8 @@ Three consequences, all different from the other two indexes:
   property the evidence bar exists to protect elsewhere and gets for free here, and
   it is why the coverage shrinkage barely moves this column: almost everyone in it
   has enough weight measured to be believed nearly in full.
-- **The scale earns its width.** 155 ranked values put the closest pair **11 index
-  points** apart (Coding's is 16) with no two colliding. On a 0–100 scale a good part
+- **The scale earns its width.** 155 ranked values put the closest pair **5 index
+  points** apart (Coding's is 8) with no two colliding. On a 0–100 scale a good part
   of this mid-field would have rounded into ties, which is the argument for `SCALE`
   made visible.
 
@@ -1573,9 +1590,9 @@ directions. `ornith-1-5-397b` is measured on two of the six and places 6th on HL
 8th on GPQA Diamond; it went from **37th to 6th** when the fill was removed, because
 its four blanks were previously dragging it back toward the middle. `k2-1b-final` is
 measured on three and placed 131st, 149th and 49th on them; it went from **124th to
-144th**, because its three blanks had been quietly lifting it *toward* the middle.
-Across the column, models measured on three members or fewer gained a mean of 4.7
-places and those measured on five or more lost 0.9 — which is the old fill's
+135th**, because its three blanks had been quietly lifting it *toward* the middle.
+Across the column, models measured on three members or fewer gained a mean of 4.9
+places and those measured on five or more lost 1.0 — which is the old fill's
 asymmetry being unwound rather than a new bias, and the reason a blank now does
 nothing in either direction.
 
@@ -1611,11 +1628,11 @@ rather than burying. Against the models it shares with them:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | 0.95 (45 models) | 0.78 |
-| vs [Tooling](#tooling-index) | 0.94 (55) | 0.78 |
-| vs [Knowledge](#knowledge-index) | 0.95 (58) | 0.78 |
-| vs AA Intelligence Index | 0.96 (58) | 0.83 |
-| vs GPQA Diamond | 0.96 (57) | 0.82 |
+| vs [Coding](#coding-index) | 0.95 (45 models) | 0.75 |
+| vs [Tooling](#tooling-index) | 0.94 (55) | 0.85 |
+| vs [Knowledge](#knowledge-index) | 0.95 (58) | 0.80 |
+| vs AA Intelligence Index | 0.96 (58) | 0.87 |
+| vs GPQA Diamond | 0.96 (57) | 0.84 |
 
 On a mean of 0.92 against the other four it is second-least independent, a shade
 ahead of [Knowledge](#knowledge-index) at 0.93 and well behind
@@ -1623,10 +1640,9 @@ ahead of [Knowledge](#knowledge-index) at 0.93 and well behind
 mostly a range effect: the 58 ranked models run from `qwen3-5-0-8b` to 400B-plus
 mixtures of experts, and across a spread that wide nearly every capability column
 agrees with nearly every other. Inside the top 20 — where a reader actually
-chooses between models — it loosens to 0.78, though less than it used to: these
-figures read 0.41 to 0.58 before the [Bradley-Terry
-rewrite](#coding-index) removed the median fill, which was depressing them with
-coverage noise rather than with independence.
+chooses between models — it loosens only to 0.75-0.87, and it used to read 0.41
+to 0.58: the [Bradley-Terry rewrite](#coding-index) removed the median fill, which
+was depressing these figures with coverage noise rather than with independence.
 
 So this column does not earn its place by being orthogonal to the other three.
 It earns it by covering a **modality** none of them touches, by saying so about
@@ -1729,8 +1745,8 @@ Two other properties of the current field:
 - **58 ranked, 57 distinct values.** The one tie is not a rounding artifact and
   no weighting can remove it: `devstral-small-2` and `gemma-4-e2b` both score
   44.6 on MMMU Pro and have no other score in the group, so their evidence is
-  byte-identical and the index is right to tie them at 11,972.
-- **The range is the widest of the five**, 499 to 99,471, because the
+  byte-identical and the index is right to tie them at 12,114.
+- **The range is the widest of the five**, 171 to 99,644, because the
   multimodal field in this table runs from 0.8B models to frontier mixtures of
   experts with very little in between.
 
@@ -1775,20 +1791,26 @@ the reason is worth keeping on the page. Against the models it shares with each:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | **0.76** (82 models) | **0.37** |
-| vs [Tooling](#tooling-index) | 0.83 (103) | 0.29 |
-| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.37 |
-| vs [Vision](#vision-index) | 0.85 (58) | 0.48 |
-| vs AA Intelligence Index | 0.86 (148) | 0.34 |
-| vs GPQA Diamond | 0.80 (145) | 0.26 |
-| vs HLE | 0.76 (142) | 0.32 |
+| vs [Coding](#coding-index) | **0.76** (82 models) | **0.15** |
+| vs [Tooling](#tooling-index) | 0.84 (103) | **0.05** |
+| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.23 |
+| vs [Vision](#vision-index) | 0.85 (58) | 0.37 |
+| vs AA Intelligence Index | 0.86 (148) | 0.15 |
+| vs GPQA Diamond | 0.82 (145) | 0.14 |
+| vs HLE | 0.78 (142) | 0.17 |
 
 Mean correlation with the other four indexes: **Trust 0.83**, against Coding
 0.90, Tooling 0.92, Vision 0.92 and Knowledge 0.93. Trust against Coding, 0.76,
 is still the lowest figure any two of these five columns produce. Inside the top
-20 every relationship roughly halves — among models a reader would actually
-choose between, knowing which is more capable tells you much less about which
-will make something up.
+20 the relationship all but disappears — **0.05** against Tooling, 0.14 against
+GPQA Diamond, 0.15 against Coding — so among the models a reader would actually
+choose between, knowing which is more capable tells you close to nothing about
+which will make something up. That head-on independence is sharper than it was
+before this column started shrinking partial evidence hard (see
+[below](#how-far-one-benchmark-speaks-for-the-others)): with a
+`transfer_ratio` of 1.522, a model measured on two of the four members is barely
+allowed to leave the middle of the field, and what survives at the top is the
+models that carry the whole group.
 
 **These figures used to read 0.44 / 0.66 / 0.78 / 0.77, and the drop is mostly
 the cost of AA-Omniscience Accuracy landing.** Accuracy is the knowledge half of
@@ -1797,7 +1819,8 @@ the column toward capability — the exact trade its weight was chosen to make,
 argued in its row below, and now paid rather than predicted. Re-running the old
 percentile math on today's data gives 0.65 / 0.80 / 0.89 / 0.82, so most of the
 move is the new member and the growth of the table; switching to the
-[Bradley-Terry fit](#coding-index) added roughly 0.03 on top. The column still
+[Bradley-Terry fit](#coding-index) added between nothing and 0.11 on top,
+depending on the sibling. The column still
 measures something the other four do not — `deepseek-v4-1-flash` falling 91
 places is not a capability ranking — but "no correlation at all" is no longer a
 claim this page can make.

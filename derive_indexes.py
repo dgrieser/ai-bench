@@ -15,10 +15,18 @@ evidence for it is ragged: no two models are measured on the same set of
 benchmarks.
 
   * Every benchmark contributes comparisons, not scores. For each benchmark,
-    every pair of models that both carry a score is compared once, and the
-    comparison is worth that benchmark's reliability weight from INDEXES
-    below. A pair whose values are equal to within nearly_equal() splits the
-    comparison. A lower-is-better column compares the other way round.
+    every pair of models that both carry a score is compared once. A pair whose
+    values are equal to within nearly_equal() splits the comparison, and a
+    lower-is-better column compares the other way round.
+  * A benchmark's reliability weight from INDEXES is what those comparisons add
+    up to, not what each one is worth: the weight is divided by the total and
+    again by the opponents available, so a model collects exactly that
+    benchmark's share of the index from it however wide the board. Weighting
+    each pair by the raw weight instead would hand the vote to field size --
+    measured on the coding group, Real-SWE at 1.0 supplied 1.4% of the
+    likelihood and SciCode at 0.35 supplied 17.9%. Dividing by the total is
+    also what keeps the weights relative, so scaling every one of them leaves
+    the ranking alone.
   * That is the whole use a raw score is put to, and it is what makes the
     columns commensurable. "Model A beat model B on SciCode" needs no common
     unit; a percentile does. The older method averaged percentiles taken from
@@ -43,8 +51,9 @@ benchmarks.
     evidence there is. Unlike the median fill it is symmetric: it never helps
     a weak model more than a strong one.
   * A benchmark nobody can be ranked on (fewer than two scored models) yields
-    no comparisons and is left out of the total weight so it dilutes nobody.
-  * A model measured on less than MIN_SCORED_FRACTION of the total weight is
+    no comparisons and is left out of the total before the shares are taken, so
+    it dilutes nobody.
+  * A model measured on less than MIN_SCORED_FRACTION of the index's weight is
     left unranked (null) rather than scored. The bar is about how much of the
     construct was covered, not about statistical confidence: a model measured
     on one benchmark against a hundred opponents is precisely estimated on
@@ -110,14 +119,16 @@ class IndexDef(NamedTuple):
     derived score, so the source is the README section documenting the method),
     the contributing benchmarks with their reliability weights, and how far one
     of those benchmarks generalises to the rest. Weights are relative, so only
-    their ratios matter; scale them all and the ranking does not move.
+    their ratios matter; scale them all and the ranking does not move, because
+    comparisons() divides them by their own total before anything reads them.
 
-    `transfer_ratio` is how far a unit weight's worth of one benchmark misses
+    `transfer_ratio` is how far a whole index's worth of one benchmark misses
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
-    It is in units of weight, so it is read against the group's total: 0.053
-    against the coding group's 7.3 is mild, 0.693 against Trust's 2.35 is not.
-    It sets how hard a thinly covered model is shrunk toward the middle (see
+    It is in shares of the group, so the five are directly comparable with each
+    other and with MIN_SCORED_FRACTION: Coding's 0.015 leaves a fully measured
+    model 98.5% of its distance from the middle, Trust's 1.522 leaves it 40%.
+    It sets how hard a thinly covered model is pulled toward the middle (see
     coverage_reliability), and it is measured rather than chosen: run
     ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
     and shrinks nobody.
@@ -164,14 +175,13 @@ INDEXES: list[IndexDef] = [
             ("swe_atlas_qna", 0.25),
             ("swe_bench_verified", 0.15),
         ],
-        # Coding benchmarks largely agree: hold one out and the rest predict
-        # it to within a twentieth of a unit weight's worth of the spread
-        # between models. Against a group weight of 7.3 that is mild -- a model
-        # on 18% of the weight keeps 96% of its distance from the middle, one
-        # measured throughout 99% -- which is the data's verdict, not a
-        # preference: a model that places top-decile on three coding benchmarks
-        # really is unlikely to be mid-field on the rest.
-        transfer_ratio=0.053,
+        # The lowest of the five: coding benchmarks predict each other well.
+        # Hold one out and the rest miss it by a sixty-fifth of the spread
+        # between models, so a fully measured model keeps 98.5% of its distance
+        # from the middle and one at the 18% bar keeps 92%. That is the data's
+        # verdict rather than a preference: a model placing top-decile on three
+        # coding benchmarks really is unlikely to be mid-field on the rest.
+        transfer_ratio=0.015,
     ),
     IndexDef(
         key="tooling_index",
@@ -188,9 +198,9 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # Tool-use benchmarks agree more closely still, over a wider group
-        # weight, so this shrinks almost nobody.
-        transfer_ratio=0.022,
+        # Almost as low, over the widest group here, so this shrinks little:
+        # 98% kept when fully measured, 90% at the 18% bar.
+        transfer_ratio=0.019,
     ),
     IndexDef(
         key="knowledge_index",
@@ -219,9 +229,11 @@ INDEXES: list[IndexDef] = [
             # honesty, which is why they are worth aggregating there and not
             # here.
         ],
-        # A knowledge benchmark predicts its siblings well -- the group's
-        # members correlate 0.61 to 0.83 with each other, and it shows.
-        transfer_ratio=0.029,
+        # Five times the coding group's, which is not what the members'
+        # correlations with each other suggest -- and is the point of measuring
+        # it held out rather than reading it off a correlation. A fully
+        # measured model keeps 93% of its distance, one at the 18% bar 71%.
+        transfer_ratio=0.072,
     ),
     IndexDef(
         key="vision_index",
@@ -242,13 +254,13 @@ INDEXES: list[IndexDef] = [
             # visual evidence at all -- see README, "Why GDPval-AA is left
             # out".
         ],
-        # The lowest of the five: the vision members track each other almost
-        # exactly -- MMMU Pro correlates 0.96 with MathVista-mini and 0.93 with
-        # ZeroBench -- which is the same redundancy their weights are already
-        # discounted for. The consequence is worth stating plainly: this column
-        # barely penalises a model measured on MMMU Pro alone, because on this
-        # evidence MMMU Pro predicts the rest.
-        transfer_ratio=0.010,
+        # The vision members correlate 0.93-0.97 with each other, yet held out
+        # they miss by nine times what the coding group's do. Correlation over
+        # the handful of models scored on two small boards is a far weaker
+        # guarantee than it looks. Still mild in absolute terms: a model on
+        # MMMU Pro alone -- 36% of the group, and half this column's field --
+        # keeps 91% of its distance.
+        transfer_ratio=0.034,
     ),
     IndexDef(
         key="trust_index",
@@ -274,16 +286,17 @@ INDEXES: list[IndexDef] = [
             # whose whole subject is trustworthiness -- see README, "What the
             # Trust index leaves out".
         ],
-        # Thirteen times the coding group's, seventy times Vision's, and the
-        # reason this parameter is per-index rather than global. A
-        # hallucination rate, an accuracy, a long-context recall and an
-        # instruction-following score are nearly separate constructs, and the
-        # models sit close together on all of them (the fitted spread here is
-        # an eighth of the coding group's), so one of these benchmarks says
-        # little about the next. Against a group weight of 2.35 that bites
-        # hard: a model carrying the 1.0 anchor alone keeps 59% of its
-        # distance from the middle, one measured throughout 77%.
-        transfer_ratio=0.693,
+        # A hundred times the coding group's, and the reason this parameter is
+        # per-index rather than global. A hallucination rate, an accuracy, a
+        # long-context recall and an instruction-following score are nearly
+        # separate constructs, and the models sit close together on all of
+        # them, so the between-model variance this is divided by is small while
+        # the disagreement above it is not. Above 1.0 it means one member says
+        # less about the next than the field's own spread does, and it bites
+        # accordingly: a model carrying the 1.0 anchor alone keeps 22% of its
+        # distance from the middle, one measured throughout 40%. That is the
+        # column honestly reporting how little it can lean on partial evidence.
+        transfer_ratio=1.522,
     ),
 ]
 
@@ -331,18 +344,22 @@ MIN_SCORED_FRACTION = 0.18
 # an opponent fixed at the centre of the field. It is what keeps the fit
 # finite, because a model that won every comparison it ever had has no
 # maximum-likelihood ability short of infinity, and llm.json holds several.
-# It also shrinks a thinly compared model toward the middle in proportion to
-# how little evidence stands behind it -- 0.3 against a model carrying
-# hundreds of units of comparison weight is nothing, against a model carrying
-# two it is most of the story.
+# It also pulls a thinly compared model toward the middle in proportion to how
+# little evidence stands behind it.
 #
-# 0.3 rather than a round 1.0 because the ranking has to be the data's and not
-# the prior's: at 0.3 the ordering is indistinguishable from an unregularised
-# fit (Spearman 1.00000 against 0.1, no model moving a single rank), and it
-# still holds at 1.0 (0.99997) and 3.0 (0.99974). The value is chosen from the
-# bottom of that plateau rather than the top, so the prior does the two jobs
-# above and no more.
-BT_PRIOR = 0.3
+# It is read against a model's comparison mass, which comparisons() normalises
+# to the share of the index that model was measured on -- so at most 1, and
+# 0.212 for a model on 21% of the coding group. 0.001 is therefore about a
+# thousandth of a well-covered model's evidence, and the ceiling it puts on an
+# unbeaten model is around log(1/0.001), near 7 log-odds.
+#
+# Chosen from a sweep rather than picked: the ranking keeps moving while the
+# prior is heavy (16, 14, 11 and 13 places of worst-case movement stepping down
+# 0.02 -> 0.01 -> 0.005 -> 0.002) and settles once it is not (4 places to
+# 0.001, then 3 and 3). Below that it buys nothing and costs convergence --
+# at 0.0001 the MM iteration no longer meets BT_TOLERANCE inside
+# BT_MAX_ITERATIONS. 0.001 is the top of the flat stretch.
+BT_PRIOR = 0.001
 
 # Convergence of the MM iteration, on the largest change in log-ability across
 # one sweep. 1e-10 is far tighter than the output needs: every index in
@@ -451,9 +468,16 @@ class Comparisons(NamedTuple):
     `wins[(a, b)]` is the comparison weight a took off b, `pairs[(a, b)]` the
     weight they were compared over; both are symmetric in the sense that
     wins[(a, b)] + wins[(b, a)] == pairs[(a, b)] == pairs[(b, a)]. `weight` is
-    the per-benchmark weight actually in play -- benchmarks with fewer than two
-    scored models produce no comparisons and are absent, which is what keeps
-    them out of the coverage denominator.
+    the per-benchmark *share* actually in play, summing to 1 over the
+    benchmarks that rank anybody -- benchmarks with fewer than two scored
+    models produce no comparisons and are absent, which is what keeps them out
+    of the coverage denominator.
+
+    The shares are what a model's comparisons add up to: every model scored on
+    a benchmark collects exactly `weight[key]` of comparison mass from it, so a
+    model's total mass is the share of the index it was measured on, and
+    MIN_SCORED_FRACTION, coverage_reliability and the fit are all reading the
+    same quantity.
     """
 
     wins: dict[tuple[str, str], float]
@@ -476,32 +500,61 @@ def comparisons(
     pairs: dict[tuple[str, str], float] = {}
     weight: dict[str, float] = {}
 
-    for key, benchmark_weight in index.contributing:
-        entries = scored_on(models, key)
-        if len(entries) < 2:
-            # Nobody can be compared here, so the benchmark ranks nobody and is
-            # left out of the total weight rather than diluting it.
-            continue
-        weight[key] = benchmark_weight
+    # Only benchmarks two models can be compared on rank anybody, so the rest
+    # are left out of the total rather than diluting it.
+    live = [
+        (key, benchmark_weight, scored_on(models, key))
+        for key, benchmark_weight in index.contributing
+    ]
+    live = [entry for entry in live if len(entry[2]) >= 2]
+    declared = sum(benchmark_weight for _, benchmark_weight, _ in live)
+    if declared <= 0:
+        return Comparisons(wins, pairs, weight)
+
+    for key, benchmark_weight, entries in live:
+        # Two normalisations, and the index's stated contract needs both.
+        #
+        # By the total, so only the ratios between weights matter: doubling
+        # every weight in INDEXES must leave the ranking exactly where it was,
+        # which it cannot do while BT_PRIOR and transfer_ratio are fixed
+        # amounts measured against them. After this a share is what those
+        # constants are read against, and MIN_SCORED_FRACTION -- already a
+        # share -- is on the same footing.
+        #
+        # By the field size, so a benchmark's weight is the influence it
+        # actually has. Every pair on a benchmark carrying the same weight
+        # sounds right and is not: a model on a 118-model board collects 117
+        # comparisons where one on a 5-model board collects 4, so an unweighted
+        # pair makes width, not reliability, decide the fit. Measured on the
+        # coding group before this was fixed, Real-SWE at 1.0 supplied 1.4% of
+        # the likelihood mass and SciCode at 0.35 supplied 17.9% -- the weights
+        # were being set by the boards' sizes rather than by INDEXES. Dividing
+        # by the opponents available hands each model exactly `share` of
+        # evidence from a benchmark it ran, whatever the size of the field it
+        # ran against, which is what the weight is documented to mean and what
+        # coverage_reliability already assumes.
+        share = benchmark_weight / declared
+        weight[key] = share
+        per_pair = share / (len(entries) - 1)
         lower = is_lower_better(doc, key)
         for a in range(len(entries)):
             name_a, value_a = entries[a]
             for b in range(a + 1, len(entries)):
                 name_b, value_b = entries[b]
                 if nearly_equal(value_a, value_b):
-                    share = 0.5
+                    won = 0.5
                 elif lower:
-                    share = 1.0 if value_a < value_b else 0.0
+                    won = 1.0 if value_a < value_b else 0.0
                 else:
-                    share = 1.0 if value_a > value_b else 0.0
+                    won = 1.0 if value_a > value_b else 0.0
                 forward = (name_a, name_b)
                 backward = (name_b, name_a)
-                wins[forward] = wins.get(forward, 0.0) + benchmark_weight * share
+                wins[forward] = wins.get(forward, 0.0) + per_pair * won
                 wins[backward] = (
-                    wins.get(backward, 0.0) + benchmark_weight * (1.0 - share)
+                    wins.get(backward, 0.0) + per_pair * (1.0 - won)
                 )
-                pairs[forward] = pairs.get(forward, 0.0) + benchmark_weight
-                pairs[backward] = pairs.get(backward, 0.0) + benchmark_weight
+                pairs[forward] = pairs.get(forward, 0.0) + per_pair
+                pairs[backward] = pairs.get(backward, 0.0) + per_pair
 
     return Comparisons(wins, pairs, weight)
 
@@ -598,21 +651,24 @@ def coverage_reliability(weights: list[float], transfer_ratio: float) -> float:
     A benchmark is treated as one draw from the construct the index is named
     after: it reads a model's ability plus something specific to that benchmark
     (a harness, a task mix, a scoring rule). A weight says how much that draw
-    can be trusted -- that is what "reliability weight" means, and it is why the
-    fit already counts a comparison by its weight -- so a weight is a precision,
-    and the weights a model was measured on simply add up:
+    can be trusted -- that is what "reliability weight" means, and it is why a
+    benchmark hands each model that ran it exactly its share of comparison mass
+    -- so a weight is a precision, and the shares a model was measured on
+    simply add up:
 
-        variance of the measured ability = transfer_ratio / sum(w)
+        variance of the measured ability = transfer_ratio / sum(share)
 
     in units of the between-model variance. Kelley's formula then says how much
     of an observed deviation from the middle is real, which reduces to the
-    covered weight against itself plus a constant:
+    covered share against itself plus a constant:
 
-        reliability = sum(w) / (sum(w) + transfer_ratio)
+        reliability = sum(share) / (sum(share) + transfer_ratio)
 
-    So the thing that buys reliability is total weight measured, the same
-    quantity MIN_SCORED_FRACTION is a bar on -- one heavy benchmark can be
-    worth more than three light ones, exactly as the weights claim.
+    `weights` holds the shares comparisons() computed, summing to 1 for a fully
+    measured model, so what buys reliability is the share of the index
+    measured: the same quantity MIN_SCORED_FRACTION is a bar on, and the same
+    quantity the fit weighs a model's comparisons by. One heavy benchmark can
+    be worth more than three light ones, exactly as the weights claim.
 
     This is what stops a model being ranked on the benchmarks it happens to
     have run. It is not a guess at a missing score -- nothing is imputed, and a
@@ -620,10 +676,9 @@ def coverage_reliability(weights: list[float], transfer_ratio: float) -> float:
     ability may be carried from the middle of the field before it is claiming
     more than the measurements support.
 
-    How much that bites is the data's decision, not a preference: at the coding
-    group's calibrated ratio a model on three of the twelve benchmarks keeps
-    97% of its distance, because coding benchmarks agree with each other. At
-    the Trust group's it keeps 72%, because they do not.
+    How much that bites is the data's decision, not a preference, and the
+    calibrated ratios differ by two orders of magnitude across the five groups
+    -- see the table in INDEXES and the README section they link to.
     """
     total = sum(weights)
     if total <= 0 or transfer_ratio <= 0:
@@ -729,6 +784,15 @@ def apparent_ability(
 
     A model's expected win rate rises monotonically with its ability, so this
     is a bisection rather than an optimisation.
+
+    `record` must hold the comparisons from `key` and nothing else, which is
+    the whole point of the function and easy to get wrong: a record covering
+    the rest of the index too would answer with how the model did *overall*
+    against the opponents that happen to have run this benchmark, because
+    wins[(name, other)] pools every benchmark the pair share. Calibration would
+    then be scoring the rest of the index against a target it had already been
+    folded into, and would read the benchmarks as far more mutually predictive
+    than they are.
     """
     others = [
         other for other, _ in scored_on(models, key)
@@ -817,6 +881,22 @@ def calibrate(
         record = comparisons(models, doc, rest)
         without = bradley_terry(record)
         rest_weight = sum(record.weight.values())
+        # The held-out benchmark on its own, so apparent_ability sees only what
+        # it said. Passing the whole index here would feed `without` back into
+        # the target it is being scored against -- see apparent_ability.
+        alone = comparisons(
+            models,
+            doc,
+            IndexDef(
+                key=index.key,
+                fallback_source_url=index.fallback_source_url,
+                contributing=[
+                    (key, weight)
+                    for key, weight in index.contributing
+                    if key == held_out
+                ],
+            ),
+        )
         for model in models:
             name = model.get("name")
             if not isinstance(name, str) or name not in without:
@@ -828,7 +908,7 @@ def calibrate(
             )
             if covered < CALIBRATION_MIN_COVERAGE * rest_weight:
                 continue
-            fitted = apparent_ability(name, held_out, models, without, full)
+            fitted = apparent_ability(name, held_out, models, without, alone)
             if fitted is None:
                 continue
             gaps.append((full.weight[held_out], fitted - without[name]))
