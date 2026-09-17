@@ -121,7 +121,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: Real-SWE 1.0, DeepSWE 1.1 0.75, FrontierSWE 2.0 0.9, FrontierCode 1.1 Extended 0.9, SWE-Marathon 1.1 0.9, Terminal-Bench 4.0 0.85, Terminal-Bench 2.1 0.4, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.25, SWE-bench Verified 0.15.",
+      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: Real-SWE 1.0, DeepSWE 1.1 0.75, FrontierSWE 2.0 0.9, FrontierCode 1.1 Extended 0.9, SWE-Marathon 1.1 0.9, Terminal-Bench 4.0 0.85, Terminal-Bench 2.1 0.4, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.75, SWE Atlas: Refactoring 0.75, SWE-bench Verified 0.15.",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -737,7 +737,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 14132,
+        "coding_index": 14432,
         "tooling_index": 36252,
         "knowledge_index": 27640,
         "vision_index": null,
@@ -1076,7 +1076,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "coding_index": 9676,
+        "coding_index": 9981,
         "tooling_index": 34148,
         "knowledge_index": 19048,
         "vision_index": 12126,
@@ -2070,7 +2070,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 30500,
+        "coding_index": 27405,
         "tooling_index": null,
         "knowledge_index": 58360,
         "vision_index": null,
@@ -2749,7 +2749,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 16341,
+        "coding_index": 16627,
         "tooling_index": 30232,
         "knowledge_index": 37677,
         "vision_index": null,
@@ -3745,7 +3745,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 58630,
+        "coding_index": 58121,
         "tooling_index": 60354,
         "knowledge_index": 72467,
         "vision_index": 70678,
@@ -7640,7 +7640,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "coding_index": 18480,
+        "coding_index": 18747,
         "tooling_index": 43360,
         "knowledge_index": 55502,
         "vision_index": null,
@@ -8671,7 +8671,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "coding_index": 40094,
+        "coding_index": 39619,
         "tooling_index": 57342,
         "knowledge_index": 71786,
         "vision_index": null,
@@ -9979,7 +9979,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "coding_index": 31821,
+        "coding_index": 31863,
         "tooling_index": 58462,
         "knowledge_index": 62023,
         "vision_index": 49201,
@@ -11312,7 +11312,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 29802,
+        "coding_index": 29905,
         "tooling_index": 48597,
         "knowledge_index": 62457,
         "vision_index": 57011,
@@ -11700,7 +11700,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 44327,
+        "coding_index": 44117,
         "tooling_index": 62918,
         "knowledge_index": 68553,
         "vision_index": 57889,
@@ -12081,7 +12081,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 65279,
+        "coding_index": 64723,
         "tooling_index": 78858,
         "knowledge_index": 85193,
         "vision_index": null,
@@ -12512,7 +12512,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "coding_index": 43928,
+        "coding_index": 43704,
         "tooling_index": 73344,
         "knowledge_index": 78372,
         "vision_index": null,
@@ -13747,7 +13747,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "coding_index": 23371,
+        "coding_index": 23248,
         "tooling_index": 56715,
         "knowledge_index": 45198,
         "vision_index": 37249,
@@ -15017,7 +15017,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 18869,
+        "coding_index": 19107,
         "tooling_index": 37568,
         "knowledge_index": 62731,
         "vision_index": 35490,
@@ -15992,7 +15992,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "coding_index": 20069,
+        "coding_index": 20298,
         "tooling_index": 33896,
         "knowledge_index": 45785,
         "vision_index": null,
@@ -16346,7 +16346,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 61116,
+        "coding_index": 63022,
         "tooling_index": 81487,
         "knowledge_index": 92938,
         "vision_index": null,
@@ -16819,7 +16819,7 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "coding_index": 54905,
+        "coding_index": 52845,
         "tooling_index": 73167,
         "knowledge_index": 84924,
         "vision_index": 77862,
@@ -20403,7 +20403,7 @@
       },
       "context": "512k",
       "scores": {
-        "coding_index": 19558,
+        "coding_index": 19787,
         "tooling_index": 33758,
         "knowledge_index": 57690,
         "vision_index": null,
@@ -23497,7 +23497,7 @@
       },
       "context": "200k",
       "scores": {
-        "coding_index": 40785,
+        "coding_index": 40577,
         "tooling_index": 55337,
         "knowledge_index": 69001,
         "vision_index": null,
@@ -25576,7 +25576,7 @@
       },
       "context": "256k",
       "scores": {
-        "coding_index": 20879,
+        "coding_index": 21116,
         "tooling_index": 33598,
         "knowledge_index": 38389,
         "vision_index": null,
@@ -33401,7 +33401,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 22376,
+        "coding_index": 22068,
         "tooling_index": 39438,
         "knowledge_index": null,
         "vision_index": null,
@@ -33656,7 +33656,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 43893,
+        "coding_index": 50306,
         "tooling_index": 59394,
         "knowledge_index": null,
         "vision_index": null,
@@ -33911,7 +33911,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 72097,
+        "coding_index": 72279,
         "tooling_index": 72281,
         "knowledge_index": null,
         "vision_index": null,
@@ -34166,7 +34166,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 38069,
+        "coding_index": 37708,
         "tooling_index": 55962,
         "knowledge_index": 80702,
         "vision_index": null,
@@ -35108,7 +35108,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 46403,
+        "coding_index": 45751,
         "tooling_index": 73450,
         "knowledge_index": 85186,
         "vision_index": 54169,
@@ -35501,7 +35501,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 69947,
+        "coding_index": 71145,
         "tooling_index": 86148,
         "knowledge_index": 91854,
         "vision_index": null,
@@ -35959,7 +35959,7 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "coding_index": 48637,
+        "coding_index": null,
         "tooling_index": 55648,
         "knowledge_index": 71989,
         "vision_index": null,
@@ -36016,7 +36016,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "coding_index": "2026-09-17",
+        "coding_index": null,
         "tooling_index": "2026-09-17",
         "knowledge_index": "2026-09-17",
         "vision_index": null,
@@ -36072,7 +36072,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -36588,7 +36588,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 34577,
+        "coding_index": 33301,
         "tooling_index": 54209,
         "knowledge_index": 80424,
         "vision_index": 63502,
@@ -37037,7 +37037,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 52690,
+        "coding_index": 50163,
         "tooling_index": 70547,
         "knowledge_index": 89562,
         "vision_index": 76819,
@@ -37501,7 +37501,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 59523,
+        "coding_index": 58574,
         "tooling_index": 74038,
         "knowledge_index": 83928,
         "vision_index": null,
@@ -37868,7 +37868,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "coding_index": 88769,
+        "coding_index": 85805,
         "tooling_index": 91887,
         "knowledge_index": 97017,
         "vision_index": 89914,
@@ -38577,7 +38577,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 46535,
+        "coding_index": 46201,
         "tooling_index": 59172,
         "knowledge_index": 76238,
         "vision_index": 66742,
@@ -38937,7 +38937,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "coding_index": 49599,
+        "coding_index": 48974,
         "tooling_index": 66888,
         "knowledge_index": 84051,
         "vision_index": 76153,
@@ -39309,7 +39309,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "coding_index": 52105,
+        "coding_index": 51676,
         "tooling_index": 76319,
         "knowledge_index": 83005,
         "vision_index": 51250,
@@ -39952,7 +39952,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 76022,
+        "coding_index": 74875,
         "tooling_index": 91127,
         "knowledge_index": 94576,
         "vision_index": 92969,
@@ -40319,7 +40319,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "coding_index": 47843,
+        "coding_index": 47550,
         "tooling_index": 67556,
         "knowledge_index": 67970,
         "vision_index": null,
@@ -41253,7 +41253,7 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "coding_index": 35166,
+        "coding_index": 35148,
         "tooling_index": 66390,
         "knowledge_index": 65980,
         "vision_index": 63303,
@@ -41599,7 +41599,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "coding_index": 12159,
+        "coding_index": 12416,
         "tooling_index": 43983,
         "knowledge_index": 57666,
         "vision_index": null,
@@ -41922,7 +41922,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 90399,
+        "coding_index": 89706,
         "tooling_index": 94989,
         "knowledge_index": 93805,
         "vision_index": null,
@@ -42342,7 +42342,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 64774,
+        "coding_index": 63941,
         "tooling_index": 86438,
         "knowledge_index": 81352,
         "vision_index": 80455,
@@ -43542,7 +43542,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 85190,
+        "coding_index": 86589,
         "tooling_index": 87321,
         "knowledge_index": 94493,
         "vision_index": null,
@@ -43804,7 +43804,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 62061,
+        "coding_index": 64348,
         "tooling_index": 68347,
         "knowledge_index": 74510,
         "vision_index": null,
@@ -44066,7 +44066,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
-        "coding_index": 27704,
+        "coding_index": 31041,
         "tooling_index": 49341,
         "knowledge_index": 65592,
         "vision_index": null,
@@ -44328,7 +44328,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "coding_index": 68327,
+        "coding_index": 66900,
         "tooling_index": 89919,
         "knowledge_index": 81958,
         "vision_index": 62359,
@@ -44665,7 +44665,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "coding_index": 81961,
+        "coding_index": 80987,
         "tooling_index": 96070,
         "knowledge_index": 91020,
         "vision_index": 96297,
@@ -45035,7 +45035,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "coding_index": 81012,
+        "coding_index": 80279,
         "tooling_index": 92621,
         "knowledge_index": 86235,
         "vision_index": 85540,
@@ -45704,7 +45704,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 9307,
+        "coding_index": 9585,
         "tooling_index": 34277,
         "knowledge_index": 48932,
         "vision_index": null,
@@ -46048,7 +46048,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "coding_index": 14826,
+        "coding_index": 15103,
         "tooling_index": 48688,
         "knowledge_index": 54458,
         "vision_index": null,
@@ -46676,7 +46676,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "coding_index": 54134,
+        "coding_index": 61572,
         "tooling_index": 81805,
         "knowledge_index": 82725,
         "vision_index": null,
@@ -46997,7 +46997,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "coding_index": 6032,
+        "coding_index": 6309,
         "tooling_index": 56020,
         "knowledge_index": 49568,
         "vision_index": null,
@@ -47355,7 +47355,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "coding_index": 91113,
+        "coding_index": 90565,
         "tooling_index": 91003,
         "knowledge_index": 87432,
         "vision_index": 71040,
@@ -47954,7 +47954,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 97666,
+        "coding_index": 97725,
         "tooling_index": 97957,
         "knowledge_index": 98267,
         "vision_index": 88934,
@@ -48390,7 +48390,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 78794,
+        "coding_index": 77872,
         "tooling_index": 88706,
         "knowledge_index": 93476,
         "vision_index": 76127,
@@ -48777,7 +48777,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "coding_index": 97509,
+        "coding_index": 97272,
         "tooling_index": 98634,
         "knowledge_index": 99051,
         "vision_index": 99629,
@@ -49194,7 +49194,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 77957,
+        "coding_index": 76958,
         "tooling_index": 81160,
         "knowledge_index": 87744,
         "vision_index": 79851,
@@ -49596,7 +49596,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 86566,
+        "coding_index": 85809,
         "tooling_index": 86487,
         "knowledge_index": 93114,
         "vision_index": 87880,
@@ -49999,7 +49999,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 87984,
+        "coding_index": 86581,
         "tooling_index": 90466,
         "knowledge_index": 98644,
         "vision_index": 93067,
@@ -50432,7 +50432,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "coding_index": 96239,
+        "coding_index": 96183,
         "tooling_index": 96010,
         "knowledge_index": 98991,
         "vision_index": 97756,
@@ -52947,7 +52947,7 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "coding_index": 31473,
+        "coding_index": 31491,
         "tooling_index": 70990,
         "knowledge_index": 59002,
         "vision_index": null,

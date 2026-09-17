@@ -1135,10 +1135,12 @@ Two consequences worth knowing (they hold for every derived index):
   carried as a column but left out of `INDEXES` for now — admitting it at 0.15
   dropped four models from ranked to `null` and bought no discrimination in
   return. Worth adding once its coverage grows. SWE-bench Multilingual, admitted
-  at 0.30 on 26 scored models, unseated the same four — and they came back when
-  the SWE Atlas trio was collapsed to one track, which took more weight out of
-  the denominator than the new column put in. Both moves are worked through
-  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the trio](#why-swe-atlas-contributes-one-track) — as is
+  at 0.30 on 26 scored models, unseated the same four — they came back when the
+  SWE Atlas trio was collapsed to one track, which took more weight out of the
+  denominator than the new column put in, and they are out again now that
+  [two of those tracks are back at 0.75](#why-swe-atlas-contributes-two-tracks).
+  Both moves are worked through
+  below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the tracks](#why-swe-atlas-contributes-two-tracks) — as is
   [Real-SWE's admission at 1.0](#why-real-swe-leads-the-coding-group-and-what-it-cost),
   which cost 21 models their rank, and the Terminal-Bench 4.0 admission in the
   next bullet, which cost 34. A *swap* costs nothing of the sort: replacing
@@ -1364,11 +1366,14 @@ them lost a score; the bar moved. Each carries the same four cheap members (SWE-
 Pro + LiveCodeBench + SciCode + SWE-bench Verified = **1.30** scored weight), and under
 the 20% threshold in force at the time that bar went from 1.272 to 1.332 — they had
 been clearing it by 0.028, so *any* new coding column above 0.14 would have unseated
-them. Not a fact about SWE-bench Multilingual. Both follow-ups have since removed the
-problem rather than papered over it: [the SWE Atlas
-trio](#why-swe-atlas-contributes-one-track) gave 0.26 back to the denominator, and
-[the threshold](#why-the-evidence-bar-is-18) moved to 18%, which puts the bar at 1.152
-and leaves them 0.15 of margin instead of 0.02.
+them. Not a fact about SWE-bench Multilingual, and the four were duly given their rank
+back by the two follow-ups that removed the problem rather than papering over it:
+[collapsing the SWE Atlas trio](#why-swe-atlas-contributes-two-tracks) gave 0.26 back
+to the denominator, and [the threshold](#why-the-evidence-bar-is-18) moved to 18%,
+which took the bar to 1.152 against their 1.30. They have since lost it again, to the
+denominator the admissions after that one added — the bar is **1.584** today — which
+is the point restated rather than contradicted: a model clearing the bar on four cheap
+columns is one column away from not clearing it, whichever column arrives.
 
 One knob deliberately not turned: weighting it **0.5** would also have cleared the
 bar for two models (at w ≥ 0.465 `deepseek-v3-2-0925` and `kimi-k2-thinking` qualify
@@ -1376,34 +1381,54 @@ on their own SWE-bench Multilingual score). Buying coverage with a weight the tr
 evidence does not support is the mistake the ladder exists to prevent; the weight
 describes the benchmark, not the roster.
 
-### Why SWE Atlas contributes one track
+### Why SWE Atlas contributes two tracks
 
-Scale AI's SWE Atlas ships three tracks and the index carried all three at 0.17 each,
-so the family voted 0.51 — deliberately, as "three narrow rubric-graded slices, half a
-benchmark between them". Measured on the current file, that reasoning does not hold:
+Scale AI's SWE Atlas ships three tracks. The index carried all three at 0.17 each
+(the family voting 0.51), then Codebase Q&A alone at 0.25 once the three looked like
+one measurement repeated. It now carries **Codebase Q&A and Refactoring at 0.75
+each**, 1.5 between them, with Test Writing left out.
 
-- **The three tracks are not three populations.** Every model scored on Refactoring
-  (6) or Test Writing (7) is also scored on Codebase Q&A (13). Dropping the first two
-  removes **no model** from the index, and Q&A alone covers the family's whole roster.
-- **They are barely three measurements.** Spearman **0.87** between Refactoring and
-  Test Writing, 0.75 and 0.95 against Q&A. Three near-duplicate ranks over one
-  ≤13-model population is the same triple-count that got `aa_coding_index` removed
-  from this group, one order of magnitude smaller.
-- **The redundant weight was not free.** Weight in the denominator raises the
-  `MIN_SCORED_FRACTION` bar for *every* model, including the ones the extra tracks
-  never measured.
+The one-track argument rested on the three tracks being one population and one
+ranking. Re-measured on the current file, half of that is still true and half is not:
 
-So the family now contributes **Codebase Q&A at 0.25**: one track, weighted a little
-above the 0.17 it held as one third of a trio, because it now carries the family's
-whole vote — and well below the 0.51 the trio held, because it is one small
-rubric-graded track. It stays under `swe_bench_multilingual` (0.30) and every
-execution-graded column above it, which is the honest place for it: Q&A is the one
-track in the trio that requires **no code changes** at all (124 comprehension tasks —
-tracing execution paths, multi-file reasoning), so on task shape it is the weakest of
-the three for a coding index. It is kept over the other two anyway because the
-correlations say all three rank models alike and only Q&A has the coverage.
-Refactoring and Test Writing remain columns in `llm.json`; they are simply not
-aggregated.
+| Pair | Spearman | Models on both |
+| --- | ---: | ---: |
+| Test Writing ↔ Codebase Q&A | **0.955** | 11 |
+| Refactoring ↔ Test Writing | 0.867 | 9 |
+| Refactoring ↔ Codebase Q&A | **0.755** | 11 |
+
+Test Writing is the track that genuinely repeats one already here: 0.955 against Q&A
+is a second copy of the same ranking, and every model it scores (11) is scored on Q&A
+as well, so it adds a column's worth of denominator and nothing else. That is the
+triple-count the collapse to one track was aimed at, and it still applies — to Test
+Writing.
+
+Refactoring is the opposite case, and the collapse had swept it up by association.
+At **0.755** it is the loosest pair in the family, and about as independent as
+anything in this group gets — of the agreements measured on this page only
+DeepSWE ↔ SWE-Marathon (0.74) sits lower. It is also the only track that scores a
+model Q&A does not (`minimax-m3`, 12 models to Q&A's 19, one of them outside it), and
+on task shape it is the one track of the three that actually **changes code** — Q&A's
+124 comprehension tasks require no edit at all, which is why Q&A was the weakest of
+the trio for a coding index even while it was the only one with coverage. Keeping the track that
+edits code and the track that has the reach, and dropping the one that duplicates
+them, is the shape the correlations argue for.
+
+**0.75 each** puts both a rung below the execution-graded boards (FrontierCode,
+FrontierSWE, SWE-Marathon at 0.9) and level with DeepSWE 1.1, rather than under
+`swe_bench_multilingual` where one track at 0.25 sat. It is a substantial promotion —
+the family goes from 0.25 of the group to 1.5, from 3% of the weight to 17% — and
+what it buys is a rubric-graded pair on private-ish task sets that the public
+execution boards do not reach. Test Writing stays a column in `llm.json`, scraped and
+rendered, simply not aggregated.
+
+**What it cost, measured.** The denominator rises **7.55 → 8.80** and the
+[evidence bar](#why-the-evidence-bar-is-18) **1.359 → 1.584**. One model,
+`longcat-2-0`, drops from ranked to `null` — it carries 1.45 of scored weight and
+nothing from SWE Atlas, so the bar moved past it; no score was lost. The other 58 stay
+ranked and the order moves more than a swap would (Spearman **0.9969**, mean 0.59
+places, worst case 7 — `ornith-1-0-35b` 34 → 27, `kimi-k3` 6 → 9), which is what 1.25
+of net new weight on a pair of rubric-graded tracks should do.
 
 ### Why the evidence bar is 18%
 
@@ -1549,7 +1574,7 @@ are easy to get wrong:
 
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.016 | 92% | 98.4% |
+| Coding | 0.015 | 92% | 98.5% |
 | Tooling | 0.016 | 92% | 98.4% |
 | Vision | 0.034 | 84% | 97% |
 | Knowledge | 0.072 | 71% | 93% |
@@ -1560,10 +1585,12 @@ other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
 them. Coding and Tooling were 0.015 and 0.019 until
 [Terminal-Bench 4.0 joined both groups](#coding-index); re-running `--calibrate`
 afterwards put them on the same 0.016, which is what the instruction below to
-re-calibrate after a membership change is for. Re-running it again after
-[FrontierCode's Main → Extended swap](#frontiercode-extended-in-the-coding-group)
-returned the coding group's 0.016 unchanged — the expected answer for a change
-that swaps one board for a near-identical one instead of adding weight.
+re-calibrate after a membership change is for. Two changes since have each been
+re-measured: [FrontierCode's Main → Extended
+swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchanged,
+the expected answer for swapping one board for a near-identical one instead of adding
+weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
+to **0.015**.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an
@@ -1684,8 +1711,9 @@ differ:
   weight, and it buys 6 models of coverage (148 scored against 142). Measured, it is
   not a second opinion either: Spearman **−0.72** against the column it duplicates,
   and of the 20 best hallucination rates in the file, **none** sits below the
-  Omniscience median — the two rank the field alike. It is the same triple-count
-  argument as [SWE Atlas](#why-swe-atlas-contributes-one-track), and it is not free:
+  Omniscience median — the two rank the field alike. It is the same duplicate-column
+  argument that keeps [SWE Atlas Test Writing](#why-swe-atlas-contributes-two-tracks)
+  out of the coding group, and it is not free:
   at 0.3 it moves the ranked field a mean of 3.6 places and reorders five of the top
   six, on the strength of one re-counted run.
 - **AIME 2026** — the same exam one year on, and the fresher contamination profile is
