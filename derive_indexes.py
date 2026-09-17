@@ -127,7 +127,7 @@ class IndexDef(NamedTuple):
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
     other and with MIN_SCORED_FRACTION: Coding's 0.015 leaves a fully measured
-    model 98.5% of its distance from the middle, Trust's 1.522 leaves it 40%.
+    model 98.5% of its distance from the middle, Trust's 1.524 leaves it 40%.
     It sets how hard a thinly covered model is pulled toward the middle (see
     coverage_reliability), and it is measured rather than chosen: run
     ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
@@ -296,15 +296,15 @@ INDEXES: list[IndexDef] = [
         # accordingly: a model carrying the 1.0 anchor alone keeps 22% of its
         # distance from the middle, one measured throughout 40%. That is the
         # column honestly reporting how little it can lean on partial evidence.
-        transfer_ratio=1.522,
+        transfer_ratio=1.524,
     ),
 ]
 
 # A benchmark that has re-run itself keeps a column per revision, because the
 # two are not comparable as published (see _revisions.py). For the *index* that
 # leaves a hole: a model measured only on the retired board contributes nothing
-# to the benchmark it was actually measured on, and is imputed at the median
-# instead -- which flatters a model that scored near zero there.
+# to the benchmark it was actually measured on, so it takes part in no
+# comparison there at all -- which flatters a model that scored near zero.
 #
 # The fix is a scale conversion, not a second column. The re-run's own overlap
 # -- the open-weight models published on both boards -- gives the factor that
@@ -327,7 +327,8 @@ REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
     # 2.0's a mean@5 task percentage. A factor fitted on the three models on
     # both boards would be fitting the two metrics' relationship to each other,
     # not a revision's drift, and would rank a model on the shape of a field it
-    # was never measured against. A model on 1.0 alone is imputed instead.
+    # was never measured against. A model on 1.0 alone simply supports no
+    # comparison on this benchmark.
 }
 
 
@@ -372,6 +373,13 @@ BT_TOLERANCE = 1e-10
 # hitting it warns rather than failing, because a slightly under-converged
 # ranking is still a ranking.
 BT_MAX_ITERATIONS = 100_000
+
+# The scale block's bisection (see _set_scale). The bound is in log-odds and is
+# far outside any real field; 60 halvings of a 120-wide interval land well below
+# what a float can represent, so the block is solved exactly as far as the
+# arithmetic is concerned.
+_SCALE_SEARCH_BOUND = 60.0
+_SCALE_SEARCH_STEPS = 60
 
 # Calibration only (--calibrate). A model is asked about a held-out benchmark
 # only once the benchmarks left behind cover this share of their weight: the
@@ -433,9 +441,10 @@ def index_score(model: dict[str, Any], key: str) -> float:
 
     Normally the stored score. For a benchmark with a REVISION_FALLBACKS entry,
     a model absent from the current revision falls back to its older-revision
-    score converted onto the current scale, so it is ranked against the current
-    field rather than imputed at the median. A model published on both keeps
-    the current revision's own number -- the conversion only ever fills a hole.
+    score converted onto the current scale, so it is compared against the
+    current field rather than sitting the benchmark out. A model published on
+    both keeps the current revision's own number -- the conversion only ever
+    fills a hole.
     """
     scores = model.get("scores") or {}
     value = to_number(scores.get(key))
@@ -560,22 +569,32 @@ def comparisons(
 
 
 def bradley_terry(record: Comparisons) -> dict[str, float]:
-    """Model name -> fitted ability, as a log-odds centred on the field.
+    """Model name -> fitted ability, as a log-odds with zero at the middle of
+    the field.
 
     Bradley-Terry says the odds of a beating b are exp(ability_a - ability_b),
-    and the fit is the abilities that best explain the comparisons actually
-    observed. It is solved by the standard MM (minorise-maximise) iteration,
-    which is monotone -- every sweep raises the likelihood -- and needs no
-    derivatives or matrix algebra.
+    and the fit maximises the likelihood of the comparisons actually observed,
+    penalised by BT_PRIOR's pseudo-comparisons against an opponent pinned at
+    strength 1. That penalised objective is strictly concave in the abilities,
+    so it has one maximum and the only question is getting there.
 
-    The sweep is the fixed point of
+    Two blocks, alternated, each of which can only raise the objective:
 
-        strength_i <- (wins_i + prior) / (sum_j pairs_ij / (strength_i + strength_j)
-                                          + 2 * prior / (strength_i + 1))
+      * the shape, by the standard MM (minorise-maximise) step, which is
+        monotone and needs no derivatives or matrix algebra --
 
-    with the abilities renormalised to a geometric mean of 1 each time, so the
-    prior's notional opponent sits at the centre of the field and the scale is
-    pinned (only differences are identified, so some anchor is needed).
+            strength_i <- (wins_i + prior)
+                          / (sum_j pairs_ij / (strength_i + strength_j)
+                             + 2 * prior / (strength_i + 1))
+
+      * the overall level, solved outright by _set_scale(), because the
+        comparisons say nothing about it and the prior says everything.
+
+    At a fixed point of the pair the MM step can only be multiplying every
+    strength by one constant, and the scale block forces that constant to 1, so
+    every model's gradient is zero and the result is the maximum rather than
+    merely somewhere the iteration stopped moving. test_index_math.py checks
+    that gradient directly rather than trusting this paragraph.
 
     Models are visited in sorted order and the iteration starts from each
     model's own weighted win rate, so the result is deterministic and does not
@@ -605,7 +624,7 @@ def bradley_terry(record: Comparisons) -> dict[str, float]:
         rate = (won[i] + BT_PRIOR) / (played[i] + 2 * BT_PRIOR)
         rate = min(max(rate, 1e-4), 1.0 - 1e-4)
         strength.append(rate / (1.0 - rate))
-    strength = _recentre(strength)
+    strength = _set_scale(strength)
 
     for sweep in range(BT_MAX_ITERATIONS):
         updated = [0.0] * len(names)
@@ -617,7 +636,7 @@ def bradley_terry(record: Comparisons) -> dict[str, float]:
             for t in range(len(neighbours_i)):
                 denominator += weights_i[t] / (own + strength[neighbours_i[t]])
             updated[i] = (won[i] + BT_PRIOR) / denominator
-        updated = _recentre(updated)
+        updated = _set_scale(updated)
         shift = max(
             abs(math.log(updated[i] / strength[i])) for i in range(len(names))
         )
@@ -635,12 +654,57 @@ def bradley_terry(record: Comparisons) -> dict[str, float]:
     return {name: math.log(strength[i]) for i, name in enumerate(names)}
 
 
-def _recentre(strength: list[float]) -> list[float]:
-    """The same abilities with a geometric mean of 1. Only differences are
-    identified, so this pins the scale and puts the prior's notional opponent
-    at the centre of the field."""
-    centre = math.exp(sum(math.log(value) for value in strength) / len(strength))
-    return [value / centre for value in strength]
+def _set_scale(strength: list[float]) -> list[float]:
+    """The same abilities shifted along the one direction the comparisons say
+    nothing about, to the level the prior most prefers.
+
+    Bradley-Terry itself is scale-free -- only differences are identified -- so
+    the overall level is fixed by the prior alone, and fixing it is a
+    one-parameter problem that can be solved outright rather than iterated
+    toward. Writing the shift as c, the prior contributes
+
+        sum_i [ log(c*s_i / (c*s_i + 1)) + log(1 / (c*s_i + 1)) ]
+
+    whose derivative vanishes exactly when the shifted abilities average a
+    win probability of one half against the prior's opponent:
+
+        sum_i  c*s_i / (c*s_i + 1)  ==  n / 2
+
+    The left side rises monotonically with c, so a bisection finds it. Two
+    things follow, and the fit depends on both.
+
+    It makes the sweep a block coordinate ascent whose fixed point is the real
+    optimum. Each MM sweep raises the penalised likelihood and so does this, so
+    the pair still only ever climbs; and at a fixed point the sweep can only be
+    rescaling everything by one constant, which this step's own stationarity
+    then forces to be 1 -- leaving the gradient zero for every model, which is
+    what a solution means. Simply renormalising to a geometric mean of 1
+    instead looks like the same housekeeping and is not: the prior's opponent
+    is pinned at 1, so sliding every model past it changes the penalty, and the
+    iteration settles where the sweep scales everything by some c != 1 and no
+    model's gradient is zero. Against llm.json that left the coding group at
+    c = 1.000503 and gradients of 4.5e-4 rather than 1e-10, and moved models
+    across each other.
+
+    And it puts zero where the column's own scale says the middle is. The
+    condition above says a model at ability zero wins half its comparisons
+    against this field on average -- which is expected_win_rate()'s definition
+    of the midpoint, to the digit. So coverage_reliability can shrink a thin
+    measurement toward zero and be shrinking it toward the middle of the field,
+    with no separate centring step to disagree with.
+    """
+    target = len(strength) / 2.0
+    low, high = -_SCALE_SEARCH_BOUND, _SCALE_SEARCH_BOUND
+    for _ in range(_SCALE_SEARCH_STEPS):
+        middle = (low + high) / 2
+        shift = math.exp(middle)
+        total = sum(value * shift / (value * shift + 1.0) for value in strength)
+        if total < target:
+            low = middle
+        else:
+            high = middle
+    shift = math.exp((low + high) / 2)
+    return [value * shift for value in strength]
 
 
 def coverage_reliability(weights: list[float], transfer_ratio: float) -> float:

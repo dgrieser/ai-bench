@@ -1016,10 +1016,24 @@ How a value is produced:
    ranking does not move.
 3. **Fit one ability per model.** A weighted [Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model)
    model says the odds of A beating B are `exp(ability_A − ability_B)`, and the fit
-   is the set of abilities that best explains the comparisons actually observed. It
-   is solved by the standard MM iteration, with a small symmetric prior
-   (`BT_PRIOR`) that keeps a model which won or lost *everything* finite and pulls a
-   barely-compared model toward the middle.
+   is the set of abilities that best explains the comparisons actually observed,
+   penalised by a small symmetric prior (`BT_PRIOR`) that keeps a model which won or
+   lost *everything* finite and pulls a barely-compared model toward the middle.
+   That objective is strictly concave, so it has one maximum, and it is reached by
+   alternating two steps that each only ever climb: the standard MM iteration for
+   the shape, and a closed-form solve for the overall level, which the comparisons
+   say nothing about and the prior decides alone. The level is the one making a
+   zero-ability model win exactly half its comparisons against the field, so **zero
+   is the middle of the column's own scale** — which is what lets step 5 shrink
+   toward zero and mean "toward the middle of the field".
+
+   Renormalising the abilities after each MM step instead — the obvious way to pin
+   a scale that Bradley-Terry leaves free — is subtly wrong once there is a prior,
+   because the prior's opponent is pinned and sliding the field past it changes the
+   penalty. The iteration then settles somewhere no model's gradient is zero: on
+   this file it left the coding group with gradients of 4.5e-4 instead of 1e-10, and
+   moved models across each other. `test_index_math.py` checks the gradient directly
+   rather than trusting that the loop stopped moving.
 4. **Never impute.** A missing score produces no comparison at all. Nothing is
    filled in, no stand-in value is invented, and a benchmark a model never ran
    cannot move it in either direction. Models measured on disjoint benchmarks are
@@ -1404,7 +1418,7 @@ are easy to get wrong:
 | Tooling | 0.019 | 90% | 98% |
 | Vision | 0.034 | 84% | 97% |
 | Knowledge | 0.072 | 71% | 93% |
-| **Trust** | **1.522** | **11%** | **40%** |
+| **Trust** | **1.524** | **11%** | **40%** |
 
 The ratio is a share of the group, so these five are directly comparable with each
 other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
@@ -1491,7 +1505,7 @@ same thing; it stopped a measurement artifact from making them look more
 different than they are.
 
 Two things say the columns are still distinct rather than flattened. Inside the
-top 20 the agreement drops sharply — **0.67** against Coding and **0.59** against
+top 20 the agreement drops sharply — **0.66** against Coding and **0.59** against
 Tooling — so among the models a reader is actually choosing between, the ranking
 is its own. And [Trust](#trust-index) still stands apart from all four on a mean
 of 0.83 against 0.90–0.93, which a method that merely collapsed distinctions
@@ -1580,8 +1594,8 @@ Three consequences, all different from the other two indexes:
   property the evidence bar exists to protect elsewhere and gets for free here, and
   it is why the coverage shrinkage barely moves this column: almost everyone in it
   has enough weight measured to be believed nearly in full.
-- **The scale earns its width.** 155 ranked values put the closest pair **5 index
-  points** apart (Coding's is 8) with no two colliding. On a 0–100 scale a good part
+- **The scale earns its width.** 155 ranked values put the closest pair **1 index
+  point** apart (Coding's is 3) with no two colliding. On a 0–100 scale a good part
   of this mid-field would have rounded into ties, which is the argument for `SCALE`
   made visible.
 
@@ -1628,10 +1642,10 @@ rather than burying. Against the models it shares with them:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | 0.95 (45 models) | 0.75 |
-| vs [Tooling](#tooling-index) | 0.94 (55) | 0.85 |
-| vs [Knowledge](#knowledge-index) | 0.95 (58) | 0.80 |
-| vs AA Intelligence Index | 0.96 (58) | 0.87 |
+| vs [Coding](#coding-index) | 0.95 (45 models) | 0.74 |
+| vs [Tooling](#tooling-index) | 0.94 (55) | 0.83 |
+| vs [Knowledge](#knowledge-index) | 0.95 (58) | 0.79 |
+| vs AA Intelligence Index | 0.96 (58) | 0.86 |
 | vs GPQA Diamond | 0.96 (57) | 0.84 |
 
 On a mean of 0.92 against the other four it is second-least independent, a shade
@@ -1640,7 +1654,7 @@ ahead of [Knowledge](#knowledge-index) at 0.93 and well behind
 mostly a range effect: the 58 ranked models run from `qwen3-5-0-8b` to 400B-plus
 mixtures of experts, and across a spread that wide nearly every capability column
 agrees with nearly every other. Inside the top 20 — where a reader actually
-chooses between models — it loosens only to 0.75-0.87, and it used to read 0.41
+chooses between models — it loosens only to 0.74-0.86, and it used to read 0.41
 to 0.58: the [Bradley-Terry rewrite](#coding-index) removed the median fill, which
 was depressing these figures with coverage noise rather than with independence.
 
@@ -1745,8 +1759,8 @@ Two other properties of the current field:
 - **58 ranked, 57 distinct values.** The one tie is not a rounding artifact and
   no weighting can remove it: `devstral-small-2` and `gemma-4-e2b` both score
   44.6 on MMMU Pro and have no other score in the group, so their evidence is
-  byte-identical and the index is right to tie them at 12,114.
-- **The range is the widest of the five**, 171 to 99,644, because the
+  byte-identical and the index is right to tie them at 12,126.
+- **The range is the widest of the five**, 168 to 99,629, because the
   multimodal field in this table runs from 0.8B models to frontier mixtures of
   experts with very little in between.
 
@@ -1791,24 +1805,24 @@ the reason is worth keeping on the page. Against the models it shares with each:
 
 | | full field | top 20 |
 | --- | --- | --- |
-| vs [Coding](#coding-index) | **0.76** (82 models) | **0.15** |
-| vs [Tooling](#tooling-index) | 0.84 (103) | **0.05** |
-| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.23 |
-| vs [Vision](#vision-index) | 0.85 (58) | 0.37 |
-| vs AA Intelligence Index | 0.86 (148) | 0.15 |
-| vs GPQA Diamond | 0.82 (145) | 0.14 |
-| vs HLE | 0.78 (142) | 0.17 |
+| vs [Coding](#coding-index) | **0.76** (82 models) | **0.18** |
+| vs [Tooling](#tooling-index) | 0.84 (103) | **0.07** |
+| vs [Knowledge](#knowledge-index) | 0.89 (148) | 0.25 |
+| vs [Vision](#vision-index) | 0.85 (58) | 0.41 |
+| vs AA Intelligence Index | 0.86 (148) | 0.16 |
+| vs GPQA Diamond | 0.82 (145) | 0.16 |
+| vs HLE | 0.78 (142) | 0.20 |
 
 Mean correlation with the other four indexes: **Trust 0.83**, against Coding
 0.90, Tooling 0.92, Vision 0.92 and Knowledge 0.93. Trust against Coding, 0.76,
 is still the lowest figure any two of these five columns produce. Inside the top
-20 the relationship all but disappears — **0.05** against Tooling, 0.14 against
-GPQA Diamond, 0.15 against Coding — so among the models a reader would actually
+20 the relationship all but disappears — **0.07** against Tooling, 0.16 against
+GPQA Diamond, 0.18 against Coding — so among the models a reader would actually
 choose between, knowing which is more capable tells you close to nothing about
 which will make something up. That head-on independence is sharper than it was
 before this column started shrinking partial evidence hard (see
 [below](#how-far-one-benchmark-speaks-for-the-others)): with a
-`transfer_ratio` of 1.522, a model measured on two of the four members is barely
+`transfer_ratio` of 1.524, a model measured on two of the four members is barely
 allowed to leave the middle of the field, and what survives at the top is the
 models that carry the whole group.
 

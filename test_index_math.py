@@ -13,7 +13,10 @@ replaced could not have:
 
 from __future__ import annotations
 
+import json
+import math
 import unittest
+from pathlib import Path
 
 import derive_indexes as di
 
@@ -300,6 +303,99 @@ class TestScale(unittest.TestCase):
         # The middle of a symmetric three-model field wins about half of its
         # head-to-heads.
         self.assertAlmostEqual(values["mid"] / di.SCALE, 0.5, places=2)
+
+
+class TestSolverIsStationary(unittest.TestCase):
+    """The fit must return the maximum, not merely a place it stopped moving.
+
+    The penalised log-likelihood is
+
+        sum_ij [ w_ij * theta_i - n_ij * log(e^theta_i + e^theta_j) ]
+        + sum_i prior * [ theta_i - 2 * log(e^theta_i + 1) ]
+
+    and its derivative in theta_i is
+
+        (wins_i + prior) - strength_i * denominator_i
+
+    which is zero exactly when the MM step returns strength_i unchanged. The
+    trap this pins: renormalising the strengths to a geometric mean of 1 after
+    each MM step looks like harmless housekeeping, but the prior's opponent is
+    pinned at strength 1, so sliding the whole field past it changes the
+    penalty. The iteration then settles where the MM step scales everything by
+    some constant other than 1 and no gradient is zero at all.
+    """
+
+    def gradients(self, record: di.Comparisons, ability: dict) -> dict:
+        strength = {name: math.exp(value) for name, value in ability.items()}
+        opponents: dict[str, set] = {}
+        for a, b in record.pairs:
+            opponents.setdefault(a, set()).add(b)
+        out = {}
+        for name, own in strength.items():
+            won = sum(
+                record.wins.get((name, other), 0.0) for other in opponents[name]
+            )
+            denominator = sum(
+                record.pairs[(name, other)] / (own + strength[other])
+                for other in opponents[name]
+            ) + 2 * di.BT_PRIOR / (own + 1.0)
+            out[name] = (won + di.BT_PRIOR) - own * denominator
+        return out
+
+    def ragged(self) -> list[dict]:
+        """Uneven coverage, which is where an inconsistent scale step shows."""
+        return [
+            model("a", x=90.0, y=20.0, z=70.0),
+            model("b", x=60.0, y=80.0),
+            model("c", x=30.0, z=40.0),
+            model("d", y=50.0, z=10.0),
+            model("e", x=75.0, y=65.0, z=55.0),
+            model("sweeps-everything", x=99.0, y=99.0, z=99.0),
+            model("loses-everything", x=1.0, y=1.0, z=1.0),
+        ]
+
+    def test_every_gradient_is_zero_at_the_solution(self) -> None:
+        models = self.ragged()
+        spec = index(("x", 1.0), ("y", 0.6), ("z", 0.3))
+        record = di.comparisons(models, DOC, spec)
+        worst = max(
+            abs(v) for v in self.gradients(record, di.bradley_terry(record)).values()
+        )
+        self.assertLess(worst, 1e-8, f"largest |gradient| was {worst:.2e}")
+
+    def test_the_live_indexes_solve_to_a_stationary_point(self) -> None:
+        path = Path(__file__).resolve().with_name("llm.json")
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        models = doc["models"]
+        for spec in di.INDEXES:
+            with self.subTest(index=spec.key):
+                record = di.comparisons(models, doc, spec)
+                worst = max(
+                    abs(v)
+                    for v in self.gradients(
+                        record, di.bradley_terry(record)
+                    ).values()
+                )
+                self.assertLess(worst, 1e-8, f"largest |gradient| {worst:.2e}")
+
+    def test_a_model_that_wins_everything_stays_finite(self) -> None:
+        """What the prior is for, and the reason the scale needs care."""
+        record = di.comparisons(
+            self.ragged(), DOC, index(("x", 1.0), ("y", 0.6), ("z", 0.3))
+        )
+        ability = di.bradley_terry(record)
+        for name in ("sweeps-everything", "loses-everything"):
+            self.assertTrue(math.isfinite(ability[name]), name)
+
+    def test_zero_is_the_middle_of_the_field(self) -> None:
+        """The scale block puts zero where expected_win_rate() says the middle
+        is, so shrinking a thin measurement toward zero shrinks it toward the
+        field rather than toward an arbitrary anchor."""
+        record = di.comparisons(
+            self.ragged(), DOC, index(("x", 1.0), ("y", 0.6), ("z", 0.3))
+        )
+        field = list(di.bradley_terry(record).values())
+        self.assertAlmostEqual(di.expected_win_rate(0.0, field), 0.5, places=9)
 
 
 class TestOnlyRatiosMatter(unittest.TestCase):
