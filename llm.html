@@ -8053,11 +8053,11 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      // Twelve because that is what the widest preset needs (the Coding index
-      // aggregates twelve benchmarks) and a preset has to fit inside the same
-      // bounds a hand-picked set does -- otherwise the chips would show a set
-      // the picker refuses to reproduce.
-      const RADAR_MAX_AXES = 12;
+      // Thirteen because that is what the widest preset needs (the Coding index
+      // aggregates thirteen benchmarks since Terminal-Bench 4.0 joined it) and a
+      // preset has to fit inside the same bounds a hand-picked set does --
+      // otherwise the chips would show a set the picker refuses to reproduce.
+      const RADAR_MAX_AXES = 13;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index"];
 
@@ -8078,14 +8078,15 @@
           id: "coding",
           label: "Coding",
           axes: ["real_swe", "deepswe_1_1", "frontierswe_2_0", "frontiercode_1_1", "swe_marathon_1_1",
-            "terminal_bench_2_1", "swe_bench_pro", "livecodebench", "scicode", "swe_bench_multilingual",
-            "swe_atlas_qna", "swe_bench_verified"]
+            "terminal_bench_4_0", "terminal_bench_2_1", "swe_bench_pro", "livecodebench", "scicode",
+            "swe_bench_multilingual", "swe_atlas_qna", "swe_bench_verified"]
         },
         {
           id: "tooling",
           label: "Tooling",
-          axes: ["tau3_bench_banking", "toolathlon", "mcp_atlas", "terminal_bench_2_1", "gdpval_aa",
-            "itbench_aa", "bfcl_v4", "tau2_bench_telecom", "terminal_bench_hard", "ifbench"]
+          axes: ["tau3_bench_banking", "toolathlon", "mcp_atlas", "terminal_bench_4_0",
+            "terminal_bench_2_1", "gdpval_aa", "itbench_aa", "bfcl_v4", "tau2_bench_telecom",
+            "terminal_bench_hard", "ifbench"]
         },
         {
           id: "knowledge",
