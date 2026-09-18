@@ -8,7 +8,7 @@ ran: the AA-only pass in 2ab9ab0 replaced four evals.report values with
 Artificial Analysis' own, and the next full refresh put evals.report back.
 
 _precedence.py declares the rank instead and apply_score() enforces it. These
-tests pin the rungs, the two same-host families that have to be told apart, and
+tests pin the rungs, the shared authority of AA's publication surfaces, and
 the property the change exists for: the stored value is the same whichever
 subset of the ingests runs, and in whatever order.
 """
@@ -108,11 +108,11 @@ class TestRungs(unittest.TestCase):
 
 
 class TestSameHostFamilies(unittest.TestCase):
-    """AA publishes on one host at two standings, and the Coding Agent Index
-    must not inherit the lock the model pages carry."""
+    """Every AA publication has the same authority."""
 
-    def test_coding_agent_index_is_not_aa_rank(self) -> None:
+    def test_coding_agent_index_is_aa_rank(self) -> None:
         self.assertEqual(source_rank(AA_CODING_AGENTS_SOURCE_URL), RANK_AA_CODING_AGENTS)
+        self.assertEqual(RANK_AA_CODING_AGENTS, RANK_AA)
         self.assertEqual(source_rank(AA_PAGE), RANK_AA)
 
     def test_coding_agent_index_outranks_the_aggregates(self) -> None:
@@ -120,12 +120,13 @@ class TestSameHostFamilies(unittest.TestCase):
         self.assertFalse(may_overwrite(HF_CARD, AA_CODING_AGENTS_SOURCE_URL))
 
     def test_prefix_matches_only_on_a_path_boundary(self) -> None:
-        # A future leaderboard at .../models-v2 is a different page, not a
-        # longer spelling of the one that holds rank 1.
+        self.assertEqual(source_rank("https://artificialanalysis.ai/models-v2/x"), RANK_AA)
+        self.assertEqual(source_rank("https://x.com/ArtificialAnlys/status/123"), RANK_AA)
         self.assertEqual(
-            source_rank("https://artificialanalysis.ai/models-v2/x"),
+            source_rank("https://artificialanalysis.ai.example.com/models/x"),
             RANK_HAND_ENTERED,
         )
+        self.assertEqual(source_rank("https://x.com/ArtificialAnlysFake/status/123"), RANK_HAND_ENTERED)
 
 
 class TestMayOverwrite(unittest.TestCase):
@@ -147,6 +148,27 @@ class TestMayOverwrite(unittest.TestCase):
 
 
 class TestApplyScoreHonoursRank(unittest.TestCase):
+    def test_equal_aa_value_takes_authority_without_changing_date(self) -> None:
+        model = model_with(score=39.6, source=EVALS_IFBENCH)
+        model["scores_updated"]["ifbench"] = "2026-08-27"
+        self.assertEqual(update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, []), 1)
+        self.assertEqual(model["scores_source"]["ifbench"], AA_PAGE)
+        self.assertEqual(model["scores_updated"]["ifbench"], "2026-08-27")
+        self.assertEqual(update.apply_score(DOC, model, "m", "ifbench", 38, EVALS_IFBENCH, []), 0)
+        self.assertEqual(update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, []), 0)
+
+    def test_aa_agent_ingest_overwrites_other_sources_and_itself(self) -> None:
+        for source in (AA_PAGE, AA_CODING_AGENTS_SOURCE_URL, HF_CARD,
+                       SWE_ATLAS_KEY_URLS["swe_atlas_qna"], HAND_ENTERED):
+            with self.subTest(source=source):
+                model = model_with(55.6, source, "swe_atlas_qna")
+                doc = {"benchmarks": {}, "models": [model]}
+                _, count, _ = update.update_aa_coding_agents_scores(doc, {"m": {"swe_atlas_qna": 51.34}})
+                self.assertEqual(count, 1)
+                self.assertEqual(model["scores"]["swe_atlas_qna"], 51.3)
+                self.assertEqual(model["scores_source"]["swe_atlas_qna"], AA_CODING_AGENTS_SOURCE_URL)
+                self.assertEqual(update.apply_score(doc, model, "m", "swe_atlas_qna", 60, HF_CARD, []), 0)
+
     def test_outranked_source_cannot_change_a_stored_value(self) -> None:
         model = model_with(score=39.6, source=AA_PAGE)
         changes: list = []
@@ -302,7 +324,7 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertLess(source_rank(url), RANK_HAND_ENTERED)
 
-    def test_rungs_are_contiguous_and_ordered(self) -> None:
+    def test_rungs_keep_aa_agent_alias_at_the_top(self) -> None:
         self.assertEqual(
             [
                 RANK_AA,
@@ -312,11 +334,11 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
                 RANK_AGGREGATE,
                 RANK_HAND_ENTERED,
             ],
-            [1, 2, 3, 4, 5, 6],
+            [1, 2, 3, 1, 5, 6],
         )
         self.assertEqual(
             sorted({rank for _, rank in RANKED_PREFIXES}),
-            [RANK_AA, RANK_BENCHMARK_SITE, RANK_CURATED, RANK_AA_CODING_AGENTS,
+            [RANK_AA, RANK_BENCHMARK_SITE, RANK_CURATED,
              RANK_AGGREGATE],
         )
 

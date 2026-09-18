@@ -158,12 +158,12 @@ INDEXES: list[IndexDef] = [
             # the benchmark twice for whoever was re-run and once for everyone
             # else. The archived columns stay visible in the table.
             ("real_swe", 1.0),
-            # 0.75: the group's narrowest head (4.6 points between the best
+            # 0.6: the group's narrowest head (4.6 points between the best
             # model and the fifth, against Real-SWE's 15.0) on a board the rest
             # of the group predicts well -- 0.85 Spearman with SWE-bench
             # Verified, 0.82 with FrontierCode 1.1, 0.81 with Terminal-Bench
             # 4.0 -- and 6 of its 18 values are not the maintainers' own runs.
-            ("deepswe_1_1", 0.75),
+            ("deepswe_1_1", 0.6),
             ("frontierswe_2_0", 0.9),
             # FrontierCode enters through its Extended board, the full
             # 150-task set, and not through Main, the 100 hardest of those same

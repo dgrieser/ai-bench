@@ -578,16 +578,19 @@ already gives row collisions inside a single source.
 
 | Rank | Source | Why there |
 | --- | --- | --- |
-| 1 | **Artificial Analysis** (`artificialanalysis.py`, API + model pages) | First-party runs of one harness across the whole field, and the leading source for 21 columns. Locked: only a later AA number replaces an AA number. |
+| 1 | **Artificial Analysis** (API, model pages, Coding Agent Index, official social posts) | Authority across all AA surfaces regardless of harness. AA replaces other sources and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. |
-| 4 | **AA Coding Agent Index** (`fetch_aa_coding_agents.py`) | AA-published, but AA's *own harness* over someone else's benchmark, and it disagrees systematically with that benchmark's board — so it does not inherit rank 1. Fill-only, so it reaches a column only where it is still null. Its three datasets are versioned now, so all three are ingested: see [Benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision). |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
 Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
 came from a *strictly* better-ranked source.
+
+The Coding Agent Index shares AA's rank 1 and is no longer fill-only. When AA
+surfaces disagree, the later AA ingest wins (the coding-agent ingest follows the
+model-page ingest in a full update). Missing results never erase stored scores.
 
 The rungs are where they are because of what actually disagrees. Where both a
 first-party run and a self-report exist for one model they differ by a point or
@@ -1276,12 +1279,12 @@ report as unknown, and the alternative is shading the weight to protect four row
 rather than to describe the benchmark — the mistake the ladder exists to prevent,
 [in the other direction](#why-swe-bench-multilingual-sits-at-030).
 
-**Why DeepSWE 1.1 sits at 0.75.** Real-SWE's admission moved it off the top of the
+**Why DeepSWE 1.1 sits at 0.6.** Real-SWE's admission moved it off the top of the
 ladder to 0.9, on the argument that it was giving up the top of the ladder and not
 its tier: 18 scored models against Real-SWE's 5, hand-written contamination-free
 tasks over 91 repositories in 5 languages, a judge that disagrees with an audit on
 1.4% of rollouts, and nothing measured that would put it below FrontierSWE 2.0,
-FrontierCode 1.1 or SWE-Marathon 1.1. **It now sits at 0.75, a tier below all
+FrontierCode 1.1 or SWE-Marathon 1.1. **It now sits at 0.6, below all
 three**, and the measurements that argue for it are the two the 0.9 case did not
 weigh:
 
@@ -1292,13 +1295,19 @@ weigh:
 | Trust | 12 of its 18 values are the maintainers' own artifact; the other 6 arrive through Hugging Face cards, llm-stats, OpenAI's own page and the benchlm.ai mirror. Better provenance than SWE-bench Verified's, worse than it reads at first. | down |
 | What it tests | Unchanged and still the reason it is not lower: tasks written from scratch against public repositories, so the contamination guarantee holds, over a wider language and repository spread than anything else here. | up |
 
-The cost is nil in coverage and small in values: the group's denominator falls
+The earlier reduction from 0.9 to 0.75 had no coverage cost: the group's denominator fell
 7.70 → 7.55 and the bar 1.386 → **1.359**, **no model changes ranked status in
 either direction**, and 57 values move. That is what a re-pricing inside the ladder
 looks like when it does not cross the evidence bar, and it is the contrast with the
 [Terminal-Bench 4.0 admission](#coding-index): that one moved a weight the same
 distance but added a member at the same time, so the denominator rose instead of
 falling and 34 models lost their rank.
+
+The subsequent reduction from 0.75 to **0.6** further limits the influence of
+this benchmark on models with thin coverage, particularly DeepSeek V4.1 Flash,
+whose first-place DeepSWE result comes from its own model card. With the current
+benchmark mix, the total weight falls from **8.80 to 8.65**; the 18% evidence
+threshold and the transfer ratio remain unchanged.
 
 ### FrontierCode Extended in the coding group
 
@@ -2714,4 +2723,3 @@ json.dump(rows, open('export.json','w'), indent=2)
 ## Live Demo
 
 See https://dgrieser.github.io/ai-bench/ for OpenBench Index, aggregated benchmarks of open-weight LLMs.
-
