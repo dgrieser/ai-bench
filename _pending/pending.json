@@ -10,55 +10,6 @@
       "route_kind": "new-model",
       "subject": "k2-horizon-mova-36b-a4b",
       "universe": null
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gpt-6-astra",
-          "reason": "exact to GPT-6 Astra, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to GPT-6 Astra, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-luna",
-          "reason": "exact to GPT-6 Astra, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
-          "reason": "exact to GPT-6 Astra, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierSWE model 'GPT-6 Astra' to llm.json model",
-      "route": "update_frontierswe_mapping.py",
-      "route_kind": "mapping",
-      "subject": "GPT-6 Astra",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "hy4-preview",
-          "reason": "exact to hy4-preview, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'tencent/hy4-preview' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "tencent/hy4-preview",
-      "universe": "models"
     }
   ]
 }
