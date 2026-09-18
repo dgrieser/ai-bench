@@ -176,7 +176,9 @@ INDEXES: list[IndexDef] = [
             # not voted on here, the way frontiercode_1_0 is not. See README,
             # "FrontierCode Extended in the coding group".
             ("frontiercode_extended_1_1", 0.9),
-            ("swe_marathon_1_1", 0.9),
+            # Long-horizon execution adds useful coverage, but 20 distinct
+            # tasks warrant less influence than the larger frontier boards.
+            ("swe_marathon_1_1", 0.65),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release and carries the weight 2.1 held; 2.1 stays in
             # at 0.4 because it is not a superseded revision in the sense above
