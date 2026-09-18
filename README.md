@@ -1305,9 +1305,17 @@ falling and 34 models lost their rank.
 
 The subsequent reduction from 0.75 to **0.6** further limits the influence of
 this benchmark on models with thin coverage, particularly DeepSeek V4.1 Flash,
-whose first-place DeepSWE result comes from its own model card. With the current
-benchmark mix, the total weight falls from **8.80 to 8.65**; the 18% evidence
+whose first-place DeepSWE result comes from its own model card. With the
+benchmark mix at that point, the total weight fell from **8.80 to 8.65**; the 18% evidence
 threshold and the transfer ratio remain unchanged.
+
+**SWE-Marathon 1.1 now carries 0.65, down from 0.9.** Its 20 distinct tasks
+provide valuable evidence about sustained execution on multi-hour projects, but
+form a narrow sample for a leading weight. Repeated runs improve measurement of
+those tasks without broadening the task sample. The weight is a judgment about
+evidence breadth, not a statistically calibrated optimum. This reduction takes
+the coding group's total weight from **8.65 to 8.40**, and Marathon's share from
+**10.4% to 7.7%**. The evidence threshold and transfer ratio remain unchanged.
 
 ### FrontierCode Extended in the coding group
 
@@ -1423,8 +1431,8 @@ the trio for a coding index even while it was the only one with coverage. Keepin
 edits code and the track that has the reach, and dropping the one that duplicates
 them, is the shape the correlations argue for.
 
-**0.75 each** puts both a rung below the execution-graded boards (FrontierCode,
-FrontierSWE, SWE-Marathon at 0.9) and level with DeepSWE 1.1, rather than under
+**0.75 each** puts both below FrontierCode and FrontierSWE at 0.9, and above
+SWE-Marathon at 0.65 and DeepSWE 1.1 at 0.6, rather than under
 `swe_bench_multilingual` where one track at 0.25 sat. It is a substantial promotion —
 the family goes from 0.25 of the group to 1.5, from 3% of the weight to 17% — and
 what it buys is a rubric-graded pair on private-ish task sets that the public
