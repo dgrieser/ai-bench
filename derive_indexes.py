@@ -126,8 +126,8 @@ class IndexDef(NamedTuple):
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
-    other and with MIN_SCORED_FRACTION: Coding's 0.015 leaves a fully measured
-    model 98.5% of its distance from the middle, Trust's 1.524 leaves it 40%.
+    other and with MIN_SCORED_FRACTION: Coding's 0.013 leaves a fully measured
+    model 98.7% of its distance from the middle, Trust's 1.524 leaves it 40%.
     It sets how hard a thinly covered model is pulled toward the middle (see
     coverage_reliability), and it is measured rather than chosen: run
     ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
@@ -188,6 +188,39 @@ INDEXES: list[IndexDef] = [
             # twice on one construct.
             ("terminal_bench_4_0", 0.85),
             ("terminal_bench_2_1", 0.4),
+            # The only member that measures building rather than maintaining:
+            # every other board here sets its tasks inside a repository that
+            # already works, and this one hands the model a specification for a
+            # web application and has a browser agent drive whatever it
+            # deploys. 0.8 is the group's provenance-and-coverage argument
+            # minus a head discount. For it: Vals runs all 96 rows itself, 88
+            # of them in OpenHands and the other 8 in the vendor harness the
+            # row names, publishes a standard error per cell and holds out 50
+            # of the 100 specifications, which is the provenance Real-SWE is
+            # trusted for; 35 of those rows are models in this file, every one
+            # of them an OpenHands row,
+            # which is the widest field of any frontier agentic board here --
+            # FrontierCode Extended and DeepSWE have 18, SWE-Marathon 12,
+            # FrontierSWE 8, Real-SWE 5 -- and it spreads them over 0 to 90.3,
+            # where the boards below saturate. Against it: 5.6 points separate
+            # the best model from the fifth, the same narrow head that holds
+            # DeepSWE at 0.6, and one harness for nearly everyone measures a
+            # model-in-OpenHands rather than a model. Redundancy does not argue
+            # either way -- its highest Spearman against a member with power is
+            # 0.908 with SWE-bench Verified over 30 models and 0.882 with
+            # SciCode over 34, both of which sit at the bottom of this list
+            # precisely because they are saturated, and it reads 0.858 against
+            # FrontierCode Extended and 0.815 against Terminal-Bench 4.0. The
+            # 0.93s against the SWE Atlas tracks are 12 and 9 models wide and
+            # carry no weight. Nothing here is the near-copy that cut
+            # Terminal-Bench 2.1 to 0.4 (0.91 against 4.0) or kept FrontierCode
+            # Main out (0.99 against Extended). Note that the index is insensitive to this
+            # number: anywhere in 0.6-1.0 the same 4 models join the ranked
+            # field and the same 5 -- Command A+, both Devstrals, GLM 4.7 and
+            # MiMo V2 Flash, none of them scored here -- fall under the
+            # evidence bar the new weight lifts. See README, "Why Vibe Code
+            # Bench enters at 0.80".
+            ("vibe_code_bench_1_1", 0.8),
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
@@ -205,17 +238,19 @@ INDEXES: list[IndexDef] = [
             ("swe_atlas_rf", 0.75),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, a hair under tooling: coding benchmarks
+        # The lowest of the five, and now clear of tooling: coding benchmarks
         # predict each other well. Hold one out and the rest miss it by a
-        # sixty-seventh of the spread between models, so a fully measured model
-        # keeps 98.5% of its distance from the middle and one at the 18% bar
-        # keeps 92%. That is the data's verdict rather than a preference: a
+        # seventy-seventh of the spread between models, so a fully measured
+        # model keeps 98.7% of its distance from the middle and one at the 18%
+        # bar keeps 93%. That is the data's verdict rather than a preference: a
         # model placing top-decile on three coding benchmarks really is
         # unlikely to be mid-field on the rest. Re-measured by --calibrate
-        # after the SWE Atlas promotion, 0.016 -> 0.015; the FrontierCode
-        # Main -> Extended swap before it moved nothing, which is what swapping
-        # one board for a near-identical one should do.
-        transfer_ratio=0.015,
+        # after the SWE Atlas promotion, 0.016 -> 0.015, and again after Vibe
+        # Code Bench joined, 0.015 -> 0.013: a member scored on 35 models makes
+        # the group better at predicting its own held-out parts. The
+        # FrontierCode Main -> Extended swap between them moved nothing, which
+        # is what swapping one board for a near-identical one should do.
+        transfer_ratio=0.013,
     ),
     IndexDef(
         key="tooling_index",

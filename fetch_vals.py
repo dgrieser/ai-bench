@@ -33,11 +33,19 @@ matched on it.
 BENCHMARKS maps the Vals slug to our llm.json benchmark key. TASKS overrides
 which task within a board is read, for the one board whose "overall" is not the
 column we track: Vals' AIME leaderboard pools the 2024 and 2025 exams, while
-llm.json keeps a column per exam year, so `aime_2025` is read instead.
+llm.json keeps a column per exam year, so `aime_2025` is read instead. VERSIONS
+pins the revision a board is allowed to be, for the boards whose slug does not
+name one, and VALS_OWN_BENCHMARKS marks the boards Vals owns rather than
+re-runs -- the two halves of keeping a Vals-authored benchmark honest.
 
 Boards Vals runs that llm.json has no column for (its private industry suites --
 Finance Agent, LegalBench, MedQA, the Vals Index -- plus MATH 500 and MGSM) are
-deliberately absent; add an entry to BENCHMARKS to ingest one.
+deliberately absent; add an entry to BENCHMARKS to ingest one. One of those is
+worth naming because it reads like the board above and is not: "vcb-1-100",
+"Vibe Code Bench 1-100", is a separate benchmark with a family of its own
+(vcb_1_100), asking whether a model can extend a working application across a
+long sequence of dependent requests, where "vibe-code" asks whether it can
+build one from scratch.
 """
 
 from __future__ import annotations
@@ -77,6 +85,35 @@ BENCHMARKS: dict[str, str] = {
     "mmmu": "mmmu_pro",
     # Read through TASKS: see below.
     "aime": "aime_2025",
+    # Vals' own benchmark rather than a re-run of someone else's, which is what
+    # puts this one board on the benchmark-site rung in _precedence.py while the
+    # rest of the table stays curated -- see VALS_OWN_BENCHMARKS below. Pinned
+    # to its published version through VERSIONS, because the slug carries none.
+    "vibe-code": "vibe_code_bench_1_1",
+}
+
+# The boards Vals authors, runs and publishes itself, as opposed to the ones it
+# re-runs from someone else's task set. For its own boards the page is the
+# benchmark's leaderboard, not a second opinion on one, so _precedence.py ranks
+# these at RANK_BENCHMARK_SITE and the rest at RANK_CURATED. Declared here, with
+# the table above, so a board added to BENCHMARKS is classified in the same
+# place it is ingested.
+VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code"})
+
+# The version a board's column measures, for the boards whose slug does not
+# carry one. Vals stamps a version into every board's metadata but names only
+# some of its slugs after it: "terminal-bench-2-1" and "terminal-bench-2" are
+# two pages, so a re-run appears as a new URL and the slug check below catches
+# the swap, while "vibe-code" is one page that has already been revised in
+# place once -- 1.1 rewrote the authentication and payment instructions in the
+# specifications and gave the browser evaluator new tools, and it did it at
+# this URL, with nothing but the stamped version to say so. Writing a v1.2
+# re-run into vibe_code_bench_1_1 would be exactly the revision blend the
+# versioned columns exist to prevent, so the stamped version is checked and a
+# mismatch refuses the board rather than filing it under the old column. A slug
+# absent from this table is not version-checked.
+VERSIONS: dict[str, str] = {
+    "vibe-code": "1.1",
 }
 
 # The task each board is read at. "overall" everywhere except where the board
@@ -202,6 +239,14 @@ def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, An
     if metadata.get("slug") != slug:
         raise ValueError(
             f"asked for {slug} but the page reports {metadata.get('slug')!r}"
+        )
+    expected = VERSIONS.get(slug)
+    if expected is not None and metadata.get("version") != expected:
+        raise ValueError(
+            f"{slug} is version {metadata.get('version')!r}, not the {expected!r} "
+            f"that {BENCHMARKS[slug]} measures -- the board was revised in place; "
+            "give the new revision a column of its own rather than blending it "
+            "into the old one."
         )
 
     task = task_of(slug)

@@ -38,7 +38,12 @@ The rungs, strongest first:
      half of the definition: it runs every model itself, on its own harness and
      its own held-out sets, so its numbers are measurements rather than
      republished ones -- but of benchmarks it does not own, which is what keeps
-     it off rung 2 next to the boards themselves.
+     it off rung 2 next to the boards themselves. Its own benchmarks are
+     the exception, and they are ranked as what they are: for a board Vals
+     authored, runs and solely publishes -- ``vibe_code_bench_1_1`` today --
+     the Vals page *is* the benchmark's leaderboard, so it sits on rung 2
+     with the other first-party boards. ``fetch_vals.VALS_OWN_BENCHMARKS``
+     draws the line, and it moves the rank of one board, not of the source.
      ``RANK_AA_CODING_AGENTS`` is an alias for rank 1, not a separate rung.
   5. ``RANK_AGGREGATE`` -- cross-benchmark aggregates that republish numbers
      nobody in the chain ran: llm-stats and the Hugging Face model cards. Both
@@ -140,6 +145,19 @@ VALS_KEY_URLS = {
     key: canonical(fetch_vals.benchmark_url(slug))
     for slug, key in fetch_vals.BENCHMARKS.items()
 }
+# Vals sits on rung 3 for the boards it re-runs, and on rung 2 for the ones it
+# owns: what keeps it off the benchmark-site rung is that the benchmarks it
+# measures belong to someone else, and that reason does not apply to a board it
+# authored, runs and is the only publisher of. Split by
+# fetch_vals.VALS_OWN_BENCHMARKS rather than listed again here, so a board
+# added to the ingest is ranked where it is classified.
+VALS_OWN_KEY_URLS = {
+    fetch_vals.BENCHMARKS[slug]: canonical(fetch_vals.benchmark_url(slug))
+    for slug in sorted(fetch_vals.VALS_OWN_BENCHMARKS)
+}
+VALS_RERUN_KEY_URLS = {
+    key: url for key, url in VALS_KEY_URLS.items() if key not in VALS_OWN_KEY_URLS
+}
 
 # The two per-model families, which are ranked by the path they live under
 # rather than by one URL: AA writes a score with the page of the model it
@@ -173,7 +191,8 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
-        *((url, RANK_CURATED) for url in VALS_KEY_URLS.values()),
+        *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),
+        *((url, RANK_CURATED) for url in VALS_RERUN_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
         (AA_CODING_AGENTS_SOURCE_URL, RANK_AA_CODING_AGENTS),
         (LLMSTATS_SOURCE_URL, RANK_AGGREGATE),

@@ -33,7 +33,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
-| **Vals AI** | Independent evaluator | Astro island props |
+| **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench) | Astro island props |
 
 ## Core Data Structure
 
@@ -267,6 +267,7 @@ Output: llm.json (unified dataset)
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_vals.py --benchmark swebench    # or pin one board
+./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
 
 # Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
 ./artificialanalysis.py --open          # every open-weights model AA lists
@@ -579,8 +580,8 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (API, model pages, Coding Agent Index, official social posts) | Authority across all AA surfaces regardless of harness. AA replaces other sources and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
-| 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2 — *for the boards it re-runs*. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
@@ -612,11 +613,16 @@ leading it.
 
 Vals AI runs the models itself rather than collecting what labs report, and it
 publishes a standard error, a latency and a cost per test beside every accuracy.
-That makes it a second uniform run of columns that already have a publisher, so
-it never leads one: at rank 3 it fills gaps under Artificial Analysis and under
-each benchmark's own board, and displaces the model-card self-reports below it.
+For the boards it re-runs that makes it a second uniform run of a column that
+already has a publisher, so it never leads one: at rank 3 it fills gaps under
+Artificial Analysis and under each benchmark's own board, and displaces the
+model-card self-reports below it. Its *own* benchmarks are the exception, and
+`fetch_vals.VALS_OWN_BENCHMARKS` names them: for a board Vals authored, runs and
+solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-080) today —
+the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
+first-party boards. The line is drawn per board, not per source.
 
-Eight of its boards name a column `llm.json` already tracks — the table lives in
+Nine of its boards name a column `llm.json` tracks — the table lives in
 `fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
 more:
 
@@ -629,6 +635,7 @@ more:
 | `mmlu_pro` | `mmlu_pro` | |
 | `mmmu` | `mmmu_pro` | Titled "MMMU Pro"; the metadata slug is the bare `mmmu` |
 | `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
+| `vibe-code` | `vibe_code_bench_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; version-pinned, see below |
 
 The AIME board is the one that needs a task override. Vals runs the 2024 and
 2025 exams as two tasks of one board and its "overall" is the pair pooled, while
@@ -647,9 +654,26 @@ is the mapping key, but every comparison against another source's name (the
 review candidates, the [openness index](#openness-classification)) is made on the
 model half alone.
 
+The `vibe-code` board is the one that needs a version pin. Vals stamps a version
+into every board's metadata but names only some of its slugs after it:
+`terminal-bench-2-1` and `terminal-bench-2` are two pages, so a re-run shows up
+as a new URL and the slug check catches the swap, while `vibe-code` is a single
+page that has already been revised in place once: 1.1 rewrote the authentication
+and dummy-payment instructions in the specifications and gave the browser
+evaluator new tools, and it did so at this URL, with nothing but the stamped
+version to say a re-run had happened. Writing a future v1.2 into
+`vibe_code_bench_1_1` would be exactly the revision blend the versioned columns
+exist to prevent, so `fetch_vals.VERSIONS` pins the board to `"1.1"` and a
+mismatch refuses it rather than filing new numbers under the old column. Boards
+whose slug carries their version are not in that table and are not checked.
+
 The boards Vals runs that no column tracks — its private industry suites
 (Finance Agent, LegalBench, MedQA, the Vals Index), plus MATH 500 and MGSM — are
-deliberately not ingested.
+deliberately not ingested. One of them is worth naming because it reads like an
+ingested board and is not: `vcb-1-100`, "Vibe Code Bench 1-100", is a separate
+benchmark with a family of its own, asking whether a model can *extend* a working
+application across a long sequence of dependent requests, where `vibe-code` asks
+whether it can build one from scratch.
 
 ### Tool Use and Instruction Following
 
@@ -717,6 +741,15 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
+
+A benchmark that keeps only its current revision as a column still spells that
+column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the
+name is what stops a later re-run being written into it. Where the revision
+lives at a URL of its own, the scraper's slug check is what catches the swap.
+Where it does not, the version has to be checked in the payload: `vibe-code` is
+one page that Vals revises in place, so
+[`fetch_vals.VERSIONS`](#what-vals-ai-contributes) pins it to `"1.1"` and a
+board stamping anything else is refused rather than filed under the old column.
 
 #### FrontierCode's second split: Main and Extended
 
@@ -1146,7 +1179,10 @@ Two consequences worth knowing (they hold for every derived index):
   below: [the weight](#why-swe-bench-multilingual-sits-at-030), [the tracks](#why-swe-atlas-contributes-two-tracks) — as is
   [Real-SWE's admission at 1.0](#why-real-swe-leads-the-coding-group-and-what-it-cost),
   which cost 21 models their rank, and the Terminal-Bench 4.0 admission in the
-  next bullet, which cost 34. A *swap* costs nothing of the sort: replacing
+  next bullet, which cost 34. A broadly covered column is much cheaper:
+  [Vibe Code Bench at 0.80](#why-vibe-code-bench-enters-at-080), scored on 35
+  models, dropped five and ranked four for the first time, a net 58 → 57. A
+  *swap* costs nothing of the sort: replacing
   FrontierCode's Main board with [its Extended
   one](#frontiercode-extended-in-the-coding-group) left the denominator, the
   bar and all 59 ranked models exactly where they were.
@@ -1447,6 +1483,83 @@ ranked and the order moves more than a swap would (Spearman **0.9969**, mean 0.5
 places, worst case 7 — `ornith-1-0-35b` 34 → 27, `kimi-k3` 6 → 9), which is what 1.25
 of net new weight on a pair of rubric-graded tracks should do.
 
+### Why Vibe Code Bench enters at 0.80
+
+**`vibe_code_bench_1_1` is aggregated at 0.80**, between Terminal-Bench 4.0
+(0.85) and the SWE Atlas pair (0.75). It is the only member that measures
+*building* rather than maintaining: every other board in the group sets its
+tasks inside a repository that already works, while this one hands the model a
+natural-language specification for a web application and asks for the running
+product. Grading is behavioural rather than textual — an autonomous browser
+agent drives the deployed application through the specification's workflows, 964
+of them over 10,131 substeps across 100 specifications, half of which are held
+out — so a build that does not start scores nothing and a diff that reads well
+earns nothing on its own.
+
+What argues for a leading weight is provenance and reach, the same pair that
+puts Real-SWE at the top:
+
+| | Measured on the current file |
+| --- | --- |
+| Provenance | all 96 rows are Vals' own runs — 88 in OpenHands, 8 in the vendor harness the row names — with a standard error per cell and 50 of the 100 specifications held out |
+| Coverage | **35 scored models** — the widest field of any frontier agentic board here (FrontierCode Extended and DeepSWE 18, SWE-Marathon 12, FrontierSWE 8, Real-SWE 5) |
+| Spread | **0 to 90.3**, where the wide members below it saturate |
+| Head | 5.6 points between the best model and the fifth |
+
+What argues against one is the head and the harness. 5.6 points across the top
+five is the same narrow head that holds [DeepSWE at
+0.6](#coding-index), and one harness for nearly everyone measures a
+model-in-OpenHands rather than a model — fair across the field, but a property of
+the setup as much as of the model. All 35 rows that reach `llm.json` are
+OpenHands rows; the eight vendor-harness rows are closed-weight products this
+file does not track.
+
+Redundancy argues neither way, which is what decides it. Its highest Spearman
+against a member with any power is **0.908** with SWE-bench Verified over 30
+models and **0.882** with SciCode over 34 — the two columns sitting at the
+bottom of the list precisely because they are saturated — and it reads **0.858**
+against FrontierCode Extended (18) and **0.815** against Terminal-Bench 4.0
+(23). The 0.935 and 0.933 against the SWE Atlas tracks are 12 and 9 models wide
+and carry no weight. Nothing here is a second copy of a column already in the
+group, which is the test that cut [Terminal-Bench 2.1](#coding-index) to 0.4 at
+0.91 against 4.0 and kept [FrontierCode
+Main](#frontiercode-extended-in-the-coding-group) out entirely at 0.99 against
+Extended.
+
+**The index is insensitive to the exact number, and the cost is not.** Anywhere
+in 0.6–1.0 the ranked field is the same 57 models, and the largest rank change
+among the models ranked before and after is 7 places. What the weight does move
+is [the evidence bar](#why-the-evidence-bar-is-18): the denominator rises
+**8.40 → 9.20** and the bar with it, **1.512 → 1.656**.
+
+- **Five models lose their rank** — `command-a-plus`, both Devstrals, `glm-4-7`
+  and `mimo-v2-flash`. Each carries exactly 1.60 of scored weight, which cleared
+  the old bar and does not clear the new one, and none of them is scored on the
+  new board.
+- **Four are ranked for the first time** — `deepseek-v3-2-0925`, `glm-4-6`,
+  `hy4-preview` and `mistral-small-4` — because the 0.80 they gain outruns the
+  0.144 the bar rises.
+
+Net **58 → 57 ranked**, which makes this the cheapest admission on this page
+after the free ones: [Terminal-Bench 4.0](#coding-index) cost 34 and
+[Real-SWE](#why-real-swe-leads-the-coding-group-and-what-it-cost) cost 21. Broad
+coverage is why — a column 35 of the 57 ranked models carry pays for its own
+place in the denominator.
+
+The bar is also where a cheaper admission would have hidden: below **0.489** the
+bar stays under 1.60 and nobody drops at all. That is not a reason to price the
+board there. The five models at 1.60 are measured on Terminal-Bench 2.1 plus two
+public columns, which is the case the bar exists to report as unknown, and
+choosing a weight to keep them ranked would be choosing it around the bar rather
+than around what the board measures — the mistake [Agents' Last
+Exam](#coding-index) is kept out to avoid.
+
+Re-running `--calibrate` after the admission moved the coding group's
+[transfer ratio](#how-far-one-benchmark-speaks-for-the-others) **0.015 → 0.013**:
+a member this broad makes the group slightly better at predicting its own
+held-out parts, so a fully measured model keeps 98.7% of its distance from the
+middle instead of 98.5%.
+
 ### Why the evidence bar is 18%
 
 `MIN_SCORED_FRACTION` is the one number all five derived indexes share: sum the
@@ -1591,7 +1704,7 @@ are easy to get wrong:
 
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.015 | 92% | 98.5% |
+| Coding | 0.013 | 93% | 98.7% |
 | Tooling | 0.016 | 92% | 98.4% |
 | Vision | 0.034 | 84% | 97% |
 | Knowledge | 0.072 | 71% | 93% |
@@ -1607,7 +1720,9 @@ re-measured: [FrontierCode's Main → Extended
 swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchanged,
 the expected answer for swapping one board for a near-identical one instead of adding
 weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
-to **0.015**.
+to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-080) took
+it to **0.013**, the lowest ratio in the file: a member scored on 35 models is a
+member the rest of the group has enough overlap to predict.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an
