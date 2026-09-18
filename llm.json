@@ -121,7 +121,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own coding composite, derived from the coding benchmarks in this table. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: Real-SWE 1.0, DeepSWE 1.1 0.75, FrontierSWE 2.0 0.9, FrontierCode 1.1 Extended 0.9, SWE-Marathon 1.1 0.9, Terminal-Bench 4.0 0.85, Terminal-Bench 2.1 0.4, SWE-bench Pro 0.4, LiveCodeBench 0.4, SciCode 0.35, SWE-bench Multilingual 0.3, SWE Atlas: Codebase Q&A 0.75, SWE Atlas: Refactoring 0.75, SWE-bench Verified 0.15.",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.9), SWE-Marathon 1.1 (0.65), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.4), SWE-bench Pro (0.4), LiveCodeBench (0.4), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.75), SWE Atlas: Refactoring (0.75), SWE-bench Verified (0.15).",
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -133,7 +133,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own agentic tool-use composite, derived from the tool-use benchmarks in this table. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: τ³-Bench Banking 1.0, Toolathlon-Verified 0.9, MCP-Atlas 0.85, Terminal-Bench 2.1 0.8, GDPval-AA v2 0.7, ITBench-AA 0.6, BFCL v4 0.5, τ²-Bench Telecom 0.3, Terminal-Bench Hard 0.3, IFBench 0.2.",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: τ³-Bench Banking (1), Toolathlon-Verified (0.9), MCP-Atlas (0.85), Terminal-Bench 4.0 (0.8), Terminal-Bench 2.1 (0.3), GDPval-AA v2 (0.7), ITBench-AA (0.6), BFCL v4 (0.5), τ²-Bench Telecom (0.3), Terminal-Bench Hard (0.3), IFBench (0.2).",
       "icon_svg": "icons/tooling-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#tooling-index"
@@ -145,7 +145,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own knowledge composite, derived from the knowledge, science and math benchmarks in this table. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: AA-Omniscience 1.0, Humanity's Last Exam 0.9, CritPt 0.6, MMLU-Pro 0.5, AIME 2025 0.4, GPQA Diamond 0.3.",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience (1), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3).",
       "icon_svg": "icons/knowledge-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#knowledge-index"
@@ -157,7 +157,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own multimodal composite, derived from the vision benchmarks in this table. A model measured on none of them stays blank by design. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: MMMU Pro 1.0, OSWorld-Verified 0.7, MathVista-mini 0.35, ZeroBench 0.35.",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35).",
       "icon_svg": "icons/vision-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#vision-index"
@@ -169,7 +169,7 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
-      "description": "This site's own trustworthiness composite, derived from the honesty, grounding and instruction-compliance benchmarks in this table. It ranks whether an answer can be believed, not how capable the model is. Models are compared head-to-head on every benchmark both of them ran, and one ability per model is fitted to those comparisons (Bradley-Terry). A benchmark's reliability weight below is what its comparisons add up to for each model that ran it, so a wide board does not outvote a heavy one. A benchmark a model never ran produces no comparison and is never imputed; an ability measured by few benchmarks is shrunk toward the middle of the field instead. The value is the share of head-to-head comparisons the model would be expected to win against the ranked field. Whole index points, median near 50,000, relative to the models currently in the table. Based on: AA-Omniscience Hallucination Rate 1.0, AA-Omniscience Accuracy 0.6, AA-LCR 0.45, IFBench 0.3.",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience Hallucination Rate (1), AA-Omniscience Accuracy (0.6), AA-LCR (0.45), IFBench (0.3).",
       "icon_svg": "icons/trust-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#trust-index"
@@ -319,7 +319,7 @@
     },
     "frontiercode_1_1": {
       "name": "FrontierCode 1.1",
-      "short_name": "FCode 1.1",
+      "short_name": "FCo 1.1",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 is the current re-run and covers only the models Cognition re-ran; its scores are not comparable with 1.0's. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
       "urls": [
@@ -330,7 +330,7 @@
     },
     "frontiercode_extended_1_1": {
       "name": "FrontierCode 1.1 Extended",
-      "short_name": "FCode 1.1E",
+      "short_name": "FCo 1.1E",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability, graded on whether the change would be merged: each task is scored against reviewer-defined criteria covering correctness, tests, scope, style and repository conventions, some of them blockers that cap the score on their own. Extended is the full 150-task set; the Main column is the 100 hardest of those same tasks, scored from the same runs, so Extended reads about thirteen points higher and Cognition publishes the two as separate leaderboards that are not to be mixed. Revision 1.1 is the current re-run: it allows fair internet use such as documentation and API references, and zeroes any run its scanner catches opening a solution-bearing page. 1.0's Extended board is published too but is not kept as a column.",
       "urls": [
@@ -340,7 +340,7 @@
     },
     "frontiercode_1_0": {
       "name": "FrontierCode 1.0",
-      "short_name": "FCode 1.0",
+      "short_name": "FCo 1.0",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader scored 46.8%. Revision 1.0 is the superseded run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
       "urls": [
