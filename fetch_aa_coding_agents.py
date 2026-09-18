@@ -11,8 +11,8 @@ the model pages and the v2 API report neither.
 Terminal-Bench 4.0 it shares with the model pages, and the two disagree by
 design: here each model runs under its own vendor's agent (Claude Code, Codex,
 Opencode), on the model pages under AA's single harness, so Opus 5 scores 54.5
-here and 49.0 there. That is the gap _precedence.RANK_AA_CODING_AGENTS exists
-for, and update.py ingests this page fill-only because of it.
+here and 49.0 there. Both surfaces have top source priority; the later AA
+ingest may refresh an earlier AA value regardless of harness differences.
 
 The page is a Next.js App Router app; requesting it with an "RSC: 1" header
 returns the flight payload, in which every leaderboard row is a plain JSON

@@ -50,6 +50,7 @@ from _precedence import (
     MCP_ATLAS_SOURCE_URL,
     OSWORLD_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
+    RANK_AA,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
     TBENCH_SOURCE_URL,
@@ -57,6 +58,7 @@ from _precedence import (
     VALS_KEY_URLS,
     ZEROBENCH_SOURCE_URL,
     may_overwrite,
+    source_rank,
 )
 from _reference import apply_reference_flags, missing_reference_models
 from _scores import round_score, score_source, stamp_score_source, stamp_score_updated
@@ -628,11 +630,16 @@ def apply_score(
     if old_value is not None and new_value is None:
         return 0
     if old_value == new_value:
+        # An equal AA measurement still takes ownership of a lower-ranked
+        # score, so later non-AA updates cannot displace AA's authority.
+        if (new_value is not None and source_rank(url) == RANK_AA
+                and source_rank(score_source(model, key)) > RANK_AA):
+            stamp_score_source(model, key, url)
+            changes.append((slug, key, old_value, new_value))
+            return 1
         return 0
     # A stored value keeps its number until a source of at least its own
-    # standing reports a different one. Checked after the equal-value exit, so
-    # a source re-reporting what is already stored is a no-op either way and
-    # never has to be ranked at all.
+    # standing reports a different one.
     if old_value is not None and not may_overwrite(url, score_source(model, key)):
         return 0
     scores[key] = new_value
@@ -859,15 +866,12 @@ def update_aa_coding_agents_scores(
 
         matched += 1
         for benchmark_key, new_value in aa_coding_agents_scores.items():
-            # AA's own agent runs of these benchmarks disagree systematically
-            # with the benchmarks' own leaderboards (different harnesses), so
-            # overwriting would flip a score back and forth within one update
-            # run and restamp its date every time. Fill gaps only: the leading
-            # sources keep every value they report.
+            # All AA evaluations are authoritative, including refreshed agent
+            # runs. Source precedence prevents non-AA ingests replacing them.
             updated += apply_score(
                 doc, model, slug, benchmark_key, new_value,
                 AA_CODING_AGENTS_SOURCE_URL, changes,
-                fill_only=True, fill_urls_only=fill_urls_only,
+                fill_urls_only=fill_urls_only,
             )
 
     return matched, updated, changes

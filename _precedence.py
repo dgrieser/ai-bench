@@ -23,9 +23,8 @@ single source.
 
 The rungs, strongest first:
 
-  1. ``RANK_AA`` -- Artificial Analysis' own evaluations, from the API and the
-     model pages. First-party runs of one harness across the whole field, and
-     the leading source for 21 of the columns. Locked at the top: nothing
+  1. ``RANK_AA`` -- Artificial Analysis' evaluations, including the API, model
+     pages, Coding Agent Index and official social posts. Locked at the top: nothing
      overwrites an AA number except a later AA number.
   2. ``RANK_BENCHMARK_SITE`` -- the leaderboard run by the team that owns the
      benchmark. First-party for the one column it publishes, and no two members
@@ -40,11 +39,7 @@ The rungs, strongest first:
      its own held-out sets, so its numbers are measurements rather than
      republished ones -- but of benchmarks it does not own, which is what keeps
      it off rung 2 next to the boards themselves.
-  4. ``RANK_AA_CODING_AGENTS`` -- AA's Coding Agent Index. AA-published, but
-     these are AA's *own harness* over someone else's benchmark, and they
-     disagree systematically with that benchmark's board, so the index does not
-     inherit rank 1: it sits above the aggregates as a gap-filler, which is the
-     role the fill-only flag on its ingest already gave it.
+     ``RANK_AA_CODING_AGENTS`` is an alias for rank 1, not a separate rung.
   5. ``RANK_AGGREGATE`` -- cross-benchmark aggregates that republish numbers
      nobody in the chain ran: llm-stats and the Hugging Face model cards. Both
      ingests are fill-only, so in practice they reach a column only where it is
@@ -93,7 +88,7 @@ from fill_source_urls import canonical
 RANK_AA = 1
 RANK_BENCHMARK_SITE = 2
 RANK_CURATED = 3
-RANK_AA_CODING_AGENTS = 4
+RANK_AA_CODING_AGENTS = RANK_AA
 RANK_AGGREGATE = 5
 RANK_HAND_ENTERED = 6
 
@@ -156,12 +151,13 @@ HUGGING_FACE_PREFIX = canonical(fetch_huggingface.HF_BASE)
 def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
     """(page prefix, rank) pairs, longest prefix first.
 
-    Longest-first is what separates two sources on one host: AA's model pages
-    are rank 1 and its Coding Agent Index rank 4, both under
-    ``artificialanalysis.ai``, and the longer of the two prefixes has to be
-    tried first or every AA URL would answer to whichever came earlier.
+    Longest-first allows specific pages to override a host-wide rule.
+    All Artificial Analysis surfaces currently share the top rank.
     """
     pairs: list[tuple[str, int]] = [
+        ("https://artificialanalysis.ai", RANK_AA),
+        ("https://x.com/ArtificialAnlys", RANK_AA),
+        ("https://twitter.com/ArtificialAnlys", RANK_AA),
         (AA_MODEL_PAGE_PREFIX, RANK_AA),
         (OSWORLD_SOURCE_URL, RANK_BENCHMARK_SITE),
         (TOOLATHLON_SOURCE_URL, RANK_BENCHMARK_SITE),
@@ -194,9 +190,8 @@ def source_rank(url: str | None) -> int:
 
     An unrecognised page ranks as hand-entered, and so does None: both mean the
     number reached llm.json through a person rather than through a scraper this
-    repo runs. A prefix matches only on a path boundary, so a leaderboard that
-    someday lives at ``.../models-v2`` does not inherit the rank of
-    ``.../models``.
+    repo runs. A prefix matches only on a path boundary, so lookalike hosts
+    and social account names cannot inherit a trusted source's rank.
     """
     if not url:
         return RANK_HAND_ENTERED
