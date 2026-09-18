@@ -47955,7 +47955,7 @@
       },
       "scores": {
         "coding_index": 97725,
-        "tooling_index": 97957,
+        "tooling_index": 98034,
         "knowledge_index": 98267,
         "vision_index": 88934,
         "trust_index": 66492,
@@ -47992,7 +47992,7 @@
         "itbench_aa": null,
         "gdpval_aa": 1735,
         "agents_last_exam": 31.6,
-        "aa_briefcase": 1645,
+        "aa_briefcase": 1635,
         "browsecomp": 90.8,
         "aa_omniscience": 37.1,
         "aa_omniscience_hallucination": 60.8,
@@ -48012,7 +48012,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-09-17",
-        "tooling_index": "2026-09-17",
+        "tooling_index": "2026-09-18",
         "knowledge_index": "2026-09-17",
         "vision_index": "2026-09-17",
         "trust_index": "2026-09-17",
@@ -48048,7 +48048,7 @@
         "itbench_aa": null,
         "gdpval_aa": "2026-09-11",
         "agents_last_exam": "2026-09-11",
-        "aa_briefcase": "2026-09-11",
+        "aa_briefcase": "2026-09-18",
         "browsecomp": "2026-09-11",
         "aa_omniscience": "2026-09-11",
         "aa_omniscience_hallucination": "2026-09-11",
@@ -48279,6 +48279,11 @@
           {
             "date": "2026-09-11",
             "score": 1645,
+            "source": "https://artificialanalysis.ai/models/claude-opus-5"
+          },
+          {
+            "date": "2026-09-18",
+            "score": 1635,
             "source": "https://artificialanalysis.ai/models/claude-opus-5"
           }
         ],
@@ -48778,7 +48783,7 @@
       },
       "scores": {
         "coding_index": 97272,
-        "tooling_index": 98634,
+        "tooling_index": 98558,
         "knowledge_index": 99051,
         "vision_index": 99629,
         "trust_index": 67082,
@@ -48813,9 +48818,9 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": 1765,
+        "gdpval_aa": 1725,
         "agents_last_exam": null,
-        "aa_briefcase": 1660,
+        "aa_briefcase": 1645,
         "browsecomp": null,
         "aa_omniscience": 43.5,
         "aa_omniscience_hallucination": 72.6,
@@ -48835,7 +48840,7 @@
       },
       "scores_updated": {
         "coding_index": "2026-09-17",
-        "tooling_index": "2026-09-17",
+        "tooling_index": "2026-09-18",
         "knowledge_index": "2026-09-17",
         "vision_index": "2026-09-17",
         "trust_index": "2026-09-17",
@@ -48869,9 +48874,9 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": "2026-09-11",
+        "gdpval_aa": "2026-09-18",
         "agents_last_exam": null,
-        "aa_briefcase": "2026-09-11",
+        "aa_briefcase": "2026-09-18",
         "browsecomp": null,
         "aa_omniscience": "2026-09-11",
         "aa_omniscience_hallucination": "2026-09-11",
@@ -49098,12 +49103,22 @@
             "date": "2026-09-11",
             "score": 1765,
             "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
+          },
+          {
+            "date": "2026-09-18",
+            "score": 1725,
+            "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
           }
         ],
         "aa_briefcase": [
           {
             "date": "2026-09-11",
             "score": 1660,
+            "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
+          },
+          {
+            "date": "2026-09-18",
+            "score": 1645,
             "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
           }
         ],
@@ -50040,9 +50055,9 @@
         "bfcl_v4": null,
         "ifbench": 72.7,
         "itbench_aa": 56.2,
-        "gdpval_aa": 1625,
+        "gdpval_aa": 1585,
         "agents_last_exam": 30.6,
-        "aa_briefcase": 1475,
+        "aa_briefcase": 1465,
         "browsecomp": 90.4,
         "aa_omniscience": 22,
         "aa_omniscience_hallucination": 92.2,
@@ -50096,9 +50111,9 @@
         "bfcl_v4": null,
         "ifbench": "2026-09-11",
         "itbench_aa": "2026-09-11",
-        "gdpval_aa": "2026-09-11",
+        "gdpval_aa": "2026-09-18",
         "agents_last_exam": "2026-09-11",
-        "aa_briefcase": "2026-09-11",
+        "aa_briefcase": "2026-09-18",
         "browsecomp": "2026-09-11",
         "aa_omniscience": "2026-09-11",
         "aa_omniscience_hallucination": "2026-09-11",
@@ -50325,6 +50340,11 @@
             "date": "2026-09-11",
             "score": 1625,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
+          },
+          {
+            "date": "2026-09-18",
+            "score": 1585,
+            "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
           }
         ],
         "agents_last_exam": [
@@ -50338,6 +50358,11 @@
           {
             "date": "2026-09-11",
             "score": 1475,
+            "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
+          },
+          {
+            "date": "2026-09-18",
+            "score": 1465,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
           }
         ],
