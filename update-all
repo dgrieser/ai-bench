@@ -67,16 +67,68 @@ fi
 
 FAILED=()
 
+# Wall clock in milliseconds. EPOCHREALTIME is a bash 5 builtin, so a timing
+# costs no process of its own; the fallback keeps whole-second timings on the
+# bash 3.2 that macOS still ships as /bin/bash.
+now_ms() {
+    if [ -n "${EPOCHREALTIME:-}" ]; then
+        # "1758312124.214147" -> microseconds. A comma is possible under a
+        # locale that decimal-separates that way, so both are stripped.
+        local raw="${EPOCHREALTIME/./}"
+        raw="${raw/,/}"
+        echo $(( 10#${raw} / 1000 ))
+    else
+        echo $(( $(date +%s) * 1000 ))
+    fi
+}
+
+# One decimal, matching what update.py prints per fetcher, so the two halves of
+# a run's log read as one scale.
+fmt_ms() {
+    printf '%d.%ds' $(( $1 / 1000 )) $(( ($1 % 1000) / 100 ))
+}
+
+# label<TAB>milliseconds per step, in the order they ran. Kept for the summary
+# at the end rather than only printed as it goes: the per-step lines are spread
+# across thousands of lines of scraper output, and the question being asked is
+# always which of them to look at first.
+TIMINGS=()
+STARTED_MS=$(now_ms)
+
 run() {
     local label="$1"
     shift
     echo "+ Running ${label}" 1>&2
+    local started=$(now_ms)
     "$@"
     local status=$?
+    # Timed on the way out whatever happened, so a step that failed slowly --
+    # a scraper retrying against a dead host -- is in the table too, which is
+    # exactly the one worth seeing.
+    local elapsed=$(( $(now_ms) - started ))
+    TIMINGS+=("${label}	${elapsed}")
+    echo "+ ${label} took $(fmt_ms ${elapsed})" 1>&2
     if [ $status -ne 0 ]; then
         FAILED+=("${label} (exit ${status})")
     fi
     return 0
+}
+
+# Longest first: the ordering the log is read in when a run got slower and
+# nobody knows which step to blame. The by-hand elapsed total covers the gaps
+# between steps as well -- there are none worth naming today, but a total that
+# is the sum of its parts would hide one if there ever were.
+report_timings() {
+    local total=$(( $(now_ms) - STARTED_MS ))
+    echo 1>&2
+    echo "step timings (longest first):" 1>&2
+    local row
+    for row in "${TIMINGS[@]}"; do
+        printf '%s\t%s\n' "${row#*	}" "${row%%	*}"
+    done | sort -rn | while IFS=$'\t' read -r ms label; do
+        printf '  %8s  %s\n' "$(fmt_ms ${ms})" "${label}" 1>&2
+    done
+    printf '  %8s  total\n' "$(fmt_ms ${total})" 1>&2
 }
 
 # Record the pages the scrapers below read; independent of the scores, so first
@@ -107,6 +159,8 @@ if [ -n "$REPORT" ]; then
     echo 1>&2
     "${SCRIPT_DIR}/pending_prompts.py" "$REPORT" --format text 1>&2
 fi
+
+report_timings
 
 if [ ${#FAILED[@]} -gt 0 ]; then
     echo 1>&2

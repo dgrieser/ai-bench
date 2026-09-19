@@ -2928,9 +2928,61 @@ json.dump(rows, open('export.json','w'), indent=2)
 ## Performance Characteristics
 
 - **Index size**: ~2,300 nodes, ~6,100 edges (code graph)
-- **Data size**: llm.json ~100KB+ (variable with model count)
-- **Update time**: ~10-30 seconds (depending on number of active benchmarks)
+- **Data size**: llm.json ~1.9MB at 164 models, and it is read and rewritten
+  whole by every writer
+- **Update time**: `update-all` takes about 4m40s on a GitHub-hosted runner;
+  the workflow around it adds roughly 25 seconds of checkout, dependency
+  install and tests
 - **Memory**: Minimal (loads entire llm.json into memory)
+
+### Where a refresh's time goes
+
+Every step of a refresh is timed, so a run that got slower says so itself
+rather than leaving the reader to subtract log timestamps:
+
+- `update-all` times each step it runs and prints a longest-first table at
+  the end, under `step timings`.
+- `update.py` times each fetcher subprocess (it always did) *and* each
+  in-process phase -- the per-source update passes, the index refresh, the
+  history sync, the write -- so its parts add up to its whole.
+- `derive_indexes.py` times each of the five indexes separately, both when
+  run as a script and when update.py refreshes the columns in memory.
+
+All of it goes to stderr, which Python keeps line-buffered whether or not it
+is a terminal, so the timings arrive as each step finishes rather than at
+exit.
+
+A representative cron run, 279 seconds in total:
+
+| Step | Time | Share |
+| --- | ---: | ---: |
+| `update.py` | 150.3s | 54% |
+| `update_llmstats_mapping.py` | 42.2s | 15% |
+| `derive_indexes.py` | 40.9s | 15% |
+| `update_huggingface_mapping.py` | 13.5s | 5% |
+| `check_new.py` | 11.3s | 4% |
+| the other 20 `update_*_mapping.py` | 20.7s | 7% |
+| `fill_source_urls.py` | 0.2s | 0% |
+
+Inside update.py's 150 seconds, about 109 are fetcher subprocesses -- the AA
+score fetch alone is 43s, Spheron 27s, llm-stats 14s, Hugging Face 14s -- and
+about 41 are the in-memory index refresh.
+
+Two things are worth knowing before optimising any of it:
+
+- **The indexes are computed twice per refresh.** `update.py -w` refreshes
+  them in memory before writing (about 41s), and `update-all` then runs
+  `derive_indexes.py -w` (about 41s again), which recomputes all five and
+  normally reports "The derived indexes are up to date. Nothing to do." That
+  second pass is a check, not a fix, on any run that went through update.py;
+  it exists because update.py skips its own refresh under
+  `--fill-source-urls`, and because derive_indexes.py is also the repair path
+  for a hand-edited llm.json. `knowledge_index` is most of the cost on both
+  passes.
+- **llm-stats and Hugging Face are each read twice.** The mapping updater
+  scrapes the source to learn its model names, and the fetcher scrapes it
+  again for the scores: 42.2s + 14.4s for llm-stats, 13.5s + 14.0s for
+  Hugging Face. Nothing caches between the two.
 
 ## Notes
 

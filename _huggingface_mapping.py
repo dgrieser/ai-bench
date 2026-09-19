@@ -10,6 +10,9 @@ from typing import Any
 
 from _openness import PENDING
 from _prompts import freeze_decisions
+# The scrape below is a second full read of the Hugging Face model cards, on
+# top of the one update.py's fetcher makes; timing it says so in the log.
+from _timing import timed
 
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapping.json")
@@ -133,7 +136,9 @@ UNMAPPABLE = "__unmappable__"
 
 
 def fetch_huggingface_benchmark_names() -> list[str]:
-    proc = subprocess.run(
+    proc = timed(
+        "fetch_huggingface.py --names",
+        subprocess.run,
         [sys.executable, str(HF_SCRIPT), "--all-models", "--format", "names"],
         capture_output=True,
         text=True,
