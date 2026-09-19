@@ -80,6 +80,7 @@ import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_osworld
+import fetch_programbench
 import fetch_real_swe
 import fetch_swe_atlas
 import fetch_swe_marathon
@@ -108,6 +109,10 @@ LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
 REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
+# The extended table, which is the complete board, not the site root: the
+# root is the top ten of the same runs and prefix-matches everything under
+# the host, including the per-run pages.
+PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
 # cards under another roof, which is rung 5; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
@@ -181,6 +186,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (TOOLATHLON_SOURCE_URL, RANK_BENCHMARK_SITE),
         (MCP_ATLAS_SOURCE_URL, RANK_BENCHMARK_SITE),
         (REAL_SWE_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (PROGRAMBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         (BFCL_SOURCE_URL, RANK_BENCHMARK_SITE),
         (DATACURVE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (FRONTIERSWE_SOURCE_URL, RANK_BENCHMARK_SITE),

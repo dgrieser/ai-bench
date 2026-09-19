@@ -8053,11 +8053,11 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      // Fifteen because that is what the widest preset needs (the Coding index
-      // aggregates fifteen benchmarks) and a preset has to fit inside the same
+      // Sixteen because that is what the widest preset needs (the Coding index
+      // aggregates sixteen benchmarks) and a preset has to fit inside the same
       // bounds a hand-picked set does -- otherwise the chips would show a set
       // the picker refuses to reproduce.
-      const RADAR_MAX_AXES = 15;
+      const RADAR_MAX_AXES = 16;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index"];
 
@@ -8081,7 +8081,7 @@
             "swe_marathon_1_1", "terminal_bench_4_0", "terminal_bench_2_1",
             "vibe_code_bench_1_1", "swe_bench_pro", "livecodebench", "scicode",
             "swe_bench_multilingual", "swe_atlas_qna", "swe_atlas_rf",
-            "swe_bench_verified"]
+            "programbench", "swe_bench_verified"]
         },
         {
           id: "tooling",

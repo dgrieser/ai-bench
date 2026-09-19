@@ -126,8 +126,8 @@ class IndexDef(NamedTuple):
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
-    other and with MIN_SCORED_FRACTION: Coding's 0.013 leaves a fully measured
-    model 98.7% of its distance from the middle, Trust's 1.524 leaves it 40%.
+    other and with MIN_SCORED_FRACTION: Coding's 0.012 leaves a fully measured
+    model 98.8% of its distance from the middle, Trust's 1.524 leaves it 40%.
     It sets how hard a thinly covered model is pulled toward the middle (see
     coverage_reliability), and it is measured rather than chosen: run
     ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
@@ -240,21 +240,43 @@ INDEXES: list[IndexDef] = [
             # aggregates. See README, "Why SWE Atlas contributes two tracks".
             ("swe_atlas_qna", 0.75),
             ("swe_atlas_rf", 0.75),
+            # The floor of the group, and the only member that is low because a
+            # benchmark is too hard rather than too easy. ProgramBench asks for
+            # a program rebuilt from its binary, and its authors are explicit
+            # that the metric is Fully Resolved -- every behavioural test
+            # passing -- with the relaxed alternatives named as misleading, so
+            # that is what the column stores and there is no gentler reading to
+            # fall back on. Today that puts 14 of its 22 scored models at zero,
+            # and 12 of the 15 open-weight ones: 39.8% of its pairs are ties
+            # against under 8% for every other member here, 62.9% among the
+            # open-weight models this table is about. So it votes 0.2, a
+            # notch above SWE-bench Verified and for the opposite reason --
+            # SWE-V is cheap because it is saturated at the top, this because
+            # it is at the floor. What it buys at that price is the only
+            # from-scratch reconstruction signal in the file and the most
+            # headroom of anything here, on the 8 models that have cleared
+            # zero. 0.2 also keeps the admission free: the evidence bar passes
+            # 1.70 at 0.294, and four models -- Gemma 4 31B, gpt-oss-120b,
+            # MiniCPM5 2B and Qwen3 Coder Next -- sit exactly there. Worth
+            # re-pricing upward as models start resolving tasks. See README,
+            # "Why ProgramBench enters at 0.20".
+            ("programbench", 0.2),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, and now clear of tooling: coding benchmarks
-        # predict each other well. Hold one out and the rest miss it by a
-        # seventy-seventh of the spread between models, so a fully measured
-        # model keeps 98.7% of its distance from the middle and one at the 18%
-        # bar keeps 93%. That is the data's verdict rather than a preference: a
+        # The lowest of the five, and now well clear of tooling: coding
+        # benchmarks predict each other well. Hold one out and the rest miss it
+        # by an eighty-third of the spread between models, so a fully measured
+        # model keeps 98.8% of its distance from the middle and one at the 18%
+        # bar keeps 94%. That is the data's verdict rather than a preference: a
         # model placing top-decile on three coding benchmarks really is
         # unlikely to be mid-field on the rest. Re-measured by --calibrate
-        # after the SWE Atlas promotion, 0.016 -> 0.015, and again after Vibe
-        # Code Bench joined, 0.015 -> 0.013: a member scored on 35 models makes
-        # the group better at predicting its own held-out parts. The
-        # FrontierCode Main -> Extended swap between them moved nothing, which
-        # is what swapping one board for a near-identical one should do.
-        transfer_ratio=0.013,
+        # after the SWE Atlas promotion, 0.016 -> 0.015, after Vibe Code Bench
+        # joined, 0.015 -> 0.013, and after ProgramBench, 0.013 -> 0.012 --
+        # each time a broadly scored member gave the group more overlap to
+        # predict its own held-out parts from. The FrontierCode Main ->
+        # Extended swap in between moved nothing, which is what swapping one
+        # board for a near-identical one should do.
+        transfer_ratio=0.012,
     ),
     IndexDef(
         key="tooling_index",

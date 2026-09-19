@@ -126,6 +126,9 @@ ROUTES: dict[str, dict[str, Route]] = {
     "update_toolathlon_mapping.py": {
         "*": Route("_toolathlon_mapping", "TOOLATHLON_MAPPING", "add_toolathlon_mapping", MODELS)
     },
+    "update_programbench_mapping.py": {
+        "*": Route("_programbench_mapping", "PROGRAMBENCH_MAPPING", "add_programbench_mapping", MODELS)
+    },
     "update_real_swe_mapping.py": {
         "*": Route("_real_swe_mapping", "REAL_SWE_MAPPING", "add_real_swe_mapping", MODELS)
     },

@@ -90,6 +90,10 @@ BENCHMARKS: dict[str, str] = {
     # rest of the table stays curated -- see VALS_OWN_BENCHMARKS below. Pinned
     # to its published version through VERSIONS, because the slug carries none.
     "vibe-code": "vibe_code_bench_1_1",
+    # Meta's ProgramBench, which Vals re-runs over its own field: 47 rows
+    # against the 21 the benchmark's own board publishes, which is the whole
+    # reason to read it. Read through TASKS at the "strict" task -- see below.
+    "programbench": "programbench",
 }
 
 # The boards Vals authors, runs and publishes itself, as opposed to the ones it
@@ -127,6 +131,18 @@ TASKS: dict[str, str] = {
     # The board is archived upstream (last moved 2026-04-16), so it fills the
     # models it measured and never moves again.
     "aime": "aime_2025",
+    # ProgramBench publishes three quantities and its authors are explicit that
+    # only one of them is the benchmark: Fully Resolved, every behavioural test
+    # passing. Almost Resolved (>=95% of tests) is "an additional point of
+    # reference while the scores of our primary metric are low", and an average
+    # test pass rate "would be extremely misleading" -- every task carries
+    # trivial tests a useless program still passes. Vals publishes all three,
+    # and its "overall" is Fully Resolved today, so this override does not
+    # change which number is read; it pins it. Raw Pass Rate would be the
+    # tempting one -- 22 distinct values over the 22 models here against Fully
+    # Resolved's 7, most of them zero -- and it is exactly the number the
+    # authors say not to report.
+    "programbench": "strict",
 }
 
 HEADERS = {

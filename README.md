@@ -33,6 +33,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **BFCL (Berkeley/Gorilla)** | Research (benchmark's own leaderboard) | CSV the page hydrates from |
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
+| **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench) | Astro island props |
 
 ## Core Data Structure
@@ -265,9 +266,11 @@ Output: llm.json (unified dataset)
 ./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
+./fetch_programbench.py                 # ProgramBench Resolved %, from the extended board
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_vals.py --benchmark swebench    # or pin one board
 ./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
+./fetch_vals.py --benchmark programbench  # ProgramBench, Vals' wider re-run of it
 
 # Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
 ./artificialanalysis.py --open          # every open-weights model AA lists
@@ -285,6 +288,7 @@ Output: llm.json (unified dataset)
 ./update_real_swe_mapping.py
 ./update_tbench_mapping.py
 ./update_agents_last_exam_mapping.py
+./update_programbench_mapping.py
 ./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
@@ -580,7 +584,7 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 1 | **Artificial Analysis** (API, model pages, Coding Agent Index, official social posts) | Authority across all AA surfaces regardless of harness. AA replaces other sources and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2 — *for the boards it re-runs*. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | Whatever page the entry cited — `edit.py --score-url`, or the admin page's score card — and null where it cited none, which is the default: a hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
@@ -622,7 +626,7 @@ solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
 first-party boards. The line is drawn per board, not per source.
 
-Nine of its boards name a column `llm.json` tracks — the table lives in
+Ten of its boards name a column `llm.json` tracks — the table lives in
 `fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
 more:
 
@@ -636,6 +640,7 @@ more:
 | `mmmu` | `mmmu_pro` | Titled "MMMU Pro"; the metadata slug is the bare `mmmu` |
 | `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
 | `vibe-code` | `vibe_code_bench_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; version-pinned, see below |
+| `programbench` | `programbench` | Read at the `strict` *task*, not the board's "overall" — see [below](#why-programbench-enters-at-020) |
 
 The AIME board is the one that needs a task override. Vals runs the 2024 and
 2025 exams as two tasks of one board and its "overall" is the pair pooled, while
@@ -653,6 +658,22 @@ API Vals called rather than the model — the same weights arrive as
 is the mapping key, but every comparison against another source's name (the
 review candidates, the [openness index](#openness-classification)) is made on the
 model half alone.
+
+The `programbench` board is the other one that needs a task override, and for a
+different reason than AIME's. Vals publishes ProgramBench four ways — Fully
+Resolved, Almost Resolved, Raw Pass Rate, and an "overall" that is Fully
+Resolved today — while the benchmark's authors are explicit in their
+[FAQ](https://programbench.com/#faq-metrics) that only one of them is the
+benchmark: Fully Resolved is "the primary metric that should be reported",
+Almost Resolved is published "as an additional point of reference while the
+scores of our primary metric are low", and an average test pass rate "would be
+extremely misleading", because every task carries trivial tests — does the
+binary exist, does `--help` work — that a program doing nothing useful still
+passes. So `fetch_vals.TASKS` pins the board to its `strict` task. That does not
+change which number is read today; it stops "overall" quietly becoming something
+else. Raw Pass Rate is the tempting one — 22 distinct values over the 22 models
+here against Fully Resolved's 7, most of them zero — and it is precisely the
+number the authors say not to report.
 
 The `vibe-code` board is the one that needs a version pin. Vals stamps a version
 into every board's metadata but names only some of its slugs after it:
@@ -1181,7 +1202,10 @@ Two consequences worth knowing (they hold for every derived index):
   which cost 21 models their rank, and the Terminal-Bench 4.0 admission in the
   next bullet, which cost 34. A broadly covered column is much cheaper:
   [Vibe Code Bench at 0.75](#why-vibe-code-bench-enters-at-075), scored on 35
-  models, dropped five and ranked four for the first time, a net 58 → 57. A
+  models, dropped five and ranked four for the first time, a net 58 → 57. And an
+  admission can be free if its weight is chosen to stay under the next cliff:
+  [ProgramBench at 0.20](#why-programbench-enters-at-020) left all 57 ranked,
+  where 0.294 would have cost four of them. A
   *swap* costs nothing of the sort: replacing
   FrontierCode's Main board with [its Extended
   one](#frontiercode-extended-in-the-coding-group) left the denominator, the
@@ -1567,6 +1591,70 @@ a member this broad makes the group slightly better at predicting its own
 held-out parts, so a fully measured model keeps 98.7% of its distance from the
 middle instead of 98.5%.
 
+### Why ProgramBench enters at 0.20
+
+**`programbench` is aggregated at 0.20**, the floor of the group bar SWE-bench
+Verified, and it is the only member priced low because a benchmark is too *hard*
+rather than too easy. ProgramBench hands an agent a reference executable and its
+documentation and asks for a codebase whose behaviour matches — 200 tasks from
+compact CLI tools up to FFmpeg, SQLite and the PHP interpreter, graded by hidden
+behavioural tests against the binary the agent produces, with the internet off
+because the authors found that allowing it mostly produced solutions that had
+found the original source.
+
+**The metric is not a choice this file gets to make.** The board prints three
+numbers and the
+[authors' FAQ](https://programbench.com/#faq-metrics) rules on them: Fully
+Resolved — every behavioural test passing — is "the primary metric that should be
+reported"; Almost Resolved (≥95% of tests) is "an additional point of reference
+while the scores of our primary metric are low"; and an average test pass rate
+"would be extremely misleading", because every task carries trivial tests that a
+program doing nothing useful still passes. So the column stores Resolved. The
+alternative was not available: Raw Pass Rate would have ranked all 22 models
+cleanly, and it is the number its authors say not to publish.
+
+What that costs is a column sitting on the floor:
+
+| | Measured on the current file |
+| --- | --- |
+| Coverage | **22 scored models**, of which **14 score zero** — 8 distinct values in all |
+| Open-weight half | 15 models, **12 of them at zero**; only Kimi K3 (2.0), GLM 5.3 (1.5) and Inkling Small (0.5) have resolved anything |
+| Ties | **39.8%** of its pairs are ties, and **62.9%** among open-weight models — every other member of this group is under 8%, and most under 1% |
+| Headroom | the best run in the file resolves **7.0%** of the tasks; nothing else here is this far from its ceiling |
+
+That tie share is the whole argument. A benchmark contributes
+[comparisons, not scores](#coding-index), and a tied pair splits its comparison
+instead of ranking anyone, so nearly two thirds of what ProgramBench says about
+the population this table is about is "these two are indistinguishable". True,
+and worth recording — but not worth a mid-tier weight.
+
+**0.20 is what that buys, and it is deliberately just under a cliff.** The
+evidence bar rises **1.647 → 1.683** on a denominator of **9.15 → 9.35**, and
+the field is unchanged: **57 ranked before and after**, nobody in, nobody out,
+largest rank change 3 places (`inkling-small` 30 → 27, on the strength of being
+one of the three open-weight models to resolve a task), mean 0.18. That is not
+luck. Four models — `gemma-4-31b`, `gpt-oss-120b`, `minicpm5-2b` and
+`qwen3-coder-next` — carry exactly 1.70 of scored weight, so the bar passes them
+at a ProgramBench weight of **0.294** and they lose their rank. Unlike
+[Vibe Code Bench](#why-vibe-code-bench-enters-at-075), which brought four new
+models into the ranked field in exchange, ProgramBench brings none: every model
+it scores was already ranked, so any weight above that cliff is a pure cost.
+0.20 leaves margin under it rather than sitting on it.
+
+It goes in rather than staying a column outside `INDEXES` — the treatment
+[SWE-bench Multimodal and Agents' Last Exam](#coding-index) get — because its
+problem is the opposite of theirs. Those two are thin: too few models to re-rank
+the table on. ProgramBench has the coverage and spends it on a construct nothing
+else here measures, separating the eight models that have cleared zero at a point
+on the difficulty curve where every other coding column has saturated. **Worth
+re-pricing upward as models start resolving tasks** — this is the one weight in
+the group that should move on the benchmark's own progress rather than on ours.
+
+Re-running `--calibrate` after the admission moved the coding group's
+[transfer ratio](#how-far-one-benchmark-speaks-for-the-others) **0.013 → 0.012**,
+the lowest in the file: another broadly scored member is more overlap for the
+rest of the group to predict a held-out one from.
+
 ### Why the evidence bar is 18%
 
 `MIN_SCORED_FRACTION` is the one number all five derived indexes share: sum the
@@ -1711,7 +1799,7 @@ are easy to get wrong:
 
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.013 | 93% | 98.7% |
+| Coding | 0.012 | 94% | 98.8% |
 | Tooling | 0.016 | 92% | 98.4% |
 | Vision | 0.034 | 84% | 97% |
 | Knowledge | 0.072 | 71% | 93% |
@@ -1728,8 +1816,10 @@ swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchan
 the expected answer for swapping one board for a near-identical one instead of adding
 weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
 to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-075) took
-it to **0.013**, the lowest ratio in the file: a member scored on 35 models is a
-member the rest of the group has enough overlap to predict.
+it to **0.013** and [ProgramBench's](#why-programbench-enters-at-020) to
+**0.012**, the lowest ratio in the file: a member scored on 35 models, and then
+another on 22, is more overlap for the rest of the group to predict a held-out
+one from.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an
@@ -2722,9 +2812,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (20 files)
-├── update_*_mapping.py         # Mapping sync scripts (20 files)
-├── _*_mapping.py               # Mapping application modules (20 files)
+├── fetch_*.py                  # Benchmark data fetchers (22 files)
+├── update_*_mapping.py         # Mapping sync scripts (22 files)
+├── _*_mapping.py               # Mapping application modules (22 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 │
