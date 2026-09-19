@@ -266,7 +266,7 @@ Output: llm.json (unified dataset)
 ./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
-./fetch_programbench.py                 # ProgramBench Resolved %, from the extended board
+./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_vals.py --benchmark swebench    # or pin one board
 ./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
@@ -640,7 +640,7 @@ more:
 | `mmmu` | `mmmu_pro` | Titled "MMMU Pro"; the metadata slug is the bare `mmmu` |
 | `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
 | `vibe-code` | `vibe_code_bench_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; version-pinned, see below |
-| `programbench` | `programbench` | Read at the `strict` *task*, not the board's "overall" — see [below](#why-programbench-enters-at-020) |
+| `programbench` | `programbench_almost` | Read at the `almost` *task*, not the board's "overall" — see [below](#why-programbench-enters-at-050) |
 
 The AIME board is the one that needs a task override. Vals runs the 2024 and
 2025 exams as two tasks of one board and its "overall" is the pair pooled, while
@@ -660,20 +660,14 @@ review candidates, the [openness index](#openness-classification)) is made on th
 model half alone.
 
 The `programbench` board is the other one that needs a task override, and for a
-different reason than AIME's. Vals publishes ProgramBench four ways — Fully
-Resolved, Almost Resolved, Raw Pass Rate, and an "overall" that is Fully
-Resolved today — while the benchmark's authors are explicit in their
-[FAQ](https://programbench.com/#faq-metrics) that only one of them is the
-benchmark: Fully Resolved is "the primary metric that should be reported",
-Almost Resolved is published "as an additional point of reference while the
-scores of our primary metric are low", and an average test pass rate "would be
-extremely misleading", because every task carries trivial tests — does the
-binary exist, does `--help` work — that a program doing nothing useful still
-passes. So `fetch_vals.TASKS` pins the board to its `strict` task. That does not
-change which number is read today; it stops "overall" quietly becoming something
-else. Raw Pass Rate is the tempting one — 22 distinct values over the 22 models
-here against Fully Resolved's 7, most of them zero — and it is precisely the
-number the authors say not to report.
+different reason than AIME's. Vals mirrors all three of ProgramBench's readings
+plus an "overall", so on that board the task *is* the metric, and the one this
+file stores is Almost Resolved: `fetch_vals.TASKS` pins it to `almost`, and the
+column is called `programbench_almost` so the choice is legible in the key
+rather than only in prose. Which reading, and why, is
+[worked through below](#why-programbench-enters-at-050); the short version is
+that the authors' primary metric puts 14 of 22 models at zero, and the raw pass
+rate they rule out as "extremely misleading" is stored nowhere here.
 
 The `vibe-code` board is the one that needs a version pin. Vals stamps a version
 into every board's metadata but names only some of its slugs after it:
@@ -1204,8 +1198,8 @@ Two consequences worth knowing (they hold for every derived index):
   [Vibe Code Bench at 0.75](#why-vibe-code-bench-enters-at-075), scored on 35
   models, dropped five and ranked four for the first time, a net 58 → 57. And an
   admission can be free if its weight is chosen to stay under the next cliff:
-  [ProgramBench at 0.20](#why-programbench-enters-at-020) left all 57 ranked,
-  where 0.294 would have cost four of them. A
+  [ProgramBench at 0.50](#why-programbench-enters-at-050) cost four, and
+  brought none back. A
   *swap* costs nothing of the sort: replacing
   FrontierCode's Main board with [its Extended
   one](#frontiercode-extended-in-the-coding-group) left the denominator, the
@@ -1591,69 +1585,76 @@ a member this broad makes the group slightly better at predicting its own
 held-out parts, so a fully measured model keeps 98.7% of its distance from the
 middle instead of 98.5%.
 
-### Why ProgramBench enters at 0.20
+### Why ProgramBench enters at 0.50
 
-**`programbench` is aggregated at 0.20**, the floor of the group bar SWE-bench
-Verified, and it is the only member priced low because a benchmark is too *hard*
-rather than too easy. ProgramBench hands an agent a reference executable and its
-documentation and asks for a codebase whose behaviour matches — 200 tasks from
-compact CLI tools up to FFmpeg, SQLite and the PHP interpreter, graded by hidden
-behavioural tests against the binary the agent produces, with the internet off
-because the authors found that allowing it mostly produced solutions that had
-found the original source.
+**`programbench_almost` is aggregated at 0.50.** ProgramBench hands an agent a
+reference executable and its documentation and asks for a codebase whose
+behaviour matches — 200 tasks from compact CLI tools up to FFmpeg, SQLite and
+the PHP interpreter, graded by hidden behavioural tests against the binary the
+agent produces, with the internet off because the authors found that allowing it
+mostly produced solutions that had located the original source.
 
-**The metric is not a choice this file gets to make.** The board prints three
-numbers and the
-[authors' FAQ](https://programbench.com/#faq-metrics) rules on them: Fully
-Resolved — every behavioural test passing — is "the primary metric that should be
-reported"; Almost Resolved (≥95% of tests) is "an additional point of reference
-while the scores of our primary metric are low"; and an average test pass rate
-"would be extremely misleading", because every task carries trivial tests that a
-program doing nothing useful still passes. So the column stores Resolved. The
-alternative was not available: Raw Pass Rate would have ranked all 22 models
-cleanly, and it is the number its authors say not to publish.
+**Which of the board's numbers the column stores is the first decision, and the
+column is named for it.** The
+[authors' FAQ](https://programbench.com/#faq-metrics) rules on all three:
 
-What that costs is a column sitting on the floor:
+| Reading | What it is | Where it lands |
+| --- | --- | --- |
+| **Resolved** | every behavioural test passes | their "primary metric that should be reported" — and, today, **14 of the same 22 models at zero**, which ranks the top few and calls everything below them equal |
+| **Almost Resolved** | ≥95% of a task's tests pass | published "as an additional point of reference while the scores of our primary metric are low" — **the column**, `programbench_almost` |
+| Raw pass rate | mean share of tests passed | ruled out: "would be extremely misleading", because every task carries trivial tests a program doing nothing useful still passes — **not stored anywhere here** |
 
-| | Measured on the current file |
-| --- | --- |
-| Coverage | **22 scored models**, of which **14 score zero** — 8 distinct values in all |
-| Open-weight half | 15 models, **12 of them at zero**; only Kimi K3 (2.0), GLM 5.3 (1.5) and Inkling Small (0.5) have resolved anything |
-| Ties | **39.8%** of its pairs are ties, and **62.9%** among open-weight models — every other member of this group is under 8%, and most under 1% |
-| Headroom | the best run in the file resolves **7.0%** of the tasks; nothing else here is this far from its ceiling |
+Almost is the looser of the two readings they publish, and it is read as what it
+is: how close a rebuild came, not whether it was correct. The authors are
+explicit that the relaxation is not free — one failed test out of the 15,000 some
+tasks carry can still mean a badly broken program — so the column carries their
+strict number nowhere and says `_almost` in its own key, rather than letting
+`programbench` be read as the headline metric. `fetch_vals.TASKS` pins the Vals
+mirror to the same `almost` task, because on that board the task *is* the metric.
 
-That tie share is the whole argument. A benchmark contributes
-[comparisons, not scores](#coding-index), and a tied pair splits its comparison
-instead of ranking anyone, so nearly two thirds of what ProgramBench says about
-the population this table is about is "these two are indistinguishable". True,
-and worth recording — but not worth a mid-tier weight.
+That choice is what makes the column rankable at all:
 
-**0.20 is what that buys, and it is deliberately just under a cliff.** The
-evidence bar rises **1.647 → 1.683** on a denominator of **9.15 → 9.35**, and
-the field is unchanged: **57 ranked before and after**, nobody in, nobody out,
-largest rank change 3 places (`inkling-small` 30 → 27, on the strength of being
-one of the three open-weight models to resolve a task), mean 0.18. That is not
-luck. Four models — `gemma-4-31b`, `gpt-oss-120b`, `minicpm5-2b` and
-`qwen3-coder-next` — carry exactly 1.70 of scored weight, so the bar passes them
-at a ProgramBench weight of **0.294** and they lose their rank. Unlike
-[Vibe Code Bench](#why-vibe-code-bench-enters-at-075), which brought four new
-models into the ranked field in exchange, ProgramBench brings none: every model
-it scores was already ranked, so any weight above that cliff is a pure cost.
-0.20 leaves margin under it rather than sitting on it.
+| | Resolved | **Almost Resolved** |
+| --- | --- | --- |
+| Distinct values over 22 models | 7 | **16** |
+| Models at zero | 14 | **2** |
+| Tied pairs | 39.8% | **3.9%** (7.6% among open-weight, better than Terminal-Bench 4.0 at 0.85) |
+| Range | 0 – 7.0 | **0 – 53.5** |
 
-It goes in rather than staying a column outside `INDEXES` — the treatment
-[SWE-bench Multimodal and Agents' Last Exam](#coding-index) get — because its
-problem is the opposite of theirs. Those two are thin: too few models to re-rank
-the table on. ProgramBench has the coverage and spends it on a construct nothing
-else here measures, separating the eight models that have cleared zero at a point
-on the difficulty curve where every other coding column has saturated. **Worth
-re-pricing upward as models start resolving tasks** — this is the one weight in
-the group that should move on the benchmark's own progress rather than on ours.
+What argues for a high weight is head resolution and provenance. **37.0 points
+separate the best model from the fifth** — the widest head in the group after
+FrontierSWE 2.0's 39.6, against Terminal-Bench 4.0's 20.2 — on a board nothing is
+near saturating, and the column is fed by two sources on the rungs they belong
+to: [the benchmark's own leaderboard](https://programbench.com/extended/) at
+rank 2 and [Vals' wider re-run](#what-vals-ai-contributes) beneath it.
 
-Re-running `--calibrate` after the admission moved the coding group's
-[transfer ratio](#how-far-one-benchmark-speaks-for-the-others) **0.013 → 0.012**,
-the lowest in the file: another broadly scored member is more overlap for the
-rest of the group to predict a held-out one from.
+**What holds it down is that it is the second board here measuring
+construction.** It agrees with [Vibe Code
+Bench](#why-vibe-code-bench-enters-at-075) at Spearman **0.922 over all 22**
+models on both — the highest well-powered correlation between any two members of
+this group outside the Terminal-Bench family. Both ask a model to build rather
+than maintain, so that is one construct measured twice, and the second member
+takes the discount [Terminal-Bench 2.1 takes beside 4.0](#coding-index). At 0.50
+against Vibe Code's 0.75 the pair carries **1.25 of 9.65, 13.0%** of the group —
+exactly the share the Terminal-Bench pair carries, which is the most any single
+construct is allowed here.
+
+**The band is wide, so merit is the only thing left to choose on.** Every weight
+from **0.30 to 0.57** produces the identical ranked field, because
+[the evidence bar](#why-the-evidence-bar-is-18) crosses 1.70 at **0.294** and
+does not reach the next group until 0.572. The admission therefore costs the
+four models sitting at exactly 1.70 of scored weight — `gemma-4-31b`,
+`gpt-oss-120b`, `minicpm5-2b` and `qwen3-coder-next`, none of them scored on this
+board — their rank, and brings none in, since every model ProgramBench scores was
+already ranked: **57 → 53**. Pricing it at 0.29 instead would have bought those
+four back, and that is the trade this file
+[declines on principle](#why-vibe-code-bench-enters-at-075): a weight chosen
+around the bar is a weight chosen around the wrong thing. The four are measured
+on Terminal-Bench 2.1 plus two public columns, which is the case the bar exists
+to report as unknown.
+
+Re-running `--calibrate` after the admission left the coding group's
+[transfer ratio](#how-far-one-benchmark-speaks-for-the-others) at **0.012**.
 
 ### Why the evidence bar is 18%
 
@@ -1816,7 +1817,7 @@ swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchan
 the expected answer for swapping one board for a near-identical one instead of adding
 weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
 to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-075) took
-it to **0.013** and [ProgramBench's](#why-programbench-enters-at-020) to
+it to **0.013** and [ProgramBench's](#why-programbench-enters-at-050) to
 **0.012**, the lowest ratio in the file: a member scored on 35 models, and then
 another on 22, is more overlap for the rest of the group to predict a held-out
 one from.

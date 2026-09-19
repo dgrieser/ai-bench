@@ -155,7 +155,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         ),
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_real_swe.URL, ("real_swe",)),
-        (fetch_programbench.LEADERBOARD_URL, ("programbench",)),
+        (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),

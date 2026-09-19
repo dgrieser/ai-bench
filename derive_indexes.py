@@ -240,27 +240,46 @@ INDEXES: list[IndexDef] = [
             # aggregates. See README, "Why SWE Atlas contributes two tracks".
             ("swe_atlas_qna", 0.75),
             ("swe_atlas_rf", 0.75),
-            # The floor of the group, and the only member that is low because a
-            # benchmark is too hard rather than too easy. ProgramBench asks for
-            # a program rebuilt from its binary, and its authors are explicit
-            # that the metric is Fully Resolved -- every behavioural test
-            # passing -- with the relaxed alternatives named as misleading, so
-            # that is what the column stores and there is no gentler reading to
-            # fall back on. Today that puts 14 of its 22 scored models at zero,
-            # and 12 of the 15 open-weight ones: 39.8% of its pairs are ties
-            # against under 8% for every other member here, 62.9% among the
-            # open-weight models this table is about. So it votes 0.2, a
-            # notch above SWE-bench Verified and for the opposite reason --
-            # SWE-V is cheap because it is saturated at the top, this because
-            # it is at the floor. What it buys at that price is the only
-            # from-scratch reconstruction signal in the file and the most
-            # headroom of anything here, on the 8 models that have cleared
-            # zero. 0.2 also keeps the admission free: the evidence bar passes
-            # 1.70 at 0.294, and four models -- Gemma 4 31B, gpt-oss-120b,
-            # MiniCPM5 2B and Qwen3 Coder Next -- sit exactly there. Worth
-            # re-pricing upward as models start resolving tasks. See README,
-            # "Why ProgramBench enters at 0.20".
-            ("programbench", 0.2),
+            # ProgramBench rebuilt from its binary: the agent gets a
+            # reference executable and its documentation, nothing else, and has
+            # to produce a codebase whose behaviour matches across 200 tasks
+            # from compact CLI tools up to FFmpeg, SQLite and the PHP
+            # interpreter. The column stores Almost Resolved, at least 95% of a
+            # task's behavioural tests passing, which is the looser of the two
+            # readings the board publishes; the authors' primary metric,
+            # Resolved, needs every test to pass and is close to the floor --
+            # 14 of the same 22 models at zero -- so it ranks the top few and
+            # calls everything below them equal. Almost separates the same
+            # field over 0 to 53.5, and the column is named for the reading it
+            # stores so the two are never confused.
+            #
+            # For it: the widest head in the group, 37.0 points between the
+            # best model and the fifth against FrontierSWE 2.0's 39.6 and
+            # Terminal-Bench 4.0's 20.2, on a board nothing is near saturating;
+            # two sources, the benchmark's own leaderboard at rank 2 and Vals'
+            # wider re-run beneath it; and a tie share of 3.9% overall and 7.6%
+            # among the open-weight models, which is better than Terminal-Bench
+            # 4.0 manages at 0.85.
+            #
+            # Against it: 22 scored models is mid-field here, and it agrees
+            # with Vibe Code Bench at 0.922 over all 22 -- the highest
+            # well-powered correlation between any two members of this group
+            # outside the Terminal-Bench family. Both ask a model to build
+            # rather than maintain, so that is one construct measured twice,
+            # and the second member takes the discount the same way
+            # terminal_bench_2_1 does beside 4.0. 0.5 against Vibe Code's 0.75
+            # gives the pair 1.25 of 9.65, the same share the Terminal-Bench
+            # pair carries, which is the most any single construct is allowed
+            # here.
+            #
+            # The band is wide: every weight from 0.3 to 0.57 produces exactly
+            # the same ranked field, because the evidence bar crosses 1.70 at
+            # 0.294 -- taking Gemma 4 31B, gpt-oss-120b, MiniCPM5 2B and Qwen3
+            # Coder Next, none of them scored here -- and does not reach the
+            # next group until 0.572. So 0.5 is chosen on merit inside a band
+            # where merit is the only thing left to choose on. See README,
+            # "Why ProgramBench enters at 0.50".
+            ("programbench_almost", 0.5),
             ("swe_bench_verified", 0.15),
         ],
         # The lowest of the five, and now well clear of tooling: coding

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch ProgramBench resolved rates from https://programbench.com
+Fetch ProgramBench almost-resolved rates from https://programbench.com
 
 ProgramBench (Meta AI Research and collaborators, 2026) asks whether a model can
 rebuild a program *from scratch*: the agent is given a reference executable and
@@ -21,20 +21,27 @@ There are two pages and they are the same runs, not two boards:
                    nothing to keep apart. This script reads /extended/ because
                    it is the complete list.
 
-**The score is Resolved, and that is a deliberate choice this file has to keep
-making.** The board prints three quantities and the authors are explicit about
-them in the FAQ: Resolved (all behavioural tests pass) is "the primary metric
-that should be reported", Almost Resolved (>=95% of tests) is published "as an
-additional point of reference while the scores of our primary metric are low",
-and an average test pass rate "would be extremely misleading", because every
-task carries trivial tests -- does the binary exist, does ``--help`` work -- that
-a program which does nothing useful still passes. So ``score`` is Resolved;
-``almost`` rides along as a reported field and is never written into the column.
+**The score is Almost Resolved, and that is a deliberate choice this file has to
+keep making.** The board prints three quantities and the authors rule on them in
+the FAQ. Resolved -- every behavioural test passing -- is "the primary metric
+that should be reported", and it is what ``resolved`` carries here. Almost
+Resolved, at least 95% of the tests passing, is published "as an additional
+point of reference while the scores of our primary metric are low", with the
+caveat that even one failed test out of the 15k some tasks carry "can indicate
+severe issues with a program". An average test pass rate is the one they rule
+out entirely -- it "would be extremely misleading", because every task carries
+trivial tests (does the binary exist, does ``--help`` work) that a program doing
+nothing useful still passes -- and this scraper never reports it.
 
-The consequence is a board at the floor: the best run resolves 4.5% of the 200
-tasks and most rows resolve none. That is the benchmark working as designed
-rather than a scrape to be fixed, and it is why the column it feeds carries a
-low weight in the coding index -- see README, "Why ProgramBench enters at 0.25".
+``score`` is Almost Resolved because Resolved is, today, almost entirely floor:
+the best published run resolves 4.5% of the 200 tasks and most rows resolve
+none, which ranks the top few models and calls everything below them equal.
+Almost separates the same field over a real range. It is the more permissive of
+the two readings the authors publish, and it is read as what it is -- how close
+a rebuild came, not whether it was correct. Resolved rides along on every row so
+the strict number is never more than a field away, and the column it feeds says
+in its own name which of the two it stores. See README, "Why ProgramBench enters
+at 0.35".
 
 Rows name an effort where the run used one -- "Claude Opus 5 (xhigh)", "GPT 5.5
 (high)" beside a bare "GPT 5.5" -- and the label is reported as published. The
@@ -170,7 +177,7 @@ def parse_rows(table_body: str) -> list[dict]:
         rows.append({header[i]: cells[i] for i in range(min(len(header), len(cells)))})
     if not header:
         raise ValueError(f"The leaderboard table on {LEADERBOARD_URL} has no header row")
-    for required in ("model", "resolved"):
+    for required in ("model", "resolved", "almost"):
         if required not in header:
             raise ValueError(
                 f"The leaderboard table on {LEADERBOARD_URL} has no {required!r} "
@@ -195,8 +202,9 @@ def get_scores() -> list[dict]:
     """Return a list of score dicts for the ProgramBench leaderboard.
 
     Keys: model (the published label, effort suffix included), effort, agent,
-    score (Resolved %), almost (Almost Resolved %), cost_per_task, calls_per_task,
-    tasks, rank (the board's own position).
+    score (Almost Resolved %), resolved (the strict Resolved %, reported but not
+    scored), cost_per_task, calls_per_task, tasks, rank (the board's own
+    position).
     """
     print(f"Fetching {LEADERBOARD_URL} ...", file=sys.stderr)
     page = fetch_html()
@@ -208,8 +216,8 @@ def get_scores() -> list[dict]:
         model = _text(row.get("model", ""))
         if not model:
             continue
-        resolved = _percent(row.get("resolved", ""))
-        if resolved is None:
+        almost = _percent(row.get("almost", ""))
+        if almost is None:
             continue
         rank = _RANK_RE.match(_text(row.get("rank", "")))
         cost = _text(row.get("cost", "")).lstrip("$")
@@ -219,8 +227,8 @@ def get_scores() -> list[dict]:
                 "model": model,
                 "effort": _effort(model),
                 "agent": _text(row.get("agent", "")) or None,
-                "score": resolved,
-                "almost": _percent(row.get("almost", "")),
+                "score": almost,
+                "resolved": _percent(row.get("resolved", "")),
                 "cost_per_task": float(cost) if re.fullmatch(r"[0-9.]+", cost) else None,
                 "calls_per_task": int(calls) if calls.isdigit() else None,
                 "tasks": tasks,
@@ -238,7 +246,7 @@ def get_scores() -> list[dict]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch ProgramBench leaderboard scores (Resolved %)."
+        description="Fetch ProgramBench leaderboard scores (Almost Resolved %)."
     )
     parser.add_argument(
         "--format",
@@ -261,16 +269,16 @@ def main() -> int:
     else:
         width = max([len("MODEL"), *(len(e["model"]) for e in scores)])
         agent_width = max([len("AGENT"), *(len(e.get("agent") or "") for e in scores)])
-        fmt = f"{{:>4}}  {{:<{width}}}  {{:>8}}  {{:>7}}  {{:<{agent_width}}}"
-        print(fmt.format("#", "MODEL", "RESOLVED", "ALMOST", "AGENT"))
+        fmt = f"{{:>4}}  {{:<{width}}}  {{:>7}}  {{:>9}}  {{:<{agent_width}}}"
+        print(fmt.format("#", "MODEL", "ALMOST", "RESOLVED", "AGENT"))
         for entry in scores:
-            almost = entry["almost"]
+            resolved = entry["resolved"]
             print(
                 fmt.format(
                     "" if entry["rank"] is None else str(entry["rank"]),
                     entry["model"],
                     f"{entry['score']:.1f}%",
-                    "" if almost is None else f"{almost:.1f}%",
+                    "" if resolved is None else f"{resolved:.1f}%",
                     entry.get("agent") or "",
                 )
             )

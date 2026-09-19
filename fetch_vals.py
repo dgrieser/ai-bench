@@ -92,8 +92,9 @@ BENCHMARKS: dict[str, str] = {
     "vibe-code": "vibe_code_bench_1_1",
     # Meta's ProgramBench, which Vals re-runs over its own field: 47 rows
     # against the 21 the benchmark's own board publishes, which is the whole
-    # reason to read it. Read through TASKS at the "strict" task -- see below.
-    "programbench": "programbench",
+    # reason to read it. Read through TASKS at the "almost" task, which is the
+    # metric the column stores -- see below.
+    "programbench": "programbench_almost",
 }
 
 # The boards Vals authors, runs and publishes itself, as opposed to the ones it
@@ -131,18 +132,18 @@ TASKS: dict[str, str] = {
     # The board is archived upstream (last moved 2026-04-16), so it fills the
     # models it measured and never moves again.
     "aime": "aime_2025",
-    # ProgramBench publishes three quantities and its authors are explicit that
-    # only one of them is the benchmark: Fully Resolved, every behavioural test
-    # passing. Almost Resolved (>=95% of tests) is "an additional point of
-    # reference while the scores of our primary metric are low", and an average
-    # test pass rate "would be extremely misleading" -- every task carries
-    # trivial tests a useless program still passes. Vals publishes all three,
-    # and its "overall" is Fully Resolved today, so this override does not
-    # change which number is read; it pins it. Raw Pass Rate would be the
-    # tempting one -- 22 distinct values over the 22 models here against Fully
-    # Resolved's 7, most of them zero -- and it is exactly the number the
-    # authors say not to report.
-    "programbench": "strict",
+    # ProgramBench publishes three quantities and Vals mirrors all three, so
+    # which task is read *is* which metric the column stores. "overall" is
+    # Fully Resolved, the authors' primary metric, and on this file that is 14
+    # of 22 models at zero -- a column that ranks the top few and calls
+    # everything below them equal. "almost" is at least 95% of a task's
+    # behavioural tests passing, which the authors publish as "an additional
+    # point of reference while the scores of our primary metric are low", and
+    # it separates the same field over a real range. That is the reading this
+    # column stores, and programbench_almost is named for it so the two are
+    # never confused. "partial", the raw test pass rate, is the one the authors
+    # rule out as "extremely misleading" and nothing here reads it.
+    "programbench": "almost",
 }
 
 HEADERS = {

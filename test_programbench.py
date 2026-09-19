@@ -3,17 +3,16 @@
 
 Three things carry the weight here.
 
-``test_the_score_is_resolved_not_almost``: the board prints Resolved beside
-Almost Resolved, Almost is the larger and friendlier number, and the authors'
-FAQ says outright that Resolved is "the primary metric that should be reported".
-Reading the wrong column would inflate every value in the file by the width of
-that gap -- 4.5 against 37.0 for the leader -- while still looking like a
-plausible benchmark score, which is the kind of error nothing downstream would
-catch.
+``test_the_score_is_almost_not_resolved``: the board prints Almost Resolved
+beside Resolved and the two are far apart -- 37.0 against 4.5 for the leader --
+so reading the wrong cell would move every value in the file by the width of
+that gap while still looking like a plausible benchmark score, the kind of error
+nothing downstream would catch. The column stores Almost, and is named for it;
+Resolved is reported on every row and never scored.
 
-``test_a_zero_is_a_score_not_a_gap``: most rows resolve nothing, and a reader
-that treated 0% as "no result" would drop two thirds of the board and leave the
-column reporting only the handful of models above the floor.
+``test_a_zero_is_a_score_not_a_gap``: several rows are almost-resolving nothing,
+and a reader that treated 0% as "no result" would drop them and leave the column
+reporting only the models above the floor.
 
 ``test_a_moved_leaderboard_is_refused``: the table is picked by its class, so a
 layout change raises instead of silently reading the first table on the page.
@@ -74,7 +73,11 @@ HEADER = """
     </tr></thead>"""
 
 
-def page(rows: str, subtitle: str = "Evaluated with mini-SWE-agent &middot; 200 tasks", cls: str = "lb-table") -> str:
+def page(
+    rows: str,
+    subtitle: str = "Evaluated with mini-SWE-agent &middot; 200 tasks",
+    cls: str = "lb-table",
+) -> str:
     return f"""<html><body>
       <p class="lb-sub">{subtitle}</p>
       <table class="{cls}">{HEADER}<tbody>{rows}</tbody></table>
@@ -86,30 +89,43 @@ def stub(body: str):
 
 
 class TestParsing(unittest.TestCase):
-    def test_the_score_is_resolved_not_almost(self) -> None:
+    def test_the_score_is_almost_not_resolved(self) -> None:
         with stub(page(row(1, "Claude Opus 5 (xhigh)", "4.5%", "37.0%"))):
             entries = pb.get_scores()
         self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0]["score"], 4.5)
-        self.assertEqual(entries[0]["almost"], 37.0)
+        self.assertEqual(entries[0]["score"], 37.0)
+        self.assertEqual(entries[0]["resolved"], 4.5)
+
+    def test_a_row_is_kept_on_its_almost_cell_alone(self) -> None:
+        # Resolved sitting at zero is the normal case on this board and must
+        # never cost the row its Almost score.
+        with stub(page(row(1, "A", "0%", "16.5%"))):
+            entries = pb.get_scores()
+        self.assertEqual([(e["score"], e["resolved"]) for e in entries], [(16.5, 0.0)])
 
     def test_a_zero_is_a_score_not_a_gap(self) -> None:
-        with stub(page(row(1, "A", "0.5%", "5.0%") + row(2, "B", "0%", "8.5%"))):
+        with stub(page(row(1, "A", "0.5%", "5.0%") + row(2, "B", "0%", "0.0%"))):
             entries = pb.get_scores()
         self.assertEqual([e["model"] for e in entries], ["A", "B"])
         self.assertEqual(entries[1]["score"], 0.0)
 
     def test_a_moved_leaderboard_is_refused(self) -> None:
         with self.assertRaises(ValueError):
-            pb.parse_rows(pb.select_leaderboard_table(page(row(1, "A", "1%", "2%"), cls="other-table")))
+            pb.parse_rows(
+                pb.select_leaderboard_table(page(row(1, "A", "1%", "2%"), cls="other-table"))
+            )
 
     def test_a_renamed_score_column_is_refused(self) -> None:
-        # Silently losing the Resolved column would empty the ingest; the
-        # header is checked so that shows up as a failure instead.
-        body = page(row(1, "A", "1%", "2%")).replace("<span class=\"th-full\">Resolved</span>", "<span class=\"th-full\">Solved</span>")
-        with self.assertRaises(ValueError) as caught:
-            pb.parse_rows(pb.select_leaderboard_table(body))
-        self.assertIn("resolved", str(caught.exception))
+        # Silently losing the Almost column would empty the ingest; the header
+        # is checked so that shows up as a failure instead. Resolved is checked
+        # too: it is reported on every row, and a board that stopped printing it
+        # is a board whose meaning has changed.
+        for label, missing in (("Resolved", "resolved"), ("Almost", "almost")):
+            with self.subTest(column=label):
+                body = page(row(1, "A", "1%", "2%")).replace(f">{label}", ">Renamed", 1)
+                with self.assertRaises(ValueError) as caught:
+                    pb.parse_rows(pb.select_leaderboard_table(body))
+                self.assertIn(missing, str(caught.exception))
 
     def test_the_mobile_label_is_not_read_as_the_column_name(self) -> None:
         rows = pb.parse_rows(pb.select_leaderboard_table(page(row(1, "A", "1%", "2%"))))
@@ -125,7 +141,9 @@ class TestParsing(unittest.TestCase):
         # Two efforts of one model are two runs; the ingest collapses them onto
         # a slug with "best reported run wins", which it can only do while the
         # published labels stay distinct.
-        with stub(page(row(1, "GPT 5.5 (xhigh)", "0.5%", "13.5%") + row(2, "GPT 5.5", "0%", "1.5%"))):
+        with stub(
+            page(row(1, "GPT 5.5 (xhigh)", "0.5%", "13.5%") + row(2, "GPT 5.5", "0%", "1.5%"))
+        ):
             entries = pb.get_scores()
         self.assertEqual([e["model"] for e in entries], ["GPT 5.5 (xhigh)", "GPT 5.5"])
         self.assertEqual([e["effort"] for e in entries], ["xhigh", None])
@@ -145,11 +163,13 @@ class TestParsing(unittest.TestCase):
             self.assertIsNone(pb.get_scores()[0]["tasks"])
 
     def test_the_root_pages_percent_markup_is_read_too(self) -> None:
-        # The site root wraps the sign ("4.5<span class="pct">%</span>") where
+        # The site root wraps the sign ("37.0<span class="pct">%</span>") where
         # /extended/ prints it inline; one reader has to handle both.
-        body = page(row(1, "A", '4.5<span class="pct">%</span>', '37.0<span class="pct">%</span>'))
+        body = page(
+            row(1, "A", '4.5<span class="pct">%</span>', '37.0<span class="pct">%</span>')
+        )
         with stub(body):
-            self.assertEqual(pb.get_scores()[0]["score"], 4.5)
+            self.assertEqual(pb.get_scores()[0]["score"], 37.0)
 
 
 class TestSourceIdentity(unittest.TestCase):
@@ -167,19 +187,26 @@ class TestSourceIdentity(unittest.TestCase):
     def test_the_vals_mirror_ranks_below_it(self) -> None:
         from _precedence import PROGRAMBENCH_SOURCE_URL, VALS_RERUN_KEY_URLS, may_overwrite
 
-        mirror = VALS_RERUN_KEY_URLS["programbench"]
+        mirror = VALS_RERUN_KEY_URLS["programbench_almost"]
         self.assertTrue(may_overwrite(PROGRAMBENCH_SOURCE_URL, mirror))
         self.assertFalse(may_overwrite(mirror, PROGRAMBENCH_SOURCE_URL))
 
 
 class TestValsBoard(unittest.TestCase):
-    def test_the_vals_board_is_read_at_the_strict_task(self) -> None:
-        """Raw Pass Rate is the number the authors call misleading, and the
-        Vals board publishes it beside the one they endorse."""
+    def test_the_vals_board_is_read_at_the_almost_task(self) -> None:
+        """Which task is read *is* which metric the column stores, and the Vals
+        board mirrors all three of ProgramBench's."""
         import fetch_vals
 
-        self.assertEqual(fetch_vals.BENCHMARKS["programbench"], "programbench")
-        self.assertEqual(fetch_vals.task_of("programbench"), "strict")
+        self.assertEqual(fetch_vals.BENCHMARKS["programbench"], "programbench_almost")
+        self.assertEqual(fetch_vals.task_of("programbench"), "almost")
+
+    def test_the_column_names_the_reading_it_stores(self) -> None:
+        # "programbench" alone would read as the authors' primary metric, which
+        # is the one number this column is not.
+        import fetch_vals
+
+        self.assertTrue(fetch_vals.BENCHMARKS["programbench"].endswith("_almost"))
 
     def test_programbench_is_not_a_vals_owned_board(self) -> None:
         import fetch_vals

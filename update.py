@@ -1168,7 +1168,7 @@ def update_programbench_scores(
 
         matched += 1
         updated += apply_score(
-            doc, model, slug, "programbench", programbench_model.get("score"),
+            doc, model, slug, "programbench_almost", programbench_model.get("score"),
             PROGRAMBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
