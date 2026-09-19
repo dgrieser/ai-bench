@@ -618,7 +618,7 @@ already has a publisher, so it never leads one: at rank 3 it fills gaps under
 Artificial Analysis and under each benchmark's own board, and displaces the
 model-card self-reports below it. Its *own* benchmarks are the exception, and
 `fetch_vals.VALS_OWN_BENCHMARKS` names them: for a board Vals authored, runs and
-solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-080) today —
+solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today —
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
 first-party boards. The line is drawn per board, not per source.
 
@@ -1180,7 +1180,7 @@ Two consequences worth knowing (they hold for every derived index):
   [Real-SWE's admission at 1.0](#why-real-swe-leads-the-coding-group-and-what-it-cost),
   which cost 21 models their rank, and the Terminal-Bench 4.0 admission in the
   next bullet, which cost 34. A broadly covered column is much cheaper:
-  [Vibe Code Bench at 0.80](#why-vibe-code-bench-enters-at-080), scored on 35
+  [Vibe Code Bench at 0.75](#why-vibe-code-bench-enters-at-075), scored on 35
   models, dropped five and ranked four for the first time, a net 58 → 57. A
   *swap* costs nothing of the sort: replacing
   FrontierCode's Main board with [its Extended
@@ -1483,10 +1483,10 @@ ranked and the order moves more than a swap would (Spearman **0.9969**, mean 0.5
 places, worst case 7 — `ornith-1-0-35b` 34 → 27, `kimi-k3` 6 → 9), which is what 1.25
 of net new weight on a pair of rubric-graded tracks should do.
 
-### Why Vibe Code Bench enters at 0.80
+### Why Vibe Code Bench enters at 0.75
 
-**`vibe_code_bench_1_1` is aggregated at 0.80**, between Terminal-Bench 4.0
-(0.85) and the SWE Atlas pair (0.75). It is the only member that measures
+**`vibe_code_bench_1_1` is aggregated at 0.75**, level with the SWE Atlas pair
+and a rung under Terminal-Bench 4.0 (0.85). It is the only member that measures
 *building* rather than maintaining: every other board in the group sets its
 tasks inside a repository that already works, while this one hands the model a
 natural-language specification for a web application and asks for the running
@@ -1496,8 +1496,8 @@ of them over 10,131 substeps across 100 specifications, half of which are held
 out — so a build that does not start scores nothing and a diff that reads well
 earns nothing on its own.
 
-What argues for a leading weight is provenance and reach, the same pair that
-puts Real-SWE at the top:
+Provenance and reach argue for a high weight, the same pair that puts Real-SWE
+at the top:
 
 | | Measured on the current file |
 | --- | --- |
@@ -1506,39 +1506,46 @@ puts Real-SWE at the top:
 | Spread | **0 to 90.3**, where the wide members below it saturate |
 | Head | 5.6 points between the best model and the fifth |
 
-What argues against one is the head and the harness. 5.6 points across the top
-five is the same narrow head that holds [DeepSWE at
-0.6](#coding-index), and one harness for nearly everyone measures a
-model-in-OpenHands rather than a model — fair across the field, but a property of
-the setup as much as of the model. All 35 rows that reach `llm.json` are
-OpenHands rows; the eight vendor-harness rows are closed-weight products this
-file does not track.
+The head and the harness argue it back down. 5.6 points across the top five is
+the same narrow head that holds [DeepSWE at 0.6](#coding-index), and one harness
+for nearly everyone measures a model-in-OpenHands rather than a model — fair
+across the field, but a property of the setup as much as of the model. All 35
+rows that reach `llm.json` are OpenHands rows; the eight vendor-harness rows are
+closed-weight products this file does not track.
 
-Redundancy argues neither way, which is what decides it. Its highest Spearman
-against a member with any power is **0.908** with SWE-bench Verified over 30
-models and **0.882** with SciCode over 34 — the two columns sitting at the
-bottom of the list precisely because they are saturated — and it reads **0.858**
-against FrontierCode Extended (18) and **0.815** against Terminal-Bench 4.0
-(23). The 0.935 and 0.933 against the SWE Atlas tracks are 12 and 9 models wide
-and carry no weight. Nothing here is a second copy of a column already in the
+**0.75 is where those two land it**: level with the SWE Atlas tracks, which are
+first-party, rubric-graded and comparable in reach, and a rung under
+[Terminal-Bench 4.0](#coding-index) at 0.85, which has the live head this board
+does not — measured today, 20.2 points between 4.0's best model and its fifth
+against 5.6 here. It is deliberately not priced with the 0.9 pair either:
+FrontierSWE 2.0 and FrontierCode Extended exist to separate the frontier, and
+that is the one thing this board, for all its reach, does least well.
+
+Redundancy argues neither way, which is what lets it sit that high at all. Its
+highest Spearman against a member with any power is **0.908** with SWE-bench
+Verified over 30 models and **0.882** with SciCode over 34 — the two columns
+sitting at the bottom of the list precisely because they are saturated — and it
+reads **0.858** against FrontierCode Extended (18) and **0.815** against
+Terminal-Bench 4.0 (23). The 0.935 and 0.933 against the SWE Atlas tracks are 12
+and 9 models wide and carry no weight. Nothing here is a second copy of a column already in the
 group, which is the test that cut [Terminal-Bench 2.1](#coding-index) to 0.4 at
 0.91 against 4.0 and kept [FrontierCode
 Main](#frontiercode-extended-in-the-coding-group) out entirely at 0.99 against
 Extended.
 
 **The index is insensitive to the exact number, and the cost is not.** Anywhere
-in 0.6–1.0 the ranked field is the same 57 models, and the largest rank change
+in 0.55–1.0 the ranked field is the same 57 models, and the largest rank change
 among the models ranked before and after is 7 places. What the weight does move
 is [the evidence bar](#why-the-evidence-bar-is-18): the denominator rises
-**8.40 → 9.20** and the bar with it, **1.512 → 1.656**.
+**8.40 → 9.15** and the bar with it, **1.512 → 1.647**.
 
 - **Five models lose their rank** — `command-a-plus`, both Devstrals, `glm-4-7`
   and `mimo-v2-flash`. Each carries exactly 1.60 of scored weight, which cleared
   the old bar and does not clear the new one, and none of them is scored on the
   new board.
 - **Four are ranked for the first time** — `deepseek-v3-2-0925`, `glm-4-6`,
-  `hy4-preview` and `mistral-small-4` — because the 0.80 they gain outruns the
-  0.144 the bar rises.
+  `hy4-preview` and `mistral-small-4` — because the 0.75 they gain outruns the
+  0.135 the bar rises.
 
 Net **58 → 57 ranked**, which makes this the cheapest admission on this page
 after the free ones: [Terminal-Bench 4.0](#coding-index) cost 34 and
@@ -1720,7 +1727,7 @@ re-measured: [FrontierCode's Main → Extended
 swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchanged,
 the expected answer for swapping one board for a near-identical one instead of adding
 weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
-to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-080) took
+to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-075) took
 it to **0.013**, the lowest ratio in the file: a member scored on 35 models is a
 member the rest of the group has enough overlap to predict.
 

@@ -192,35 +192,39 @@ INDEXES: list[IndexDef] = [
             # every other board here sets its tasks inside a repository that
             # already works, and this one hands the model a specification for a
             # web application and has a browser agent drive whatever it
-            # deploys. 0.8 is the group's provenance-and-coverage argument
-            # minus a head discount. For it: Vals runs all 96 rows itself, 88
-            # of them in OpenHands and the other 8 in the vendor harness the
-            # row names, publishes a standard error per cell and holds out 50
-            # of the 100 specifications, which is the provenance Real-SWE is
-            # trusted for; 35 of those rows are models in this file, every one
-            # of them an OpenHands row,
-            # which is the widest field of any frontier agentic board here --
-            # FrontierCode Extended and DeepSWE have 18, SWE-Marathon 12,
-            # FrontierSWE 8, Real-SWE 5 -- and it spreads them over 0 to 90.3,
-            # where the boards below saturate. Against it: 5.6 points separate
-            # the best model from the fifth, the same narrow head that holds
-            # DeepSWE at 0.6, and one harness for nearly everyone measures a
-            # model-in-OpenHands rather than a model. Redundancy does not argue
-            # either way -- its highest Spearman against a member with power is
-            # 0.908 with SWE-bench Verified over 30 models and 0.882 with
-            # SciCode over 34, both of which sit at the bottom of this list
-            # precisely because they are saturated, and it reads 0.858 against
-            # FrontierCode Extended and 0.815 against Terminal-Bench 4.0. The
-            # 0.93s against the SWE Atlas tracks are 12 and 9 models wide and
-            # carry no weight. Nothing here is the near-copy that cut
-            # Terminal-Bench 2.1 to 0.4 (0.91 against 4.0) or kept FrontierCode
-            # Main out (0.99 against Extended). Note that the index is insensitive to this
-            # number: anywhere in 0.6-1.0 the same 4 models join the ranked
-            # field and the same 5 -- Command A+, both Devstrals, GLM 4.7 and
-            # MiMo V2 Flash, none of them scored here -- fall under the
-            # evidence bar the new weight lifts. See README, "Why Vibe Code
-            # Bench enters at 0.80".
-            ("vibe_code_bench_1_1", 0.8),
+            # deploys. 0.75 prices it level with the SWE Atlas tracks and a
+            # rung under Terminal-Bench 4.0: the group's provenance-and-
+            # coverage argument, minus a head discount.
+            #
+            # For it: Vals runs all 96 rows itself -- 88 in OpenHands, 8 in the
+            # vendor harness the row names -- publishes a standard error per
+            # cell and holds out 50 of the 100 specifications, which is the
+            # provenance Real-SWE is trusted for; 35 of those rows are models
+            # in this file, every one an OpenHands row, which is the widest
+            # field of any frontier agentic board here -- FrontierCode Extended
+            # and DeepSWE have 18, SWE-Marathon 12, FrontierSWE 8, Real-SWE 5
+            # -- and it spreads them over 0 to 90.3, where the boards below
+            # saturate. Against it: 5.6 points separate the best model from the
+            # fifth, the same narrow head that holds DeepSWE at 0.6, and one
+            # harness for nearly everyone measures a model-in-OpenHands rather
+            # than a model.
+            #
+            # Redundancy argues neither way. Its highest Spearman against a
+            # member with power is 0.908 with SWE-bench Verified over 30 models
+            # and 0.882 with SciCode over 34, both of which sit at the bottom
+            # of this list precisely because they are saturated, and it reads
+            # 0.858 against FrontierCode Extended and 0.815 against
+            # Terminal-Bench 4.0. The 0.93s against the SWE Atlas tracks are 12
+            # and 9 models wide and carry no weight. Nothing here is the
+            # near-copy that cut Terminal-Bench 2.1 to 0.4 (0.91 against 4.0)
+            # or kept FrontierCode Main out (0.99 against Extended).
+            #
+            # The index is insensitive to the exact number: anywhere in
+            # 0.55-1.0 the same 4 models join the ranked field and the same 5
+            # -- Command A+, both Devstrals, GLM 4.7 and MiMo V2 Flash, none of
+            # them scored here -- fall under the evidence bar the new weight
+            # lifts. See README, "Why Vibe Code Bench enters at 0.75".
+            ("vibe_code_bench_1_1", 0.75),
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
