@@ -102,12 +102,18 @@ import argparse
 import json
 import math
 import sys
+import time
 from pathlib import Path
 from typing import Any, NamedTuple
 
 import _history
 from _reference import apply_reference_flags
 from _scores import stamp_score_updated
+# The five indexes are the slowest thing this repository does that is not a
+# network call -- about 41 seconds of a 279-second refresh, spent twice over,
+# and nothing in either log said which of them it went to, because the only
+# per-index line printed is a count of models.
+from _timing import report
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -1240,12 +1246,14 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
     for index in reversed(INDEXES):
+        started = time.monotonic()
         changes.extend(
             (index.key, name, old, new)
             for name, old, new in apply_index(
                 doc, index, compute_index(models, doc, index)
             )
         )
+        report(index.key, started)
     return changes
 
 
@@ -1357,8 +1365,11 @@ def main() -> int:
 
     all_changes: list[tuple[str, str, int | None, int | None]] = []
     restamped = 0
+    started_all = time.monotonic()
     for index in reversed(INDEXES):
+        started = time.monotonic()
         values = compute_index(models, doc, index)
+        report(index.key, started)
 
         ranked = sum(1 for value in values.values() if value is not None)
         print(
@@ -1400,6 +1411,8 @@ def main() -> int:
                     )
         print()
 
+    report("all indexes", started_all)
+
     if not all_changes and not restamped:
         print("The derived indexes are up to date. Nothing to do.")
         return 0
@@ -1415,8 +1428,10 @@ def main() -> int:
         print("\ndry-run only, pass --write to persist changes")
         return 0
 
+    started_write = time.monotonic()
     _history.sync(doc)
     path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
+    report(f"_history.sync + write {path.name}", started_write)
     print(f"\nWrote {path}")
     return 0
 

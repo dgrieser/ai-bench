@@ -33,6 +33,12 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+# This module is the single largest cost in a refresh after update.py itself,
+# and none of it was ever attributed: the three calls below each start
+# fetch_llmstats.py afresh, so llm-stats is scraped three times here and a
+# fourth by update.py's own fetcher. Naming each one is what makes that
+# legible in a log rather than only in this comment.
+from _timing import timed
 
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 LLMSTATS_MODEL_MAPPING = Path(__file__).resolve().with_name(
@@ -75,7 +81,9 @@ def _add_mapping(key: str, value: str, path: Path) -> None:
 
 
 def fetch_llmstats_model_names() -> list[str]:
-    proc = subprocess.run(
+    proc = timed(
+        "fetch_llmstats.py --names models",
+        subprocess.run,
         [sys.executable, str(LLMSTATS_SCRIPT), "--format", "names", "--names", "models",
          "--no-hle-detail"],
         capture_output=True,
@@ -90,7 +98,9 @@ def fetch_llmstats_model_names() -> list[str]:
 
 def fetch_llmstats_model_openness() -> dict[str, bool | None]:
     """llm-stats model_id -> has open weights, as read from its licence field."""
-    proc = subprocess.run(
+    proc = timed(
+        "fetch_llmstats.py --format json (openness)",
+        subprocess.run,
         [sys.executable, str(LLMSTATS_SCRIPT), "--format", "json", "--no-hle-detail"],
         capture_output=True,
         text=True,
@@ -159,7 +169,9 @@ def add_llmstats_closed_weights(
 
 
 def fetch_llmstats_benchmark_names() -> list[str]:
-    proc = subprocess.run(
+    proc = timed(
+        "fetch_llmstats.py --names benchmarks",
+        subprocess.run,
         [sys.executable, str(LLMSTATS_SCRIPT), "--format", "names", "--names", "benchmarks"],
         capture_output=True,
         text=True,

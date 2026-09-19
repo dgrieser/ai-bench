@@ -42,6 +42,7 @@ import time
 from typing import Any, Iterable
 
 from _reference import load_reference_slugs
+from _timing import timed
 
 # Sentinel stored for source names a human reviewed and deliberately left
 # unmapped. Never used as a real llm.json model slug.
@@ -185,7 +186,7 @@ def build_index() -> dict[str, bool]:
         ("DeepSWE", _pool_deepswe),
     ):
         try:
-            pool(verdicts)
+            timed(f"openness: {label}", pool, verdicts)
         except Exception as exc:  # noqa: BLE001 - a dead source must not block review
             print(f"  openness: skipping {label} ({exc})", file=sys.stderr)
     return verdicts
@@ -223,7 +224,10 @@ def open_index(refresh: bool = False) -> dict[str, bool]:
         return _INDEX
     verdicts = None if refresh else _load_cached()
     if verdicts is None:
-        verdicts = build_index()
+        # Only the miss is timed: a hit is a file read, and a line per hit
+        # would drown the timings that matter. The miss is three sources over
+        # the network, which every mapping updater then waits on.
+        verdicts = timed("_openness.build_index", build_index)
         if verdicts:
             _save_cached(verdicts)
     _INDEX = verdicts

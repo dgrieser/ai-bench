@@ -209,19 +209,36 @@ jobs:
       # that would fix it. A regression in the sweep is silent -- the mapping
       # simply stays wrong, feeding one model's scores to another until the
       # next run goes red.
+      #
+      # Run through a loop rather than one line each so every suite is timed.
+      # `bash -e` still stops at the first red one: the loop body is not a
+      # tested condition, so a non-zero exit ends the step exactly as it did
+      # when these were eleven separate lines.
       - name: Check collect mode, the matcher and the answer applier
         run: |
-          ./test_prompts.py
-          ./test_propose.py
-          ./test_new_models.py
-          ./test_answers.py
-          ./test_model_admin.py
-          ./test_pending_json.py
-          ./test_reference.py
-          ./test_hle_no_tools.py
-          ./test_history.py
-          ./test_remap.py
-          ./test_artificialanalysis_api.py
+          suites=(
+            ./test_prompts.py
+            ./test_propose.py
+            ./test_new_models.py
+            ./test_answers.py
+            ./test_model_admin.py
+            ./test_pending_json.py
+            ./test_reference.py
+            ./test_hle_no_tools.py
+            ./test_history.py
+            ./test_remap.py
+            ./test_artificialanalysis_api.py
+          )
+          # EPOCHREALTIME is microseconds with the locale's decimal point in
+          # the middle; both separators are stripped so the arithmetic below
+          # cannot depend on the runner's locale.
+          now_us() { local t=${EPOCHREALTIME/./}; echo "10#${t/,/}"; }
+          for suite in "${suites[@]}"; do
+            started=$(( $(now_us) ))
+            "$suite"
+            ms=$(( ($(now_us) - started) / 1000 ))
+            printf '%s: %d.%ds\n' "$suite" $((ms / 1000)) $(((ms % 1000) / 100))
+          done
 
       # Two combinations that are silently destructive rather than merely wrong,
       # so they are refused rather than interpreted.
