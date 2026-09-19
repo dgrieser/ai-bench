@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tests for the Vals AI leaderboard reader. Run with ./test_vals.py
 
-Two things carry the weight here.
+Three things carry the weight here.
 
 ``test_a_renamed_slug_is_not_read_as_the_old_board``: Vals serves one board per
 URL and its slugs have already moved once (``terminal-bench-2`` sits beside
@@ -13,6 +13,11 @@ slug the payload reports against the slug it asked for.
 ``test_aime_is_read_at_the_2025_task``: Vals' AIME board pools the 2024 and 2025
 exams into its "overall" task while llm.json keeps a column per exam year. The
 task override is what stops the pooled number reaching ``aime_2025``.
+
+``test_a_revised_board_is_not_read_as_the_pinned_revision``: the slug check above
+only catches a revision that moved to a new URL. ``vibe-code`` was revised in
+place once already, and its column is a revision column, so the version stamped
+in the payload is checked against ``VERSIONS`` too.
 """
 
 from __future__ import annotations
@@ -123,6 +128,32 @@ class TestParseBoard(unittest.TestCase):
         with self.assertRaises(ValueError):
             fv.parse_board("<html><body>maintenance</body></html>", "gpqa")
 
+    def test_a_revised_board_is_not_read_as_the_pinned_revision(self) -> None:
+        body = page(
+            "vibe-code", {"overall": {"zai/glm-5.3": cell(80.0)}}, version="1.2"
+        )
+        with self.assertRaises(ValueError) as caught:
+            fv.parse_board(body, "vibe-code")
+        message = str(caught.exception)
+        self.assertIn("1.2", message)
+        self.assertIn("vibe_code_bench_1_1", message)
+
+    def test_the_pinned_revision_is_read(self) -> None:
+        body = page(
+            "vibe-code", {"overall": {"zai/glm-5.3": cell(80.0)}}, version="1.1"
+        )
+        metadata, cells = fv.parse_board(body, "vibe-code")
+        self.assertEqual(metadata["version"], "1.1")
+        self.assertEqual(cells["zai/glm-5.3"]["accuracy"], 80.0)
+
+    def test_an_unpinned_board_is_not_version_checked(self) -> None:
+        # Every board stamps a version; only the ones whose slug does not carry
+        # one are pinned, so a bumped stamp elsewhere must not refuse the board.
+        self.assertNotIn("gpqa", fv.VERSIONS)
+        body = page("gpqa", {"overall": {"zai/glm-5.3": cell(80.0)}}, version="2")
+        metadata, _ = fv.parse_board(body, "gpqa")
+        self.assertEqual(metadata["version"], "2")
+
 
 class TestGetScores(unittest.TestCase):
     def test_rows_carry_the_column_the_board_feeds(self) -> None:
@@ -186,6 +217,22 @@ class TestBenchmarkTable(unittest.TestCase):
 
     def test_task_overrides_name_a_board_that_is_ingested(self) -> None:
         self.assertLessEqual(set(fv.TASKS), set(fv.BENCHMARKS))
+
+    def test_version_pins_name_a_board_that_is_ingested(self) -> None:
+        self.assertLessEqual(set(fv.VERSIONS), set(fv.BENCHMARKS))
+
+    def test_own_benchmarks_name_a_board_that_is_ingested(self) -> None:
+        self.assertLessEqual(fv.VALS_OWN_BENCHMARKS, set(fv.BENCHMARKS))
+
+    def test_a_versioned_column_names_the_revision_it_is_pinned_to(self) -> None:
+        """vibe_code_bench_1_1 must not be fed by a board pinned to 1.2."""
+        for slug, version in fv.VERSIONS.items():
+            with self.subTest(slug=slug):
+                suffix = version.replace(".", "_")
+                self.assertTrue(
+                    fv.BENCHMARKS[slug].endswith(f"_{suffix}"),
+                    f"{fv.BENCHMARKS[slug]} is not the column for version {version}",
+                )
 
 
 if __name__ == "__main__":

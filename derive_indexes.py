@@ -126,8 +126,8 @@ class IndexDef(NamedTuple):
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
-    other and with MIN_SCORED_FRACTION: Coding's 0.015 leaves a fully measured
-    model 98.5% of its distance from the middle, Trust's 1.524 leaves it 40%.
+    other and with MIN_SCORED_FRACTION: Coding's 0.012 leaves a fully measured
+    model 98.8% of its distance from the middle, Trust's 1.524 leaves it 40%.
     It sets how hard a thinly covered model is pulled toward the middle (see
     coverage_reliability), and it is measured rather than chosen: run
     ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
@@ -188,6 +188,43 @@ INDEXES: list[IndexDef] = [
             # twice on one construct.
             ("terminal_bench_4_0", 0.85),
             ("terminal_bench_2_1", 0.4),
+            # The only member that measures building rather than maintaining:
+            # every other board here sets its tasks inside a repository that
+            # already works, and this one hands the model a specification for a
+            # web application and has a browser agent drive whatever it
+            # deploys. 0.75 prices it level with the SWE Atlas tracks and a
+            # rung under Terminal-Bench 4.0: the group's provenance-and-
+            # coverage argument, minus a head discount.
+            #
+            # For it: Vals runs all 96 rows itself -- 88 in OpenHands, 8 in the
+            # vendor harness the row names -- publishes a standard error per
+            # cell and holds out 50 of the 100 specifications, which is the
+            # provenance Real-SWE is trusted for; 35 of those rows are models
+            # in this file, every one an OpenHands row, which is the widest
+            # field of any frontier agentic board here -- FrontierCode Extended
+            # and DeepSWE have 18, SWE-Marathon 12, FrontierSWE 8, Real-SWE 5
+            # -- and it spreads them over 0 to 90.3, where the boards below
+            # saturate. Against it: 5.6 points separate the best model from the
+            # fifth, the same narrow head that holds DeepSWE at 0.6, and one
+            # harness for nearly everyone measures a model-in-OpenHands rather
+            # than a model.
+            #
+            # Redundancy argues neither way. Its highest Spearman against a
+            # member with power is 0.908 with SWE-bench Verified over 30 models
+            # and 0.882 with SciCode over 34, both of which sit at the bottom
+            # of this list precisely because they are saturated, and it reads
+            # 0.858 against FrontierCode Extended and 0.815 against
+            # Terminal-Bench 4.0. The 0.93s against the SWE Atlas tracks are 12
+            # and 9 models wide and carry no weight. Nothing here is the
+            # near-copy that cut Terminal-Bench 2.1 to 0.4 (0.91 against 4.0)
+            # or kept FrontierCode Main out (0.99 against Extended).
+            #
+            # The index is insensitive to the exact number: anywhere in
+            # 0.55-1.0 the same 4 models join the ranked field and the same 5
+            # -- Command A+, both Devstrals, GLM 4.7 and MiMo V2 Flash, none of
+            # them scored here -- fall under the evidence bar the new weight
+            # lifts. See README, "Why Vibe Code Bench enters at 0.75".
+            ("vibe_code_bench_1_1", 0.75),
             ("swe_bench_pro", 0.4),
             ("livecodebench", 0.4),
             ("scicode", 0.35),
@@ -203,19 +240,62 @@ INDEXES: list[IndexDef] = [
             # aggregates. See README, "Why SWE Atlas contributes two tracks".
             ("swe_atlas_qna", 0.75),
             ("swe_atlas_rf", 0.75),
+            # ProgramBench rebuilt from its binary: the agent gets a
+            # reference executable and its documentation, nothing else, and has
+            # to produce a codebase whose behaviour matches across 200 tasks
+            # from compact CLI tools up to FFmpeg, SQLite and the PHP
+            # interpreter. The column stores Almost Resolved, at least 95% of a
+            # task's behavioural tests passing, which is the looser of the two
+            # readings the board publishes; the authors' primary metric,
+            # Resolved, needs every test to pass and is close to the floor --
+            # 14 of the same 22 models at zero -- so it ranks the top few and
+            # calls everything below them equal. Almost separates the same
+            # field over 0 to 53.5, and the column is named for the reading it
+            # stores so the two are never confused.
+            #
+            # For it: the widest head in the group, 37.0 points between the
+            # best model and the fifth against FrontierSWE 2.0's 39.6 and
+            # Terminal-Bench 4.0's 20.2, on a board nothing is near saturating;
+            # two sources, the benchmark's own leaderboard at rank 2 and Vals'
+            # wider re-run beneath it; and a tie share of 3.9% overall and 7.6%
+            # among the open-weight models, which is better than Terminal-Bench
+            # 4.0 manages at 0.85.
+            #
+            # Against it: 22 scored models is mid-field here, and it agrees
+            # with Vibe Code Bench at 0.922 over all 22 -- the highest
+            # well-powered correlation between any two members of this group
+            # outside the Terminal-Bench family. Both ask a model to build
+            # rather than maintain, so that is one construct measured twice,
+            # and the second member takes the discount the same way
+            # terminal_bench_2_1 does beside 4.0. 0.5 against Vibe Code's 0.75
+            # gives the pair 1.25 of 9.65, the same share the Terminal-Bench
+            # pair carries, which is the most any single construct is allowed
+            # here.
+            #
+            # The band is wide: every weight from 0.3 to 0.57 produces exactly
+            # the same ranked field, because the evidence bar crosses 1.70 at
+            # 0.294 -- taking Gemma 4 31B, gpt-oss-120b, MiniCPM5 2B and Qwen3
+            # Coder Next, none of them scored here -- and does not reach the
+            # next group until 0.572. So 0.5 is chosen on merit inside a band
+            # where merit is the only thing left to choose on. See README,
+            # "Why ProgramBench enters at 0.50".
+            ("programbench_almost", 0.5),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, a hair under tooling: coding benchmarks
-        # predict each other well. Hold one out and the rest miss it by a
-        # sixty-seventh of the spread between models, so a fully measured model
-        # keeps 98.5% of its distance from the middle and one at the 18% bar
-        # keeps 92%. That is the data's verdict rather than a preference: a
+        # The lowest of the five, and now well clear of tooling: coding
+        # benchmarks predict each other well. Hold one out and the rest miss it
+        # by an eighty-third of the spread between models, so a fully measured
+        # model keeps 98.8% of its distance from the middle and one at the 18%
+        # bar keeps 94%. That is the data's verdict rather than a preference: a
         # model placing top-decile on three coding benchmarks really is
         # unlikely to be mid-field on the rest. Re-measured by --calibrate
-        # after the SWE Atlas promotion, 0.016 -> 0.015; the FrontierCode
-        # Main -> Extended swap before it moved nothing, which is what swapping
-        # one board for a near-identical one should do.
-        transfer_ratio=0.015,
+        # after the SWE Atlas promotion, 0.016 -> 0.015, after Vibe Code Bench
+        # joined, 0.015 -> 0.013, and after ProgramBench, 0.013 -> 0.012 --
+        # each time a broadly scored member gave the group more overlap to
+        # predict its own held-out parts from. The FrontierCode Main ->
+        # Extended swap in between moved nothing, which is what swapping one
+        # board for a near-identical one should do.
+        transfer_ratio=0.012,
     ),
     IndexDef(
         key="tooling_index",

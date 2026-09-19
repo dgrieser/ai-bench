@@ -41,6 +41,9 @@ from _precedence import (
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
     TOOLATHLON_SOURCE_URL,
+    VALS_KEY_URLS,
+    VALS_OWN_KEY_URLS,
+    VALS_RERUN_KEY_URLS,
     may_overwrite,
     source_rank,
 )
@@ -85,9 +88,36 @@ class TestRungs(unittest.TestCase):
                 self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
 
     def test_curated_third_parties(self) -> None:
-        for url in (*EVALS_REPORT_KEY_URLS.values(), DEEPSWE_SOURCE_URL):
+        for url in (
+            *EVALS_REPORT_KEY_URLS.values(),
+            *VALS_RERUN_KEY_URLS.values(),
+            DEEPSWE_SOURCE_URL,
+        ):
             with self.subTest(url=url):
                 self.assertEqual(source_rank(url), RANK_CURATED)
+
+    def test_vals_own_boards_rank_as_first_party(self) -> None:
+        # Vals is curated for the boards it re-runs and first-party for the ones
+        # it authored, so the split is per board rather than per source. Both
+        # halves are checked here, and the split itself in the two tests below.
+        self.assertTrue(VALS_OWN_KEY_URLS)
+        for url in VALS_OWN_KEY_URLS.values():
+            with self.subTest(url=url):
+                self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
+
+    def test_every_vals_board_is_on_exactly_one_side_of_the_split(self) -> None:
+        self.assertEqual(
+            set(VALS_OWN_KEY_URLS) | set(VALS_RERUN_KEY_URLS), set(VALS_KEY_URLS)
+        )
+        self.assertEqual(set(VALS_OWN_KEY_URLS) & set(VALS_RERUN_KEY_URLS), set())
+
+    def test_a_vals_own_board_outranks_a_vals_rerun(self) -> None:
+        # Not a statement about the source: it is what lets the Vibe Code Bench
+        # page lead its column the way any other benchmark's own board does.
+        own = next(iter(VALS_OWN_KEY_URLS.values()))
+        rerun = next(iter(VALS_RERUN_KEY_URLS.values()))
+        self.assertTrue(may_overwrite(own, rerun))
+        self.assertFalse(may_overwrite(rerun, own))
 
     def test_aggregates(self) -> None:
         self.assertEqual(source_rank(LLMSTATS_SOURCE_URL), RANK_AGGREGATE)

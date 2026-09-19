@@ -27,6 +27,7 @@ import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_osworld
+import fetch_programbench
 import fetch_real_swe
 import fetch_swe_atlas
 import fetch_swe_marathon
@@ -49,6 +50,7 @@ from _precedence import (
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
     OSWORLD_SOURCE_URL,
+    PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
     RANK_AA,
     SWE_ATLAS_KEY_URLS,
@@ -72,6 +74,7 @@ from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _toolathlon_mapping import load_toolathlon_to_slug_mapping
+from _programbench_mapping import load_programbench_to_slug_mapping
 from _real_swe_mapping import load_real_swe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _frontiercode_mapping import load_frontiercode_to_slug_mapping
@@ -98,6 +101,7 @@ DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
+PROGRAMBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_programbench.py")
 REAL_SWE_SCRIPT = Path(__file__).resolve().with_name("fetch_real_swe.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
@@ -343,6 +347,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-frontierswe",
         action="store_true",
         help="Skip fetching scores from frontierswe.",
+    )
+    parser.add_argument(
+        "--skip-programbench",
+        action="store_true",
+        help="Skip fetching scores from the ProgramBench leaderboard.",
     )
     parser.add_argument(
         "--skip-real-swe",
@@ -1098,6 +1107,69 @@ def update_toolathlon_scores(
         updated += apply_score(
             doc, model, slug, "toolathlon", toolathlon_model.get("score"),
             TOOLATHLON_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_programbench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_programbench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_programbench_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_programbench.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected programbench JSON format: expected a list")
+
+    programbench_to_slug = load_programbench_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        programbench_name = row.get("model")
+        if not isinstance(programbench_name, str) or not programbench_name:
+            continue
+        slug = programbench_to_slug.get(programbench_name)
+        if not slug:
+            continue
+        # The board publishes a row per effort ("GPT-5.6 Sol" beside "GPT-5.6
+        # Sol (xhigh)"), so one slug can collect several; the best reported run
+        # wins, the same rule every other multi-row source follows.
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_programbench_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        programbench_model = by_slug.get(slug)
+        if programbench_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "programbench_almost", programbench_model.get("score"),
+            PROGRAMBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
     return matched, updated, changes
@@ -2153,6 +2225,7 @@ def main() -> int:
     zerobench_path = ZEROBENCH_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
+    programbench_path = PROGRAMBENCH_SCRIPT
     real_swe_path = REAL_SWE_SCRIPT
     tbench_path = TBENCH_SCRIPT
     agents_last_exam_path = AGENTS_LAST_EXAM_SCRIPT
@@ -2177,6 +2250,9 @@ def main() -> int:
     )
     toolathlon_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-toolathlon-to-artificialanalysis.json"
+    )
+    programbench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-programbench-to-artificialanalysis.json"
     )
     real_swe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-real-swe-to-artificialanalysis.json"
@@ -2269,6 +2345,8 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
     if not args.skip_toolathlon:
         print(f"  - {shlex.join(build_fetch_toolathlon_cmd(toolathlon_path))}")
+    if not args.skip_programbench:
+        print(f"  - {shlex.join(build_fetch_programbench_cmd(programbench_path))}")
     if not args.skip_real_swe:
         print(f"  - {shlex.join(build_fetch_real_swe_cmd(real_swe_path))}")
     if not args.skip_deepswe:
@@ -2402,6 +2480,20 @@ def main() -> int:
             doc, toolathlon_by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(toolathlon_changes)
+
+    programbench_by_slug: dict[str, dict[str, Any]] = {}
+    programbench_matched = 0
+    programbench_updated = 0
+    if not args.skip_programbench:
+        programbench_by_slug = fetch_programbench_data(
+            programbench_path, programbench_mapping_path
+        )
+        programbench_matched, programbench_updated, programbench_changes = (
+            update_programbench_scores(
+                doc, programbench_by_slug, fill_urls_only=args.fill_source_urls
+            )
+        )
+        changes.extend(programbench_changes)
 
     real_swe_by_slug: dict[str, dict[str, Any]] = {}
     real_swe_matched = 0
@@ -2596,6 +2688,8 @@ def main() -> int:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_toolathlon:
         print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
+    if not args.skip_programbench:
+        print(f"models returned by programbench: {len(programbench_by_slug)}")
     if not args.skip_real_swe:
         print(f"models returned by real-swe: {len(real_swe_by_slug)}")
     if not args.skip_deepswe:
@@ -2652,6 +2746,8 @@ def main() -> int:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_toolathlon:
         print(f"models matched on toolathlon: {toolathlon_matched}")
+    if not args.skip_programbench:
+        print(f"models matched on programbench: {programbench_matched}")
     if not args.skip_real_swe:
         print(f"models matched on real-swe: {real_swe_matched}")
     if not args.skip_deepswe:
@@ -2697,6 +2793,8 @@ def main() -> int:
             print(f"params values filled from huggingface: {hf_params_filled}")
     if not args.skip_toolathlon:
         print(f"{action} from toolathlon: {toolathlon_updated}")
+    if not args.skip_programbench:
+        print(f"{action} from programbench: {programbench_updated}")
     if not args.skip_real_swe:
         print(f"{action} from real-swe: {real_swe_updated}")
     if not args.skip_deepswe:
