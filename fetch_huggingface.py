@@ -155,24 +155,33 @@ def clean_cell(text: str) -> str:
 # decimal rather than a thousand, so what reaches this is grouped or plain.
 _NUMBER_RE = re.compile(r"[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?|[-+]?\d+(?:\.\d+)?")
 # Thousands group or decimal separator? "1,441" is 1441 and "63,1" is 63.1,
-# and the comma says nothing about which. What decides is the digits around it:
-# exactly three after it is a thousands group, *unless* what precedes it is a
-# bare zero, because no thousands-formatted number starts with one. "0,794" is
-# a fraction written the German way, and read as a group it becomes 794 -- three
-# orders of magnitude out, and past the point where the 0-1 rescaling below
-# could recognise it as a fraction at all. Anything other than three digits
-# after the comma is a decimal too: "0,3026" used to read as 0.
-_COMMA_NUMBER_RE = re.compile(r"(?<![\d,.])(\d+),(\d+)(?![\d,])")
+# and the comma says nothing about which. Three things around it do, and a
+# group of exactly three digits after it is the only reading that survives all
+# of them:
+#
+#   * a bare zero in front rules a group out, because no thousands-formatted
+#     number starts with one -- "0,794" is a fraction written the German way,
+#     and read as a group it becomes 794, three orders of magnitude out and
+#     past the point where the 0-1 rescaling below could recognise it as a
+#     fraction at all;
+#   * a percent sign after it rules a group out too, whatever precedes the
+#     comma: "63,125%" is 63.125, because nothing here scores 63,125 percent;
+#   * any count of digits but three rules a group out on its own ("0,3026").
+#
+# What is left -- "1,441" with nothing around it to say otherwise -- keeps the
+# grouped reading, because an Elo column really does report 1441 and the cell
+# gives nothing else to go on.
+_COMMA_NUMBER_RE = re.compile(r"(?<![\d,.])(\d+),(\d+)(?![\d,])\s*(%?)")
 
 
 def _decimal_commas(text: str) -> str:
     """Rewrite every decimal comma as a decimal point, leaving thousands alone."""
 
     def replace(match: re.Match[str]) -> str:
-        whole, fraction = match.group(1), match.group(2)
-        if len(fraction) == 3 and not whole.startswith("0"):
+        whole, fraction, percent = match.group(1), match.group(2), match.group(3)
+        if len(fraction) == 3 and not whole.startswith("0") and not percent:
             return match.group(0)  # a thousands group; _NUMBER_RE reads it
-        return f"{whole}.{fraction}"
+        return f"{whole}.{fraction}{percent}"
 
     return _COMMA_NUMBER_RE.sub(replace, text)
 _PLACEHOLDERS = {"", "-", "—", "–", "n/a", "na", "/", "?", "—%", "tbd", "x", "✗", "✓"}
@@ -223,10 +232,13 @@ def parse_score(text: str) -> float | None:
         return None
     if _ALTERNATIVES_RE.search(cleaned):
         return None
+    # Before the value is pulled out of a labelled cell, because what decides
+    # the comma is partly what follows the number, and _LABELLED_VALUE_RE
+    # captures the digits without the percent sign after them.
+    cleaned = _decimal_commas(cleaned)
     labelled = _LABELLED_VALUE_RE.search(cleaned)
     if labelled:
         cleaned = labelled.group(1)
-    cleaned = _decimal_commas(cleaned)
     match = _STANDALONE_NUMBER_RE.search(cleaned)
     if not match:
         return None

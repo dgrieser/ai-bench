@@ -214,6 +214,15 @@ class TestNumberParsing(unittest.TestCase):
         self.assertEqual(fh.parse_score("0,3026"), 0.3026)
         self.assertEqual(fh.parse_score("0,08"), 0.08)
 
+    def test_a_percent_sign_settles_the_comma(self):
+        # Nothing here scores 63,125 percent, so the group reading is out
+        # however the digits fall -- and the sign has to still be attached when
+        # the comma is judged, which a labelled cell nearly loses.
+        self.assertEqual(fh.parse_score("63,125%"), 63.125)
+        self.assertEqual(fh.parse_score("10,794%"), 10.794)
+        self.assertEqual(fh.parse_score("Avg: 63,125%"), 63.125)
+        self.assertEqual(fh.parse_score("56,25 %"), 56.25)
+
     def test_grouped_thousands_survive_the_decimal_comma_rule(self):
         for cell, expected in (
             ("1,441", 1441.0), ("3,348", 3348.0), ("100,000", 100000.0),
@@ -221,6 +230,11 @@ class TestNumberParsing(unittest.TestCase):
         ):
             with self.subTest(cell=cell):
                 self.assertEqual(fh.parse_score(cell), expected)
+
+    def test_an_unadorned_three_digit_comma_stays_a_thousands_group(self):
+        # The deliberate boundary: with no percent sign and no leading zero,
+        # "1,441" is an Elo rating and the cell gives nothing else to go on.
+        self.assertEqual(fh.parse_score("1,441"), 1441.0)
 
 
 class TestCrossTableMerge(unittest.TestCase):

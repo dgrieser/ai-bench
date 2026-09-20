@@ -1193,11 +1193,14 @@ that stands on its own in the cell:
   first used to store **-3**.
 - `1st` is a rank, and `43.2 (no tools) / 57.4 (with tools)` is two runs in one
   cell and so is neither.
-- A comma is a thousands group or a decimal point depending on the digits
-  around it, not on the comma: `1,441` is 1441, `63,1` is 63.1, and `0,794` is
-  0.794 because no thousands-formatted number starts with a bare zero -- read
-  as a group it would be 794, past the point where the rescaling below could
-  recognise it as a fraction at all.
+- A comma is a thousands group or a decimal point depending on what is around
+  it, not on the comma. A bare zero in front rules a group out, because no
+  thousands-formatted number starts with one: `0,794` is 0.794, and read as a
+  group it would be 794, past the point where the rescaling below could
+  recognise it as a fraction at all. A percent sign after it rules a group out
+  too, whatever the digits: `63,125%` is 63.125, because nothing here scores
+  63,125 percent. What is left keeps the grouped reading — `1,441` with
+  nothing around it to say otherwise is an Elo rating.
 - A column reported 0-1 throughout is put back on the scale every other card
   uses (Mistral's Ministral cards report MMLU at 0.794), while a single
   near-zero value beside siblings in the eighties is left alone -- ZeroBench's
