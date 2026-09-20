@@ -354,6 +354,55 @@ class TestHuggingfaceMerge(unittest.TestCase):
                 (45.0, "https://huggingface.co/org/m-high"),
             )
 
+    def test_a_plain_label_beats_a_qualified_one_whatever_the_values(self) -> None:
+        # One card, one benchmark, two runs. "Best harness" is a maximum over
+        # configurations and "w/ tools" is a different question being asked;
+        # neither is the number the column holds, so neither wins on being
+        # bigger.
+        mapping = write_json({
+            "Terminal Bench 2.1": "terminal_bench_2_1",
+            "Terminal Bench 2.1 (best harness)": "terminal_bench_2_1",
+            "HLE": "hle",
+            "HLE w/ tools": "hle",
+        })
+        rows = [{
+            "model": "m",
+            "repo": "org/m",
+            "scores": {
+                "Terminal Bench 2.1 (best harness)": 90.6,
+                "Terminal Bench 2.1": 85.2,
+                "HLE w/ tools": 63.9,
+                "HLE": 36.8,
+            },
+        }]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["terminal_bench_2_1"][0], 85.2)
+        self.assertEqual(by_slug["m"]["hle"][0], 36.8)
+
+    def test_equally_qualified_labels_still_take_the_best_run(self) -> None:
+        # A card printing one benchmark twice at two budgets, with nothing to
+        # separate the labels, keeps the policy it always had.
+        mapping = write_json({"LiveCodeBench v6": "livecodebench", "LiveCodeBench-v6": "livecodebench"})
+        rows = [{
+            "model": "m",
+            "repo": "org/m",
+            "scores": {"LiveCodeBench v6": 30.8, "LiveCodeBench-v6": 80.6},
+        }]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["livecodebench"][0], 80.6)
+
+    def test_a_no_tools_label_is_not_a_qualified_one(self) -> None:
+        # Every benchmark column here holds the no-tool run, so a label saying
+        # so names the column rather than a variant of it.
+        mapping = write_json({"HLE": "hle", "HLE (no tools)": "hle"})
+        rows = [{"model": "m", "repo": "org/m", "scores": {"HLE": 30.1, "HLE (no tools)": 24.4}}]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["hle"][0], 30.1)
+
+
 
 class TestSpheronMerge(unittest.TestCase):
     def test_largest_vram_estimate_wins_per_quant(self) -> None:

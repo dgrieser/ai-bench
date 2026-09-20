@@ -122,7 +122,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
     def _crawl(self, fails: set[str] | None = None) -> list[dict]:
         failing = fails or set()
 
-        def reader(repo: str) -> dict[str, float]:
+        def reader(repo: str, slug: str | None = None) -> dict[str, float]:
             if repo in failing:
                 raise RuntimeError("HTTP Error 401: Unauthorized")
             return {"mmlu": 1.0}
@@ -134,7 +134,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         first = self._crawl()
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(repo: str, slug: str | None = None) -> dict[str, float]:
             reads.append(repo)
             return {}
 
@@ -156,7 +156,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         self._crawl(fails={"org/m3"})
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(repo: str, slug: str | None = None) -> dict[str, float]:
             reads.append(repo)
             return {}
 
@@ -170,7 +170,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         self._crawl(fails={f"org/m{i}" for i in range(5)})
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(repo: str, slug: str | None = None) -> dict[str, float]:
             reads.append(repo)
             return {}
 

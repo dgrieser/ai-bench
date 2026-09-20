@@ -956,6 +956,29 @@ def build_fetch_huggingface_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--all-models", "--format", "json"]
 
 
+# Words that say a card label names one *run* of a benchmark rather than the
+# benchmark: which harness drove it, whether tools were allowed, which subset
+# or grading it used. The mapping file parks the qualified spellings it knows
+# about (see `huggingface-benchmark-name-mapping.json`), and this is the net
+# under it -- a label nobody has reviewed yet cannot displace a plain one.
+# "No tools" is deliberately absent: every benchmark column here holds the
+# no-tool run, so a label that says so names the column rather than a variant
+# of it, and ranking it below a bare label would hand HLE the tools number on
+# every card that prints both.
+_HF_QUALIFIED_LABEL_RE = re.compile(
+    r"\bw/\s*tools?\b|\bwith\s+tools?\b|\btool[- ]augmented\b"
+    r"|\bharness\b|\bscaffold\b|\bterminus\b|\bopenhands\b"
+    r"|\bopencode\b|\bcodex\b|\bmini-?swe\b|\bbest\b|\bstrict\b|\bpublic\b"
+    r"|\bwith\s+python\b|\bw/\s*python\b|\bpass@[2-9]\d*\b|\bw/\s*cot\b",
+    re.IGNORECASE,
+)
+
+
+def hf_label_rank(label: str) -> int:
+    """0 for a label that names the benchmark, 1 for one that names a run of it."""
+    return 1 if _HF_QUALIFIED_LABEL_RE.search(label) else 0
+
+
 def fetch_huggingface_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
@@ -982,23 +1005,33 @@ def fetch_huggingface_data(
         if not isinstance(repo, str) or not repo:
             continue
         url = canonical(f"{fetch_huggingface.HF_BASE}/{repo}")
-        mapped: dict[str, tuple[Any, str]] = {}
+        mapped: dict[str, tuple[int, Any, str]] = {}
         for label, value in scores.items():
             key = hf_to_key.get(label)
             if not key or value is None:
                 continue
-            # Several leaderboard labels can alias one llm.json benchmark; the
-            # best reported run wins rather than whichever label came first.
+            # Several card labels can alias one llm.json benchmark, and they do
+            # not all name the same run. An unqualified label -- one that names
+            # the benchmark and nothing else -- is the column's own number and
+            # wins outright over one carrying a harness, a tool mode or a
+            # subset, however the values compare. Only between labels that
+            # qualify the run equally does the best reported run win, which is
+            # what a card printing the same benchmark twice at two budgets
+            # asks for.
+            rank = hf_label_rank(label)
             old = mapped.get(key)
-            if old is None or not is_number(old[0]) or (is_number(value) and value > old[0]):
-                mapped[key] = (value, url)
+            if old is None or rank < old[0] or (
+                rank == old[0]
+                and (not is_number(old[1]) or (is_number(value) and value > old[1]))
+            ):
+                mapped[key] = (rank, value, url)
         if not mapped:
             continue
         merged = by_slug.setdefault(slug, {})
-        for key, pair in mapped.items():
+        for key, (rank, value, source) in mapped.items():
             old = merged.get(key)
-            if old is None or not is_number(old[0]) or (is_number(pair[0]) and pair[0] > old[0]):
-                merged[key] = pair
+            if old is None or not is_number(old[0]) or (is_number(value) and value > old[0]):
+                merged[key] = (value, source)
     return by_slug
 
 
