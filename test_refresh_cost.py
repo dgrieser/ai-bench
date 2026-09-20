@@ -106,7 +106,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         self._dir = tempfile.TemporaryDirectory()
         self._original = _cache.CACHE_DIR
         _cache.CACHE_DIR = self._dir.name
-        self._reader = fetch_huggingface.extract_scores
+        self._reader = fetch_huggingface.extract_scores_and_channels
         self.doc = {
             "models": [
                 {"name": f"m{i}", "url": f"https://huggingface.co/org/m{i}"}
@@ -115,30 +115,34 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         }
 
     def tearDown(self) -> None:
-        fetch_huggingface.extract_scores = self._reader
+        fetch_huggingface.extract_scores_and_channels = self._reader
         _cache.CACHE_DIR = self._original
         self._dir.cleanup()
 
     def _crawl(self, fails: set[str] | None = None) -> list[dict]:
         failing = fails or set()
 
-        def reader(repo: str) -> dict[str, float]:
+        def reader(
+            repo: str, slug: str | None = None
+        ) -> tuple[dict[str, float], dict[str, str]]:
             if repo in failing:
                 raise RuntimeError("HTTP Error 401: Unauthorized")
-            return {"mmlu": 1.0}
+            return {"mmlu": 1.0}, {"mmlu": fetch_huggingface.CHANNEL_METADATA}
 
-        fetch_huggingface.extract_scores = reader
+        fetch_huggingface.extract_scores_and_channels = reader
         return fetch_huggingface.crawl_all_models(self.doc)
 
     def test_the_second_walk_reuses_the_first(self) -> None:
         first = self._crawl()
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(
+            repo: str, slug: str | None = None
+        ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
-            return {}
+            return {}, {}
 
-        fetch_huggingface.extract_scores = counting
+        fetch_huggingface.extract_scores_and_channels = counting
         self.assertEqual(fetch_huggingface.crawl_all_models(self.doc), first)
         self.assertEqual(reads, [])
 
@@ -156,11 +160,13 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         self._crawl(fails={"org/m3"})
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(
+            repo: str, slug: str | None = None
+        ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
-            return {}
+            return {}, {}
 
-        fetch_huggingface.extract_scores = counting
+        fetch_huggingface.extract_scores_and_channels = counting
         fetch_huggingface.crawl_all_models(self.doc)
         self.assertEqual(reads, [])
 
@@ -170,11 +176,13 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         self._crawl(fails={f"org/m{i}" for i in range(5)})
         reads: list[str] = []
 
-        def counting(repo: str) -> dict[str, float]:
+        def counting(
+            repo: str, slug: str | None = None
+        ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
-            return {}
+            return {}, {}
 
-        fetch_huggingface.extract_scores = counting
+        fetch_huggingface.extract_scores_and_channels = counting
         fetch_huggingface.crawl_all_models(self.doc)
         self.assertEqual(len(reads), 10)
 

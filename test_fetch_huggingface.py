@@ -19,12 +19,25 @@ The fixtures pin the model-card shapes that used to lose or misalign scores:
     reasoning"), where the caption tripped the MoE-architecture filter;
   * grouped thousands separators in an Elo-scale cell ("1,441"), read as 1;
   * the Hub's structured eval metadata (evalResults + model-index), which the
-    README-table parser never saw at all.
+    README-table parser never saw at all;
+  * a lab's own shorthand for its model ("DS-V4.1-Flash" for
+    DeepSeek-V4.1-Flash), which matched nothing, so the whole frontier table
+    was dropped and only the *base* column -- the one header spelling the repo
+    out -- was read;
+  * a parameter count rounded differently in the heading than in the repo name
+    ("Solar Open (102B)" for Solar-Open-100B);
+  * a model derived from the repo sitting in the repo's own table
+    ("DeepSeek-R1-0528-Qwen3-8B"), whose numbers landed on the 685B model;
+  * "Pass@1 20.4" read as 1, "1st" read as 1, "63,1" read as 63, and a model
+    name read as a score because it had a number in it;
+  * a card reporting one benchmark at several settings, in the tables and in
+    the structured metadata alike, where whichever came first used to win.
 """
 
 from __future__ import annotations
 
 import unittest
+from unittest import mock
 
 import fetch_huggingface as fh
 
@@ -187,10 +200,41 @@ class TestNumberParsing(unittest.TestCase):
         self.assertEqual(fh.parse_score("1,441"), 1441.0)
         self.assertEqual(fh.parse_score("1,298.34"), 1298.34)
 
-    def test_a_lone_comma_group_is_left_alone(self):
+    def test_a_decimal_comma_is_a_decimal_point(self):
         # Not a thousands separator: three digits are required after the comma,
-        # so a decimal comma reads as it always did rather than as 631.
-        self.assertEqual(fh.parse_score("63,1"), 63.0)
+        # so a card writing "63,1" is writing 63.1, not 63 and not 631.
+        self.assertEqual(fh.parse_score("63,1"), 63.1)
+        self.assertEqual(fh.parse_score("8,25"), 8.25)
+
+    def test_a_fraction_written_with_a_comma_is_still_a_fraction(self):
+        # A bare zero in front rules out a thousands group, whatever follows
+        # the comma: "0,794" read as one is 794, three orders of magnitude out
+        # and past the point where the 0-1 rescaling could recognise it.
+        self.assertEqual(fh.parse_score("0,794"), 0.794)
+        self.assertEqual(fh.parse_score("0,3026"), 0.3026)
+        self.assertEqual(fh.parse_score("0,08"), 0.08)
+
+    def test_a_percent_sign_settles_the_comma(self):
+        # Nothing here scores 63,125 percent, so the group reading is out
+        # however the digits fall -- and the sign has to still be attached when
+        # the comma is judged, which a labelled cell nearly loses.
+        self.assertEqual(fh.parse_score("63,125%"), 63.125)
+        self.assertEqual(fh.parse_score("10,794%"), 10.794)
+        self.assertEqual(fh.parse_score("Avg: 63,125%"), 63.125)
+        self.assertEqual(fh.parse_score("56,25 %"), 56.25)
+
+    def test_grouped_thousands_survive_the_decimal_comma_rule(self):
+        for cell, expected in (
+            ("1,441", 1441.0), ("3,348", 3348.0), ("100,000", 100000.0),
+            ("1,298.34", 1298.34), ("12,345.67", 12345.67),
+        ):
+            with self.subTest(cell=cell):
+                self.assertEqual(fh.parse_score(cell), expected)
+
+    def test_an_unadorned_three_digit_comma_stays_a_thousands_group(self):
+        # The deliberate boundary: with no percent sign and no leading zero,
+        # "1,441" is an Elo rating and the cell gives nothing else to go on.
+        self.assertEqual(fh.parse_score("1,441"), 1441.0)
 
 
 class TestCrossTableMerge(unittest.TestCase):
@@ -231,6 +275,298 @@ class TestCrossTableMerge(unittest.TestCase):
         )
         scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
         self.assertEqual(scores, {"BBH": 88.5})
+
+
+class TestModelNaming(unittest.TestCase):
+    """Which column is this model? The question the whole ingest turns on."""
+
+    def test_a_family_initialism_names_the_model(self):
+        # DeepSeek's own card heads its frontier table "DS-V4.1-Flash".
+        md = md_table(
+            "| Benchmark (Metric) | Opus-5.0 | DS-V4-Pro | DS-V4.1-Flash |",
+            "| :--- | :---: | :---: | :---: |",
+            "| Terminal-Bench 4.0 (Pass@1) | 51.8 | 12.4 | 31.2 |",
+            "| ProgramBench (Almost@1) | 37.0 | 15.5 | 20.3 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "deepseek-ai/DeepSeek-V4.1-Flash"
+        )
+        self.assertEqual(
+            scores,
+            {"Terminal-Bench 4.0 (Pass@1)": 31.2, "ProgramBench (Almost@1)": 20.3},
+        )
+
+    def test_a_first_letter_abbreviation_names_the_model(self):
+        md = md_table(
+            "| Benchmark | N-3-Ultra <br> 550B-A55B | Rival 1T |",
+            "| :--- | :---: | :---: |",
+            "| SWE-Bench Verified | 70.7 | 75.3 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+        )
+        self.assertEqual(scores, {"SWE-Bench Verified": 70.7})
+
+    def test_a_rounded_parameter_count_still_names_the_model(self):
+        md = md_table(
+            "| Category | Benchmarks | Solar Open (102B) | gpt-oss-120b (117B, high) |",
+            "| :--- | :--- | :---: | :---: |",
+            "| *General* | KMMLU | 73.0 | 72.7 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "upstage/Solar-Open-100B"
+        )
+        self.assertEqual(scores, {"KMMLU": 73.0})
+
+    def test_a_different_parameter_count_is_a_different_model(self):
+        md = md_table(
+            "| Benchmark | Qwen3.5-4B | Qwen3.5-122B-A10B |",
+            "| :--- | :---: | :---: |",
+            "| MMLU-Pro | 60.1 | 84.9 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "Qwen/Qwen3.5-9B"
+        )
+        self.assertEqual(scores, {})
+
+    def test_the_same_words_spaced_differently_still_match(self):
+        # Olmo's table heads its released model "Olmo3 Instruct 7B" and the
+        # checkpoints it was built from "Olmo 3 Instruct 7B SFT"/"DPO".
+        md = md_table(
+            "| Skill | Benchmark | Olmo 3 Instruct 7B SFT | Olmo 3 Instruct 7B DPO | Olmo3 Instruct 7B |",
+            "| :--- | :--- | :---: | :---: | :---: |",
+            "| Math | AIME 2024 | 6.7 | 30.1 | 44.3 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "allenai/Olmo-3-7B-Instruct"
+        )
+        self.assertEqual(scores, {"AIME 2024": 44.3})
+
+    def test_a_base_column_loses_to_the_post_trained_one(self):
+        md = md_table(
+            "| Benchmark | Example-30B Base | Example-30B | Rival |",
+            "| :--- | :---: | :---: | :---: |",
+            "| MMLU-Pro | 73.2 | 84.9 | 80.1 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {"MMLU-Pro": 84.9})
+
+    def test_a_model_built_from_this_one_is_not_this_one(self):
+        # R1-0528's card carries a table of models distilled *from* it, and the
+        # 8B distill's name contains the repo's whole name.
+        md = md_table(
+            "| | AIME 24 | GPQA Diamond |",
+            "| :--- | :---: | :---: |",
+            "| DeepSeek-R1-0528-Qwen3-8B | 86.0 | 61.1 |",
+            "| Qwen3-8B | 76.3 | 62.0 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "deepseek-ai/DeepSeek-R1-0528"
+        )
+        self.assertEqual(scores, {})
+
+    def test_a_release_date_tells_two_releases_apart(self):
+        md = md_table(
+            "| Model Name | Acc avg |",
+            "| :--- | :---: |",
+            "| Qwen3-235B-A22B (Thinking) | 70.6 |",
+            "| Qwen3-235B-A22B-Thinking-2507 (Full Attention) | 82.9 |",
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "Qwen/Qwen3-235B-A22B-Thinking-2507"
+        )
+        self.assertEqual(scores, {"Acc avg": 82.9})
+
+    def test_the_row_the_llm_json_slug_asks_for_wins(self):
+        # One repo serves both modes; the row being filled names which.
+        md = md_table(
+            "| Benchmark | Example-30B (Thinking) | Example-30B (Non-thinking) |",
+            "| :--- | :---: | :---: |",
+            "| AIME25 | 92.3 | 74.1 |",
+        )
+        tables = fh.parse_markdown_tables(md)
+        self.assertEqual(
+            fh.extract_scores_from_tables(tables, REPO, "example-30b-instruct"),
+            {"AIME25": 74.1},
+        )
+        self.assertEqual(
+            fh.extract_scores_from_tables(tables, REPO, "example-30b-reasoning"),
+            {"AIME25": 92.3},
+        )
+
+    def test_two_variants_and_nothing_to_choose_between_them(self):
+        # Neither the repo nor the row says which mode it wants, and picking
+        # the leftmost is picking whichever the author typed first.
+        md = md_table(
+            "| Benchmark | Example-30B (Thinking) | Example-30B (Non-thinking) |",
+            "| :--- | :---: | :---: |",
+            "| AIME25 | 92.3 | 74.1 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {})
+
+    def test_one_name_in_two_cells_is_not_a_tie(self):
+        # A download table lists a model once per precision; the first is as
+        # good as the last, and nothing is skipped over it.
+        md = md_table(
+            "| Model | Precision | MMLU-Pro |",
+            "| :--- | :--- | :---: |",
+            "| Example-30B | BF16 | 84.9 |",
+            "| Example-30B | FP8 | 84.9 |",
+        )
+        self.assertEqual(fh.select_row(fh.parse_markdown_tables(md)[0], REPO), 0)
+
+    def test_a_model_column_on_the_right_is_still_the_model_column(self):
+        md = md_table(
+            "| MMLU-Pro | AIME24 | Model |",
+            "| :---: | :---: | :--- |",
+            "| 84.9 | 88.1 | Example-30B |",
+            "| 80.1 | 77.9 | Rival-27B |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {"MMLU-Pro": 84.9, "AIME24": 88.1})
+
+    def test_a_mapped_heading_names_the_column_nothing_else_would(self):
+        aliases = {"example-org/Example-30B": ["BF16"]}
+        md = md_table(
+            "| Benchmark | BF16 | FP8 | NVFP4 |",
+            "| :--- | :---: | :---: | :---: |",
+            "| MathVista_MINI | 71.90 | 71.05 | 71.30 |",
+        )
+        tables = fh.parse_markdown_tables(md)
+        self.assertEqual(fh.extract_scores_from_tables(tables, REPO), {})
+        with mock.patch.object(fh, "load_model_column_aliases", lambda *a, **k: aliases):
+            self.assertEqual(
+                fh.extract_scores_from_tables(tables, REPO), {"MathVista_MINI": 71.9}
+            )
+
+
+class TestLabelNormalisation(unittest.TestCase):
+    def test_inline_markup_leaves_the_label(self):
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| AIME24<sub>(Mean@32)</sub> | 93.3 |",
+            "| Terminal-Bench<br>4.0 (Pass@1) | 31.2 |",
+            "| MGSM&nbsp;(EM) | 80.2 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(
+            scores,
+            {
+                "AIME24 (Mean@32)": 93.3,
+                "Terminal-Bench 4.0 (Pass@1)": 31.2,
+                "MGSM (EM)": 80.2,
+            },
+        )
+
+    def test_a_nested_row_keeps_the_benchmark_it_hangs_off(self):
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| TauBench V3 | |",
+            "| &nbsp;&nbsp;Airline | 81.5 |",
+            "| &nbsp;&nbsp;Telecom | 92.9 |",
+            "| BrowseComp | 44.4 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(
+            scores,
+            {"TauBench V3 Airline": 81.5, "TauBench V3 Telecom": 92.9, "BrowseComp": 44.4},
+        )
+
+    def test_a_row_in_bold_is_not_a_nested_row(self):
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| **Chat** | |",
+            "| AlpacaEval 2 LC | 69.1 |",
+            "| **Safety** | 64.8 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {"AlpacaEval 2 LC": 69.1, "Safety": 64.8})
+
+    def test_a_lower_is_better_label_is_not_a_benchmark(self):
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| HF-ASR (WER\u2193) | 3.11 |",
+            "| MMLU-Pro | 84.9 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {"MMLU-Pro": 84.9})
+
+
+class TestValueReading(unittest.TestCase):
+    def test_a_metric_name_in_the_cell_is_not_the_value(self):
+        # Qwen prints "Pass@1 20.4 Score 42.9" in one cell; the "1" of "Pass@1"
+        # used to land as the model's Agent's Last Exam score.
+        self.assertEqual(fh.parse_score("Pass@1 20.4 Score 42.9"), 20.4)
+        self.assertEqual(fh.parse_score("Without CI 83.7 With CI 90.2"), 83.7)
+
+    def test_a_name_with_a_number_in_it_is_not_a_value(self):
+        self.assertIsNone(fh.parse_score("NVIDIA-Nemotron-3-Nano-Omni-30B"))
+        self.assertIsNone(fh.parse_score("GLM-4.5-Air"))
+        self.assertIsNone(fh.parse_score("8B / 16B"))
+
+    def test_a_rank_is_not_a_score(self):
+        self.assertIsNone(fh.parse_score("1st"))
+        self.assertIsNone(fh.parse_score("3rd"))
+
+    def test_the_value_after_a_label_is_the_value(self):
+        self.assertEqual(fh.parse_score("10/50 steps: 40.1"), 40.1)
+
+    def test_two_qualified_runs_in_one_cell_name_neither(self):
+        self.assertIsNone(fh.parse_score("43.2 (no tools) / 57.4 (with tools)"))
+
+    def test_a_footnoted_alternative_keeps_the_leading_value(self):
+        self.assertEqual(fh.parse_score("36.8 (39.1\u2020)"), 36.8)
+
+    def test_a_fraction_scaled_table_is_put_back_on_scale(self):
+        # Mistral's Ministral cards report 0-1 where every other card reports
+        # 0-100, which stored as-is lands as a sub-1% score.
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| MMLU 5-shot | 0.794 |",
+            "| AIME24 | 0.898 |",
+            "| GPQA Diamond | 0.712 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(
+            scores, {"MMLU 5-shot": 79.4, "AIME24": 89.8, "GPQA Diamond": 71.2}
+        )
+
+    def test_a_genuinely_near_zero_column_is_left_alone(self):
+        # ZeroBench's whole published field is 0.0 to 12.0.
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| ZeroBench | 0.4 |",
+            "| MMLU-Pro | 84.9 |",
+            "| AIME24 | 88.1 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores["ZeroBench"], 0.4)
+
+
+class TestTablesWithoutTrailingPipes(unittest.TestCase):
+    def test_a_row_may_end_without_its_closing_pipe(self):
+        # DeepSeek-R1-0528's comparison table is written this way, and
+        # requiring the trailing pipe dropped every benchmark on the card.
+        md = (
+            "| Category | Benchmark (Metric) | DeepSeek R1 | DeepSeek R1 0528\n"
+            "|----------|----------|-----------------|---|\n"
+            "| General  |\n"
+            "|          | MMLU-Pro (EM) | 84.0 | 85.0\n"
+            "|          | GPQA-Diamond (Pass@1) | 71.5 | 81.0\n"
+        )
+        scores = fh.extract_scores_from_tables(
+            fh.parse_markdown_tables(md), "deepseek-ai/DeepSeek-R1-0528"
+        )
+        self.assertEqual(
+            scores, {"MMLU-Pro (EM)": 85.0, "GPQA-Diamond (Pass@1)": 81.0}
+        )
 
 
 class TestEvalResults(unittest.TestCase):
@@ -285,6 +621,142 @@ class TestEvalResults(unittest.TestCase):
         }
         self.assertEqual(fh.extract_eval_results(payload), {"e/f": 76.0})
 
+    def test_a_plain_entry_beats_the_qualified_ones(self):
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"},
+                          "value": 73.5, "notes": "Reasoning: medium"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"},
+                          "value": 80.1, "notes": "Reasoning: high"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"},
+                          "value": 80.8, "notes": "GPQA Diamond"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 80.8})
+
+    def test_qualified_runs_that_disagree_name_no_value(self):
+        # NVIDIA files SWE-bench Verified three times, once per harness, and
+        # nothing on the page says which of the three is the benchmark's.
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "SWE-bench/SWE-bench_Verified", "task_id": "resolved"},
+                          "value": 60.47, "notes": "OpenHands harness"}},
+                {"data": {"dataset": {"id": "SWE-bench/SWE-bench_Verified", "task_id": "resolved"},
+                          "value": 59.2, "notes": "OpenCode harness"}},
+                {"data": {"dataset": {"id": "SWE-bench/SWE-bench_Verified", "task_id": "resolved"},
+                          "value": 53.73, "notes": "Codex harness"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {})
+
+    def test_one_harness_note_on_its_own_is_still_the_card_s_number(self):
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"},
+                          "value": 86.1, "notes": "Terminus-2 harness, avg of 5 runs."}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 86.1})
+
+    def test_a_merged_entry_beats_one_pending_on_a_pull_request(self):
+        payload = {
+            "evalResults": [
+                {"pullRequest": 24, "data": {"dataset": {"id": "a/b", "task_id": "b"},
+                                             "value": 84.8, "date": "2026-01-01"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"},
+                          "value": 86.6, "date": "2026-01-01"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 86.6})
+
+    def test_a_board_filed_as_fractions_is_put_back_on_scale(self):
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "board/results", "task_id": "overall"}, "value": 0.3026}},
+                {"data": {"dataset": {"id": "board/results", "task_id": "swebench"}, "value": 0.5204}},
+                {"data": {"dataset": {"id": "board/results", "task_id": "appworld"}, "value": 0.08}},
+                {"data": {"dataset": {"id": "other/bench", "task_id": "chart"}, "value": 0.4}},
+            ]
+        }
+        self.assertEqual(
+            fh.extract_eval_results(payload),
+            {
+                "board/results (overall)": 30.26,
+                "board/results (swebench)": 52.04,
+                "board/results (appworld)": 8.0,
+                # One near-zero value on its own is a small model, not a scale.
+                "other/bench (chart)": 0.4,
+            },
+        )
+
+
+
+    def test_one_run_filed_twice_is_not_two_runs(self):
+        # Same harness, two records: a later date and a merged entry beat an
+        # earlier one still pending on a Hub PR. Nothing is ambiguous here.
+        payload = {
+            "evalResults": [
+                {"pullRequest": 3,
+                 "data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 59.2,
+                          "date": "2026-01-01", "notes": "OpenHands harness"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 60.5,
+                          "date": "2026-02-01", "notes": "OpenHands harness"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 60.5})
+
+    def test_the_latest_of_two_records_of_one_run_wins(self):
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 47.0,
+                          "date": "2026-03-01", "notes": "Terminus-2 harness"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 46.2,
+                          "date": "2026-01-01", "notes": "Terminus-2 harness"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 47.0})
+
+
+class TestChannels(unittest.TestCase):
+    """Which read a value came from, carried past the benchmark-name mapping."""
+
+    PAYLOAD = {
+        "evalResults": [
+            {"data": {"dataset": {"id": "Idavidrein/gpqa", "task_id": "diamond"},
+                      "value": 84.8}}
+        ]
+    }
+    CARD = md_table(
+        "| Benchmark | Example-30B |",
+        "| :--- | :---: |",
+        "| GPQA Diamond | 86.6 |",
+        "| MMLU-Pro | 84.9 |",
+    )
+
+    def _crawl(self):
+        with mock.patch.object(fh, "fetch_api_eval_data", lambda *a, **k: self.PAYLOAD), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            return fh.extract_scores_and_channels(REPO)
+
+    def test_each_label_says_which_channel_read_it(self):
+        scores, channels = self._crawl()
+        self.assertEqual(
+            scores,
+            {"Idavidrein/gpqa (diamond)": 84.8, "GPQA Diamond": 86.6, "MMLU-Pro": 84.9},
+        )
+        self.assertEqual(
+            channels,
+            {
+                "Idavidrein/gpqa (diamond)": fh.CHANNEL_METADATA,
+                "GPQA Diamond": fh.CHANNEL_TABLE,
+                "MMLU-Pro": fh.CHANNEL_TABLE,
+            },
+        )
+
+    def test_extract_scores_still_returns_the_scores_alone(self):
+        with mock.patch.object(fh, "fetch_api_eval_data", lambda *a, **k: self.PAYLOAD), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            self.assertEqual(fh.extract_scores(REPO), self._crawl()[0])
 
 class TestModelIndex(unittest.TestCase):
     def test_extracts_metrics(self):

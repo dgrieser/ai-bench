@@ -1,0 +1,7 @@
+{
+  "#": "Hugging Face repo -> the column headings that card uses for it.",
+  "# why": "fetch_huggingface.py already expands a repo name into the shorthands that follow a rule -- initials for a camel-cased family (DeepSeek-V4.1-Flash -> DS-V4.1-Flash), a first letter for one word (Nemotron-3-Ultra -> N-3-Ultra), a parameter count rounded differently (Solar-Open-100B -> Solar Open (102B)). This file is for the headings that follow no rule at all: a codename, an internal name, the precision a checkpoint ships at. A wrong column is a wrong score under the right name, which is worse than no score, so these are read rather than guessed at.",
+  "# format": "\"owner/name\": [\"heading\", ...], one entry per heading the card may use. Keys starting with # are notes and are skipped.",
+
+  "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16": ["BF16"]
+}

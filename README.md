@@ -242,7 +242,8 @@ Output: llm.json (unified dataset)
 
 # Fetch from specific benchmarks
 ./fetch_aa_coding_agents.py              # DeepSWE 1.1, SWE-Atlas-QnA, Terminal-Bench 4.0 as run by AA
-./fetch_huggingface.py --repo owner/model-name
+./fetch_huggingface.py owner/model-name  # or the full card URL
+./fetch_huggingface.py --all-models --format table   # every card llm.json points at
 ./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
 ./fetch_frontierswe.py                  # both published boards, V2 and V1
 ./fetch_frontierswe.py --revision v1    # or pin one revision
@@ -1008,6 +1009,18 @@ somewhere else. The extra slugs are an ingestion detail — they never reach
 `llm.json`, `llm.html` or `llm-cli`, and `check_new.py` does not offer them as
 new models.
 
+This is also how a model that arrived twice is put back together. IFM's
+K2-Horizon line was published under codenames first and under its release names
+three days later, and `check_new.py` added both: `k2-1b-final` beside
+`k2-horizon-0-9b`, `k2-4b-ph1` beside `k2-horizon-3-7b`, `k2-7b-ph2` beside
+`k2-horizon-7b`, `k2-mova-36b-mid5` beside `k2-horizon-mova-36b-a4b` — eight
+rows for four models, each pair pointing at one Hugging Face repo, so every
+card self-report was published twice under two names. The codename rows are
+gone and their AA slugs sit in the list above, which keeps the AA numbers
+filed under the codename reachable with the release slug leading. The surviving
+row keeps the earlier `date_added`, because that is the day the model first
+appeared here.
+
 ### A hand-added model meets Artificial Analysis
 
 A model added by hand — `add.py`, or the admin page's **Add a model** — exists in
@@ -1065,6 +1078,133 @@ Two deliberate exceptions:
 Some benchmarks have internal name variations:
 - `huggingface-benchmark-name-mapping.json` (benchmark name aliases)
 - `llmstats-benchmark-name-mapping.json`
+
+An alias is a claim that two labels name the same run of the same benchmark.
+Where a label names a *different* run -- a harness, a subset, a tool mode, a
+maximum over configurations -- it is parked on `__unmappable__` instead, and
+`test_hle_no_tools.py` checks the whole file against that rule rather than
+trusting each entry to have been thought about. Parked for it are, among
+others, `SWE-Bench (Codex)`/`(OpenCode)`/`(OpenHands)` and
+`SWE Bench Verified (SWE-Agent Harness)` (a harness other than the column's
+leading source's), a bare `SWE-Bench (Pass@1)` (Verified, Full and Lite are
+three question sets), `Terminal Bench 2.1 (best harness)`, `SWE-bench Pro
+(Public Dataset)` and `(strict)`, `MCP Atlas (Public)`, `MMMU/MMMU_Pro
+(mmmu_pro_vision)`, `Charxiv RQ (original / with python)`, `HLE-Full` and
+`HLE w/ CoT`. `AA-Omni-Public Non-hallu` is parked for a sharper reason: it is
+the *inverse* of `aa_omniscience_hallucination`, which is a hallucination rate
+where lower is better, so mapping it wrote a model's best number into the
+column as its worst.
+
+Under the file there is a net, because a label nobody has reviewed yet still
+arrives with a value attached. Three things decide between the labels that
+alias one column, in this order:
+
+1. **An unqualified label wins.** `update.hf_label_rank()` reads the label
+   itself: one that names a run of the benchmark -- with tools, a named
+   harness, "best", "strict", "public", `pass@k` for every k but 1 -- cannot
+   displace one that just names the benchmark, however the two values compare.
+   "No tools" is deliberately *not* a qualifier: every benchmark column here
+   holds the no-tool run, so a label saying so names the column rather than a
+   variant of it.
+2. **The structured channel wins.** See below: the precedence the card-level
+   read applies label by label has to survive the mapping, because
+   `Idavidrein/gpqa (diamond)` and `GPQA Diamond` are one column read two ways
+   and once both are `gpqa_diamond` nothing in the label says which came from
+   where. On the 157 cards this file reads, dropping that provenance before
+   the collision was resolved handed nine columns the table's number over the
+   structured one, every one of them the higher of the two.
+3. **The best reported run wins**, which is the policy the rest of this file
+   describes and the one a card printing the same benchmark at two budgets
+   asks for.
+
+### How a Hugging Face model card is read
+
+`fetch_huggingface.py` reads two things per repo, and the structured one wins
+where they overlap -- per label here, and per *column* once the benchmark-name
+mapping has collapsed several labels onto one (rule 2 above; the crawl carries
+a `channels` map beside its scores so that survives):
+
+**The Hub's "Evaluation results" widget** (`evalResults` plus the classic
+`model-index` card metadata). Every entry names its dataset by Hub id, so
+nothing has to be guessed from a heading; the label is the dataset id plus the
+task when the task adds information (`Idavidrein/gpqa (diamond)`). What an
+entry does *not* carry is which run it is, beyond a free-text note, and one
+card routinely files the same dataset several times -- once per harness, per
+agent scaffold, per reasoning effort, per video frame count. So entries are
+grouped by label: one whose note names no run at all is the card's headline and
+wins outright, and where entries name *different* runs and disagree, nothing is
+taken. NVIDIA files SWE-bench Verified at 60.47 on OpenHands, 59.2 on OpenCode
+and 53.73 on Codex, and no page says which of the three the column should
+carry. Two records of the *same* run are not that case -- one harness filed
+twice, on two dates or two Hub PRs, is one run reported twice -- and there the
+merged entry beats one still pending on an open PR, and a later date beats an
+earlier one. `cais/hle` is split by tool mode before any of this, because the gap there
+is worth a median 11.5 points (`TOOL_MODE_SENSITIVE_DATASETS`).
+
+**The tables in the card body**, which are where most of the numbers are and
+all of the ambiguity. The whole ingest turns on one question -- which column is
+*this* model? -- and a card answers it in whatever shorthand its author had in
+mind. So the repo name is expanded into the spellings a card is likely to use,
+weakest last, and the penalty each carries is what keeps a loose reading from
+beating a literal one when both are on the page:
+
+| The card writes | The repo is called | How it is read |
+| --- | --- | --- |
+| `DS-V4.1-Flash` | `DeepSeek-V4.1-Flash` | initials of each camel-cased word |
+| `N-3-Ultra 550B-A55B` | `NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16` | one word down to its first letter |
+| `Solar Open (102B)` | `Solar-Open-100B` | a parameter count rounded differently, within 10% and compared like with like (a total against a total, an active count against an active) |
+| `Olmo3 Instruct 7B` | `Olmo-3-7B-Instruct` | the same words, spaced and ordered differently |
+| `BF16` | `Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16` | a hand-written entry in `huggingface-model-column-mapping.json`, for the headings that follow no rule |
+
+Four readings are refused rather than taken, because a wrong column is a wrong
+score under the right name:
+
+- **A base column when the repo is post-trained**, and the reverse. DeepSeek's
+  V4-Pro card reports MMLU-Pro at 73.5 in its base table and 87.5 in its
+  instruct one, and the base table is the one whose header spells the repo out.
+- **A model built from this one.** `DeepSeek-R1-0528-Qwen3-8B` contains
+  `DeepSeek-R1-0528`, so every substring reading matches it; a parameter count
+  the repo does not carry *plus* a family name from somewhere else says
+  "derived", and the row is left alone.
+- **A different release of the same name.** Qwen's long-context table carries
+  `Qwen3-235B-A22B (Thinking)` beside `Qwen3-235B-A22B-Thinking-2507`, and only
+  the date tells them apart.
+- **A tie between two names the card spells differently.** "Thinking" and
+  "Non-thinking" on a hybrid model whose row names neither is a question this
+  parser cannot answer, and picking the leftmost is picking whichever the
+  author typed first. llm.json's own name for the row breaks the tie where it
+  can -- the repo `Qwen/Qwen3-8B` serves both modes and the row asking for it
+  is `qwen3-8b-instruct` -- and where it cannot, the table is skipped. A tie
+  between two cells carrying the *same* name is not this: a download table
+  lists one model once per precision, and the first is as good as the last.
+
+What comes out of a cell is then read the way a reader reads it. Inline markup
+(`<br>`, `<sub>`, `<b>`, markdown links) is dropped, every kind of line break
+and run of whitespace becomes one space, so the label is
+`Terminal-Bench 4.0 (Pass@1)` and `AIME24 (Mean@32)` rather than the markup
+around them. A row indented under the benchmark above it keeps the name it
+hangs off -- `TauBench V3 Airline`, not `Airline`. And a value is the number
+that stands on its own in the cell:
+
+- `Pass@1 20.4 Score 42.9` is 20.4, not 1. (`qwen3-8-flash-next` stored an
+  Agents' Last Exam score of **1** for exactly this reason.)
+- `Without CI 83.7 With CI 90.2` is 83.7, the setting `charxiv_reasoning` holds.
+- `NVIDIA-Nemotron-3-Nano-Omni-30B` and `8B / 16B` are not values at all; the
+  first used to store **-3**.
+- `1st` is a rank, and `43.2 (no tools) / 57.4 (with tools)` is two runs in one
+  cell and so is neither.
+- A comma is a thousands group or a decimal point depending on what is around
+  it, not on the comma. A bare zero in front rules a group out, because no
+  thousands-formatted number starts with one: `0,794` is 0.794, and read as a
+  group it would be 794, past the point where the rescaling below could
+  recognise it as a fraction at all. A percent sign after it rules a group out
+  too, whatever the digits: `63,125%` is 63.125, because nothing here scores
+  63,125 percent. What is left keeps the grouped reading — `1,441` with
+  nothing around it to say otherwise is an Elo rating.
+- A column reported 0-1 throughout is put back on the scale every other card
+  uses (Mistral's Ministral cards report MMLU at 0.794), while a single
+  near-zero value beside siblings in the eighties is left alone -- ZeroBench's
+  whole published field is 0.0 to 12.0.
 
 ### Update Process
 
@@ -1313,7 +1453,7 @@ reason the number is 21 rather than 4:
 
 | Scored weight | What they carry | Models |
 | --- | --- | --- |
-| 1.20 | Terminal-Bench 2.1 + SciCode (0.85 + 0.35) | 15 — `qwen3-5-2b`, `granite-4-1-3b`/`-8b`/`-30b`, `nemotron-3-nano-omni-30b-a3b`, `command-a-plus`, `g9v3-3b`, `g9v3-39a5b`, `ling-3-0-tiny`, `ling-3-0-flash-vl`, `k2-horizon-375b-a23b`, `k2-1b-final`, `k2-4b-ph1`, `k2-7b-ph2`, `k2-mova-36b-mid5` |
+| 1.20 | Terminal-Bench 2.1 + SciCode (0.85 + 0.35) | 15 — `qwen3-5-2b`, `granite-4-1-3b`/`-8b`/`-30b`, `nemotron-3-nano-omni-30b-a3b`, `command-a-plus`, `g9v3-3b`, `g9v3-39a5b`, `ling-3-0-tiny`, `ling-3-0-flash-vl`, `k2-horizon-375b-a23b`, `k2-horizon-0-9b`, `k2-horizon-3-7b`, `k2-horizon-7b`, `k2-horizon-mova-36b-a4b` |
 | 1.20 | LiveCodeBench + SciCode + SWE-bench Multilingual + SWE-bench Verified (0.4 + 0.35 + 0.3 + 0.15) | 2 — `deepseek-v3-2-0925`, `kimi-k2-thinking` |
 | 1.30 | SWE-bench Pro + LiveCodeBench + SciCode + SWE-bench Verified (0.4 + 0.4 + 0.35 + 0.15) | 4 — `glm-4-6`, `glm-4-7-flash`, `qwen3-5-27b`, `qwen3-coder-480b-a35b-instruct` |
 
@@ -2007,7 +2147,7 @@ Three consequences, all different from the other two indexes:
 This is also the column where dropping the median fill is most visible, in both
 directions. `ornith-1-5-397b` is measured on two of the six and places 6th on HLE and
 8th on GPQA Diamond; it went from **37th to 6th** when the fill was removed, because
-its four blanks were previously dragging it back toward the middle. `k2-1b-final` is
+its four blanks were previously dragging it back toward the middle. `k2-horizon-0-9b` is
 measured on three and placed 131st, 149th and 49th on them; it went from **124th to
 135th**, because its three blanks had been quietly lifting it *toward* the middle.
 Across the column, models measured on three members or fewer gained a mean of 4.9
@@ -2843,6 +2983,7 @@ ai-bench/
 ├── check_new-decisions.json    # Open add/ignore questions for the proposal PR
 ├── check_new-dismissed.json    # AA slugs never to offer again
 ├── huggingface-benchmark-name-mapping.json
+├── huggingface-model-column-mapping.json   # repo -> the heading its card uses
 ├── llmstats-benchmark-name-mapping.json
 ├── gpu.json                    # GPU configuration reference
 ├── model-names-*.txt           # Cached model name lists

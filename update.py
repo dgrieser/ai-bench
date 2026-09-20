@@ -956,6 +956,32 @@ def build_fetch_huggingface_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--all-models", "--format", "json"]
 
 
+# Words that say a card label names one *run* of a benchmark rather than the
+# benchmark: which harness drove it, whether tools were allowed, which subset
+# or grading it used. The mapping file parks the qualified spellings it knows
+# about (see `huggingface-benchmark-name-mapping.json`), and this is the net
+# under it -- a label nobody has reviewed yet cannot displace a plain one.
+# `pass@k` counts as a qualifier for every k but 1: best-of-k is a different
+# measurement, and the gap is not small -- see docs/cybergym-coverage-2026-08.md
+# for pass@1 against pass@10 on the same model.
+# "No tools" is deliberately absent: every benchmark column here holds the
+# no-tool run, so a label that says so names the column rather than a variant
+# of it, and ranking it below a bare label would hand HLE the tools number on
+# every card that prints both.
+_HF_QUALIFIED_LABEL_RE = re.compile(
+    r"\bw/\s*tools?\b|\bwith\s+tools?\b|\btool[- ]augmented\b"
+    r"|\bharness\b|\bscaffold\b|\bterminus\b|\bopenhands\b"
+    r"|\bopencode\b|\bcodex\b|\bmini-?swe\b|\bbest\b|\bstrict\b|\bpublic\b"
+    r"|\bwith\s+python\b|\bw/\s*python\b|\bpass@(?!1\b)\d+\b|\bw/\s*cot\b",
+    re.IGNORECASE,
+)
+
+
+def hf_label_rank(label: str) -> int:
+    """0 for a label that names the benchmark, 1 for one that names a run of it."""
+    return 1 if _HF_QUALIFIED_LABEL_RE.search(label) else 0
+
+
 def fetch_huggingface_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
@@ -981,24 +1007,46 @@ def fetch_huggingface_data(
             continue
         if not isinstance(repo, str) or not repo:
             continue
+        channels = row.get("channels")
+        channels = channels if isinstance(channels, dict) else {}
         url = canonical(f"{fetch_huggingface.HF_BASE}/{repo}")
-        mapped: dict[str, tuple[Any, str]] = {}
+        mapped: dict[str, tuple[int, int, Any, str]] = {}
         for label, value in scores.items():
             key = hf_to_key.get(label)
             if not key or value is None:
                 continue
-            # Several leaderboard labels can alias one llm.json benchmark; the
-            # best reported run wins rather than whichever label came first.
+            # Several card labels can alias one llm.json benchmark, and they do
+            # not all name the same run. Three things decide between them, in
+            # this order:
+            #
+            #   1. An unqualified label -- one that names the benchmark and
+            #      nothing else -- is the column's own number and wins outright
+            #      over one carrying a harness, a tool mode or a subset,
+            #      however the values compare.
+            #   2. The structured channel beats the card's own table. That is
+            #      the precedence extract_scores() applies label by label, and
+            #      it has to survive the mapping: "Idavidrein/gpqa (diamond)"
+            #      and "GPQA Diamond" are one column read two ways, and once
+            #      they are both `gpqa_diamond` nothing in the label says which
+            #      came from where.
+            #   3. Only between labels that tie on both does the best reported
+            #      run win, which is what a card printing the same benchmark
+            #      twice at two budgets asks for.
+            rank = hf_label_rank(label)
+            channel = 0 if channels.get(label) == fetch_huggingface.CHANNEL_METADATA else 1
             old = mapped.get(key)
-            if old is None or not is_number(old[0]) or (is_number(value) and value > old[0]):
-                mapped[key] = (value, url)
+            if old is None or (rank, channel) < old[:2] or (
+                (rank, channel) == old[:2]
+                and (not is_number(old[2]) or (is_number(value) and value > old[2]))
+            ):
+                mapped[key] = (rank, channel, value, url)
         if not mapped:
             continue
         merged = by_slug.setdefault(slug, {})
-        for key, pair in mapped.items():
+        for key, (rank, channel, value, source) in mapped.items():
             old = merged.get(key)
-            if old is None or not is_number(old[0]) or (is_number(pair[0]) and pair[0] > old[0]):
-                merged[key] = pair
+            if old is None or not is_number(old[0]) or (is_number(value) and value > old[0]):
+                merged[key] = (value, source)
     return by_slug
 
 
