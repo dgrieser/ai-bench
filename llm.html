@@ -1974,11 +1974,6 @@
       line-height: 1.55;
     }
 
-    .recent-count {
-      color: var(--text);
-      font-weight: 700;
-    }
-
     .recent-days {
       list-style: none;
       display: flex;
@@ -7064,46 +7059,11 @@
       function renderRecentPanel() {
         const days = recentAdditions();
         const showAll = state.history.showAll;
-        const modelCount = days.reduce((total, day) => total + day.models.length, 0);
-        // Every score the panel lists, split by what happened to it: the ones
-        // that arrived (with a new model or on a model already here) and the
-        // ones that replaced a number the table used to show. The lead counts
-        // what is on screen, so a reader can check it against the chips below
-        // rather than being told that a new model's scores are somewhere in
-        // the model count.
-        const counts = days.reduce((totals, day) => {
-          [...day.models, ...day.scores].forEach((row) => {
-            row.entries.forEach((entry) => {
-              if (entry.kind === "updated") {
-                totals.updated += 1;
-              } else if (entry.kind === "recorded") {
-                totals.recorded += 1;
-              } else {
-                totals.added += 1;
-              }
-            });
-          });
-          return totals;
-        }, { added: 0, recorded: 0, updated: 0 });
-
-        const span = showAll
-          ? "since the index started keeping one"
-          : `in the last ${HISTORY_DAYS} days`;
-        const since = state.data?.history_since || "";
-        const lead = modelCount || counts.added || counts.recorded || counts.updated
-          ? [
-              `<span class="recent-count">${countLabel(modelCount, "model")}</span>, `,
-              `<span class="recent-count">${countLabel(counts.added + counts.recorded, "score")}</span> added and `,
-              `<span class="recent-count">${countLabel(counts.updated, "updated score")}</span> ${span}, `,
-              `across the models and columns the table is showing now. An updated score is drawn with the number it replaced, `,
-              `so a measurement that moved reads as a move rather than as a fresh arrival. A new model's scores are listed beside it, `,
-              `since they arrived with it; a derived column is left out, exactly as in the table; and a score that was withdrawn is `,
-              `kept in the data but not drawn here.`,
-              counts.recorded && since
-                ? ` ${counts.recorded === counts.added + counts.recorded ? "These" : `${counts.recorded} of them`} are marked <em>first recorded</em>: the index began keeping this history on ${escapeHtml(since)}, and a score last written before that day carries the date of that write without what it replaced.`
-                : ""
-            ].join("")
-          : `Nothing has changed ${showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.`;
+        // The days below say what happened; only their absence needs saying in
+        // words, so the lead is the empty case and nothing else.
+        const lead = days.length
+          ? ""
+          : `<p class="recent-lead">Nothing has changed ${showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.</p>`;
 
         const items = days.map((day) => {
           // The dot fades across the window the table marks in red — the
@@ -7148,7 +7108,7 @@
         return `
           <section class="recent-panel" aria-label="Recently added and updated scores">
             <h2>${showAll ? "Score History" : "Recently Added"}</h2>
-            <p class="recent-lead">${lead}</p>
+            ${lead}
             ${items ? `<ol class="recent-days">${items}</ol>` : ""}
             ${toggle}
           </section>
