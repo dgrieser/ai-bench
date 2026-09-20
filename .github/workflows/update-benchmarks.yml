@@ -210,10 +210,18 @@ jobs:
       # simply stays wrong, feeding one model's scores to another until the
       # next run goes red.
       #
+      # test_refresh_cost.py guards the shortcuts the refresh takes to stay
+      # under five minutes -- the response cache two steps share, and the
+      # report that replaced a second full fit of the indexes. Each is only
+      # allowed to exist because it gives the same answer as the work it skips,
+      # so a regression there is a wrong number reaching the site with the run
+      # still green, which is the failure mode the whole file is arranged
+      # against.
+      #
       # Run through a loop rather than one line each so every suite is timed.
       # `bash -e` still stops at the first red one: the loop body is not a
       # tested condition, so a non-zero exit ends the step exactly as it did
-      # when these were eleven separate lines.
+      # when these were separate lines.
       - name: Check collect mode, the matcher and the answer applier
         run: |
           suites=(
@@ -228,6 +236,7 @@ jobs:
             ./test_history.py
             ./test_remap.py
             ./test_artificialanalysis_api.py
+            ./test_refresh_cost.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below
@@ -310,11 +319,19 @@ jobs:
           git pull --rebase --autostash origin main
           git push
 
+      # ~/.cache/ai-bench: the openness index, plus the response caches the
+      # fetchers share within a refresh (see _cache.py -- the llm-stats
+      # leaderboard and the Hugging Face model-card crawl, each of which two
+      # different steps would otherwise read separately).
+      #
       # The openness index has a 12h TTL, so the daily run always rebuilds it
       # from its three sources; this only spares re-fetching when a run is
-      # repeated or dispatched inside that window. The run_id in the key is
-      # deliberate: an exact key hit skips the save, which would freeze the
-      # cache at its first contents forever. restore-keys does the restoring.
+      # repeated or dispatched inside that window. The response caches hold for
+      # an hour against a three-hourly cron, so a scheduled run re-reads every
+      # source and only the second read inside one run is served from here.
+      # The run_id in the key is deliberate: an exact key hit skips the save,
+      # which would freeze the cache at its first contents forever.
+      # restore-keys does the restoring.
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ai-bench

@@ -46,6 +46,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import _cache
 from _openness import license_open
 
 URL = "https://api.zeroeval.com/leaderboard/models/full"
@@ -58,6 +59,10 @@ LEADERBOARD_URL = "https://llm-stats.com/leaderboards/open-llm-leaderboard"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) ai-bench-fetcher/1.0"
 
 _SCORE_SUFFIX = "_score"
+
+# Seconds the flat leaderboard may be served from ~/.cache/ai-bench; 0 turns
+# the cache off, which is what a test replacing fetch_json wants.
+LEADERBOARD_CACHE_TTL_VAR = "AI_BENCH_LLMSTATS_CACHE_TTL"
 
 # The flat-endpoint label we refuse to publish as-is, and the qualified label
 # resolve_hle_no_tools() puts in its place.
@@ -145,6 +150,70 @@ def fetch_json(url: str, timeout: int = 60) -> object:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8", errors="replace"))
+
+
+def fetch_leaderboard() -> list:
+    """The flat leaderboard, cached for the rest of the refresh.
+
+    One `update-all` reads this endpoint four times -- three from
+    _llmstats_mapping (model ids, licences, benchmark labels) and once from
+    update.py's own fetcher -- in four separate processes, so only a cache on
+    disk can make them share a fetch. The per-model detail requests are not
+    cached: those are the scores, and they are read once.
+    """
+    ttl = _cache.ttl_seconds(LEADERBOARD_CACHE_TTL_VAR)
+    cached = _cache.load("llmstats-leaderboard", URL, ttl, label="llm-stats leaderboard")
+    if isinstance(cached, list):
+        return cached
+    print(f"Fetching {URL} ...", file=sys.stderr)
+    payload = fetch_json(URL)
+    if not isinstance(payload, list):
+        raise ValueError("Unexpected response: expected a JSON list")
+    _cache.store("llmstats-leaderboard", URL, payload, ttl)
+    return payload
+
+
+def _flat_scores(item: dict) -> dict[str, float]:
+    """The numeric ``*_score`` fields of one leaderboard record, unsuffixed."""
+    scores: dict[str, float] = {}
+    for key, value in item.items():
+        if not key.endswith(_SCORE_SUFFIX):
+            continue
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            continue
+        scores[key[: -len(_SCORE_SUFFIX)]] = value
+    return scores
+
+
+def benchmark_labels() -> list[str]:
+    """Every label get_scores() can publish, without resolving a single tool mode.
+
+    The only caller that wants the label list is the mapping updater, asking
+    which names it has to offer for review, and it does not care what any
+    model scored. Deriving the list from the flat leaderboard alone costs one
+    request; asking get_scores() for it cost one request per model carrying a
+    gated score as well -- 63 seconds of a 65-second step, to list two dozen
+    strings.
+
+    The two lists agree. resolve_tool_modes() never *adds* a label beyond
+    ``hle (no tools)`` and never renames one besides ``hle``, so the publishable
+    set is the flat set with that one rename applied.
+
+    It can differ in one direction only, and harmlessly: a gated column whose
+    every entry is rejected as a with-tools run disappears from the resolved
+    list, and is still offered here. Every gated label is already answered in
+    llmstats-benchmark-name-mapping.json, so an already-answered name is simply
+    not asked again -- whereas the reverse mistake, a label that never reaches
+    review, is the one that loses a benchmark silently.
+    """
+    labels: set[str] = set()
+    for item in fetch_leaderboard():
+        if isinstance(item, dict):
+            labels.update(_flat_scores(item))
+    if HLE_LABEL in labels:
+        labels.discard(HLE_LABEL)
+        labels.add(HLE_NO_TOOLS_LABEL)
+    return sorted(labels)
 
 
 def _benchmark_entries(model_id: str, timeout: int = 30) -> dict[str, dict]:
@@ -282,26 +351,14 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
     per model carrying a gated score, so callers that only want model ids or
     licences turn it off.
     """
-    print(f"Fetching {URL} ...", file=sys.stderr)
-    payload = fetch_json(URL)
-    if not isinstance(payload, list):
-        raise ValueError("Unexpected response: expected a JSON list")
-
     results: list[dict] = []
-    for item in payload:
+    for item in fetch_leaderboard():
         if not isinstance(item, dict):
             continue
         model_id = item.get("model_id")
         if not isinstance(model_id, str) or not model_id:
             continue
-        scores: dict[str, float] = {}
-        for key, value in item.items():
-            if not key.endswith(_SCORE_SUFFIX):
-                continue
-            if not isinstance(value, (int, float)) or isinstance(value, bool):
-                continue
-            label = key[: -len(_SCORE_SUFFIX)]
-            scores[label] = value
+        scores = _flat_scores(item)
         if not scores:
             continue
         results.append(
@@ -350,7 +407,9 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help=(
             "Skip the per-model tool-mode lookup, dropping the gated columns "
-            "instead. For callers that only need model ids or licences."
+            "instead. For callers that only need model ids or licences. "
+            "--names benchmarks never runs the lookup, so the flag is a no-op "
+            "there."
         ),
     )
     return parser.parse_args()
@@ -358,20 +417,23 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+
+    # Listing the benchmark labels never needs a score, so it never needs the
+    # per-model tool-mode pass -- and asking get_scores() for them would run it
+    # before this branch could decline. Returned from here rather than falling
+    # through for that reason alone.
+    if args.format == "names" and args.names == "benchmarks":
+        for label in benchmark_labels():
+            print(label)
+        return 0
+
     results = get_scores(resolve_hle=not args.no_hle_detail)
 
     if args.format == "json":
         print(json.dumps(results, ensure_ascii=False))
     elif args.format == "names":
-        if args.names == "models":
-            for entry in results:
-                print(entry["model"])
-        else:
-            labels: set[str] = set()
-            for entry in results:
-                labels.update(entry["scores"].keys())
-            for label in sorted(labels):
-                print(label)
+        for entry in results:
+            print(entry["model"])
     else:
         for entry in results:
             title = entry["model"]

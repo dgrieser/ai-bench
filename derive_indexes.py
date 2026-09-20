@@ -1287,6 +1287,68 @@ def refresh_and_report(
     return changes
 
 
+def report_stored(
+    doc: dict[str, Any], by_name: dict[str, dict[str, Any]], top: int
+) -> int:
+    """Print the ranking llm.json already holds, computing nothing.
+
+    update.py refreshes every index in memory before it writes, so on the
+    update-all path the columns in the file are this run's, and recomputing
+    them to look at them cost a second full fit -- 41 seconds of a 439-second
+    refresh, whose usual verdict is "up to date. Nothing to do." This prints
+    the same tables from the stored values instead.
+
+    It is a report, not a check: a file whose columns are stale reports its
+    stale columns without complaint. `./derive_indexes.py -w` is still the
+    thing that recomputes and repairs, and still what to run on a file edited
+    by hand -- the one cheap check made here is that the columns exist at all,
+    since a missing key means no writer ever got to them and the tables below
+    would quietly be a report about nothing.
+    """
+    # Where apply_index put them: alongside the measured scores, so the derived
+    # columns read like any other column to every consumer.
+    stored = {
+        name: model["scores"] if isinstance(model.get("scores"), dict) else {}
+        for name, model in by_name.items()
+    }
+    # Reversed like main()'s own loop, so the report reads in the order every
+    # log of this script has ever printed it in.
+    for index in reversed(INDEXES):
+        values = {name: scores.get(index.key) for name, scores in stored.items()}
+        missing = [name for name, scores in stored.items() if index.key not in scores]
+        ranked = sum(1 for value in values.values() if isinstance(value, int))
+        print(
+            f"{index.key}: {len(values)} model(s): {ranked} ranked, "
+            f"{len(values) - ranked} unranked "
+            f"(< {MIN_SCORED_FRACTION:.0%} of the weight of "
+            f"{len(index.contributing)} benchmarks)"
+        )
+        if missing:
+            print(
+                f"Warning: {len(missing)} model(s) carry no {index.key} at all "
+                f"(first: {missing[0]}); run ./derive_indexes.py -w",
+                file=sys.stderr,
+            )
+
+        if top:
+            best = sorted(
+                ((value, name) for name, value in values.items() if isinstance(value, int)),
+                reverse=True,
+            )[:top]
+            if best:
+                print(f"\nTop {len(best)} by {index.key}:")
+                for rank, (value, name) in enumerate(best, start=1):
+                    measured = scored_count(by_name[name], index)
+                    print(
+                        f"  {rank:2d}. {fmt(value):>9s}  {name:40s} "
+                        f"{measured}/{len(index.contributing)} measured"
+                    )
+        print()
+
+    print("Reported from the stored values; nothing recomputed.")
+    return 0
+
+
 def fmt(value: int | None) -> str:
     # Grouped only in this script's output; llm.json keeps a plain integer.
     return "—" if value is None else f"{value:,}"
@@ -1312,6 +1374,13 @@ def main() -> int:
         "-w",
         action="store_true",
         help="Write changes back to the input JSON file (default is dry-run).",
+    )
+    parser.add_argument(
+        "--report-only",
+        action="store_true",
+        help="Print the ranking already stored in the file instead of fitting "
+        "it again, for a caller that has just refreshed it -- update-all after "
+        "update.py. Computes nothing and writes nothing.",
     )
     parser.add_argument(
         "--calibrate",
@@ -1345,6 +1414,9 @@ def main() -> int:
     # in step with reference-models.json before anything is computed.
     for name, marked in apply_reference_flags(doc):
         print(f"{name}: {'now' if marked else 'no longer'} a reference model")
+
+    if args.report_only:
+        return report_stored(doc, by_name, args.top)
 
     if args.calibrate:
         print(
