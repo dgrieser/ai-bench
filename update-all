@@ -151,9 +151,22 @@ done
 
 run "update.py" "${SCRIPT_DIR}/update.py" -w
 
-# Derived from the scores above, so it has to run last -- and outside the
-# update_*.py glob, which runs before update.py has filled those scores in.
-run "derive_indexes.py" "${SCRIPT_DIR}/derive_indexes.py" -w
+# The ranking, printed rather than recomputed. update.py refreshes every
+# derived index in memory before it writes -- it has to, since a score it just
+# moved re-ranks the whole field -- so by the time this runs the columns in
+# llm.json are already this run's, and the recompute that used to stand here
+# was a second full fit whose verdict was "up to date. Nothing to do." It cost
+# 41 seconds of a 439-second refresh; the report is a file read, and prints the
+# identical tables.
+#
+# What is lost is that the second fit would also have *repaired* the columns if
+# update.py had somehow left them wrong. That is not this step's job to carry:
+# update.py cannot skip its refresh on this path (only --fill-source-urls
+# skips, which update-all never passes), and `./derive_indexes.py -w` remains
+# the repair path for a file edited by hand. --report-only still warns if a
+# model carries no index at all, which is what "nobody refreshed these" looks
+# like from here.
+run "derive_indexes.py" "${SCRIPT_DIR}/derive_indexes.py" --report-only
 
 if [ -n "$REPORT" ]; then
     echo 1>&2

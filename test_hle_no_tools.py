@@ -28,6 +28,7 @@ implementation said the day a model was added.
 from __future__ import annotations
 
 import json
+import os
 import re
 import unittest
 from pathlib import Path
@@ -305,6 +306,20 @@ class TestHuggingFaceNotes(unittest.TestCase):
 class TestLlmStatsResolution(unittest.TestCase):
     """Door three: one `hle_score` field over three different measurements."""
 
+    def setUp(self) -> None:
+        # Every test here replaces fetch_json with a payload of its own, and
+        # the leaderboard response cache sits in front of that seam: left on,
+        # the second test would be answered from the first one's payload, and
+        # a test run would write to the developer's real ~/.cache/ai-bench.
+        self._ttl = os.environ.get(fetch_llmstats.LEADERBOARD_CACHE_TTL_VAR)
+        os.environ[fetch_llmstats.LEADERBOARD_CACHE_TTL_VAR] = "0"
+
+    def tearDown(self) -> None:
+        if self._ttl is None:
+            os.environ.pop(fetch_llmstats.LEADERBOARD_CACHE_TTL_VAR, None)
+        else:
+            os.environ[fetch_llmstats.LEADERBOARD_CACHE_TTL_VAR] = self._ttl
+
     @staticmethod
     def _run(payload, detail_for):
         def fake_fetch_json(url, timeout=60):
@@ -433,6 +448,81 @@ class TestLlmStatsResolution(unittest.TestCase):
         # A silent note is not a tools note: these columns keep their coverage.
         self.assertEqual(got["m"]["scicode"], 0.5)
         self.assertEqual(got["m"]["gpqa"], 0.9)
+
+    def test_the_label_list_agrees_with_the_resolved_one(self) -> None:
+        # benchmark_labels() exists to answer "which names need reviewing?"
+        # without the per-model tool-mode pass, which was 63 seconds of a
+        # 65-second step. It is only allowed to be cheap if it is also right:
+        # the set it returns has to be the set get_scores() can publish.
+        payload = [
+            {"model_id": "a", "license": "mit", "hle_score": 0.6,
+             "gpqa_score": 0.9, "swe_bench_verified_score": 0.7},
+            {"model_id": "b", "license": "mit", "hle_score": 0.4,
+             "scicode_score": 0.5, "toolathlon_score": 0.2},
+        ]
+        # Every gated column measured without tools, so the resolved run keeps
+        # all of them and the two lists must match exactly.
+        detail = {"benchmarks": [
+            {"benchmark_id": board, "analysis_method": "no tools"}
+            for board in (fetch_llmstats.HLE_BENCHMARK_ID,
+                          *fetch_llmstats.NO_TOOL_FIELDS.values())
+        ]}
+        resolved = self._run(payload, lambda _mid: detail)
+        expected = sorted({label for scores in resolved.values() for label in scores})
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = lambda url, timeout=60: payload
+        try:
+            cheap = fetch_llmstats.benchmark_labels()
+        finally:
+            fetch_llmstats.fetch_json = original
+
+        self.assertEqual(cheap, expected)
+        # Named explicitly: the rename is the one thing the cheap path has to
+        # apply itself, and the bare label must never reach a mapping file.
+        self.assertIn(fetch_llmstats.HLE_NO_TOOLS_LABEL, cheap)
+        self.assertNotIn(fetch_llmstats.HLE_LABEL, cheap)
+
+    def test_the_label_list_offers_a_fully_rejected_column(self) -> None:
+        # The one direction the two lists may differ in. Every entry of a gated
+        # column is a with-tools run, so the resolved list loses the label
+        # entirely; the cheap path still offers it, which costs nothing -- all
+        # six gated labels are already answered in the mapping file -- while
+        # the reverse would drop a benchmark from review without saying so.
+        payload = [{"model_id": "a", "license": "mit", "aime_2025_score": 0.9,
+                    "toolathlon_score": 0.2}]
+        detail = {"benchmarks": [
+            {"benchmark_id": "aime-2025", "analysis_method": "With tools"}
+        ]}
+        resolved = self._run(payload, lambda _mid: detail)
+        self.assertNotIn("aime_2025", {l for s in resolved.values() for l in s})
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = lambda url, timeout=60: payload
+        try:
+            cheap = fetch_llmstats.benchmark_labels()
+        finally:
+            fetch_llmstats.fetch_json = original
+        self.assertIn("aime_2025", cheap)
+
+    def test_the_label_list_makes_no_per_model_request(self) -> None:
+        # The whole point. A detail request here means the pass came back.
+        payload = [{"model_id": "a", "license": "mit", "hle_score": 0.6}]
+        asked: list[str] = []
+
+        def fake_fetch_json(url, timeout=60):
+            if url == fetch_llmstats.URL:
+                return payload
+            asked.append(url)
+            return {}
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = fake_fetch_json
+        try:
+            fetch_llmstats.benchmark_labels()
+        finally:
+            fetch_llmstats.fetch_json = original
+        self.assertEqual(asked, [])
 
     def test_used_tools_reads_a_code_interpreter_as_a_tool(self) -> None:
         for method in ("w/ python", "with python", "code execution", "code interpreter"):

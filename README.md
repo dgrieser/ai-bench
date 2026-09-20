@@ -2930,9 +2930,9 @@ json.dump(rows, open('export.json','w'), indent=2)
 - **Index size**: ~2,300 nodes, ~6,100 edges (code graph)
 - **Data size**: llm.json ~1.9MB at 164 models, and it is read and rewritten
   whole by every writer
-- **Update time**: `update-all` takes about 4m40s on a GitHub-hosted runner;
-  the workflow around it adds roughly 25 seconds of checkout, dependency
-  install and tests
+- **Update time**: `update-all` takes about 3 minutes on a GitHub-hosted
+  runner, most of it waiting on the boards; the workflow around it adds
+  roughly 30 seconds of checkout, dependency install and tests
 - **Memory**: Minimal (loads entire llm.json into memory)
 
 ### Where a refresh's time goes
@@ -2942,47 +2942,101 @@ rather than leaving the reader to subtract log timestamps:
 
 - `update-all` times each step it runs and prints a longest-first table at
   the end, under `step timings`.
-- `update.py` times each fetcher subprocess (it always did) *and* each
-  in-process phase -- the per-source update passes, the index refresh, the
-  history sync, the write -- so its parts add up to its whole.
+- `update.py` times each fetcher subprocess *and* each in-process phase --
+  the per-source update passes, the index refresh, the history sync, the
+  write -- so its parts add up to its whole.
 - `derive_indexes.py` times each of the five indexes separately, both when
   run as a script and when update.py refreshes the columns in memory.
+- `_llmstats_mapping` and `_huggingface_mapping` time their scrapes, and
+  `_openness` times its three sources when it rebuilds.
 
 All of it goes to stderr, which Python keeps line-buffered whether or not it
 is a terminal, so the timings arrive as each step finishes rather than at
 exit.
 
-A representative cron run, 279 seconds in total:
+A cron run measured at 439 seconds, and where it went afterwards:
 
-| Step | Time | Share |
-| --- | ---: | ---: |
-| `update.py` | 150.3s | 54% |
-| `update_llmstats_mapping.py` | 42.2s | 15% |
-| `derive_indexes.py` | 40.9s | 15% |
-| `update_huggingface_mapping.py` | 13.5s | 5% |
-| `check_new.py` | 11.3s | 4% |
-| the other 20 `update_*_mapping.py` | 20.7s | 7% |
-| `fill_source_urls.py` | 0.2s | 0% |
+| Step | Was | Now | What changed |
+| --- | ---: | ---: | --- |
+| `update.py` | 254.4s | ~213s | the second index fit is update.py's only one |
+| `update_llmstats_mapping.py` | 65.3s | ~1s | benchmark labels no longer resolve tool modes |
+| `derive_indexes.py` | 41.0s | ~0.1s | reports the stored ranking instead of refitting it |
+| `update_huggingface_mapping.py` | 37.9s | ~0.1s | the model-card crawl is shared with the fetcher |
+| `check_new.py` | 13.5s | 13.5s | |
+| the other 20 `update_*_mapping.py` | 22.0s | 22.0s | |
 
-Inside update.py's 150 seconds, about 109 are fetcher subprocesses -- the AA
-score fetch alone is 43s, Spheron 27s, llm-stats 14s, Hugging Face 14s -- and
-about 41 are the in-memory index refresh.
+Inside update.py's time, about 212 seconds are fetcher subprocesses -- the AA
+score fetch alone is 54s, llm-stats 59s, Spheron 48s, Hugging Face 39s -- and
+about 41 are the in-memory index refresh. Every `update_*_scores` pass is
+0.0s: the matching is free, and this is a network and CPU problem only.
 
-Two things are worth knowing before optimising any of it:
+#### What the refresh no longer does twice
 
-- **The indexes are computed twice per refresh.** `update.py -w` refreshes
-  them in memory before writing (about 41s), and `update-all` then runs
-  `derive_indexes.py -w` (about 41s again), which recomputes all five and
-  normally reports "The derived indexes are up to date. Nothing to do." That
-  second pass is a check, not a fix, on any run that went through update.py;
-  it exists because update.py skips its own refresh under
-  `--fill-source-urls`, and because derive_indexes.py is also the repair path
-  for a hand-edited llm.json. `knowledge_index` is most of the cost on both
-  passes.
-- **llm-stats and Hugging Face are each read twice.** The mapping updater
-  scrapes the source to learn its model names, and the fetcher scrapes it
-  again for the scores: 42.2s + 14.4s for llm-stats, 13.5s + 14.0s for
-  Hugging Face. Nothing caches between the two.
+Three shortcuts, each one allowed to exist only because it gives the same
+answer as the work it skips. `test_refresh_cost.py` is what holds them to
+that, and the workflow runs it before anything is fetched.
+
+- **The ranking is fitted once, not twice.** `update.py -w` refreshes every
+  derived index in memory before it writes -- it has to, since a score it just
+  moved re-ranks the whole field -- so by the time `update-all` reaches
+  `derive_indexes.py` the columns in llm.json are already that run's. It now
+  runs `--report-only`, which prints the identical tables from the stored
+  values and computes nothing. `./derive_indexes.py -w` is still the repair
+  path for a file edited by hand, and `--report-only` still warns if a model
+  carries no index at all.
+- **Listing llm-stats' benchmark labels costs one request.** The mapping
+  updater asks which names need reviewing; it used to ask `get_scores()`,
+  which re-reads HLE per model to hold the no-tools columns to no-tools runs
+  -- 63 seconds of a 65-second step to list two dozen strings.
+  `benchmark_labels()` derives the same set from the flat leaderboard alone.
+  Verified against the live source: the two lists are identical, 0.9s against
+  80s.
+- **The Hugging Face model cards are walked once.** The mapping updater wants
+  the labels and update.py's fetcher wants the scores, and both walked all
+  ~150 cards, in separate processes minutes apart. The crawl is now cached
+  (see below), so the second reader gets the first one's result: 57s to 0.1s,
+  byte-identical.
+
+#### The response cache
+
+`_cache.py` holds a small TTL'd cache under `~/.cache/ai-bench`, on the same
+terms artificialanalysis.py's has used for AA (see "The request budget"):
+
+- The TTL decides freshness, not the caller. It is one hour against a
+  three-hourly cron, so a *scheduled* refresh always re-reads every source;
+  only the second read inside one run, and a merge- or dispatch-triggered run
+  landing inside the window, are served from here.
+- A key names what was asked for -- for the Hugging Face crawl, the set of
+  models being walked -- so a model added to llm.json misses rather than being
+  answered from a crawl that never saw it.
+- Every failure is a miss. A corrupt file, an unwritable directory and a full
+  disk all end as "fetch it again", and a crawl that came back short is not
+  stored at all.
+
+`AI_BENCH_LLMSTATS_CACHE_TTL` and `AI_BENCH_HF_CACHE_TTL` override the TTL per
+source; `0` turns that cache off. The workflow already carries the directory
+between runs, under the `ai-bench-openness-` cache step.
+
+#### Still on the table
+
+- **The per-model loops are sequential.** AA walks 149 model pages, llm-stats
+  ~100 HLE detail pages, Hugging Face ~150 cards and Spheron 188, one request
+  at a time, and update.py runs its 23 fetchers one after another. That is
+  most of what is left. A thread pool would turn a sum of variable latencies
+  into a max -- worth noting that two adjacent runs measured 279s and 439s on
+  identical code, so the variance is upstream and parallelism cuts it too.
+- **The index fit is pure-Python.** 8,292 Bradley-Terry sweeps, about 41
+  seconds. A numpy rewrite measured 27.2s -> 1.7s with bit-identical published
+  values; replacing `_set_scale`'s 60-step bisection with Newton measured
+  28.4s -> 19.3s, also identical, and needs no new dependency.
+- **The openness index reads llm-stats the expensive way.** `_pool_llmstats`
+  calls `get_scores()`, which resolves every model's tool mode -- 72 seconds
+  measured -- to read one licence field per record. Only on a cache miss
+  (12h TTL), so twice a day at most. `resolve_hle=False` would make it
+  near-free, but it also changes which records survive -- a model whose only
+  score is a rejected HLE run drops out -- and that changes which names the
+  pooled index can call closed. Worth doing deliberately, not as a
+  performance change.
 
 ## Notes
 

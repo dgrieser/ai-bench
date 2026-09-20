@@ -25,9 +25,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import _cache
+
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 HF_BASE = "https://huggingface.co"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) ai-bench-fetcher/1.0"
+
+# Seconds a model-card crawl may be served from ~/.cache/ai-bench; 0 turns the
+# cache off, which is what a test replacing the reader wants.
+CRAWL_CACHE_TTL_VAR = "AI_BENCH_HF_CACHE_TTL"
+
+# How much of the crawl has to have come back before it is worth storing.
+_MIN_CACHEABLE_SHARE = 0.9
 
 
 @dataclass
@@ -700,26 +709,72 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def crawl_all_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
+    """Read every Hugging Face model card llm.json points at, cached per crawl.
+
+    One `update-all` walks this twice in two processes minutes apart -- the
+    mapping updater for the benchmark labels, then update.py's fetcher for the
+    scores -- and it is a hundred and forty model cards each time, the second
+    most expensive thing in a refresh. The cache lets the second walk reuse the
+    first; nothing else about either changes.
+
+    The key is the (slug, repo) list, so a model added to or renamed in
+    llm.json misses rather than being answered from a crawl that never saw it.
+    A model whose *card* changed inside the TTL is served the older read, which
+    is the same bargain artificialanalysis.py's response cache makes: the cron
+    is three hours apart and the TTL is one, so a scheduled refresh always
+    re-reads.
+    """
+    pairs = iter_hf_models(doc)
+    ttl = _cache.ttl_seconds(CRAWL_CACHE_TTL_VAR)
+    key = _cache.digest(sorted(pairs))
+    cached = _cache.load("huggingface-cards", key, ttl, label="Hugging Face model cards")
+    if isinstance(cached, list):
+        return cached
+
+    results: list[dict[str, Any]] = []
+    for slug, repo in pairs:
+        try:
+            scores = extract_scores(repo)
+        except Exception as exc:
+            print(f"warning: {slug} ({repo}): {exc}", file=sys.stderr)
+            continue
+        results.append({"model": slug, "repo": repo, "scores": scores})
+    # A short crawl is not stored, the same way artificialanalysis.py refuses
+    # to publish a short model list: a run that lost its network partway would
+    # otherwise serve a stub to the fetcher that follows it, for an hour.
+    #
+    # Not "complete", though, because a complete crawl is not the normal case:
+    # a gated or withdrawn repo answers 401 or 404 on every run, and a
+    # threshold that those models can never meet is a cache that is never
+    # written. A card that is missing for that reason is missing from the live
+    # crawl too, and the ingest reading it fills gaps rather than overwriting,
+    # so it costs a fill, not a score.
+    if pairs and len(results) >= _MIN_CACHEABLE_SHARE * len(pairs):
+        _cache.store("huggingface-cards", key, results, ttl)
+    elif pairs:
+        print(
+            f"not caching a crawl of {len(results)}/{len(pairs)} model card(s)",
+            file=sys.stderr,
+        )
+    return results
+
+
 def main() -> int:
     args = parse_args()
 
     if args.all_models:
         doc = json.loads(Path(args.json_file).read_text(encoding="utf-8"))
-        results: list[dict[str, Any]] = []
-        for slug, repo in iter_hf_models(doc):
-            try:
-                scores = extract_scores(repo)
-            except Exception as exc:
-                print(f"warning: {slug} ({repo}): {exc}", file=sys.stderr)
-                continue
-            results.append({"model": slug, "repo": repo, "scores": scores})
+        results = crawl_all_models(doc)
     else:
         if not args.repo_or_url:
             print("error: repo_or_url is required when --all-models is not set", file=sys.stderr)
             return 2
         repo = normalize_repo(args.repo_or_url)
         scores = extract_scores(repo)
-        results = [{"model": repo.split("/")[-1], "repo": repo, "scores": scores}]
+        results: list[dict[str, Any]] = [
+            {"model": repo.split("/")[-1], "repo": repo, "scores": scores}
+        ]
 
     if args.format == "json":
         print(json.dumps(results, ensure_ascii=False, indent=2))
