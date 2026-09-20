@@ -1141,8 +1141,9 @@ const SKEW_MS = 60000;
    coming back in the next.
 
    So the keys outlive the lock. An entry is dropped when a queue read comes
-   back without its question, which is the page seeing the run's own push, and
-   otherwise only on the clocks below. */
+   back without its question, which is the page seeing the run's own push; when
+   a refresh has since republished a queue that still asks it, which is the site
+   asking again; and otherwise only on the clocks below. */
 const APPLIED_KEY = "ai-bench-admin-applied";
 /* A new-model line is the one question the site means to keep asking: for a
    slug it has added, apply_decisions() clears the line without dismissing it,
@@ -1158,6 +1159,31 @@ const RECURRING_TTL_MS = 30 * 60 * 1000;
    while the page is closed for a week, say. Long enough that it can only ever
    fire on a lock that is already wrong. */
 const LOCK_MAX_MS = 7 * 24 * 60 * 60 * 1000;
+/* A question the site asks again once its answer has landed is the case a
+   missing question cannot cover: nothing ever drops the entry, so the card sits
+   there reading "answered in an earlier batch" until the backstop above fires a
+   week later. Not hypothetical either -- reopening the Vals names parked as
+   __unmappable__ put three of them back in the queue on 2026-09-19, already
+   answered and no longer answerable.
+
+   A scheduled run is the proof that the queue in hand is newer than the answer.
+   It always refreshes -- skip_refresh is only ever set on a batch dispatched
+   from this page -- so it re-collects _pending/pending.json from the files as
+   the answer left them. One of those has finished and the question is still
+   listed: it is being asked again, and the lock is wrong.
+
+   Only `schedule`, though a merge and a hand-asked refresh republish the queue
+   just as well: a merge run is skipped unless the pull request was merged, and
+   a dispatched one cannot be told from a record-only batch, which republishes
+   nothing at all. Waiting for the next cron costs three hours at most. */
+const REFRESH_EVENT = "schedule";
+/* How long after that run started before it counts. The run list carries no
+   finish time, and a run that has only just reported completed pushed its queue
+   seconds ago -- which is the window where raw.githubusercontent is still
+   serving the previous blob, the one that does list the answered question. A
+   refresh takes about five minutes, so this lands a couple of minutes past its
+   push, and the next cron is three hours out either way. */
+const REFRESHED_SETTLE_MS = 10 * 60 * 1000;
 
 /* Which of a batch's keys were the queue's own questions, decided when the
    batch is built rather than when it settles.
@@ -1228,13 +1254,26 @@ function rememberApplied(keys) {
   ]);
 }
 
+/* Whether a scheduled refresh has republished the queue since this answer
+   settled. That run collects its questions from the files the answer wrote, so
+   a question that survives one is a question being asked again -- see
+   REFRESH_EVENT. */
+const reopenedSince = (at) => state.runs.some((run) =>
+  run.event === REFRESH_EVENT
+  && run.status === "completed"
+  && run.conclusion === "success"
+  && Date.parse(run.created_at) >= at + SKEW_MS
+  && Date.now() - Date.parse(run.created_at) >= REFRESHED_SETTLE_MS);
+
 /* Called on every queue read. A question that is gone is the page seeing the
-   run's push, which is the only proof there is; a clock is not proof, so only
-   the kind that is deliberately asked again expires by one. */
+   run's push, and a question that outlived a scheduled refresh is the site
+   asking it again; those are the only proofs there are. A clock is not proof,
+   so only the kind that is deliberately asked again expires by one. */
 function pruneApplied(questions) {
   const asked = new Set(questions.map(KEY));
   const now = Date.now();
   const kept = state.applied.filter((entry) => asked.has(entry.key)
+    && !reopenedSince(entry.at)
     && now - entry.at < (entry.recurring ? RECURRING_TTL_MS : LOCK_MAX_MS));
   if (kept.length !== state.applied.length) writeApplied(kept);
   return kept.length;
@@ -1734,7 +1773,9 @@ function staleQueueNote() {
     ", and the queue has not caught up: a run republishes it only after a "
     + "successful refresh, and a record-only run skips that entirely. They stay "
     + "locked until it does -- answering one again would be refused as a "
-    + "question nothing asked, and a batch is all or nothing.",
+    + "question nothing asked, and a batch is all or nothing. A question the "
+    + "site means to ask again unlocks itself once a scheduled run has "
+    + "republished the queue still listing it.",
   ]));
 }
 
