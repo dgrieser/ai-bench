@@ -393,6 +393,59 @@ class TestHuggingfaceMerge(unittest.TestCase):
             by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
         self.assertEqual(by_slug["m"]["livecodebench"][0], 80.6)
 
+    def test_the_structured_channel_beats_the_card_s_own_table(self) -> None:
+        # One column read two ways: the Hub's "Evaluation results" widget files
+        # GPQA Diamond under its dataset id, the card's table heads it "GPQA
+        # Diamond", and after the mapping both are gpqa_diamond. Taking the
+        # larger is how a table number displaces the structured one, which is
+        # the channel a benchmark owner can write to.
+        mapping = write_json({
+            "Idavidrein/gpqa (diamond)": "gpqa_diamond",
+            "GPQA Diamond": "gpqa_diamond",
+        })
+        rows = [{
+            "model": "m",
+            "repo": "org/m",
+            "scores": {"Idavidrein/gpqa (diamond)": 70.8, "GPQA Diamond": 76.8},
+            "channels": {"Idavidrein/gpqa (diamond)": "metadata", "GPQA Diamond": "table"},
+        }]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["gpqa_diamond"][0], 70.8)
+
+    def test_a_plain_table_label_still_beats_a_qualified_structured_one(self) -> None:
+        # Channel is the tiebreak under the qualifier rule, not over it.
+        mapping = write_json({"cais/hle (with tools)": "hle", "HLE": "hle"})
+        rows = [{
+            "model": "m",
+            "repo": "org/m",
+            "scores": {"cais/hle (with tools)": 63.9, "HLE": 36.8},
+            "channels": {"cais/hle (with tools)": "metadata", "HLE": "table"},
+        }]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["hle"][0], 36.8)
+
+    def test_a_crawl_without_channels_keeps_the_old_policy(self) -> None:
+        # A payload cached before this field existed says nothing about where
+        # its labels came from, and must not be read as saying "table".
+        mapping = write_json({"A": "hle", "B": "hle"})
+        rows = [{"model": "m", "repo": "org/m", "scores": {"A": 30.1, "B": 24.4}}]
+        with stub_run(rows):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(by_slug["m"]["hle"][0], 30.1)
+
+    def test_pass_at_k_is_qualified_for_every_k_but_one(self) -> None:
+        # pass@10 is best-of-ten. The first-digit range this used to test for
+        # let 10, 11 and 100 through as if they were pass@1.
+        for label in ("Foo (Pass@2)", "Foo (Pass@5)", "Foo (Pass@10)",
+                      "Foo (Pass@16)", "Foo (Pass@100)"):
+            with self.subTest(label=label):
+                self.assertEqual(update.hf_label_rank(label), 1)
+        for label in ("Foo (Pass@1)", "Foo", "Foo (Avg@32)"):
+            with self.subTest(label=label):
+                self.assertEqual(update.hf_label_rank(label), 0)
+
     def test_a_no_tools_label_is_not_a_qualified_one(self) -> None:
         # Every benchmark column here holds the no-tool run, so a label saying
         # so names the column rather than a variant of it.

@@ -206,6 +206,22 @@ class TestNumberParsing(unittest.TestCase):
         self.assertEqual(fh.parse_score("63,1"), 63.1)
         self.assertEqual(fh.parse_score("8,25"), 8.25)
 
+    def test_a_fraction_written_with_a_comma_is_still_a_fraction(self):
+        # A bare zero in front rules out a thousands group, whatever follows
+        # the comma: "0,794" read as one is 794, three orders of magnitude out
+        # and past the point where the 0-1 rescaling could recognise it.
+        self.assertEqual(fh.parse_score("0,794"), 0.794)
+        self.assertEqual(fh.parse_score("0,3026"), 0.3026)
+        self.assertEqual(fh.parse_score("0,08"), 0.08)
+
+    def test_grouped_thousands_survive_the_decimal_comma_rule(self):
+        for cell, expected in (
+            ("1,441", 1441.0), ("3,348", 3348.0), ("100,000", 100000.0),
+            ("1,298.34", 1298.34), ("12,345.67", 12345.67),
+        ):
+            with self.subTest(cell=cell):
+                self.assertEqual(fh.parse_score(cell), expected)
+
 
 class TestCrossTableMerge(unittest.TestCase):
     def test_exact_name_match_beats_loose_match(self):
@@ -660,6 +676,73 @@ class TestEvalResults(unittest.TestCase):
         )
 
 
+
+    def test_one_run_filed_twice_is_not_two_runs(self):
+        # Same harness, two records: a later date and a merged entry beat an
+        # earlier one still pending on a Hub PR. Nothing is ambiguous here.
+        payload = {
+            "evalResults": [
+                {"pullRequest": 3,
+                 "data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 59.2,
+                          "date": "2026-01-01", "notes": "OpenHands harness"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 60.5,
+                          "date": "2026-02-01", "notes": "OpenHands harness"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 60.5})
+
+    def test_the_latest_of_two_records_of_one_run_wins(self):
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 47.0,
+                          "date": "2026-03-01", "notes": "Terminus-2 harness"}},
+                {"data": {"dataset": {"id": "a/b", "task_id": "b"}, "value": 46.2,
+                          "date": "2026-01-01", "notes": "Terminus-2 harness"}},
+            ]
+        }
+        self.assertEqual(fh.extract_eval_results(payload), {"a/b": 47.0})
+
+
+class TestChannels(unittest.TestCase):
+    """Which read a value came from, carried past the benchmark-name mapping."""
+
+    PAYLOAD = {
+        "evalResults": [
+            {"data": {"dataset": {"id": "Idavidrein/gpqa", "task_id": "diamond"},
+                      "value": 84.8}}
+        ]
+    }
+    CARD = md_table(
+        "| Benchmark | Example-30B |",
+        "| :--- | :---: |",
+        "| GPQA Diamond | 86.6 |",
+        "| MMLU-Pro | 84.9 |",
+    )
+
+    def _crawl(self):
+        with mock.patch.object(fh, "fetch_api_eval_data", lambda *a, **k: self.PAYLOAD), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            return fh.extract_scores_and_channels(REPO)
+
+    def test_each_label_says_which_channel_read_it(self):
+        scores, channels = self._crawl()
+        self.assertEqual(
+            scores,
+            {"Idavidrein/gpqa (diamond)": 84.8, "GPQA Diamond": 86.6, "MMLU-Pro": 84.9},
+        )
+        self.assertEqual(
+            channels,
+            {
+                "Idavidrein/gpqa (diamond)": fh.CHANNEL_METADATA,
+                "GPQA Diamond": fh.CHANNEL_TABLE,
+                "MMLU-Pro": fh.CHANNEL_TABLE,
+            },
+        )
+
+    def test_extract_scores_still_returns_the_scores_alone(self):
+        with mock.patch.object(fh, "fetch_api_eval_data", lambda *a, **k: self.PAYLOAD), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            self.assertEqual(fh.extract_scores(REPO), self._crawl()[0])
 
 class TestModelIndex(unittest.TestCase):
     def test_extracts_metrics(self):

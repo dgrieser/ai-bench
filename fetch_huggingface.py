@@ -150,14 +150,31 @@ def clean_cell(text: str) -> str:
 # The grouped form has to come first: against "1,441" the bare alternative
 # matches at the same position and stops at the "1", so an Elo-scale column
 # (GDPval-AA, AA-Briefcase) would store a value three orders of magnitude off
-# rather than miss it. Only strict three-digit groups qualify, so a card
-# writing a decimal comma ("63,1") falls to the bare branch, where
-# _DECIMAL_COMMA_RE reads it as 63.1 rather than as 63.
+# rather than miss it. Only strict three-digit groups qualify, and
+# _decimal_commas() below has already rewritten the commas that separate a
+# decimal rather than a thousand, so what reaches this is grouped or plain.
 _NUMBER_RE = re.compile(r"[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?|[-+]?\d+(?:\.\d+)?")
-# A comma with one or two digits after it and no third digit is a decimal
-# separator, which is how a German- or French-language card writes a score.
-# Three digits after it is the thousands group _NUMBER_RE already reads.
-_DECIMAL_COMMA_RE = re.compile(r"(?<![\d,])(\d{1,3}),(\d{1,2})(?![\d,])")
+# Thousands group or decimal separator? "1,441" is 1441 and "63,1" is 63.1,
+# and the comma says nothing about which. What decides is the digits around it:
+# exactly three after it is a thousands group, *unless* what precedes it is a
+# bare zero, because no thousands-formatted number starts with one. "0,794" is
+# a fraction written the German way, and read as a group it becomes 794 -- three
+# orders of magnitude out, and past the point where the 0-1 rescaling below
+# could recognise it as a fraction at all. Anything other than three digits
+# after the comma is a decimal too: "0,3026" used to read as 0.
+_COMMA_NUMBER_RE = re.compile(r"(?<![\d,.])(\d+),(\d+)(?![\d,])")
+
+
+def _decimal_commas(text: str) -> str:
+    """Rewrite every decimal comma as a decimal point, leaving thousands alone."""
+
+    def replace(match: re.Match[str]) -> str:
+        whole, fraction = match.group(1), match.group(2)
+        if len(fraction) == 3 and not whole.startswith("0"):
+            return match.group(0)  # a thousands group; _NUMBER_RE reads it
+        return f"{whole}.{fraction}"
+
+    return _COMMA_NUMBER_RE.sub(replace, text)
 _PLACEHOLDERS = {"", "-", "—", "–", "n/a", "na", "/", "?", "—%", "tbd", "x", "✗", "✓"}
 
 # A rank is not a score. "1st" in a leaderboard-position column used to store a
@@ -209,7 +226,7 @@ def parse_score(text: str) -> float | None:
     labelled = _LABELLED_VALUE_RE.search(cleaned)
     if labelled:
         cleaned = labelled.group(1)
-    cleaned = _DECIMAL_COMMA_RE.sub(r"\1.\2", cleaned)
+    cleaned = _decimal_commas(cleaned)
     match = _STANDALONE_NUMBER_RE.search(cleaned)
     if not match:
         return None
@@ -1205,6 +1222,13 @@ def _is_qualified_run(notes: Any) -> bool:
     return isinstance(notes, str) and bool(_QUALIFIED_RUN_RE.search(notes))
 
 
+def _run_key(notes: Any) -> str:
+    """What run a note describes, as far as two notes can be compared at all."""
+    if not isinstance(notes, str):
+        return ""
+    return re.sub(r"\s+", " ", notes).strip().lower()
+
+
 def _pick_eval_entry(entries: list[dict[str, Any]], label: str) -> float | None:
     """The one value a label's entries report, or None when they do not agree.
 
@@ -1224,13 +1248,19 @@ def _pick_eval_entry(entries: list[dict[str, Any]], label: str) -> float | None:
     plain = [entry for entry in entries if not _is_qualified_run(entry.get("notes"))]
     considered = plain or entries
     values = {round(entry["value"], 6) for entry in considered}
-    if len(values) > 1 and not plain:
-        print(
-            f"warning: {label}: {len(values)} qualified runs and no plain one "
-            f"({', '.join(str(v) for v in sorted(values))}); skipping",
-            file=sys.stderr,
-        )
-        return None
+    if not plain and len(values) > 1:
+        # Two numbers under one dataset id is only ambiguous when the notes say
+        # they are two *different* runs. One harness filed twice, at two dates
+        # or on two Hub PRs, is the same run reported twice, and the rule below
+        # is what picks between those.
+        runs = {_run_key(entry.get("notes")) for entry in considered}
+        if len(runs) > 1:
+            print(
+                f"warning: {label}: {len(runs)} qualified runs and no plain one "
+                f"({', '.join(str(v) for v in sorted(values))}); skipping",
+                file=sys.stderr,
+            )
+            return None
     # Two stable passes rather than one key: latest date first, then merged
     # entries ahead of ones still pending on an open Hub PR.
     considered.sort(key=lambda entry: (entry["date"] or "", -entry["order"]), reverse=True)
@@ -1339,28 +1369,54 @@ def extract_model_index(payload: dict[str, Any]) -> dict[str, float]:
     return out
 
 
-def extract_scores(repo: str, slug: str | None = None) -> dict[str, float]:
+# Which of the two reads a value came from. A label alone does not say: the
+# structured channel files GPQA Diamond as "Idavidrein/gpqa (diamond)" and the
+# card's own table heads it "GPQA Diamond", and once the benchmark-name mapping
+# has collapsed both onto `gpqa_diamond` there is nothing left in the label to
+# tell them apart. Carried through the crawl so update.py can keep the
+# structured value, which is the channel a benchmark owner can write to via a
+# Hub PR and the one the Hub renders as "Evaluation results".
+CHANNEL_METADATA = "metadata"
+CHANNEL_TABLE = "table"
+
+
+def extract_scores_and_channels(
+    repo: str, slug: str | None = None
+) -> tuple[dict[str, float], dict[str, str]]:
+    """Every score on one card, and which channel each label was read from."""
     # Structured metadata first: it is what the Hub renders as 'Evaluation
     # results' and is unambiguous. README tables then fill remaining labels.
     out: dict[str, float] = {}
+    channels: dict[str, str] = {}
     try:
         payload = fetch_api_eval_data(repo)
     except Exception as exc:
         print(f"warning: {repo}: eval metadata fetch failed: {exc}", file=sys.stderr)
         payload = {}
-    out.update(extract_eval_results(payload))
+    for label, value in extract_eval_results(payload).items():
+        out[label] = value
+        channels[label] = CHANNEL_METADATA
     for label, value in extract_model_index(payload).items():
-        out.setdefault(label, value)
+        if label not in out:
+            out[label] = value
+            channels[label] = CHANNEL_METADATA
     try:
         md = fetch_readme(repo)
     except FileNotFoundError:
         if not out:
             raise
-        return out
+        return out, channels
     tables = parse_markdown_tables(md) + parse_html_tables(md)
     for label, value in extract_scores_from_tables(tables, repo, slug).items():
-        out.setdefault(label, value)
-    return out
+        if label not in out:
+            out[label] = value
+            channels[label] = CHANNEL_TABLE
+    return out, channels
+
+
+def extract_scores(repo: str, slug: str | None = None) -> dict[str, float]:
+    """Every score on one card, structured metadata taking precedence."""
+    return extract_scores_and_channels(repo, slug)[0]
 
 
 def iter_hf_models(doc: dict[str, Any]) -> list[tuple[str, str]]:
@@ -1439,11 +1495,13 @@ def crawl_all_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
     for slug, repo in pairs:
         try:
-            scores = extract_scores(repo, slug)
+            scores, channels = extract_scores_and_channels(repo, slug)
         except Exception as exc:
             print(f"warning: {slug} ({repo}): {exc}", file=sys.stderr)
             continue
-        results.append({"model": slug, "repo": repo, "scores": scores})
+        results.append(
+            {"model": slug, "repo": repo, "scores": scores, "channels": channels}
+        )
     # A short crawl is not stored, the same way artificialanalysis.py refuses
     # to publish a short model list: a run that lost its network partway would
     # otherwise serve a stub to the fetcher that follows it, for an hour.
@@ -1475,9 +1533,14 @@ def main() -> int:
             print("error: repo_or_url is required when --all-models is not set", file=sys.stderr)
             return 2
         repo = normalize_repo(args.repo_or_url)
-        scores = extract_scores(repo)
+        scores, channels = extract_scores_and_channels(repo)
         results: list[dict[str, Any]] = [
-            {"model": repo.split("/")[-1], "repo": repo, "scores": scores}
+            {
+                "model": repo.split("/")[-1],
+                "repo": repo,
+                "scores": scores,
+                "channels": channels,
+            }
         ]
 
     if args.format == "json":

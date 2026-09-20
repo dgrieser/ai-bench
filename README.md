@@ -1096,20 +1096,33 @@ where lower is better, so mapping it wrote a model's best number into the
 column as its worst.
 
 Under the file there is a net, because a label nobody has reviewed yet still
-arrives with a value attached. `update.hf_label_rank()` reads the label itself:
-one that names a run of the benchmark -- with tools, a named harness, "best",
-"strict", "public", `pass@k` for k > 1 -- cannot displace one that just names
-the benchmark, however the two values compare. Only between labels that qualify
-the run equally does the best reported run win, which is the policy the rest of
-this file describes and the one a card printing the same benchmark at two
-budgets asks for. "No tools" is deliberately *not* a qualifier: every benchmark
-column here holds the no-tool run, so a label saying so names the column rather
-than a variant of it.
+arrives with a value attached. Three things decide between the labels that
+alias one column, in this order:
+
+1. **An unqualified label wins.** `update.hf_label_rank()` reads the label
+   itself: one that names a run of the benchmark -- with tools, a named
+   harness, "best", "strict", "public", `pass@k` for every k but 1 -- cannot
+   displace one that just names the benchmark, however the two values compare.
+   "No tools" is deliberately *not* a qualifier: every benchmark column here
+   holds the no-tool run, so a label saying so names the column rather than a
+   variant of it.
+2. **The structured channel wins.** See below: the precedence the card-level
+   read applies label by label has to survive the mapping, because
+   `Idavidrein/gpqa (diamond)` and `GPQA Diamond` are one column read two ways
+   and once both are `gpqa_diamond` nothing in the label says which came from
+   where. On the 157 cards this file reads, dropping that provenance before
+   the collision was resolved handed nine columns the table's number over the
+   structured one, every one of them the higher of the two.
+3. **The best reported run wins**, which is the policy the rest of this file
+   describes and the one a card printing the same benchmark at two budgets
+   asks for.
 
 ### How a Hugging Face model card is read
 
 `fetch_huggingface.py` reads two things per repo, and the structured one wins
-where they overlap:
+where they overlap -- per label here, and per *column* once the benchmark-name
+mapping has collapsed several labels onto one (rule 2 above; the crawl carries
+a `channels` map beside its scores so that survives):
 
 **The Hub's "Evaluation results" widget** (`evalResults` plus the classic
 `model-index` card metadata). Every entry names its dataset by Hub id, so
@@ -1119,12 +1132,13 @@ entry does *not* carry is which run it is, beyond a free-text note, and one
 card routinely files the same dataset several times -- once per harness, per
 agent scaffold, per reasoning effort, per video frame count. So entries are
 grouped by label: one whose note names no run at all is the card's headline and
-wins outright, and where *every* entry names a run and they disagree, nothing
-is taken. NVIDIA files SWE-bench Verified at 60.47 on OpenHands, 59.2 on
-OpenCode and 53.73 on Codex, and no page says which of the three the column
-should carry. Between entries that qualify equally, one merged into the card
-beats one still pending on an open Hub PR, and a later date beats an earlier
-one. `cais/hle` is split by tool mode before any of this, because the gap there
+wins outright, and where entries name *different* runs and disagree, nothing is
+taken. NVIDIA files SWE-bench Verified at 60.47 on OpenHands, 59.2 on OpenCode
+and 53.73 on Codex, and no page says which of the three the column should
+carry. Two records of the *same* run are not that case -- one harness filed
+twice, on two dates or two Hub PRs, is one run reported twice -- and there the
+merged entry beats one still pending on an open PR, and a later date beats an
+earlier one. `cais/hle` is split by tool mode before any of this, because the gap there
 is worth a median 11.5 points (`TOOL_MODE_SENSITIVE_DATASETS`).
 
 **The tables in the card body**, which are where most of the numbers are and
@@ -1177,9 +1191,13 @@ that stands on its own in the cell:
 - `Without CI 83.7 With CI 90.2` is 83.7, the setting `charxiv_reasoning` holds.
 - `NVIDIA-Nemotron-3-Nano-Omni-30B` and `8B / 16B` are not values at all; the
   first used to store **-3**.
-- `1st` is a rank, `63,1` is 63.1, `1,441` is 1441, and
-  `43.2 (no tools) / 57.4 (with tools)` is two runs in one cell and so is
-  neither.
+- `1st` is a rank, and `43.2 (no tools) / 57.4 (with tools)` is two runs in one
+  cell and so is neither.
+- A comma is a thousands group or a decimal point depending on the digits
+  around it, not on the comma: `1,441` is 1441, `63,1` is 63.1, and `0,794` is
+  0.794 because no thousands-formatted number starts with a bare zero -- read
+  as a group it would be 794, past the point where the rescaling below could
+  recognise it as a fraction at all.
 - A column reported 0-1 throughout is put back on the scale every other card
   uses (Mistral's Ministral cards report MMLU at 0.794), while a single
   near-zero value beside siblings in the eighties is left alone -- ZeroBench's
