@@ -147,6 +147,21 @@ class TestNoMappedLabelContradictsItsColumn(unittest.TestCase):
     # A maximum over harnesses is not a measurement of one.
     BEST_OF = re.compile(r"best[- ]reported|best[- ]of\b|\b4\*10\b", re.IGNORECASE)
 
+    def test_the_columns_say_so_themselves(self) -> None:
+        # The set above is the rule this file enforces; `settings` in llm.json
+        # is what a reader and the admin page's mapping queue are shown. They
+        # have to be the same claim, or a human answers a question against one
+        # while the test polices the other.
+        benchmarks = json.loads(
+            (Path(__file__).resolve().with_name("llm.json")).read_text(encoding="utf-8")
+        )["benchmarks"]
+        for key in self.NO_TOOL_COLUMNS:
+            with self.subTest(column=key):
+                self.assertIn(
+                    "no tools", benchmarks[key]["settings"],
+                    f"{key} is policed as a no-tools column but is not tagged one",
+                )
+
     def test_no_tools_columns_take_no_tools_labels(self) -> None:
         for label, key in load(HF_MAPPING).items():
             if key not in self.NO_TOOL_COLUMNS:

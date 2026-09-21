@@ -146,6 +146,59 @@ each entry naming the day, the value, what the change was (`updated from 78.6`,
 `added`, `first recorded`, `withdrawn`) and the page the score was read from on
 that day. The benchmark dialog quotes the head of the same list.
 
+### What a benchmark column holds
+
+`description` in each `benchmarks` entry says what a benchmark *is*. Two more
+fields say which of its published runs this column stores, because those are
+different questions and only the second one decides a mapping:
+
+```json
+"programbench_almost": {
+  "name": "ProgramBench: Almost Resolved",
+  "description": "Rebuilding a program from scratch: …",
+  "settings": ["Almost Resolved", "mini-SWE-agent"],
+  "excludes": ["Resolved, the board's primary metric, which requires every test to pass"]
+}
+```
+
+- **`settings`** — tags, two to four of them: the metric, the subset, the tool
+  mode, the harness, and the scale where it is not a percentage. Every
+  benchmark has them, including the derived indexes, whose `index scale` tag
+  says the number is not a percentage before anyone compares it with one.
+- **`excludes`** — the runs that must *not* be filed in this column, as short
+  phrases rather than tags, because each one needs a reason attached. Left out
+  entirely where there is nothing to exclude. It is the written form of what
+  `huggingface-benchmark-name-mapping.json` parks on `__unmappable__`, and of
+  the version traps documented per benchmark below.
+
+Free text rather than enumerated keys, because the distinctions that matter
+are not a fixed set. "Best harness" is a maximum over configurations,
+`HLE-Verified` is a different question set, FrontierCode Main and Extended are
+one set of runs scored twice, and the non-hallucination rate is the inverse of
+a lower-is-better column. A schema of `tool_mode` / `subset` / `metric` would
+have held the first of those and lost the rest.
+
+Three surfaces read them, and the third is the reason they exist:
+
+1. The **column-header slip** carries both as lines (a tooltip is a plain-text
+   attribute, so the tags join with `·`); the **benchmark dialog** and the
+   **Reference directory** draw the tags as chips.
+2. A **score cell's slip** carries the tags on their own line, so a number can
+   say which run it is without opening anything.
+3. The **admin page's mapping queue** prints the benchmark's name, its tags and
+   its excludes under every candidate it offers, and under the search box once
+   what is typed there names a column. A question like
+   `HLE w/ tools (Pass@1) → hle?` is answered from the key alone otherwise, and
+   the key does not mention tools. The box also *looks* answered now — a green
+   field and a boxed panel, the same green the buttons use — because an answer
+   typed by hand was the only one that did not.
+
+`test_benchmark_settings.py` holds the shape: every column tags its run, the
+tags stay tags rather than drifting into prose, and `excludes` is a list of
+phrases rather than sentences. `test_hle_no_tools.py` additionally checks that
+every column it polices as no-tools carries the `no tools` tag, so the rule and
+the chip a human is shown cannot drift apart.
+
 ### Score Precision
 
 Every score is rounded onto a per-benchmark grid before it is stored, by
