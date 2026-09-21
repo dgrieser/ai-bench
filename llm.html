@@ -2352,8 +2352,8 @@
 
     /* What run the column holds, under the description it qualifies: a row of
        tags, because the facts are short and read better side by side than as a
-       sentence. The "not this" line under them is quieter again -- a warning
-       you read only when you are about to file something here. */
+       sentence. What the column *excludes* is not drawn here -- that is a
+       mapping decision, and it is shown where mappings are made. */
     .bench-tags {
       margin: 8px 0 0;
       display: flex;
@@ -2371,19 +2371,6 @@
       font-size: 0.68rem;
       line-height: 1.6;
       white-space: nowrap;
-    }
-
-    .benchmark-settings {
-      margin: 8px 0 0;
-      color: var(--subtle);
-      line-height: 1.5;
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-    }
-
-    .benchmark-settings.excludes,
-    .bench-dialog-settings.excludes {
-      opacity: 0.85;
     }
 
     .benchmark-links {
@@ -3124,14 +3111,6 @@
 
     .bench-dialog-tags {
       margin: -4px 0 12px;
-    }
-
-    .bench-dialog-settings {
-      margin: -6px 0 12px;
-      color: var(--subtle);
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
-      line-height: 1.5;
     }
 
     .bench-dialog dl {
@@ -7174,7 +7153,6 @@
             category: card.category || "",
             description: card.description || "",
             settings: "",
-            excludes: "",
             links: benchmarkLinks(card),
             icon: ""
           }));
@@ -7186,7 +7164,6 @@
             category: benchmark.category || "",
             description: benchmark.description || "",
             settings: benchmarkTagsMarkup(key),
-            excludes: benchmarkExcludesLine(key),
             links: benchmarkLinks(benchmark),
             icon: renderBenchmarkIcon(key)
           };
@@ -7204,7 +7181,6 @@
               </div>
               ${card.description ? `<p class="benchmark-desc">${escapeHtml(card.description)}</p>` : ""}
               ${card.settings}
-              ${card.excludes ? `<p class="benchmark-settings excludes">${escapeHtml(card.excludes)}</p>` : ""}
               ${card.links.length ? `<div class="benchmark-links">${card.links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
             </article>
           `).join("");
@@ -8686,7 +8662,6 @@
           <h3 class="bench-dialog-title">${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</h3>
           ${bench.description ? `<p class="bench-dialog-desc">${escapeHtml(firstSentence(bench.description))} ${isLowerBetter(key) ? "Lower is better." : "Higher is better."}</p>` : ""}
           ${benchmarkTagsMarkup(key, "bench-tags bench-dialog-tags")}
-          ${benchmarkExcludesLine(key) ? `<p class="bench-dialog-settings excludes">${escapeHtml(benchmarkExcludesLine(key))}</p>` : ""}
           <dl>
             <dt>Score</dt>
             <dd${fresh ? ' class="fresh"' : ""}>${formatScore(value, key)}</dd>
@@ -10185,22 +10160,6 @@
           .join("")}</p>`;
       }
 
-      // The other half of the same fact: the runs that must not be filed here.
-      // A label naming one of these is a different measurement wearing the
-      // benchmark's name, which is how a with-tools number lands in a no-tools
-      // column and reads as a record.
-      function benchmarkExcludes(key) {
-        const excludes = state.data?.benchmarks?.[key]?.excludes;
-        return Array.isArray(excludes)
-          ? excludes.filter((item) => typeof item === "string" && item.trim()).map((item) => item.trim())
-          : [];
-      }
-
-      function benchmarkExcludesLine(key) {
-        const items = benchmarkExcludes(key);
-        return items.length ? `Not this: ${items.join(" \u00b7 ")}` : "";
-      }
-
       // One tooltip contract for a benchmark, shared by the column header and
       // the visibility picker: what it is, what it measures, which run of it
       // this column holds, where to read it up.
@@ -10210,7 +10169,7 @@
           eyebrow: eyebrow || bench.category || "Benchmark",
           title: bench.name || getBenchmarkLabel(key),
           body: bench.description || "",
-          meta: [benchmarkSettingsLine(key), benchmarkExcludesLine(key)].filter(Boolean).join("\n"),
+          meta: benchmarkSettingsLine(key),
           url: benchmarkLinks(bench)[0] || "",
           iconKey: key
         };

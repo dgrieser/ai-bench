@@ -169,7 +169,8 @@ different questions and only the second one decides a mapping:
   phrases rather than tags, because each one needs a reason attached. Left out
   entirely where there is nothing to exclude. It is the written form of what
   `huggingface-benchmark-name-mapping.json` parks on `__unmappable__`, and of
-  the version traps documented per benchmark below.
+  the version traps documented per benchmark below. Shown on the admin page
+  only — see below.
 
 Free text rather than enumerated keys, because the distinctions that matter
 are not a fixed set. "Best harness" is a maximum over configurations,
@@ -178,20 +179,21 @@ one set of runs scored twice, and the non-hallucination rate is the inverse of
 a lower-is-better column. A schema of `tool_mode` / `subset` / `metric` would
 have held the first of those and lost the rest.
 
-Three surfaces read them, and the third is the reason they exist:
+The two are shown in different places, because they answer different people.
+**`settings` is for a reader** — the site draws the tags on the column-header
+slip (a tooltip is a plain-text attribute, so they join with `·`), on a score
+cell's slip so a number can say which run it is without opening anything, and
+as chips in the benchmark dialog and the Reference directory.
 
-1. The **column-header slip** carries both as lines (a tooltip is a plain-text
-   attribute, so the tags join with `·`); the **benchmark dialog** and the
-   **Reference directory** draw the tags as chips.
-2. A **score cell's slip** carries the tags on their own line, so a number can
-   say which run it is without opening anything.
-3. The **admin page's mapping queue** prints the benchmark's name, its tags and
-   its excludes under every candidate it offers, and under the search box once
-   what is typed there names a column. A question like
-   `HLE w/ tools (Pass@1) → hle?` is answered from the key alone otherwise, and
-   the key does not mention tools. The box also *looks* answered now — a green
-   field and a boxed panel, the same green the buttons use — because an answer
-   typed by hand was the only one that did not.
+**`excludes` is for whoever is mapping**, and the site does not draw it at all:
+a reader looking up what a column holds does not need a list of the runs it
+refuses, and on a card with four of them the warning was longer than the fact.
+The **admin page's mapping queue** prints it under every candidate it offers,
+and under the search box once what is typed there names a column. A question
+like `HLE w/ tools (Pass@1) → hle?` is answered from the key alone otherwise,
+and the key does not mention tools. The box also *looks* answered — a green
+field and a boxed panel, the same green the buttons use — because an answer
+typed by hand was the only one that did not.
 
 `test_benchmark_settings.py` holds the shape: every column tags its run, the
 tags stay tags rather than drifting into prose, and `excludes` is a list of
