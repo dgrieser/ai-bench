@@ -592,10 +592,11 @@
       "settings": [
         "Pass@1",
         "no tools",
-        "window not recorded"
+        "v6 labels only"
       ],
       "excludes": [
-        "runs labelled with a date window (2408-2505 and the like)",
+        "the v3 and v5 releases, which are smaller problem sets",
+        "date windows that name no release",
         "card labels that report it as a 0-1 fraction"
       ],
       "urls": [
@@ -806,12 +807,13 @@
       "description": "Ai2's test of whether instruction following generalizes: 58 new, diverse output constraints held out from the small set of verifiable constraints models have overfit to, each checked by a verification function rather than a judge, so a response either satisfies the constraint or does not. Run independently by Artificial Analysis. Metric is the share of constraints satisfied.",
       "settings": [
         "constraints satisfied",
+        "Pass@1",
         "no tools",
         "Artificial Analysis"
       ],
       "excludes": [
         "IFEval, the set these constraints were held out from",
-        "prompt-level and loose scoring variants"
+        "labels naming one scoring axis only (“prompt”, “loose”)"
       ],
       "urls": [
         "https://artificialanalysis.ai/evaluations/ifbench",
@@ -847,9 +849,10 @@
       "category": "Real-world Professional Work",
       "decimals": 0,
       "round_to": 5,
-      "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: 220 real work deliverables — documents, slides, spreadsheets, diagrams — for 44 occupations across 9 industries, authored with experienced professionals. The model works in AA's Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, so a deliverable is the product of a tool trajectory rather than a single response. Scored by blind pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance.",
+      "description": "Artificial Analysis' v2.1 evaluation framework over OpenAI's GDPval dataset: 220 real work deliverables — documents, slides, spreadsheets, diagrams — for 44 occupations across 9 industries, authored with experienced professionals. The model works in AA's Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, so a deliverable is the product of a tool trajectory rather than a single response. Scored by blind pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance.",
       "settings": [
         "Elo",
+        "v2.1 framework",
         "1000 = human expert",
         "Stirrup harness"
       ],
@@ -1016,16 +1019,17 @@
       "name": "AIME 2025",
       "short_name": "AIME25",
       "category": "Competition Math",
-      "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.",
+      "description": "American Invitational Mathematics Examination, 2025: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
       "settings": [
-        "accuracy",
-        "2025 exam set",
+        "Pass@1",
+        "30 problems",
         "no tools"
       ],
       "excludes": [
         "with-tools runs",
         "AIME 2024 and 2026",
-        "single-paper splits such as “AIME 2026 I”"
+        "single-paper splits such as “AIME 2026 I”",
+        "best-of-k runs (pass@k for k > 1)"
       ],
       "urls": [
         "https://maa.org/maa-invitational-competitions/",
@@ -1037,16 +1041,17 @@
       "name": "AIME 2026",
       "short_name": "AIME26",
       "category": "Competition Math",
-      "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2026 exam set.",
+      "description": "American Invitational Mathematics Examination, 2026: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
       "settings": [
-        "accuracy",
-        "2026 exam set",
+        "Pass@1",
+        "30 problems",
         "no tools"
       ],
       "excludes": [
         "with-tools runs",
         "AIME 2024 and 2025",
-        "single-paper splits such as “AIME 2026 I”"
+        "single-paper splits such as “AIME 2026 I”",
+        "best-of-k runs (pass@k for k > 1)"
       ],
       "urls": [
         "https://maa.org/maa-invitational-competitions/",
