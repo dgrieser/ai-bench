@@ -122,7 +122,10 @@
       "derived": true,
       "decimals": 0,
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.9), SWE-Marathon 1.1 (0.65), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.4), Vibe Code Bench 1.1 (0.75), SWE-bench Pro (0.4), LiveCodeBench (0.4), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.75), SWE Atlas: Refactoring (0.75), ProgramBench: Almost Resolved (0.5), SWE-bench Verified (0.15).",
-      "settings": "Derived, not measured: a Bradley-Terry fit over the member benchmarks, published as the expected win rate against the ranked field x 100,000. An index, not a percentage.",
+      "settings": [
+        "derived",
+        "index scale"
+      ],
       "icon_svg": "icons/coding-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#coding-index"
@@ -135,7 +138,10 @@
       "derived": true,
       "decimals": 0,
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: τ³-Bench Banking (1), Toolathlon-Verified (0.9), MCP-Atlas (0.85), Terminal-Bench 4.0 (0.8), Terminal-Bench 2.1 (0.3), GDPval-AA v2 (0.7), ITBench-AA (0.6), BFCL v4 (0.5), τ²-Bench Telecom (0.3), Terminal-Bench Hard (0.3), IFBench (0.2).",
-      "settings": "Derived, not measured: a Bradley-Terry fit over the member benchmarks, published as the expected win rate against the ranked field x 100,000. An index, not a percentage.",
+      "settings": [
+        "derived",
+        "index scale"
+      ],
       "icon_svg": "icons/tooling-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#tooling-index"
@@ -148,7 +154,10 @@
       "derived": true,
       "decimals": 0,
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience (1), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3).",
-      "settings": "Derived, not measured: a Bradley-Terry fit over the member benchmarks, published as the expected win rate against the ranked field x 100,000. An index, not a percentage.",
+      "settings": [
+        "derived",
+        "index scale"
+      ],
       "icon_svg": "icons/knowledge-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#knowledge-index"
@@ -161,7 +170,10 @@
       "derived": true,
       "decimals": 0,
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35).",
-      "settings": "Derived, not measured: a Bradley-Terry fit over the member benchmarks, published as the expected win rate against the ranked field x 100,000. An index, not a percentage.",
+      "settings": [
+        "derived",
+        "index scale"
+      ],
       "icon_svg": "icons/vision-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#vision-index"
@@ -174,7 +186,10 @@
       "derived": true,
       "decimals": 0,
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience Hallucination Rate (1), AA-Omniscience Accuracy (0.6), AA-LCR (0.45), IFBench (0.3).",
-      "settings": "Derived, not measured: a Bradley-Terry fit over the member benchmarks, published as the expected win rate against the ranked field x 100,000. An index, not a percentage.",
+      "settings": [
+        "derived",
+        "index scale"
+      ],
       "icon_svg": "icons/trust-index.svg",
       "urls": [
         "https://github.com/dgrieser/ai-bench#trust-index"
@@ -185,7 +200,11 @@
       "short_name": "Index",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index of overall model capability; v4.1 since 2026-06-15. Weighted average of nine evaluations in four categories: Agents 34%, Coding 24%, Scientific Reasoning 24% and General 18%. Scored on Artificial Analysis' index scale rather than as a percentage.",
-      "settings": "A weighted average of nine Artificial Analysis evaluations, v4.1 since 2026-06-15, on AA's own index scale rather than as a percentage.",
+      "settings": [
+        "v4.1",
+        "index scale",
+        "Artificial Analysis"
+      ],
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
@@ -197,7 +216,12 @@
       "short_name": "SWE-V",
       "category": "Software Engineering",
       "description": "Human-validated subset of SWE-bench for fixing real GitHub issues; solutions are judged by running unit tests.",
-      "settings": "Resolved rate over the 500 human-validated Verified issues, agentic. The harness is whatever each source ran: the official board standardises on mini-SWE-agent, and most stored values are lab self-reports on a scaffold of the lab's choosing.",
+      "settings": [
+        "Resolved %",
+        "Verified 500",
+        "agentic",
+        "harness varies"
+      ],
       "excludes": [
         "SWE-bench Full and Lite",
         "runs named for a harness (Codex, OpenCode, OpenHands, SWE-agent)",
@@ -213,7 +237,11 @@
       "short_name": "SWE-MM",
       "category": "Software Engineering",
       "description": "Multimodal extension of SWE-bench: 517 issues from JavaScript and TypeScript repositories whose reports carry visual context — screenshots, design mockups, diagrams — so the fix depends on reading the images, not just the text. Solutions are judged by running unit tests.",
-      "settings": "Resolved rate over 517 JavaScript and TypeScript issues whose reports carry visual context, agentic.",
+      "settings": [
+        "Resolved %",
+        "517 JS/TS issues",
+        "agentic"
+      ],
       "excludes": [
         "the text-only SWE-bench sets"
       ],
@@ -229,7 +257,12 @@
       "short_name": "SWE-ML",
       "category": "Software Engineering",
       "description": "Multilingual extension of SWE-bench: 300 issue/pull-request pairs from 42 repositories in nine languages other than Python (C, C++, Go, Java, JavaScript, TypeScript, PHP, Ruby, Rust), collected and graded by the same protocol as SWE-bench -- fail-to-pass tests prove the issue is fixed, pass-to-pass tests prove nothing else broke. Built because agent scaffolds had overfitted to Python tooling. The official leaderboard runs a standardized mini-SWE-agent; a lab self-report uses whatever harness the lab chose.",
-      "settings": "Resolved rate over 300 issue/pull-request pairs in nine non-Python languages, agentic. The official board runs a standardised mini-SWE-agent; a lab self-report uses whatever harness the lab chose.",
+      "settings": [
+        "Resolved %",
+        "300 pairs, 9 languages",
+        "agentic",
+        "harness varies"
+      ],
       "excludes": [
         "runs named for a harness (OpenHands)",
         "SWE-bench Verified"
@@ -246,7 +279,11 @@
       "short_name": "SWE-Pro",
       "category": "Software Engineering",
       "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
-      "settings": "Resolved rate, agentic. Which split and grading a stored value came from is not recorded: the board publishes a public dataset and a stricter grading, and the sources naming either are refused.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "split not recorded"
+      ],
       "excludes": [
         "the public-dataset split",
         "strict grading",
@@ -262,7 +299,11 @@
       "short_name": "SWE-A RF",
       "category": "Software Engineering",
       "description": "Refactoring track of Scale AI's SWE Atlas suite: restructure production code to improve readability and maintainability while preserving behavior; 70 tasks graded by programmatic test validation plus rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": "Task Resolve Rate -- the share of the 70 refactoring tasks passing every rubric item -- from Scale's own runs, agentic.",
+      "settings": [
+        "Task Resolve Rate",
+        "70 refactoring tasks",
+        "agentic"
+      ],
       "excludes": [
         "the Test Writing and Codebase Q&A tracks"
       ],
@@ -277,7 +318,11 @@
       "short_name": "SWE-A TW",
       "category": "Software Engineering",
       "description": "Test Writing track of Scale AI's SWE Atlas suite: write meaningful tests that exercise real functionality and raise coverage; 90 tasks graded by manifest check, mutation testing and rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": "Task Resolve Rate -- the share of the 90 test-writing tasks passing every rubric item -- from Scale's own runs, agentic.",
+      "settings": [
+        "Task Resolve Rate",
+        "90 test-writing tasks",
+        "agentic"
+      ],
       "excludes": [
         "the Refactoring and Codebase Q&A tracks"
       ],
@@ -292,7 +337,11 @@
       "short_name": "SWE-A QnA",
       "category": "Software Engineering",
       "description": "Codebase Q&A track of Scale AI's SWE Atlas suite: deep code-comprehension tasks such as tracing execution paths, multi-file reasoning and answering technical questions, with no code changes required; 124 tasks across 11 open-source repos in Go, Python, C and TypeScript. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": "Task Resolve Rate -- the share of the 124 comprehension tasks passing every rubric item -- from Scale's own runs. No code changes are required.",
+      "settings": [
+        "Task Resolve Rate",
+        "124 Q&A tasks",
+        "no code changes"
+      ],
       "excludes": [
         "the Refactoring and Test Writing tracks"
       ],
@@ -308,7 +357,12 @@
       "short_name": "RealSWE",
       "category": "Software Engineering",
       "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time; the reference solution touches a median of 11 files. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
-      "settings": "Resolution rate: pass@1 averaged over eight runs per task on private enterprise repositories, each model in its own native agent harness -- so a row is a model-and-harness pair, not a model.",
+      "settings": [
+        "Resolved %",
+        "pass@1 over 8 runs",
+        "native harness",
+        "private repos"
+      ],
       "excludes": [
         "public SWE-bench-style boards"
       ],
@@ -321,7 +375,11 @@
       "short_name": "DSWE 1.1",
       "category": "Software Engineering",
       "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.1 is the current leaderboard, re-run in September 2026; its numbers are not comparable with 1.0's, which moved some models by more than 50 points.",
-      "settings": "Resolved rate on the 1.1 board, agentic. Where the board publishes several harness or effort configurations for one model, the best-scoring one is taken.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "best configuration"
+      ],
       "excludes": [
         "DeepSWE 1.0, which moved some models by more than 50 points",
         "a bare “DeepSWE” naming no revision"
@@ -339,7 +397,11 @@
       "short_name": "DSWE 1.0",
       "category": "Software Engineering",
       "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.0 is the superseded June 2026 run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": "Resolved rate on the superseded June 2026 board, agentic. Where several harness or effort configurations exist for one model, the best-scoring one is taken.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "best configuration"
+      ],
       "excludes": [
         "DeepSWE 1.1",
         "a bare “DeepSWE” naming no revision"
@@ -356,7 +418,11 @@
       "short_name": "F-SWE 2.0",
       "category": "Software Engineering",
       "description": "Benchmarking software engineering skill at the edge of human ability; 34 hand-crafted tasks run five times each under a 20-hour budget, scored as the mean@5 task score (%). Revision 2.0 is the current board; its scores are not comparable with 1.0's, which ranked a different task set by a pairwise win rate.",
-      "settings": "Mean@5 task score over 34 hand-crafted tasks under a 20-hour budget, agentic.",
+      "settings": [
+        "mean@5 task score",
+        "34 tasks",
+        "20-hour budget"
+      ],
       "excludes": [
         "FrontierSWE 1.0's dominance score",
         "a bare “FrontierSWE” naming no revision"
@@ -370,7 +436,10 @@
       "short_name": "F-SWE 1.0",
       "category": "Software Engineering",
       "description": "Benchmarking software engineering skill at the edge of human ability. Revision 1.0 is the first release, preserved as published at /v1 and the only revision that scored the models retired before the re-run. It ranked 17 tasks by average per-task rank and by dominance -- the win rate against a random opponent on a random task -- and this column stores that dominance as a percentage, the only quantity the board publishes on a higher-is-better 0-100 scale. Kept as a separate column because a win rate is not the 2.0 board's mean@5 task score, and left out of the coding index for the same reason.",
-      "settings": "Dominance -- the win rate against a random opponent on a random task -- over 1.0's 17 tasks. The only quantity that board publishes on a higher-is-better 0-100 scale.",
+      "settings": [
+        "dominance",
+        "17 tasks"
+      ],
       "excludes": [
         "2.0's mean@5 task score",
         "1.0's per-task average rank",
@@ -386,7 +455,11 @@
       "short_name": "FCo 1.1",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 is the current re-run and covers only the models Cognition re-ran; its scores are not comparable with 1.0's. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
-      "settings": "Would-it-be-merged score against reviewer-defined criteria, over the Main board -- the 100 hardest of the 150 tasks. 1.1 allows fair internet use such as documentation and API references, and zeroes any run its scanner catches opening a solution-bearing page.",
+      "settings": [
+        "would-be-merged score",
+        "Main board, 100 tasks",
+        "internet allowed"
+      ],
       "excludes": [
         "the Extended board, which reads about 13 points higher off the same runs",
         "FrontierCode 1.0"
@@ -402,7 +475,11 @@
       "short_name": "FCo 1.1E",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability, graded on whether the change would be merged: each task is scored against reviewer-defined criteria covering correctness, tests, scope, style and repository conventions, some of them blockers that cap the score on their own. Extended is the full 150-task set; the Main column is the 100 hardest of those same tasks, scored from the same runs, so Extended reads about thirteen points higher and Cognition publishes the two as separate leaderboards that are not to be mixed. Revision 1.1 is the current re-run: it allows fair internet use such as documentation and API references, and zeroes any run its scanner catches opening a solution-bearing page. 1.0's Extended board is published too but is not kept as a column.",
-      "settings": "Would-it-be-merged score against reviewer-defined criteria, over the Extended board -- all 150 tasks, scored from the same runs as Main. 1.1 allows fair internet use such as documentation and API references.",
+      "settings": [
+        "would-be-merged score",
+        "Extended board, 150 tasks",
+        "internet allowed"
+      ],
       "excludes": [
         "the Main board, the 100 hardest of the same tasks",
         "1.0's Extended board"
@@ -417,7 +494,10 @@
       "short_name": "FCo 1.0",
       "category": "Software Engineering",
       "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader scored 46.8%. Revision 1.0 is the superseded run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": "Would-it-be-merged score against reviewer-defined criteria, over the superseded 1.0 Main board.",
+      "settings": [
+        "would-be-merged score",
+        "Main board"
+      ],
       "excludes": [
         "FrontierCode 1.1",
         "any Extended board"
@@ -433,7 +513,11 @@
       "short_name": "SWE-M 1.1",
       "category": "Software Engineering",
       "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.1 is the current board: all 20 tasks updated, with tighter verification and closed-internet execution. The site reuses no 1.0 score for the updated tasks, so the two are not comparable.",
-      "settings": "Score over 20 multi-hour tasks, each with an executable environment and a multi-layer verification suite, agentic and with the internet closed. 1.1 re-verified all 20 tasks.",
+      "settings": [
+        "20 multi-hour tasks",
+        "agentic",
+        "no internet"
+      ],
       "excludes": [
         "SWE-Marathon 1.0",
         "a bare “SWE-Marathon” naming no revision"
@@ -448,7 +532,10 @@
       "short_name": "SWE-M 1.0",
       "category": "Software Engineering",
       "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.0 is the archived board the site keeps beside the current one. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": "Score over 20 multi-hour tasks, each with an executable environment and a multi-layer verification suite, agentic. 1.0 is the archived board.",
+      "settings": [
+        "20 multi-hour tasks",
+        "agentic"
+      ],
       "excludes": [
         "SWE-Marathon 1.1",
         "a bare “SWE-Marathon” naming no revision"
@@ -463,7 +550,11 @@
       "short_name": "Vibe 1.1",
       "category": "Software Engineering",
       "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1 replaced 1.0 at the same URL, so 1.0's numbers are not comparable and are not kept as a column.",
-      "settings": "Behavioural pass rate: an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. 100 specifications, 50 public and 50 held out.",
+      "settings": [
+        "behavioural pass rate",
+        "100 specs",
+        "agentic"
+      ],
       "excludes": [
         "Vibe Code Bench 1.0, which was replaced at the same URL"
       ],
@@ -478,7 +569,10 @@
       "short_name": "ProgBench",
       "category": "Software Engineering",
       "description": "Rebuilding a program from scratch: the agent is handed a reference executable and its documentation and nothing else, and has to implement a codebase whose behaviour matches, graded by hidden behavioural tests against the binary it produces. The 200 tasks run from compact CLI tools up to FFmpeg, SQLite and the PHP interpreter, and published runs use mini-SWE-agent with the internet switched off. This column stores Almost Resolved — at least 95% of a task's behavioural tests passing — because the board's primary metric, Resolved, requires every test to pass and is close to the floor today.",
-      "settings": "Almost Resolved -- at least 95% of a task's hidden behavioural tests passing -- over the 200-task Extended board, run with mini-SWE-agent and the internet switched off.",
+      "settings": [
+        "Almost Resolved",
+        "mini-SWE-agent"
+      ],
       "excludes": [
         "Resolved, the board's primary metric, which requires every test to pass"
       ],
@@ -495,7 +589,11 @@
       "short_name": "LCBench",
       "category": "Coding",
       "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
-      "settings": "Pass@1 on generated code, as a percentage. Which release window a stored value covers is not recorded: sources report different date ranges under the same name.",
+      "settings": [
+        "Pass@1",
+        "no tools",
+        "window not recorded"
+      ],
       "excludes": [
         "runs labelled with a date window (2408-2505 and the like)",
         "card labels that report it as a 0-1 fraction"
@@ -510,7 +608,10 @@
       "short_name": "SciCode",
       "category": "Scientific Coding",
       "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
-      "settings": "Main-problem accuracy, no tools. The benchmark also scores sub-problems, which run far higher.",
+      "settings": [
+        "main problem",
+        "no tools"
+      ],
       "excludes": [
         "the subtask score",
         "combined sub/main estimators"
@@ -524,7 +625,11 @@
       "short_name": "Term 4.0",
       "category": "Agentic Coding & Terminal Use",
       "description": "Current Terminal-Bench release: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials.",
-      "settings": "Share of the 66 tasks resolved, on an 8-hour flat agent timeout, reported with a 95% interval over repeated trials.",
+      "settings": [
+        "Resolved %",
+        "66 tasks",
+        "agentic"
+      ],
       "excludes": [
         "runs named for a harness (Claude Code, Terminus-2)",
         "Terminal-Bench 3.0, 2.1 and 2.0",
@@ -543,7 +648,11 @@
       "short_name": "Term 2.1",
       "category": "Agentic Coding & Terminal Use",
       "description": "Terminal-Bench 2.1 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
-      "settings": "Share of the 2.1 task set resolved, run under Terminus-2, the harness that board standardises on.",
+      "settings": [
+        "Resolved %",
+        "Terminus-2",
+        "agentic"
+      ],
       "excludes": [
         "“best harness” rows, a maximum over configurations",
         "runs named for another harness",
@@ -560,7 +669,10 @@
       "short_name": "Term 2.0",
       "category": "Agentic Coding & Terminal Use",
       "description": "Terminal-Bench 2.0 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
-      "settings": "Share of the 2.0 task set resolved.",
+      "settings": [
+        "Resolved %",
+        "agentic"
+      ],
       "excludes": [
         "Terminal-Bench 2.1, 3.0 and 4.0",
         "a bare “Terminal-Bench” naming no version"
@@ -575,7 +687,11 @@
       "short_name": "Term Hard",
       "category": "Agentic Coding & Terminal Use",
       "description": "Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.",
-      "settings": "Share of the hard subset resolved.",
+      "settings": [
+        "Resolved %",
+        "hard subset",
+        "agentic"
+      ],
       "excludes": [
         "the full Terminal-Bench task sets",
         "a bare “Terminal-Bench” naming no version"
@@ -589,7 +705,11 @@
       "short_name": "Toolath",
       "category": "Agentic Tool Use",
       "description": "The Tool Decathlon: long-horizon agentic tool use across 32 real MCP servers plus 7 local toolkits, with 108 tasks averaging around 20 interaction steps. Grading is execution-based on the final state of the applications. Scores are the Toolathlon-Verified series, not comparable with earlier Toolathlon numbers. Metric is Pass@1.",
-      "settings": "Pass@1 over 108 long-horizon tasks across 32 real MCP servers and 7 local toolkits, graded on the final state of the applications. The Toolathlon-Verified series.",
+      "settings": [
+        "Pass@1",
+        "Verified series",
+        "108 tasks"
+      ],
       "excludes": [
         "pre-Verified Toolathlon numbers, a different score series"
       ],
@@ -604,7 +724,11 @@
       "short_name": "τ³ Bank",
       "category": "Agentic Tool Use",
       "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ adds a knowledge-retrieval layer to the dual-control τ² setup: action tools are hidden in knowledge-base documents, so the agent must search for them and unlock them with meta-tools before calling. Metric is task success rate.",
-      "settings": "Task success rate on τ³-Bench's Banking domain, as run by Artificial Analysis. τ³ hides action tools in knowledge-base documents, so the agent must search for them and unlock them before calling.",
+      "settings": [
+        "task success rate",
+        "Banking domain",
+        "Artificial Analysis"
+      ],
       "excludes": [
         "the τ³ cross-domain aggregate",
         "τ³'s other domains",
@@ -621,7 +745,10 @@
       "short_name": "τ² Tel",
       "category": "Agentic Tool Use",
       "description": "Dual-control conversational agent benchmark where both agent and user use tools in a shared environment; includes a compositional task generator; Telecom domain.",
-      "settings": "Task success rate on τ²-Bench's Telecom domain, dual-control: both agent and user hold tools in a shared environment.",
+      "settings": [
+        "task success rate",
+        "Telecom domain"
+      ],
       "excludes": [
         "the Airline and Retail domains",
         "τ³-Bench, which adds a retrieval layer"
@@ -635,7 +762,11 @@
       "short_name": "MCP Atlas",
       "category": "Agentic Tool Use",
       "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks over 40+ real MCP servers exposing 300+ tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard runs the representative 500-task public subset under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task. Metric is pass rate.",
-      "settings": "Pass rate over the representative 500-task public subset, under the April 2026 configuration that replaced the original 20-turn cap with a budget of 100 tool calls per task; graded by an LLM judge against the ground-truth answer.",
+      "settings": [
+        "pass rate",
+        "public 500-task subset",
+        "100 tool calls/task"
+      ],
       "excludes": [
         "MCPMark and MCP Mark Verified, a different benchmark"
       ],
@@ -651,7 +782,11 @@
       "short_name": "BFCL v4",
       "category": "Agentic Tool Use",
       "description": "Berkeley Function-Calling Leaderboard V4, the Gorilla team's function-calling benchmark grown from single tool calls into holistic agentic evaluation: AST-checked simple, multiple and parallel calls over both curated and live user-contributed functions, multi-turn sessions that withhold a function or a parameter, V4's web-search and memory tracks, relevance and irrelevance detection, and format sensitivity. The reported number is the leaderboard's Overall Accuracy, the unweighted average of every sub-category, taking the better of a model's native function-calling and prompted runs. V4 scores are a series of their own and are not comparable with V1-V3 numbers.",
-      "settings": "Overall Accuracy on the v4 leaderboard: the unweighted average of every sub-category, taking the better of a model's native function-calling and prompted runs.",
+      "settings": [
+        "Overall Accuracy",
+        "v4",
+        "best of native / prompted"
+      ],
       "excludes": [
         "BFCL v1-v3, a score series of their own",
         "a bare “BFCL” naming no version"
@@ -669,7 +804,11 @@
       "short_name": "IFBench",
       "category": "Instruction Following",
       "description": "Ai2's test of whether instruction following generalizes: 58 new, diverse output constraints held out from the small set of verifiable constraints models have overfit to, each checked by a verification function rather than a judge, so a response either satisfies the constraint or does not. Run independently by Artificial Analysis. Metric is the share of constraints satisfied.",
-      "settings": "Share of 58 held-out output constraints satisfied, each checked by a verification function rather than by a judge. Run independently by Artificial Analysis.",
+      "settings": [
+        "constraints satisfied",
+        "no tools",
+        "Artificial Analysis"
+      ],
       "excludes": [
         "IFEval, the set these constraints were held out from",
         "prompt-level and loose scoring variants"
@@ -686,7 +825,11 @@
       "short_name": "ITBench",
       "category": "IT Operations",
       "description": "Artificial Analysis' independent implementation of IBM's ITBench, SRE track: 59 Kubernetes incident scenarios (40 from IBM's public release, 19 shared privately by the ITBench team) in which the agent, given shell access to an offline snapshot of alerts, events, traces, metrics and application topology, must identify the entities that caused the failure. Metric is average precision at full recall: a task scores TP/(TP+FP) when no contributing factor is missed, 0 otherwise.",
-      "settings": "Average precision at full recall -- a task scores TP/(TP+FP) when no contributing factor is missed and 0 otherwise -- over 59 Kubernetes incident scenarios on the SRE track, with shell access to an offline snapshot. Artificial Analysis' own implementation of IBM's benchmark.",
+      "settings": [
+        "precision @ full recall",
+        "SRE track",
+        "Artificial Analysis"
+      ],
       "excludes": [
         "IBM's own ITBench runs",
         "ITBench's other tracks"
@@ -705,7 +848,11 @@
       "decimals": 0,
       "round_to": 5,
       "description": "Artificial Analysis' v2 evaluation framework over OpenAI's GDPval dataset: 220 real work deliverables — documents, slides, spreadsheets, diagrams — for 44 occupations across 9 industries, authored with experienced professionals. The model works in AA's Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, so a deliverable is the product of a tool trajectory rather than a single response. Scored by blind pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance.",
-      "settings": "An Elo, not a percentage: blind pairwise LLM-judge comparisons over 220 real work deliverables, aggregated so that 1000 is human expert performance. The model works in AA's Stirrup agentic harness with shell access to a sandbox filesystem and web browsing.",
+      "settings": [
+        "Elo",
+        "1000 = human expert",
+        "Stirrup harness"
+      ],
       "excludes": [
         "the v1 evaluation framework",
         "a bare “GDPval” naming no framework"
@@ -721,7 +868,11 @@
       "short_name": "ALE",
       "category": "Real-world Professional Work",
       "description": "Berkeley RDI's benchmark of long-horizon, economically valuable computer work, authored with 300+ industry experts across 55 professional sub-industries. Each task is graded by a task-specific deterministic grader against a hidden reference. Stored value is the Overall Pass Rate over the public task set — the share of tasks fully passed — which is the view the leaderboard opens on; the partial-credit Score and the Near-term, Full-Spectrum, Last-Exam and ALE-CLI tiers are separate scales and are not stored here.",
-      "settings": "Overall Pass Rate over the public task set -- the share of tasks fully passed, graded by a task-specific deterministic grader -- which is the view the leaderboard opens on.",
+      "settings": [
+        "Overall Pass Rate",
+        "public task set",
+        "agentic"
+      ],
       "excludes": [
         "the partial-credit Score",
         "the Near-term, Full-Spectrum, Last-Exam and ALE-CLI tiers"
@@ -740,7 +891,11 @@
       "decimals": 0,
       "round_to": 5,
       "description": "Artificial Analysis' agentic knowledge-work benchmark: four multi-week project scenarios — data science, product management, banking operations and heavy-industry strategy — totalling 91 tasks over thousands of input files, each producing a professional deliverable (spreadsheets, presentations, documents). Scored as a composite Elo aggregating binary rubric checks with pairwise LLM-judged analytical quality and presentation; GPT-5.5 (medium) anchors 1000.",
-      "settings": "An Elo, not a percentage: binary rubric checks aggregated with pairwise LLM-judged analytical quality and presentation over 91 tasks in four multi-week scenarios, with GPT-5.5 (medium) anchoring 1000.",
+      "settings": [
+        "Elo",
+        "91 tasks",
+        "Artificial Analysis"
+      ],
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/aa-briefcase"
@@ -751,7 +906,11 @@
       "short_name": "BrowseC",
       "category": "Web Browsing",
       "description": "Browsing benchmark with 1,266 challenging short-answer questions designed to be hard to find but easy to verify.",
-      "settings": "Accuracy over 1,266 short-answer questions that are hard to find and easy to verify. Browsing is the benchmark, so tool use is the point -- but the scaffold around it is not.",
+      "settings": [
+        "accuracy",
+        "browsing agent",
+        "default scaffold"
+      ],
       "excludes": [
         "agent-swarm runs",
         "runs with a bolted-on context manager",
@@ -767,7 +926,11 @@
       "short_name": "Omni",
       "category": "Reasoning & Knowledge",
       "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains. The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention; 0 means as often right as wrong.",
-      "settings": "The Omniscience Index, a bounded -100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention; 0 means as often right as wrong. 6,000 questions, no tools.",
+      "settings": [
+        "Omniscience Index",
+        "-100 to 100",
+        "no tools"
+      ],
       "excludes": [
         "the accuracy and hallucination-rate companions, which are columns of their own"
       ],
@@ -782,7 +945,11 @@
       "short_name": "HallRate",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
-      "settings": "Of the responses that were not correct, the share that were confident wrong answers: incorrect / (incorrect + partial + not attempted). No tools. Lower is better.",
+      "settings": [
+        "hallucination rate",
+        "no tools",
+        "lower is better"
+      ],
       "excludes": [
         "the non-hallucination rate, which is this metric inverted",
         "the Omniscience Index and the accuracy companion"
@@ -799,7 +966,10 @@
       "short_name": "OmniAcc",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: the plain share of the 6,000 questions answered correctly, before the Omniscience Index nets confident wrong answers off against it. Read next to the hallucination rate it is the other half of the same run — how much the model knows, against what it does with the rest.",
-      "settings": "The plain share of the 6,000 questions answered correctly, before the Omniscience Index nets confident wrong answers off against it. No tools.",
+      "settings": [
+        "accuracy",
+        "no tools"
+      ],
       "excludes": [
         "the Omniscience Index and the hallucination-rate companion"
       ],
@@ -814,7 +984,11 @@
       "short_name": "LCR",
       "category": "Long Context Reasoning",
       "description": "Artificial Analysis Long Context Reasoning: 100 open-answer questions over real documents of 10k-100k tokens. Each needs multi-step reasoning that synthesises facts scattered across the text rather than a single lookup. Graded pass/fail by an LLM judge; metric is the average pass rate.",
-      "settings": "Average pass rate over 100 open-answer questions on real documents of 10k-100k tokens, graded pass/fail by an LLM judge. Artificial Analysis' own run.",
+      "settings": [
+        "pass rate",
+        "no tools",
+        "Artificial Analysis"
+      ],
       "excludes": [
         "long-context tests that are not AA-LCR"
       ],
@@ -829,7 +1003,10 @@
       "short_name": "CritPt",
       "category": "Scientific Reasoning",
       "description": "Complex Research using Integrated Thinking - Physics Test (\"critical point\"): 70 research-level physics challenges written by 50+ active researchers across 11 subfields, decomposed into 190 machine-verifiable checkpoint tasks. Deeply unsaturated: the best base models score in the low single digits.",
-      "settings": "Research-level physics, no tools: 70 challenges written by 50+ active researchers across 11 subfields, decomposed into 190 machine-verifiable checkpoint tasks.",
+      "settings": [
+        "190 checkpoints",
+        "no tools"
+      ],
       "urls": [
         "https://artificialanalysis.ai/evaluations/critpt",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
@@ -840,7 +1017,11 @@
       "short_name": "AIME25",
       "category": "Competition Math",
       "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2025 exam set.",
-      "settings": "Accuracy on the 2025 exam set: 15 questions, integer answers from 0 to 999, no tools.",
+      "settings": [
+        "accuracy",
+        "2025 exam set",
+        "no tools"
+      ],
       "excludes": [
         "with-tools runs",
         "AIME 2024 and 2026",
@@ -857,7 +1038,11 @@
       "short_name": "AIME26",
       "category": "Competition Math",
       "description": "American Invitational Mathematics Examination; 15-question, 3-hour exam with integer answers from 0 to 999, using the 2026 exam set.",
-      "settings": "Accuracy on the 2026 exam set: 15 questions, integer answers from 0 to 999, no tools.",
+      "settings": [
+        "accuracy",
+        "2026 exam set",
+        "no tools"
+      ],
       "excludes": [
         "with-tools runs",
         "AIME 2024 and 2025",
@@ -873,7 +1058,11 @@
       "short_name": "GPQA",
       "category": "Scientific Reasoning",
       "description": "Graduate-level Google-proof multiple-choice science questions (biology, physics, chemistry) from GPQA; Diamond split used in evals.",
-      "settings": "Accuracy, pass@1, on GPQA's Diamond split, no tools.",
+      "settings": [
+        "Pass@1",
+        "Diamond split",
+        "no tools"
+      ],
       "excludes": [
         "GPQA main and extended, different question sets",
         "with-tools runs"
@@ -888,7 +1077,11 @@
       "short_name": "HLE",
       "category": "Reasoning & Knowledge",
       "description": "Humanity's Last Exam, run without tools: 2,500 expert-level questions across mathematics, the humanities and the natural sciences, written to resist internet retrieval. This column is the no-tools variant only. Tool use changes the answer rather than sharpening it -- across the models whose publisher states both, search and a code interpreter are worth a median +11.5 points and up to +27 -- so with-tools and search-agent runs are rejected rather than blended in here. Most values are Artificial Analysis' own run of the 2,158-question text-only subset, pass@1, and track AA's current implementation of it.",
-      "settings": "Accuracy, pass@1, without tools. Most values are Artificial Analysis' run of the 2,158-question text-only subset of the 2,500 questions.",
+      "settings": [
+        "Pass@1",
+        "text-only subset",
+        "no tools"
+      ],
       "excludes": [
         "with-tools and search-agent runs, worth a median +11.5 points and up to +27",
         "HLE-Verified, a different question set"
@@ -903,7 +1096,11 @@
       "short_name": "MMLUPro",
       "category": "Reasoning & Knowledge",
       "description": "TIGER-Lab's reasoning-focused rebuild of MMLU: around 12,000 questions across 14 disciplines with ten answer options instead of four, after the trivial and mislabelled items MMLU had accumulated were filtered out. The extra distractors and the chain-of-thought scoring shift it from recall toward reasoning. Metric is accuracy.",
-      "settings": "Accuracy over around 12,000 questions in 14 disciplines with ten answer options instead of four, chain-of-thought scored, no tools.",
+      "settings": [
+        "accuracy",
+        "10 options",
+        "no tools"
+      ],
       "excludes": [
         "MMLU",
         "MMLU-ProX and KMMLU-Pro, a multilingual extension and a Korean one"
@@ -921,7 +1118,11 @@
       "short_name": "MMMUPro",
       "category": "Vision-language Reasoning",
       "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
-      "settings": "Accuracy on the standard ten-option setting, no tools.",
+      "settings": [
+        "accuracy",
+        "standard 10-option",
+        "no tools"
+      ],
       "excludes": [
         "MMMU, which is not the Pro set",
         "the vision-only setting",
@@ -940,7 +1141,11 @@
       "short_name": "OSWorld",
       "category": "GUI Agent",
       "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment; Foundation E2E GUI subset with max 100 steps, scored by task success rate.",
-      "settings": "Task success rate on the Foundation E2E GUI subset with a cap of 100 steps, in a sandboxed Ubuntu desktop.",
+      "settings": [
+        "task success rate",
+        "Foundation E2E GUI",
+        "max 100 steps"
+      ],
       "excludes": [
         "OSWorld before verification, and OSWorld 2.0"
       ],
@@ -954,7 +1159,11 @@
       "short_name": "ZeroBench",
       "category": "Vision-language Reasoning",
       "description": "Deliberately \"impossible\" visual reasoning benchmark: 100 hand-crafted, multi-step questions over natural and synthetic images, scored as accuracy on the main set. Built for headroom — open-weight models sit in the low tens of percent, and the 334 subquestions are a separate score series this column does not mix in.",
-      "settings": "Accuracy, pass@1, on the 100 main questions, no tools.",
+      "settings": [
+        "Pass@1",
+        "100 main questions",
+        "no tools"
+      ],
       "excludes": [
         "the 334 subquestions, which score three to four times higher",
         "pass@5 runs",
@@ -972,7 +1181,11 @@
       "short_name": "MathVista",
       "category": "Visual Math Reasoning",
       "description": "Mathematical reasoning in visual contexts — figure QA, geometry, math word problems, textbook and visual QA — scored as answer accuracy on MathVista's 1,000-example testmini split, the split published runs report.",
-      "settings": "Answer accuracy on the 1,000-example testmini split, the split published runs report. No tools.",
+      "settings": [
+        "accuracy",
+        "testmini",
+        "no tools"
+      ],
       "excludes": [
         "the full test split",
         "MathVerse and MathVision, different benchmarks"
@@ -989,7 +1202,11 @@
       "short_name": "CharXiv",
       "category": "Vision-language Reasoning",
       "description": "Reasoning over scientific charts: 2,323 figures taken from arXiv papers, each with four open-ended reasoning questions whose answers have to be read off the chart itself rather than recalled. This column is the reasoning split (\"RQ\") without tool use — the descriptive split is a different, far easier question set, and a run allowed a code interpreter is a different measurement again.",
-      "settings": "Accuracy on the reasoning questions (“RQ”) over 2,323 arXiv figures, without tools.",
+      "settings": [
+        "accuracy",
+        "reasoning split (RQ)",
+        "no tools"
+      ],
       "excludes": [
         "the descriptive split, a far easier question set",
         "runs allowed a code interpreter, worth about 6 points"

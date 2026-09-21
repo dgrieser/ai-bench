@@ -2350,9 +2350,29 @@
       font-weight: 500;
     }
 
-    /* What run the column holds, under the description it qualifies: quieter
-       than the prose, and the "not this" line quieter again, because it is a
-       warning you read only when you are about to file something here. */
+    /* What run the column holds, under the description it qualifies: a row of
+       tags, because the facts are short and read better side by side than as a
+       sentence. The "not this" line under them is quieter again -- a warning
+       you read only when you are about to file something here. */
+    .bench-tags {
+      margin: 8px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .bench-tag {
+      padding: 1px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+
     .benchmark-settings {
       margin: 8px 0 0;
       color: var(--subtle);
@@ -3100,6 +3120,10 @@
       font-size: 0.78rem;
       font-weight: 500;
       line-height: 1.5;
+    }
+
+    .bench-dialog-tags {
+      margin: -4px 0 12px;
     }
 
     .bench-dialog-settings {
@@ -7161,7 +7185,7 @@
             name: benchmark.name || getBenchmarkLabel(key),
             category: benchmark.category || "",
             description: benchmark.description || "",
-            settings: benchmarkSettings(key),
+            settings: benchmarkTagsMarkup(key),
             excludes: benchmarkExcludesLine(key),
             links: benchmarkLinks(benchmark),
             icon: renderBenchmarkIcon(key)
@@ -7179,7 +7203,7 @@
                 ${card.category ? `<span class="benchmark-category">${escapeHtml(card.category)}</span>` : ""}
               </div>
               ${card.description ? `<p class="benchmark-desc">${escapeHtml(card.description)}</p>` : ""}
-              ${card.settings ? `<p class="benchmark-settings">${escapeHtml(card.settings)}</p>` : ""}
+              ${card.settings}
               ${card.excludes ? `<p class="benchmark-settings excludes">${escapeHtml(card.excludes)}</p>` : ""}
               ${card.links.length ? `<div class="benchmark-links">${card.links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
             </article>
@@ -8661,7 +8685,7 @@
           <span class="bench-dialog-eyebrow">${escapeHtml(bench.category || "Benchmark")}</span>
           <h3 class="bench-dialog-title">${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</h3>
           ${bench.description ? `<p class="bench-dialog-desc">${escapeHtml(firstSentence(bench.description))} ${isLowerBetter(key) ? "Lower is better." : "Higher is better."}</p>` : ""}
-          ${benchmarkSettings(key) ? `<p class="bench-dialog-settings">${escapeHtml(benchmarkSettings(key))}</p>` : ""}
+          ${benchmarkTagsMarkup(key, "bench-tags bench-dialog-tags")}
           ${benchmarkExcludesLine(key) ? `<p class="bench-dialog-settings excludes">${escapeHtml(benchmarkExcludesLine(key))}</p>` : ""}
           <dl>
             <dt>Score</dt>
@@ -10136,13 +10160,29 @@
         return attrs.join("");
       }
 
-      // The run this column holds, as llm.json states it: which metric, which
-      // subset, whether tools were allowed, which harness. Two columns can
-      // carry one benchmark's name and not be the same measurement, and this
-      // is the line that says which of them you are reading.
+      // The run this column holds, as llm.json tags it: the metric, the subset,
+      // the tool mode, the harness. Two columns can carry one benchmark's name
+      // and not be the same measurement, and these are the words that say
+      // which of them you are reading.
       function benchmarkSettings(key) {
         const settings = state.data?.benchmarks?.[key]?.settings;
-        return typeof settings === "string" ? settings.trim() : "";
+        return Array.isArray(settings)
+          ? settings.filter((tag) => typeof tag === "string" && tag.trim()).map((tag) => tag.trim())
+          : [];
+      }
+
+      // Tags read as chips where there is room to draw them and as one line
+      // where there is not -- a tooltip is a plain-text attribute.
+      function benchmarkSettingsLine(key) {
+        return benchmarkSettings(key).join(" \u00b7 ");
+      }
+
+      function benchmarkTagsMarkup(key, className = "bench-tags") {
+        const tags = benchmarkSettings(key);
+        if (!tags.length) return "";
+        return `<p class="${className}">${tags
+          .map((tag) => `<span class="bench-tag">${escapeHtml(tag)}</span>`)
+          .join("")}</p>`;
       }
 
       // The other half of the same fact: the runs that must not be filed here.
@@ -10170,7 +10210,7 @@
           eyebrow: eyebrow || bench.category || "Benchmark",
           title: bench.name || getBenchmarkLabel(key),
           body: bench.description || "",
-          meta: [benchmarkSettings(key), benchmarkExcludesLine(key)].filter(Boolean).join("\n"),
+          meta: [benchmarkSettingsLine(key), benchmarkExcludesLine(key)].filter(Boolean).join("\n"),
           url: benchmarkLinks(bench)[0] || "",
           iconKey: key
         };
@@ -10205,7 +10245,7 @@
         ].filter(Boolean).join(" ");
         // On its own line, because it answers a different question from the
         // gist: not what the benchmark is, but which run of it this number is.
-        return [gist, benchmarkSettings(key)].filter(Boolean).join("\n");
+        return [gist, benchmarkSettingsLine(key)].filter(Boolean).join("\n");
       }
 
       // One tooltip contract for a model, shared by the table row and the

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Every benchmark column says which run of its benchmark it holds.
 
-`description` says what a benchmark is. `settings` says which of its published
+`description` says what a benchmark is. `settings` tags which of its published
 runs this column stores -- the metric, the subset, the tool mode, the harness --
 and `excludes` names the runs that must not be filed here. The two exist
 because a column and a label can carry one benchmark's name and not be the same
@@ -22,9 +22,8 @@ from pathlib import Path
 
 LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 
-# Long enough to say metric, subset and tool mode; short enough to stay a
-# tooltip rather than becoming the description over again.
-MAX_SETTINGS = 320
+# Long enough for "best of native / prompted", short enough to stay a chip.
+MAX_TAG = 30
 
 
 def benchmarks() -> dict:
@@ -32,23 +31,27 @@ def benchmarks() -> dict:
 
 
 class TestSettings(unittest.TestCase):
-    def test_every_column_states_its_run(self) -> None:
+    def test_every_column_tags_its_run(self) -> None:
         for key, bench in benchmarks().items():
             with self.subTest(benchmark=key):
                 settings = bench.get("settings")
-                self.assertIsInstance(settings, str, "no settings recorded")
-                self.assertTrue(settings.strip(), "settings is empty")
+                self.assertIsInstance(settings, list, "no settings recorded")
+                self.assertTrue(settings, "settings is empty")
 
-    def test_settings_read_as_prose(self) -> None:
-        # It is shown to a reader, not parsed, so the only contract is that it
-        # reads as a sentence: no stray whitespace, and it ends.
+    def test_settings_are_tags_rather_than_prose(self) -> None:
+        # They are drawn as chips, so each one has to stand on its own line of
+        # a row: no stray whitespace, no sentence, nothing that wraps.
         for key, bench in benchmarks().items():
             with self.subTest(benchmark=key):
-                settings = bench["settings"]
-                self.assertEqual(settings, settings.strip())
-                self.assertEqual(settings, " ".join(settings.split()))
-                self.assertTrue(settings.endswith("."), f"no full stop: {settings!r}")
-                self.assertLessEqual(len(settings), MAX_SETTINGS)
+                tags = bench["settings"]
+                for tag in tags:
+                    self.assertIsInstance(tag, str)
+                    self.assertTrue(tag.strip())
+                    self.assertEqual(tag, tag.strip())
+                    self.assertEqual(tag, " ".join(tag.split()))
+                    self.assertLessEqual(len(tag), MAX_TAG, f"not a tag: {tag!r}")
+                    self.assertFalse(tag.endswith("."), f"not a tag: {tag!r}")
+                self.assertEqual(len(tags), len(set(tags)), "duplicate tag")
 
     def test_excludes_is_a_list_of_phrases(self) -> None:
         for key, bench in benchmarks().items():
@@ -69,13 +72,13 @@ class TestSettings(unittest.TestCase):
                 self.assertEqual(len(excludes), len(set(excludes)))
 
     def test_a_derived_index_says_it_is_derived(self) -> None:
-        # Nothing measured them, so the slip has to say the number is not a
+        # Nothing measured them, so the tags have to say the number is not a
         # percentage before a reader compares it with one.
         for key, bench in benchmarks().items():
             if not bench.get("derived"):
                 continue
             with self.subTest(benchmark=key):
-                self.assertIn("index", bench["settings"].lower())
+                self.assertIn("index scale", bench["settings"])
 
 
 if __name__ == "__main__":

@@ -472,6 +472,15 @@ main { padding-block: 1rem; }
   white-space: normal;
 }
 .bench-note-name { font-weight: 600; color: var(--text); }
+.bench-tags { display: flex; flex-wrap: wrap; gap: .25rem; }
+.bench-tag {
+  padding: 0 .4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font: 400 .7rem/1.6 var(--font-mono);
+  color: var(--text);
+  white-space: nowrap;
+}
 .bench-note .excludes { opacity: .85; }
 .field .bench-note { margin-top: .5rem; }
 
@@ -1617,14 +1626,19 @@ const benchmarks = () =>
 function benchNote(key) {
   const bench = state.llm?.benchmarks?.[key];
   if (!bench) return null;
-  const settings = typeof bench.settings === "string" ? bench.settings.trim() : "";
+  const settings = Array.isArray(bench.settings)
+    ? bench.settings.filter((tag) => typeof tag === "string" && tag.trim())
+    : [];
   const excludes = Array.isArray(bench.excludes)
     ? bench.excludes.filter((item) => typeof item === "string" && item.trim())
     : [];
-  if (!settings && !excludes.length) return null;
+  if (!settings.length && !excludes.length) return null;
   return el("div", { className: "bench-note" }, [
     bench.name ? el("span", { className: "bench-note-name" }, bench.name) : null,
-    settings ? el("span", {}, settings) : null,
+    settings.length
+      ? el("span", { className: "bench-tags" },
+          settings.map((tag) => el("span", { className: "bench-tag" }, tag.trim())))
+      : null,
     excludes.length ? el("span", { className: "excludes" }, `Not this: ${excludes.join(" · ")}`) : null,
   ]);
 }

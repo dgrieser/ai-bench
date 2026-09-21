@@ -157,10 +157,9 @@ class TestNoMappedLabelContradictsItsColumn(unittest.TestCase):
         )["benchmarks"]
         for key in self.NO_TOOL_COLUMNS:
             with self.subTest(column=key):
-                settings = benchmarks[key]["settings"].lower()
-                self.assertTrue(
-                    "no tools" in settings or "without tools" in settings,
-                    f"{key} is policed as a no-tools column but does not say so",
+                self.assertIn(
+                    "no tools", benchmarks[key]["settings"],
+                    f"{key} is policed as a no-tools column but is not tagged one",
                 )
 
     def test_no_tools_columns_take_no_tools_labels(self) -> None:
