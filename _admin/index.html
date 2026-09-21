@@ -484,6 +484,31 @@ main { padding-block: 1rem; }
 .bench-note .excludes { opacity: .85; }
 .field .bench-note { margin-top: .5rem; }
 
+/* The free-text picker, once it names something real. Green rather than the
+   buttons' solid accent, because the text has to stay readable inside it --
+   and a tick on the right, so the state survives being read at a glance. */
+.field.picker { position: relative; }
+.field.is-picked > input {
+  border-color: var(--good-line);
+  background: var(--good-soft);
+  font-weight: 600;
+}
+/* The tick goes on the panel, not in the box: Chrome draws its own arrow at
+   the right edge of an input with a datalist, and two marks in one corner
+   read as a glitch. */
+.field.is-picked .bench-note-name::before {
+  content: "\2713\00a0";
+  color: var(--good);
+}
+/* What was picked, boxed under the box: the same card the buttons draw, so
+   choosing from the list and typing a name end in the same place. */
+.field.is-picked .bench-note {
+  padding: .5rem .6rem;
+  border: 1px solid var(--good-line);
+  border-radius: var(--r);
+  background: var(--good-soft);
+}
+
 .opt.exact .why { color: var(--good); }
 .opt.decline { background: var(--surface); border-style: dashed; }
 
@@ -1933,38 +1958,40 @@ function renderQuestion(question) {
       value: freeform ? chosen.answer : "",
     });
     input.setAttribute("list", listId);
+    const list = el("datalist", { id: listId },
+      universe.slice(0, 2000).map((value) => el("option", { value })));
+    /* An answer typed here is an answer, and until now it was the only one
+       that did not look like one: a button turns solid when it is chosen, and
+       a filled box looked exactly like a half-typed one. So the field carries
+       the state -- and, for a benchmark, the same terms the buttons carry,
+       because a name typed in by hand is the answer most likely to be wrong:
+       nothing offered it. */
+    const picked = el("div", {});
+    const field = el("div", { className: "field picker" }, [input, list, picked]);
+    const drawPicked = () => {
+      const value = input.value.trim();
+      const known = universe.includes(value);
+      field.classList.toggle("is-picked", known);
+      // Half-typed is neither an answer nor an error; only a finished word
+      // that names nothing is worth flagging.
+      input.classList.toggle("unknown", Boolean(value) && !known);
+      picked.replaceChildren();
+      const note = known && question.universe === "benchmarks" ? benchNote(value) : null;
+      if (note) picked.append(note);
+    };
     input.oninput = () => {
       const value = input.value.trim();
       const known = universe.includes(value);
       setAnswer(question, known ? mappingRecord(question, value) : null, false);
-      // Half-typed is neither an answer nor an error; only a finished word that
-      // names nothing is worth flagging.
-      input.classList.toggle("unknown", Boolean(value) && !known);
       card.classList.toggle("answered", Boolean(answerOf(question)));
       if (value) {
         card.querySelectorAll('.opt[aria-pressed="true"]')
           .forEach((button) => button.setAttribute("aria-pressed", "false"));
       }
+      drawPicked();
     };
-    const list = el("datalist", { id: listId },
-      universe.slice(0, 2000).map((value) => el("option", { value })));
-    /* The same terms under the box as under the buttons: a benchmark typed in
-       by hand is the answer most likely to be wrong, because nothing offered
-       it. */
-    const typedNote = el("div", {});
-    const drawTypedNote = () => {
-      typedNote.replaceChildren();
-      if (question.universe !== "benchmarks") return;
-      const note = benchNote(input.value.trim());
-      if (note) typedNote.append(note);
-    };
-    const onValue = input.oninput;
-    input.oninput = () => {
-      onValue();
-      drawTypedNote();
-    };
-    drawTypedNote();
-    card.append(el("div", { className: "field" }, [input, list, typedNote]));
+    drawPicked();
+    card.append(field);
   }
   return card;
 }

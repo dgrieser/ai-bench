@@ -186,9 +186,12 @@ Three surfaces read them, and the third is the reason they exist:
 2. A **score cell's slip** carries the tags on their own line, so a number can
    say which run it is without opening anything.
 3. The **admin page's mapping queue** prints the benchmark's name, its tags and
-   its excludes under every candidate it offers. A question like
+   its excludes under every candidate it offers, and under the search box once
+   what is typed there names a column. A question like
    `HLE w/ tools (Pass@1) → hle?` is answered from the key alone otherwise, and
-   the key does not mention tools.
+   the key does not mention tools. The box also *looks* answered now — a green
+   field and a boxed panel, the same green the buttons use — because an answer
+   typed by hand was the only one that did not.
 
 `test_benchmark_settings.py` holds the shape: every column tags its run, the
 tags stay tags rather than drifting into prose, and `excludes` is a list of
