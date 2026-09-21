@@ -16,6 +16,17 @@
       "default": null,
       "if_previous": null,
       "note": null,
+      "question": "Map FrontierSWE model 'Grok 4.7' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
       "question": "Map HF label 'AIME 2024 (Pass@1)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
@@ -963,6 +974,17 @@
       "route_kind": "mapping",
       "subject": "World Sense",
       "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'grok/grok-4.7' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok/grok-4.7",
+      "universe": "models"
     }
   ]
 }
