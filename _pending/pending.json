@@ -5,6 +5,17 @@
       "default": null,
       "if_previous": null,
       "note": null,
+      "question": "Map Coding Agent Index model 'grok 4.7' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
       "question": "Map HF label 'AIME 2024 (Pass@1)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
