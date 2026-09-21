@@ -444,7 +444,7 @@ main { padding-block: 1rem; }
   overflow-wrap: anywhere;
 }
 .opt .tick {
-  grid-row: 1 / span 2;
+  grid-row: 1 / -1;
   grid-column: 2;
   display: grid;
   place-items: center;
@@ -459,6 +459,22 @@ main { padding-block: 1rem; }
   border-color: var(--good-line);
   background: var(--good-soft);
 }
+/* The column's own terms, under the option that would file a label into it.
+   Quiet, because it is reference rather than the answer -- but always there,
+   because the key alone does not say which run the column holds. */
+.bench-note {
+  grid-column: 1;
+  display: grid;
+  gap: .15rem;
+  margin-top: .4rem;
+  font: 400 .72rem/1.45 var(--font-ui);
+  color: var(--muted);
+  white-space: normal;
+}
+.bench-note-name { font-weight: 600; color: var(--text); }
+.bench-note .excludes { opacity: .85; }
+.field .bench-note { margin-top: .5rem; }
+
 .opt.exact .why { color: var(--good); }
 .opt.decline { background: var(--surface); border-style: dashed; }
 
@@ -1591,6 +1607,28 @@ const benchmarks = () =>
     .map(([key]) => key)
     .sort();
 
+/* What a benchmark column actually holds -- which metric, which subset,
+   whether tools were allowed, which harness -- and what must not be filed in
+   it. The queue asks "is this label that column?", and llm.json is the only
+   place that answers it: a key like `charxiv_reasoning` says nothing about the
+   split or the tool mode, and the labels that turn up here
+   ("CharXiv (descriptive)", "HLE w/ tools", "Terminal Bench 2.1 (best
+   harness)") differ from the column by exactly that. */
+function benchNote(key) {
+  const bench = state.llm?.benchmarks?.[key];
+  if (!bench) return null;
+  const settings = typeof bench.settings === "string" ? bench.settings.trim() : "";
+  const excludes = Array.isArray(bench.excludes)
+    ? bench.excludes.filter((item) => typeof item === "string" && item.trim())
+    : [];
+  if (!settings && !excludes.length) return null;
+  return el("div", { className: "bench-note" }, [
+    bench.name ? el("span", { className: "bench-note-name" }, bench.name) : null,
+    settings ? el("span", {}, settings) : null,
+    excludes.length ? el("span", { className: "excludes" }, `Not this: ${excludes.join(" · ")}`) : null,
+  ]);
+}
+
 /* Which list an answer must come from, as the queue states it.
    Never inferred from the kind: update_huggingface_mapping.py asks a plain
    "mapping" question whose answers are benchmark keys, so guessing from the
@@ -1808,12 +1846,14 @@ function chip(label, value, { className = "", prose = false } = {}) {
      el("span", { className: prose ? "prose" : "mono" }, value)]);
 }
 
-function option(text, why, { pressed, className = "", tag = "", onclick }) {
+function option(text, why, { pressed, className = "", tag = "", note = null, onclick }) {
   const head = el("div", { className: "head" },
     [el("span", {}, text), tag ? el("span", { className: "tag" }, tag) : null]);
   const button = el("button", { type: "button", className: `opt ${className}`.trim(), onclick }, head);
   button.setAttribute("aria-pressed", String(pressed));
-  button.append(el("span", { className: "why" }, why), el("span", { className: "tick" }, "✓"));
+  button.append(el("span", { className: "why" }, why));
+  if (note) button.append(note);
+  button.append(el("span", { className: "tick" }, "✓"));
   return button;
 }
 
@@ -1852,6 +1892,7 @@ function renderQuestion(question) {
       pressed,
       className: exact ? "exact" : "",
       tag: exact ? "best match" : "",
+      note: question.universe === "benchmarks" ? benchNote(candidate.option) : null,
       onclick: () => setAnswer(question, pressed ? null : mappingRecord(question, candidate.option)),
     }));
   }
@@ -1893,7 +1934,23 @@ function renderQuestion(question) {
     };
     const list = el("datalist", { id: listId },
       universe.slice(0, 2000).map((value) => el("option", { value })));
-    card.append(el("div", { className: "field" }, [input, list]));
+    /* The same terms under the box as under the buttons: a benchmark typed in
+       by hand is the answer most likely to be wrong, because nothing offered
+       it. */
+    const typedNote = el("div", {});
+    const drawTypedNote = () => {
+      typedNote.replaceChildren();
+      if (question.universe !== "benchmarks") return;
+      const note = benchNote(input.value.trim());
+      if (note) typedNote.append(note);
+    };
+    const onValue = input.oninput;
+    input.oninput = () => {
+      onValue();
+      drawTypedNote();
+    };
+    drawTypedNote();
+    card.append(el("div", { className: "field" }, [input, list, typedNote]));
   }
   return card;
 }

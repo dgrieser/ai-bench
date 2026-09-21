@@ -146,6 +146,55 @@ each entry naming the day, the value, what the change was (`updated from 78.6`,
 `added`, `first recorded`, `withdrawn`) and the page the score was read from on
 that day. The benchmark dialog quotes the head of the same list.
 
+### What a benchmark column holds
+
+`description` in each `benchmarks` entry says what a benchmark *is*. Two more
+fields say which of its published runs this column stores, because those are
+different questions and only the second one decides a mapping:
+
+```json
+"programbench_almost": {
+  "name": "ProgramBench: Almost Resolved",
+  "description": "Rebuilding a program from scratch: …",
+  "settings": "Almost Resolved -- at least 95% of a task's hidden behavioural tests passing -- over the 200-task Extended board, run with mini-SWE-agent and the internet switched off.",
+  "excludes": ["Resolved, the board's primary metric, which requires every test to pass"]
+}
+```
+
+- **`settings`** — free prose, one or two sentences: the metric, the subset,
+  the tool mode, the harness, and the scale where it is not a percentage. Every
+  benchmark has one, including the derived indexes, which use it to say that
+  the number is an index rather than a percentage before anyone compares it
+  with one.
+- **`excludes`** — the runs that must *not* be filed in this column, as short
+  phrases. Left out entirely where there is nothing to exclude. It is the
+  written form of what `huggingface-benchmark-name-mapping.json` parks on
+  `__unmappable__`, and of the version traps documented per benchmark below.
+
+Both are prose rather than enumerated fields on purpose: the distinctions that
+matter are not a fixed set. "Best harness" is a maximum over configurations,
+`HLE-Verified` is a different question set, FrontierCode Main and Extended are
+one set of runs scored twice, and the non-hallucination rate is the inverse of
+a lower-is-better column. A schema of `tool_mode` / `subset` / `metric` would
+have held the first of those and lost the rest.
+
+Three surfaces read them, and the third is the reason they exist:
+
+1. The **column-header slip** and the **benchmark dialog** carry both lines
+   under the description.
+2. A **score cell's slip** carries `settings` on its own line, so a number can
+   say which run it is without opening anything.
+3. The **admin page's mapping queue** prints the benchmark's name, its
+   `settings` and its `excludes` under every candidate it offers. A question
+   like `HLE w/ tools (Pass@1) → hle?` is answered from the key alone
+   otherwise, and the key does not mention tools.
+
+`test_benchmark_settings.py` holds the shape: every column states its run, the
+prose reads as prose, and `excludes` is a list of phrases rather than
+sentences. `test_hle_no_tools.py` additionally checks that every column it
+polices as no-tools says so in its own `settings`, so the rule and the sentence
+a human is shown cannot drift apart.
+
 ### Score Precision
 
 Every score is rounded onto a per-benchmark grid before it is stored, by

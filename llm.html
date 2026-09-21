@@ -2350,6 +2350,22 @@
       font-weight: 500;
     }
 
+    /* What run the column holds, under the description it qualifies: quieter
+       than the prose, and the "not this" line quieter again, because it is a
+       warning you read only when you are about to file something here. */
+    .benchmark-settings {
+      margin: 8px 0 0;
+      color: var(--subtle);
+      line-height: 1.5;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+    }
+
+    .benchmark-settings.excludes,
+    .bench-dialog-settings.excludes {
+      opacity: 0.85;
+    }
+
     .benchmark-links {
       margin-top: auto;
       padding-top: 8px;
@@ -3083,6 +3099,14 @@
       color: var(--muted);
       font-size: 0.78rem;
       font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .bench-dialog-settings {
+      margin: -6px 0 12px;
+      color: var(--subtle);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
       line-height: 1.5;
     }
 
@@ -7125,6 +7149,8 @@
             name: card.name,
             category: card.category || "",
             description: card.description || "",
+            settings: "",
+            excludes: "",
             links: benchmarkLinks(card),
             icon: ""
           }));
@@ -7135,6 +7161,8 @@
             name: benchmark.name || getBenchmarkLabel(key),
             category: benchmark.category || "",
             description: benchmark.description || "",
+            settings: benchmarkSettings(key),
+            excludes: benchmarkExcludesLine(key),
             links: benchmarkLinks(benchmark),
             icon: renderBenchmarkIcon(key)
           };
@@ -7151,6 +7179,8 @@
                 ${card.category ? `<span class="benchmark-category">${escapeHtml(card.category)}</span>` : ""}
               </div>
               ${card.description ? `<p class="benchmark-desc">${escapeHtml(card.description)}</p>` : ""}
+              ${card.settings ? `<p class="benchmark-settings">${escapeHtml(card.settings)}</p>` : ""}
+              ${card.excludes ? `<p class="benchmark-settings excludes">${escapeHtml(card.excludes)}</p>` : ""}
               ${card.links.length ? `<div class="benchmark-links">${card.links.map((url) => `<a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`).join("")}</div>` : ""}
             </article>
           `).join("");
@@ -7343,6 +7373,11 @@
         if (inGroup) {
           metaLines.push(`Counts toward “${group.label || group.key}” · weight ${groupEntry.weight}`);
         }
+        // What the view is doing with this column, then what the column is:
+        // the benchmark's own meta says which run it holds, and replacing it
+        // with the sort state would drop that from the one slip most readers
+        // ever open.
+        if (header.tip?.meta) metaLines.push(header.tip.meta);
         const tip = tipAttrs({ ...(header.tip || {}), meta: metaLines.join("\n") });
 
         const resizeHandle = `<div class="col-resize-handle" data-resize-key="${escapeHtml(header.key)}"></div>`;
@@ -8626,6 +8661,8 @@
           <span class="bench-dialog-eyebrow">${escapeHtml(bench.category || "Benchmark")}</span>
           <h3 class="bench-dialog-title">${renderBenchmarkIcon(key)}${escapeHtml(bench.name || getBenchmarkLabel(key))}</h3>
           ${bench.description ? `<p class="bench-dialog-desc">${escapeHtml(firstSentence(bench.description))} ${isLowerBetter(key) ? "Lower is better." : "Higher is better."}</p>` : ""}
+          ${benchmarkSettings(key) ? `<p class="bench-dialog-settings">${escapeHtml(benchmarkSettings(key))}</p>` : ""}
+          ${benchmarkExcludesLine(key) ? `<p class="bench-dialog-settings excludes">${escapeHtml(benchmarkExcludesLine(key))}</p>` : ""}
           <dl>
             <dt>Score</dt>
             <dd${fresh ? ' class="fresh"' : ""}>${formatScore(value, key)}</dd>
@@ -10099,14 +10136,41 @@
         return attrs.join("");
       }
 
+      // The run this column holds, as llm.json states it: which metric, which
+      // subset, whether tools were allowed, which harness. Two columns can
+      // carry one benchmark's name and not be the same measurement, and this
+      // is the line that says which of them you are reading.
+      function benchmarkSettings(key) {
+        const settings = state.data?.benchmarks?.[key]?.settings;
+        return typeof settings === "string" ? settings.trim() : "";
+      }
+
+      // The other half of the same fact: the runs that must not be filed here.
+      // A label naming one of these is a different measurement wearing the
+      // benchmark's name, which is how a with-tools number lands in a no-tools
+      // column and reads as a record.
+      function benchmarkExcludes(key) {
+        const excludes = state.data?.benchmarks?.[key]?.excludes;
+        return Array.isArray(excludes)
+          ? excludes.filter((item) => typeof item === "string" && item.trim()).map((item) => item.trim())
+          : [];
+      }
+
+      function benchmarkExcludesLine(key) {
+        const items = benchmarkExcludes(key);
+        return items.length ? `Not this: ${items.join(" \u00b7 ")}` : "";
+      }
+
       // One tooltip contract for a benchmark, shared by the column header and
-      // the visibility picker: what it is, what it measures, where to read it up.
+      // the visibility picker: what it is, what it measures, which run of it
+      // this column holds, where to read it up.
       function benchmarkTipFields(key, eyebrow) {
         const bench = state.data?.benchmarks?.[key] || {};
         return {
           eyebrow: eyebrow || bench.category || "Benchmark",
           title: bench.name || getBenchmarkLabel(key),
           body: bench.description || "",
+          meta: [benchmarkSettings(key), benchmarkExcludesLine(key)].filter(Boolean).join("\n"),
           url: benchmarkLinks(bench)[0] || "",
           iconKey: key
         };
@@ -10135,10 +10199,13 @@
       // on the column header, which has the room for it.
       function scoreTipBody(key) {
         const bench = state.data?.benchmarks?.[key] || {};
-        return [
+        const gist = [
           firstSentence(bench.description),
           isLowerBetter(key) ? "Lower is better." : "Higher is better."
         ].filter(Boolean).join(" ");
+        // On its own line, because it answers a different question from the
+        // gist: not what the benchmark is, but which run of it this number is.
+        return [gist, benchmarkSettings(key)].filter(Boolean).join("\n");
       }
 
       // One tooltip contract for a model, shared by the table row and the
