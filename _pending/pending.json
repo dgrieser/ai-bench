@@ -629,17 +629,6 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'LiveCodeBench (v1–v6 cumul)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "LiveCodeBench (v1–v6 cumul)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
       "question": "Map HF label 'Longbench v2 (≤ 1M)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
