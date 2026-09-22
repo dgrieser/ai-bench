@@ -682,13 +682,14 @@ solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
 first-party boards. The line is drawn per board, not per source.
 
-Ten of its boards name a column `llm.json` tracks — the table lives in
+Eleven of its boards name a column `llm.json` tracks — the table lives in
 `fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
 more:
 
 | Vals board | Column | Note |
 | --- | --- | --- |
 | `swebench` | `swe_bench_verified` | Titled "SWE-bench Verified"; the metadata slug is the bare `swebench` |
+| `terminal-bench-4` | `terminal_bench_4_0` | Version-pinned: the slug names the major and stops there, see below |
 | `terminal-bench-2-1` / `terminal-bench-2` | `terminal_bench_2_1` / `terminal_bench_2_0` | Each page stamps its own version, so neither can be read as the other |
 | `lcb` | `livecodebench` | Vals' own implementation |
 | `gpqa` | `gpqa_diamond` | |
@@ -725,26 +726,47 @@ rather than only in prose. Which reading, and why, is
 that the authors' primary metric puts 14 of 22 models at zero, and the raw pass
 rate they rule out as "extremely misleading" is stored nowhere here.
 
-The `vibe-code` board is the one that needs a version pin. Vals stamps a version
-into every board's metadata but names only some of its slugs after it:
-`terminal-bench-2-1` and `terminal-bench-2` are two pages, so a re-run shows up
-as a new URL and the slug check catches the swap, while `vibe-code` is a single
-page that has already been revised in place once: 1.1 rewrote the authentication
-and dummy-payment instructions in the specifications and gave the browser
-evaluator new tools, and it did so at this URL, with nothing but the stamped
-version to say a re-run had happened. Writing a future v1.2 into
-`vibe_code_bench_1_1` would be exactly the revision blend the versioned columns
-exist to prevent, so `fetch_vals.VERSIONS` pins the board to `"1.1"` and a
-mismatch refuses it rather than filing new numbers under the old column. Boards
-whose slug carries their version are not in that table and are not checked.
+Two boards need a version pin. Vals stamps a version into every board's metadata
+but names only some of its slugs after it: `terminal-bench-2-1` and
+`terminal-bench-2` are two pages, so a re-run shows up as a new URL and the slug
+check catches the swap, while `vibe-code` is a single page that has already been
+revised in place once: 1.1 rewrote the authentication and dummy-payment
+instructions in the specifications and gave the browser evaluator new tools, and
+it did so at this URL, with nothing but the stamped version to say a re-run had
+happened. Writing a future v1.2 into `vibe_code_bench_1_1` would be exactly the
+revision blend the versioned columns exist to prevent, so
+`fetch_vals.VERSIONS` pins the board to `"1.1"` and a mismatch refuses it rather
+than filing new numbers under the old column.
 
-The boards Vals runs that no column tracks — its private industry suites
-(Finance Agent, LegalBench, MedQA, the Vals Index), plus MATH 500 and MGSM — are
-deliberately not ingested. One of them is worth naming because it reads like an
-ingested board and is not: `vcb-1-100`, "Vibe Code Bench 1-100", is a separate
-benchmark with a family of its own, asking whether a model can *extend* a working
-application across a long sequence of dependent requests, where `vibe-code` asks
-whether it can build one from scratch.
+`terminal-bench-4` is pinned for the half of that reason it shares. Its slug
+names the major and stops there, so unlike 2.1 — which tbench.ai gave a page of
+its own — a 4.1 re-run has a URL it could arrive at unannounced, and the column
+it would land in is spelled `terminal_bench_4_0`. The pin is therefore `"4.0"`,
+and a 4.1 refuses the board instead of being read as 4.0; if Vals does give 4.1
+a page, that is a new row in `fetch_vals.BENCHMARKS`, not a bumped pin. Boards
+whose slug carries their full version are not in that table and are not checked.
+
+Vals publishes far more boards than this reads. Its industry suites (Finance
+Agent, LegalBench, Harvey's legal agent benchmark, MedQA, the tax and mortgage
+evals), the indexes it composes from them (the Vals Index, the Multimodal Index,
+the Time Horizon Index) and the academic and agentic boards no column tracks
+(MATH 500, MGSM, IOI, CyberBench, SRE Bench, SkillsBench, Code Migration,
+ProofBench, SAGE, Terminal-Bench Science, VoiceCodeBench) are all deliberately
+absent: a board is ingested when `llm.json` has a column for it, and a column
+arriving later is one row in `fetch_vals.BENCHMARKS` away. One board is worth
+naming because it reads like an ingested one and is not: `vcb-1-100`, "Vibe Code
+Bench 1-100", is a separate benchmark with a family of its own, asking whether a
+model can *extend* a working application across a long sequence of dependent
+requests, where `vibe-code` asks whether it can build one from scratch.
+
+The mapping keys are paths, and two paths can be two models. Vals lists
+`fireworks/deepseek-v3p2` beside `fireworks/deepseek-v3p2-thinking`, and
+`deepseek/deepseek-v4-pro` beside `deepseek/deepseek-v4-pro-0813`, on the same
+board — a hybrid's two modes and two releases of one family, telling themselves
+apart by a suffix. update.py keeps the best score across every path that reaches
+a slug, which is right for one model served by two providers and wrong for two
+models, so `test_vals.py` holds the mapping to one path per `llm.json` row and
+asks for a reason in `ALLOWED_DOUBLE` where a model really does arrive twice.
 
 ### Tool Use and Instruction Following
 
@@ -3192,6 +3214,12 @@ that, and the workflow runs it before anything is fetched.
   ~150 cards, in separate processes minutes apart. The crawl is now cached
   (see below), so the second reader gets the first one's result: 57s to 0.1s,
   byte-identical.
+- **The Vals boards are read once.** Same shape, one page per board:
+  `update_vals_mapping.py` wants the model paths and update.py's fetcher wants
+  the scores, so eleven boards were fetched twice a run. The parsed board is
+  now cached under the same rules, keyed on the board URL *and* the task read
+  from it, so an edit to `fetch_vals.TASKS` cannot be answered from a crawl of
+  the old one: 3.9s to 0.1s, and eleven requests saved a run.
 
 #### The response cache
 
@@ -3209,9 +3237,10 @@ terms artificialanalysis.py's has used for AA (see "The request budget"):
   disk all end as "fetch it again", and a crawl that came back short is not
   stored at all.
 
-`AI_BENCH_LLMSTATS_CACHE_TTL` and `AI_BENCH_HF_CACHE_TTL` override the TTL per
-source; `0` turns that cache off. The workflow already carries the directory
-between runs, under the `ai-bench-openness-` cache step.
+`AI_BENCH_LLMSTATS_CACHE_TTL`, `AI_BENCH_HF_CACHE_TTL` and
+`AI_BENCH_VALS_CACHE_TTL` override the TTL per source; `0` turns that cache off.
+The workflow already carries the directory between runs, under the
+`ai-bench-openness-` cache step.
 
 #### Still on the table
 
