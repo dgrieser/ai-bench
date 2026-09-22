@@ -18,17 +18,34 @@ task override is what stops the pooled number reaching ``aime_2025``.
 only catches a revision that moved to a new URL. ``vibe-code`` was revised in
 place once already, and its column is a revision column, so the version stamped
 in the payload is checked against ``VERSIONS`` too.
+
+``test_no_two_paths_map_to_one_model``: the mapping is keyed on Vals' own
+``<provider>/<model>`` paths, and two of those can be two different models
+whose names sit one character apart -- a thinking twin beside a non-thinking
+one, a dated snapshot beside the release before it. update.py keeps the best
+score across the paths that reach a slug, so folding two models onto one row
+silently publishes the stronger one's number under both names. Issue #231 found
+five such rows at once, so the mapping is held to one path per model here.
+
+Every test that reaches ``get_scores`` runs with the board cache off:
+``stub_page`` replaces ``fetch_html``, and a stubbed board written to
+``~/.cache/ai-bench`` would be served to the next real refresh.
 """
 
 from __future__ import annotations
 
 import html
 import json
+import os
+import tempfile
 import unittest
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from unittest import mock
 
+import _cache
 import fetch_vals as fv
+from _openness import SENTINELS
 
 
 def cell(accuracy: float, provider: str = "Example", stderr: float = 1.5) -> dict:
@@ -82,8 +99,20 @@ def page(slug: str, tasks: dict, updated: str = "2026-09-01", **metadata) -> str
     )
 
 
+@contextmanager
 def stub_page(body: str):
-    return mock.patch.object(fv, "fetch_html", return_value=body)
+    """Serve `body` as every board's page, with the response cache off.
+
+    The cache is keyed on the board URL and lives in the real cache directory,
+    so a test board stored there would be handed to the next refresh as though
+    Vals had published it.
+    """
+    with ExitStack() as stack:
+        stack.enter_context(
+            mock.patch.dict(os.environ, {fv.BOARD_CACHE_TTL_VAR: "0"})
+        )
+        stack.enter_context(mock.patch.object(fv, "fetch_html", return_value=body))
+        yield
 
 
 class TestDeserialize(unittest.TestCase):
@@ -233,6 +262,118 @@ class TestBenchmarkTable(unittest.TestCase):
                     fv.BENCHMARKS[slug].endswith(f"_{suffix}"),
                     f"{fv.BENCHMARKS[slug]} is not the column for version {version}",
                 )
+
+
+class TestBoardCache(unittest.TestCase):
+    """The cache exists to halve the request count, not to change an answer."""
+
+    def setUp(self) -> None:
+        self._dir = tempfile.TemporaryDirectory()
+        self._original = _cache.CACHE_DIR
+        _cache.CACHE_DIR = self._dir.name
+        self.addCleanup(self._dir.cleanup)
+        self.addCleanup(setattr, _cache, "CACHE_DIR", self._original)
+
+    @contextmanager
+    def _serving(self, body: str, ttl: str = "3600"):
+        """`body` as every page, with the cache on, counting the fetches."""
+        with mock.patch.dict(os.environ, {fv.BOARD_CACHE_TTL_VAR: ttl}):
+            with mock.patch.object(
+                fv, "fetch_html", return_value=body
+            ) as fetch_html:
+                yield fetch_html
+
+    def test_the_second_read_of_a_board_does_not_fetch_it(self) -> None:
+        body = page("mmmu", {"overall": {"zai/glm-5.3": cell(86.0)}})
+        with self._serving(body) as fetch_html:
+            first = fv.get_scores(["mmmu"])
+            second = fv.get_scores(["mmmu"])
+        self.assertEqual(fetch_html.call_count, 1)
+        self.assertEqual(first, second)
+
+    def test_a_changed_task_override_is_not_answered_from_the_old_crawl(self) -> None:
+        # The task is part of the cache key, so pinning a board to another task
+        # misses rather than re-reading the task the stored crawl carried.
+        body = page(
+            "mmmu",
+            {
+                "overall": {"zai/glm-5.3": cell(86.0)},
+                "vision": {"zai/glm-5.3": cell(70.0)},
+            },
+        )
+        with self._serving(body) as fetch_html:
+            self.assertEqual(fv.get_scores(["mmmu"])[0]["score"], 86.0)
+            with mock.patch.dict(fv.TASKS, {"mmmu": "vision"}):
+                self.assertEqual(fv.get_scores(["mmmu"])[0]["score"], 70.0)
+        self.assertEqual(fetch_html.call_count, 2)
+
+    def test_a_tightened_version_pin_refuses_a_stored_board(self) -> None:
+        # The pin is the guard against a board revised in place; a board that
+        # passed it yesterday must not be waved through from the cache today.
+        body = page("mmmu", {"overall": {"zai/glm-5.3": cell(86.0)}}, version="1")
+        with self._serving(body) as fetch_html:
+            fv.get_scores(["mmmu"])
+            with mock.patch.dict(fv.VERSIONS, {"mmmu": "2"}):
+                with self.assertRaises(ValueError) as caught:
+                    fv.get_scores(["mmmu"])
+        self.assertIn("revised in place", str(caught.exception))
+        self.assertEqual(fetch_html.call_count, 1)
+
+
+class TestMappingFolding(unittest.TestCase):
+    """One Vals path per llm.json model, so no two models share a row.
+
+    update.py keeps the best score across every path that reaches a slug, which
+    is right for one model served by two providers and wrong for two models
+    whose paths differ by a suffix. Nothing in the payload tells those apart, so
+    the mapping carries the answer and this holds it to it. A model that really
+    does arrive twice -- the same weights under two providers -- belongs in
+    ALLOWED_DOUBLE below, with the reason, rather than in silence.
+    """
+
+    #: slug -> why more than one Vals path legitimately names it.
+    ALLOWED_DOUBLE: dict[str, str] = {}
+
+    def test_no_two_paths_map_to_one_model(self) -> None:
+        path = Path(__file__).resolve().with_name(
+            "model-name-mapping-vals-to-artificialanalysis.json"
+        )
+        mapping = json.loads(path.read_text(encoding="utf-8"))
+        by_slug: dict[str, list[str]] = {}
+        for vals_path, slug in mapping.items():
+            if slug in SENTINELS:
+                continue
+            by_slug.setdefault(slug, []).append(vals_path)
+        folded = {
+            slug: sorted(paths)
+            for slug, paths in by_slug.items()
+            if len(paths) > 1 and slug not in self.ALLOWED_DOUBLE
+        }
+        self.assertEqual(
+            folded,
+            {},
+            "two Vals paths write to one llm.json row; park the one that names "
+            "another model, or record it in ALLOWED_DOUBLE with its reason",
+        )
+
+    def test_every_mapped_slug_is_a_model_llm_json_carries(self) -> None:
+        """A mapping onto a renamed or dropped model writes nowhere, silently."""
+        here = Path(__file__).resolve().parent
+        mapping = json.loads(
+            (here / "model-name-mapping-vals-to-artificialanalysis.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        names = {
+            model["name"]
+            for model in json.loads((here / "llm.json").read_text(encoding="utf-8"))[
+                "models"
+            ]
+        }
+        missing = sorted(
+            {slug for slug in mapping.values() if slug not in SENTINELS} - names
+        )
+        self.assertEqual(missing, [])
 
 
 if __name__ == "__main__":

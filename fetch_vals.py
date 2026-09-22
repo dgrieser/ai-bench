@@ -38,14 +38,24 @@ pins the revision a board is allowed to be, for the boards whose slug does not
 name one, and VALS_OWN_BENCHMARKS marks the boards Vals owns rather than
 re-runs -- the two halves of keeping a Vals-authored benchmark honest.
 
-Boards Vals runs that llm.json has no column for (its private industry suites --
-Finance Agent, LegalBench, MedQA, the Vals Index -- plus MATH 500 and MGSM) are
-deliberately absent; add an entry to BENCHMARKS to ingest one. One of those is
-worth naming because it reads like the board above and is not: "vcb-1-100",
-"Vibe Code Bench 1-100", is a separate benchmark with a family of its own
-(vcb_1_100), asking whether a model can extend a working application across a
-long sequence of dependent requests, where "vibe-code" asks whether it can
-build one from scratch.
+Vals publishes far more boards than this reads -- its industry suites (Finance
+Agent, LegalBench, Harvey's legal agent benchmark, MedQA, the tax and mortgage
+evals), the indexes it composes from them (the Vals Index, the Multimodal
+Index, the Time Horizon Index), and academic boards no column tracks (MATH 500,
+MGSM, IOI, CyberBench, SRE Bench, SkillsBench, Code Migration, ProofBench,
+SAGE, Terminal-Bench Science, VoiceCodeBench). All of them are deliberately
+absent: a board is ingested when llm.json has a column for it, and adding an
+entry to BENCHMARKS is all it takes to ingest one whose column arrives later.
+One is worth naming because it reads like an ingested board and is not:
+"vcb-1-100", "Vibe Code Bench 1-100", is a separate benchmark with a family of
+its own (vcb_1_100), asking whether a model can extend a working application
+across a long sequence of dependent requests, where "vibe-code" asks whether it
+can build one from scratch.
+
+Every board is read twice per refresh -- once by update_vals_mapping.py, for
+the model paths, and once by update.py, for the scores -- in two processes
+minutes apart, so the parsed board is cached on disk the way llm-stats' and
+Hugging Face's payloads already are. See board() below.
 """
 
 from __future__ import annotations
@@ -60,8 +70,14 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import _cache
+
 
 BASE_URL = "https://www.vals.ai/benchmarks/{slug}"
+
+# Seconds a parsed board may be served from ~/.cache/ai-bench; 0 turns the
+# cache off, which is what a test stubbing fetch_html wants.
+BOARD_CACHE_TTL_VAR = "AI_BENCH_VALS_CACHE_TTL"
 
 # Vals AI benchmark slug -> llm.json benchmark key.
 BENCHMARKS: dict[str, str] = {
@@ -69,11 +85,14 @@ BENCHMARKS: dict[str, str] = {
     # bare "swebench"; the numbers are the Verified split, which is the only
     # SWE-bench column llm.json keeps.
     "swebench": "swe_bench_verified",
-    # Two revisions of Terminal-Bench, each on its own page and each stamping
-    # its version into the metadata ("2.1" / "2.0"), so neither can be mistaken
-    # for the other -- the version trap that keeps SWE-Marathon out of the
-    # evals.report ingest does not apply here. tbench.ai owns both columns and
-    # outranks this source, so these fill gaps rather than displace the board.
+    # Three revisions of Terminal-Bench, each on its own page and each stamping
+    # its version into the metadata ("4.0" / "2.1" / "2.0"), so none can be
+    # mistaken for another -- the version trap that keeps SWE-Marathon out of
+    # the evals.report ingest does not apply here. tbench.ai owns all three
+    # columns and outranks this source, so these fill gaps rather than displace
+    # the board. Only "terminal-bench-4" is version-pinned, because its slug
+    # names the major and not the revision -- see VERSIONS below.
+    "terminal-bench-4": "terminal_bench_4_0",
     "terminal-bench-2-1": "terminal_bench_2_1",
     "terminal-bench-2": "terminal_bench_2_0",
     # Vals' own implementation of LiveCodeBench, run over the same field as the
@@ -117,7 +136,16 @@ VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code"})
 # versioned columns exist to prevent, so the stamped version is checked and a
 # mismatch refuses the board rather than filing it under the old column. A slug
 # absent from this table is not version-checked.
+#
+# "terminal-bench-4" is in the table for the half of that reason it shares:
+# its slug names the major and stops there, so a 4.1 re-run has a URL it could
+# arrive at unannounced, the way 2.1 did not -- tbench.ai gave that one a page
+# of its own. The column is terminal_bench_4_0, so the stamp is pinned to the
+# revision the column spells and a 4.1 refuses the board instead of being read
+# as 4.0. If Vals does give 4.1 a page, it is a new entry above, not a bumped
+# pin here.
 VERSIONS: dict[str, str] = {
+    "terminal-bench-4": "4.0",
     "vibe-code": "1.1",
 }
 
@@ -236,21 +264,16 @@ def island_props(page_html: str, component: str) -> dict[str, Any] | None:
     return None
 
 
-def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, Any]]:
-    """(metadata, {model key -> cell}) for one benchmark page.
+def check_metadata(metadata: Any, slug: str) -> None:
+    """Refuse a board that is not the one this column measures.
 
-    Raises ValueError when the page is not the board that was asked for, which
-    is what a silent redirect to a renamed slug looks like.
+    Two things can make a page stop being the board it was: Vals can redirect a
+    slug at a successor, which is what a rename looks like from here, and it can
+    revise a board in place under the slug it already had. The first is caught
+    by the slug the payload reports, the second by the version stamped beside
+    it -- for the slugs VERSIONS pins, which are the ones whose URL does not
+    name the revision.
     """
-    props = island_props(page_html, BENCHMARK_VIEW_COMPONENT)
-    if not props:
-        raise ValueError(f"no {BENCHMARK_VIEW_COMPONENT} island on the {slug} page")
-    view = props.get("benchmarkView")
-    if not isinstance(view, dict) or not isinstance(view.get("default"), dict):
-        raise ValueError(f"unexpected benchmarkView shape for {slug}")
-
-    board = view["default"]
-    metadata = board.get("metadata")
     if not isinstance(metadata, dict):
         raise ValueError(f"no metadata for {slug}")
     if metadata.get("slug") != slug:
@@ -266,11 +289,61 @@ def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, An
             "into the old one."
         )
 
+
+def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(metadata, {model key -> cell}) for one benchmark page.
+
+    Raises ValueError when the page is not the board that was asked for, which
+    is what a silent redirect to a renamed slug looks like.
+    """
+    props = island_props(page_html, BENCHMARK_VIEW_COMPONENT)
+    if not props:
+        raise ValueError(f"no {BENCHMARK_VIEW_COMPONENT} island on the {slug} page")
+    view = props.get("benchmarkView")
+    if not isinstance(view, dict) or not isinstance(view.get("default"), dict):
+        raise ValueError(f"unexpected benchmarkView shape for {slug}")
+
+    payload = view["default"]
+    metadata = payload.get("metadata")
+    check_metadata(metadata, slug)
+
     task = task_of(slug)
-    tasks = board.get("tasks")
+    tasks = payload.get("tasks")
     if not isinstance(tasks, dict) or not isinstance(tasks.get(task), dict):
         raise ValueError(f"{slug} has no {task!r} task")
     return metadata, tasks[task]
+
+
+def board(slug: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(metadata, cells) for one board, cached for the rest of the refresh.
+
+    One `update-all` reads every board twice -- update_vals_mapping.py for the
+    model paths, update.py for the scores -- in two processes minutes apart, so
+    only a cache on disk can make them share a fetch. At eleven boards that is
+    eleven requests saved a run, on the same terms artificialanalysis.py's and
+    fetch_llmstats.py's caches already run under: the TTL decides freshness, a
+    changed key misses, and every failure is a miss.
+
+    What is stored is the one task's cells rather than the page, because the
+    page is a quarter of a megabyte of HTML of which everything outside the
+    island is discarded on the way in. The task is therefore part of the key:
+    an edit to TASKS must not be answered from a crawl that read the old one.
+    The metadata checks are re-run against a hit, so a tightened VERSIONS pin
+    refuses a stored board exactly as it refuses a fetched one.
+    """
+    url = benchmark_url(slug)
+    key = f"{url}#{task_of(slug)}"
+    ttl = _cache.ttl_seconds(BOARD_CACHE_TTL_VAR)
+    cached = _cache.load(f"vals-{slug}", key, ttl, label=f"vals {slug}")
+    if isinstance(cached, list) and len(cached) == 2:
+        metadata, cells = cached
+        if isinstance(metadata, dict) and isinstance(cells, dict):
+            check_metadata(metadata, slug)
+            return metadata, cells
+    print(f"Fetching {url} ...", file=sys.stderr)
+    metadata, cells = parse_board(fetch_html(url), slug)
+    _cache.store(f"vals-{slug}", key, [metadata, cells], ttl)
+    return metadata, cells
 
 
 def get_scores(slugs: list[str]) -> list[dict]:
@@ -284,9 +357,7 @@ def get_scores(slugs: list[str]) -> list[dict]:
     results: list[dict] = []
     for slug in slugs:
         key = BENCHMARKS[slug]
-        url = benchmark_url(slug)
-        print(f"Fetching {url} ...", file=sys.stderr)
-        metadata, cells = parse_board(fetch_html(url), slug)
+        metadata, cells = board(slug)
         updated = metadata.get("updated") or None
 
         rows: list[dict] = []
