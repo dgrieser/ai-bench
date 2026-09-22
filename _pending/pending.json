@@ -3,6 +3,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt 6 sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-5-6-sol",
           "reason": "exact to gpt 6 sol, all components match"
@@ -20,11 +25,6 @@
         {
           "confidence": "weak",
           "option": "gpt-5-6-luna",
-          "reason": "exact to gpt 6 sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
           "reason": "exact to gpt 6 sol, most components match"
         }
       ],
@@ -77,6 +77,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6 Sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-5-6-sol",
           "reason": "exact to GPT-6 Sol, all components match"
@@ -94,11 +99,6 @@
         {
           "confidence": "weak",
           "option": "gpt-5-6-luna",
-          "reason": "exact to GPT-6 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
           "reason": "exact to GPT-6 Sol, most components match"
         }
       ],
