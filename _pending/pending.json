@@ -3,43 +3,6 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "gpt-6-luna",
-          "reason": "exact to gpt 6 luna, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-luna",
-          "reason": "exact to gpt 6 luna, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "exact to gpt 6 luna, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to gpt 6 luna, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
-          "reason": "exact to gpt 6 luna, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'gpt 6 luna' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "subject": "gpt 6 luna",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
           "option": "gpt-5-6-sol",
           "reason": "exact to gpt 6 sol, all components match"
@@ -110,43 +73,6 @@
       "route_kind": "aa-mapping",
       "subject": "mimo-v2-6-flash",
       "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gpt-6-luna",
-          "reason": "exact to GPT-6 Luna, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-luna",
-          "reason": "exact to GPT-6 Luna, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "exact to GPT-6 Luna, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to GPT-6 Luna, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
-          "reason": "exact to GPT-6 Luna, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierCode model 'GPT-6 Luna' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "subject": "GPT-6 Luna",
-      "universe": "models"
     },
     {
       "candidates": [
