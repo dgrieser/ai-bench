@@ -4,6 +4,28 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
+      "note": "released 2026-09-21 - Xiaomi - https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+      "question": "Add newly released model 'mimo-v2-6-pro' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "mimo-v2-6-pro",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Grok 4.7' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
       "note": null,
       "question": "Map HF label 'FRAMES (Acc.)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
@@ -682,6 +704,28 @@
       "route_kind": "mapping",
       "subject": "World Sense",
       "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Grok 4.7' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Grok 4.7' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4.7",
+      "universe": "models"
     },
     {
       "candidates": [],
