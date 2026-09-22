@@ -36,6 +36,119 @@
       "route_kind": "aa-mapping",
       "subject": "mimo-v2-6-flash",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to Claude Opus 5.5, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Claude Opus 5.5' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Claude Opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to Claude Opus 5.5, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Claude Opus 5.5' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Claude Opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to claude-opus-5-5, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude-opus-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-opus-5-5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-opus-5-5' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-opus-5-5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt 6 astra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 6 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 6 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 6 astra, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 6 astra' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 6 astra",
+      "universe": "models"
     }
   ]
 }
