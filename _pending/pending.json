@@ -1,3 +1,78 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "exact to mimo-v2-6-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to mimo-v2-6-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash-reasoning",
+          "reason": "exact to mimo-v2-6-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-0206",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'mimo-v2-6-flash'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "mimo-v2-6-flash",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to MiMo-V2.6-Flash-RL, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "mimo-v2-6-flash",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'XiaomiMiMo/MiMo-V2.6-Flash-RL' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "XiaomiMiMo/MiMo-V2.6-Flash-RL",
+      "universe": "models"
+    }
+  ]
 }
