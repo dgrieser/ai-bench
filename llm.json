@@ -55805,9 +55805,9 @@
       "params": "309B-A15B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 347,
+        "int8": 174,
+        "int4": 87
       },
       "creator": {
         "name": "Xiaomi",
@@ -56040,6 +56040,11 @@
             "source": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
           }
         ]
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/XiaomiMiMo/MiMo-V2.6-Flash-RL/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/XiaomiMiMo/MiMo-V2.6-Flash-RL/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/XiaomiMiMo/MiMo-V2.6-Flash-RL/"
       }
     }
   ],
