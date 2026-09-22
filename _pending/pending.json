@@ -1,25 +1,20 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-21 - Xiaomi - https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
-      "question": "Add newly released model 'mimo-v2-6-pro' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "mimo-v2-6-pro",
-      "universe": null
-    },
-    {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "agents_last_exam",
+          "reason": "exact to Agents’ Last Exam, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Ko-AIME’25' to llm.json benchmark",
+      "question": "Map HF label 'Agents’ Last Exam' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "Ko-AIME’25",
+      "subject": "Agents’ Last Exam",
       "universe": "benchmarks"
     },
     {
@@ -27,10 +22,32 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Ko-GDPval' to llm.json benchmark",
+      "question": "Map HF label 'AutomationBench v1.0.6' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "Ko-GDPval",
+      "subject": "AutomationBench v1.0.6",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_1",
+          "reason": "exact to DeepSWE v1.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_0",
+          "reason": "exact to DeepSWE v1.1, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepSWE v1.1' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "DeepSWE v1.1",
       "universe": "benchmarks"
     },
     {
@@ -38,10 +55,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Ko-IFEval' to llm.json benchmark",
+      "question": "Map HF label 'ExploitGym' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "Ko-IFEval",
+      "subject": "ExploitGym",
       "universe": "benchmarks"
     },
     {
@@ -49,10 +66,27 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'KorMedMCQA' to llm.json benchmark",
+      "question": "Map HF label 'GA Heads (Q/KV)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "KorMedMCQA",
+      "subject": "GA Heads (Q/KV)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GDPval-AA 2.1' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GDPval-AA 2.1",
       "universe": "benchmarks"
     },
     {
@@ -60,10 +94,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'LiveCodeBench (2408-2505) (Pass@1)' to llm.json benchmark",
+      "question": "Map HF label 'Head Dimensions (QK / V)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "LiveCodeBench (2408-2505) (Pass@1)",
+      "subject": "Head Dimensions (QK / V)",
       "universe": "benchmarks"
     },
     {
@@ -71,10 +105,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Longbench v2 (≤ 1M)' to llm.json benchmark",
+      "question": "Map HF label 'MTP / Speculative Decoder' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "Longbench v2 (≤ 1M)",
+      "subject": "MTP / Speculative Decoder",
       "universe": "benchmarks"
     },
     {
@@ -82,10 +116,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'MBPP-plus' to llm.json benchmark",
+      "question": "Map HF label 'MiMo Code Bench' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "MBPP-plus",
+      "subject": "MiMo Code Bench",
       "universe": "benchmarks"
     },
     {
@@ -93,10 +127,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'MMLU-ProX (avg en/de/fr/es/it/ja/zh/hi/pt/ko)' to llm.json benchmark",
+      "question": "Map HF label 'MiMo Cyber Bench' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "MMLU-ProX (avg en/de/fr/es/it/ja/zh/hi/pt/ko)",
+      "subject": "MiMo Cyber Bench",
       "universe": "benchmarks"
     },
     {
@@ -104,10 +138,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'MMlongBench Doc' to llm.json benchmark",
+      "question": "Map HF label 'MiMo VisualCoding' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "MMlongBench Doc",
+      "subject": "MiMo VisualCoding",
       "universe": "benchmarks"
     },
     {
@@ -115,10 +149,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'MRCR 1M (MMR)' to llm.json benchmark",
+      "question": "Map HF label 'SEC Bench Pro' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "MRCR 1M (MMR)",
+      "subject": "SEC Bench Pro",
       "universe": "benchmarks"
     },
     {
@@ -126,10 +160,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'MathArena Apex (Pass@1)' to llm.json benchmark",
+      "question": "Map HF label 'SWA Heads (Q/KV)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "MathArena Apex (Pass@1)",
+      "subject": "SWA Heads (Q/KV)",
       "universe": "benchmarks"
     },
     {
@@ -137,142 +171,10 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Mean (9 non-ASR)' to llm.json benchmark",
+      "question": "Map HF label 'Sliding Window Size' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "Mean (9 non-ASR)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Median (9 non-ASR)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Median (9 non-ASR)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'NL2Repo-Bench (Score)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "NL2Repo-Bench (Score)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'OCRBenchV2 (EN)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "OCRBenchV2 (EN)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'PIQA' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "PIQA",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'ProfBench (Search)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "ProfBench (Search)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'RULER (1M)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "RULER (1M)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'SEC-Bench Pro (Pass@1)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "SEC-Bench Pro (Pass@1)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'SimpleQA (Correct)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "SimpleQA (Correct)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'SimpleQA-Verified (Pass@1)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "SimpleQA-Verified (Pass@1)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'TauBench V2 Airline' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "TauBench V2 Airline",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'TauBench V2 Average' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "TauBench V2 Average",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'TauBench V2 Retail' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "TauBench V2 Retail",
+      "subject": "Sliding Window Size",
       "universe": "benchmarks"
     },
     {
@@ -405,6 +307,38 @@
       "route_kind": "mapping",
       "subject": "World Sense",
       "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to MiMo-V2.6-Pro-RL, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "mimo-v2-6-pro",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'XiaomiMiMo/MiMo-V2.6-Pro-RL' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+      "universe": "models"
     },
     {
       "candidates": [],
