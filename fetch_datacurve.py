@@ -42,6 +42,7 @@ import urllib.request
 from urllib.parse import urljoin
 
 from _revisions import revision_label, revision_rank
+from _fetch_checks import check_fractions
 
 SITE_URL = "https://deepswe.datacurve.ai/"
 # Fallback when the page cannot be read; the live path is discovered from it.
@@ -145,6 +146,8 @@ def parse_rows(payload: dict, metric: str, all_configs: bool, revision: str) -> 
         value = row.get(field)
         if label is None or not isinstance(value, (int, float)) or isinstance(value, bool):
             continue
+        # The artifact's metrics are 0-1 fractions, multiplied below.
+        check_fractions([value], f"DeepSWE {revision} artifact", field)
         parsed.append(
             {
                 "model": label,

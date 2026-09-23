@@ -45,6 +45,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 import _cache
 from _openness import license_open
@@ -53,6 +54,9 @@ URL = "https://api.zeroeval.com/leaderboard/models/full"
 # Per-model endpoint. Same records as URL plus a ``benchmarks`` list, where each
 # entry carries the ``analysis_method`` prose the flat endpoint drops.
 MODEL_URL = "https://api.zeroeval.com/leaderboard/models/{model_id}"
+# Per-model detail requests in flight at once. Read one after another they
+# were most of a refresh's wall time -- ~300 requests at a few hundred ms each.
+DETAIL_WORKERS = 8
 # Human-facing page publishing the same data; stored as the per-score source
 # URL because the API host is not a page a reader can open.
 LEADERBOARD_URL = "https://llm-stats.com/leaderboards/open-llm-leaderboard"
@@ -296,11 +300,20 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
     scored = [r for r in results if any(r["scores"].get(f) is not None for f in gated)]
     if scored:
         print(f"Resolving tool mode for {len(scored)} model(s) ...", file=sys.stderr)
+    # The detail reads are independent of each other, so they run together;
+    # the verdicts below are still applied one record at a time, in order.
+    with ThreadPoolExecutor(max_workers=DETAIL_WORKERS) as pool:
+        details = dict(
+            zip(
+                (id(r) for r in scored),
+                pool.map(lambda r: _benchmark_entries(r["model"], timeout=timeout), scored),
+            )
+        )
     hle_seen = hle_kept = rejected = 0
     for record in results:
-        if not any(record["scores"].get(f) is not None for f in gated):
+        if id(record) not in details:
             continue
-        entries = _benchmark_entries(record["model"], timeout=timeout)
+        entries = details[id(record)]
 
         headline = record["scores"].pop(HLE_LABEL, None)
         exact = (entries.get(HLE_TEXT_ONLY_BENCHMARK_ID) or {}).get("score")

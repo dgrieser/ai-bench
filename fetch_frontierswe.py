@@ -43,7 +43,9 @@ import json
 import re
 import sys
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
+from _fetch_checks import check_fractions, check_percentages, require_rows
 from _revisions import revision_label, revision_rank
 
 
@@ -88,8 +90,29 @@ def fetch_html(url: str) -> str:
         return resp.read().decode("utf-8", errors="replace")
 
 
+_ENTRIES_RE = re.compile(r'"entries":\s*\{')
+_DECODER = json.JSONDecoder()
+
+
+def _is_board(value: object) -> bool:
+    """True for an object shaped like a leaderboard: views keyed by score mode
+    (V2) or directly by trial aggregation (V1), each a list of rows."""
+    if not isinstance(value, dict):
+        return False
+    if isinstance(value.get(SCORE_MODE), dict):
+        value = value[SCORE_MODE]
+    return any(isinstance(value.get(group), list) for group in GROUPS)
+
+
 def extract_entries(html: str) -> dict:
-    """Extract the leaderboard 'entries' object from the Next.js RSC flight data."""
+    """Extract the leaderboard 'entries' object from the Next.js RSC flight data.
+
+    Every `"entries":{...}` object in the payload is decoded -- with a real
+    JSON decoder, so a brace inside a model name or a note cannot end the
+    object early -- and only board-shaped ones count. The payload may repeat
+    the board; two *different* boards cannot be told apart and raise rather
+    than letting whichever comes first win.
+    """
     decoded = ""
     for chunk in _PUSH_RE.findall(html):
         try:
@@ -97,22 +120,23 @@ def extract_entries(html: str) -> dict:
         except json.JSONDecodeError:
             continue
 
-    key_idx = decoded.find('"entries":')
-    if key_idx == -1:
-        raise ValueError("Could not find 'entries' in page flight data")
+    boards: list[dict] = []
+    for match in _ENTRIES_RE.finditer(decoded):
+        try:
+            value, _ = _DECODER.raw_decode(decoded, match.end() - 1)
+        except json.JSONDecodeError:
+            continue
+        if _is_board(value) and value not in boards:
+            boards.append(value)
 
-    obj_start = decoded.index("{", key_idx)
-    depth, end = 0, obj_start
-    for i, c in enumerate(decoded[obj_start:], obj_start):
-        if c == "{":
-            depth += 1
-        elif c == "}":
-            depth -= 1
-            if depth == 0:
-                end = i
-                break
-
-    return json.loads(decoded[obj_start : end + 1])
+    if not boards:
+        raise ValueError("Could not find a leaderboard 'entries' object in page flight data")
+    if len(boards) > 1:
+        raise ValueError(
+            f"Page flight data carries {len(boards)} different 'entries' boards; "
+            "refusing to guess which one is the leaderboard"
+        )
+    return boards[0]
 
 
 def revisions_newest_first() -> list[str]:
@@ -236,13 +260,31 @@ def get_scores(
     mean@5, 'best' and 'worst' the ends of its whiskers. V1 publishes no
     'worst', so asking for one there raises rather than dropping that board.
     """
-    results: list[dict] = []
-    for label in resolve_revision(revision):
+    labels = resolve_revision(revision)
+
+    def fetch_board(label: str) -> dict:
         url = BOARD_URLS[label]
         print(f"Fetching {url} ...", file=sys.stderr)
-        entries = extract_entries(fetch_html(url))
+        try:
+            return extract_entries(fetch_html(url))
+        except ValueError as exc:
+            raise ValueError(f"{url}: {exc}") from exc
+
+    # One page per revision; fetched together, reported newest first.
+    with ThreadPoolExecutor(max_workers=len(labels) or 1) as pool:
+        boards = list(pool.map(fetch_board, labels))
+
+    results: list[dict] = []
+    for label, entries in zip(labels, boards):
+        url = BOARD_URLS[label]
         rows = revision_rows(label, entries, group)
         print(f"  revision {label}: {len(rows)} model(s)", file=sys.stderr)
+        # A renamed metric field ("overall", "dominance") reads as no score on
+        # every row, which would otherwise report the board as empty.
+        require_rows(rows, url, f"V{label} rows")
+        if label == "1.0":
+            check_fractions((r["dominance"] for r in rows), url, "dominance")
+        check_percentages(rows, url)
         results.extend(rows)
     return results
 

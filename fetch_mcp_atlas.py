@@ -40,6 +40,9 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages
+from _scale_labs import extract_board_rows
+
 
 URL = "https://labs.scale.com/leaderboard/mcp_atlas"
 
@@ -50,9 +53,6 @@ HEADERS = {
     )
 }
 
-_PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
-# Flat row objects in the flight payload; entries carry no nested braces.
-_ROW_RE = re.compile(r'\{[^{}]*"score":[^{}]*\}')
 # Reasoning-effort modifiers that trail a model name (case-insensitive).
 _EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
 # Every token a parenthetical may contain and still be a run setting rather
@@ -98,43 +98,17 @@ def fetch_html(url: str = URL, retries: int = 3, delay: float = 2.0) -> str:
     raise AssertionError("unreachable")
 
 
-def decode_flight(html: str) -> str:
-    """Concatenate the decoded self.__next_f flight chunks into one string."""
-    decoded = ""
-    for chunk in _PUSH_RE.findall(html):
-        try:
-            decoded += json.loads(chunk)
-        except json.JSONDecodeError:
-            continue
-    return decoded
+# The route slug the page's payload has to carry to be this board.
+BOARD_SLUG = "mcp_atlas"
 
 
 def extract_rows(html: str) -> list[dict]:
-    """Extract leaderboard row objects from the flight payload."""
-    decoded = decode_flight(html)
-    rows: list[dict] = []
-    seen: set[int] = set()
-    for match in _ROW_RE.finditer(decoded):
-        try:
-            obj = json.loads(match.group(0))
-        except json.JSONDecodeError:
-            continue
-        if not isinstance(obj, dict):
-            continue
-        if not isinstance(obj.get("model"), str) or not isinstance(obj.get("score"), (int, float)):
-            continue
-        # Flight payloads can repeat the array; de-dup on identity of (model, score).
-        ident = hash((obj["model"], obj["score"]))
-        if ident in seen:
-            continue
-        seen.add(ident)
-        rows.append(obj)
-    if not rows:
-        raise ValueError(
-            f"No leaderboard rows in the flight payload of {URL} — the page layout "
-            "changed; refusing to report an empty leaderboard."
-        )
-    return rows
+    """Rows of the MCP-Atlas board.
+
+    Raises when the page does not identify itself as the MCP-Atlas board, has
+    no row table, or has more than one -- see _scale_labs.
+    """
+    return extract_board_rows(html, BOARD_SLUG, URL)
 
 
 def split_harness(raw: str) -> tuple[str, str | None]:
@@ -217,6 +191,7 @@ def get_scores(include_deprecated: bool = False) -> list[dict]:
         + (f" ({dropped} deprecated dropped)" if dropped else ""),
         file=sys.stderr,
     )
+    check_percentages(kept, URL)
 
     kept.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(kept, 1):

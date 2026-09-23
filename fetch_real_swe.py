@@ -39,6 +39,8 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages, require_rows
+
 
 URL = "https://realswe.withspecific.com/"
 
@@ -207,6 +209,8 @@ def get_scores() -> list[dict]:
         )
 
     print(f"  parsed {len(scores)} Real-SWE row(s)", file=sys.stderr)
+    require_rows(scores, URL)
+    check_percentages(scores, URL)
     return scores
 
 

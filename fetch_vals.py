@@ -68,9 +68,11 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import _cache
+from _fetch_checks import check_percentages, require_rows
 
 
 BASE_URL = "https://www.vals.ai/benchmarks/{slug}"
@@ -78,6 +80,8 @@ BASE_URL = "https://www.vals.ai/benchmarks/{slug}"
 # Seconds a parsed board may be served from ~/.cache/ai-bench; 0 turns the
 # cache off, which is what a test stubbing fetch_html wants.
 BOARD_CACHE_TTL_VAR = "AI_BENCH_VALS_CACHE_TTL"
+# Boards read at once. Small, since they all come from one host.
+MAX_WORKERS = 6
 
 # Vals AI benchmark slug -> llm.json benchmark key.
 BENCHMARKS: dict[str, str] = {
@@ -354,10 +358,14 @@ def get_scores(slugs: list[str]) -> list[dict]:
     cost_per_test, date (the day the board last moved), rank (within the
     benchmark, 1 = best).
     """
+    # Eleven small pages on one host, independent of one another: read
+    # together, reported in BENCHMARKS order.
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        boards = list(pool.map(board, slugs))
+
     results: list[dict] = []
-    for slug in slugs:
+    for slug, (metadata, cells) in zip(slugs, boards):
         key = BENCHMARKS[slug]
-        metadata, cells = board(slug)
         updated = metadata.get("updated") or None
 
         rows: list[dict] = []
@@ -388,6 +396,9 @@ def get_scores(slugs: list[str]) -> list[dict]:
                 }
             )
         print(f"  parsed {len(rows)} rows for {slug}", file=sys.stderr)
+        # A renamed "accuracy" cell drops every row one at a time.
+        require_rows(rows, benchmark_url(slug), f"scored rows for {slug}")
+        check_percentages(rows, benchmark_url(slug))
         rows.sort(key=lambda row: -row["score"])
         for position, row in enumerate(rows, 1):
             row["rank"] = position

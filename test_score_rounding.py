@@ -25,7 +25,7 @@ DOC = {
         # A plain percentage: no metadata, so one digit.
         "pct": {"name": "Percent"},
         # An Elo that re-anchors as the judging pool grows.
-        "elo": {"name": "Elo", "decimals": 0, "round_to": 5},
+        "elo": {"name": "Elo", "decimals": 0, "round_to": 5, "range": [-1000, 3000]},
         # A whole-point index, like the derived Coding column.
         "points": {"name": "Points", "decimals": 0},
     }

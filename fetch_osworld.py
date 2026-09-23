@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from _fetch_checks import check_percentages, require_columns, require_rows
+
 OSWORLD_XLSX_URL = "https://os-world.github.io/static/data/osworld_verified_results.xlsx"
 # Human-facing site the workbook belongs to; stored as the per-score source
 # URL because the .xlsx identifies a download, not a page a reader can open.
@@ -24,6 +26,21 @@ FOUNDATION_MAX_STEPS = 100
 FOUNDATION_A11Y = "No"
 FOUNDATION_CODING = "No"
 FOUNDATION_ROLLOUT = "No"
+
+# Every column parse_rows() reads. col() answers None for a missing one, so a
+# renamed header used to drop every row -- a missing "Max steps" fails the
+# Foundation filter on all of them -- and the fetcher reported an empty board.
+REQUIRED_COLUMNS = (
+    "Model",
+    "Institution",
+    "Approach type",
+    "Max steps",
+    "Additional a11y tree used",
+    "Additional coding-based action",
+    "Multiple rollout",
+    "Date",
+    "Success rate",
+)
 
 
 def _excel_serial_to_iso(value: Any) -> str | None:
@@ -57,10 +74,10 @@ def parse_rows(data: bytes) -> list[dict[str, Any]]:
 
     ws = wb[SHEET_NAME]
     raw_rows = list(ws.iter_rows(min_row=1, values_only=True))
-    if not raw_rows:
-        return []
+    require_rows(raw_rows, OSWORLD_XLSX_URL, f"rows in sheet {SHEET_NAME!r}")
 
     headers = [str(h).strip() if h is not None else None for h in raw_rows[0]]
+    require_columns(headers, REQUIRED_COLUMNS, f"{OSWORLD_XLSX_URL} sheet {SHEET_NAME!r}")
 
     def col(row: tuple[Any, ...], name: str) -> Any:
         try:
@@ -127,7 +144,12 @@ def aggregate(rows: list[dict[str, Any]], foundation_only: bool) -> list[dict[st
 def get_scores(foundation_only: bool = True) -> list[dict[str, Any]]:
     data = fetch_xlsx_bytes(OSWORLD_XLSX_URL)
     rows = parse_rows(data)
-    return aggregate(rows, foundation_only=foundation_only)
+    scores = aggregate(rows, foundation_only=foundation_only)
+    # A setup cell spelled differently ("no" for "No", "100 steps" for 100)
+    # drops every row from the Foundation filter without touching the header.
+    require_rows(scores, OSWORLD_XLSX_URL, "Foundation E2E GUI rows" if foundation_only else "rows")
+    check_percentages(scores, OSWORLD_XLSX_URL, "success_rate")
+    return scores
 
 
 def parse_args() -> argparse.Namespace:

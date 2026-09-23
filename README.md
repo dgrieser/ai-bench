@@ -236,6 +236,45 @@ over any starting file yields the same numbers. Halves round away from zero
 rather than to even, and an integral result is stored as an int (`34`, not
 `34.0`) — the shape the rest of `llm.json` already uses.
 
+### Score Ranges and Layout Checks
+
+A leaderboard that changes its layout rarely breaks loudly on its own. A renamed
+column reads as an empty cell on every row. A moved table reads as no table.
+A switch from percentages to fractions looks like every model regressing at
+once. Each of these used to leave a fetcher printing `[]` or a column of tiny
+numbers and exiting 0. Three layers now catch them:
+
+- **`apply_score()` refuses an out-of-range value.** A benchmark's `range`
+  field gives the inclusive `[low, high]` a stored score may take. It defaults
+  to `[0, 100]`, and only columns that are not percentages declare one: the
+  two Elos (`gdpval_aa`, `aa_briefcase`), the -100..100 `aa_omniscience`, and
+  the 0..100,000 derived indexes. A value outside it raises before anything is
+  written. Hand edits through `edit.py` are not checked.
+- **Every fetcher checks its own board** with `_fetch_checks.py`. It raises
+  when a parse yields no rows, when a header lacks a column the parse reads,
+  when a fraction it is about to multiply by 100 is above 1, and when a
+  percentage board reads as fractions (at least five rows, best score ≤ 1.0).
+  Pages that could carry more than one table also check which table they are
+  reading:
+  - the Scale Labs boards (`_scale_labs.py`) must name their own route slug and
+    carry exactly one distinct `"entries"` table;
+  - FrontierSWE must carry exactly one board-shaped `"entries"` object, read
+    with a real JSON decoder;
+  - BFCL's page must name `BFCL-v4` as its newest series;
+  - evals.report drops Score cells qualified with anything other than
+    `(pass@1)`.
+- **`update.py` isolates a failed source.** When a fetcher exits non-zero,
+  its fetch is recorded and skipped. The other sources are still written, and
+  the run exits 1 with a list of what failed, so `update-all` and the workflow
+  report it. Precedence does not depend on which ingests ran
+  (`_precedence.py`), so a skipped source leaves its own columns as the last
+  good run wrote them. Artificial Analysis is the exception: its failure still
+  aborts the run.
+
+`update.py` starts all fetcher subprocesses at once, right after it lists them,
+and collects each result when it reaches that source. Each timing line on
+stderr shows how long the run actually waited for that fetcher.
+
 ## System Architecture
 
 ```

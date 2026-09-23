@@ -53,6 +53,8 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages
+
 
 URL = "https://zerobench.github.io"
 
@@ -248,6 +250,7 @@ def get_scores() -> list[dict]:
             "layout changed; refusing to report an empty leaderboard."
         )
     print(f"  parsed {len(kept)} leaderboard rows", file=sys.stderr)
+    check_percentages(kept, URL)
 
     kept.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(kept, 1):

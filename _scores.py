@@ -42,6 +42,52 @@ def score_step(doc: dict[str, Any], key: str) -> Decimal:
     return Decimal(1).scaleb(-score_decimals(doc, key))
 
 
+# The scale a benchmark without its own "range" is read on: a percentage.
+DEFAULT_SCORE_RANGE = (0.0, 100.0)
+
+
+def score_range(doc: dict[str, Any], key: str) -> tuple[float, float]:
+    """The inclusive bounds a stored score may take: benchmarks[key]["range"].
+
+    Nearly every column is a percentage, so that is the default. The few that
+    are not -- an Elo, the -100..100 Omniscience index, the 0..100,000 derived
+    indexes -- declare their own [low, high] in llm.json, the same way a
+    coarser grid is declared with "round_to". A malformed declaration falls
+    back to the default rather than switching the check off.
+    """
+    benchmark = (doc.get("benchmarks") or {}).get(key)
+    if isinstance(benchmark, dict):
+        bounds = benchmark.get("range")
+        if (
+            isinstance(bounds, list)
+            and len(bounds) == 2
+            and all(isinstance(b, (int, float)) and not isinstance(b, bool) for b in bounds)
+            and bounds[0] < bounds[1]
+        ):
+            return float(bounds[0]), float(bounds[1])
+    return DEFAULT_SCORE_RANGE
+
+
+def check_score_range(doc: dict[str, Any], key: str, value: Any, source: str = "") -> None:
+    """Raise ValueError for a score outside its benchmark's declared range.
+
+    The guard against a scale flip upstream: a board that starts publishing
+    fractions where it published percentages -- or the reverse, read through a
+    fetcher that multiplies by 100 -- would otherwise be stored as-is, and
+    round_score() cannot tell 0.42 from a real 0.4. None passes: "no score"
+    has no scale.
+    """
+    if value is None or isinstance(value, bool) or not isinstance(value, (int, float)):
+        return
+    low, high = score_range(doc, key)
+    if not low <= value <= high:
+        where = f" from {source}" if source else ""
+        raise ValueError(
+            f"score {key!r} = {value!r}{where} is outside its range [{low:g}, {high:g}] "
+            "-- the source's scale probably changed; refusing to store it"
+        )
+
+
 def round_score(doc: dict[str, Any], key: str, value: Any) -> int | float | None:
     """Quantize one benchmark score onto its grid; None passes through.
 

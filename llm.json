@@ -121,6 +121,10 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.9), SWE-Marathon 1.1 (0.65), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.4), Vibe Code Bench 1.1 (0.75), SWE-bench Pro (0.4), LiveCodeBench (0.4), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.75), SWE Atlas: Refactoring (0.75), ProgramBench: Almost Resolved (0.5), SWE-bench Verified (0.15).",
       "settings": [
         "derived",
@@ -137,6 +141,10 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: τ³-Bench Banking (1), Toolathlon-Verified (0.9), MCP-Atlas (0.85), Terminal-Bench 4.0 (0.8), Terminal-Bench 2.1 (0.3), GDPval-AA v2 (0.7), ITBench-AA (0.6), BFCL v4 (0.5), τ²-Bench Telecom (0.3), Terminal-Bench Hard (0.3), IFBench (0.2).",
       "settings": [
         "derived",
@@ -153,6 +161,10 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience (1), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3).",
       "settings": [
         "derived",
@@ -169,6 +181,10 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35).",
       "settings": [
         "derived",
@@ -185,6 +201,10 @@
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
       "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience Hallucination Rate (1), AA-Omniscience Accuracy (0.6), AA-LCR (0.45), IFBench (0.3).",
       "settings": [
         "derived",
@@ -850,6 +870,10 @@
       "category": "Real-world Professional Work",
       "decimals": 0,
       "round_to": 5,
+      "range": [
+        -1000,
+        3000
+      ],
       "description": "Artificial Analysis' v2.1 evaluation framework over OpenAI's GDPval dataset: 220 real work deliverables — documents, slides, spreadsheets, diagrams — for 44 occupations across 9 industries, authored with experienced professionals. The model works in AA's Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, so a deliverable is the product of a tool trajectory rather than a single response. Scored by blind pairwise LLM-judge comparisons aggregated into an Elo in which 1000 is human expert performance.",
       "settings": [
         "Elo",
@@ -894,6 +918,10 @@
       "category": "Real-world Professional Work",
       "decimals": 0,
       "round_to": 5,
+      "range": [
+        -1000,
+        3000
+      ],
       "description": "Artificial Analysis' agentic knowledge-work benchmark: four multi-week project scenarios — data science, product management, banking operations and heavy-industry strategy — totalling 91 tasks over thousands of input files, each producing a professional deliverable (spreadsheets, presentations, documents). Scored as a composite Elo aggregating binary rubric checks with pairwise LLM-judged analytical quality and presentation; GPT-5.5 (medium) anchors 1000.",
       "settings": [
         "Elo",
@@ -929,6 +957,10 @@
       "name": "AA-Omniscience",
       "short_name": "Omni",
       "category": "Reasoning & Knowledge",
+      "range": [
+        -100,
+        100
+      ],
       "description": "Artificial Analysis' knowledge and hallucination benchmark: 6,000 questions over 42 economically relevant topics in six domains. The Omniscience Index is a bounded −100 to 100 score that rewards correct recall, penalises confident wrong answers and credits abstention; 0 means as often right as wrong.",
       "settings": [
         "Omniscience Index",

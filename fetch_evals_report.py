@@ -35,6 +35,9 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+
+from _fetch_checks import check_percentages, require_columns, require_rows
 
 
 BASE_URL = "https://evals.report/benchmarks/{slug}?tab=scores"
@@ -102,7 +105,21 @@ HEADERS = {
 _TR_RE = re.compile(r"<tr[^>]*>(.*?)</tr>", re.DOTALL)
 _CELL_RE = re.compile(r"<t[dh][^>]*>(.*?)</t[dh]>", re.DOTALL)
 _TAG_RE = re.compile(r"<[^>]+>")
-_SCORE_RE = re.compile(r"([0-9]+(?:\.[0-9]+)?)\s*%?")
+# A Score cell is the number, optionally followed by the metric it was
+# measured under: "23.0% (pass@5)". The whole cell has to match, so a
+# qualifier this parser does not know is not read as the number in front of it.
+_SCORE_RE = re.compile(r"([0-9]+(?:\.[0-9]+)?)\s*%?(?:\s*\(\s*([^()]*?)\s*\))?")
+# The only metric qualifier every column fed from here carries. A pass@5 row
+# (the ZeroBench table holds a closed-model block of them) measures something
+# else and is dropped here rather than left for the mapping to keep out.
+ACCEPTED_METRICS = {None, "pass@1"}
+
+# Header cells get_scores() reads; the header is normalized to letters and
+# spaces ("Score ↓" -> "score").
+REQUIRED_COLUMNS = ("model", "score", "status")
+
+# Tables are fetched concurrently; each is one small page on one host.
+MAX_WORKERS = 6
 
 
 def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
@@ -132,7 +149,10 @@ def extract_rows(page_html: str) -> list[dict]:
     """Extract score-table rows as raw column dicts (header-name keyed)."""
     start = page_html.find("score-table")
     if start == -1:
-        return []
+        raise ValueError(
+            "No score-table on the page -- the layout changed; refusing to report "
+            "an empty leaderboard."
+        )
     end = page_html.find("</table>", start)
     segment = page_html[start : end if end != -1 else len(page_html)]
 
@@ -145,6 +165,7 @@ def extract_rows(page_html: str) -> list[dict]:
         if not header:
             # First row is the header; normalize "Score ↓" -> "score".
             header = [re.sub(r"[^a-z ]", "", c.lower()).strip() for c in cells]
+            require_columns(header, REQUIRED_COLUMNS, "evals.report score-table")
             continue
         row = {header[i]: cells[i] for i in range(min(len(header), len(cells)))}
         if row.get("model"):
@@ -161,27 +182,57 @@ def _open_weights(raw: str, lab: str | None) -> bool | None:
     return False
 
 
+def parse_score(cell: str) -> tuple[float, str | None] | None:
+    """(number, metric qualifier or None) of one Score cell, or None."""
+    match = _SCORE_RE.fullmatch(cell.strip())
+    if not match:
+        return None
+    metric = match.group(2)
+    return float(match.group(1)), (metric.lower().replace(" ", "") if metric else None)
+
+
+def _fetch_rows(slug: str) -> list[dict]:
+    url = BASE_URL.format(slug=slug)
+    print(f"Fetching {url} ...", file=sys.stderr)
+    try:
+        return extract_rows(fetch_html(url))
+    except ValueError as exc:
+        raise ValueError(f"{url}: {exc}") from exc
+
+
 def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
     """Return a flat list of score dicts across the requested benchmarks.
 
     Keys: benchmark, key, model (raw minus " Open"), raw, lab, open_weights,
     score, status, date, rank (rank within the benchmark, 1 = best).
+
+    Raises when a table is missing, lost a column, or yields no row: every
+    table listed in BENCHMARKS has trusted rows, so an empty one is a layout
+    change, not a quiet day.
     """
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        tables = list(pool.map(_fetch_rows, slugs))
+
     results: list[dict] = []
-    for slug in slugs:
+    for slug, raw_rows in zip(slugs, tables):
         key = BENCHMARKS[slug]
         url = BASE_URL.format(slug=slug)
-        print(f"Fetching {url} ...", file=sys.stderr)
-        raw_rows = extract_rows(fetch_html(url))
         kept: list[dict] = []
         dropped = 0
+        other_metric = 0
+        unreadable = 0
         for row in raw_rows:
             status = row.get("status", "")
             if not include_unverified and status.lower() not in TRUSTED_STATUSES:
                 dropped += 1
                 continue
-            match = _SCORE_RE.match(row.get("score", ""))
-            if not match:
+            parsed = parse_score(row.get("score", ""))
+            if parsed is None:
+                unreadable += 1
+                continue
+            value, metric = parsed
+            if metric not in ACCEPTED_METRICS:
+                other_metric += 1
                 continue
             raw = row["model"]
             model = _OPEN_SUFFIX_RE.sub("", raw)
@@ -193,16 +244,26 @@ def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
                     "raw": raw,
                     "lab": row.get("lab"),
                     "open_weights": _open_weights(raw, row.get("lab")),
-                    "score": round(float(match.group(1)), 2),
+                    "score": round(value, 2),
                     "status": status,
                     "date": row.get("date") or None,
                 }
             )
+        notes = [
+            f"{n} {what}"
+            for n, what in (
+                (dropped, "untrusted dropped"),
+                (other_metric, "other-metric (e.g. pass@5) dropped"),
+                (unreadable, "unreadable score"),
+            )
+            if n
+        ]
         print(
-            f"  parsed {len(kept)} rows for {slug}"
-            + (f" ({dropped} untrusted dropped)" if dropped else ""),
+            f"  parsed {len(kept)} rows for {slug}" + (f" ({', '.join(notes)})" if notes else ""),
             file=sys.stderr,
         )
+        require_rows(kept, url, f"{'rows' if include_unverified else 'trusted rows'} for {slug}")
+        check_percentages(kept, url)
         kept.sort(key=lambda r: -r["score"])
         for i, r in enumerate(kept, 1):
             r["rank"] = i

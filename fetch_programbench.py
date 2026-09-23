@@ -60,6 +60,8 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages, require_rows
+
 
 SITE_URL = "https://programbench.com"
 # The complete table. The site root shows the top ten of these same runs, so
@@ -241,6 +243,9 @@ def get_scores() -> list[dict]:
         + (f" over {tasks} tasks" if tasks else ""),
         file=sys.stderr,
     )
+    require_rows(scores, LEADERBOARD_URL)
+    check_percentages(scores, LEADERBOARD_URL)
+    check_percentages(scores, LEADERBOARD_URL, "resolved")
     return scores
 
 

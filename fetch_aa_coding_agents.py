@@ -35,6 +35,8 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_fractions, require_rows
+
 
 URL = "https://artificialanalysis.ai/agents/coding-agents"
 
@@ -148,6 +150,8 @@ def get_scores() -> list[dict]:
             reward = mean.get("reward") if isinstance(mean, dict) else None
             if not isinstance(reward, (int, float)) or isinstance(reward, bool):
                 continue
+            # reward is a 0-1 fraction, multiplied into a percentage below.
+            check_fractions([reward], URL, f"{dataset} reward")
             key = DATASETS.get(dataset)
             if key is None:
                 if isinstance(dataset, str):
@@ -165,6 +169,8 @@ def get_scores() -> list[dict]:
     # A new index revision can add a benchmark; surface it instead of silence.
     for dataset in sorted(ignored):
         print(f"  ignoring unmapped dataset: {dataset}", file=sys.stderr)
+    # A renamed "reward" or dataset index drops every row one at a time.
+    require_rows(results, URL, "rows for a mapped dataset")
     return results
 
 
