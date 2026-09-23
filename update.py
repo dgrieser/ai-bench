@@ -165,13 +165,6 @@ def fmt_change_value(value: Any) -> str:
     return str(value)
 
 
-def normalize_aa_value(value: Any) -> Any:
-    # Treat zero values from Artificial Analysis as unset/null.
-    if value == 0:
-        return None
-    return value
-
-
 def normalize_context(value: Any) -> str | None:
     if value is None:
         return None
@@ -591,21 +584,130 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
     return by_slug
 
 
+# Artificial Analysis runs one model several ways -- "GLM-4.6 (Reasoning)" and
+# "GLM-4.6 (Non-reasoning)", "GPT-5.6 Sol (max)" down to "(low)" -- and gives
+# each run its own slug. Which run the bare slug is was AA's choice and differs
+# from model to model (glm-4-6 is the non-reasoning run, gpt-oss-120b the high
+# one), so reading the bare slug put max-effort reasoning runs and
+# non-reasoning runs side by side in one column. The policy instead: a row reads
+# its model's highest-effort reasoning run, the bare slug on a tie.
+AA_PUBLISHED_MODELS = Path(__file__).resolve().parent / "_aa" / "models.json"
+
+# Slug suffixes that name a run of the same checkpoint rather than another
+# model: "glm-4-6-reasoning" is GLM-4.6 run another way, "deepseek-v4-flash-0420"
+# is a different checkpoint and never a candidate.
+AA_EFFORT_RANKS = {
+    "non-reasoning": 0,
+    "minimal": 1,
+    "low": 2,
+    "medium": 3,
+    "high": 4,
+    "reasoning": 4,
+    "thinking": 4,
+    "xhigh": 5,
+    "max": 6,
+}
+# A run AA names without an effort, "(Reasoning)" or nothing at all, is its
+# default reasoning run.
+AA_DEFAULT_EFFORT = 4
+_EFFORT_WORD = re.compile(r"\b(minimal|low|medium|xhigh|high|max)\b")
+
+
+def load_aa_model_names(path: Path = AA_PUBLISHED_MODELS) -> dict[str, str]:
+    """AA slug -> display name, from the list the refresh publishes to _aa/."""
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    names: dict[str, str] = {}
+    for entry in payload.get("models", []) if isinstance(payload, dict) else []:
+        if isinstance(entry, dict):
+            slug, name = entry.get("slug"), entry.get("name")
+            if isinstance(slug, str) and isinstance(name, str) and name:
+                names[slug] = name
+    return names
+
+
+def aa_name_effort(name: str) -> int:
+    """How hard the run an AA display name describes thinks, 0 = not at all."""
+    detail = " ".join(re.findall(r"\(([^)]*)\)", name)).lower()
+    if re.search(r"non[- ]reasoning", detail):
+        return 0
+    levels = [AA_EFFORT_RANKS[word] for word in _EFFORT_WORD.findall(detail)]
+    return max(levels) if levels else AA_DEFAULT_EFFORT
+
+
+def aa_variant_siblings(slug: str, available_slugs: set[str]) -> dict[str, str]:
+    """AA slugs that are another run of `slug`'s model, mapped to their suffix."""
+    return {
+        f"{slug}-{suffix}": suffix
+        for suffix in AA_EFFORT_RANKS
+        if f"{slug}-{suffix}" in available_slugs
+    }
+
+
+def pick_aa_variant(
+    slug: str, available_slugs: set[str], claimed: set[str], aa_names: dict[str, str]
+) -> str:
+    """The AA slug the variant policy reads for the llm.json row `slug`.
+
+    A sibling that is an llm.json row of its own is that row's to read. Effort
+    comes from the display name when the published list has one, else from the
+    slug's suffix; a bare slug with no name is AA's default run, which yields
+    only to a "-reasoning"/"-thinking" sibling, since that sibling existing is
+    what says the bare slug is the non-reasoning run.
+    """
+    siblings = {
+        sibling: suffix
+        for sibling, suffix in aa_variant_siblings(slug, available_slugs).items()
+        if sibling not in claimed
+    }
+    if not siblings:
+        return slug
+
+    if slug in aa_names:
+        own = aa_name_effort(aa_names[slug])
+    elif any(suffix in {"reasoning", "thinking"} for suffix in siblings.values()):
+        own = 0
+    else:
+        return slug
+
+    best, best_effort = slug, own
+    for sibling in sorted(siblings):
+        name = aa_names.get(sibling)
+        effort = aa_name_effort(name) if name else AA_EFFORT_RANKS[siblings[sibling]]
+        if effort > best_effort:
+            best, best_effort = sibling, effort
+    return best
+
+
 def resolve_aa_slugs(
-    slugs: list[str], available_slugs: set[str], mapping_path: Path
+    slugs: list[str],
+    available_slugs: set[str],
+    mapping_path: Path,
+    aa_names: dict[str, str] | None = None,
 ) -> dict[str, list[str]]:
     """AA slugs to read per llm.json model, highest priority first.
 
-    Usually one slug. A mapping entry may name several: Artificial Analysis
-    sometimes tracks the same model under more than one slug, each carrying a
-    different slice of the benchmarks, and every slug listed is read. A model's
-    own slug leads unless the entry places it somewhere else.
+    A mapping entry is a reviewer's decision and is read as written: usually
+    one slug, sometimes several when Artificial Analysis tracks the same model
+    under more than one, each carrying a different slice of the benchmarks. A
+    model's own slug leads unless the entry places it somewhere else.
+
+    A model without an entry reads its own slug, or -- when AA also runs it
+    another way -- whichever run pick_aa_variant() chooses.
     """
     llm_to_aa = load_llm_to_aa_slugs(mapping_path)
+    claimed = set(slugs)
+    names = aa_names or {}
     resolved: dict[str, list[str]] = {}
     for slug in slugs:
+        if slug not in llm_to_aa:
+            if slug in available_slugs:
+                resolved[slug] = [pick_aa_variant(slug, available_slugs, claimed, names)]
+            continue
         candidates = [
-            mapped for mapped in llm_to_aa.get(slug, []) if mapped in available_slugs
+            mapped for mapped in llm_to_aa[slug] if mapped in available_slugs
         ]
         if slug in available_slugs and slug not in candidates:
             candidates.insert(0, slug)
@@ -615,11 +717,19 @@ def resolve_aa_slugs(
 
 
 def aa_value_missing(value: Any) -> bool:
-    # AA reports an untested benchmark as null, and on some rows as 0 -- the
-    # same reading normalize_aa_value() applies when the score is written.
+    # AA reports an untested benchmark as null. A 0 is a measurement -- CritPt
+    # and ZeroBench floors are real -- and is kept like any other score.
     if isinstance(value, bool):
         return False
-    return value is None or value == "" or value == 0
+    return value is None or value == ""
+
+
+def aa_field_missing(value: Any) -> bool:
+    # Model fields (context, params) are a different matter: a 0 there is AA
+    # not knowing, never a model with no context window.
+    if isinstance(value, bool):
+        return False
+    return aa_value_missing(value) or value == 0
 
 
 def merge_aa_models(records: list[dict[str, Any]]) -> dict[str, Any]:
@@ -637,7 +747,7 @@ def merge_aa_models(records: list[dict[str, Any]]) -> dict[str, Any]:
         for key, value in record.items():
             if key == "evaluations":
                 continue
-            if aa_value_missing(merged.get(key)) and not aa_value_missing(value):
+            if aa_field_missing(merged.get(key)) and not aa_field_missing(value):
                 merged[key] = value
         for key, value in (record.get("evaluations") or {}).items():
             if aa_value_missing(evaluations.get(key)) and not aa_value_missing(value):
@@ -646,6 +756,7 @@ def merge_aa_models(records: list[dict[str, Any]]) -> dict[str, Any]:
     if evaluations:
         merged["evaluations"] = evaluations
     merged["_eval_origins"] = origins
+    merged["_aa_slugs"] = [record.get("slug") for record in records]
     return merged
 
 
@@ -877,6 +988,54 @@ def ensure_scores_source(model: dict[str, Any], benchmark_keys: list[str]) -> No
         model["scores_source"] = filled
 
 
+def aa_variant_record(aa_model: dict[str, Any]) -> dict[str, Any]:
+    """Which Artificial Analysis run a row reads, as stored on the model.
+
+    The slug is the one the row's AA scores lead with; the name is AA's own
+    label for that run -- "GLM-4.6 (Reasoning)" -- which is what says which
+    variant a column compares. Every score still names its own page in
+    scores_source, which is where a gap filled from a second slug shows.
+    """
+    slug = aa_model.get("slug")
+    name = aa_model.get("name")
+    return {
+        "slug": slug if isinstance(slug, str) else None,
+        "name": name if isinstance(name, str) and name else None,
+    }
+
+
+def drop_other_variant_score(
+    model: dict[str, Any],
+    slug: str,
+    key: str,
+    read_pages: set[str],
+    changes: list[tuple[str, str, Any, Any]],
+) -> int:
+    """Clear an AA score left behind by a run this row no longer reads.
+
+    apply_score() never overwrites with null, which is right for a source that
+    simply has no number today -- but a score credited to another AA model page
+    (the row used to read a different variant, or a second checkpoint the
+    mapping has since dropped) is not this row's measurement at all, and kept
+    it would mix two runs in one row. Anything credited elsewhere is left alone.
+    """
+    scores = model.get("scores")
+    if not isinstance(scores, dict) or scores.get(key) is None:
+        return 0
+    stored = score_source(model, key)
+    if not stored or source_rank(stored) != RANK_AA:
+        return 0
+    stored = canonical(stored)
+    if stored in read_pages or not stored.startswith(aa_model_page_url("") + "/"):
+        return 0
+    old_value = scores[key]
+    scores[key] = None
+    stamp_score_updated(model, key)
+    stamp_score_source(model, key, None)
+    changes.append((slug, key, old_value, None))
+    return 1
+
+
 def update_scores(
     doc: dict[str, Any],
     by_slug: dict[str, dict[str, Any]],
@@ -920,7 +1079,19 @@ def update_scores(
                     updated += 1
                     changes.append((slug, "params", old_params, new_params))
 
+        if not fill_urls_only:
+            variant = aa_variant_record(aa_model)
+            if model.get("aa_variant") != variant:
+                changes.append((slug, "aa_variant", model.get("aa_variant"), variant))
+                model["aa_variant"] = variant
+                updated += 1
+
         origins = aa_model.get("_eval_origins") or {}
+        read_pages = {
+            aa_model_page_url(aa_slug)
+            for aa_slug in aa_model.get("_aa_slugs") or [aa_model.get("slug")]
+            if isinstance(aa_slug, str) and aa_slug
+        }
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
             aa_value = None
             aa_key_used = None
@@ -929,7 +1100,10 @@ def update_scores(
                     aa_value = evaluations.get(aa_key)
                     aa_key_used = aa_key
                     break
-            new_value = transform(normalize_aa_value(aa_value))
+            new_value = transform(aa_value)
+            if new_value is None and not fill_urls_only:
+                updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
+                continue
             origin_slug = origins.get(aa_key_used) or aa_model.get("slug")
             url = aa_model_page_url(origin_slug)
             updated += apply_score(
@@ -2674,7 +2848,9 @@ def main() -> int:
             failed_sources.append(f"artificialanalysis: {exc}".splitlines()[0])
             print(f"error: artificialanalysis failed and is skipped this run:\n{exc}", file=sys.stderr)
     if aa_ok:
-        aa_slug_by_model = resolve_aa_slugs(slugs, available_slugs, aa_model_mapping_path)
+        aa_slug_by_model = resolve_aa_slugs(
+            slugs, available_slugs, aa_model_mapping_path, load_aa_model_names()
+        )
         existing_slugs = list(
             dict.fromkeys(
                 aa_slug

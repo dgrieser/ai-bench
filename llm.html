@@ -8026,6 +8026,7 @@
               <dt>Context</dt>
               <dd>${formatContext(model.context)}</dd>
               ${vramRows}
+              ${aaVariantRow(model)}
               <dt>Added</dt>
               <dd>${model.date_added ? escapeHtml(model.date_added) : "-"}</dd>
               <dt>Coverage</dt>
@@ -8701,6 +8702,30 @@
       function modelCoverage(model) {
         return state.benchmarkKeys
           .filter((key) => Number.isFinite(toNumber(model.scores?.[key]))).length;
+      }
+
+      // Artificial Analysis runs one model several ways — "(Reasoning)",
+      // "(Non-reasoning)", "(max)" down to "(low)" — and update.py reads the
+      // highest-effort reasoning run. These say which run a row's AA numbers
+      // are, since the column alone cannot.
+      function aaSlugOf(url) {
+        const match = /^https?:\/\/(?:www\.)?artificialanalysis\.ai\/models\/([^/?#]+)/.exec(url || "");
+        return match ? match[1] : "";
+      }
+
+      function aaRunLabel(source, model) {
+        const slug = aaSlugOf(source);
+        if (!slug) return "";
+        const variant = model.aa_variant || {};
+        return `Artificial Analysis run: ${variant.slug === slug && variant.name ? variant.name : slug}`;
+      }
+
+      function aaVariantRow(model) {
+        const variant = model.aa_variant;
+        if (!variant?.slug) return "";
+        const url = `https://artificialanalysis.ai/models/${encodeURIComponent(variant.slug)}`;
+        return `<dt>AA run</dt>
+              <dd><a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(variant.name || variant.slug)}</a></dd>`;
       }
 
       // Benchmarks in the index's own order, filed under their category. The
@@ -10817,6 +10842,7 @@
             body: scoreTipBody(key),
             meta: [
               updated ? `Updated ${updated}${newness}` : "",
+              aaRunLabel(source, model),
               source ? "" : "No source recorded for this score."
             ].filter(Boolean).join("\n"),
             // The page this one score was read from, not the benchmark's own
