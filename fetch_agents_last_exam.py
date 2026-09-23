@@ -33,6 +33,8 @@ import json
 import sys
 import urllib.request
 
+from _fetch_checks import check_fractions, require_rows
+
 
 URL = "https://agents-last-exam.org/api/demo/leaderboard"
 # Human-facing page publishing the same data; stored as the per-score source
@@ -79,6 +81,11 @@ def get_scores(split: str = SPLIT) -> list[dict]:
     print(f"Fetching {URL} ...", file=sys.stderr)
     rows = select_split(fetch_json(), split)
     print(f"  parsed {len(rows)} rows for split {split!r}", file=sys.stderr)
+    # passRate and avgScore are 0-1 fractions, multiplied into percentages
+    # below; a board that switched to percentages would otherwise be stored
+    # a hundred times too large.
+    check_fractions((row.get("passRate") for row in rows), URL, "passRate")
+    check_fractions((row.get("avgScore") for row in rows), URL, "avgScore")
 
     results: list[dict] = []
     for row in rows:
@@ -106,6 +113,9 @@ def get_scores(split: str = SPLIT) -> list[dict]:
                 "runs": row.get("runs"),
             }
         )
+
+    # A renamed "model" or "passRate" field drops every row one at a time.
+    require_rows(results, URL, f"scored rows for split {split!r}")
 
     results.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(results, 1):

@@ -34,6 +34,8 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages, require_rows
+
 
 # What this script requests: the app embeds the board in its own payload.
 URL = "https://www.tbench.ai/"
@@ -182,6 +184,10 @@ def get_scores() -> list[dict]:
                 "date": metadata.get("date") or None,
             }
         )
+
+    # A renamed "accuracy" or "model_display" drops every row one at a time.
+    require_rows(results, URL)
+    check_percentages(results, URL)
 
     results.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(results, 1):

@@ -78,8 +78,23 @@ class TestGetScores(unittest.TestCase):
         self.assertEqual([e["score"] for e in entries], [54.55])
 
     def test_a_row_without_a_reward_is_dropped(self) -> None:
-        entries = scores([row("Opus 5 (max)", {"terminal-bench-v4": None})])
-        self.assertEqual(entries, [])
+        entries = scores([
+            row("Opus 5 (max)", {"terminal-bench-v4": None}),
+            row("GLM 5.2", {"terminal-bench-v4": 0.4}),
+        ])
+        self.assertEqual([e["model"] for e in entries], ["glm 5.2"])
+
+    def test_a_board_with_no_scored_row_raises(self) -> None:
+        # A renamed "reward" drops every row one at a time; that is a layout
+        # change to report, not an empty board to write.
+        with self.assertRaises(ValueError):
+            scores([row("Opus 5 (max)", {"terminal-bench-v4": None})])
+
+    def test_a_reward_on_the_percentage_scale_raises(self) -> None:
+        # reward is multiplied by 100; one that is already a percentage would
+        # be stored as 5,455.
+        with self.assertRaises(ValueError):
+            scores([row("Opus 5 (max)", {"terminal-bench-v4": 54.55})])
 
 
 if __name__ == "__main__":

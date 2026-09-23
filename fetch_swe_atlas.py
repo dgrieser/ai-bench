@@ -31,6 +31,10 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+
+from _fetch_checks import check_percentages
+from _scale_labs import extract_board_rows
 
 
 BASE_URL = "https://labs.scale.com/leaderboard/sweatlas-{track}"
@@ -49,9 +53,6 @@ HEADERS = {
     )
 }
 
-_PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
-# Flat row objects in the flight payload; entries carry no nested braces.
-_ROW_RE = re.compile(r'\{[^{}]*"score":[^{}]*\}')
 # Reasoning-effort modifiers that trail a model name (case-insensitive).
 _EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
 
@@ -74,38 +75,9 @@ def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
     raise AssertionError("unreachable")
 
 
-def decode_flight(html: str) -> str:
-    """Concatenate the decoded self.__next_f flight chunks into one string."""
-    decoded = ""
-    for chunk in _PUSH_RE.findall(html):
-        try:
-            decoded += json.loads(chunk)
-        except json.JSONDecodeError:
-            continue
-    return decoded
-
-
-def extract_rows(html: str) -> list[dict]:
-    """Extract leaderboard row objects from the flight payload."""
-    decoded = decode_flight(html)
-    rows: list[dict] = []
-    seen: set[int] = set()
-    for match in _ROW_RE.finditer(decoded):
-        try:
-            obj = json.loads(match.group(0))
-        except json.JSONDecodeError:
-            continue
-        if not isinstance(obj, dict):
-            continue
-        if not isinstance(obj.get("model"), str) or not isinstance(obj.get("score"), (int, float)):
-            continue
-        # Flight payloads can repeat the array; de-dup on identity of (model, score).
-        ident = hash((obj["model"], obj["score"]))
-        if ident in seen:
-            continue
-        seen.add(ident)
-        rows.append(obj)
-    return rows
+def extract_rows(html: str, track: str) -> list[dict]:
+    """Rows of one track's board; raises if the page is another board or empty."""
+    return extract_board_rows(html, f"sweatlas-{track}", BASE_URL.format(track=track))
 
 
 def split_harness(raw: str) -> tuple[str, str | None]:
@@ -140,12 +112,18 @@ def get_scores(tracks: list[str]) -> list[dict]:
     Keys: track, key, model (normalized base), raw, harness, score, ci,
     company, rank (rank within the track, 1 = best).
     """
-    results: list[dict] = []
-    for track in tracks:
-        key = TRACKS[track]
+    def fetch_track(track: str) -> list[dict]:
         url = BASE_URL.format(track=track)
         print(f"Fetching {url} ...", file=sys.stderr)
-        rows = extract_rows(fetch_html(url))
+        return extract_rows(fetch_html(url), track)
+
+    # One page per track on one host; fetched together, parsed in order.
+    with ThreadPoolExecutor(max_workers=len(tracks) or 1) as pool:
+        pages = list(pool.map(fetch_track, tracks))
+
+    results: list[dict] = []
+    for track, rows in zip(tracks, pages):
+        key = TRACKS[track]
         print(f"  parsed {len(rows)} rows for {track}", file=sys.stderr)
         track_rows: list[dict] = []
         for obj in rows:
@@ -163,6 +141,7 @@ def get_scores(tracks: list[str]) -> list[dict]:
                     "company": obj.get("company"),
                 }
             )
+        check_percentages(track_rows, BASE_URL.format(track=track))
         track_rows.sort(key=lambda r: -r["score"])
         for i, r in enumerate(track_rows, 1):
             r["rank"] = i

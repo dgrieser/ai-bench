@@ -48,9 +48,10 @@ from _precedence import (
     source_rank,
 )
 
-# apply_score() reads the benchmark grid off the document; a key llm.json does
-# not describe rounds to the default one printed digit.
-DOC: dict = {"benchmarks": {}}
+# apply_score() reads the benchmark grid and range off the document; a key this
+# does not describe rounds to the default one printed digit and is held to a
+# percentage. GDPval-AA is an Elo, so it declares llm.json's range for it.
+DOC: dict = {"benchmarks": {"gdpval_aa": {"range": [-1000, 3000]}}}
 
 AA_PAGE = "https://artificialanalysis.ai/models/gemma-4-31b"
 EVALS_IFBENCH = EVALS_REPORT_KEY_URLS["ifbench"]

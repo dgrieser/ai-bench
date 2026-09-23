@@ -27,6 +27,7 @@ import re
 import sys
 import urllib.request
 
+from _fetch_checks import check_percentages, require_rows
 from _openness import source_type_open
 from _revisions import revision_label
 
@@ -122,6 +123,9 @@ def get_scores() -> list[dict]:
                 "open_weights": source_type_open(item.get("sourceType")),
             }
         )
+
+    require_rows(results, URL)
+    check_percentages(results, URL)
 
     results.sort(key=lambda r: -r["score"])
     for i, r in enumerate(results, 1):

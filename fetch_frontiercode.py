@@ -51,6 +51,7 @@ import sys
 import urllib.request
 
 from _revisions import revision_label, revision_rank
+from _fetch_checks import check_fractions
 
 
 URL = "https://cognition.com/data/frontiercode-leaderboard/data.json"
@@ -174,6 +175,8 @@ def revision_rows(
         effort, leaf = best_effort(efforts, subset, metric)
         if leaf is None:
             continue
+        # The payload's metrics are 0-1 fractions, multiplied below.
+        check_fractions([leaf[metric]], f"FrontierCode {revision_label(key)}", metric)
         rows.append(
             {
                 "model": model,

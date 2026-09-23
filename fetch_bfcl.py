@@ -37,6 +37,7 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages, require_rows
 from _openness import license_open
 
 
@@ -59,7 +60,34 @@ REQUIRED_COLUMNS = ("Model", "Overall Acc")
 # the dataset was renamed), which would silently mix two score series.
 V4_COLUMNS = ("Web Search Acc", "Memory Acc")
 
+# The series the columns above belong to. The column check catches a fallback
+# to V3, but a V5 that keeps V4's categories would pass it; the page's intro
+# links every series release ("BFCL-v1" ... "BFCL-v4"), so the newest one it
+# names has to be this one.
+SERIES = 4
+_SERIES_RE = re.compile(r"BFCL-v(\d+)", re.IGNORECASE)
+
 _PERCENT_RE = re.compile(r"(-?[0-9]+(?:\.[0-9]+)?)\s*%?")
+
+
+def check_series(page_html: str) -> None:
+    """Raise unless the leaderboard page's newest series is SERIES.
+
+    Refuses both a newer series -- its Overall Acc averages a different set of
+    categories, so it is not a bfcl_v4 number -- and a page naming none, which
+    can no longer vouch for what the CSV holds.
+    """
+    series = {int(n) for n in _SERIES_RE.findall(page_html)}
+    if not series:
+        raise ValueError(
+            f"{LEADERBOARD_URL} names no BFCL series -- the page layout changed; "
+            f"cannot confirm the CSV is still V{SERIES}."
+        )
+    if max(series) != SERIES:
+        raise ValueError(
+            f"{LEADERBOARD_URL} now names BFCL-v{max(series)} (this reader knows V{SERIES}) -- "
+            f"its Overall Acc is not a V{SERIES} number; refusing to read it into bfcl_v{SERIES}."
+        )
 
 
 def fetch_csv(url: str = CSV_URL, retries: int = 3, delay: float = 2.0) -> str:
@@ -140,6 +168,8 @@ def get_scores() -> list[dict]:
     (Overall Acc %), organization, license, open_weights, rank (rank within the
     leaderboard, 1 = best).
     """
+    print(f"Fetching {LEADERBOARD_URL} ...", file=sys.stderr)
+    check_series(fetch_csv(LEADERBOARD_URL))
     print(f"Fetching {CSV_URL} ...", file=sys.stderr)
     rows = parse_rows(fetch_csv())
     print(f"  parsed {len(rows)} leaderboard rows", file=sys.stderr)
@@ -164,6 +194,9 @@ def get_scores() -> list[dict]:
                 "open_weights": license_open(row.get("License")),
             }
         )
+
+    require_rows(kept, CSV_URL)
+    check_percentages(kept, CSV_URL)
 
     kept.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(kept, 1):

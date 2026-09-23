@@ -4,11 +4,14 @@
 from __future__ import annotations
 
 import argparse
+import atexit
 import json
+import os
 import re
 import shlex
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, Callable
@@ -63,7 +66,9 @@ from _precedence import (
     source_rank,
 )
 from _reference import apply_reference_flags, missing_reference_models
-from _scores import round_score, score_source, stamp_score_source, stamp_score_updated
+from _scores import (
+    check_score_range, round_score, score_source, stamp_score_source, stamp_score_updated,
+)
 # run_fetch below accounts for the fetcher subprocesses, timed() for everything
 # else this script does, so the two together add up to the wall time update-all
 # attributes to update.py. They did not use to: the fetchers came to about 109
@@ -436,6 +441,80 @@ def build_fetch_data_cmd(aa_script: Path, slugs: list[str]) -> list[str]:
     return cmd
 
 
+# Fetcher subprocesses started ahead of need, keyed by their exact command.
+# The fetchers read unrelated hosts and none depends on another's output, so
+# prefetch() starts them all at once and each fetch_*_data() below collects its
+# result as it reaches it; run one after another they were most of update.py's
+# wall time, spent waiting on the network. Output goes to temporary files
+# rather than pipes, so a chatty fetcher never stalls on a full pipe while
+# nothing is reading it yet.
+_PREFETCHED: dict[tuple[str, ...], tuple[subprocess.Popen, Any, Any, float]] = {}
+
+# Seconds one fetcher may run, from launch, before it is killed and its source
+# counted as failed. Without it a fetcher hung on a dead host holds update.py
+# until the workflow's own timeout kills the job, and then nothing is written.
+FETCH_TIMEOUT_VAR = "AI_BENCH_FETCH_TIMEOUT"
+DEFAULT_FETCH_TIMEOUT = 900
+
+
+def fetch_timeout() -> float:
+    try:
+        return float(os.getenv(FETCH_TIMEOUT_VAR, str(DEFAULT_FETCH_TIMEOUT)))
+    except ValueError:
+        return float(DEFAULT_FETCH_TIMEOUT)
+
+
+def _timed_out(cmd: list[str], limit: float) -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(
+        cmd, -9, "", f"TimeoutError: killed after {limit:.0f}s ({FETCH_TIMEOUT_VAR})"
+    )
+
+
+def _kill_prefetched() -> None:
+    """Stop fetchers nobody will collect -- a run that died early, or ^C."""
+    for proc, out, err, _started in _PREFETCHED.values():
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+        out.close()
+        err.close()
+    _PREFETCHED.clear()
+
+
+def prefetch(cmds: list[list[str]]) -> None:
+    """Start every fetcher command now; run_fetch() collects the results."""
+    if not _PREFETCHED and cmds:
+        atexit.register(_kill_prefetched)
+    for cmd in cmds:
+        key = tuple(cmd)
+        if key in _PREFETCHED:
+            continue
+        out = tempfile.TemporaryFile(mode="w+", encoding="utf-8")
+        err = tempfile.TemporaryFile(mode="w+", encoding="utf-8")
+        proc = subprocess.Popen(cmd, stdout=out, stderr=err, text=True)
+        _PREFETCHED[key] = (proc, out, err, time.monotonic())
+
+
+def _collect(
+    entry: tuple[subprocess.Popen, Any, Any, float]
+) -> subprocess.CompletedProcess[str]:
+    proc, out, err, started = entry
+    try:
+        limit = fetch_timeout()
+        try:
+            returncode = proc.wait(timeout=max(0.0, limit - (time.monotonic() - started)))
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait()
+            return _timed_out(list(proc.args), limit)
+        out.seek(0)
+        err.seek(0)
+        return subprocess.CompletedProcess(proc.args, returncode, out.read(), err.read())
+    finally:
+        out.close()
+        err.close()
+
+
 def run_fetch(cmd: list[str], label: str | None = None) -> subprocess.CompletedProcess[str]:
     """Run one fetcher, reporting on stderr what it cost.
 
@@ -454,15 +533,37 @@ def run_fetch(cmd: list[str], label: str | None = None) -> subprocess.CompletedP
 
     `label` is for the two commands that share a script name: the AA slug list
     and the AA score fetch would otherwise both report as artificialanalysis.py.
+
+    A command prefetch() already started is collected rather than run again.
+    Its line reports how long this process actually waited for it -- with the
+    fetchers running side by side the waits, not the run times, are what add
+    up to update.py's wall time.
     """
+    name = label or Path(cmd[1]).name
+    entry = _PREFETCHED.pop(tuple(cmd), None)
+    if entry is not None:
+        waited_from = time.monotonic()
+        proc = _collect(entry)
+        waited = time.monotonic() - waited_from
+        # The fetcher may have finished long before it was asked for, so the
+        # launch-to-collect span is an upper bound on its run time.
+        print(
+            f"  {name}: waited {waited:.1f}s (concurrent; collected "
+            f"{time.monotonic() - entry[3]:.1f}s after launch)",
+            file=sys.stderr,
+        )
+        return proc
     started = time.monotonic()
     try:
-        return subprocess.run(cmd, capture_output=True, text=True)
+        limit = fetch_timeout()
+        try:
+            return subprocess.run(cmd, capture_output=True, text=True, timeout=limit)
+        except subprocess.TimeoutExpired:
+            return _timed_out(cmd, limit)
     finally:
         # In a finally, so an interrupted or unlaunchable fetcher is timed
         # too: how long a dead one took before giving up -- a timeout, a
         # retry loop -- is exactly what a reader is after.
-        name = label or Path(cmd[1]).name
         print(f"  {name}: {time.monotonic() - started:.1f}s", file=sys.stderr)
 
 
@@ -591,6 +692,11 @@ def revision_breakdown(by_key: dict[str, dict[str, dict[str, Any]]]) -> str:
     return f" ({parts})"
 
 
+# Values apply_score() refused this run -- out of range, or not a number. The
+# run carries on without them and main() exits non-zero listing them.
+REJECTED_SCORES: list[str] = []
+
+
 def apply_score(
     doc: dict[str, Any],
     model: dict[str, Any],
@@ -608,6 +714,10 @@ def apply_score(
     Returns the number of updates made (0 or 1). Shared by every source so the
     write rules live in one place:
 
+      * refuse a value outside the benchmark's declared range (a percentage
+        unless llm.json says otherwise), or one that is not a number: a scale
+        flip upstream is recorded in REJECTED_SCORES and skipped rather than
+        stored, since rounding cannot tell 0.42 from 0.4;
       * round onto the benchmark's grid first, so a leaderboard that reports
         two decimals and one that reports one cannot disagree about a score the
         site prints identically either way;
@@ -628,7 +738,15 @@ def apply_score(
     scores = model.setdefault("scores", {})
     if not isinstance(scores, dict):
         return 0
-    new_value = round_score(doc, key, new_value)
+    try:
+        check_score_range(doc, key, new_value, url)
+        new_value = round_score(doc, key, new_value)
+    except (TypeError, ValueError) as exc:
+        # One bad value is that value's problem: it is refused and reported,
+        # and every other score of the run still lands.
+        REJECTED_SCORES.append(f"{slug} {key}: {exc}")
+        print(f"error: {slug} {key}: {exc}", file=sys.stderr)
+        return 0
     old_value = scores.get(key)
 
     if fill_urls_only:
@@ -2263,6 +2381,94 @@ def update_llmstats_scores(
     return matched, updated, changes
 
 
+def snapshot_scores(doc: dict[str, Any]) -> dict[str, tuple[dict, dict, dict]]:
+    """Each model's scores, dates and sources as the run found them."""
+    snapshot: dict[str, tuple[dict, dict, dict]] = {}
+    for model in doc.get("models", []):
+        name = model.get("name")
+        if isinstance(name, str):
+            snapshot[name] = tuple(
+                dict(model.get(field) or {}) if isinstance(model.get(field), dict) else {}
+                for field in ("scores", "scores_updated", "scores_source")
+            )
+    return snapshot
+
+
+def undo_round_trips(
+    doc: dict[str, Any],
+    snapshot: dict[str, tuple[dict, dict, dict]],
+    changes: list[tuple[str, str, Any, Any]],
+) -> list[tuple[str, str, Any, Any]]:
+    """Drop the writes that ended where they started; return the changes left.
+
+    Two sources of equal standing that disagree on one column both write it
+    every run -- evals.report's 80.9 for Llama 4 Maverick's MMLU-Pro, then Vals'
+    79.4 -- so the score ends the run exactly as it began, but its date is
+    restamped to today every time. A (model, benchmark) whose value and source
+    are back to what the run found gets its original date back, and its
+    intermediate writes leave the change table.
+    """
+    by_name = {m.get("name"): m for m in doc.get("models", []) if isinstance(m, dict)}
+    reverted: set[tuple[str, str]] = set()
+    for slug, key in {(slug, key) for slug, key, _old, _new in changes}:
+        model = by_name.get(slug)
+        before = snapshot.get(slug)
+        if model is None or before is None or key not in before[0]:
+            continue
+        scores_before, updated_before, source_before = before
+        if (
+            (model.get("scores") or {}).get(key) == scores_before.get(key)
+            and (model.get("scores_source") or {}).get(key) == source_before.get(key)
+        ):
+            if isinstance(model.get("scores_updated"), dict) and key in updated_before:
+                model["scores_updated"][key] = updated_before[key]
+            reverted.add((slug, key))
+    return [change for change in changes if (change[0], change[1]) not in reverted]
+
+
+def source_update(
+    failures: list[str], empty: Any, label: str, fn: Callable[..., Any], *args: Any,
+    **kwargs: Any,
+) -> Any:
+    """One source's update_*() under timed(), or `empty` when it raised.
+
+    The ingest counterpart of source_data(): a source whose rows trip a bug
+    in its ingest loses the rest of its own writes, not the whole run's. What
+    it wrote before raising stays -- each of those writes went through
+    apply_score() and is valid on its own.
+    """
+    try:
+        return timed(label, fn, *args, **kwargs)
+    except Exception as exc:  # noqa: BLE001 - any ingest bug is one source's
+        failures.append(f"{label}: {type(exc).__name__}: {exc}")
+        print(f"error: {label} failed; its remaining writes are skipped: {exc!r}", file=sys.stderr)
+        return empty
+
+
+def source_data(
+    failures: list[str], fetch: Callable[..., dict[str, Any]], *args: Any
+) -> dict[str, Any]:
+    """One source's fetch_*_data(), or {} when that source failed.
+
+    A fetcher raises -- and exits non-zero -- when its page moved: a table gone,
+    a column renamed, a scale that no longer reads as a percentage. That is one
+    source to look at, not a reason to throw away every other source's scores
+    for the run, so the failure is recorded, the source contributes nothing,
+    and main() exits non-zero once the rest are written. Which values land does
+    not depend on which sources ran (_precedence.py), so a skipped source only
+    leaves its own columns where the last good run put them.
+    """
+    try:
+        return fetch(*args)
+    except Exception as exc:  # noqa: BLE001 - any failure is this source's
+        name = fetch.__name__.removeprefix("fetch_").removesuffix("_data")
+        message = str(exc).strip().splitlines()
+        summary = message[-1] if message else type(exc).__name__
+        failures.append(f"{name}: {summary}")
+        print(f"error: source {name} failed and is skipped this run:\n{exc}", file=sys.stderr)
+        return {}
+
+
 def main() -> int:
     # Against the same clock the per-phase lines use, so the phases can be read
     # against the whole and what is left over is visibly what is left over.
@@ -2394,55 +2600,61 @@ def main() -> int:
 
     slugs = unique_names(models)
     spheron_paths = sorted(load_spheron_to_slug_mapping(spheron_mapping_path))
-    print("commands:")
+    listed: list[list[str]] = []
     if not args.skip_aa:
-        print(f"  - {shlex.join(build_list_models_cmd(aa_path))}")
+        listed.append(build_list_models_cmd(aa_path))
     if not args.skip_aa_coding_agents:
-        print(f"  - {shlex.join(build_fetch_aa_coding_agents_cmd(aa_coding_agents_path))}")
+        listed.append(build_fetch_aa_coding_agents_cmd(aa_coding_agents_path))
     if not args.skip_osworld:
-        print(f"  - {shlex.join(build_fetch_osworld_cmd(osworld_path))}")
+        listed.append(build_fetch_osworld_cmd(osworld_path))
     if not args.skip_llmstats:
-        print(f"  - {shlex.join(build_fetch_llmstats_cmd(llmstats_path))}")
+        listed.append(build_fetch_llmstats_cmd(llmstats_path))
     if not args.skip_huggingface:
-        print(f"  - {shlex.join(build_fetch_huggingface_cmd(huggingface_path))}")
+        listed.append(build_fetch_huggingface_cmd(huggingface_path))
     if not args.skip_toolathlon:
-        print(f"  - {shlex.join(build_fetch_toolathlon_cmd(toolathlon_path))}")
+        listed.append(build_fetch_toolathlon_cmd(toolathlon_path))
     if not args.skip_programbench:
-        print(f"  - {shlex.join(build_fetch_programbench_cmd(programbench_path))}")
+        listed.append(build_fetch_programbench_cmd(programbench_path))
     if not args.skip_real_swe:
-        print(f"  - {shlex.join(build_fetch_real_swe_cmd(real_swe_path))}")
+        listed.append(build_fetch_real_swe_cmd(real_swe_path))
     if not args.skip_deepswe:
-        print(f"  - {shlex.join(build_fetch_deepswe_cmd(deepswe_path))}")
+        listed.append(build_fetch_deepswe_cmd(deepswe_path))
     if not args.skip_datacurve:
-        print(f"  - {shlex.join(build_fetch_datacurve_cmd(datacurve_path))}")
+        listed.append(build_fetch_datacurve_cmd(datacurve_path))
     if not args.skip_frontierswe:
-        print(f"  - {shlex.join(build_fetch_frontierswe_cmd(frontierswe_path))}")
+        listed.append(build_fetch_frontierswe_cmd(frontierswe_path))
     if not args.skip_tbench:
-        print(f"  - {shlex.join(build_fetch_tbench_cmd(tbench_path))}")
+        listed.append(build_fetch_tbench_cmd(tbench_path))
     if not args.skip_agents_last_exam:
-        print(
-            f"  - {shlex.join(build_fetch_agents_last_exam_cmd(agents_last_exam_path))}"
-        )
+        listed.append(build_fetch_agents_last_exam_cmd(agents_last_exam_path))
     if not args.skip_frontiercode:
-        print(f"  - {shlex.join(build_fetch_frontiercode_cmd(frontiercode_path))}")
+        listed.append(build_fetch_frontiercode_cmd(frontiercode_path))
     if not args.skip_swe_atlas:
-        print(f"  - {shlex.join(build_fetch_swe_atlas_cmd(swe_atlas_path))}")
+        listed.append(build_fetch_swe_atlas_cmd(swe_atlas_path))
     if not args.skip_evals_report:
-        print(f"  - {shlex.join(build_fetch_evals_report_cmd(evals_report_path))}")
+        listed.append(build_fetch_evals_report_cmd(evals_report_path))
     if not args.skip_vals:
-        print(f"  - {shlex.join(build_fetch_vals_cmd(vals_path))}")
+        listed.append(build_fetch_vals_cmd(vals_path))
     if not args.skip_swe_marathon:
-        print(f"  - {shlex.join(build_fetch_swe_marathon_cmd(swe_marathon_path))}")
+        listed.append(build_fetch_swe_marathon_cmd(swe_marathon_path))
     if not args.skip_mcp_atlas:
-        print(f"  - {shlex.join(build_fetch_mcp_atlas_cmd(mcp_atlas_path))}")
+        listed.append(build_fetch_mcp_atlas_cmd(mcp_atlas_path))
     if not args.skip_zerobench:
-        print(f"  - {shlex.join(build_fetch_zerobench_cmd(zerobench_path))}")
+        listed.append(build_fetch_zerobench_cmd(zerobench_path))
     if not args.skip_bfcl:
-        print(f"  - {shlex.join(build_fetch_bfcl_cmd(bfcl_path))}")
+        listed.append(build_fetch_bfcl_cmd(bfcl_path))
     if not args.skip_spheron and spheron_paths:
-        print(f"  - {shlex.join(build_fetch_spheron_cmd(spheron_path, spheron_paths))}")
+        listed.append(build_fetch_spheron_cmd(spheron_path, spheron_paths))
+
+    print("commands:")
+    for cmd in listed:
+        print(f"  - {shlex.join(cmd)}")
+    prefetch(listed)
 
     changes: list[tuple[str, str, Any, Any]] = []
+    # Sources whose fetch failed this run; the rest still land. See source_data().
+    failed_sources: list[str] = []
+    found = snapshot_scores(doc)
     available_slugs: set[str] = set()
     existing_slugs: list[str] = []
     aa_slug_by_model: dict[str, list[str]] = {}
@@ -2451,8 +2663,17 @@ def main() -> int:
     aa_updated = 0
     seen_eval_keys: set[str] = set()
 
-    if not args.skip_aa:
-        available_slugs = fetch_available_slugs(aa_path)
+    # Artificial Analysis is the base source, but a run without it still
+    # writes every other source's scores; aa_ok says whether it answered.
+    aa_ok = not args.skip_aa
+    if aa_ok:
+        try:
+            available_slugs = fetch_available_slugs(aa_path)
+        except Exception as exc:  # noqa: BLE001 - AA down is one source down
+            aa_ok = False
+            failed_sources.append(f"artificialanalysis: {exc}".splitlines()[0])
+            print(f"error: artificialanalysis failed and is skipped this run:\n{exc}", file=sys.stderr)
+    if aa_ok:
         aa_slug_by_model = resolve_aa_slugs(slugs, available_slugs, aa_model_mapping_path)
         existing_slugs = list(
             dict.fromkeys(
@@ -2464,14 +2685,15 @@ def main() -> int:
         print(f"  - {shlex.join(build_fetch_data_cmd(aa_path, existing_slugs))}")
     print()
 
-    if not args.skip_aa:
-        by_aa_slug = fetch_aa_data(aa_path, existing_slugs)
+    if aa_ok:
+        by_aa_slug = source_data(failed_sources, fetch_aa_data, aa_path, existing_slugs)
         by_slug = {}
         for slug, aa_slugs in aa_slug_by_model.items():
             records = [by_aa_slug[aa_slug] for aa_slug in aa_slugs if aa_slug in by_aa_slug]
             if records:
                 by_slug[slug] = merge_aa_models(records)
-        matched, aa_updated, seen_eval_keys, aa_changes = timed(
+        matched, aa_updated, seen_eval_keys, aa_changes = source_update(
+            failed_sources, (0, 0, set(), []),
             "update_scores",
             update_scores,
             doc, by_slug, fill_urls_only=args.fill_source_urls
@@ -2487,11 +2709,13 @@ def main() -> int:
     aa_coding_agents_matched = 0
     aa_coding_agents_updated = 0
     if not args.skip_aa_coding_agents:
-        aa_coding_agents_by_slug = fetch_aa_coding_agents_data(
+        aa_coding_agents_by_slug = source_data(
+            failed_sources, fetch_aa_coding_agents_data,
             aa_coding_agents_path, aa_coding_agents_mapping_path
         )
         aa_coding_agents_matched, aa_coding_agents_updated, aa_coding_agents_changes = (
-            timed(
+            source_update(
+                failed_sources, (0, 0, []),
                 "update_aa_coding_agents_scores",
                 update_aa_coding_agents_scores,
                 doc, aa_coding_agents_by_slug, fill_urls_only=args.fill_source_urls
@@ -2503,8 +2727,11 @@ def main() -> int:
     osworld_matched = 0
     osworld_updated = 0
     if not args.skip_osworld:
-        osworld_by_slug = fetch_osworld_data(osworld_path, osworld_mapping_path)
-        osworld_matched, osworld_updated, osworld_changes = timed(
+        osworld_by_slug = source_data(
+            failed_sources, fetch_osworld_data, osworld_path, osworld_mapping_path
+        )
+        osworld_matched, osworld_updated, osworld_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_osworld_scores",
             update_osworld_scores,
             doc, osworld_by_slug, fill_urls_only=args.fill_source_urls
@@ -2515,10 +2742,12 @@ def main() -> int:
     llmstats_matched = 0
     llmstats_updated = 0
     if not args.skip_llmstats:
-        llmstats_by_slug = fetch_llmstats_data(
+        llmstats_by_slug = source_data(
+            failed_sources, fetch_llmstats_data,
             llmstats_path, llmstats_model_mapping_path, llmstats_benchmark_mapping_path
         )
-        llmstats_matched, llmstats_updated, llmstats_changes = timed(
+        llmstats_matched, llmstats_updated, llmstats_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_llmstats_scores",
             update_llmstats_scores,
             doc, llmstats_by_slug, fill_urls_only=args.fill_source_urls
@@ -2530,8 +2759,11 @@ def main() -> int:
     hf_updated = 0
     hf_params_filled = 0
     if not args.skip_huggingface:
-        huggingface_by_slug = fetch_huggingface_data(huggingface_path, huggingface_mapping_path)
-        hf_matched, hf_updated, hf_changes = timed(
+        huggingface_by_slug = source_data(
+            failed_sources, fetch_huggingface_data, huggingface_path, huggingface_mapping_path
+        )
+        hf_matched, hf_updated, hf_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_huggingface_scores",
             update_huggingface_scores,
             doc, huggingface_by_slug, fill_urls_only=args.fill_source_urls
@@ -2540,7 +2772,8 @@ def main() -> int:
         # Runs after the AA pass above so AA's total+active pair wins. Params
         # are not scores, so the URL backfill leaves them alone.
         if not args.fill_source_urls:
-            hf_params_filled, hf_params_changes = timed(
+            hf_params_filled, hf_params_changes = source_update(
+                failed_sources, (0, []),
                 "fill_missing_params_from_huggingface",
                 fill_missing_params_from_huggingface,
                 doc,
@@ -2551,8 +2784,11 @@ def main() -> int:
     toolathlon_matched = 0
     toolathlon_updated = 0
     if not args.skip_toolathlon:
-        toolathlon_by_slug = fetch_toolathlon_data(toolathlon_path, toolathlon_mapping_path)
-        toolathlon_matched, toolathlon_updated, toolathlon_changes = timed(
+        toolathlon_by_slug = source_data(
+            failed_sources, fetch_toolathlon_data, toolathlon_path, toolathlon_mapping_path
+        )
+        toolathlon_matched, toolathlon_updated, toolathlon_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_toolathlon_scores",
             update_toolathlon_scores,
             doc, toolathlon_by_slug, fill_urls_only=args.fill_source_urls
@@ -2563,11 +2799,13 @@ def main() -> int:
     programbench_matched = 0
     programbench_updated = 0
     if not args.skip_programbench:
-        programbench_by_slug = fetch_programbench_data(
+        programbench_by_slug = source_data(
+            failed_sources, fetch_programbench_data,
             programbench_path, programbench_mapping_path
         )
         programbench_matched, programbench_updated, programbench_changes = (
-            timed(
+            source_update(
+                failed_sources, (0, 0, []),
                 "update_programbench_scores",
                 update_programbench_scores,
                 doc, programbench_by_slug, fill_urls_only=args.fill_source_urls
@@ -2579,8 +2817,11 @@ def main() -> int:
     real_swe_matched = 0
     real_swe_updated = 0
     if not args.skip_real_swe:
-        real_swe_by_slug = fetch_real_swe_data(real_swe_path, real_swe_mapping_path)
-        real_swe_matched, real_swe_updated, real_swe_changes = timed(
+        real_swe_by_slug = source_data(
+            failed_sources, fetch_real_swe_data, real_swe_path, real_swe_mapping_path
+        )
+        real_swe_matched, real_swe_updated, real_swe_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_real_swe_scores",
             update_real_swe_scores,
             doc, real_swe_by_slug, fill_urls_only=args.fill_source_urls
@@ -2591,8 +2832,11 @@ def main() -> int:
     deepswe_matched = 0
     deepswe_updated = 0
     if not args.skip_deepswe:
-        deepswe_by_slug = fetch_deepswe_data(deepswe_path, deepswe_mapping_path)
-        deepswe_matched, deepswe_updated, deepswe_changes = timed(
+        deepswe_by_slug = source_data(
+            failed_sources, fetch_deepswe_data, deepswe_path, deepswe_mapping_path
+        )
+        deepswe_matched, deepswe_updated, deepswe_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_deepswe_scores",
             update_deepswe_scores,
             doc, deepswe_by_slug, fill_urls_only=args.fill_source_urls
@@ -2604,8 +2848,11 @@ def main() -> int:
     datacurve_matched = 0
     datacurve_updated = 0
     if not args.skip_datacurve:
-        datacurve_by_slug = fetch_datacurve_data(datacurve_path, deepswe_mapping_path)
-        datacurve_matched, datacurve_updated, datacurve_changes = timed(
+        datacurve_by_slug = source_data(
+            failed_sources, fetch_datacurve_data, datacurve_path, deepswe_mapping_path
+        )
+        datacurve_matched, datacurve_updated, datacurve_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_datacurve_scores",
             update_datacurve_scores,
             doc, datacurve_by_slug, fill_urls_only=args.fill_source_urls
@@ -2616,8 +2863,11 @@ def main() -> int:
     frontierswe_matched = 0
     frontierswe_updated = 0
     if not args.skip_frontierswe:
-        frontierswe_by_slug = fetch_frontierswe_data(frontierswe_path, frontierswe_mapping_path)
-        frontierswe_matched, frontierswe_updated, frontierswe_changes = timed(
+        frontierswe_by_slug = source_data(
+            failed_sources, fetch_frontierswe_data, frontierswe_path, frontierswe_mapping_path
+        )
+        frontierswe_matched, frontierswe_updated, frontierswe_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_frontierswe_scores",
             update_frontierswe_scores,
             doc, frontierswe_by_slug, fill_urls_only=args.fill_source_urls
@@ -2628,8 +2878,11 @@ def main() -> int:
     tbench_matched = 0
     tbench_updated = 0
     if not args.skip_tbench:
-        tbench_by_slug = fetch_tbench_data(tbench_path, tbench_mapping_path)
-        tbench_matched, tbench_updated, tbench_changes = timed(
+        tbench_by_slug = source_data(
+            failed_sources, fetch_tbench_data, tbench_path, tbench_mapping_path
+        )
+        tbench_matched, tbench_updated, tbench_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_tbench_scores",
             update_tbench_scores,
             doc, tbench_by_slug, fill_urls_only=args.fill_source_urls
@@ -2640,14 +2893,16 @@ def main() -> int:
     agents_last_exam_matched = 0
     agents_last_exam_updated = 0
     if not args.skip_agents_last_exam:
-        agents_last_exam_by_slug = fetch_agents_last_exam_data(
+        agents_last_exam_by_slug = source_data(
+            failed_sources, fetch_agents_last_exam_data,
             agents_last_exam_path, agents_last_exam_mapping_path
         )
         (
             agents_last_exam_matched,
             agents_last_exam_updated,
             agents_last_exam_changes,
-        ) = timed(
+        ) = source_update(
+            failed_sources, (0, 0, []),
             "update_agents_last_exam_scores",
             update_agents_last_exam_scores,
             doc, agents_last_exam_by_slug, fill_urls_only=args.fill_source_urls
@@ -2658,8 +2913,11 @@ def main() -> int:
     swe_atlas_matched = 0
     swe_atlas_updated = 0
     if not args.skip_swe_atlas:
-        swe_atlas_by_slug = fetch_swe_atlas_data(swe_atlas_path, swe_atlas_mapping_path)
-        swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = timed(
+        swe_atlas_by_slug = source_data(
+            failed_sources, fetch_swe_atlas_data, swe_atlas_path, swe_atlas_mapping_path
+        )
+        swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_swe_atlas_scores",
             update_swe_atlas_scores,
             doc, swe_atlas_by_slug, fill_urls_only=args.fill_source_urls
@@ -2670,8 +2928,11 @@ def main() -> int:
     evals_report_matched = 0
     evals_report_updated = 0
     if not args.skip_evals_report:
-        evals_report_by_slug = fetch_evals_report_data(evals_report_path, evals_report_mapping_path)
-        evals_report_matched, evals_report_updated, evals_report_changes = timed(
+        evals_report_by_slug = source_data(
+            failed_sources, fetch_evals_report_data, evals_report_path, evals_report_mapping_path
+        )
+        evals_report_matched, evals_report_updated, evals_report_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_evals_report_scores",
             update_evals_report_scores,
             doc, evals_report_by_slug, fill_urls_only=args.fill_source_urls
@@ -2682,8 +2943,9 @@ def main() -> int:
     vals_matched = 0
     vals_updated = 0
     if not args.skip_vals:
-        vals_by_slug = fetch_vals_data(vals_path, vals_mapping_path)
-        vals_matched, vals_updated, vals_changes = timed(
+        vals_by_slug = source_data(failed_sources, fetch_vals_data, vals_path, vals_mapping_path)
+        vals_matched, vals_updated, vals_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_vals_scores",
             update_vals_scores,
             doc, vals_by_slug, fill_urls_only=args.fill_source_urls
@@ -2695,8 +2957,11 @@ def main() -> int:
     frontiercode_matched = 0
     frontiercode_updated = 0
     if not args.skip_frontiercode:
-        frontiercode_by_slug = fetch_frontiercode_data(frontiercode_path, frontiercode_mapping_path)
-        frontiercode_matched, frontiercode_updated, frontiercode_changes = timed(
+        frontiercode_by_slug = source_data(
+            failed_sources, fetch_frontiercode_data, frontiercode_path, frontiercode_mapping_path
+        )
+        frontiercode_matched, frontiercode_updated, frontiercode_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_frontiercode_scores",
             update_frontiercode_scores,
             doc, frontiercode_by_slug, fill_urls_only=args.fill_source_urls
@@ -2708,8 +2973,11 @@ def main() -> int:
     swe_marathon_matched = 0
     swe_marathon_updated = 0
     if not args.skip_swe_marathon:
-        swe_marathon_by_slug = fetch_swe_marathon_data(swe_marathon_path, swe_marathon_mapping_path)
-        swe_marathon_matched, swe_marathon_updated, swe_marathon_changes = timed(
+        swe_marathon_by_slug = source_data(
+            failed_sources, fetch_swe_marathon_data, swe_marathon_path, swe_marathon_mapping_path
+        )
+        swe_marathon_matched, swe_marathon_updated, swe_marathon_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_swe_marathon_scores",
             update_swe_marathon_scores,
             doc, swe_marathon_by_slug, fill_urls_only=args.fill_source_urls
@@ -2723,8 +2991,11 @@ def main() -> int:
     mcp_atlas_matched = 0
     mcp_atlas_updated = 0
     if not args.skip_mcp_atlas:
-        mcp_atlas_by_slug = fetch_mcp_atlas_data(mcp_atlas_path, mcp_atlas_mapping_path)
-        mcp_atlas_matched, mcp_atlas_updated, mcp_atlas_changes = timed(
+        mcp_atlas_by_slug = source_data(
+            failed_sources, fetch_mcp_atlas_data, mcp_atlas_path, mcp_atlas_mapping_path
+        )
+        mcp_atlas_matched, mcp_atlas_updated, mcp_atlas_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_mcp_atlas_scores",
             update_mcp_atlas_scores,
             doc, mcp_atlas_by_slug, fill_urls_only=args.fill_source_urls
@@ -2738,8 +3009,11 @@ def main() -> int:
     zerobench_matched = 0
     zerobench_updated = 0
     if not args.skip_zerobench:
-        zerobench_by_slug = fetch_zerobench_data(zerobench_path, zerobench_mapping_path)
-        zerobench_matched, zerobench_updated, zerobench_changes = timed(
+        zerobench_by_slug = source_data(
+            failed_sources, fetch_zerobench_data, zerobench_path, zerobench_mapping_path
+        )
+        zerobench_matched, zerobench_updated, zerobench_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_zerobench_scores",
             update_zerobench_scores,
             doc, zerobench_by_slug, fill_urls_only=args.fill_source_urls
@@ -2751,8 +3025,9 @@ def main() -> int:
     bfcl_matched = 0
     bfcl_updated = 0
     if not args.skip_bfcl:
-        bfcl_by_slug = fetch_bfcl_data(bfcl_path, bfcl_mapping_path)
-        bfcl_matched, bfcl_updated, bfcl_changes = timed(
+        bfcl_by_slug = source_data(failed_sources, fetch_bfcl_data, bfcl_path, bfcl_mapping_path)
+        bfcl_matched, bfcl_updated, bfcl_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_bfcl_scores",
             update_bfcl_scores,
             doc, bfcl_by_slug, fill_urls_only=args.fill_source_urls
@@ -2763,25 +3038,36 @@ def main() -> int:
     spheron_matched = 0
     spheron_updated = 0
     if not args.skip_spheron:
-        spheron_by_slug = fetch_spheron_data(spheron_path, spheron_mapping_path)
-        spheron_matched, spheron_updated, spheron_changes = timed(
+        spheron_by_slug = source_data(
+            failed_sources, fetch_spheron_data, spheron_path, spheron_mapping_path
+        )
+        spheron_matched, spheron_updated, spheron_changes = source_update(
+            failed_sources, (0, 0, []),
             "update_spheron_vram", update_spheron_vram, doc, spheron_by_slug
         )
         changes.extend(spheron_changes)
 
-    missing = [slug for slug in slugs if slug not in aa_slug_by_model] if not args.skip_aa else []
+    changes = undo_round_trips(doc, found, changes)
+    missing = [slug for slug in slugs if slug not in aa_slug_by_model] if aa_ok else []
     if args.write:
         # The derived indexes are a function of the scores just fetched, so
         # they go stale the moment any of them moves. Refreshed in memory here
         # so a direct `update.py -w` leaves llm.json consistent on its own,
         # without depending on update-all's later derive step. The URL backfill
         # moves no score, and skipping the refresh keeps its diff pure.
+        #
+        # Neither refresh may cost the run its scores: one that raises is
+        # reported and the file is written with the scores regardless, leaving
+        # `./derive_indexes.py -w` (or the next run) to bring them level.
         if not args.fill_source_urls:
-            timed("derive_indexes.refresh_and_report", derive_indexes.refresh_and_report, doc)
+            source_update(
+                failed_sources, (), "derive_indexes.refresh_and_report",
+                derive_indexes.refresh_and_report, doc,
+            )
         # Every score this run wrote is now in place with its date and source
         # page; the history is brought level with them in one pass rather than
         # each ingest remembering to log its own writes.
-        timed("_history.sync", _history.sync, doc)
+        source_update(failed_sources, (), "_history.sync", _history.sync, doc)
         timed(
             f"write {llm_path.name}",
             lambda: llm_path.write_text(
@@ -2946,7 +3232,22 @@ def main() -> int:
     if not args.write:
         print("dry-run only, pass --write to persist changes")
     print(f"  update.py total: {time.monotonic() - run_started:.1f}s", file=sys.stderr)
-    return 0
+    # Scores are written above whatever failed; the exit status is how the
+    # failures reach update-all and the workflow.
+    status = 0
+    if failed_sources:
+        print(file=sys.stderr)
+        print(f"{len(failed_sources)} step(s) failed and were skipped:", file=sys.stderr)
+        for failure in failed_sources:
+            print(f"  - {failure}", file=sys.stderr)
+        status = 1
+    if REJECTED_SCORES:
+        print(file=sys.stderr)
+        print(f"{len(REJECTED_SCORES)} value(s) refused and not stored:", file=sys.stderr)
+        for rejected in REJECTED_SCORES:
+            print(f"  - {rejected}", file=sys.stderr)
+        status = 1
+    return status
 
 
 if __name__ == "__main__":

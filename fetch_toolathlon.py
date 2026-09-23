@@ -35,6 +35,7 @@ import time
 import urllib.error
 import urllib.request
 
+from _fetch_checks import check_percentages, require_columns, require_rows
 from _openness import source_type_open
 
 
@@ -44,6 +45,8 @@ URL = "https://toolathlon.xyz/docs/leaderboard"
 # the attribute is `class` in the rendered HTML and `className` in the .md
 # mirror; the class token itself is the stable part.
 CURRENT_TABLE_CLASS = "leaderboard-current-table"
+# Header cells the row parse reads; "pass@1" is the score itself.
+REQUIRED_COLUMNS = ("model", "pass@1")
 
 HEADERS = {
     "User-Agent": (
@@ -119,6 +122,9 @@ def parse_rows(table_body: str) -> list[dict]:
             continue
         if not header:
             header = [_text(c).lower().lstrip("# ").strip() for c in cells]
+            # A renamed column would read as an empty cell on every row and
+            # leave nothing to report, exactly like an empty board.
+            require_columns(header, REQUIRED_COLUMNS, URL)
             continue
         values = {header[i]: cells[i] for i in range(min(len(header), len(cells)))}
         raw = values.get("model")
@@ -172,6 +178,9 @@ def get_scores(include_self_reported: bool = False) -> list[dict]:
         + (f" ({dropped} self-reported dropped)" if dropped else ""),
         file=sys.stderr,
     )
+
+    require_rows(kept, URL, "Toolathlon-Verified rows")
+    check_percentages(kept, URL)
 
     kept.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(kept, 1):

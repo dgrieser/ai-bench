@@ -24,7 +24,10 @@ import argparse
 import json
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 
 BASE_URL = "https://www.spheron.network/tools/gpu-recommender/{model}/"
@@ -43,16 +46,32 @@ HEADERS = {
     )
 }
 
+# Model pages read at once. One page per model and ~150 models: read one after
+# another they were the longest fetch of a refresh by minutes.
+MAX_WORKERS = 8
+
 _NEXT_DATA_RE = re.compile(
     r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
     re.DOTALL,
 )
 
 
-def fetch_html(url: str) -> str:
+def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+    for attempt in range(1, retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return resp.read().decode("utf-8", errors="replace")
+        except urllib.error.HTTPError as exc:
+            # A 404 is a model Spheron does not know; asking again cannot help.
+            if exc.code < 500 and exc.code != 429 or attempt == retries:
+                raise
+            time.sleep(delay * attempt)
+        except (urllib.error.URLError, OSError):
+            if attempt == retries:
+                raise
+            time.sleep(delay * attempt)
+    raise AssertionError("unreachable")
 
 
 def extract_next_data(html: str) -> dict:
@@ -104,16 +123,25 @@ def get_scores(models: list[str]) -> list[dict]:
 
     Keys: model (canonical org/model id), vram_fp16, vram_int8, vram_int4 (GB).
     """
-    results: list[dict] = []
-    for model in models:
+    def fetch_one(model: str) -> dict | None:
         url = BASE_URL.format(model=model)
         print(f"Fetching {url} ...", file=sys.stderr)
         try:
-            row = parse_model(fetch_html(url), fallback_id=model)
+            return parse_model(fetch_html(url), fallback_id=model)
         except Exception as exc:  # noqa: BLE001 - keep going across models
             print(f"  failed for {model}: {exc}", file=sys.stderr)
-            continue
-        results.append(row)
+            return None
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        rows = list(pool.map(fetch_one, models))
+    results = [row for row in rows if row is not None]
+    # One model failing is that model's page; every model failing is the
+    # site's layout, and must not read as "no estimates today".
+    if models and not results:
+        raise ValueError(
+            f"Every one of {len(models)} Spheron page(s) failed to parse -- the "
+            "page layout changed; refusing to report no estimates."
+        )
     return results
 
 
