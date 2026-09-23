@@ -36,6 +36,191 @@
       "route_kind": "aa-mapping",
       "subject": "mimo-v2-6-flash",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-fin",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-flash-2-0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'ant/ling-3.0-flash-af-rc3' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "ant/ling-3.0-flash-af-rc3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-luna",
+          "reason": "exact to gpt-6-luna, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt-6-luna, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt-6-luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt-6-luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt-6-luna, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-6-luna' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "openai/gpt-6-luna",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt-6-sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt-6-sol, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "exact to gpt-6-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt-6-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt-6-sol, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-6-sol' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "openai/gpt-6-sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to mimo-v2.6-flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "exact to mimo-v2.6-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to mimo-v2.6-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'xiaomi/mimo-v2.6-flash' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "xiaomi/mimo-v2.6-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to mimo-v2.6-pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "exact to mimo-v2.6-pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to mimo-v2.6-pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'xiaomi/mimo-v2.6-pro' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "xiaomi/mimo-v2.6-pro",
+      "universe": "models"
     }
   ]
 }
