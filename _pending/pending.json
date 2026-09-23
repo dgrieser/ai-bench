@@ -4,6 +4,28 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to opus 5.5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to opus 5.5, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'opus 5.5' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "mimo-v2-flash",
           "reason": "exact to mimo-v2-6-flash, most components match"
         },
@@ -72,6 +94,80 @@
       "route": "update_vals_mapping.py",
       "route_kind": "mapping",
       "subject": "ant/ling-3.0-flash-af-rc3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-luna",
+          "reason": "exact to gpt 6 luna, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 6 luna, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt 6 luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt 6 luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 6 luna, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 6 luna' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 6 luna",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt 6 sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 6 sol, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "exact to gpt 6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt 6 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to gpt 6 sol, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'gpt 6 sol' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 6 sol",
       "universe": "models"
     }
   ]
