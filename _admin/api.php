@@ -31,13 +31,17 @@ declare(strict_types=1);
 // refuses to run below NEEDS_API; anything added since is announced in the GET
 // payload instead, so a newer page against an older endpoint loses the new
 // thing rather than the whole queue.
-const API_VERSION = 5;
+const API_VERSION = 6;
 
 const WORKFLOW = 'update-benchmarks.yml';
 // The workflow step that applies a dispatched batch, by name. The run's own
 // conclusion cannot stand in for it: see answer_step() below.
 const ANSWER_STEP = 'Apply the answers';
 const REF      = 'main';           // never taken from the client: see the workflow
+// The title every fetcher warning carries on a run: _fetch_warnings.TITLE_PREFIX,
+// which test_fetch_warnings.py holds this to. Anything else a run annotates -- a
+// deprecated action, a runner notice -- is not a fetcher and stays off the page.
+const WARNING_TITLE = 'Fetcher failed';
 const MAX_RECORDS = 25;
 const MAX_BYTES   = 60000;         // workflow_dispatch caps an input near 64 KB
 const GUARD_HEADER = 'HTTP_X_AI_BENCH_ADMIN';
@@ -189,6 +193,59 @@ function answer_step(array $config, string $run): array
     return ['step' => ANSWER_STEP, 'conclusion' => null];
 }
 
+/**
+ * The fetchers a run could not read, from its own annotations.
+ *
+ * A broken fetcher no longer reds the run: the workflow records it as a
+ * `::warning` titled "Fetcher failed: <source>" and carries on, so a green run
+ * may still have skipped a source. These are what say which.
+ *
+ * Annotations belong to check runs, and a job's id is its check run's id, so
+ * this is one jobs read plus one annotations read per job -- the workflow has
+ * one. Reading them needs Checks: read on the token as well as Actions; a token
+ * without it gets `warnings: null` and GitHub's reason, and the page says
+ * "unavailable" rather than "none", which would be a lie.
+ */
+function run_warnings(array $config, string $run): array
+{
+    [$status, $body] = github($config, 'GET', '/actions/runs/' . $run . '/jobs?per_page=30');
+    if ($status >= 400) {
+        return ['warnings' => null, 'reason' => $body['message'] ?? "HTTP $status"];
+    }
+    $warnings = [];
+    foreach ($body['jobs'] ?? [] as $job) {
+        if (empty($job['id'])) {
+            continue;
+        }
+        [$status, $annotations] = github(
+            $config,
+            'GET',
+            '/check-runs/' . $job['id'] . '/annotations?per_page=100'
+        );
+        if ($status >= 400) {
+            $reason = $annotations['message'] ?? "HTTP $status";
+            if ($status === 403 || $status === 404) {
+                $reason .= ' -- the token needs Checks: read to list a run\'s warnings; see _admin/README.md.';
+            }
+            return ['warnings' => null, 'reason' => $reason];
+        }
+        foreach ($annotations as $annotation) {
+            if (!is_array($annotation) || ($annotation['annotation_level'] ?? '') !== 'warning') {
+                continue;
+            }
+            $title = (string) ($annotation['title'] ?? '');
+            if (!str_starts_with($title, WARNING_TITLE . ':')) {
+                continue;
+            }
+            $warnings[] = [
+                'source'  => trim(substr($title, strlen(WARNING_TITLE) + 1)),
+                'message' => (string) ($annotation['message'] ?? ''),
+            ];
+        }
+    }
+    return ['warnings' => $warnings];
+}
+
 function recent_runs(array $config): array
 {
     [$status, $body] = github(
@@ -225,6 +282,14 @@ if ($method === 'GET') {
         }
         ok(['api' => API_VERSION] + answer_step($config, $answered));
     }
+    // Asked for once per finished run the page lists. Digits only, as above.
+    $warned = (string) ($_GET['warnings'] ?? '');
+    if ($warned !== '') {
+        if (preg_match('/^[0-9]{1,20}$/', $warned) !== 1) {
+            fail(400, 'warnings must be a run id.');
+        }
+        ok(['api' => API_VERSION, 'run' => (int) $warned] + run_warnings($config, $warned));
+    }
     ok([
         'api'  => API_VERSION,
         'repo' => $config['repo'],
@@ -238,6 +303,10 @@ if ($method === 'GET') {
         // than required, like `steps`: a page against an older endpoint hides
         // the button instead of offering one that 400s.
         'refresh' => true,
+        // Whether ?warnings=<run id> can be served: the fetchers a run could
+        // not read. Announced like the two above, so an older endpoint costs
+        // the Runs tab its warnings and nothing else.
+        'warnings' => true,
         'runs' => recent_runs($config),
     ]);
 }

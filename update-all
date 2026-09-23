@@ -11,6 +11,13 @@
 #
 # Deliberately does not set -e: one dead scraper must not stop the rest. Exit
 # codes are collected and reported at the end instead.
+#
+# Exit status: 0 when everything ran, 1 when a step failed, and 3 when the only
+# failures were fetchers -- a mapping updater that could not read its board, or
+# a source update.py had to skip. Those are warnings, not failures: every other
+# score still landed, and the source's own columns stay where the last good run
+# left them. With AI_BENCH_FETCH_WARNINGS set, each one is also recorded there
+# for the workflow to annotate (see _fetch_warnings.py).
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -66,6 +73,15 @@ if [ -n "$REPORT" ]; then
 fi
 
 FAILED=()
+# Fetchers that failed: reported, but not a failed run. See the exit status above.
+WARNINGS=()
+WARNINGS_ONLY_EXIT=3
+
+if [ -n "${AI_BENCH_FETCH_WARNINGS:-}" ]; then
+    # Truncated once here, like the prompt report: update.py appends its own
+    # entries, and a stale file would annotate this run with a past one's.
+    : > "$AI_BENCH_FETCH_WARNINGS" || exit 1
+fi
 
 # Wall clock in milliseconds. EPOCHREALTIME is a bash 5 builtin, so a timing
 # costs no process of its own; the fallback keeps whole-second timings on the
@@ -95,22 +111,52 @@ fmt_ms() {
 TIMINGS=()
 STARTED_MS=$(now_ms)
 
+# A mapping updater is a scrape of one board's names, so its failure is that
+# board's, not the run's. Recognised by name, as the loop below finds them.
+is_fetcher() {
+    case "$1" in
+        update_*_mapping.py) return 0 ;;
+    esac
+    return 1
+}
+
 run() {
     local label="$1"
     shift
     echo "+ Running ${label}" 1>&2
     local started=$(now_ms)
-    "$@"
-    local status=$?
+    local status
+    local errlog=""
+    if [ -n "${AI_BENCH_FETCH_WARNINGS:-}" ] && is_fetcher "$label"; then
+        # Unattended only: stderr is copied aside so the warning can say why,
+        # which costs stderr its tty -- harmless in CI, not at a terminal.
+        errlog=$(mktemp)
+        { "$@" 2>&1 1>&3 3>&- | tee "$errlog" 1>&2 3>&-; } 3>&1
+        status=${PIPESTATUS[0]}
+    else
+        "$@"
+        status=$?
+    fi
     # Timed on the way out whatever happened, so a step that failed slowly --
     # a scraper retrying against a dead host -- is in the table too, which is
     # exactly the one worth seeing.
     local elapsed=$(( $(now_ms) - started ))
     TIMINGS+=("${label}	${elapsed}")
     echo "+ ${label} took $(fmt_ms ${elapsed})" 1>&2
-    if [ $status -ne 0 ]; then
+    if [ $status -ne 0 ] && is_fetcher "$label"; then
+        WARNINGS+=("${label} (exit ${status})")
+        if [ -n "$errlog" ]; then
+            # The last lines are the exception, which is what names the cause.
+            "${SCRIPT_DIR}/_fetch_warnings.py" record "$AI_BENCH_FETCH_WARNINGS" \
+                --step "$label" --message "$(grep -v '^[[:space:]]*$' "$errlog" | tail -n 3)"
+        fi
+    elif [ "$label" = "update.py" ] && [ $status -eq $WARNINGS_ONLY_EXIT ]; then
+        # Sources it could not read, and nothing else; it recorded each itself.
+        WARNINGS+=("${label}: source(s) skipped (see above)")
+    elif [ $status -ne 0 ]; then
         FAILED+=("${label} (exit ${status})")
     fi
+    [ -n "$errlog" ] && rm -f "$errlog"
     return 0
 }
 
@@ -175,6 +221,14 @@ fi
 
 report_timings
 
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo 1>&2
+    echo "${#WARNINGS[@]} fetcher warning(s); their sources were skipped:" 1>&2
+    for w in "${WARNINGS[@]}"; do
+        echo "  - ${w}" 1>&2
+    done
+fi
+
 if [ ${#FAILED[@]} -gt 0 ]; then
     echo 1>&2
     echo "${#FAILED[@]} step(s) failed:" 1>&2
@@ -182,4 +236,8 @@ if [ ${#FAILED[@]} -gt 0 ]; then
         echo "  - ${f}" 1>&2
     done
     exit 1
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+    exit $WARNINGS_ONLY_EXIT
 fi

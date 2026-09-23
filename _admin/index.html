@@ -828,6 +828,15 @@ ul.runs time {
 .pill.failure, .pill.cancelled { background: var(--bad-soft); color: var(--bad); }
 .pill.running { background: var(--warn-soft); color: var(--warn); }
 .pill.running .dot { animation: pulse 1.4s ease-in-out infinite; }
+.pill.warned { background: var(--warn-soft); color: var(--warn); margin-left: .5rem; vertical-align: .1em; }
+
+/* A run's fetcher warnings: under its row, across every column. */
+.run-warnings { grid-column: 1 / -1; font-size: .8125rem; color: var(--muted); }
+.run-warnings summary { cursor: pointer; color: var(--warn); width: fit-content; }
+.run-warnings ul { list-style: none; margin-top: .35rem; padding-left: .9rem; border-left: 2px solid var(--warn-line); }
+ul.runs .run-warnings li { display: flex; gap: 0 .5rem; flex-wrap: wrap; padding: .25rem 0; border-bottom: 0; min-width: 0; }
+.run-warnings strong { color: var(--text); font-weight: 500; }
+.run-warnings span { overflow-wrap: anywhere; min-width: 0; }
 
 @keyframes pulse { 50% { opacity: .3; } }
 @media (prefers-reduced-motion: reduce) {
@@ -930,6 +939,12 @@ const state = {
   steps: false,         // whether api.php can report a run's answer step
   refreshable: false,   // whether api.php can dispatch a run that carries no answers
   refreshing: false,    // a hand-asked run is being dispatched right now
+  /* The fetchers each finished run could not read, per api.php's ?warnings=.
+     Keyed by run id; a finished run's annotations never change, so each is
+     asked for once per page load. A value is { warnings: [...] }, or
+     { warnings: null, reason } when the token cannot read them. */
+  runWarnings: new Map(),
+  warningsOffered: false,  // whether api.php can report them at all
   /* Artificial Analysis model slugs, for renaming a hand-added entry onto one.
      `offered` is what api.php says it can serve; the list itself is fetched
      once, and only when the Models tab is opened. */
@@ -1420,8 +1435,8 @@ function noteSettled({ run, applied, count }) {
        answer. That is only true once the queue it pushed has propagated, which
        is what the note under this one says when it has not. */
     state.ok = "That run has finished and the queue has just been re-read. Its "
-      + "own summary is the record of what landed, not its colour: a dead "
-      + "scraper reds a run whose answers applied perfectly.";
+      + "own summary is the record of what landed, not its colour: a failed "
+      + "refresh reds a run whose answers applied perfectly.";
   }
 }
 
@@ -1584,6 +1599,9 @@ async function loadRuns() {
     /* Announced too, so an older endpoint costs the Runs tab its button rather
        than offering one that 400s. */
     state.refreshable = Boolean(body.refresh);
+    /* Announced as well: an older endpoint costs the Runs tab its warnings. */
+    state.warningsOffered = Boolean(body.warnings);
+    loadRunWarnings();
     await settleSent();
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
@@ -1602,6 +1620,30 @@ async function loadRuns() {
       + "Nothing can be read or sent until it answers -- check the host config "
       + "and the error log; see _admin/README.md.";
     return false;
+  }
+}
+
+/* A broken fetcher no longer reds a run -- it is a warning on it, so a green
+   run may still have skipped a source. Asked for per finished run, in parallel
+   and in the background: nothing waits on them, and each one re-renders the
+   Runs tab when it lands. A read that fails is not remembered, so the next
+   run list read asks again. */
+function loadRunWarnings() {
+  if (!state.warningsOffered) return;
+  for (const run of state.runs) {
+    if (run.status !== "completed" || state.runWarnings.has(run.id)) continue;
+    state.runWarnings.set(run.id, { pending: true });
+    fetch(bust(`api.php?warnings=${encodeURIComponent(run.id)}`), { cache: "no-store" })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+        state.runWarnings.set(run.id, {
+          warnings: Array.isArray(body.warnings) ? body.warnings : null,
+          reason: body.reason || "",
+        });
+      })
+      .catch(() => { state.runWarnings.delete(run.id); })
+      .finally(() => { if (state.tab === "runs") render(); });
   }
 }
 
@@ -2761,17 +2803,53 @@ function renderRunNow() {
   ]);
 }
 
+/* The last line of a warning's message: for a traceback, the exception. */
+const lastLine = (text) => String(text || "").trim().split("\n").pop();
+
+/* Beside the run they came from: a count on its row, and the sources it could
+   not read underneath, each with the reason its fetcher gave. */
+function renderRunWarnings(run) {
+  const found = state.runWarnings.get(run.id);
+  if (!found || found.pending || !found.warnings || !found.warnings.length) return null;
+  const count = found.warnings.length;
+  return el("details", { className: "run-warnings" }, [
+    el("summary", {}, `${count} fetcher${count === 1 ? "" : "s"} failed; `
+      + "their scores stay where the last good run left them"),
+    el("ul", {}, found.warnings.map((w) => el("li", {}, [
+      el("strong", {}, w.source || "unknown source"),
+      el("span", { title: w.message || "" }, lastLine(w.message) || "see the run's log"),
+    ]))),
+  ]);
+}
+
+/* Once, above the list, when the token cannot list annotations: saying it on
+   every row would bury the runs, and saying nothing would read as "none". */
+function warningsUnavailable() {
+  const denied = [...state.runWarnings.values()].find((w) => !w.pending && w.warnings === null);
+  if (!denied) return null;
+  return el("p", { className: "note busy" }, "Fetcher warnings cannot be shown: "
+    + (denied.reason || "api.php could not read the runs' annotations."));
+}
+
 function renderRuns() {
   return el("div", {}, [
     renderRunNow(),
+    warningsUnavailable(),
     state.runs.length
       ? el("ul", { className: "runs" }, state.runs.map((run) => {
         const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
         const when = new Date(run.created_at);
+        const found = state.runWarnings.get(run.id);
+        const warned = found && found.warnings && found.warnings.length;
         return el("li", {}, [
           el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), runLabel(run)]),
-          el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name || String(run.id)),
+          el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, [
+            run.name || String(run.id),
+            warned ? el("span", { className: "pill warned", title: "Fetchers that failed on this run" },
+              `${warned} warning${warned === 1 ? "" : "s"}`) : null,
+          ]),
           el("time", { dateTime: run.created_at }, when.toLocaleString()),
+          renderRunWarnings(run),
         ]);
       }))
       : el("p", { className: "empty" }, "No runs to show."),
@@ -2834,7 +2912,7 @@ async function send() {
     state.ok = `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
       + "Watch it under Runs; the questions it answers are disabled until it "
       + "finishes, and its own summary is what counts, not its colour, since a "
-      + "dead scraper reds a run whose answers landed perfectly well.";
+      + "failed refresh reds a run whose answers landed perfectly well.";
   } catch (error) {
     state.error = `Could not send: ${error.message}`;
   }

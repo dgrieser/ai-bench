@@ -16,6 +16,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
+import _fetch_warnings
 import _history
 import artificialanalysis
 import derive_indexes
@@ -2633,7 +2634,8 @@ def source_data(
     a column renamed, a scale that no longer reads as a percentage. That is one
     source to look at, not a reason to throw away every other source's scores
     for the run, so the failure is recorded, the source contributes nothing,
-    and main() exits non-zero once the rest are written. Which values land does
+    and main() exits WARNINGS_ONLY_EXIT once the rest are written -- a warning
+    on CI, not a failed run (_fetch_warnings.py). Which values land does
     not depend on which sources ran (_precedence.py), so a skipped source only
     leaves its own columns where the last good run put them.
     """
@@ -2644,6 +2646,7 @@ def source_data(
         message = str(exc).strip().splitlines()
         summary = message[-1] if message else type(exc).__name__
         failures.append(f"{name}: {summary}")
+        _fetch_warnings.record("update.py", str(exc).strip() or summary, source=name)
         print(f"error: source {name} failed and is skipped this run:\n{exc}", file=sys.stderr)
         return {}
 
@@ -2832,6 +2835,9 @@ def main() -> int:
 
     changes: list[tuple[str, str, Any, Any]] = []
     # Sources whose fetch failed this run; the rest still land. See source_data().
+    # Kept apart from failed_sources, which is everything else that went wrong:
+    # a source that could not be read is a warning, a bug here is a failure.
+    fetch_failures: list[str] = []
     failed_sources: list[str] = []
     found = snapshot_scores(doc)
     available_slugs: set[str] = set()
@@ -2850,7 +2856,8 @@ def main() -> int:
             available_slugs = fetch_available_slugs(aa_path)
         except Exception as exc:  # noqa: BLE001 - AA down is one source down
             aa_ok = False
-            failed_sources.append(f"artificialanalysis: {exc}".splitlines()[0])
+            fetch_failures.append(f"artificialanalysis: {exc}".splitlines()[0])
+            _fetch_warnings.record("update.py", str(exc), source="artificialanalysis")
             print(f"error: artificialanalysis failed and is skipped this run:\n{exc}", file=sys.stderr)
     if aa_ok:
         aa_slug_by_model = resolve_aa_slugs(
@@ -2867,7 +2874,7 @@ def main() -> int:
     print()
 
     if aa_ok:
-        by_aa_slug = source_data(failed_sources, fetch_aa_data, aa_path, existing_slugs)
+        by_aa_slug = source_data(fetch_failures, fetch_aa_data, aa_path, existing_slugs)
         by_slug = {}
         for slug, aa_slugs in aa_slug_by_model.items():
             records = [by_aa_slug[aa_slug] for aa_slug in aa_slugs if aa_slug in by_aa_slug]
@@ -2891,7 +2898,7 @@ def main() -> int:
     aa_coding_agents_updated = 0
     if not args.skip_aa_coding_agents:
         aa_coding_agents_by_slug = source_data(
-            failed_sources, fetch_aa_coding_agents_data,
+            fetch_failures, fetch_aa_coding_agents_data,
             aa_coding_agents_path, aa_coding_agents_mapping_path
         )
         aa_coding_agents_matched, aa_coding_agents_updated, aa_coding_agents_changes = (
@@ -2909,7 +2916,7 @@ def main() -> int:
     osworld_updated = 0
     if not args.skip_osworld:
         osworld_by_slug = source_data(
-            failed_sources, fetch_osworld_data, osworld_path, osworld_mapping_path
+            fetch_failures, fetch_osworld_data, osworld_path, osworld_mapping_path
         )
         osworld_matched, osworld_updated, osworld_changes = source_update(
             failed_sources, (0, 0, []),
@@ -2924,7 +2931,7 @@ def main() -> int:
     llmstats_updated = 0
     if not args.skip_llmstats:
         llmstats_by_slug = source_data(
-            failed_sources, fetch_llmstats_data,
+            fetch_failures, fetch_llmstats_data,
             llmstats_path, llmstats_model_mapping_path, llmstats_benchmark_mapping_path
         )
         llmstats_matched, llmstats_updated, llmstats_changes = source_update(
@@ -2941,7 +2948,7 @@ def main() -> int:
     hf_params_filled = 0
     if not args.skip_huggingface:
         huggingface_by_slug = source_data(
-            failed_sources, fetch_huggingface_data, huggingface_path, huggingface_mapping_path
+            fetch_failures, fetch_huggingface_data, huggingface_path, huggingface_mapping_path
         )
         hf_matched, hf_updated, hf_changes = source_update(
             failed_sources, (0, 0, []),
@@ -2966,7 +2973,7 @@ def main() -> int:
     toolathlon_updated = 0
     if not args.skip_toolathlon:
         toolathlon_by_slug = source_data(
-            failed_sources, fetch_toolathlon_data, toolathlon_path, toolathlon_mapping_path
+            fetch_failures, fetch_toolathlon_data, toolathlon_path, toolathlon_mapping_path
         )
         toolathlon_matched, toolathlon_updated, toolathlon_changes = source_update(
             failed_sources, (0, 0, []),
@@ -2981,7 +2988,7 @@ def main() -> int:
     programbench_updated = 0
     if not args.skip_programbench:
         programbench_by_slug = source_data(
-            failed_sources, fetch_programbench_data,
+            fetch_failures, fetch_programbench_data,
             programbench_path, programbench_mapping_path
         )
         programbench_matched, programbench_updated, programbench_changes = (
@@ -2999,7 +3006,7 @@ def main() -> int:
     real_swe_updated = 0
     if not args.skip_real_swe:
         real_swe_by_slug = source_data(
-            failed_sources, fetch_real_swe_data, real_swe_path, real_swe_mapping_path
+            fetch_failures, fetch_real_swe_data, real_swe_path, real_swe_mapping_path
         )
         real_swe_matched, real_swe_updated, real_swe_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3014,7 +3021,7 @@ def main() -> int:
     deepswe_updated = 0
     if not args.skip_deepswe:
         deepswe_by_slug = source_data(
-            failed_sources, fetch_deepswe_data, deepswe_path, deepswe_mapping_path
+            fetch_failures, fetch_deepswe_data, deepswe_path, deepswe_mapping_path
         )
         deepswe_matched, deepswe_updated, deepswe_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3030,7 +3037,7 @@ def main() -> int:
     datacurve_updated = 0
     if not args.skip_datacurve:
         datacurve_by_slug = source_data(
-            failed_sources, fetch_datacurve_data, datacurve_path, deepswe_mapping_path
+            fetch_failures, fetch_datacurve_data, datacurve_path, deepswe_mapping_path
         )
         datacurve_matched, datacurve_updated, datacurve_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3045,7 +3052,7 @@ def main() -> int:
     frontierswe_updated = 0
     if not args.skip_frontierswe:
         frontierswe_by_slug = source_data(
-            failed_sources, fetch_frontierswe_data, frontierswe_path, frontierswe_mapping_path
+            fetch_failures, fetch_frontierswe_data, frontierswe_path, frontierswe_mapping_path
         )
         frontierswe_matched, frontierswe_updated, frontierswe_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3060,7 +3067,7 @@ def main() -> int:
     tbench_updated = 0
     if not args.skip_tbench:
         tbench_by_slug = source_data(
-            failed_sources, fetch_tbench_data, tbench_path, tbench_mapping_path
+            fetch_failures, fetch_tbench_data, tbench_path, tbench_mapping_path
         )
         tbench_matched, tbench_updated, tbench_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3075,7 +3082,7 @@ def main() -> int:
     agents_last_exam_updated = 0
     if not args.skip_agents_last_exam:
         agents_last_exam_by_slug = source_data(
-            failed_sources, fetch_agents_last_exam_data,
+            fetch_failures, fetch_agents_last_exam_data,
             agents_last_exam_path, agents_last_exam_mapping_path
         )
         (
@@ -3095,7 +3102,7 @@ def main() -> int:
     swe_atlas_updated = 0
     if not args.skip_swe_atlas:
         swe_atlas_by_slug = source_data(
-            failed_sources, fetch_swe_atlas_data, swe_atlas_path, swe_atlas_mapping_path
+            fetch_failures, fetch_swe_atlas_data, swe_atlas_path, swe_atlas_mapping_path
         )
         swe_atlas_matched, swe_atlas_updated, swe_atlas_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3110,7 +3117,7 @@ def main() -> int:
     evals_report_updated = 0
     if not args.skip_evals_report:
         evals_report_by_slug = source_data(
-            failed_sources, fetch_evals_report_data, evals_report_path, evals_report_mapping_path
+            fetch_failures, fetch_evals_report_data, evals_report_path, evals_report_mapping_path
         )
         evals_report_matched, evals_report_updated, evals_report_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3124,7 +3131,7 @@ def main() -> int:
     vals_matched = 0
     vals_updated = 0
     if not args.skip_vals:
-        vals_by_slug = source_data(failed_sources, fetch_vals_data, vals_path, vals_mapping_path)
+        vals_by_slug = source_data(fetch_failures, fetch_vals_data, vals_path, vals_mapping_path)
         vals_matched, vals_updated, vals_changes = source_update(
             failed_sources, (0, 0, []),
             "update_vals_scores",
@@ -3139,7 +3146,7 @@ def main() -> int:
     frontiercode_updated = 0
     if not args.skip_frontiercode:
         frontiercode_by_slug = source_data(
-            failed_sources, fetch_frontiercode_data, frontiercode_path, frontiercode_mapping_path
+            fetch_failures, fetch_frontiercode_data, frontiercode_path, frontiercode_mapping_path
         )
         frontiercode_matched, frontiercode_updated, frontiercode_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3155,7 +3162,7 @@ def main() -> int:
     swe_marathon_updated = 0
     if not args.skip_swe_marathon:
         swe_marathon_by_slug = source_data(
-            failed_sources, fetch_swe_marathon_data, swe_marathon_path, swe_marathon_mapping_path
+            fetch_failures, fetch_swe_marathon_data, swe_marathon_path, swe_marathon_mapping_path
         )
         swe_marathon_matched, swe_marathon_updated, swe_marathon_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3173,7 +3180,7 @@ def main() -> int:
     mcp_atlas_updated = 0
     if not args.skip_mcp_atlas:
         mcp_atlas_by_slug = source_data(
-            failed_sources, fetch_mcp_atlas_data, mcp_atlas_path, mcp_atlas_mapping_path
+            fetch_failures, fetch_mcp_atlas_data, mcp_atlas_path, mcp_atlas_mapping_path
         )
         mcp_atlas_matched, mcp_atlas_updated, mcp_atlas_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3191,7 +3198,7 @@ def main() -> int:
     zerobench_updated = 0
     if not args.skip_zerobench:
         zerobench_by_slug = source_data(
-            failed_sources, fetch_zerobench_data, zerobench_path, zerobench_mapping_path
+            fetch_failures, fetch_zerobench_data, zerobench_path, zerobench_mapping_path
         )
         zerobench_matched, zerobench_updated, zerobench_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3206,7 +3213,7 @@ def main() -> int:
     bfcl_matched = 0
     bfcl_updated = 0
     if not args.skip_bfcl:
-        bfcl_by_slug = source_data(failed_sources, fetch_bfcl_data, bfcl_path, bfcl_mapping_path)
+        bfcl_by_slug = source_data(fetch_failures, fetch_bfcl_data, bfcl_path, bfcl_mapping_path)
         bfcl_matched, bfcl_updated, bfcl_changes = source_update(
             failed_sources, (0, 0, []),
             "update_bfcl_scores",
@@ -3220,7 +3227,7 @@ def main() -> int:
     spheron_updated = 0
     if not args.skip_spheron:
         spheron_by_slug = source_data(
-            failed_sources, fetch_spheron_data, spheron_path, spheron_mapping_path
+            fetch_failures, fetch_spheron_data, spheron_path, spheron_mapping_path
         )
         spheron_matched, spheron_updated, spheron_changes = source_update(
             failed_sources, (0, 0, []),
@@ -3414,8 +3421,16 @@ def main() -> int:
         print("dry-run only, pass --write to persist changes")
     print(f"  update.py total: {time.monotonic() - run_started:.1f}s", file=sys.stderr)
     # Scores are written above whatever failed; the exit status is how the
-    # failures reach update-all and the workflow.
+    # failures reach update-all and the workflow. A source that could not be
+    # read alone is WARNINGS_ONLY_EXIT, which update-all reports as a warning
+    # rather than a failed step; anything else is 1, and wins.
     status = 0
+    if fetch_failures:
+        print(file=sys.stderr)
+        print(f"{len(fetch_failures)} source(s) could not be read and were skipped:", file=sys.stderr)
+        for failure in fetch_failures:
+            print(f"  - {failure}", file=sys.stderr)
+        status = _fetch_warnings.WARNINGS_ONLY_EXIT
     if failed_sources:
         print(file=sys.stderr)
         print(f"{len(failed_sources)} step(s) failed and were skipped:", file=sys.stderr)

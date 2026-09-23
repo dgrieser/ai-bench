@@ -218,6 +218,11 @@ jobs:
       # still green, which is the failure mode the whole file is arranged
       # against.
       #
+      # test_fetch_warnings.py guards the line between a warning and a failure.
+      # Drawn too wide, a bug in this repository reads as a flaky source and
+      # the run stays green over it; too narrow, and one dead scraper reds
+      # every scheduled run again.
+      #
       # Run through a loop rather than one line each so every suite is timed.
       # `bash -e` still stops at the first red one: the loop body is not a
       # tested condition, so a non-zero exit ends the step exactly as it did
@@ -237,6 +242,7 @@ jobs:
             ./test_remap.py
             ./test_artificialanalysis_api.py
             ./test_refresh_cost.py
+            ./test_fetch_warnings.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below
@@ -342,6 +348,13 @@ jobs:
       # recorded in about a minute and the scores it unlocks land on the next
       # cron. It is not an equivalent path -- a mapping does nothing until
       # update.py reads it.
+      #
+      # A broken fetcher does not fail this step. update-all exits 3 when every
+      # failure was a source it could not read -- a board that moved, a host
+      # that is down -- and each of those is recorded in the warnings file for
+      # the next step to annotate. The run stays green, every other score
+      # lands, and the admin page shows the warnings beside the run. Anything
+      # else (exit 1) is a bug in this repository and still reds the run.
       - name: Refresh benchmarks
         id: refresh
         if: ${{ !inputs.skip_refresh }}
@@ -349,16 +362,38 @@ jobs:
         env:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: ./update-all --collect-prompts pending-prompts.jsonl
+          AI_BENCH_FETCH_WARNINGS: ${{ runner.temp }}/fetch-warnings.jsonl
+        run: |
+          status=0
+          ./update-all --collect-prompts pending-prompts.jsonl || status=$?
+          if [ "$status" -eq 3 ]; then
+            echo "Only fetchers failed; reported as warnings, not as a failed step." >&2
+            exit 0
+          fi
+          exit "$status"
+
+      # One `::warning` per fetcher that failed, titled "Fetcher failed: ...",
+      # which is the prefix api.php filters the run's annotations on. Runs
+      # whatever the refresh concluded: a run that went red for another reason
+      # should still say which sources it could not read.
+      - name: Report fetcher warnings
+        if: ${{ !inputs.skip_refresh }}
+        run: ./_fetch_warnings.py annotate "$RUNNER_TEMP/fetch-warnings.jsonl" --summary "$GITHUB_STEP_SUMMARY"
 
       # The markdown stays outside the working tree so the commit step cannot
       # pick it up; the JSON deliberately does not, because the admin page reads
       # it and answer.py checks answers against it.
       #
-      # Only a wholly successful refresh may rewrite it. `Refresh benchmarks` is
+      # Only a successful refresh may rewrite it. `Refresh benchmarks` is
       # continue-on-error, so a half-failed run leaves a partial queue, and a
       # skipped one leaves none at all -- committing either would erase live
       # questions from the page until the next cron.
+      #
+      # A refresh whose only failures were fetchers counts as successful, and
+      # the one gap that leaves is closed here: a mapping updater that could
+      # not read its board asked nothing, so its questions are carried over
+      # from the queue already committed (--carry-over), minus any whose
+      # mapping has since been answered.
       - name: Render the pending queue
         id: pending
         if: ${{ steps.refresh.outcome == 'success' }}
@@ -366,7 +401,11 @@ jobs:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
         run: |
           ./pending_prompts.py pending-prompts.jsonl --format markdown > "$RUNNER_TEMP/pending.md"
-          ./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json
+          carry=()
+          while read -r route; do
+            carry+=(--carry-over "$route")
+          done < <(./_fetch_warnings.py routes "$RUNNER_TEMP/fetch-warnings.jsonl")
+          ./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json "${carry[@]}"
           echo "count=$(./pending_prompts.py pending-prompts.jsonl --count)" >> "$GITHUB_OUTPUT"
           {
             echo "## Pending review"
@@ -512,6 +551,8 @@ jobs:
           echo "Attached $attached of $count suggestion(s)." >> "$GITHUB_STEP_SUMMARY"
           [ "$attached" -gt 0 ]
 
+      # Not a fetcher: those are warnings (see `Refresh benchmarks`), so what
+      # reaches here is a failure in this repository's own code.
       - name: Fail if a step of update-all failed
         if: ${{ !inputs.skip_refresh && steps.refresh.outcome != 'success' }}
         run: |
