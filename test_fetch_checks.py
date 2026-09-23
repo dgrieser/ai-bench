@@ -10,11 +10,16 @@ value outside its benchmark's range is refused by apply_score().
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
+import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import _fetch_checks as checks
 import _scale_labs
@@ -95,10 +100,24 @@ class TestScoreRange(unittest.TestCase):
         check_score_range(self.DOC, "pct", None)
 
     def test_apply_score_refuses_a_rescaled_value(self) -> None:
+        # Refused and reported, not raised: the rest of the run still lands.
         model = {"name": "m", "scores": {"pct": 42.0}}
-        with self.assertRaisesRegex(ValueError, "outside its range"):
-            update.apply_score(self.DOC, model, "m", "pct", 4200.0, "https://x", [])
+        update.REJECTED_SCORES.clear()
+        self.assertEqual(
+            update.apply_score(self.DOC, model, "m", "pct", 4200.0, "https://x", []), 0
+        )
         self.assertEqual(model["scores"]["pct"], 42.0)
+        self.assertEqual(len(update.REJECTED_SCORES), 1)
+        self.assertIn("outside its range", update.REJECTED_SCORES[0])
+        update.REJECTED_SCORES.clear()
+
+    def test_apply_score_refuses_a_non_number(self) -> None:
+        model = {"name": "m", "scores": {"pct": 42.0}}
+        update.REJECTED_SCORES.clear()
+        self.assertEqual(update.apply_score(self.DOC, model, "m", "pct", "42%", "https://x", []), 0)
+        self.assertEqual(model["scores"]["pct"], 42.0)
+        self.assertEqual(len(update.REJECTED_SCORES), 1)
+        update.REJECTED_SCORES.clear()
 
     def test_llm_json_holds_every_stored_score_in_range(self) -> None:
         doc = json.loads(LLM_JSON.read_text(encoding="utf-8"))
@@ -276,6 +295,84 @@ class TestRoundTrips(unittest.TestCase):
         update.apply_score(doc, model, "m", "mmlu_pro", 80.9, self.EVALS, changes)
         self.assertEqual(update.undo_round_trips(doc, found, changes), changes)
         self.assertNotEqual(model["scores_updated"]["mmlu_pro"], "2026-09-01")
+
+
+class TestSourceUpdate(unittest.TestCase):
+    def test_a_raising_ingest_returns_the_empty_result(self) -> None:
+        def update_broken_scores(doc: dict) -> tuple:
+            raise KeyError("score")
+
+        failures: list[str] = []
+        self.assertEqual(
+            update.source_update(failures, (0, 0, []), "update_broken_scores", update_broken_scores, {}),
+            (0, 0, []),
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("update_broken_scores", failures[0])
+
+
+class TestFetchTimeout(unittest.TestCase):
+    def setUp(self) -> None:
+        self._old = os.environ.get(update.FETCH_TIMEOUT_VAR)
+        os.environ[update.FETCH_TIMEOUT_VAR] = "0.5"
+
+    def tearDown(self) -> None:
+        if self._old is None:
+            os.environ.pop(update.FETCH_TIMEOUT_VAR, None)
+        else:
+            os.environ[update.FETCH_TIMEOUT_VAR] = self._old
+
+    def test_a_hung_prefetched_fetcher_is_killed(self) -> None:
+        cmd = [sys.executable, "-c", "import time; time.sleep(30)"]
+        update.prefetch([cmd])
+        proc = update.run_fetch(cmd, "hung")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("TimeoutError", proc.stderr)
+
+    def test_a_hung_direct_fetcher_is_killed(self) -> None:
+        proc = update.run_fetch([sys.executable, "-c", "import time; time.sleep(30)"], "hung")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("TimeoutError", proc.stderr)
+
+
+class TestScoresAreWrittenWhateverFails(unittest.TestCase):
+    """The run's contract: every score that could be read lands in llm.json,
+    and the exit status is what reports the failures."""
+
+    def test_main_writes_the_working_source_and_exits_1(self) -> None:
+        doc = json.loads(LLM_JSON.read_text(encoding="utf-8"))
+        model = next(m for m in doc["models"] if "toolathlon" in (m.get("scores") or {}))
+        slug = model["name"]
+        new_score = 12.3 if model["scores"]["toolathlon"] != 12.3 else 45.6
+
+        def broken(*_args: object, **_kwargs: object) -> dict:
+            raise RuntimeError("fetcher failed (1): ValueError: the page moved")
+
+        def refresh_broken(_doc: dict) -> None:
+            raise RuntimeError("index fit failed")
+
+        patches = {
+            name: broken for name in dir(update)
+            if name.startswith("fetch_") and name.endswith("_data")
+        }
+        patches["fetch_available_slugs"] = broken
+        patches["fetch_toolathlon_data"] = lambda *_a: {slug: {"score": new_score}}
+        patches["prefetch"] = lambda _cmds: None
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "llm.json"
+            path.write_text(LLM_JSON.read_text(encoding="utf-8"), encoding="utf-8")
+            argv = ["update.py", "-w", str(path)]
+            with mock.patch.multiple(update, **patches), \
+                    mock.patch.object(update.derive_indexes, "refresh_and_report", refresh_broken), \
+                    mock.patch.object(sys, "argv", argv), \
+                    contextlib.redirect_stdout(io.StringIO()), \
+                    contextlib.redirect_stderr(io.StringIO()):
+                status = update.main()
+            written = json.loads(path.read_text(encoding="utf-8"))
+
+        self.assertEqual(status, 1)
+        after = next(m for m in written["models"] if m["name"] == slug)
+        self.assertEqual(after["scores"]["toolathlon"], new_score)
 
 
 class TestPrefetch(unittest.TestCase):
