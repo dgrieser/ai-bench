@@ -1147,6 +1147,35 @@ filed under the codename reachable with the release slug leading. The surviving
 row keeps the earlier `date_added`, because that is the day the model first
 appeared here.
 
+A list names slugs of the *same checkpoint*. `deepseek-v4-flash` used to list
+`deepseek-v4-flash-0420` behind the 0731 release, which filled one row from
+two checkpoints; that entry is gone.
+
+### Which Artificial Analysis Run a Row Reads
+
+AA runs one model several ways and gives each run its own slug —
+`glm-4-6` is "GLM-4.6 (Non-reasoning)" and `glm-4-6-reasoning` its reasoning
+run, `gpt-5-6-sol` is "(max)" beside `-xhigh`, `-high`, … `-non-reasoning`.
+Which run the bare slug names is AA's choice and differs model to model, so
+the policy is explicit: **a row without a mapping entry reads its model's
+highest-effort reasoning run**, the bare slug on a tie (`update.pick_aa_variant`).
+A sibling is only a slug with an effort suffix (`-reasoning`, `-thinking`,
+`-non-reasoning`, `-minimal` … `-max`); `-0420` or `-preview` is another
+checkpoint and never a candidate, and a sibling that is an llm.json row of its
+own is left to that row. Effort is read from AA's display names in
+`_aa/models.json`, falling back to the slug suffix. A mapping entry overrides
+the policy.
+
+The run read is stored on the model as `aa_variant` (`{"slug", "name"}`) and
+shown on the detail page and in AA score tooltips; each score's
+`scores_source` still names the exact AA page it came from. When a row switches
+run, an AA score credited to a page it no longer reads is cleared rather than
+left to mix two runs in one row.
+
+AA reports an untested benchmark as null. A `0` is a measurement — CritPt and
+ZeroBench floors are real — and is written like any other score, so a
+fill-only self-report cannot take its cell.
+
 ### A hand-added model meets Artificial Analysis
 
 A model added by hand — `add.py`, or the admin page's **Add a model** — exists in

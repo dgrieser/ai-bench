@@ -149,6 +149,130 @@ class TestResolveAaSlugs(MappingFileTestCase):
         )
 
 
+class TestVariantPolicy(MappingFileTestCase):
+    """An unmapped row reads its model's highest-effort reasoning run."""
+
+    NAMES = {
+        "glm": "GLM (Non-reasoning)",
+        "glm-reasoning": "GLM (Reasoning)",
+        "gpt": "GPT (max)",
+        "gpt-xhigh": "GPT (xhigh)",
+        "gpt-non-reasoning": "GPT (Non-reasoning)",
+        "claude": "Claude (Adaptive Reasoning, Max Effort)",
+        "claude-non-reasoning": "Claude (Non-reasoning, High Effort)",
+        "kimi": "Kimi",
+        "kimi-non-reasoning": "Kimi (Non-reasoning)",
+        "ds": "DS 0731 (Reasoning, Max Effort)",
+        "ds-0420": "DS 0420 (Reasoning, Max Effort)",
+        "ds-0420-high": "DS 0420 (Reasoning, High Effort)",
+    }
+
+    def resolve(self, slugs, available=None, names=None, mapping=None):
+        return update.resolve_aa_slugs(
+            slugs,
+            set(self.NAMES) if available is None else available,
+            self.write_mapping(mapping or {}),
+            self.NAMES if names is None else names,
+        )
+
+    def test_non_reasoning_bare_slug_yields_to_the_reasoning_run(self) -> None:
+        self.assertEqual(self.resolve(["glm"]), {"glm": ["glm-reasoning"]})
+
+    def test_bare_slug_that_is_already_the_top_run_stays(self) -> None:
+        self.assertEqual(self.resolve(["gpt"]), {"gpt": ["gpt"]})
+        self.assertEqual(self.resolve(["claude"]), {"claude": ["claude"]})
+        self.assertEqual(self.resolve(["kimi"]), {"kimi": ["kimi"]})
+
+    def test_another_checkpoint_is_never_a_variant(self) -> None:
+        self.assertEqual(self.resolve(["ds"]), {"ds": ["ds"]})
+
+    def test_a_sibling_with_its_own_row_is_left_to_it(self) -> None:
+        self.assertEqual(
+            self.resolve(["glm", "glm-reasoning"]),
+            {"glm": ["glm"], "glm-reasoning": ["glm-reasoning"]},
+        )
+
+    def test_a_mapping_entry_is_read_as_written(self) -> None:
+        self.assertEqual(self.resolve(["glm"], mapping={"glm": "glm"}), {"glm": ["glm"]})
+
+    def test_suffixes_decide_without_published_names(self) -> None:
+        self.assertEqual(self.resolve(["glm"], names={}), {"glm": ["glm-reasoning"]})
+        # An unnamed bare slug is AA's default run, never displaced by effort
+        # guesses from a suffix alone.
+        self.assertEqual(self.resolve(["gpt"], names={}), {"gpt": ["gpt"]})
+
+    def test_name_effort(self) -> None:
+        self.assertEqual(update.aa_name_effort("GPT (Non-Reasoning)"), 0)
+        self.assertEqual(update.aa_name_effort("X (Non-reasoning, High Effort)"), 0)
+        self.assertEqual(update.aa_name_effort("X (low)"), 2)
+        self.assertEqual(update.aa_name_effort("X (Reasoning, High Effort)"), 4)
+        self.assertEqual(update.aa_name_effort("X (xhigh)"), 5)
+        self.assertEqual(update.aa_name_effort("X (Adaptive Reasoning, Max Effort)"), 6)
+        self.assertEqual(update.aa_name_effort("X (Reasoning)"), update.AA_DEFAULT_EFFORT)
+        self.assertEqual(update.aa_name_effort("X"), update.AA_DEFAULT_EFFORT)
+
+
+class TestUpdateScoresVariants(unittest.TestCase):
+    PAGE = "https://artificialanalysis.ai/models/{}"
+
+    def doc(self, scores, sources):
+        return {
+            "benchmarks": {},
+            "models": [
+                {
+                    "name": "m",
+                    "scores": dict(scores),
+                    "scores_updated": {k: "2026-01-01" for k in scores},
+                    "scores_source": dict(sources),
+                }
+            ],
+        }
+
+    def run_update(self, doc, records):
+        by_slug = {"m": update.merge_aa_models(records)}
+        return update.update_scores(doc, by_slug)
+
+    def test_a_zero_is_written(self) -> None:
+        doc = self.doc(
+            {"critpt": 1.2}, {"critpt": "https://huggingface.co/some/model"}
+        )
+        self.run_update(doc, [{"slug": "m", "name": "M", "evaluations": {"critpt": 0}}])
+        model = doc["models"][0]
+        self.assertEqual(model["scores"]["critpt"], 0)
+        self.assertEqual(model["scores_source"]["critpt"], self.PAGE.format("m"))
+
+    def test_the_run_read_is_stored(self) -> None:
+        doc = self.doc({}, {})
+        self.run_update(doc, [{"slug": "m-reasoning", "name": "M (Reasoning)", "evaluations": {}}])
+        self.assertEqual(
+            doc["models"][0]["aa_variant"], {"slug": "m-reasoning", "name": "M (Reasoning)"}
+        )
+
+    def test_a_score_from_a_run_no_longer_read_is_cleared(self) -> None:
+        doc = self.doc(
+            {"critpt": 3.0, "ifbench": 40.0, "hle": 20.0},
+            {
+                "critpt": self.PAGE.format("m"),
+                "ifbench": self.PAGE.format("m-reasoning"),
+                "hle": "https://huggingface.co/some/model",
+            },
+        )
+        self.run_update(doc, [{"slug": "m-reasoning", "evaluations": {}}])
+        scores = doc["models"][0]["scores"]
+        # Credited to the old variant's page: not this row's run any more.
+        self.assertIsNone(scores["critpt"])
+        self.assertIsNone(doc["models"][0]["scores_source"]["critpt"])
+        # Credited to the page still read: AA has no number today, keep it.
+        self.assertEqual(scores["ifbench"], 40.0)
+        # Credited to another source altogether: not AA's to clear.
+        self.assertEqual(scores["hle"], 20.0)
+
+    def test_a_gap_filled_from_a_second_mapped_slug_is_kept(self) -> None:
+        doc = self.doc({"critpt": 3.0}, {"critpt": self.PAGE.format("m-old")})
+        self.run_update(doc, [{"slug": "m", "evaluations": {}}, {"slug": "m-old", "evaluations": {}}])
+        self.assertEqual(doc["models"][0]["scores"]["critpt"], 3.0)
+
+
 class TestHandAddedModelMeetsAa(MappingFileTestCase):
     """A model added before Artificial Analysis tracked it.
 
@@ -226,13 +350,21 @@ class TestMergeAaModels(unittest.TestCase):
             merged["evaluations"], {"hle": 0.4, "gpqa": 0.7, "tau2": 0.5}
         )
 
-    def test_zero_counts_as_untested(self) -> None:
-        # AA reports some untested benchmarks as 0, the same reading
-        # normalize_aa_value() applies before a score is written.
+    def test_zero_is_a_measurement(self) -> None:
+        # A 0% is a real floor (CritPt, ZeroBench), so a later record cannot
+        # fill it the way it fills a null.
         merged = update.merge_aa_models(
             [{"evaluations": {"hle": 0}}, {"evaluations": {"hle": 0.6}}]
         )
-        self.assertEqual(merged["evaluations"]["hle"], 0.6)
+        self.assertEqual(merged["evaluations"]["hle"], 0)
+
+    def test_zero_model_field_is_still_a_gap(self) -> None:
+        merged = update.merge_aa_models([{"context": 0}, {"context": "128k"}])
+        self.assertEqual(merged["context"], "128k")
+
+    def test_merged_record_lists_the_slugs_read(self) -> None:
+        merged = update.merge_aa_models([{"slug": "m"}, {"slug": "m-old"}])
+        self.assertEqual(merged["_aa_slugs"], ["m", "m-old"])
 
     def test_false_is_a_value_not_a_gap(self) -> None:
         merged = update.merge_aa_models(
