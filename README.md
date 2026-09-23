@@ -1172,6 +1172,10 @@ shown on the detail page and in AA score tooltips; each score's
 run, an AA score credited to a page it no longer reads is cleared rather than
 left to mix two runs in one row.
 
+HLE and GPQA Diamond are read off the model pages as well as the API: the
+free API tier carries neither, so without the page a row that switched run
+would lose both.
+
 AA reports an untested benchmark as null. A `0` is a measurement — CritPt and
 ZeroBench floors are real — and is written like any other score, so a
 fill-only self-report cannot take its cell.

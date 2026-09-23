@@ -594,6 +594,11 @@ _PAGE_FLOAT_FIELDS = [
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     ("ifbench", "ifbench"),
+    # HLE and GPQA Diamond are on every page too. The free API tier returns
+    # neither, so without these a row that switches to another AA run has no
+    # way to get them back.
+    ("hle", "hle"),
+    ("gpqa", "gpqa"),
     ("harveyLab", "harvey_lab"),
     ("automationBenchPartialScore", "automation_bench_partial_score"),
     ("enterpriseOpsGym", "enterprise_ops_gym"),
@@ -915,6 +920,8 @@ _PAGE_EVALS = [
     "terminalbench_v2_1",
     "terminalbench_hard",
     "ifbench",
+    "hle",
+    "gpqa",
     "livecodebench",
     "scicode",
     "aime_25",

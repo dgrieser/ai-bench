@@ -396,7 +396,8 @@ MODEL_PAGE = (
     '"mlcrOverall":0.555555555555556,"harveyLab":0.93457808655377,'
     '"itBenchSre":null,"tau2":null,"terminalbenchHard":null,'
     '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
-    '"scicode":0.563657407407407,"hle":0.548656163113994}}'
+    '"scicode":0.563657407407407,"hle":0.548656163113994,'
+    '"gpqa":0.912121212121212}}'
 )
 
 
@@ -432,6 +433,31 @@ class TestTerminalBenchOnTheModelPages(unittest.TestCase):
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
             aa._enrich_structured_metrics([model])
         self.assertAlmostEqual(model["evaluations"]["terminalbench_4_0"], 0.48989898989899)
+
+
+class TestHleAndGpqaOnTheModelPages(unittest.TestCase):
+    """The free API tier carries neither, so the page is where they come from."""
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_both_are_read(self) -> None:
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["hle"], 0.548656163113994)
+        self.assertAlmostEqual(metrics["gpqa"], 0.912121212121212)
+
+    def test_both_reach_the_evaluations_block(self) -> None:
+        model = {"slug": "claude-opus-5"}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        self.assertAlmostEqual(model["evaluations"]["hle"], 0.548656163113994)
+        self.assertAlmostEqual(model["evaluations"]["gpqa"], 0.912121212121212)
+
+    def test_an_api_value_is_not_displaced(self) -> None:
+        model = {"slug": "claude-opus-5", "evaluations": {"hle": 0.5}}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        self.assertEqual(model["evaluations"]["hle"], 0.5)
 
 
 class TestPageFieldsThatWentStale(unittest.TestCase):
