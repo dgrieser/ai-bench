@@ -1170,7 +1170,9 @@ The run read is stored on the model as `aa_variant` (`{"slug", "name"}`) and
 shown on the detail page and in AA score tooltips; each score's
 `scores_source` still names the exact AA page it came from. When a row switches
 run, an AA score credited to a page it no longer reads is cleared rather than
-left to mix two runs in one row.
+left to mix two runs in one row. Only when the new run's model page was
+actually read, though (`page_read` on the AA record): a page that failed to
+load leaves every page field empty, which is not AA saying it has no number.
 
 HLE and GPQA Diamond are read off the model pages as well as the API: the
 free API tier carries neither, so without the page a row that switched run

@@ -267,6 +267,17 @@ class TestUpdateScoresVariants(unittest.TestCase):
         # Credited to another source altogether: not AA's to clear.
         self.assertEqual(scores["hle"], 20.0)
 
+    def test_nothing_is_cleared_when_the_page_was_not_read(self) -> None:
+        doc = self.doc({"critpt": 3.0}, {"critpt": self.PAGE.format("m")})
+        self.run_update(doc, [{"slug": "m-reasoning", "page_read": False, "evaluations": {}}])
+        self.assertEqual(doc["models"][0]["scores"]["critpt"], 3.0)
+
+    def test_one_unread_page_holds_the_whole_merge(self) -> None:
+        merged = update.merge_aa_models(
+            [{"slug": "m", "page_read": True}, {"slug": "m-old", "page_read": False}]
+        )
+        self.assertFalse(merged["page_read"])
+
     def test_a_gap_filled_from_a_second_mapped_slug_is_kept(self) -> None:
         doc = self.doc({"critpt": 3.0}, {"critpt": self.PAGE.format("m-old")})
         self.run_update(doc, [{"slug": "m", "evaluations": {}}, {"slug": "m-old", "evaluations": {}}])

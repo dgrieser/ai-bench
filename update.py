@@ -757,6 +757,9 @@ def merge_aa_models(records: list[dict[str, Any]]) -> dict[str, Any]:
         merged["evaluations"] = evaluations
     merged["_eval_origins"] = origins
     merged["_aa_slugs"] = [record.get("slug") for record in records]
+    # Complete only if every page was read: a gap from a page that failed to
+    # load is not AA saying it has no number.
+    merged["page_read"] = all(record.get("page_read", True) is not False for record in records)
     return merged
 
 
@@ -1087,6 +1090,7 @@ def update_scores(
                 updated += 1
 
         origins = aa_model.get("_eval_origins") or {}
+        complete = aa_model.get("page_read", True) is not False
         read_pages = {
             aa_model_page_url(aa_slug)
             for aa_slug in aa_model.get("_aa_slugs") or [aa_model.get("slug")]
@@ -1102,7 +1106,8 @@ def update_scores(
                     break
             new_value = transform(aa_value)
             if new_value is None and not fill_urls_only:
-                updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
+                if complete:
+                    updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
                 continue
             origin_slug = origins.get(aa_key_used) or aa_model.get("slug")
             url = aa_model_page_url(origin_slug)

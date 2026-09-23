@@ -453,6 +453,19 @@ class TestHleAndGpqaOnTheModelPages(unittest.TestCase):
         self.assertAlmostEqual(model["evaluations"]["hle"], 0.548656163113994)
         self.assertAlmostEqual(model["evaluations"]["gpqa"], 0.912121212121212)
 
+    def test_the_record_says_whether_its_page_was_read(self) -> None:
+        read = {"slug": "claude-opus-5"}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value={**self.metrics(), "page_read": True}):
+            aa._enrich_structured_metrics([read])
+        self.assertTrue(read["page_read"])
+
+        failed = {"slug": "claude-opus-5"}
+        aa._PAGE_METRICS_CACHE.pop("claude-opus-5", None)
+        with mock.patch.object(aa, "_fetch_page_text", return_value=None):
+            aa._enrich_structured_metrics([failed])
+        aa._PAGE_METRICS_CACHE.pop("claude-opus-5", None)
+        self.assertFalse(failed["page_read"])
+
     def test_an_api_value_is_not_displaced(self) -> None:
         model = {"slug": "claude-opus-5", "evaluations": {"hle": 0.5}}
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
