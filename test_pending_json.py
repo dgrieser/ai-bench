@@ -177,6 +177,79 @@ class TestContent(PendingJsonTestCase):
         self.assertEqual(question["subject"], "GLM-5.3")
 
 
+class TestCarryOver(PendingJsonTestCase):
+    """A mapping updater that could not read its board asked nothing this run.
+
+    Its failure is a warning now, so the queue is republished anyway -- and
+    without carrying its open questions forward they would vanish from the
+    admin page until the board came back.
+    """
+
+    PREVIOUS = {
+        "route": "update_tbench_mapping.py",
+        "route_kind": "mapping",
+        "subject": "Kimi-K3",
+        "question": "Which llm.json model is Terminal-Bench 'Kimi-K3'?",
+        "note": None,
+        "default": None,
+        "if_previous": None,
+        "universe": propose.MODELS,
+        "candidates": [],
+    }
+
+    def write_previous(self, *questions) -> Path:
+        path = self.tmp / "pending.json"
+        path.write_text(json.dumps({"questions": list(questions)}), encoding="utf-8")
+        return path
+
+    def test_a_failed_routes_questions_are_kept(self) -> None:
+        path = self.write_previous(self.PREVIOUS)
+        carried = pending_prompts.previous_questions(path, {"update_tbench_mapping.py"})
+        doc = json.loads(pending_prompts.render_json(ENTRIES, self.llm, True, carried))
+        self.assertIn("Kimi-K3", [q["subject"] for q in doc["questions"]])
+
+    def test_only_the_failed_routes_are_read(self) -> None:
+        path = self.write_previous(self.PREVIOUS)
+        self.assertEqual(pending_prompts.previous_questions(path, {"update_bfcl_mapping.py"}), [])
+        self.assertEqual(pending_prompts.previous_questions(path, set()), [])
+
+    def test_a_missing_previous_queue_carries_nothing(self) -> None:
+        self.assertEqual(
+            pending_prompts.previous_questions(self.tmp / "absent.json", {"update_tbench_mapping.py"}),
+            [],
+        )
+
+    def test_a_question_answered_since_is_dropped(self) -> None:
+        """The mapping file moved, so the question is no longer open."""
+        with mock.patch.object(pending_prompts, "_answers_current_value", return_value=["kimi-k3"]):
+            self.assertEqual(pending_prompts.carry_over([self.PREVIOUS], []), [])
+
+    def test_a_question_asked_again_is_not_duplicated(self) -> None:
+        again = dict(self.PREVIOUS, subject="GLM-5.3")
+        doc = json.loads(pending_prompts.render_json(ENTRIES, self.llm, True, [again]))
+        subjects = [q["subject"] for q in doc["questions"]]
+        self.assertEqual(subjects.count("GLM-5.3"), 1)
+
+    def test_the_render_stays_sorted_and_deterministic(self) -> None:
+        once = pending_prompts.render_json(ENTRIES, self.llm, True, [self.PREVIOUS])
+        twice = pending_prompts.render_json(list(reversed(ENTRIES)), self.llm, True, [self.PREVIOUS])
+        self.assertEqual(once, twice)
+
+    def test_the_cli_reads_the_previous_queue_from_out(self) -> None:
+        report = self.tmp / "queue.jsonl"
+        report.write_text("".join(json.dumps(e) + "\n" for e in ENTRIES), encoding="utf-8")
+        target = self.write_previous(self.PREVIOUS)
+        argv = [
+            str(report), "--format=json", "--skip-aa", f"--out={target}",
+            f"--llm-json={self.llm}", "--carry-over", "update_tbench_mapping.py",
+        ]
+        with mock.patch("sys.argv", ["pending_prompts.py", *argv]):
+            self.assertEqual(pending_prompts.main(), 0)
+        subjects = [q["subject"] for q in json.loads(target.read_text(encoding="utf-8"))["questions"]]
+        self.assertIn("Kimi-K3", subjects)
+        self.assertIn("GLM-5.3", subjects)
+
+
 class TestOutput(PendingJsonTestCase):
     def test_out_writes_through_the_cli_and_creates_its_directory(self) -> None:
         report = self.tmp / "queue.jsonl"

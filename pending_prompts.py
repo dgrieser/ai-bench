@@ -93,7 +93,12 @@ def render_text(entries: list[dict[str, Any]]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def render_json(entries: list[dict[str, Any]], llm_path: Path, skip_aa: bool) -> str:
+def render_json(
+    entries: list[dict[str, Any]],
+    llm_path: Path,
+    skip_aa: bool,
+    carried: list[dict[str, Any]] | None = None,
+) -> str:
     """The queue as data: one question per entry, with its route and candidates.
 
     Universes are deliberately left out. The model list alone is hundreds of
@@ -146,9 +151,53 @@ def render_json(entries: list[dict[str, Any]], llm_path: Path, skip_aa: bool) ->
                 ],
             }
         )
+    if carried:
+        questions.extend(carry_over(carried, questions))
+        questions.sort(key=lambda q: (q["route"], q["route_kind"], q["subject"]))
     return (
         json.dumps({"questions": questions}, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
     )
+
+
+def carry_over(
+    carried: list[dict[str, Any]], fresh: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """The previous queue's questions for routes that could not ask this run.
+
+    A mapping updater that failed to read its board queued nothing, and since a
+    fetcher failure no longer fails the run, the queue is still republished --
+    which would drop that source's open questions from the admin page until the
+    board came back. So they are carried forward as they were, unless the
+    mapping file has moved since (an answer landed), which is exactly the
+    staleness check answer.py applies to `if_previous`.
+    """
+    seen = {(q["route"], q["route_kind"], q["subject"]) for q in fresh}
+    kept = []
+    for question in carried:
+        key = (question.get("route"), question.get("route_kind"), question.get("subject"))
+        if key in seen or not question.get("subject"):
+            continue
+        route = propose.route_for({"command": key[0], "kind": key[1]})
+        if route is not None and _answers_current_value(route, key[2]) != question.get("if_previous"):
+            continue
+        seen.add(key)
+        kept.append(question)
+    return kept
+
+
+def previous_questions(path: Path, routes: set[str]) -> list[dict[str, Any]]:
+    """The questions `path` holds for `routes`, or none if it cannot be read."""
+    if not routes:
+        return []
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    questions = doc.get("questions") if isinstance(doc, dict) else None
+    return [
+        q for q in questions or []
+        if isinstance(q, dict) and q.get("route") in routes
+    ]
 
 
 def _answers_current_value(route, subject: str):
@@ -188,6 +237,20 @@ def main() -> int:
         help="Do not fetch the Artificial Analysis slug list (--format json).",
     )
     parser.add_argument(
+        "--carry-over",
+        metavar="ROUTE",
+        action="append",
+        default=[],
+        help="A mapping updater that failed this run: keep its questions from "
+        "the previous queue (--previous) instead of dropping them (--format json). "
+        "Repeatable.",
+    )
+    parser.add_argument(
+        "--previous",
+        metavar="FILE",
+        help="The queue --carry-over reads from (default: --out).",
+    )
+    parser.add_argument(
         "--count",
         action="store_true",
         help="Print only the number of pending prompts.",
@@ -200,7 +263,11 @@ def main() -> int:
         return 0
 
     if args.format == "json":
-        output = render_json(entries, Path(args.llm_json), args.skip_aa)
+        previous = args.previous or args.out
+        carried = (
+            previous_questions(Path(previous), set(args.carry_over)) if previous else []
+        )
+        output = render_json(entries, Path(args.llm_json), args.skip_aa, carried)
     elif args.format == "markdown":
         output = render_markdown(entries)
     else:

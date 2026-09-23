@@ -275,8 +275,15 @@ numbers and exiting 0. Three layers now catch them:
   - a failed index or history refresh; the scores are written anyway, and
     `./derive_indexes.py -w` or the next run brings the indexes level.
 
-  Each failure is listed at the end, and the run exits 1, so `update-all` and
-  the workflow still fail while the scores are committed. Precedence does not
+  Each failure is listed at the end. A fetcher that could not be read is a
+  **warning**, not a failure: when those are the only failures `update.py`
+  exits 3, and so does `update-all` (which also counts an
+  `update_*_mapping.py` that exits non-zero as a fetcher). The workflow treats
+  3 as success and annotates each skipped source as a `Fetcher failed: …`
+  warning on the run, which the admin page shows beside it
+  (`_fetch_warnings.py`). Anything else -- an ingest that raised, a refused
+  value, a failed index or history refresh, `check_new.py` -- exits 1 and
+  still fails the run, with the scores committed regardless. Precedence does not
   depend on which ingests ran (`_precedence.py`), so a skipped source leaves
   its own columns as the last good run wrote them. When Artificial Analysis is
   down, the other sources still cannot overwrite the values it owns.

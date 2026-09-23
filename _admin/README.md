@@ -44,7 +44,8 @@ browser  ──writes──►  api.php  ──►  workflow_dispatch: update-be
 ```
 
 The page holds no credential. `api.php` holds one, and it can do exactly two
-things: queue this one workflow, and list its runs.
+things: queue this one workflow, and read its runs -- including the
+`Fetcher failed: …` warnings each run annotates.
 
 ## There is no URL to configure
 
@@ -138,13 +139,19 @@ A **fine-grained** personal access token:
 | | |
 | --- | --- |
 | Repository access | only `dgrieser/ai-bench` |
-| Permissions | **Actions → Read and write**, nothing else |
+| Permissions | **Actions → Read and write**, **Checks → Read**, nothing else |
 
 That scope is the point, not an inconvenience. A `Contents: write` token would
 bypass the branch ruleset outright — the repository owner is on its bypass list —
 which would turn an internet-facing endpoint into arbitrary-write-to-`main`. With
 Actions alone, the worst anyone who gets past the host's auth can do is queue a
 workflow whose every record `answer.py` then validates on the runner.
+
+**Checks → Read** is only for the Runs tab's fetcher warnings: a broken fetcher
+no longer fails the run, it annotates it, and annotations belong to check runs.
+It is read-only and adds nothing an attacker could write with. A token without
+it still works for everything else; the Runs tab then says the warnings cannot
+be shown, and why, rather than showing none.
 
 Fine-grained tokens expire within a year, and the failure is opaque. `api.php`
 passes GitHub's own `message` through, so when dispatches start failing the page
@@ -234,6 +241,10 @@ tells you why.
   the removal is offered again, since the floor is about what the batch leaves
   behind rather than about each record.
 - **Runs** — the last few runs of the workflow, and a button that asks for one.
+  A run whose fetchers failed shows a count of warnings beside it and, under
+  it, each source it could not read with the reason its fetcher gave. Such a
+  run is still green: a dead scraper skips its own source and nothing else, so
+  the warning is the only place it shows.
   **Run the refresh now** dispatches `update-benchmarks.yml` against `main`
   carrying no answers: the same run the schedule makes every three hours, which
   re-reads every source, commits the scores that moved, and republishes the
