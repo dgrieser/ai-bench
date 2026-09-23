@@ -594,6 +594,11 @@ _PAGE_FLOAT_FIELDS = [
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     ("ifbench", "ifbench"),
+    # HLE and GPQA Diamond are on every page too. The free API tier returns
+    # neither, so without these a row that switches to another AA run has no
+    # way to get them back.
+    ("hle", "hle"),
+    ("gpqa", "gpqa"),
     ("harveyLab", "harvey_lab"),
     ("automationBenchPartialScore", "automation_bench_partial_score"),
     ("enterpriseOpsGym", "enterprise_ops_gym"),
@@ -722,7 +727,10 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
     if slug in _PAGE_METRICS_CACHE:
         return _PAGE_METRICS_CACHE[slug]
 
-    result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None}
+    # page_read says whether the page's metrics block was actually read. A
+    # model whose page failed to load reports every page field as missing,
+    # which update.py must not mistake for AA having no number.
+    result = {"context_window": "", "params": "", "hugging_face_url": "", "creator": {"name": creator_name, "url": ""}, "mmmu_pro": None, "page_read": False}
     text = _fetch_page_text(slug)
     if text is None:
         _PAGE_METRICS_CACHE[slug] = result
@@ -734,6 +742,7 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
     result["creator"] = _parse_creator(text, creator_name)
     metrics = _parse_metrics_block(text, slug)
     result.update(metrics)
+    result["page_read"] = bool(metrics)
     if "mmmu_pro" not in result:
         result["mmmu_pro"] = None
 
@@ -915,6 +924,8 @@ _PAGE_EVALS = [
     "terminalbench_v2_1",
     "terminalbench_hard",
     "ifbench",
+    "hle",
+    "gpqa",
     "livecodebench",
     "scicode",
     "aime_25",
@@ -989,6 +1000,7 @@ def _enrich_structured_metrics(models):
                 evals["omniscience_hallucination_rate"] = 1 - rate
 
         m["evaluations"] = evals
+        m["page_read"] = bool(page_metrics.get("page_read"))
 
         for key in _PAGE_META_KEYS:
             if m.get(key) is None:
