@@ -399,25 +399,28 @@ class TestModelEdits(AnswersTestCase):
         self.assertEqual(answer.score_date, "2026-08-06")
         self.assertEqual(answer.score_url, "https://example.com/board")
 
-    def test_provenance_defaults_to_today_and_nobody(self) -> None:
-        """Absent is not the same as null: edit.py stamps the defaults itself.
-
-        Sending None for either would say the same thing today, but leaving the
-        flags off keeps one script deciding what "now" and "unattributed" mean.
-        """
-        answer = self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}})
+    def test_the_date_defaults_to_the_runners_today(self) -> None:
+        """Absent is not the same as null: edit.py stamps the default itself,
+        so one script decides what "now" means."""
+        answer = self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
+                                "score_url": "https://example.com/board"})
         self.assertIsNone(answer.score_date)
-        self.assertIsNone(answer.score_url)
         with mock.patch.object(_answers, "_run") as run:
             _answers._apply_edit(answer, self.llm)
         flags = [a for a in run.call_args[0][0] if a.startswith("--score-")]
-        self.assertEqual(flags, [])
+        self.assertEqual(flags, ["--score-url=https://example.com/board"])
 
-    def test_a_blank_page_credits_nobody(self) -> None:
-        """Which is what a hand edit means, and the weakest precedence rung."""
-        answer = self.accepted(
-            {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}, "score_url": "  "}
-        )
+    def test_a_score_needs_the_page_it_was_read_from(self) -> None:
+        """Refused here, before the batch runs: edit.py would refuse it mid-batch."""
+        for extra in ({}, {"score_url": None}, {"score_url": "  "}):
+            with self.subTest(extra=extra):
+                self.refused(
+                    {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1}, **extra},
+                    "'score_url' is required",
+                )
+
+    def test_clearing_a_score_needs_no_page(self) -> None:
+        answer = self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": None}})
         self.assertIsNone(answer.score_url)
 
     def test_provenance_needs_a_score_to_stamp(self) -> None:
@@ -451,7 +454,8 @@ class TestModelEdits(AnswersTestCase):
         )
         self.assertEqual(
             self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
-                           "score_date": date.today().isoformat()}).score_date,
+                           "score_date": date.today().isoformat(),
+                           "score_url": "https://example.com/board"}).score_date,
             date.today().isoformat(),
         )
 

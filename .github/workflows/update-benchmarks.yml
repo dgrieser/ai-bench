@@ -218,6 +218,10 @@ jobs:
       # still green, which is the failure mode the whole file is arranged
       # against.
       #
+      # test_hand_sources.py checks that every score in llm.json names the
+      # page it was read from. A hand entry is often the only value in its
+      # column, so an unsourced one is a number nobody can check.
+      #
       # test_fetch_warnings.py guards the line between a warning and a failure.
       # Drawn too wide, a bug in this repository reads as a flaky source and
       # the run stays green over it; too narrow, and one dead scraper reds
@@ -243,6 +247,7 @@ jobs:
             ./test_artificialanalysis_api.py
             ./test_refresh_cost.py
             ./test_fetch_warnings.py
+            ./test_hand_sources.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below

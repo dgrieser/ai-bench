@@ -721,24 +721,26 @@ def _score_date(record: dict[str, Any], has_scores: bool) -> str | None:
     return parsed.isoformat()
 
 
-def _score_url(record: dict[str, Any], has_scores: bool) -> str | None:
-    """The page the scores in this record were read from, or None for nobody.
+def _score_url(record: dict[str, Any], has_scores: bool, writes_score: bool) -> str | None:
+    """The page the scores in this record were read from, or None.
 
-    None is a real answer and the default: _precedence.source_rank() reads an
-    unattributed score as hand-entered, the weakest rung, so any scraper may
-    replace it. Naming the page therefore matters -- it moves the value onto
-    that page's rung -- which is also why the value is checked to be a URL and
-    not free text.
+    Required whenever the record writes a number (edit.py refuses the run
+    otherwise, which would take the rest of the batch down after it): the page
+    moves the value onto that page's rung of _precedence.source_rank(), and it
+    is the only thing a reader can check the number against. A record that only
+    clears scores has nothing to credit.
     """
     raw = record.get("score_url")
-    if raw is None:
-        return None
-    if not has_scores:
+    if raw is not None and not has_scores:
         raise AnswerError("'score_url' credits a score, so send at least one score with it")
-    if not isinstance(raw, str):
-        raise AnswerError("'score_url' must be a URL string, or null to credit nobody")
-    url = raw.strip()
+    if raw is not None and not isinstance(raw, str):
+        raise AnswerError("'score_url' must be a URL string")
+    url = (raw or "").strip()
     if not url:
+        if writes_score:
+            raise AnswerError(
+                "'score_url' is required with a score: name the page it was read from"
+            )
         return None
     if not url.startswith(("http://", "https://")):
         raise AnswerError(f"{raw!r} is not a URL starting with http:// or https://")
@@ -871,7 +873,9 @@ def _validate_model_edit(
         fields=dict(fields),
         scores=dict(scores),
         score_date=_score_date(record, bool(scores)),
-        score_url=_score_url(record, bool(scores)),
+        score_url=_score_url(
+            record, bool(scores), any(value is not None for value in scores.values())
+        ),
     )
 
 

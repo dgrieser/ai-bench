@@ -48,12 +48,15 @@ The rungs, strongest first:
   5. ``RANK_AGGREGATE`` -- cross-benchmark aggregates that republish numbers
      nobody in the chain ran: llm-stats and the Hugging Face model cards. Both
      ingests are fill-only, so in practice they reach a column only where it is
-     still null.
+     still null, custom-sourced, or credited to the very page they are
+     re-reading.
   6. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
      ``edit.py``. Its attribution is whatever page the entry cited, or null
      when a hand edit cleared it (``stamp_score_source`` takes None for exactly
      that), and either way it is the weakest rung: a hand entry seeds a column
-     until a source measures it, and any scraper may overwrite it.
+     until a source measures it, and any scraper may overwrite it -- the
+     fill-only aggregates of rung 5 included, which otherwise never replace a
+     stored value (``is_fetcher_source``).
 
 Two sources on the same rung may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -225,6 +228,18 @@ def source_rank(url: str | None) -> int:
         if candidate == prefix or candidate.startswith(f"{prefix}/"):
             return rank
     return RANK_HAND_ENTERED
+
+
+def is_fetcher_source(url: str | None) -> bool:
+    """Whether url is a page one of this repo's fetchers writes scores from.
+
+    RANKED_PREFIXES is built from the fetchers' own URL constants, so it is the
+    complete list of pages a scraper stamps; anything else -- a model card or
+    vendor post cited by hand, a news story, or no page at all -- is a custom
+    source. Every fetcher may replace a custom-sourced value, the fill-only
+    ones included, and one reporting the same number takes over its credit.
+    """
+    return source_rank(url) < RANK_HAND_ENTERED
 
 
 def may_overwrite(new_url: str | None, stored_url: str | None) -> bool:

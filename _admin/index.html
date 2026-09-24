@@ -1000,6 +1000,12 @@ const badUrl = (raw) => {
   return Boolean(value) && !/^https?:\/\//i.test(value);
 };
 
+/* A score's page: required when the edit writes a number. */
+const badScoreUrl = (raw, writes) => {
+  const value = String(raw ?? "").trim();
+  return (writes && !value) || badUrl(value);
+};
+
 /* The shape every name in llm.json has. Checked here so a name that could not
    become an entry is caught while it is being typed rather than on the runner,
    where the whole batch would go down with it. */
@@ -2500,12 +2506,13 @@ function renderModelCard(model) {
   };
   const commit = () => {
     const scored = Object.keys(draft.scores).length > 0;
+    const writes = Object.values(draft.scores).some((value) => value !== null);
     /* A batch is all or nothing on the runner, so a half-typed page must not
        reach it: it would refuse this record and take every other answer in the
        sitting down with it. The card simply stops counting as answered until
        the URL is one. */
     const broken = META_FIELDS.some(([field, type]) => type === "url" && badUrl(draft.fields[field]))
-      || (scored && badUrl(draft.score_url));
+      || (scored && badScoreUrl(draft.score_url, writes));
     const empty = !Object.keys(draft.fields).length && !scored;
     if (empty || broken) state.answers.delete(key);
     else {
@@ -2563,13 +2570,13 @@ function renderModelCard(model) {
   const urlInput = el("input", {
     type: "url",
     inputMode: "url",
-    placeholder: "https://... (blank credits nobody)",
+    placeholder: "https://... page the scores were read from",
     value: draft.score_url,
     disabled: Boolean(rename),
   });
   urlInput.oninput = () => {
     draft.score_url = urlInput.value;
-    urlInput.classList.toggle("unknown", badUrl(draft.score_url));
+    urlInput.classList.toggle("unknown", badScoreUrl(draft.score_url, false));
     commit();
   };
   const provenance = el("div", { className: "provenance" }, [
@@ -2578,10 +2585,9 @@ function renderModelCard(model) {
       el("div", { className: "field" }, [el("label", {}, "score url"), urlInput]),
     ]),
     el("p", { className: "note-text" },
-      "Stamped on every score changed above. A page moves the value onto that "
-      + "page's rung of the source precedence, where only that page or a better "
-      + "one may overwrite it; left blank it counts as hand-entered, which any "
-      + "scraper may replace."),
+      "Stamped on every score changed above, and required with one. A page moves "
+      + "the value onto that page's rung of the source precedence, where only that "
+      + "page or a better one may overwrite it."),
   ]);
 
   const scores = el("div", {});

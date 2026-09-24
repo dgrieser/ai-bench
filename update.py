@@ -63,6 +63,7 @@ from _precedence import (
     TOOLATHLON_SOURCE_URL,
     VALS_KEY_URLS,
     ZEROBENCH_SOURCE_URL,
+    is_fetcher_source,
     may_overwrite,
     source_rank,
 )
@@ -842,7 +843,12 @@ def apply_score(
         the ingests, so which numbers land does not depend on which subset of
         the ingests ran (see the module docstring there);
       * fill_only: only fill nulls, never overwrite (the low-trust rule the
-        Hugging Face and llm-stats aggregates follow);
+        Hugging Face and llm-stats aggregates follow) -- except a value from a
+        custom source, a page no fetcher writes (_precedence.is_fetcher_source),
+        which every fetcher may replace, and a value credited to the very page
+        being read, which is that page refreshing its own number;
+      * a fetcher reporting the very number a custom source gave takes over its
+        credit, so the value is attributed to a page this repo re-reads;
       * fill_urls_only (--fill-source-urls): scores and dates stay untouched;
         the URL is stamped only where none is stored yet and this source's
         fetched value equals the stored score, so the first source in the
@@ -874,7 +880,10 @@ def apply_score(
         changes.append((slug, key, old_value, url))
         return 1
 
-    if fill_only and old_value is not None:
+    stored_url = score_source(model, key)
+    custom = not is_fetcher_source(stored_url)
+    own = stored_url is not None and canonical(stored_url) == canonical(url)
+    if fill_only and old_value is not None and not (custom or own):
         return 0
     # Never overwrite an existing non-null value with null.
     if old_value is not None and new_value is None:
@@ -882,15 +891,18 @@ def apply_score(
     if old_value == new_value:
         # An equal AA measurement still takes ownership of a lower-ranked
         # score, so later non-AA updates cannot displace AA's authority.
-        if (new_value is not None and source_rank(url) == RANK_AA
-                and source_rank(score_source(model, key)) > RANK_AA):
+        # So does any fetcher confirming a custom source's number.
+        if new_value is not None and (
+            (source_rank(url) == RANK_AA and source_rank(stored_url) > RANK_AA)
+            or (custom and is_fetcher_source(url))
+        ):
             stamp_score_source(model, key, url)
             changes.append((slug, key, old_value, new_value))
             return 1
         return 0
     # A stored value keeps its number until a source of at least its own
     # standing reports a different one.
-    if old_value is not None and not may_overwrite(url, score_source(model, key)):
+    if old_value is not None and not may_overwrite(url, stored_url):
         return 0
     scores[key] = new_value
     stamp_score_updated(model, key)
