@@ -436,6 +436,34 @@ class TestDroppedScores(unittest.TestCase):
         self.assertFalse(update.RunReports().dropped("m", "ifbench", HAND_ENTERED))
         self.assertFalse(update.RunReports().dropped("m", "ifbench", None))
 
+    def test_a_step_that_failed_partway_drops_nothing(self) -> None:
+        """Its page was read, but only as far as the step got before raising."""
+        model = model_with(score=39.6, source=AA_PAGE)
+
+        def ingest() -> None:
+            self.other_row(AA_PAGE)
+            raise RuntimeError("bug halfway through the rows")
+
+        failures: list = []
+        update.source_update(failures, None, "aa", ingest)
+        self.assertEqual(len(failures), 1)
+        self.run_once(model, [(38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 39.6)
+        self.assertEqual(model["scores_source"]["ifbench"], AA_PAGE)
+
+    def test_a_page_read_in_part_drops_nothing(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.other_row(AA_PAGE)
+        update.RUN_REPORTS.failed(AA_PAGE)
+        self.run_once(model, [(38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 39.6)
+
+    def test_a_step_that_succeeded_still_drops(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        update.source_update([], None, "aa", lambda: self.other_row(AA_PAGE))
+        self.run_once(model, [(38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 38.0)
+
     def test_a_refusal_from_an_earlier_run_is_not_applied(self) -> None:
         model = model_with(score=39.6, source=AA_PAGE)
         update.apply_score(DOC, model, "m", "ifbench", 38.0, EVALS_IFBENCH, [])

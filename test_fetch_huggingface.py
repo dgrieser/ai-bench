@@ -758,6 +758,30 @@ class TestChannels(unittest.TestCase):
              mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
             self.assertEqual(fh.extract_scores(REPO), self._crawl()[0])
 
+class TestPartialCards(unittest.TestCase):
+    """A card read in part is flagged, so update.py drops nothing on it (#226)."""
+
+    CARD = TestChannels.CARD
+
+    def test_a_failed_metadata_read_is_reported(self):
+        def fail(*a, **k):
+            raise OSError("503")
+
+        failures: list[str] = []
+        with mock.patch.object(fh, "fetch_api_eval_data", fail), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            scores, _ = fh.extract_scores_and_channels(REPO, None, failures)
+        self.assertIn("GPQA Diamond", scores)
+        self.assertEqual(len(failures), 1)
+
+    def test_a_complete_read_reports_nothing(self):
+        failures: list[str] = []
+        with mock.patch.object(fh, "fetch_api_eval_data", lambda *a, **k: TestChannels.PAYLOAD), \
+             mock.patch.object(fh, "fetch_readme", lambda *a, **k: self.CARD):
+            fh.extract_scores_and_channels(REPO, None, failures)
+        self.assertEqual(failures, [])
+
+
 class TestModelIndex(unittest.TestCase):
     def test_extracts_metrics(self):
         payload = {

@@ -828,11 +828,17 @@ class RunReports:
 
     Everything here is one run's: a page is "read" only if it produced a row in
     this process, so a fetch that failed or was skipped drops nothing, and a
-    write refused in one run is never applied by a later one.
+    write refused in one run is never applied by a later one. A fetcher that
+    failed partway drops nothing either: every page its failed step read, and
+    any page it reports it could read only in part, is in failed_pages.
     """
 
     # Canonical pages some fetcher read at least one row from this run.
     read_pages: set[str] = field(default_factory=set)
+    # Pages whose read failed partway: what they did not report proves nothing.
+    failed_pages: set[str] = field(default_factory=set)
+    # Pages read by the ingest step now running, so a failure can mark them.
+    step_pages: set[str] = field(default_factory=set)
     # (model, benchmark) -> canonical pages that reported a number for it.
     reported: dict[tuple[str, str], set[str]] = field(default_factory=dict)
     # (model, benchmark) -> writes refused by rank or fill-only, in run order:
@@ -844,6 +850,7 @@ class RunReports:
     def saw(self, slug: str, key: str, value: Any, url: str) -> None:
         page = canonical(url)
         self.read_pages.add(page)
+        self.step_pages.add(page)
         if value is not None:
             self.reported.setdefault((slug, key), set()).add(page)
 
@@ -852,7 +859,14 @@ class RunReports:
         if not is_fetcher_source(stored_url):
             return False
         page = canonical(stored_url)
-        return page in self.read_pages and page not in self.reported.get((slug, key), set())
+        return (
+            page in self.read_pages
+            and page not in self.failed_pages
+            and page not in self.reported.get((slug, key), set())
+        )
+
+    def failed(self, url: str) -> None:
+        self.failed_pages.add(canonical(url))
 
 
 RUN_REPORTS = RunReports()
@@ -1401,6 +1415,9 @@ def fetch_huggingface_data(
         channels = row.get("channels")
         channels = channels if isinstance(channels, dict) else {}
         url = canonical(f"{fetch_huggingface.HF_BASE}/{repo}")
+        if row.get("partial"):
+            # A channel of the card failed to load; what it lacks is unknown.
+            RUN_REPORTS.failed(url)
         mapped: dict[str, tuple[int, int, Any, str]] = {}
         for label, value in scores.items():
             key = hf_to_key.get(label)
@@ -2710,9 +2727,13 @@ def source_update(
     it wrote before raising stays -- each of those writes went through
     apply_score() and is valid on its own.
     """
+    RUN_REPORTS.step_pages = set()
     try:
         return timed(label, fn, *args, **kwargs)
     except Exception as exc:  # noqa: BLE001 - any ingest bug is one source's
+        # It stopped partway, so a score missing from what it read is not one
+        # its source dropped (replace_dropped_scores).
+        RUN_REPORTS.failed_pages |= RUN_REPORTS.step_pages
         failures.append(f"{label}: {type(exc).__name__}: {exc}")
         print(f"error: {label} failed; its remaining writes are skipped: {exc!r}", file=sys.stderr)
         return empty

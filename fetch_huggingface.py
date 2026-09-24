@@ -1393,9 +1393,14 @@ CHANNEL_TABLE = "table"
 
 
 def extract_scores_and_channels(
-    repo: str, slug: str | None = None
+    repo: str, slug: str | None = None, failures: list[str] | None = None
 ) -> tuple[dict[str, float], dict[str, str]]:
-    """Every score on one card, and which channel each label was read from."""
+    """Every score on one card, and which channel each label was read from.
+
+    A channel that could not be read is appended to `failures` when given: the
+    card then carries only part of what it lists, and update.py must not read
+    a score missing from it as one the card stopped reporting.
+    """
     # Structured metadata first: it is what the Hub renders as 'Evaluation
     # results' and is unambiguous. README tables then fill remaining labels.
     out: dict[str, float] = {}
@@ -1404,6 +1409,8 @@ def extract_scores_and_channels(
         payload = fetch_api_eval_data(repo)
     except Exception as exc:
         print(f"warning: {repo}: eval metadata fetch failed: {exc}", file=sys.stderr)
+        if failures is not None:
+            failures.append(f"eval metadata: {exc}")
         payload = {}
     for label, value in extract_eval_results(payload).items():
         out[label] = value
@@ -1506,14 +1513,17 @@ def crawl_all_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
 
     results: list[dict[str, Any]] = []
     for slug, repo in pairs:
+        failures: list[str] = []
         try:
-            scores, channels = extract_scores_and_channels(repo, slug)
+            scores, channels = extract_scores_and_channels(repo, slug, failures)
         except Exception as exc:
             print(f"warning: {slug} ({repo}): {exc}", file=sys.stderr)
             continue
-        results.append(
-            {"model": slug, "repo": repo, "scores": scores, "channels": channels}
-        )
+        row = {"model": slug, "repo": repo, "scores": scores, "channels": channels}
+        if failures:
+            # Read only in part: update.py treats this card as a failed fetch.
+            row["partial"] = True
+        results.append(row)
     # A short crawl is not stored, the same way artificialanalysis.py refuses
     # to publish a short model list: a run that lost its network partway would
     # otherwise serve a stub to the fetcher that follows it, for an hour.

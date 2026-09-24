@@ -712,8 +712,10 @@ new label -- may be replaced by any other fetcher that reports it in the same ru
 fill-only aggregates included (`update.replace_dropped_scores`). It runs once
 after every ingest, so ingest order does not matter, and the best-ranked
 candidate wins. A score is never nulled for going unreported: with no candidate
-it stays. A page that was not read at all (a failed or skipped fetch) drops
-nothing, and nothing carries over between runs.
+it stays. A failed fetcher drops nothing: a page not read at all (a failed or
+skipped fetch), every page an ingest step read before it raised, and a Hugging
+Face card whose metadata could not be loaded (`"partial": true` from
+`fetch_huggingface.py`) are all excluded. Nothing carries over between runs.
 
 The Coding Agent Index shares AA's rank 1 and is no longer fill-only. When AA
 surfaces disagree, the later AA ingest wins (the coding-agent ingest follows the
