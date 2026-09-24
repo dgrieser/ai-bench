@@ -1247,7 +1247,7 @@ def update_scores(
     # model -- a tier without it, a field renamed upstream -- still reads every
     # page for the rest, and without this the #226 pass would take that
     # silence for AA withdrawing all of them: the 2026-09-24 11:48 refresh
-    # handed 21 mmlu_pro and 22 aa_lcr rows to model cards that way.
+    # handed 21 mmlu_pro and 22 aa_lcr rows to cards, Vals and evals.report.
     if not fill_urls_only:
         for llm_key in SCORE_MAPPINGS.keys() - delivered:
             RUN_REPORTS.could_not_show(llm_key, all_read_pages)
