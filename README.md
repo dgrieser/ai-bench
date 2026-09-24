@@ -1059,6 +1059,13 @@ Analysis runs itself, plus three assembled the same way the tool-use columns are
 | **MathVista-mini** (`mathvista_mini`) | evals.report's `mathvista` table | Hugging Face model cards |
 | **CharXiv Reasoning** (`charxiv_reasoning`) | Hugging Face model cards | evals.report's `charxiv` table, where it also overwrites |
 
+OSWorld-Verified (`osworld_verified`), the GUI-agent column, leads from the
+benchmark's own results workbook (`fetch_osworld.py`, Foundation E2E GUI runs
+only). Behind it come evals.report's `osworld` table, Verified rows only, and
+then the Hugging Face cards. That table names no revision, but its numbers do:
+every row sits on the Verified scale (47-86%), where no OSWorld 2.0 run on any
+release reaches 45. So it never feeds `osworld_2_0`.
+
 Two of the three still lead from an aggregator, which is unusual here and worth
 saying why. MathVista's board stopped at the 2024 field — nothing on it is in
 this index.

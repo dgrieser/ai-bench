@@ -1188,7 +1188,8 @@
       ],
       "urls": [
         "https://os-world.github.io",
-        "https://arxiv.org/abs/2404.07972"
+        "https://arxiv.org/abs/2404.07972",
+        "https://evals.report/benchmarks/osworld"
       ]
     },
     "osworld_2_0": {
@@ -61096,7 +61097,7 @@
         "hle": "https://artificialanalysis.ai/models/claude-sonnet-5",
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-sonnet-5",
-        "osworld_verified": "https://www.anthropic.com/news/claude-sonnet-5",
+        "osworld_verified": "https://evals.report/benchmarks/osworld",
         "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
@@ -61331,7 +61332,7 @@
           {
             "date": "2026-09-11",
             "score": 81.2,
-            "source": "https://www.anthropic.com/news/claude-sonnet-5"
+            "source": "https://evals.report/benchmarks/osworld"
           }
         ],
         "zerobench": [
@@ -68065,6 +68066,7 @@
     "https://programbench.com/extended",
     "https://www.vals.ai/benchmarks/programbench",
     "https://www.vals.ai/benchmarks/terminal-bench-4",
-    "https://osworld-v2.xlang.ai"
+    "https://osworld-v2.xlang.ai",
+    "https://evals.report/benchmarks/osworld"
   ]
 }

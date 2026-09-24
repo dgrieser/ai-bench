@@ -86,6 +86,14 @@ BENCHMARKS: dict[str, str] = {
     # metric charxiv_reasoning carries, so this source overwrites a self-report
     # with an agreeing vetted run and fills Inkling, which no card reports.
     "charxiv": "charxiv_reasoning",
+    # Its "osworld" table names no revision either, but its numbers identify
+    # one: every row sits on the OSWorld-Verified scale (47-86%), where no
+    # OSWorld 2.0 run on any release reaches 45, and the Verified rows it keeps
+    # (Qwen3.8-27B 84.3, Muse Glimmer 30B 65.9) are the figures those models'
+    # cards publish as OSWorld-Verified. So it feeds osworld_verified and
+    # never an OSWorld 2.0 column. The benchmark's own workbook outranks it,
+    # so it only fills models the board does not list.
+    "osworld": "osworld_verified",
 }
 
 TRUSTED_STATUSES = {"official", "verified"}
