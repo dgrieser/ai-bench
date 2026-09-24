@@ -24,7 +24,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
-| **OSWorld** | Research | JSON API |
+| **OSWorld** | Research (benchmark's own leaderboards) | Results workbook (Verified) + the JSON the OSWorld 2.0 board renders from |
 | **Spheron** | Infrastructure | JSON API |
 | **LLMStats** | Community Aggregator | JSON API |
 | **Evals Report** | Research | JSON API |
@@ -359,7 +359,8 @@ Output: llm.json (unified dataset)
 ./fetch_frontierswe.py                  # both published boards, V2 and V1
 ./fetch_frontierswe.py --revision v1    # or pin one revision
 ./fetch_real_swe.py                     # Real-SWE, from Specific Labs' own board
-./fetch_osworld.py
+./fetch_osworld.py                      # OSWorld-Verified, and OSWorld 2.0 releases 2026.06.24 and 2.1
+./fetch_osworld.py --board v2           # or one board (verified, v2)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
 ./fetch_swe_marathon.py                 # both published boards, 1.0 and 1.1
@@ -698,7 +699,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
 | 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only — they write a null, a value from a custom source (below), or a value credited to the same page they are reading, which is that page refreshing its own number; never another fetcher's; where they overlap, llm-stats runs first and so claims the gap. |
@@ -898,7 +899,7 @@ why, is in that section's table.
 
 ### Benchmarks that publish more than one revision
 
-Four benchmarks in this table have re-run themselves, and in every case the
+Five benchmarks in this table have re-run themselves, and in every case the
 re-run changed the task set, the verification or the scoring — so a 1.0 number
 and a 1.1 number are two different measurements that happen to share a name.
 Each revision gets its own column, the way `terminal_bench_2_0` and
@@ -912,6 +913,7 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
+| **OSWorld 2.0** | `osworld_2_1`, `osworld_2_0` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. `osworld_2_0` is 2026.06.24, where the paper's field and every open-weight run sit; 2026.08.08 has no column, superseded by 2.1 five weeks later with nothing on it but closed models. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`, and a release it does not list is skipped and reported. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the

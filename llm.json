@@ -1191,6 +1191,56 @@
         "https://arxiv.org/abs/2404.07972"
       ]
     },
+    "osworld_2_1": {
+      "name": "OSWorld 2.1",
+      "short_name": "OSW 2.1",
+      "category": "GUI Agent",
+      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2.1, the bug-fix release the maintainers now recommend, which re-pins every task, asset, website and VM image. Scores do not carry across releases — Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 here — so 2026.06.24 is a separate column.",
+      "settings": [
+        "binary accuracy",
+        "full 108-task set",
+        "max 500 steps",
+        "release 2.1"
+      ],
+      "excludes": [
+        "the partial (checkpoint) score",
+        "the 82-task offline set",
+        "150- and 300-step runs",
+        "releases 2026.06.24 and 2026.08.08",
+        "OSWorld and OSWorld-Verified",
+        "a bare “OSWorld 2.0” naming no release"
+      ],
+      "urls": [
+        "https://osworld-v2.xlang.ai",
+        "https://arxiv.org/abs/2606.29537",
+        "https://github.com/xlang-ai/OSWorld-V2"
+      ]
+    },
+    "osworld_2_0": {
+      "name": "OSWorld 2.0",
+      "short_name": "OSW 2.0",
+      "category": "GUI Agent",
+      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2026.06.24, the one the paper reports. The task set has been re-released since with new task files, assets and mocked websites, and scores do not carry across releases, so 2.1 is a separate column.",
+      "settings": [
+        "binary accuracy",
+        "full 108-task set",
+        "max 500 steps",
+        "release 2026.06.24"
+      ],
+      "excludes": [
+        "the partial (checkpoint) score",
+        "the 82-task offline set",
+        "150- and 300-step runs",
+        "releases 2026.08.08 and 2.1",
+        "OSWorld and OSWorld-Verified",
+        "a bare “OSWorld 2.0” naming no release"
+      ],
+      "urls": [
+        "https://osworld-v2.xlang.ai",
+        "https://arxiv.org/abs/2606.29537",
+        "https://github.com/xlang-ai/OSWorld-V2"
+      ]
+    },
     "zerobench": {
       "name": "ZeroBench",
       "short_name": "ZeroBench",
@@ -1322,6 +1372,8 @@
         "mmlu_pro": 76.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -1380,6 +1432,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -1438,6 +1492,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/devstral-2",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -1753,6 +1809,8 @@
         "mmlu_pro": 67.8,
         "mmmu_pro": 44.6,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -1811,6 +1869,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -1869,6 +1929,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/devstral-small-2",
         "mmmu_pro": "https://artificialanalysis.ai/models/devstral-small-2",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2198,6 +2260,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 54.0,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2256,6 +2320,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2314,6 +2380,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/glm-4-7-flash",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2559,6 +2627,8 @@
         "mmlu_pro": 84.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2617,6 +2687,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2675,6 +2747,8 @@
         "mmlu_pro": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2927,6 +3001,8 @@
         "mmlu_pro": 80.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -2985,6 +3061,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3043,6 +3121,8 @@
         "mmlu_pro": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3368,6 +3448,8 @@
         "mmlu_pro": 70.6,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3426,6 +3508,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3484,6 +3568,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/qwen3-coder-30b-a3b-instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3723,6 +3809,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3781,6 +3869,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -3839,6 +3929,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4146,6 +4238,8 @@
         "mmlu_pro": 80.9,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4204,6 +4298,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4262,6 +4358,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4586,6 +4684,8 @@
         "mmlu_pro": 82.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4644,6 +4744,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4702,6 +4804,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -4978,6 +5082,8 @@
         "mmlu_pro": 87.8,
         "mmmu_pro": 77.3,
         "osworld_verified": 62.2,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 12,
         "mathvista_mini": 90.3,
         "charxiv_reasoning": 80.8
@@ -5036,6 +5142,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-10",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -5094,6 +5202,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
@@ -5525,6 +5635,8 @@
         "mmlu_pro": 86.7,
         "mmmu_pro": 75,
         "osworld_verified": 58.0,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 9,
         "mathvista_mini": 87.4,
         "charxiv_reasoning": 77.2
@@ -5583,6 +5695,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -5641,6 +5755,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B"
@@ -6021,6 +6137,8 @@
         "mmlu_pro": 86.1,
         "mmmu_pro": 75,
         "osworld_verified": 56.2,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 10,
         "mathvista_mini": 87.8,
         "charxiv_reasoning": 79.5
@@ -6079,6 +6197,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -6137,6 +6257,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-27B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-27B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-27B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-27B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-27B"
@@ -6475,6 +6597,8 @@
         "mmlu_pro": 85.3,
         "mmmu_pro": 72.7,
         "osworld_verified": 54.5,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 8,
         "mathvista_mini": 86.2,
         "charxiv_reasoning": 77.5
@@ -6533,6 +6657,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -6591,6 +6717,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B"
@@ -6917,6 +7045,8 @@
         "mmlu_pro": 82.5,
         "mmmu_pro": 69.2,
         "osworld_verified": 41.8,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 3,
         "mathvista_mini": 85.7,
         "charxiv_reasoning": 73
@@ -6975,6 +7105,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -7033,6 +7165,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-9B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-9B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-9B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-9B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-9B"
@@ -7359,6 +7493,8 @@
         "mmlu_pro": 79.1,
         "mmmu_pro": 65.4,
         "osworld_verified": 35.6,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 3,
         "mathvista_mini": 85.1,
         "charxiv_reasoning": 70.8
@@ -7417,6 +7553,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": "2026-05-13",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -7475,6 +7613,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-4B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.5-4B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-4B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-4B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-4B"
@@ -7781,6 +7921,8 @@
         "mmlu_pro": 55.3,
         "mmmu_pro": 43,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 1,
         "mathvista_mini": 76.7,
         "charxiv_reasoning": 58.8
@@ -7839,6 +7981,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -7897,6 +8041,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-2B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-2B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-2B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-2B"
@@ -8200,6 +8346,8 @@
         "mmlu_pro": 29.7,
         "mmmu_pro": 25.8,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 0,
         "mathvista_mini": 62.2,
         "charxiv_reasoning": 41.3
@@ -8258,6 +8406,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-03-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -8316,6 +8466,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.5-0.8B"
@@ -8609,6 +8761,8 @@
         "mmlu_pro": 83.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -8667,6 +8821,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -8725,6 +8881,8 @@
         "mmlu_pro": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9086,6 +9244,8 @@
         "mmlu_pro": 78.3,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9144,6 +9304,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9202,6 +9364,8 @@
         "mmlu_pro": "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9441,6 +9605,8 @@
         "mmlu_pro": 71.6,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9499,6 +9665,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9557,6 +9725,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9871,6 +10041,8 @@
         "mmlu_pro": 79.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9929,6 +10101,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -9987,6 +10161,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10326,6 +10502,8 @@
         "mmlu_pro": 78.3,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10384,6 +10562,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10442,6 +10622,8 @@
         "mmlu_pro": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10769,6 +10951,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 56.8,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10827,6 +11011,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-03-18",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -10885,6 +11071,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-small-4",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11202,6 +11390,8 @@
         "mmlu_pro": 80.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11260,6 +11450,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11318,6 +11510,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11696,6 +11890,8 @@
         "mmlu_pro": 80,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11754,6 +11950,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -11812,6 +12010,8 @@
         "mmlu_pro": "https://huggingface.co/sarvamai/sarvam-30b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12040,6 +12240,8 @@
         "mmlu_pro": 81.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12098,6 +12300,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12156,6 +12360,8 @@
         "mmlu_pro": "https://huggingface.co/sarvamai/sarvam-105b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12384,6 +12590,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12442,6 +12650,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12500,6 +12710,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12756,6 +12968,8 @@
         "mmlu_pro": 85.2,
         "mmmu_pro": 73.4,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12814,6 +13028,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -12872,6 +13088,8 @@
         "mmlu_pro": "https://huggingface.co/google/gemma-4-31B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-31b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13212,6 +13430,8 @@
         "mmlu_pro": 82.6,
         "mmmu_pro": 69.2,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13270,6 +13490,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-08",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13328,6 +13550,8 @@
         "mmlu_pro": "https://huggingface.co/google/gemma-4-26B-A4B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-26b-a4b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13610,6 +13834,8 @@
         "mmlu_pro": 69.4,
         "mmmu_pro": 51.4,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13668,6 +13894,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13726,6 +13954,8 @@
         "mmlu_pro": "https://huggingface.co/google/gemma-4-E4B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-e4b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -13995,6 +14225,8 @@
         "mmlu_pro": 60,
         "mmmu_pro": 44.6,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -14053,6 +14285,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-04",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -14111,6 +14345,8 @@
         "mmlu_pro": "https://huggingface.co/google/gemma-4-E2B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-e2b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -14380,6 +14616,8 @@
         "mmlu_pro": 85.2,
         "mmmu_pro": 75,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": 86.4,
         "charxiv_reasoning": 78
@@ -14438,6 +14676,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-22",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -14496,6 +14736,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B"
@@ -14872,6 +15114,8 @@
         "mmlu_pro": 86.2,
         "mmmu_pro": 74.6,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": 87.4,
         "charxiv_reasoning": 78.4
@@ -14930,6 +15174,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-04-24",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -14988,6 +15234,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/Qwen3.6-27B",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-6-27b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "https://huggingface.co/Qwen/Qwen3.6-27B",
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.6-27B"
@@ -15358,6 +15606,8 @@
         "mmlu_pro": 86.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -15416,6 +15666,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -15474,6 +15726,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -15942,6 +16196,8 @@
         "mmlu_pro": 65.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16000,6 +16256,8 @@
         "mmlu_pro": "2026-09-20",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16058,6 +16316,8 @@
         "mmlu_pro": "https://huggingface.co/tencent/Hy3-preview",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16401,6 +16661,8 @@
         "mmlu_pro": 56,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16459,6 +16721,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16517,6 +16781,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.1-8b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16745,6 +17011,8 @@
         "mmlu_pro": 49.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16803,6 +17071,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -16861,6 +17131,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.1-3b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17102,6 +17374,8 @@
         "mmlu_pro": 64.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17160,6 +17434,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17218,6 +17494,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.1-30b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17459,6 +17737,8 @@
         "mmlu_pro": 75.3,
         "mmmu_pro": 64.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17517,6 +17797,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-05-03",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17575,6 +17857,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-medium-3-5",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17939,6 +18223,8 @@
         "mmlu_pro": 69.3,
         "mmmu_pro": 49.8,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -17997,6 +18283,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-05-03",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -18055,6 +18343,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ministral-3-14b",
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-14b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -18352,6 +18642,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 53.2,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": 71.9,
         "charxiv_reasoning": 49.1
@@ -18410,6 +18702,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-05-13",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "2026-09-20",
         "charxiv_reasoning": "2026-09-20"
@@ -18468,6 +18762,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/nemotron-3-nano-omni-30b-a3b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
         "charxiv_reasoning": "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"
@@ -18732,6 +19028,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 37.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -18790,6 +19088,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-05-13",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -18848,6 +19148,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/minicpm-v4-6-1-3b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19092,6 +19394,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 63.2,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19150,6 +19454,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-05-24",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19208,6 +19514,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/command-a-plus",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19488,6 +19796,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 75.3,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19546,6 +19856,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-06-01",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19604,6 +19916,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/step-3-7-flash",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19877,6 +20191,8 @@
         "mmlu_pro": 59.5,
         "mmmu_pro": 37.5,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19935,6 +20251,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -19993,6 +20311,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/gemma-3-12b",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-12b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20286,6 +20606,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20344,6 +20666,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20402,6 +20726,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20716,6 +21042,8 @@
         "mmlu_pro": 86.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20774,6 +21102,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -20832,6 +21162,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21296,6 +21628,8 @@
         "mmlu_pro": 84.2,
         "mmmu_pro": 78.6,
         "osworld_verified": 75.2,
+        "osworld_2_1": null,
+        "osworld_2_0": 4.6,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21354,6 +21688,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": "2026-06-18",
+        "osworld_2_1": null,
+        "osworld_2_0": "2026-09-24",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21412,6 +21748,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/minimax-m3",
         "osworld_verified": "https://os-world.github.io",
+        "osworld_2_1": null,
+        "osworld_2_0": "https://osworld-v2.xlang.ai",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21648,6 +21986,13 @@
             "score": 75.2,
             "source": "https://os-world.github.io"
           }
+        ],
+        "osworld_2_0": [
+          {
+            "date": "2026-09-24",
+            "score": 4.6,
+            "source": "https://osworld-v2.xlang.ai"
+          }
         ]
       },
       "vram": {
@@ -21796,6 +22141,8 @@
         "mmlu_pro": 37.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21854,6 +22201,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -21912,6 +22261,8 @@
         "mmlu_pro": "https://huggingface.co/LiquidAI/LFM2-8B-A1B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -22119,6 +22470,8 @@
         "mmlu_pro": 49.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -22177,6 +22530,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -22235,6 +22590,8 @@
         "mmlu_pro": "https://huggingface.co/LiquidAI/LFM2.5-1.2B-Thinking",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -22438,6 +22795,8 @@
         "mmlu_pro": 69.6,
         "mmmu_pro": 52.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 1.6,
         "mathvista_mini": 70.7,
         "charxiv_reasoning": null
@@ -22496,6 +22855,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": null
@@ -22554,6 +22915,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/llama-4-scout",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": "https://evals.report/benchmarks/mathvista",
         "charxiv_reasoning": null
@@ -22888,6 +23251,8 @@
         "mmlu_pro": 79.4,
         "mmmu_pro": 62.1,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 0.4,
         "mathvista_mini": 73.7,
         "charxiv_reasoning": null
@@ -22946,6 +23311,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": null
@@ -23004,6 +23371,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/llama-4-maverick",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": "https://evals.report/benchmarks/mathvista",
         "charxiv_reasoning": null
@@ -23348,6 +23717,8 @@
         "mmlu_pro": 70.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23406,6 +23777,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23464,6 +23837,8 @@
         "mmlu_pro": "https://huggingface.co/microsoft/phi-4",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23678,6 +24053,8 @@
         "mmlu_pro": 75.9,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23736,6 +24113,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23794,6 +24173,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/olmo-3-32b-think",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -23995,6 +24376,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24053,6 +24436,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24111,6 +24496,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24306,6 +24693,8 @@
         "mmlu_pro": 65.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24364,6 +24753,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24422,6 +24813,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/olmo-3-7b-think",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24622,6 +25015,8 @@
         "mmlu_pro": 52.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24680,6 +25075,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24738,6 +25135,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/olmo-3-7b-instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -24945,6 +25344,8 @@
         "mmlu_pro": 57.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25003,6 +25404,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25061,6 +25464,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/jamba-1-7-large",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25276,6 +25681,8 @@
         "mmlu_pro": 38.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25334,6 +25741,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25392,6 +25801,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/jamba-1-7-mini",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25607,6 +26018,8 @@
         "mmlu_pro": 83.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25665,6 +26078,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -25723,6 +26138,8 @@
         "mmlu_pro": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26033,6 +26450,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26091,6 +26510,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26149,6 +26570,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26423,6 +26846,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26481,6 +26906,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26539,6 +26966,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26808,6 +27237,8 @@
         "mmlu_pro": 66.9,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26866,6 +27297,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -26924,6 +27357,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/reka-flash-3",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -27124,6 +27559,8 @@
         "mmlu_pro": 79,
         "mmmu_pro": 60.3,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": 79.9,
         "charxiv_reasoning": 56
@@ -27182,6 +27619,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -27240,6 +27679,8 @@
         "mmlu_pro": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "mmmu_pro": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
         "charxiv_reasoning": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker"
@@ -27523,6 +27964,8 @@
         "mmlu_pro": 83.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -27581,6 +28024,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -27639,6 +28084,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -27938,6 +28385,8 @@
         "mmlu_pro": 83.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -27996,6 +28445,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28054,6 +28505,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28288,6 +28741,8 @@
         "mmlu_pro": 81.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28346,6 +28801,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28404,6 +28861,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28643,6 +29102,8 @@
         "mmlu_pro": 81.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28701,6 +29162,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -28759,6 +29222,8 @@
         "mmlu_pro": "https://huggingface.co/zai-org/GLM-4.5-Air",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29001,6 +29466,8 @@
         "mmlu_pro": 82.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29059,6 +29526,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29117,6 +29586,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29482,6 +29953,8 @@
         "mmlu_pro": 82.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29540,6 +30013,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29598,6 +30073,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29897,6 +30374,8 @@
         "mmlu_pro": 58.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -29955,6 +30434,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30013,6 +30494,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/kimi-linear-48b-a3b-instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30205,6 +30688,8 @@
         "mmlu_pro": 78.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30263,6 +30748,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30321,6 +30808,8 @@
         "mmlu_pro": "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30537,6 +31026,8 @@
         "mmlu_pro": 82.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30595,6 +31086,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30653,6 +31146,8 @@
         "mmlu_pro": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30883,6 +31378,8 @@
         "mmlu_pro": 77.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30941,6 +31438,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -30999,6 +31498,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ling-flash-2-0",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31214,6 +31715,8 @@
         "mmlu_pro": 79.3,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31272,6 +31775,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31330,6 +31835,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ring-flash-2-0",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31538,6 +32045,8 @@
         "mmlu_pro": 67.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31596,6 +32105,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31654,6 +32165,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ling-mini-2-0",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31869,6 +32382,8 @@
         "mmlu_pro": 84.9,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31927,6 +32442,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -31985,6 +32502,8 @@
         "mmlu_pro": "https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32336,6 +32855,8 @@
         "mmlu_pro": 82.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32394,6 +32915,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32452,6 +32975,8 @@
         "mmlu_pro": "https://huggingface.co/meituan-longcat/LongCat-Flash-Chat",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32592,6 +33117,8 @@
         "mmlu_pro": 82.6,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32650,6 +33177,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32708,6 +33237,8 @@
         "mmlu_pro": "https://huggingface.co/meituan-longcat/LongCat-Flash-Thinking",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32870,6 +33401,8 @@
         "mmlu_pro": 81.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32928,6 +33461,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -32986,6 +33521,8 @@
         "mmlu_pro": "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33216,6 +33753,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33274,6 +33813,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33332,6 +33873,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33629,6 +34172,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33687,6 +34232,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -33745,6 +34292,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34064,6 +34613,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34122,6 +34673,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34180,6 +34733,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34494,6 +35049,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34552,6 +35109,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34610,6 +35169,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34817,6 +35378,8 @@
         "mmlu_pro": 82.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34875,6 +35438,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -34933,6 +35498,8 @@
         "mmlu_pro": "https://evals.report/benchmarks/mmlu-pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35186,6 +35753,8 @@
         "mmlu_pro": 81.3,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35244,6 +35813,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35302,6 +35873,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35598,6 +36171,8 @@
         "mmlu_pro": 78.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35656,6 +36231,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35714,6 +36291,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/qwen3-coder-480b-a35b-instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -35955,6 +36534,8 @@
         "mmlu_pro": 69.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36013,6 +36594,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36071,6 +36654,8 @@
         "mmlu_pro": "https://huggingface.co/Qwen/QwQ-32B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36269,6 +36854,8 @@
         "mmlu_pro": 81.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36327,6 +36914,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36385,6 +36974,8 @@
         "mmlu_pro": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-32B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36663,6 +37254,8 @@
         "mmlu_pro": 59.3,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36721,6 +37314,8 @@
         "mmlu_pro": "2026-09-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -36779,6 +37374,8 @@
         "mmlu_pro": "https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-1.2B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37040,6 +37637,8 @@
         "mmlu_pro": 80.4,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37098,6 +37697,8 @@
         "mmlu_pro": "2026-09-20",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37156,6 +37757,8 @@
         "mmlu_pro": "https://huggingface.co/upstage/Solar-Open-100B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37388,6 +37991,8 @@
         "mmlu_pro": 72.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37446,6 +38051,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37504,6 +38111,8 @@
         "mmlu_pro": "https://huggingface.co/tiiuae/Falcon-H1R-7B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37732,6 +38341,8 @@
         "mmlu_pro": 79.8,
         "mmmu_pro": 55.7,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37790,6 +38401,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -37848,6 +38461,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-large-3",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38170,6 +38785,8 @@
         "mmlu_pro": 64.2,
         "mmmu_pro": 46,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38228,6 +38845,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38286,6 +38905,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ministral-3-8b",
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-8b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38583,6 +39204,8 @@
         "mmlu_pro": 52.4,
         "mmmu_pro": 38.1,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38641,6 +39264,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38699,6 +39324,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/ministral-3-3b",
         "mmmu_pro": "https://artificialanalysis.ai/models/ministral-3-3b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -38996,6 +39623,8 @@
         "mmlu_pro": 78.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39054,6 +39683,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39112,6 +39743,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/hyperclova-x-seed-think-32b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39327,6 +39960,8 @@
         "mmlu_pro": 66.9,
         "mmmu_pro": 48,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39385,6 +40020,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39443,6 +40080,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/gemma-3-27b",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-27b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39736,6 +40375,8 @@
         "mmlu_pro": 41.7,
         "mmmu_pro": 29.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39794,6 +40435,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -39852,6 +40495,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/gemma-3-4b",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-3-4b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40114,6 +40759,8 @@
         "mmlu_pro": 13.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40172,6 +40819,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40230,6 +40879,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/gemma-3-1b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40454,6 +41105,8 @@
         "mmlu_pro": 5.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40512,6 +41165,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40570,6 +41225,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/gemma-3-270m",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40770,6 +41427,8 @@
         "mmlu_pro": 39.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40828,6 +41487,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -40886,6 +41547,8 @@
         "mmlu_pro": "https://artificialanalysis.ai/models/dbrx",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41038,6 +41701,8 @@
         "mmlu_pro": 75.5,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41096,6 +41761,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": "2026-09-22",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41154,6 +41821,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41332,6 +42001,8 @@
         "mmlu_pro": 77.2,
         "mmmu_pro": 69.7,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41390,6 +42061,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-29",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41448,6 +42121,8 @@
         "mmlu_pro": "https://huggingface.co/google/gemma-4-12B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/gemma-4-12b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41717,6 +42392,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41775,6 +42452,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -41833,6 +42512,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42014,6 +42695,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42072,6 +42755,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42130,6 +42815,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42311,6 +42998,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42369,6 +43058,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42427,6 +43118,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42608,6 +43301,8 @@
         "mmlu_pro": 85.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42666,6 +43361,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -42724,6 +43421,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43103,6 +43802,8 @@
         "mmlu_pro": 77.6,
         "mmmu_pro": 66.5,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43161,6 +43862,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-07-06",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43219,6 +43922,8 @@
         "mmlu_pro": "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
         "mmmu_pro": "https://artificialanalysis.ai/models/diffusiongemma-26b-a4b",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43472,6 +44177,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43530,6 +44237,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43588,6 +44297,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -43725,6 +44436,8 @@
         "mmlu_pro": 86.3,
         "mmmu_pro": 73.5,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 78.1
@@ -43783,6 +44496,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-20",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -43841,6 +44556,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/inkling",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://evals.report/benchmarks/charxiv"
@@ -44230,6 +44947,8 @@
         "mmlu_pro": 87,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -44288,6 +45007,8 @@
         "mmlu_pro": "2026-09-22",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -44346,6 +45067,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -44821,6 +45544,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -44879,6 +45604,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -44937,6 +45664,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -45203,6 +45932,8 @@
         "mmlu_pro": 81.1,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -45261,6 +45992,8 @@
         "mmlu_pro": "2026-09-24",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -45319,6 +46052,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -45577,6 +46312,8 @@
         "mmlu_pro": 85.9,
         "mmmu_pro": 75.4,
         "osworld_verified": 63.3,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 9,
         "mathvista_mini": 90.1,
         "charxiv_reasoning": 77.5
@@ -45635,6 +46372,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-20",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-08-29",
         "mathvista_mini": "2026-08-29",
         "charxiv_reasoning": "2026-09-09"
@@ -45693,6 +46432,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k2-5",
         "osworld_verified": "https://os-world.github.io",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://huggingface.co/moonshotai/Kimi-K2.5",
         "mathvista_mini": "https://huggingface.co/moonshotai/Kimi-K2.5",
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K2.5"
@@ -46140,6 +46881,8 @@
         "mmlu_pro": 87.6,
         "mmmu_pro": 79.4,
         "osworld_verified": 73.1,
+        "osworld_2_1": null,
+        "osworld_2_0": 4.6,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 80.4
@@ -46198,6 +46941,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-20",
+        "osworld_2_1": null,
+        "osworld_2_0": "2026-09-24",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -46256,6 +47001,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k2-6",
         "osworld_verified": "https://os-world.github.io",
+        "osworld_2_1": null,
+        "osworld_2_0": "https://osworld-v2.xlang.ai",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K2.6"
@@ -46555,6 +47302,13 @@
             "source": "https://os-world.github.io"
           }
         ],
+        "osworld_2_0": [
+          {
+            "date": "2026-09-24",
+            "score": 4.6,
+            "source": "https://osworld-v2.xlang.ai"
+          }
+        ],
         "charxiv_reasoning": [
           {
             "date": "2026-09-09",
@@ -46713,6 +47467,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -46771,6 +47527,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -46829,6 +47587,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -47169,6 +47929,8 @@
         "mmlu_pro": 88,
         "mmmu_pro": 80.5,
         "osworld_verified": 84.8,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 84.8
@@ -47227,6 +47989,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-20",
         "osworld_verified": "2026-07-27",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
@@ -47286,6 +48050,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/kimi-k3",
         "osworld_verified": "https://huggingface.co/moonshotai/Kimi-K3",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3",
@@ -47758,6 +48524,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -47816,6 +48584,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -47874,6 +48644,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48074,6 +48846,8 @@
         "mmlu_pro": 82.9,
         "mmmu_pro": 75.4,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48132,6 +48906,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-28",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48190,6 +48966,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/mimo-v2-5-0424",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48528,6 +49306,8 @@
         "mmlu_pro": 84.6,
         "mmmu_pro": 77.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48586,6 +49366,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-28",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -48644,6 +49426,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/mimo-v2-5-pro",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49004,6 +49788,8 @@
         "mmlu_pro": 85.6,
         "mmmu_pro": 74,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 77.4
@@ -49062,6 +49848,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-07-30",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-16"
@@ -49120,6 +49908,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/inkling-small",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/thinkingmachines/Inkling-Small"
@@ -49487,6 +50277,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49545,6 +50337,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49603,6 +50397,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49798,6 +50594,8 @@
         "mmlu_pro": 88.6,
         "mmmu_pro": 88,
         "osworld_verified": 86.1,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49856,6 +50654,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-09-23",
         "osworld_verified": "2026-08-21",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -49914,6 +50714,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://www.vals.ai/benchmarks/mmmu",
         "osworld_verified": "https://www.datacamp.com/blog/qwen3-8-max",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50276,6 +51078,8 @@
         "mmlu_pro": 82,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50334,6 +51138,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50392,6 +51198,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50713,6 +51521,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50771,6 +51581,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -50829,6 +51641,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -51054,6 +51868,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -51112,6 +51928,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -51170,6 +51988,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -51435,6 +52255,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 74.3,
         "osworld_verified": 65.9,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 78.8
@@ -51493,6 +52315,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-08-11",
         "osworld_verified": "2026-08-11",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -51551,6 +52375,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/muse-glimmer",
         "osworld_verified": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/meta-models/Muse-Glimmer-30B"
@@ -51886,6 +52712,8 @@
         "mmlu_pro": 81.9,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -51944,6 +52772,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -52002,6 +52832,8 @@
         "mmlu_pro": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -52318,6 +53150,8 @@
         "mmlu_pro": 86.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -52376,6 +53210,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -52435,6 +53271,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -52854,6 +53692,8 @@
         "mmlu_pro": 84.3,
         "mmmu_pro": 76.3,
         "osworld_verified": 84.3,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 83.7
@@ -52912,6 +53752,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-08-17",
         "osworld_verified": "2026-08-15",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -52970,6 +53812,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.8-27B",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.8-27B"
@@ -53332,6 +54176,8 @@
         "mmlu_pro": 86.2,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -53390,6 +54236,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -53448,6 +54296,8 @@
         "mmlu_pro": "https://huggingface.co/upstage/Solar-Open2-250B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -53725,6 +54575,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -53783,6 +54635,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -53841,6 +54695,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54103,6 +54959,8 @@
         "mmlu_pro": 80.7,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54161,6 +55019,8 @@
         "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54219,6 +55079,8 @@
         "mmlu_pro": "https://huggingface.co/NousResearch/Hermes-4.3-36B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54338,6 +55200,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54396,6 +55260,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54454,6 +55320,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54652,6 +55520,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54710,6 +55580,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54768,6 +55640,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -54966,6 +55840,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -55024,6 +55900,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -55082,6 +55960,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -55280,6 +56160,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 74.8,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 80.4
@@ -55338,6 +56220,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-08-27",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-15",
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-08-21"
@@ -55396,6 +56280,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/deepseek-v4-flash-vision",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6"
@@ -55703,6 +56589,8 @@
         "mmlu_pro": 86.1,
         "mmmu_pro": 86,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 89.4
@@ -55761,6 +56649,8 @@
         "mmlu_pro": "2026-09-10",
         "mmmu_pro": "2026-08-21",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -55819,6 +56709,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://www.vals.ai/benchmarks/mmmu",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6"
@@ -56178,6 +57070,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 79.8,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 84.6
@@ -56236,6 +57130,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-08-27",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -56294,6 +57190,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/qwen3-8-flash-next",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
@@ -56637,6 +57535,8 @@
         "mmlu_pro": 67.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -56695,6 +57595,8 @@
         "mmlu_pro": "2026-08-27",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -56753,6 +57655,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.2-3b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57041,6 +57945,8 @@
         "mmlu_pro": 74,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57099,6 +58005,8 @@
         "mmlu_pro": "2026-08-27",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57157,6 +58065,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.2-8b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57482,6 +58392,8 @@
         "mmlu_pro": 77.6,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57540,6 +58452,8 @@
         "mmlu_pro": "2026-08-28",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57598,6 +58512,8 @@
         "mmlu_pro": "https://huggingface.co/ibm-granite/granite-4.2-30b",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57892,6 +58808,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -57950,6 +58868,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58008,6 +58928,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58263,6 +59185,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58321,6 +59245,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58379,6 +59305,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58679,6 +59607,8 @@
         "mmlu_pro": 70.8,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58737,6 +59667,8 @@
         "mmlu_pro": "2026-09-07",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -58795,6 +59727,8 @@
         "mmlu_pro": "https://huggingface.co/openbmb/MiniCPM5-2B",
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59141,6 +60075,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 77,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59199,6 +60135,8 @@
         "mmlu_pro": "2026-09-15",
         "mmmu_pro": "2026-09-10",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-15",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59257,6 +60195,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59571,6 +60511,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 79,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59629,6 +60571,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59687,6 +60631,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/ling-3-0-flash-vl",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59916,6 +60862,8 @@
         "mmlu_pro": 91.6,
         "mmmu_pro": 84.7,
         "osworld_verified": 83.4,
+        "osworld_2_1": 44.3,
+        "osworld_2_0": null,
         "zerobench": 17.2,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -59974,6 +60922,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": "2026-09-11",
+        "osworld_2_1": "2026-09-24",
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -60032,6 +60982,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-opus-5",
         "osworld_verified": "https://os-world.github.io",
+        "osworld_2_1": "https://osworld-v2.xlang.ai",
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -60342,6 +61294,13 @@
             "source": "https://os-world.github.io"
           }
         ],
+        "osworld_2_1": [
+          {
+            "date": "2026-09-24",
+            "score": 44.3,
+            "source": "https://osworld-v2.xlang.ai"
+          }
+        ],
         "zerobench": [
           {
             "date": "2026-09-16",
@@ -60496,6 +61455,8 @@
         "mmlu_pro": 87.6,
         "mmmu_pro": 77.3,
         "osworld_verified": 81.2,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 9.4,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -60554,6 +61515,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": "2026-09-11",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -60612,6 +61575,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-sonnet-5",
         "osworld_verified": "https://www.anthropic.com/news/claude-sonnet-5",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -60997,6 +61962,8 @@
         "mmlu_pro": 92.4,
         "mmmu_pro": 90.6,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -61055,6 +62022,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -61114,6 +62083,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://www.vals.ai/benchmarks/mmmu",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -61557,6 +62528,8 @@
         "mmlu_pro": 86,
         "mmmu_pro": 78.6,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 13.4,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -61615,6 +62588,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -61673,6 +62648,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-5-6-luna",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -62090,6 +63067,8 @@
         "mmlu_pro": 86.7,
         "mmmu_pro": 80.7,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 14.2,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -62148,6 +63127,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -62206,6 +63187,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-5-6-terra",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -62605,6 +63588,8 @@
         "mmlu_pro": 89.1,
         "mmmu_pro": 83.4,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 22,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -62663,6 +63648,8 @@
         "mmlu_pro": "2026-09-11",
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -62722,6 +63709,8 @@
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-5-6-sol",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -63183,6 +64172,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 86.9,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 43.2,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -63241,6 +64232,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-09-11",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-22",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -63300,6 +64293,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-6-astra",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
@@ -63687,6 +64682,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -63746,6 +64743,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -63805,6 +64804,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -63938,6 +64939,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -63997,6 +65000,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64056,6 +65061,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64262,6 +65269,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64321,6 +65330,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64380,6 +65391,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64638,6 +65651,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64697,6 +65712,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -64756,6 +65773,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65015,6 +66034,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65074,6 +66095,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65133,6 +66156,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65380,6 +66405,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65439,6 +66466,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65498,6 +66527,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65740,6 +66771,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": 82,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65799,6 +66832,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": "2026-09-22",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -65858,6 +66893,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66108,6 +67145,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": 80.8,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66167,6 +67206,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": "2026-09-22",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66226,6 +67267,8 @@
         "mmlu_pro": null,
         "mmmu_pro": null,
         "osworld_verified": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66414,6 +67457,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 87.7,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66473,6 +67518,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-09-22",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66532,6 +67579,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/claude-opus-5-5",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66798,6 +67847,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 75.5,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 12.2,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66857,6 +67908,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-09-22",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-24",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -66916,6 +67969,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-6-luna",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -67166,6 +68221,8 @@
         "mmlu_pro": null,
         "mmmu_pro": 83.3,
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": 28.8,
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -67225,6 +68282,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "2026-09-22",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "2026-09-24",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -67284,6 +68343,8 @@
         "mmlu_pro": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/gpt-6-sol",
         "osworld_verified": null,
+        "osworld_2_1": null,
+        "osworld_2_0": null,
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null
@@ -67479,7 +68540,7 @@
     "https://benchlm.ai/benchmarks/deepSwe",
     "https://www.frontierswe.com",
     "https://www.tbench.ai/leaderboard/terminal-bench/2.1",
-    "https://os-world.github.io/static/data/osworld_verified_results.xlsx",
+    "https://osworld-v1.xlang.ai/static/data/osworld_verified_results.xlsx",
     "https://www.spheron.network/tools/gpu-recommender",
     "https://evals.report/benchmarks/frontiercode",
     "https://evals.report/benchmarks/swe-marathon",
@@ -67530,6 +68591,7 @@
     "https://www.vals.ai/benchmarks/vibe-code",
     "https://programbench.com/extended",
     "https://www.vals.ai/benchmarks/programbench",
-    "https://www.vals.ai/benchmarks/terminal-bench-4"
+    "https://www.vals.ai/benchmarks/terminal-bench-4",
+    "https://osworld-v2.xlang.ai"
   ]
 }
