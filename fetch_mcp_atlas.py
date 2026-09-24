@@ -41,7 +41,7 @@ import urllib.error
 import urllib.request
 
 from _fetch_checks import check_percentages
-from _scale_labs import extract_board_rows
+from _scale_labs import extract_board_rows, fetch_board_rows
 
 
 URL = "https://labs.scale.com/leaderboard/mcp_atlas"
@@ -165,7 +165,7 @@ def get_scores(include_deprecated: bool = False) -> list[dict]:
     company, contamination, rank (rank within the leaderboard, 1 = best).
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
-    rows = extract_rows(fetch_html())
+    rows = fetch_board_rows(fetch_html, URL, BOARD_SLUG)
 
     kept: list[dict] = []
     dropped = 0

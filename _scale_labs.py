@@ -15,13 +15,22 @@ This reader is stricter in two ways:
   * rows come only from `"entries"` arrays, and every such array on the page
     has to be the same table -- the flight payload may repeat one, but two
     different ones cannot be told apart and are refused rather than merged.
+
+A page that is the right board but carries no row table at all is also what
+the site serves for a moment while it redeploys or regenerates a board (seen
+on sweatlas-refactoring: one run got it, the runs an hour either side read
+the full table). fetch_board_rows re-fetches such a page a few times before
+giving up; a page that is another board, or carries two tables, is refused
+at once -- fetching it again would not change what it says.
 """
 
 from __future__ import annotations
 
 import json
 import re
-from typing import Any
+import sys
+import time
+from typing import Any, Callable
 
 _PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
 _ENTRIES_RE = re.compile(r'"entries":\s*\[')
@@ -37,6 +46,10 @@ def decode_flight(html: str) -> str:
         except json.JSONDecodeError:
             continue
     return decoded
+
+
+class NoRowsError(ValueError):
+    """The page is the board asked for but carries no row table."""
 
 
 def _is_row(obj: Any) -> bool:
@@ -79,7 +92,7 @@ def extract_board_rows(html: str, slug: str, source: str) -> list[dict]:
             tables.append(value)
 
     if not tables:
-        raise ValueError(
+        raise NoRowsError(
             f"{source}: no leaderboard rows in the flight payload -- the page layout "
             "changed; refusing to report an empty leaderboard."
         )
@@ -99,3 +112,32 @@ def extract_board_rows(html: str, slug: str, source: str) -> list[dict]:
         seen.add(ident)
         rows.append(obj)
     return rows
+
+
+def fetch_board_rows(
+    fetch: Callable[[str], str],
+    url: str,
+    slug: str,
+    attempts: int = 3,
+    delay: float = 10.0,
+    sleep: Callable[[float], None] = time.sleep,
+) -> list[dict]:
+    """extract_board_rows over fetch(url), re-fetching a page that has no rows.
+
+    Only NoRowsError is retried; every other refusal is raised on the first
+    page. The last attempt's NoRowsError is raised unchanged.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return extract_board_rows(fetch(url), slug, url)
+        except NoRowsError as exc:
+            if attempt == attempts:
+                raise
+            wait = delay * attempt
+            print(
+                f"  {url}: no rows on attempt {attempt}/{attempts} ({exc}); "
+                f"re-fetching in {wait:.0f}s ...",
+                file=sys.stderr,
+            )
+            sleep(wait)
+    raise AssertionError("unreachable")

@@ -34,7 +34,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 from _fetch_checks import check_percentages
-from _scale_labs import extract_board_rows
+from _scale_labs import extract_board_rows, fetch_board_rows
 
 
 BASE_URL = "https://labs.scale.com/leaderboard/sweatlas-{track}"
@@ -115,7 +115,7 @@ def get_scores(tracks: list[str]) -> list[dict]:
     def fetch_track(track: str) -> list[dict]:
         url = BASE_URL.format(track=track)
         print(f"Fetching {url} ...", file=sys.stderr)
-        return extract_rows(fetch_html(url), track)
+        return fetch_board_rows(fetch_html, url, f"sweatlas-{track}")
 
     # One page per track on one host; fetched together, parsed in order.
     with ThreadPoolExecutor(max_workers=len(tracks) or 1) as pool:

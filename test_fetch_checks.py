@@ -209,6 +209,29 @@ class TestScaleLabsBoard(unittest.TestCase):
         with self.assertRaises(ValueError):
             _scale_labs.extract_board_rows(self.payload("mcp_atlas"), "mcp_atlas", "src")
 
+    def fetch_pages(self, *pages: str, attempts: int = 3) -> tuple[list[dict], list[float]]:
+        queue, waits = list(pages), []
+        rows = _scale_labs.fetch_board_rows(
+            lambda url: queue.pop(0), "src", "mcp_atlas", attempts=attempts, sleep=waits.append
+        )
+        return rows, waits
+
+    def test_a_page_without_rows_is_fetched_again(self) -> None:
+        # labs.scale.com once served sweatlas-refactoring with no row table
+        # for one run; the runs either side of it read the full board.
+        rows, waits = self.fetch_pages(self.payload("mcp_atlas"), self.payload("mcp_atlas", self.ROWS))
+        self.assertEqual([r["model"] for r in rows], ["A", "B"])
+        self.assertEqual(len(waits), 1)
+
+    def test_a_board_that_stays_empty_still_raises(self) -> None:
+        empty = self.payload("mcp_atlas")
+        with self.assertRaises(_scale_labs.NoRowsError):
+            self.fetch_pages(empty, empty, empty)
+
+    def test_another_board_is_not_fetched_again(self) -> None:
+        with self.assertRaisesRegex(ValueError, "does not identify"):
+            self.fetch_pages(self.payload("sweatlas-qna", self.ROWS), self.payload("mcp_atlas", self.ROWS))
+
 
 class TestFrontierSweEntries(unittest.TestCase):
     BOARD = {"abs": {"mean": [{"model": "M {x}", "harness": "h}", "overall": 40.0}]}}
