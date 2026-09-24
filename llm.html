@@ -2785,6 +2785,11 @@
       font-size: 0.72rem;
     }
 
+    .axis-trim-btn[aria-disabled="true"] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     /* The preset dropdown swaps a whole axis set in one go -- the five
        composite indexes, or the benchmarks one index aggregates. It replaces
        the old "Default axes" reset link, whose job is now the first option.
@@ -7806,6 +7811,14 @@
             } else if (state.radar.axes.length < RADAR_MAX_AXES) {
               setRadarAxes([...state.radar.axes, key]);
             }
+          } else if (action === "trim-axes") {
+            // Re-derived here rather than trusted from the render: the button
+            // is aria-disabled, not disabled, so its tip still shows on hover
+            // and a click still lands.
+            const common = commonRadarAxes(currentRadarModels(), state.radar.axes);
+            if (common.length >= RADAR_MIN_AXES && common.length < state.radar.axes.length) {
+              setRadarAxes(common);
+            }
           } else if (action === "remove-axis") {
             if (state.radar.axes.length > RADAR_MIN_AXES) {
               setRadarAxes(state.radar.axes.filter((k) => k !== key));
@@ -8278,7 +8291,34 @@
         const atMax = axes.length >= RADAR_MAX_AXES;
         const addBtn = `<button type="button" class="axis-add-btn" data-action="toggle-picker" aria-expanded="${String(Boolean(state.radar.pickerOpen))}" aria-haspopup="true">+ Add axis</button>`;
         const menu = state.radar.pickerOpen ? renderAxisMenu(models, axes, atMax) : "";
-        return `<div class="radar-controls">${renderAxisPresetSelect(axes)}<span class="axis-preset-sep" aria-hidden="true"></span>${chips}${addBtn}${menu}</div>`;
+        return `<div class="radar-controls">${renderAxisPresetSelect(axes)}<span class="axis-preset-sep" aria-hidden="true"></span>${chips}${addBtn}${renderTrimAxesBtn(models, axes)}${menu}</div>`;
+      }
+
+      // The charted axes every model on the chart has a score on, in chart
+      // order. One model counts as a comparison of one here too.
+      function commonRadarAxes(models, axes) {
+        return axes.filter((key) => models.every((model) => Number.isFinite(toNumber(model.scores?.[key]))));
+      }
+
+      // Drops every axis with a gap — 2/3, 1/3 and 0/3 alike — so the shapes
+      // compare like with like. Shown only while there is a gap to drop; when
+      // too few full axes would be left for a radar, it stays visible but
+      // inert and its tip says why, rather than vanishing without a word.
+      function renderTrimAxesBtn(models, axes) {
+        const common = commonRadarAxes(models, axes);
+        const dropped = axes.length - common.length;
+        if (!dropped) {
+          return "";
+        }
+        const single = models.length === 1;
+        const label = single ? "Scored only" : "Common only";
+        const who = single ? "this model has" : `all ${models.length} models have`;
+        const enabled = common.length >= RADAR_MIN_AXES;
+        const body = enabled
+          ? `Keep only the ${common.length} axes ${who} a score on, dropping ${dropped} with a gap.`
+          : `Only ${common.length} of the ${axes.length} axes ${common.length === 1 ? "has" : "have"} a score from ${single ? "this model" : `all ${models.length} models`} — a radar needs at least ${RADAR_MIN_AXES}.`;
+        const tip = tipAttrs({ eyebrow: label, body });
+        return `<button type="button" class="axis-add-btn axis-trim-btn" data-action="trim-axes"${enabled ? "" : ` aria-disabled="true"`}${tip}>${label}</button>`;
       }
 
       // The preset dropdown. "Custom" is offered only while the axes match no
