@@ -314,6 +314,8 @@ class TestWriters(unittest.TestCase):
                     "m",
                     "--bench",
                     "51",
+                    "--score-url",
+                    URL_B,
                 ],
                 capture_output=True,
                 text=True,
@@ -322,9 +324,9 @@ class TestWriters(unittest.TestCase):
             written = json.loads(path.read_text(encoding="utf-8"))
         entries = written["models"][0][_history.HISTORY_FIELD]["bench"]
         self.assertEqual([entry["score"] for entry in entries], [45.0, 51])
-        # A hand edit cites no page, and the history says so rather than
-        # leaving the previous source attached to a number it never produced.
-        self.assertIsNone(entries[-1]["source"])
+        # The page the hand edit cited, not the previous source, which never
+        # produced this number.
+        self.assertEqual(entries[-1]["source"], URL_B)
 
 
 class TestShippedFile(unittest.TestCase):

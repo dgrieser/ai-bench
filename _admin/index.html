@@ -1000,6 +1000,55 @@ const badUrl = (raw) => {
   return Boolean(value) && !/^https?:\/\//i.test(value);
 };
 
+/* _source_quality.SECONDARY_HOSTS, in JavaScript: news, blog and social hosts
+   that retell a score rather than publish it. answer.py refuses them as a
+   score's page, so they are caught here for the same reason as badUrl.
+   test_hand_sources.py keeps the two lists equal. */
+const SECONDARY_HOSTS = new Set([
+  "aiweekly.co",
+  "analyticsvidhya.com",
+  "atlas.kevinhu.io",
+  "bsky.app",
+  "datacamp.com",
+  "dev.to",
+  "edenai.co",
+  "felloai.com",
+  "gist.github.com",
+  "hashnode.dev",
+  "linkedin.com",
+  "marktechpost.com",
+  "medium.com",
+  "news.ycombinator.com",
+  "pastebin.com",
+  "reddit.com",
+  "substack.com",
+  "techcrunch.com",
+  "thenextweb.com",
+  "theverge.com",
+  "threads.net",
+  "twitter.com",
+  "venturebeat.com",
+  "x.com",
+  "youtube.com"
+]);
+
+const secondaryUrl = (raw) => {
+  let host = "";
+  try {
+    host = new URL(String(raw ?? "").trim()).hostname.toLowerCase().replace(/^www\./, "");
+  } catch (err) {
+    return false;
+  }
+  return [...SECONDARY_HOSTS].some((blocked) => host === blocked || host.endsWith(`.${blocked}`));
+};
+
+/* A score's page: required when the edit writes a number, and the publication
+   itself rather than a retelling of it. */
+const badScoreUrl = (raw, writes) => {
+  const value = String(raw ?? "").trim();
+  return (writes && !value) || badUrl(value) || secondaryUrl(value);
+};
+
 /* The shape every name in llm.json has. Checked here so a name that could not
    become an entry is caught while it is being typed rather than on the runner,
    where the whole batch would go down with it. */
@@ -2500,12 +2549,13 @@ function renderModelCard(model) {
   };
   const commit = () => {
     const scored = Object.keys(draft.scores).length > 0;
+    const writes = Object.values(draft.scores).some((value) => value !== null);
     /* A batch is all or nothing on the runner, so a half-typed page must not
        reach it: it would refuse this record and take every other answer in the
        sitting down with it. The card simply stops counting as answered until
        the URL is one. */
     const broken = META_FIELDS.some(([field, type]) => type === "url" && badUrl(draft.fields[field]))
-      || (scored && badUrl(draft.score_url));
+      || (scored && badScoreUrl(draft.score_url, writes));
     const empty = !Object.keys(draft.fields).length && !scored;
     if (empty || broken) state.answers.delete(key);
     else {
@@ -2563,13 +2613,13 @@ function renderModelCard(model) {
   const urlInput = el("input", {
     type: "url",
     inputMode: "url",
-    placeholder: "https://... (blank credits nobody)",
+    placeholder: "https://... model card, paper or leaderboard",
     value: draft.score_url,
     disabled: Boolean(rename),
   });
   urlInput.oninput = () => {
     draft.score_url = urlInput.value;
-    urlInput.classList.toggle("unknown", badUrl(draft.score_url));
+    urlInput.classList.toggle("unknown", badScoreUrl(draft.score_url, false));
     commit();
   };
   const provenance = el("div", { className: "provenance" }, [
@@ -2578,10 +2628,11 @@ function renderModelCard(model) {
       el("div", { className: "field" }, [el("label", {}, "score url"), urlInput]),
     ]),
     el("p", { className: "note-text" },
-      "Stamped on every score changed above. A page moves the value onto that "
-      + "page's rung of the source precedence, where only that page or a better "
-      + "one may overwrite it; left blank it counts as hand-entered, which any "
-      + "scraper may replace."),
+      "Stamped on every score changed above, and required with one: the page the "
+      + "number was published on (model card, paper, vendor announcement or "
+      + "leaderboard), not a news, blog or social post repeating it. It moves the "
+      + "value onto that page's rung of the source precedence, where only that "
+      + "page or a better one may overwrite it."),
   ]);
 
   const scores = el("div", {});

@@ -53,7 +53,10 @@ The rungs, strongest first:
      ``edit.py``. Its attribution is whatever page the entry cited, or null
      when a hand edit cleared it (``stamp_score_source`` takes None for exactly
      that), and either way it is the weakest rung: a hand entry seeds a column
-     until a source measures it, and any scraper may overwrite it.
+     until a source measures it, and any scraper may overwrite it. Where none
+     does, it is the column's only word, so the page it cites has to be the
+     primary publication, not a news, blog or social retelling
+     (``_source_quality.py``).
 
 Two sources on the same rung may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value

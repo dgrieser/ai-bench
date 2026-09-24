@@ -16,6 +16,7 @@ from typing import Any
 import _history
 import derive_indexes
 from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
+from _source_quality import is_secondary_source, secondary_source_error
 from _selector import (
     clear_selector,
     find_matches,
@@ -178,8 +179,9 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
     parser.add_argument(
         "--score-url",
         metavar="URL",
-        help="Page the scores this run changes were read from. Use 'null', or leave it "
-        "off, to credit nobody -- which is what a hand edit means by default.",
+        help="Page the scores this run changes were published on: the model card, paper, "
+        "vendor announcement or benchmark leaderboard, not a news, blog or social post that "
+        "repeats them. Required whenever the run writes a score; clearing one needs none.",
     )
 
     reserved_flags = {
@@ -256,16 +258,50 @@ def parse_date_field(raw: str | None, flag: str = "--date-added") -> str | None:
 
 
 def parse_score_source(raw: str | None) -> str | None:
-    """The page a hand-entered score is credited to, or None for nobody.
+    """The page a hand-entered score is credited to, or None where none was named.
 
-    None is a real answer rather than a missing one: `stamp_score_source` takes
-    it to mean the score reached llm.json through a person, which is the weakest
-    rung of _precedence.source_rank() and so the one every scraper may
-    overwrite. Naming the page a number was actually read from is therefore not
-    cosmetic -- it moves the value onto that page's rung, where only that page's
-    own rung or better replaces it.
+    Naming the page a number was actually read from is not cosmetic -- it moves
+    the value onto that page's rung of _precedence.source_rank(), where only
+    that page's own rung or better replaces it -- and it is the only way a
+    reader can check the number. It must be where the score was published:
+    a hand entry often leads a column no scraper reaches, so a news story or
+    social post retelling somebody's table would be the column's word on it
+    (_source_quality.py, issue #229).
     """
-    return parse_url_field(raw, "--score-url")
+    url = parse_url_field(raw, "--score-url")
+    if url is not None and is_secondary_source(url):
+        raise ValueError(f"Invalid --score-url: {secondary_source_error(url)}")
+    return url
+
+
+def require_score_source(url: str | None, score_updates: dict[str, Any]) -> None:
+    """Refuse a run that writes a score without naming where it was published.
+
+    Clearing a score needs no page, so only a non-null value asks for one.
+    """
+    written = sorted(key for key, value in score_updates.items() if value is not None)
+    if written and url is None:
+        raise ValueError(
+            "--score-url is required to write a score ("
+            + ", ".join(written)
+            + "): name the model card, paper, vendor announcement or benchmark "
+            "leaderboard the number was published on."
+        )
+
+
+def prompt_score_source() -> str:
+    """Ask for the page the scores just typed in were published on, until one is valid."""
+    while True:
+        answer = input("  Source page for these scores (model card, paper or leaderboard): ")
+        try:
+            url = parse_score_source(answer)
+        except ValueError as exc:
+            print(f"  {exc}")
+            continue
+        if url is None:
+            print("  A score needs the page it was published on.")
+            continue
+        return url
 
 
 def parse_metadata_value(raw: str) -> str | None:
@@ -537,6 +573,11 @@ def collect_updates(
     return model, score_updates, metadata_updates
 
 
+# What collect_missing_updates() plans for one model: its score and metadata
+# updates, and the page the scores were read from (None when it wrote none).
+MissingPlan = tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None], str | None]
+
+
 def collect_missing_updates(
     doc: dict[str, Any],
     interactive: bool,
@@ -544,14 +585,14 @@ def collect_missing_updates(
     benchmark_keys: list[str] | None = None,
     metadata_keys: list[str] | None = None,
     after: date | None = None,
-) -> list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]]:
+) -> list[MissingPlan]:
     if not interactive:
         raise ValueError("--missing requires interactive mode.")
 
     benchmark_filter = set(benchmark_keys or [])
     metadata_filter = set(metadata_keys or [])
     scoped = bool(benchmark_filter or metadata_filter)
-    planned: list[tuple[dict[str, Any], dict[str, int | float | None], dict[str, str | None]]] = []
+    planned: list[MissingPlan] = []
     for model in doc["models"]:
         current_model_name = model.get("name")
         if not isinstance(current_model_name, str):
@@ -589,6 +630,13 @@ def collect_missing_updates(
             score_updates[key] = round_score(
                 doc, key, prompt_score(benchmark.get("name", key), scores.get(key))
             )
+        # Asked once per model, after its scores: one model's numbers are
+        # typed in from one page, and a skipped model has nothing to credit.
+        score_url = (
+            prompt_score_source()
+            if any(value is not None for value in score_updates.values())
+            else None
+        )
         for key in missing_metadata_keys:
             while True:
                 answer = prompt_metadata_value(
@@ -599,7 +647,7 @@ def collect_missing_updates(
                     break
                 except ValueError as exc:
                     print(f"  {exc}")
-        planned.append((model, score_updates, metadata_updates))
+        planned.append((model, score_updates, metadata_updates, score_url))
 
     return planned
 
@@ -694,16 +742,16 @@ def main() -> int:
         changed = 0
         models_changed = 0
         scores_changed = False
-        for model, score_updates, metadata_updates in planned:
+        for model, score_updates, metadata_updates, score_url in planned:
             model_changed = False
             scores = model["scores"]
             for key, value in score_updates.items():
                 if scores.get(key) != value:
                     scores[key] = value
                     stamp_score_updated(model, key)
-                    # A hand edit has no source page; whatever attribution the
-                    # previous automated write left behind is now stale.
-                    stamp_score_source(model, key, None)
+                    # Whatever attribution the previous automated write left
+                    # behind is stale; a cleared score is credited to nobody.
+                    stamp_score_source(model, key, score_url if value is not None else None)
                     changed += 1
                     model_changed = True
                     scores_changed = True
@@ -737,6 +785,9 @@ def main() -> int:
             " and ".join(provenance_flags)
             + " stamps the scores this run writes, so it needs one: pass a benchmark flag too."
         )
+    if score_url is None and interactive and any(v is not None for v in score_updates.values()):
+        score_url = prompt_score_source()
+    require_score_source(score_url, score_updates)
 
     changed = 0
     scores_changed = False
@@ -744,12 +795,12 @@ def main() -> int:
     for key, value in score_updates.items():
         if scores.get(key) != value:
             scores[key] = value
-            # Today and nobody unless --score-date and --score-url say
-            # otherwise: a hand edit is read today from no page anybody can
-            # cite, and whatever attribution the previous automated write left
-            # behind is stale either way.
+            # Today unless --score-date says otherwise, and the page
+            # --score-url names: whatever attribution the previous automated
+            # write left behind is stale either way. A cleared score is
+            # credited to nobody, since there is no number left to credit.
             stamp_score_updated(model, key, score_date)
-            stamp_score_source(model, key, score_url)
+            stamp_score_source(model, key, score_url if value is not None else None)
             changed += 1
             scores_changed = True
     for key, value in metadata_updates.items():

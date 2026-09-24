@@ -272,16 +272,44 @@ class TestHandEditProvenance(unittest.TestCase):
         self.assertEqual(model["scores_updated"]["bench"], "2026-08-06")
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
-    def test_the_defaults_are_today_and_nobody(self) -> None:
-        self.assertEqual(self.edit("--bench=42.5").returncode, 0)
+    def test_the_date_defaults_to_today(self) -> None:
+        self.assertEqual(self.edit("--bench=42.5", f"--score-url={URL_A}").returncode, 0)
+        self.assertEqual(self.model()["scores_updated"]["bench"], date.today().isoformat())
+
+    def test_a_score_needs_the_page_it_was_published_on(self) -> None:
+        """Issue #229: unsourced hand entries sat in llm.json with nothing to check them by."""
+        for flags in ((), ("--score-url=null",), ("--score-url=",)):
+            with self.subTest(flags=flags):
+                result = self.edit("--bench=42.5", *flags)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("--score-url is required", result.stderr)
+                self.assertEqual(self.model()["scores"], {})
+
+    def test_clearing_a_score_needs_no_page_and_credits_nobody(self) -> None:
+        self.edit("--bench=42.5", f"--score-url={URL_A}")
+        self.assertEqual(self.edit("--bench=null").returncode, 0)
         model = self.model()
-        self.assertEqual(model["scores_updated"]["bench"], date.today().isoformat())
+        self.assertIsNone(model["scores"]["bench"])
         self.assertIsNone(model["scores_source"]["bench"])
 
-    def test_null_credits_nobody(self) -> None:
-        self.edit("--bench=42.5", f"--score-url={URL_A}")
-        self.assertEqual(self.edit("--bench=43.5", "--score-url=null").returncode, 0)
-        self.assertIsNone(self.model()["scores_source"]["bench"])
+    def test_a_cleared_score_is_not_credited_to_the_runs_page(self) -> None:
+        self.edit("--bench=1", "--other=2", f"--score-url={URL_A}")
+        self.assertEqual(self.edit("--bench=null", "--other=3", f"--score-url={URL_B}").returncode, 0)
+        self.assertEqual(self.model()["scores_source"], {"bench": None, "other": URL_B})
+
+    def test_a_retelling_is_not_a_source(self) -> None:
+        """A news, blog or social post that repeats a number is not where it was published."""
+        for url in (
+            "https://x.com/someone/status/1",
+            "https://www.datacamp.com/blog/qwen3-8-max",
+            "https://gist.github.com/someone/abc",
+            "https://someone.substack.com/p/scores",
+        ):
+            with self.subTest(url=url):
+                result = self.edit("--bench=1", f"--score-url={url}")
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("primary publication", result.stderr)
+                self.assertEqual(self.model()["scores"], {})
 
     def test_the_stamp_covers_every_score_the_run_changes(self) -> None:
         """One sitting is one leaderboard read on one day."""
