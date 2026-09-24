@@ -354,6 +354,102 @@ class TestCustomSources(unittest.TestCase):
         self.assertEqual(model["scores"]["ifbench"], 10.0)
 
 
+class TestDroppedScores(unittest.TestCase):
+    """Issue #226: a score its own page no longer reports gives way, in that run.
+
+    Never nulled -- the replacement is another fetcher's current number, and
+    only where the stored page is a fetcher's and was read in this very run.
+    """
+
+    def setUp(self) -> None:
+        update.RUN_REPORTS = update.RunReports()
+
+    def run_once(self, model: dict, writes) -> list:
+        """Each write is (value, url, fill_only); then the end-of-run pass."""
+        changes: list = []
+        for value, url, fill_only in writes:
+            update.apply_score(DOC, model, "m", "ifbench", value, url, changes, fill_only=fill_only)
+        update.replace_dropped_scores(DOC, changes)
+        return changes
+
+    def other_row(self, url: str) -> None:
+        # The page was read this run: it reported some other model's score.
+        other = model_with(score=None)
+        other["name"] = "other"
+        update.apply_score(DOC, other, "other", "ifbench", 1.0, url, [])
+
+    def test_a_dropped_score_is_replaced_by_a_lower_ranked_fetcher(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.other_row(AA_PAGE)
+        changes = self.run_once(model, [(38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 38.0)
+        self.assertEqual(model["scores_source"]["ifbench"], EVALS_IFBENCH)
+        self.assertEqual(changes, [("m", "ifbench", 39.6, 38.0)])
+
+    def test_order_does_not_matter(self) -> None:
+        """The replacing fetcher may run before the page that dropped the score is read."""
+        model = model_with(score=39.6, source=AA_PAGE)
+        update.apply_score(DOC, model, "m", "ifbench", 38.0, EVALS_IFBENCH, [])
+        self.other_row(AA_PAGE)
+        update.replace_dropped_scores(DOC, [])
+        self.assertEqual(model["scores"]["ifbench"], 38.0)
+
+    def test_a_fill_only_fetcher_may_replace_a_dropped_score(self) -> None:
+        model = model_with(score=39.6, source=EVALS_IFBENCH)
+        self.other_row(EVALS_IFBENCH)
+        self.run_once(model, [(38.0, LLMSTATS_SOURCE_URL, True)])
+        self.assertEqual(model["scores_source"]["ifbench"], LLMSTATS_SOURCE_URL)
+
+    def test_the_best_ranked_candidate_wins(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.other_row(AA_PAGE)
+        self.run_once(model, [(30.0, LLMSTATS_SOURCE_URL, True), (38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 38.0)
+
+    def test_a_score_its_page_still_reports_stays(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.run_once(model, [(39.6, AA_PAGE, False), (38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores_source"]["ifbench"], AA_PAGE)
+
+    def test_a_null_row_is_not_a_report(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.run_once(model, [(None, AA_PAGE, False), (38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 38.0)
+
+    def test_a_page_not_read_this_run_drops_nothing(self) -> None:
+        """A fetch that failed or was skipped is not a retraction."""
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.run_once(model, [(38.0, EVALS_IFBENCH, False)])
+        self.assertEqual(model["scores"]["ifbench"], 39.6)
+        self.assertEqual(model["scores_source"]["ifbench"], AA_PAGE)
+
+    def test_it_is_never_nulled(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        self.other_row(AA_PAGE)
+        self.run_once(model, [])
+        self.assertEqual(model["scores"]["ifbench"], 39.6)
+        self.assertEqual(model["scores_source"]["ifbench"], AA_PAGE)
+
+    def test_only_a_fetchers_page_qualifies(self) -> None:
+        # Nothing refuses a write over a custom page, so nothing waits on it
+        # either; a custom page "read" this run is not a fetcher's retraction.
+        self.assertFalse(update.RunReports().dropped("m", "ifbench", HAND_ENTERED))
+        self.assertFalse(update.RunReports().dropped("m", "ifbench", None))
+
+    def test_a_refusal_from_an_earlier_run_is_not_applied(self) -> None:
+        model = model_with(score=39.6, source=AA_PAGE)
+        update.apply_score(DOC, model, "m", "ifbench", 38.0, EVALS_IFBENCH, [])
+        update.RUN_REPORTS = update.RunReports()  # the next run
+        self.other_row(AA_PAGE)
+        update.replace_dropped_scores(DOC, [])
+        self.assertEqual(model["scores"]["ifbench"], 39.6)
+
+    def test_the_url_backfill_records_nothing(self) -> None:
+        model = model_with(score=39.6, source=None)
+        update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, [], fill_urls_only=True)
+        self.assertEqual(update.RUN_REPORTS.read_pages, set())
+
+
 class TestOrderIndependence(unittest.TestCase):
     """The regression this exists for: 2ab9ab0 ran the AA ingest alone and
     displaced evals.report's ifbench and mmlu_pro values, and 0c24cc9 -- the

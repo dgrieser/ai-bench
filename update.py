@@ -13,6 +13,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
@@ -813,6 +814,81 @@ def revision_breakdown(by_key: dict[str, dict[str, dict[str, Any]]]) -> str:
 REJECTED_SCORES: list[str] = []
 
 
+@dataclass
+class RunReports:
+    """What this run's fetchers reported, for replacing scores a source dropped.
+
+    apply_score() never overwrites with null, so a score its source stops
+    listing -- the model removed from the board, or re-run under a new label --
+    would otherwise sit behind that source's rank for good (issue #226). It is
+    never withdrawn; instead, once its page has been read in this run and did
+    not report it, any other fetcher reporting that score in the same run may
+    replace it, whatever the two ranks. Only a page a fetcher writes counts
+    (_precedence.is_fetcher_source): a custom source is replaceable anyway.
+
+    Everything here is one run's: a page is "read" only if it produced a row in
+    this process, so a fetch that failed or was skipped drops nothing, and a
+    write refused in one run is never applied by a later one.
+    """
+
+    # Canonical pages some fetcher read at least one row from this run.
+    read_pages: set[str] = field(default_factory=set)
+    # (model, benchmark) -> canonical pages that reported a number for it.
+    reported: dict[tuple[str, str], set[str]] = field(default_factory=dict)
+    # (model, benchmark) -> writes refused by rank or fill-only, in run order:
+    # (model, new value, page).
+    refused: dict[tuple[str, str], list[tuple[dict[str, Any], Any, str]]] = field(
+        default_factory=dict
+    )
+
+    def saw(self, slug: str, key: str, value: Any, url: str) -> None:
+        page = canonical(url)
+        self.read_pages.add(page)
+        if value is not None:
+            self.reported.setdefault((slug, key), set()).add(page)
+
+    def dropped(self, slug: str, key: str, stored_url: str | None) -> bool:
+        """Whether the stored score's own page was read this run and no longer reports it."""
+        if not is_fetcher_source(stored_url):
+            return False
+        page = canonical(stored_url)
+        return page in self.read_pages and page not in self.reported.get((slug, key), set())
+
+
+RUN_REPORTS = RunReports()
+
+
+def replace_dropped_scores(
+    doc: dict[str, Any], changes: list[tuple[str, str, Any, Any]]
+) -> int:
+    """Apply refused writes whose blocking score its own source no longer reports.
+
+    Called once, after every ingest of the run, so the outcome does not depend
+    on whether the replacing fetcher ran before or after the one that dropped
+    the score. Of several candidates the best-ranked page wins, then the first
+    in run order. The score is never nulled: with no candidate it stays.
+    """
+    replaced = 0
+    for (slug, key), offers in RUN_REPORTS.refused.items():
+        model = offers[0][0]
+        stored_url = score_source(model, key)
+        if not RUN_REPORTS.dropped(slug, key, stored_url):
+            continue
+        _, new_value, url = min(
+            enumerate(offers), key=lambda item: (source_rank(item[1][2]), item[0])
+        )[1]
+        scores = model.get("scores")
+        old_value = scores.get(key) if isinstance(scores, dict) else None
+        if old_value is None or old_value == new_value:
+            continue
+        scores[key] = new_value
+        stamp_score_updated(model, key)
+        stamp_score_source(model, key, url)
+        changes.append((slug, key, old_value, new_value))
+        replaced += 1
+    return replaced
+
+
 def apply_score(
     doc: dict[str, Any],
     model: dict[str, Any],
@@ -869,6 +945,8 @@ def apply_score(
         print(f"error: {slug} {key}: {exc}", file=sys.stderr)
         return 0
     old_value = scores.get(key)
+    if not fill_urls_only:
+        RUN_REPORTS.saw(slug, key, new_value, url)
 
     if fill_urls_only:
         if new_value is None or old_value != new_value:
@@ -884,6 +962,8 @@ def apply_score(
     custom = not is_fetcher_source(stored_url)
     own = stored_url is not None and canonical(stored_url) == canonical(url)
     if fill_only and old_value is not None and not (custom or own):
+        if new_value is not None and new_value != old_value:
+            RUN_REPORTS.refused.setdefault((slug, key), []).append((model, new_value, url))
         return 0
     # Never overwrite an existing non-null value with null.
     if old_value is not None and new_value is None:
@@ -903,6 +983,7 @@ def apply_score(
     # A stored value keeps its number until a source of at least its own
     # standing reports a different one.
     if old_value is not None and not may_overwrite(url, stored_url):
+        RUN_REPORTS.refused.setdefault((slug, key), []).append((model, new_value, url))
         return 0
     scores[key] = new_value
     stamp_score_updated(model, key)
@@ -2667,6 +2748,9 @@ def main() -> int:
     # Against the same clock the per-phase lines use, so the phases can be read
     # against the whole and what is left over is visibly what is left over.
     run_started = time.monotonic()
+    # One run's reports only: nothing a previous call saw may drop a score.
+    global RUN_REPORTS
+    RUN_REPORTS = RunReports()
     args = parse_args()
     if args.fill_source_urls:
         # Spheron carries VRAM estimates, not benchmark scores; the URL
@@ -3247,6 +3331,12 @@ def main() -> int:
         )
         changes.extend(spheron_changes)
 
+    # Last, once every source has reported: a score whose own page was read
+    # this run and no longer lists it gives way to one another fetcher did.
+    if not args.fill_source_urls:
+        dropped_replaced = replace_dropped_scores(doc, changes)
+        if dropped_replaced:
+            print(f"scores replaced after their source dropped them: {dropped_replaced}")
     changes = undo_round_trips(doc, found, changes)
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if aa_ok else []
     if args.write:
