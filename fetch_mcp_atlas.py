@@ -53,8 +53,11 @@ HEADERS = {
     )
 }
 
-# Reasoning-effort modifiers that trail a model name (case-insensitive).
-_EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
+# Reasoning-effort modifiers that trail a model name (case-insensitive). Only
+# a word standing on its own is one: a hyphen joins a word that is part of the
+# name, so "qwen3.8-max" stays its own model instead of collapsing onto the
+# base "qwen3.8" (issue #233; fetch_swe_atlas.py had the same bug).
+_EFFORT_RE = re.compile(r"(?<![\w-])(?:xhigh|x-high|high|medium|low|max)(?![\w-])", re.IGNORECASE)
 # Every token a parenthetical may contain and still be a run setting rather
 # than a model name. A parenthetical holding anything else names the model --
 # "gpt-5.6 (sol)" -- and is kept in the normalized key.

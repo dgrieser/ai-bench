@@ -49,6 +49,13 @@ class KeepsModelNames(unittest.TestCase):
         self.assertEqual(mcp.normalize_model("gpt-5.6 (luna)"), "gpt 5.6 luna")
         self.assertEqual(mcp.normalize_model("gpt-5.6 (terra)"), "gpt 5.6 terra")
 
+    def test_a_hyphenated_max_is_part_of_the_name(self):
+        # Issue #233: "max" joined by a hyphen names the model, not the run.
+        self.assertEqual(mcp.normalize_model("qwen3.8-max (xhigh)"), "qwen3.8 max")
+        self.assertNotEqual(
+            mcp.normalize_model("Qwen3.8-Max"), mcp.normalize_model("qwen3.8 (max)")
+        )
+
     def test_the_three_variants_do_not_share_a_key(self):
         keys = {mcp.normalize_model(f"gpt-5.6 ({v})") for v in ("sol", "luna", "terra")}
         self.assertEqual(len(keys), 3)
