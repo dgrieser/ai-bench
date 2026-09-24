@@ -375,7 +375,7 @@ Output: llm.json (unified dataset)
 ./fetch_frontiercode.py                 # every revision and subset, each row labelled
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
 ./fetch_frontiercode.py --subset extended   # or one task subset (main, extended)
-./fetch_tbench.py                       # Terminal-Bench 4.0, from the benchmark's own board
+./fetch_tbench.py                       # Terminal-Bench 4.0, 2.1 and 2.0, from the benchmark's own boards
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
@@ -724,10 +724,11 @@ pages: where both AA surfaces report a column, the agent run lands whether or
 not the model-page ingest ran, and in either order. Missing results never erase
 stored scores.
 
-tbench.ai's 2.0 and 2.1 boards are deliberately unranked. `fetch_tbench.py`
-reads only the 4.0 board (the site's payload is always the current one), so a
-value credited to a 2.x page was typed in by hand, and ranking it as first-party
-would lock that number above Vals' measured one with nothing to refresh it.
+tbench.ai's 4.0, 2.1 and 2.0 boards each rank 2 for their own column.
+`fetch_tbench.py` reads them from the Harbor Hub function the site's version
+picker calls, since the server-rendered page only ever carries the current
+board. On 2.0, which takes outside submissions, only verified single-model rows
+are read.
 
 The rungs are where they are because of what actually disagrees. Where both a
 first-party run and a self-report exist for one model they differ by a point or

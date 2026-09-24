@@ -83,7 +83,6 @@ class TestRowFetchers(unittest.TestCase):
         ("programbench", "score", "fetch_programbench_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
-        ("tbench", "score", "fetch_tbench_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
     ]
 
@@ -117,6 +116,22 @@ class TestRowFetchers(unittest.TestCase):
                     with stub_run(order):
                         by_slug = getattr(update, func_name)(SCRIPT, mapping)
                     self.assertEqual(by_slug["m"][score_key], 45.0)
+
+    def test_tbench_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
+        # fetch_tbench.py names the column on every row, one board per
+        # Terminal-Bench revision, so the fold is per column like the above.
+        mapping = write_json({"Model": "m", "Model [high]": "m"})
+        rows = [
+            {"benchmark": "terminal_bench_2_1", "model": "Model", "score": 30.0},
+            {"benchmark": "terminal_bench_2_1", "model": "Model [high]", "score": 45.0},
+            {"benchmark": "terminal_bench_4_0", "model": "Model", "score": 20.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_tbench_data(SCRIPT, mapping)
+                self.assertEqual(by_key["terminal_bench_2_1"]["m"]["score"], 45.0)
+                self.assertEqual(by_key["terminal_bench_4_0"]["m"]["score"], 20.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
         for source, func_name, base, revision, extra in self.REVISION_CASES:

@@ -60,7 +60,7 @@ from _precedence import (
     RANK_AA,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
-    TBENCH_SOURCE_URL,
+    TBENCH_KEY_URLS,
     TOOLATHLON_SOURCE_URL,
     VALS_KEY_URLS,
     ZEROBENCH_SOURCE_URL,
@@ -370,7 +370,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-tbench",
         action="store_true",
-        help="Skip fetching Terminal-Bench 4.0 scores from tbench.ai.",
+        help="Skip fetching Terminal-Bench 4.0, 2.1 and 2.0 scores from tbench.ai.",
     )
     parser.add_argument(
         "--skip-agents-last-exam",
@@ -1993,7 +1993,14 @@ def build_fetch_tbench_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
 
-def fetch_tbench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+def fetch_tbench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """tbench.ai's boards, one column per Terminal-Bench revision.
+
+    Each row names the column it was read for, so a model on several boards
+    arrives once per board and is ranked only against that board's runs.
+    """
     cmd = build_fetch_tbench_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2004,9 +2011,12 @@ def fetch_tbench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, A
         raise RuntimeError("Unexpected tbench JSON format: expected a list")
 
     tbench_to_slug = load_tbench_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
     for row in payload:
         if not isinstance(row, dict):
+            continue
+        key = row.get("benchmark")
+        if key not in TBENCH_KEY_URLS:
             continue
         tbench_name = row.get("model")
         if not isinstance(tbench_name, str) or not tbench_name:
@@ -2016,35 +2026,19 @@ def fetch_tbench_data(script: Path, mapping_path: Path) -> dict[str, dict[str, A
             continue
         # One row per (agent, model, reasoning effort); the leaderboard's own
         # ranking takes the best run, so the collision rule matches it.
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
 
 
 def update_tbench_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        tbench_model = by_slug.get(slug)
-        if tbench_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "terminal_bench_4_0", tbench_model.get("score"),
-            TBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, TBENCH_KEY_URLS["terminal_bench_4_0"],
+        key_urls=TBENCH_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_agents_last_exam_cmd(script: Path) -> list[str]:
@@ -3181,7 +3175,7 @@ def main() -> int:
         )
         changes.extend(frontierswe_changes)
 
-    tbench_by_slug: dict[str, dict[str, Any]] = {}
+    tbench_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     tbench_matched = 0
     tbench_updated = 0
     if not args.skip_tbench:
@@ -3413,7 +3407,7 @@ def main() -> int:
     if not args.skip_frontierswe:
         print(f"models returned by frontierswe: {revision_model_count(frontierswe_by_slug)}" + revision_breakdown(frontierswe_by_slug))
     if not args.skip_tbench:
-        print(f"models returned by tbench: {len(tbench_by_slug)}")
+        print(f"models returned by tbench: {revision_model_count(tbench_by_slug)}" + revision_breakdown(tbench_by_slug))
     if not args.skip_agents_last_exam:
         print(f"models returned by agents-last-exam: {len(agents_last_exam_by_slug)}")
     if not args.skip_frontiercode:

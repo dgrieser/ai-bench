@@ -154,15 +154,12 @@ FRONTIERSWE_KEY_URLS = {
 # The leaderboard page, not the JSON it loads: the page is what a reader opens.
 FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
 SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)
-# The versioned leaderboard, not the app root the payload is read from: the
-# root would prefix-match the 2.0 and 2.1 boards on the same host too. Those
-# two are left unregistered on purpose: no fetcher reads them (the homepage
-# payload is always the current board, and ?version= does not change it), so
-# the only values credited to them are hand entries, and ranking the pages as
-# first-party would lock a typed number above Vals' measured one with nothing
-# to ever refresh it. They rank as hand-entered, like any page no scraper
-# reads; a fetcher for them should register them here in the same change.
-TBENCH_SOURCE_URL = canonical(fetch_tbench.LEADERBOARD_URL)
+# One versioned leaderboard page per column, not the function the boards are
+# read from: that is what a reader opens, and the host root would prefix-match
+# every board at once.
+TBENCH_KEY_URLS = {
+    key: canonical(fetch_tbench.board_url(key)) for key in fetch_tbench.BOARDS
+}
 # The leaderboard page, not the JSON endpoint it hydrates from.
 AGENTS_LAST_EXAM_SOURCE_URL = canonical(fetch_agents_last_exam.LEADERBOARD_URL)
 SWE_ATLAS_KEY_URLS = {
@@ -220,7 +217,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (FRONTIERSWE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (FRONTIERCODE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (SWE_MARATHON_SOURCE_URL, RANK_BENCHMARK_SITE),
-        (TBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        *((url, RANK_BENCHMARK_SITE) for url in TBENCH_KEY_URLS.values()),
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),

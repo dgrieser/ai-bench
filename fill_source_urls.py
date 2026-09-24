@@ -52,11 +52,6 @@ import fetch_vals
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
-# Terminal-Bench 2.1 numbers arrive through the Artificial Analysis API, but the
-# leaderboard that publishes them is its own source; "sources" already lists the
-# 2.0 page.
-TBENCH_2_1_LEADERBOARD = "https://www.tbench.ai/leaderboard/terminal-bench/2.1"
-
 # Scrapers whose data is already represented in "sources" by a human-facing
 # equivalent: (what the scraper actually requests, the URL that covers it).
 # Reported, never inserted — an API host next to its own leaderboard page would
@@ -159,8 +154,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
-        (TBENCH_2_1_LEADERBOARD, ("terminal_bench_2_1",)),
-        (fetch_tbench.LEADERBOARD_URL, ("terminal_bench_4_0",)),
+        # One page per Terminal-Bench revision, each covering its own column.
+        *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
         (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         (spheron_root(), ()),

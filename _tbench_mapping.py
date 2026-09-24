@@ -1,4 +1,4 @@
-"""Helper module for managing Terminal-Bench 4.0-to-slug name mappings."""
+"""Helper module for managing Terminal-Bench-to-slug name mappings (all boards)."""
 
 from __future__ import annotations
 

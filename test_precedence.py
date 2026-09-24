@@ -652,12 +652,17 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
              RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE],
         )
 
-    def test_tbench_2x_boards_stay_unregistered(self) -> None:
-        # No fetcher reads them, so a value credited to one was typed in.
-        for version in ("2.0", "2.1"):
+    def test_every_tbench_board_ranks_as_the_benchmarks_own_site(self) -> None:
+        for version in ("4.0", "2.1", "2.0"):
             with self.subTest(version=version):
                 url = f"https://www.tbench.ai/leaderboard/terminal-bench/{version}"
-                self.assertEqual(source_rank(url), RANK_HAND_ENTERED)
+                self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
+        # The host root is not a board, and the 3.0 board feeds no column.
+        self.assertEqual(source_rank("https://www.tbench.ai"), RANK_HAND_ENTERED)
+        self.assertEqual(
+            source_rank("https://www.tbench.ai/leaderboard/terminal-bench/3.0"),
+            RANK_HAND_ENTERED,
+        )
 
     def test_prefixes_are_tried_longest_first(self) -> None:
         lengths = [len(url) for url, _ in precedence.RANKED_PREFIXES]
