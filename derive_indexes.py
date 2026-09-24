@@ -16,8 +16,9 @@ benchmarks.
 
   * Every benchmark contributes comparisons, not scores. For each benchmark,
     every pair of models that both carry a score is compared once. A pair whose
-    values are equal to within nearly_equal() splits the comparison, and a
-    lower-is-better column compares the other way round.
+    values are within one step of the column's rounding grid (tie_tolerance)
+    splits the comparison, and a lower-is-better column compares the other way
+    round.
   * A benchmark's reliability weight from INDEXES is what those comparisons add
     up to, not what each one is worth: the weight is divided by the total and
     again by the opponents available, so a model collects exactly that
@@ -37,7 +38,17 @@ benchmarks.
     stand-in value is invented, and a benchmark a model never ran cannot move
     it in either direction. This is the property the median fill could not
     have: filling a gap at the median beat actually being measured and placing
-    last, so a model was better off never being run on a hard benchmark.
+    last, so a model was better off never being run on a hard benchmark. The
+    one exception is a benchmark that re-ran itself: a model measured on the
+    retired board only may have that score carried onto the current board's
+    scale (REVISION_FALLBACKS), and only once enough models sit on both boards
+    to fit the conversion. That is a measurement moved between scales rather
+    than a value made up, and every such value is named in the model's
+    index_coverage record, so the page says so wherever it is used.
+  * Not every score in a column is the same instrument. A comparison involving
+    a second-hand score -- a model card, an aggregator, a compilation, a hand
+    entry -- counts SECOND_HAND_WEIGHT of one between two scores this
+    repository read off the benchmark's own run or a third party's re-run.
   * Comparisons a model never had are still answered, by the fit rather than
     by a guess. Two models measured on disjoint benchmarks are linked through
     the opponents they share -- the same anchoring that lets two candidates
@@ -108,7 +119,8 @@ from typing import Any, NamedTuple
 
 import _history
 from _reference import apply_reference_flags
-from _scores import stamp_score_updated
+from _precedence import RANK_CURATED, source_rank
+from _scores import score_step, stamp_score_updated
 # The five indexes are the slowest thing this repository does that is not a
 # network call -- about 41 seconds of a 279-second refresh, spent twice over,
 # and nothing in either log said which of them it went to, because the only
@@ -132,12 +144,11 @@ class IndexDef(NamedTuple):
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
-    other and with MIN_SCORED_FRACTION: Coding's 0.012 leaves a fully measured
-    model 98.8% of its distance from the middle, Trust's 1.524 leaves it 40%.
-    It sets how hard a thinly covered model is pulled toward the middle (see
-    coverage_reliability), and it is measured rather than chosen: run
-    ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
-    and shrinks nobody.
+    other and with MIN_SCORED_FRACTION. It sets how hard a thinly covered model
+    is pulled toward the middle (see coverage_reliability), and it is measured
+    rather than chosen: ./derive_indexes.py --calibrate -w re-derives it into
+    CALIBRATION_JSON, which a nightly workflow does, and INDEXES picks the
+    stored value up at import. 0.0 means never calibrated and shrinks nobody.
     """
 
     key: str
@@ -288,20 +299,6 @@ INDEXES: list[IndexDef] = [
             ("programbench_almost", 0.5),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, and now well clear of tooling: coding
-        # benchmarks predict each other well. Hold one out and the rest miss it
-        # by an eighty-third of the spread between models, so a fully measured
-        # model keeps 98.8% of its distance from the middle and one at the 18%
-        # bar keeps 94%. That is the data's verdict rather than a preference: a
-        # model placing top-decile on three coding benchmarks really is
-        # unlikely to be mid-field on the rest. Re-measured by --calibrate
-        # after the SWE Atlas promotion, 0.016 -> 0.015, after Vibe Code Bench
-        # joined, 0.015 -> 0.013, and after ProgramBench, 0.013 -> 0.012 --
-        # each time a broadly scored member gave the group more overlap to
-        # predict its own held-out parts from. The FrontierCode Main ->
-        # Extended swap in between moved nothing, which is what swapping one
-        # board for a near-identical one should do.
-        transfer_ratio=0.012,
     ),
     IndexDef(
         key="tooling_index",
@@ -321,11 +318,6 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # A hair above the coding group, over the widest group here, so this
-        # shrinks little: 98.4% kept when fully measured, 92% at the 18% bar.
-        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016,
-        # and unmoved since: the changes after it were all coding-group ones.
-        transfer_ratio=0.016,
     ),
     IndexDef(
         key="knowledge_index",
@@ -354,11 +346,6 @@ INDEXES: list[IndexDef] = [
             # honesty, which is why they are worth aggregating there and not
             # here.
         ],
-        # Five times the coding group's, which is not what the members'
-        # correlations with each other suggest -- and is the point of measuring
-        # it held out rather than reading it off a correlation. A fully
-        # measured model keeps 93% of its distance, one at the 18% bar 71%.
-        transfer_ratio=0.072,
     ),
     IndexDef(
         key="vision_index",
@@ -379,13 +366,6 @@ INDEXES: list[IndexDef] = [
             # visual evidence at all -- see README, "Why GDPval-AA is left
             # out".
         ],
-        # The vision members correlate 0.93-0.97 with each other, yet held out
-        # they miss by nine times what the coding group's do. Correlation over
-        # the handful of models scored on two small boards is a far weaker
-        # guarantee than it looks. Still mild in absolute terms: a model on
-        # MMMU Pro alone -- 36% of the group, and half this column's field --
-        # keeps 91% of its distance.
-        transfer_ratio=0.034,
     ),
     IndexDef(
         key="trust_index",
@@ -411,19 +391,93 @@ INDEXES: list[IndexDef] = [
             # whose whole subject is trustworthiness -- see README, "What the
             # Trust index leaves out".
         ],
-        # A hundred times the coding group's, and the reason this parameter is
-        # per-index rather than global. A hallucination rate, an accuracy, a
-        # long-context recall and an instruction-following score are nearly
-        # separate constructs, and the models sit close together on all of
-        # them, so the between-model variance this is divided by is small while
-        # the disagreement above it is not. Above 1.0 it means one member says
-        # less about the next than the field's own spread does, and it bites
-        # accordingly: a model carrying the 1.0 anchor alone keeps 22% of its
-        # distance from the middle, one measured throughout 40%. That is the
-        # column honestly reporting how little it can lean on partial evidence.
-        transfer_ratio=1.524,
     ),
 ]
+
+# Where each index's calibrated transfer_ratio is kept. It is data rather than a
+# constant in INDEXES because it is a measurement of llm.json and moves when
+# llm.json does: typed into the source it went stale between hand re-runs --
+# Knowledge carried 0.072 while the file itself calibrated to 0.046. The
+# nightly "calibrate indexes" workflow re-measures it with
+# `--calibrate --write` and commits this file together with the llm.json the
+# new values produce.
+CALIBRATION_JSON = Path(__file__).resolve().parent / "index-calibration.json"
+
+
+def load_calibration(path: Path = CALIBRATION_JSON) -> dict[str, float]:
+    """index key -> stored transfer_ratio. A missing or malformed file, or
+    entry, yields nothing for that index, which leaves it uncalibrated (0.0,
+    shrinking nobody) rather than failing the whole refresh."""
+    try:
+        stored = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(stored, dict):
+        return {}
+    ratios: dict[str, float] = {}
+    for key, entry in stored.items():
+        ratio = entry.get("transfer_ratio") if isinstance(entry, dict) else None
+        if isinstance(ratio, (int, float)) and not isinstance(ratio, bool) and ratio >= 0:
+            ratios[key] = float(ratio)
+    return ratios
+
+
+def calibrated(
+    indexes: list[IndexDef], ratios: dict[str, float]
+) -> list[IndexDef]:
+    """`indexes` with each transfer_ratio taken from `ratios` where it has one."""
+    return [
+        index._replace(transfer_ratio=ratios[index.key])
+        if index.key in ratios
+        else index
+        for index in indexes
+    ]
+
+
+INDEXES = calibrated(INDEXES, load_calibration())
+
+
+def write_calibration(
+    results: dict[str, tuple[float, int]], path: Path = CALIBRATION_JSON
+) -> bool:
+    """Store freshly measured ratios, keeping the previous entry for an index
+    that could not be measured this time; returns whether the file changed.
+
+    Rounded to three places, the precision the ratios were always quoted at:
+    finer than that is calibration noise, and writing it would churn the file
+    and llm.json every night for no change anyone could read. An entry whose
+    rounded ratio holds is kept as it was, sample and date included, so
+    "calibrated" is the date the ratio last moved.
+    """
+    try:
+        previous = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        previous = {}
+    if not isinstance(previous, dict):
+        previous = {}
+    stored: dict[str, Any] = {}
+    for index in INDEXES:
+        if index.key in results:
+            ratio, sample = results[index.key]
+            old = previous.get(index.key)
+            # Only a change in the ratio itself is news: the sample grows with
+            # every model added, and recording that alone would commit every
+            # night for a file whose effect on the ranking had not moved.
+            if isinstance(old, dict) and old.get("transfer_ratio") == round(ratio, 3):
+                stored[index.key] = old
+                continue
+            stored[index.key] = {
+                "transfer_ratio": round(ratio, 3),
+                "sample": sample,
+                "calibrated": time.strftime("%Y-%m-%d", time.gmtime()),
+            }
+        elif index.key in previous:
+            stored[index.key] = previous[index.key]
+    if stored == previous:
+        return False
+    path.write_text(json.dumps(stored, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
+    return True
+
 
 # A benchmark that has re-run itself keeps a column per revision, because the
 # two are not comparable as published (see _revisions.py). For the *index* that
@@ -432,39 +486,104 @@ INDEXES: list[IndexDef] = [
 # comparison there at all -- which flatters a model that scored near zero.
 #
 # The fix is a scale conversion, not a second column. The re-run's own overlap
-# -- the open-weight models published on both boards -- gives the factor that
-# carries an old score onto the current board's scale; applying it lets those
-# models join the current revision's population and be ranked against today's
-# field like everyone else. The converted value is used *here only*: llm.json's
-# columns keep exactly what each board published, so nothing in the table ever
-# shows a number its leaderboard did not.
+# -- the models published on both boards -- gives the factor that carries an
+# old score onto the current board's scale; applying it lets those models join
+# the current revision's population and be ranked against today's field like
+# everyone else. llm.json's columns keep exactly what each board published, and
+# every converted value is named in the model's index_coverage record, so the
+# page says which of a model's index inputs is a conversion rather than a
+# measurement.
 #
-# current revision key -> (older revision key, multiplier onto the current scale)
-REVISION_FALLBACKS: dict[str, tuple[str, float]] = {
-    # DeepSWE 1.1 reads lower than 1.0 for the same model.
-    "deepswe_1_1": ("deepswe_1_0", 1 / 1.069),
+# The factor is fitted from llm.json on every run, not typed in here, and it is
+# only used once MIN_FALLBACK_OVERLAP models carry both columns. A constant
+# fitted once goes stale the moment either board moves: DeepSWE's used to be
+# 1 / 1.069, and the two models now on both boards say x1.06 and x7.6, which is
+# not a revision drift at all but two models saying opposite things. A factor
+# is a claim about how two scales relate, and two points cannot tell a scale
+# from a coincidence -- below the bar the hole stays open, which is the same
+# answer FrontierSWE gets below, and the reason is the README's: a fitted
+# factor that has not earned its keep is inventing a number, which is worse
+# than admitting one is missing.
+#
+# current revision key -> older revision key it may fall back to
+REVISION_FALLBACKS: dict[str, str] = {
+    "deepswe_1_1": "deepswe_1_0",
     # FrontierCode is aggregated through Extended, so the conversion targets
-    # that column: x2.076, the mean of the two open-weight models carrying both
-    # (GLM 5.2 19.2 -> 40.1, Kimi K2.7 22.0 -> 45.4). It crosses a revision and
-    # a subset at once, which is one more gap than the others cross, but it is
-    # fitted the same way and on the same overlap -- and it is the whole of what
-    # keeps the four models published on 1.0 alone (both MiniMax M2 releases,
-    # Kimi K2.5 and K2.6) in this benchmark's comparisons at all. The factor
-    # decomposes about as expected: 1.32 of revision drift on Main times ~1.57
-    # of Main-to-Extended.
+    # that column. It crosses a revision and a subset at once (1.0 Main onto
+    # 1.1 Extended), which is one more gap than the others cross, but it is
+    # fitted the same way and on the same kind of overlap.
     #
     # frontiercode_1_1 needs no entry of its own now that it is not aggregated;
     # a fallback only ever fills a hole in a column the index reads.
-    "frontiercode_extended_1_1": ("frontiercode_1_0", 2.076),
+    "frontiercode_extended_1_1": "frontiercode_1_0",
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's
     # scale to carry: its column is a pairwise win rate over a 17-model field,
-    # 2.0's a mean@5 task percentage. A factor fitted on the three models on
-    # both boards would be fitting the two metrics' relationship to each other,
+    # 2.0's a mean@5 task percentage. A factor fitted on the models on both
+    # boards would be fitting the two metrics' relationship to each other,
     # not a revision's drift, and would rank a model on the shape of a field it
     # was never measured against. A model on 1.0 alone simply supports no
     # comparison on this benchmark.
 }
+
+# How many models must carry both revisions before their overlap is trusted
+# to convert one scale onto the other. Three is the fewest that can disagree
+# with a pair: with two, one odd model is half the evidence.
+MIN_FALLBACK_OVERLAP = 3
+
+
+class RevisionFactor(NamedTuple):
+    """A fitted conversion: the older column, the multiplier that carries its
+    scores onto the current column's scale, and how many models it was fitted
+    on."""
+
+    older: str
+    factor: float
+    overlap: int
+
+
+def revision_factors(models: list[dict[str, Any]]) -> dict[str, RevisionFactor]:
+    """current key -> RevisionFactor, for every REVISION_FALLBACKS entry whose
+    overlap clears MIN_FALLBACK_OVERLAP.
+
+    The factor is the geometric mean of current / older over the models on
+    both boards, because a revision drift is a ratio: averaging the ratios
+    arithmetically would let one model that doubled outweigh one that halved.
+    A zero on either board says nothing about a ratio and is left out of it.
+    """
+    factors: dict[str, RevisionFactor] = {}
+    for key, older in REVISION_FALLBACKS.items():
+        logs = []
+        for model in models:
+            scores = model.get("scores") or {}
+            current = to_number(scores.get(key))
+            previous = to_number(scores.get(older))
+            if current > 0 and previous > 0:
+                logs.append(math.log(current / previous))
+        if len(logs) >= MIN_FALLBACK_OVERLAP:
+            factors[key] = RevisionFactor(
+                older, math.exp(sum(logs) / len(logs)), len(logs)
+            )
+    return factors
+
+
+# A comparison is only as good as the two numbers in it, and a column in
+# llm.json is not one instrument: mmlu_pro holds Artificial Analysis' own run
+# beside Vals' re-run beside a lab's model-card claim, and a pair across them
+# compares harnesses as much as models. A score whose source ranks at or below
+# SECOND_HAND_RANK (see _precedence: curated compilations, aggregators, model
+# cards and hand entries -- a number someone else produced under their own
+# prompts and settings, which this repository only read) is second-hand, and
+# any comparison it takes part in counts SECOND_HAND_WEIGHT of a first-hand
+# one. It still counts: dropping it would unrank most of the open field on
+# benchmarks only the labs report, and a lab's claim is evidence, just weaker
+# evidence than a run somebody else can reproduce.
+#
+# Halved rather than cut harder because the fit already shrinks a thin
+# measurement toward the middle through BT_PRIOR, and a model whose whole
+# record is second-hand is thin in exactly that sense after this.
+SECOND_HAND_RANK = RANK_CURATED
+SECOND_HAND_WEIGHT = 0.5
 
 
 # Below this share of an index's total weight a model is left unranked. 0.18
@@ -550,8 +669,26 @@ def to_number(value: Any) -> float:
     return math.nan
 
 
-def nearly_equal(a: float, b: float) -> bool:
-    return abs(a - b) < 1e-9
+def tie_tolerance(doc: dict[str, Any], key: str) -> float:
+    """How close two scores on one benchmark must be to split a comparison
+    rather than decide it: one step of the grid the column is stored on.
+
+    llm.json rounds every score to that grid (_scores.score_step), so two
+    values one step apart may come from true scores anywhere from nearly equal
+    to two steps apart, and which side of a rounding boundary each landed on is
+    the whole of what separates them. Deciding a comparison on that would be
+    letting the stored precision rank the models. Two steps apart is a real
+    difference and is counted as one.
+
+    What is not attempted is weighting a comparison by the size of the gap.
+    The index uses the order of the scores and nothing else, which is what
+    lets an Elo and a percentage sit in one group without a common unit; a
+    0.3-point edge on a saturated board still counts the same as a 30-point one
+    on an open board. The weights in INDEXES are where a saturated board is
+    priced down.
+    """
+    # The factor absorbs the float error in a difference such as 88.4 - 88.3.
+    return float(score_step(doc, key)) * (1 + 1e-6)
 
 
 def source_url(doc: dict[str, Any], index: IndexDef) -> str:
@@ -571,35 +708,65 @@ def is_lower_better(doc: dict[str, Any], key: str) -> bool:
     return benchmark.get("lower_is_better") is True
 
 
-def index_score(model: dict[str, Any], key: str) -> float:
+def index_score(
+    model: dict[str, Any],
+    key: str,
+    factors: dict[str, RevisionFactor] | None = None,
+) -> float:
     """The value this benchmark contributes for one model, NaN when it has none.
 
-    Normally the stored score. For a benchmark with a REVISION_FALLBACKS entry,
-    a model absent from the current revision falls back to its older-revision
-    score converted onto the current scale, so it is compared against the
-    current field rather than sitting the benchmark out. A model published on
-    both keeps the current revision's own number -- the conversion only ever
-    fills a hole.
+    Normally the stored score. For a benchmark with a fitted revision factor
+    (`factors`, from revision_factors()), a model absent from the current
+    revision falls back to its older-revision score converted onto the current
+    scale, so it is compared against the current field rather than sitting the
+    benchmark out. A model published on both keeps the current revision's own
+    number -- the conversion only ever fills a hole.
     """
     scores = model.get("scores") or {}
     value = to_number(scores.get(key))
     if math.isfinite(value):
         return value
-    fallback = REVISION_FALLBACKS.get(key)
+    fallback = (factors or {}).get(key)
     if fallback is None:
         return value
-    older_key, factor = fallback
-    older = to_number(scores.get(older_key))
-    return older * factor if math.isfinite(older) else older
+    older = to_number(scores.get(fallback.older))
+    return older * fallback.factor if math.isfinite(older) else older
+
+
+def is_converted(
+    model: dict[str, Any], key: str, factors: dict[str, RevisionFactor] | None
+) -> bool:
+    """Whether index_score() answers for this model with a converted
+    older-revision score rather than a number the current board published."""
+    if key not in (factors or {}):
+        return False
+    scores = model.get("scores") or {}
+    return not math.isfinite(to_number(scores.get(key))) and math.isfinite(
+        index_score(model, key, factors)
+    )
+
+
+def is_second_hand(
+    model: dict[str, Any], key: str, factors: dict[str, RevisionFactor] | None
+) -> bool:
+    """Whether the number index_score() uses came from a second-hand source
+    (see SECOND_HAND_RANK). A converted value is judged by the source of the
+    archived score it was converted from, since that is the number behind it."""
+    if is_converted(model, key, factors):
+        key = factors[key].older
+    url = (model.get("scores_source") or {}).get(key)
+    return source_rank(url) >= SECOND_HAND_RANK
 
 
 def scored_on(
-    models: list[dict[str, Any]], key: str
+    models: list[dict[str, Any]],
+    key: str,
+    factors: dict[str, RevisionFactor] | None = None,
 ) -> list[tuple[str, float]]:
     """(name, value) for every model carrying a score on one benchmark, revision
     fallbacks included, in llm.json order."""
     entries = [
-        (model["name"], index_score(model, key))
+        (model["name"], index_score(model, key, factors))
         for model in models
         if isinstance(model.get("name"), str)
     ]
@@ -618,10 +785,13 @@ class Comparisons(NamedTuple):
     of the coverage denominator.
 
     The shares are what a model's comparisons add up to: every model scored on
-    a benchmark collects exactly `weight[key]` of comparison mass from it, so a
-    model's total mass is the share of the index it was measured on, and
-    MIN_SCORED_FRACTION, coverage_reliability and the fit are all reading the
-    same quantity.
+    a benchmark first-hand, against opponents scored first-hand, collects
+    exactly `weight[key]` of comparison mass from it, so a model's total mass
+    is the share of the index it was measured on, and MIN_SCORED_FRACTION,
+    coverage_reliability and the fit are all reading the same quantity. A
+    comparison with a second-hand score in it carries SECOND_HAND_WEIGHT of
+    that, so a model measured mostly second-hand brings less evidence to the
+    fit than its coverage says, and the prior leans on it accordingly.
     """
 
     wins: dict[tuple[str, str], float]
@@ -629,33 +799,58 @@ class Comparisons(NamedTuple):
     weight: dict[str, float]
 
 
-def comparisons(
-    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
-) -> Comparisons:
-    """Every model-versus-model comparison the contributing benchmarks support.
+def live_benchmarks(
+    models: list[dict[str, Any]],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor],
+) -> list[tuple[str, float, list[tuple[str, float]]]]:
+    """(key, share, scored entries) for every contributing benchmark that ranks
+    anybody, the shares summing to 1.
 
-    One comparison per benchmark per pair of models that both carry a score on
-    it, worth that benchmark's weight. Two values equal to within nearly_equal()
-    split it, and a lower-is-better column is read the other way round. A model
-    missing a score simply takes part in no comparison there: that is how a gap
-    is handled, and the whole of how it is handled.
+    Only benchmarks two models can be compared on rank anybody, so the rest
+    are left out of the total rather than diluting it.
     """
-    wins: dict[tuple[str, str], float] = {}
-    pairs: dict[tuple[str, str], float] = {}
-    weight: dict[str, float] = {}
-
-    # Only benchmarks two models can be compared on rank anybody, so the rest
-    # are left out of the total rather than diluting it.
     live = [
-        (key, benchmark_weight, scored_on(models, key))
+        (key, benchmark_weight, scored_on(models, key, factors))
         for key, benchmark_weight in index.contributing
     ]
     live = [entry for entry in live if len(entry[2]) >= 2]
     declared = sum(benchmark_weight for _, benchmark_weight, _ in live)
     if declared <= 0:
-        return Comparisons(wins, pairs, weight)
+        return []
+    return [
+        (key, benchmark_weight / declared, entries)
+        for key, benchmark_weight, entries in live
+    ]
 
-    for key, benchmark_weight, entries in live:
+
+def comparisons(
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor] | None = None,
+) -> Comparisons:
+    """Every model-versus-model comparison the contributing benchmarks support.
+
+    One comparison per benchmark per pair of models that both carry a score on
+    it, worth that benchmark's weight -- or SECOND_HAND_WEIGHT of it when
+    either score is second-hand. Two values within tie_tolerance() split it,
+    and a lower-is-better column is read the other way round. A model missing
+    a score simply takes part in no comparison there: that is how a gap is
+    handled, and the whole of how it is handled.
+
+    `factors` defaults to the revision factors fitted from `models` itself.
+    """
+    if factors is None:
+        factors = revision_factors(models)
+    wins: dict[tuple[str, str], float] = {}
+    pairs: dict[tuple[str, str], float] = {}
+    weight: dict[str, float] = {}
+    by_name = {
+        model["name"]: model for model in models if isinstance(model.get("name"), str)
+    }
+
+    for key, share, entries in live_benchmarks(models, index, factors):
         # Two normalisations, and the index's stated contract needs both.
         #
         # By the total, so only the ratios between weights matter: doubling
@@ -677,28 +872,31 @@ def comparisons(
         # evidence from a benchmark it ran, whatever the size of the field it
         # ran against, which is what the weight is documented to mean and what
         # coverage_reliability already assumes.
-        share = benchmark_weight / declared
         weight[key] = share
         per_pair = share / (len(entries) - 1)
         lower = is_lower_better(doc, key)
+        tolerance = tie_tolerance(doc, key)
+        trust = [
+            SECOND_HAND_WEIGHT if is_second_hand(by_name[name], key, factors) else 1.0
+            for name, _ in entries
+        ]
         for a in range(len(entries)):
             name_a, value_a = entries[a]
             for b in range(a + 1, len(entries)):
                 name_b, value_b = entries[b]
-                if nearly_equal(value_a, value_b):
+                if abs(value_a - value_b) <= tolerance:
                     won = 0.5
                 elif lower:
                     won = 1.0 if value_a < value_b else 0.0
                 else:
                     won = 1.0 if value_a > value_b else 0.0
+                mass = per_pair * min(trust[a], trust[b])
                 forward = (name_a, name_b)
                 backward = (name_b, name_a)
-                wins[forward] = wins.get(forward, 0.0) + per_pair * won
-                wins[backward] = (
-                    wins.get(backward, 0.0) + per_pair * (1.0 - won)
-                )
-                pairs[forward] = pairs.get(forward, 0.0) + per_pair
-                pairs[backward] = pairs.get(backward, 0.0) + per_pair
+                wins[forward] = wins.get(forward, 0.0) + mass * won
+                wins[backward] = wins.get(backward, 0.0) + mass * (1.0 - won)
+                pairs[forward] = pairs.get(forward, 0.0) + mass
+                pairs[backward] = pairs.get(backward, 0.0) + mass
 
     return Comparisons(wins, pairs, weight)
 
@@ -907,7 +1105,10 @@ def expected_win_rate(ability: float, field: list[float]) -> float:
 
 
 def compute_index(
-    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor] | None = None,
 ) -> dict[str, int | None]:
     """Model name -> index value in points (0..SCALE), or None when unranked.
 
@@ -923,7 +1124,9 @@ def compute_index(
     field a reader sees, and it is what puts the median of each column near
     half of SCALE.
     """
-    record = comparisons(models, doc, index)
+    if factors is None:
+        factors = revision_factors(models)
+    record = comparisons(models, doc, index, factors)
     total_weight = sum(record.weight.values())
 
     # Coverage first: it decides who is ranked and how far their ability is
@@ -937,7 +1140,7 @@ def compute_index(
         measured[name] = [
             weight
             for key, weight in record.weight.items()
-            if math.isfinite(index_score(model, key))
+            if math.isfinite(index_score(model, key, factors))
         ]
 
     min_scored_weight = MIN_SCORED_FRACTION * total_weight
@@ -973,9 +1176,62 @@ def compute_index(
     return result
 
 
+def index_coverage(
+    models: list[dict[str, Any]],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Model name -> what one index value rests on, for every model measured
+    on at least one of the benchmarks that rank anybody.
+
+      * "measured": the ones the model carries a score on, in INDEXES order;
+      * "of": how many there are;
+      * "share": the share of the index's weight those cover -- the quantity
+        MIN_SCORED_FRACTION is a bar on, rounded to three places;
+      * "converted": the benchmarks answered by a revision conversion rather
+        than by a number the current board published (omitted when none);
+      * "second_hand": the benchmarks answered by a second-hand score, whose
+        comparisons count SECOND_HAND_WEIGHT (omitted when none).
+
+    This is what the page shows beside an index value, so a reader can see
+    that a Vision score rests on MMMU Pro alone, or that a Coding score leans
+    on a converted archive, without re-deriving it.
+    """
+    if factors is None:
+        factors = revision_factors(models)
+    live = live_benchmarks(models, index, factors)
+    result: dict[str, dict[str, Any]] = {}
+    for model in models:
+        name = model.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        keys = [
+            (key, share)
+            for key, share, _ in live
+            if math.isfinite(index_score(model, key, factors))
+        ]
+        if not keys:
+            continue
+        record: dict[str, Any] = {
+            "measured": [key for key, _ in keys],
+            "of": len(live),
+            "share": round(sum(share for _, share in keys), 3),
+        }
+        converted = [key for key, _ in keys if is_converted(model, key, factors)]
+        if converted:
+            record["converted"] = converted
+        second_hand = [
+            key for key, _ in keys if is_second_hand(model, key, factors)
+        ]
+        if second_hand:
+            record["second_hand"] = second_hand
+        result[name] = record
+    return result
+
+
 def apparent_ability(
     name: str, key: str, models: list[dict[str, Any]], field: dict[str, float],
-    record: Comparisons,
+    record: Comparisons, factors: dict[str, RevisionFactor] | None = None,
 ) -> float | None:
     """The ability that explains one model's record on one benchmark alone,
     given everyone else's ability. None when it has no opponents there, and
@@ -994,7 +1250,7 @@ def apparent_ability(
     than they are.
     """
     others = [
-        other for other, _ in scored_on(models, key)
+        other for other, _ in scored_on(models, key, factors)
         if other != name and other in field
     ]
     if not others:
@@ -1046,7 +1302,8 @@ def calibrate(
     Returns (ratio, sample size), or None when the index is too small to hold a
     benchmark out.
     """
-    full = comparisons(models, doc, index)
+    factors = revision_factors(models)
+    full = comparisons(models, doc, index, factors)
     keys = list(full.weight)
     if len(keys) < 3:
         return None
@@ -1077,7 +1334,7 @@ def calibrate(
                 if key != held_out
             ],
         )
-        record = comparisons(models, doc, rest)
+        record = comparisons(models, doc, rest, factors)
         without = bradley_terry(record)
         rest_weight = sum(record.weight.values())
         # The held-out benchmark on its own, so apparent_ability sees only what
@@ -1095,6 +1352,7 @@ def calibrate(
                     if key == held_out
                 ],
             ),
+            factors,
         )
         for model in models:
             name = model.get("name")
@@ -1103,11 +1361,13 @@ def calibrate(
             covered = sum(
                 weight
                 for key, weight in record.weight.items()
-                if math.isfinite(index_score(model, key))
+                if math.isfinite(index_score(model, key, factors))
             )
             if covered < CALIBRATION_MIN_COVERAGE * rest_weight:
                 continue
-            fitted = apparent_ability(name, held_out, models, without, alone)
+            fitted = apparent_ability(
+                name, held_out, models, without, alone, factors
+            )
             if fitted is None:
                 continue
             gaps.append((full.weight[held_out], fitted - without[name]))
@@ -1123,16 +1383,21 @@ def calibrate(
     return between_benchmarks / between_models, len(gaps)
 
 
-def scored_count(model: dict[str, Any], index: IndexDef) -> int:
+def scored_count(
+    model: dict[str, Any],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor] | None = None,
+) -> int:
     """How many contributing benchmarks this model actually has a score on.
 
-    Counts a revision fallback, because the model was measured on that
-    benchmark -- on its retired board -- and the index ranks it accordingly.
+    Counts a revision fallback in `factors`, because the model was measured on
+    that benchmark -- on its retired board -- and the index ranks it
+    accordingly.
     """
     return sum(
         1
         for key, _ in index.contributing
-        if math.isfinite(index_score(model, key))
+        if math.isfinite(index_score(model, key, factors))
     )
 
 
@@ -1223,6 +1488,39 @@ def apply_index(
     return changes
 
 
+def apply_coverage(
+    doc: dict[str, Any],
+    per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]],
+) -> int:
+    """Write each model's index_coverage record -- index key -> what that value
+    rests on (see index_coverage()) -- for every index the model is ranked on,
+    in INDEXES order, and return how many models' records changed.
+
+    `per_index` maps an index key to (its computed values, its coverage). An
+    unranked model reports no coverage for that index, the same way it reports
+    no source or date, and a model ranked on none carries no record at all.
+    """
+    changed = 0
+    for model in doc.get("models") or []:
+        name = model.get("name")
+        if not isinstance(name, str):
+            continue
+        record = {
+            index.key: per_index[index.key][1][name]
+            for index in INDEXES
+            if index.key in per_index
+            and per_index[index.key][0].get(name) is not None
+            and name in per_index[index.key][1]
+        }
+        if record != model.get("index_coverage"):
+            changed += 1
+        if record:
+            model["index_coverage"] = record
+        else:
+            model.pop("index_coverage", None)
+    return changed
+
+
 def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]]:
     """Recompute the derived columns in `doc` in memory; returns the changes as
     (index key, model, old, new) tuples.
@@ -1243,17 +1541,20 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     # ranked -- a slug added to that list takes effect on the next refresh.
     apply_reference_flags(doc)
     changes: list[tuple[str, str, int | None, int | None]] = []
+    factors = revision_factors(models)
+    per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
     for index in reversed(INDEXES):
         started = time.monotonic()
+        values = compute_index(models, doc, index, factors)
+        per_index[index.key] = (values, index_coverage(models, index, factors))
         changes.extend(
             (index.key, name, old, new)
-            for name, old, new in apply_index(
-                doc, index, compute_index(models, doc, index)
-            )
+            for name, old, new in apply_index(doc, index, values)
         )
         report(index.key, started)
+    apply_coverage(doc, per_index)
     return changes
 
 
@@ -1311,6 +1612,9 @@ def report_stored(
         name: model["scores"] if isinstance(model.get("scores"), dict) else {}
         for name, model in by_name.items()
     }
+    # The factors read only the stored scores, so this costs nothing and keeps
+    # the report line for line what a refit prints.
+    print_conversions(revision_factors(list(by_name.values())))
     # Reversed like main()'s own loop, so the report reads in the order every
     # log of this script has ever printed it in.
     for index in reversed(INDEXES):
@@ -1338,15 +1642,48 @@ def report_stored(
             if best:
                 print(f"\nTop {len(best)} by {index.key}:")
                 for rank, (value, name) in enumerate(best, start=1):
-                    measured = scored_count(by_name[name], index)
-                    print(
-                        f"  {rank:2d}. {fmt(value):>9s}  {name:40s} "
-                        f"{measured}/{len(index.contributing)} measured"
+                    coverage = (by_name[name].get("index_coverage") or {}).get(
+                        index.key
                     )
+                    print(f"  {rank:2d}. {fmt(value):>9s}  {name:40s} {describe(coverage)}")
         print()
 
     print("Reported from the stored values; nothing recomputed.")
     return 0
+
+
+def print_conversions(factors: dict[str, RevisionFactor]) -> None:
+    """Which revision fallbacks are in use this run, and on what overlap."""
+    for key, older in REVISION_FALLBACKS.items():
+        fitted = factors.get(key)
+        if fitted is None:
+            print(
+                f"{key}: no conversion from {older} (fewer than "
+                f"{MIN_FALLBACK_OVERLAP} models on both boards)"
+            )
+        else:
+            print(
+                f"{key}: {older} converted x{fitted.factor:.3f}, fitted on "
+                f"{fitted.overlap} models on both boards"
+            )
+    print()
+
+
+def describe(coverage: dict[str, Any] | None) -> str:
+    """One model's index_coverage record as the CLI prints it beside a value:
+    "3/5 measured (62%)", plus how many of those are converted or second-hand."""
+    if not isinstance(coverage, dict):
+        return "coverage not recorded"
+    text = (
+        f"{len(coverage.get('measured') or [])}/{coverage.get('of', 0)} measured "
+        f"({coverage.get('share', 0):.0%})"
+    )
+    notes = []
+    if coverage.get("converted"):
+        notes.append(f"{len(coverage['converted'])} converted")
+    if coverage.get("second_hand"):
+        notes.append(f"{len(coverage['second_hand'])} second-hand")
+    return f"{text}, {', '.join(notes)}" if notes else text
 
 
 def fmt(value: int | None) -> str:
@@ -1386,7 +1723,7 @@ def main() -> int:
         "--calibrate",
         action="store_true",
         help="Re-measure each index's transfer_ratio by leave-one-benchmark-out "
-        "and print the values to paste into INDEXES. Writes nothing, and takes "
+        "and print it; with --write, store it in index-calibration.json. Takes "
         "a few minutes: it refits every index once per contributing benchmark.",
     )
     args = parser.parse_args()
@@ -1420,27 +1757,44 @@ def main() -> int:
 
     if args.calibrate:
         print(
-            "Leave-one-benchmark-out calibration. Paste a changed ratio into "
-            "INDEXES; nothing is written here.\n"
+            "Leave-one-benchmark-out calibration"
+            + (f", written to {CALIBRATION_JSON.name}" if args.write else " (dry-run)")
+            + ".\n"
         )
+        results: dict[str, tuple[float, int]] = {}
         for index in INDEXES:
             measured = calibrate(models, doc, index)
             if measured is None:
                 print(f"  {index.key:16} too few benchmarks to hold one out")
                 continue
             ratio, sample = measured
+            results[index.key] = measured
             print(
                 f"  {index.key:16} transfer_ratio={ratio:.3f} "
                 f"(was {index.transfer_ratio:.3f}, n={sample})"
             )
+        if not args.write:
+            print("\ndry-run only, pass --write to store the ratios")
+        elif write_calibration(results):
+            print(
+                f"\nWrote {CALIBRATION_JSON}; run ./derive_indexes.py -w to "
+                "refit llm.json with the new ratios"
+            )
+        else:
+            print(f"\n{CALIBRATION_JSON.name} is up to date")
         return 0
 
     all_changes: list[tuple[str, str, int | None, int | None]] = []
     restamped = 0
     started_all = time.monotonic()
+    factors = revision_factors(models)
+    print_conversions(factors)
+    per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
     for index in reversed(INDEXES):
         started = time.monotonic()
-        values = compute_index(models, doc, index)
+        values = compute_index(models, doc, index, factors)
+        coverage = index_coverage(models, index, factors)
+        per_index[index.key] = (values, coverage)
         report(index.key, started)
 
         ranked = sum(1 for value in values.values() if value is not None)
@@ -1476,16 +1830,16 @@ def main() -> int:
             if best:
                 print(f"\nTop {len(best)} by {index.key}:")
                 for rank, (value, name) in enumerate(best, start=1):
-                    measured = scored_count(by_name[name], index)
                     print(
                         f"  {rank:2d}. {fmt(value):>9s}  {name:40s} "
-                        f"{measured}/{len(index.contributing)} measured"
+                        f"{describe(coverage.get(name))}"
                     )
         print()
 
     report("all indexes", started_all)
+    recovered = apply_coverage(doc, per_index)
 
-    if not all_changes and not restamped:
+    if not all_changes and not restamped and not recovered:
         print("The derived indexes are up to date. Nothing to do.")
         return 0
 
@@ -1495,6 +1849,8 @@ def main() -> int:
             print(f"  {key:14s} {name:40s} {fmt(old):>9s} -> {fmt(new):>9s}")
     if restamped:
         print(f"\n{restamped} source URL(s) restamped")
+    if recovered:
+        print(f"\n{recovered} model(s) with a changed index_coverage record")
 
     if not args.write:
         print("\ndry-run only, pass --write to persist changes")

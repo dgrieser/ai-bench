@@ -462,10 +462,11 @@ Output: llm.json (unified dataset)
 ./derive_indexes.py llm.json -w
 
 # Re-measure how far one benchmark speaks for the rest of its index, by
-# leave-one-benchmark-out. Prints a transfer_ratio per index to paste into
-# INDEXES; writes nothing, and takes a few minutes. Worth re-running whenever a
-# group gains or loses a member.
+# leave-one-benchmark-out. Prints a transfer_ratio per index; --write stores
+# them in index-calibration.json (then refit with -w). Takes a few minutes. The
+# nightly "calibrate indexes" workflow runs both.
 ./derive_indexes.py --calibrate
+./derive_indexes.py --calibrate --write && ./derive_indexes.py -w
 
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
@@ -965,29 +966,43 @@ contributes nothing to the benchmark it was actually measured on, so it takes
 part in no comparison there at all — which flatters a model that scored near
 zero there.
 `REVISION_FALLBACKS` in `derive_indexes.py` closes it with a scale conversion
-rather than a second index member:
+rather than a second index member — **once there is enough overlap to fit one**:
 
-| Column | Falls back to | Factor | Derivation |
+| Column | Falls back to | Factor | Status on the current file |
 | --- | --- | --- | --- |
-| `deepswe_1_1` | `deepswe_1_0` | ÷ 1.069 | 1.1 reads lower than 1.0 for the same model |
-| `frontiercode_extended_1_1` | `frontiercode_1_0` | × 2.076 | mean of the two open-weight models carrying both (GLM 5.2 19.2 → 40.1, Kimi K2.7 22.0 → 45.4). This one crosses a revision *and* a subset, one gap more than the others, because the column the index reads is Extended while the archived column is 1.0 Main; it is fitted the same way and on the same overlap, and it decomposes about as expected — 1.32 of revision drift on Main times ~1.57 of Main-to-Extended. It is also the whole of what keeps the four models published on 1.0 alone (both MiniMax M2 releases, Kimi K2.5 and K2.6) in this benchmark's comparisons. `frontiercode_1_1` needs no entry: a fallback only ever fills a hole in a column the index reads, and Main is not one. |
+| `deepswe_1_1` | `deepswe_1_0` | fitted | **Not converted.** Two models sit on both boards, and they disagree: GLM 5.2 reads ×1.06 on 1.1, DeepSeek V4 Pro ×7.6. The constant this used to carry (÷ 1.069) was fitted once and no longer matches either. |
+| `frontiercode_extended_1_1` | `frontiercode_1_0` | fitted | **Not converted.** Two models on both boards (GLM 5.2 19.2 → 40.1, Kimi K2.7 22.0 → 45.4). The conversion crosses a revision *and* a subset — the column the index reads is Extended while the archived column is 1.0 Main — which is one gap more than the others cross. `frontiercode_1_1` needs no entry: a fallback only ever fills a hole in a column the index reads, and Main is not one. |
 | `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone simply supports no comparison there. |
 
-A model absent from the current revision has its archived score carried onto
-the current scale and joins that revision's population, so it is ranked against
-today's field like everyone else instead of sitting the benchmark out. A model published on
-both keeps the current board's own number — the conversion only ever fills a
-hole, it never displaces a measurement. `swe_marathon` needs no factor: both
-models on its archive alone scored 0.0, which converts to 0.0 either way. Where
-there is no shared scale to convert along — `frontierswe`, whose two boards
-report different quantities — the hole stays open and the model is simply not
-compared there: a fitted factor would be inventing a number, which is worse than
-admitting one is missing.
+The factor is **fitted from `llm.json` on every run** — the geometric mean of
+current ÷ archived over the models published on both boards, zeros left out since
+they say nothing about a ratio — and it is only used once `MIN_FALLBACK_OVERLAP`
+(3) models carry both. It used to be a constant typed into the script, fitted on
+two models, and that is what the table above shows going wrong: a constant goes
+stale the moment either board moves, and two points cannot tell a scale from a
+coincidence. Three is the fewest that can outvote one odd model. `./derive_indexes.py`
+prints which conversions are in use and on how many models on every run.
 
-**The conversion lives in the index and nowhere else.** `llm.json`'s columns
-keep exactly what each board published, so nothing in the table ever shows a
-number its leaderboard did not — the archived columns stay visible and literal,
-which is what they are for.
+Once a factor is fitted, a model absent from the current revision has its
+archived score carried onto the current scale and joins that revision's
+population, so it is ranked against today's field like everyone else instead of
+sitting the benchmark out. A model published on both keeps the current board's
+own number — the conversion only ever fills a hole, it never displaces a
+measurement. `swe_marathon` needs no entry: both models on its archive alone
+scored 0.0, which converts to 0.0 either way. Below the bar, or where there is no
+shared scale to convert along — `frontierswe`, whose two boards report different
+quantities — the hole stays open and the model is simply not compared there: a
+factor that has not earned its keep would be inventing a number, which is worse
+than admitting one is missing. Today that leaves the four models on FrontierCode
+1.0 alone (both MiniMax M2 releases, Kimi K2.5 and K2.6) and the four on DeepSWE
+1.0 alone out of those two benchmarks' comparisons.
+
+**The conversion lives in the index and nowhere else, and it is never hidden.**
+`llm.json`'s columns keep exactly what each board published, so nothing in the
+table ever shows a number its leaderboard did not — the archived columns stay
+visible and literal, which is what they are for. Every index value that used a
+converted score names it in the model's `index_coverage` record (`converted`),
+and `llm.html` prints it in that value's slip.
 
 **A source that does not say which revision it measured does not write to a
 revision column.** This is the rule a bare `BFCL` and a bare `Toolathlon`
@@ -1422,10 +1437,34 @@ How a value is produced:
 
 1. **Compare, don't average raw numbers.** For every contributing benchmark, each
    pair of models that *both* carry a score on it is compared head to head. Values
-   equal to within the file's rounding split the comparison; a `lower_is_better`
-   benchmark is read the other way round. That comparison is the only use a raw
-   score is put to, and it is what makes the columns commensurable: "beat it on
-   SciCode" needs no common unit, whereas a percentile quietly asserts one.
+   within **one step of the column's rounding grid** (`tie_tolerance`: 0.1 for a
+   one-decimal column, the declared `round_to` where there is one) split the
+   comparison, because two scores one step apart may be anywhere from equal to two
+   steps apart and which side of a rounding boundary each landed on is all that
+   separates them; a `lower_is_better` benchmark is read the other way round. That
+   comparison is the only use a raw score is put to, and it is what makes the
+   columns commensurable: "beat it on SciCode" needs no common unit, whereas a
+   percentile quietly asserts one. The price is that the *size* of a win is not
+   used — a 0.3-point edge on a saturated board counts the same as 30 points on an
+   open one — and that is paid in the weights, which is where a saturated board is
+   priced down, rather than by reintroducing a unit.
+
+   **A comparison is only as good as the two numbers in it.** A column is not one
+   instrument: `mmlu_pro` holds Artificial Analysis' own run beside Vals' re-run
+   beside lab model-card claims, and a pair across them compares harnesses as much
+   as models. A score whose source ranks at or below the curated rung in
+   [`_precedence.py`](#source-precedence) — evals.report and benchlm.ai
+   compilations, llm-stats, Hugging Face model cards and hand entries — is
+   *second-hand*, and every comparison it takes part in counts
+   `SECOND_HAND_WEIGHT` (0.5) of one between two first-hand scores (the benchmark's
+   own board, Artificial Analysis, or a third party's re-run such as Vals). It
+   still counts: dropping it would unrank most of the open field on the benchmarks
+   only labs report, and a lab's claim is evidence, just weaker evidence than a run
+   someone else can reproduce. The share a model was *measured* on is unchanged —
+   the evidence bar and the coverage shrinkage below read the same share as before
+   — so what the discount changes is how much the fit leans on those comparisons,
+   and a model measured mostly second-hand is pulled harder toward the middle by
+   the prior.
 2. **Weight by reliability.** A benchmark's weight from `INDEXES` (1.0 for Real-SWE,
    the highest, down to 0.15 for SWE-bench Verified, the lowest) is what its
    comparisons *add up to*, not what each one is worth: the weight is divided by the
@@ -1460,7 +1499,13 @@ How a value is produced:
    filled in, no stand-in value is invented, and a benchmark a model never ran
    cannot move it in either direction. Models measured on disjoint benchmarks are
    still placed on one scale, through the opponents they share — the same anchoring
-   that puts two candidates who sat different exam papers on one grade curve.
+   that puts two candidates who sat different exam papers on one grade curve. The
+   one exception is a benchmark that re-ran itself: a model measured on the retired
+   board alone may have that score carried onto the current board's scale, and
+   only once enough models sit on both boards to fit the conversion — see
+   [benchmarks that publish more than one revision](#benchmarks-that-publish-more-than-one-revision).
+   That is a measurement moved between scales rather than a value made up, and the
+   page names every value it is used for.
 5. **Believe a thin measurement less.** A benchmark is one draw from the construct
    the index is named after, and its weight says how much that draw can be
    trusted — so a weight is a precision, and the shares a model was measured on
@@ -1590,9 +1635,20 @@ Two consequences worth knowing (they hold for every derived index):
   (`propose.py`, via `editable_benchmarks()`) all exclude them, so a fetched source
   score cannot be routed into a column the next derivation would overwrite.
 
-The math is the one `llm.html` and `llm-cli` implement for a sort group (`sortGroups`
-in `llm.json`), which is what this column replaced — that machinery is still in
-place, just with no group configured.
+**What a value rests on is shown beside it.** `derive_indexes.py` writes an
+`index_coverage` record into every model it ranks — per index, how many of the
+contributing benchmarks the model was measured on (`measured`, out of `of`), the
+share of the weight those cover (`share`, the quantity the 18% bar is on), and
+which inputs are converted archive scores (`converted`) or second-hand numbers
+(`second_hand`). `llm.html` prints it in the value's slip and on the model page
+("3 of 5 benchmarks"), and a value resting on a **single** benchmark wears a
+superscript ¹ in the table: a Vision value measured on MMMU Pro alone is MMMU Pro's
+ranking and nothing more, and it now says so where it is read. The CLI prints the
+same record beside its top-N tables.
+
+The percentile-and-median-fill composite this column replaced (the `sortGroups`
+machinery in `llm.html` and `llm-cli`) is gone: it had no group configured, so it
+could not run, and it implemented exactly the imputation step 4 rules out.
 
 ### Why Real-SWE leads the coding group, and what it cost
 
@@ -1736,9 +1792,11 @@ bar at **1.359**, all **59 ranked models stay ranked**, and the ranking moves
 by at most one place (Spearman **0.9998**, mean 0.14 places). Participation is
 unchanged too: 22 models take part either way — the 18 with a stored score plus
 the four reached by the [revision
-fallback](#benchmarks-that-publish-more-than-one-revision), which now converts
-`frontiercode_1_0` onto Extended's scale at ×2.076 instead of onto Main's at
-×1.32.
+fallback](#benchmarks-that-publish-more-than-one-revision), which at the time
+converted `frontiercode_1_0` onto Extended's scale at ×2.076 instead of onto
+Main's at ×1.32. (That factor was later retired: conversions are now fitted from
+the file and need three models on both boards, and FrontierCode has two, so
+those four sit this benchmark out until a third arrives.)
 
 ### Why SWE-bench Multilingual sits at 0.30
 
@@ -2127,29 +2185,40 @@ are easy to get wrong:
   its own target. That bug shipped in the first draft of this work and understated
   every ratio by between two and nine times; `test_index_math.py` now pins it.
 
+**It is re-measured every night.** The ratios are a measurement of `llm.json`,
+so they move when it does, and typed into `INDEXES` they went stale between hand
+re-runs — Knowledge carried 0.072 for weeks while the file itself calibrated to
+0.046. They now live in [`index-calibration.json`](index-calibration.json) (ratio,
+plus the sample size and date of the run that last moved it), which `derive_indexes.py` reads at import. The
+`calibrate indexes` workflow (`.github/workflows/calibrate-indexes.yml`, 03:41 UTC)
+runs `--calibrate --write`, refits `llm.json` with the new ratios, and commits both
+together, so the published ranking is always the one the committed ratios produce.
+It shares the refresh's concurrency group, so the two never push over each other.
+Ratios are stored to three places, the precision they were always quoted at, so
+calibration noise below that does not churn the file — a night whose ratios all
+round the same commits nothing — and an index that cannot be
+measured on a given night keeps its previous ratio.
+
+What a ratio means for a model is `Σshare / (Σshare + transfer_ratio)`, the share
+of its distance from the middle it keeps. At the ratios in the file when the
+nightly run was introduced:
+
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.012 | 94% | 98.8% |
-| Tooling | 0.016 | 92% | 98.4% |
-| Vision | 0.034 | 84% | 97% |
-| Knowledge | 0.072 | 71% | 93% |
-| **Trust** | **1.524** | **11%** | **40%** |
+| Coding | 0.016 | 92% | 98.4% |
+| Tooling | 0.021 | 90% | 97.9% |
+| Vision | 0.028 | 87% | 97% |
+| Knowledge | 0.048 | 79% | 95% |
+| **Trust** | **1.583** | **10%** | **39%** |
 
 The ratio is a share of the group, so these five are directly comparable with each
 other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
-them. Coding and Tooling were 0.015 and 0.019 until
-[Terminal-Bench 4.0 joined both groups](#coding-index); re-running `--calibrate`
-afterwards put them on the same 0.016, which is what the instruction below to
-re-calibrate after a membership change is for. Two changes since have each been
-re-measured: [FrontierCode's Main → Extended
-swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchanged,
-the expected answer for swapping one board for a near-identical one instead of adding
-weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
-to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-075) took
-it to **0.013** and [ProgramBench's](#why-programbench-enters-at-050) to
-**0.012**, the lowest ratio in the file: a member scored on 35 models, and then
-another on 22, is more overlap for the rest of the group to predict a held-out
-one from.
+them. Before the nightly run they were re-measured by hand after membership
+changes, and the history of those runs is recorded in the sections about each
+change: Coding went 0.016 → 0.015 → 0.013 → 0.012 as SWE Atlas, Vibe Code Bench and
+ProgramBench joined — a broadly scored member gives the rest of the group more
+overlap to predict a held-out one from — and the FrontierCode Main → Extended swap
+moved nothing, the expected answer for swapping one board for a near-identical one.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an
@@ -2157,7 +2226,7 @@ instruction-following score are nearly separate constructs; the models also sit
 close together on all of them, so the between-model variance the ratio is divided
 by is small while the disagreement above it is not. Past 1.0 it means one member
 says less about the next than the field's own spread does. The column pays for that
-honestly: even a model measured on all four keeps only 40% of its distance from the
+honestly: even a model measured on all four keeps only about 40% of its distance from the
 middle, which is why the Trust column is visibly more compressed than the other
 four. That is not a defect in the column, it is the column declining to extrapolate
 from evidence that does not support it.
@@ -2173,8 +2242,8 @@ columns were 1.55 of a 7.30 denominator and are 1.10 of 7.70 since
 how far a thin measurement is believed; the bar decides whether it is reported at
 all, and they are separate knobs for exactly this reason. Whether that is
 right is now an empirical question with an answer on this page rather than a policy
-baked into the arithmetic, and the answer moves when the data does: re-run
-`--calibrate` after a group gains or loses a member.
+baked into the arithmetic, and the answer moves when the data does — which is why
+it is re-measured every night.
 
 ## Tooling Index
 
@@ -2470,10 +2539,11 @@ The old method capped it: a model measured on MMMU Pro alone could not score
 above 68,182 however well it did, because the 64% of the weight it was missing
 was filled at the median and never above it, so the head was reserved for
 models measured on more of the group. That cap is gone with the imputation that
-produced it, and the coverage shrinkage does not replace it here — Vision's
-calibrated `transfer_ratio` is **0.010**, the lowest of the five, so a model on
-MMMU Pro alone keeps 99.0% of its distance from the middle and could reach
-**98,618**. `claude-fable-5-1` tops the column at **99,471** on that one
+produced it, and the coverage shrinkage does not replace it here — when this was
+written Vision's calibrated `transfer_ratio` was **0.010**, the lowest of the
+five, so a model on MMMU Pro alone kept 99.0% of its distance from the middle and
+could reach **98,618** (see [the nightly
+calibration](#how-far-one-benchmark-speaks-for-the-others) for today's ratio). `claude-fable-5-1` tops the column at **99,471** on that one
 benchmark.
 
 That is the calibration being believed rather than a hole in it: MMMU Pro
@@ -2556,7 +2626,7 @@ choose between, knowing which is more capable tells you close to nothing about
 which will make something up. That head-on independence is sharper than it was
 before this column started shrinking partial evidence hard (see
 [below](#how-far-one-benchmark-speaks-for-the-others)): with a
-`transfer_ratio` of 1.524, a model measured on two of the four members is barely
+`transfer_ratio` above 1.5, a model measured on two of the four members is barely
 allowed to leave the middle of the field, and what survives at the top is the
 models that carry the whole group.
 
@@ -3147,6 +3217,7 @@ ai-bench/
 ├── _*_mapping.py               # Mapping application modules (22 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
+├── index-calibration.json      # Each index's transfer_ratio, re-measured nightly (calibrate-indexes.yml)
 │
 ├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
 ├── _revisions.py               # Benchmark revisions: labels, order, and the column each feeds
