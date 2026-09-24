@@ -72,12 +72,13 @@ class TestApplyScoreNormalMode(unittest.TestCase):
         self.assertEqual(n, 0)
         self.assertEqual(model["scores_source"]["bench"], URL_A)
 
-    def test_fill_only_never_overwrites(self) -> None:
-        model = model_with(score=30.0, source=URL_A)
+    def test_fill_only_never_overwrites_a_fetchers_value(self) -> None:
+        # A custom page is the exception: test_precedence.TestCustomSources.
+        model = model_with(score=30.0, source=update.OSWORLD_SOURCE_URL)
         n = update.apply_score(DOC, model, "m", "bench", 45.0, URL_B, [], fill_only=True)
         self.assertEqual(n, 0)
         self.assertEqual(model["scores"]["bench"], 30.0)
-        self.assertEqual(model["scores_source"]["bench"], URL_A)
+        self.assertEqual(model["scores_source"]["bench"], update.OSWORLD_SOURCE_URL)
 
     def test_fill_only_fills_a_null(self) -> None:
         model = model_with()

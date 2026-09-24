@@ -251,6 +251,75 @@ class TestApplyScoreHonoursRank(unittest.TestCase):
         self.assertEqual(n, 1)
 
 
+class TestCustomSources(unittest.TestCase):
+    """A page no fetcher writes is a custom source, and every fetcher outranks it.
+
+    The fetchers' URLs are all known (RANKED_PREFIXES is built from their
+    constants), so a stored page outside them was typed in by a person. The
+    fill-only aggregates, which never replace a stored value, still replace
+    that one, and a fetcher confirming its number takes over the credit.
+    """
+
+    CUSTOM = (HAND_ENTERED, "https://www.anthropic.com/news/claude-sonnet-5", None)
+
+    def test_every_fetcher_page_is_a_fetcher_source(self) -> None:
+        for prefix, _ in RANKED_PREFIXES:
+            with self.subTest(prefix=prefix):
+                self.assertTrue(precedence.is_fetcher_source(prefix))
+        self.assertTrue(precedence.is_fetcher_source(HF_CARD))
+
+    def test_anything_else_is_custom(self) -> None:
+        for url in (*self.CUSTOM, "https://llm-stats.com/models/glm-5.3-flash"):
+            with self.subTest(url=url):
+                self.assertFalse(precedence.is_fetcher_source(url))
+
+    def test_a_fill_only_fetcher_replaces_a_custom_value(self) -> None:
+        for stored in self.CUSTOM:
+            for url in (HF_CARD, LLMSTATS_SOURCE_URL):
+                with self.subTest(stored=stored, url=url):
+                    model = model_with(score=10.0, source=stored)
+                    n = update.apply_score(DOC, model, "m", "ifbench", 38.0, url, [], fill_only=True)
+                    self.assertEqual(n, 1)
+                    self.assertEqual(model["scores"]["ifbench"], 38.0)
+                    self.assertEqual(model["scores_source"]["ifbench"], url)
+
+    def test_a_fill_only_fetcher_still_leaves_a_fetchers_value(self) -> None:
+        for stored in (AA_PAGE, EVALS_IFBENCH, HF_CARD, LLMSTATS_SOURCE_URL):
+            with self.subTest(stored=stored):
+                model = model_with(score=10.0, source=stored)
+                n = update.apply_score(
+                    DOC, model, "m", "ifbench", 38.0, LLMSTATS_SOURCE_URL, [], fill_only=True
+                )
+                self.assertEqual(n, 0)
+                self.assertEqual(model["scores_source"]["ifbench"], stored)
+
+    def test_a_fetcher_confirming_a_custom_number_takes_its_credit(self) -> None:
+        for fill_only in (False, True):
+            with self.subTest(fill_only=fill_only):
+                model = model_with(score=38.0, source=HAND_ENTERED)
+                model["scores_updated"]["ifbench"] = "2026-08-01"
+                changes: list = []
+                n = update.apply_score(
+                    DOC, model, "m", "ifbench", 38.0, HF_CARD, changes, fill_only=fill_only
+                )
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores_source"]["ifbench"], HF_CARD)
+                # The number did not move, so neither does its date.
+                self.assertEqual(model["scores_updated"]["ifbench"], "2026-08-01")
+
+    def test_an_equal_number_from_a_peer_fetcher_moves_nothing(self) -> None:
+        model = model_with(score=38.0, source=HF_CARD)
+        n = update.apply_score(DOC, model, "m", "ifbench", 38.0, LLMSTATS_SOURCE_URL, [])
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores_source"]["ifbench"], HF_CARD)
+
+    def test_null_never_replaces_a_custom_value(self) -> None:
+        model = model_with(score=10.0, source=HAND_ENTERED)
+        n = update.apply_score(DOC, model, "m", "ifbench", None, HF_CARD, [], fill_only=True)
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores"]["ifbench"], 10.0)
+
+
 class TestOrderIndependence(unittest.TestCase):
     """The regression this exists for: 2ab9ab0 ran the AA ingest alone and
     displaced evals.report's ifbench and mmlu_pro values, and 0c24cc9 -- the
