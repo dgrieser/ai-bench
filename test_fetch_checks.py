@@ -260,7 +260,8 @@ class TestUpdateSourceIsolation(unittest.TestCase):
 
 
 class TestRoundTrips(unittest.TestCase):
-    EVALS = "https://evals.report/benchmarks/mmlu-pro"
+    # One source moving its own number and moving it back. Two sources cannot
+    # stand in for it: no two that can overwrite each other share a rank now.
     VALS = "https://www.vals.ai/benchmarks/mmlu_pro"
 
     def doc(self) -> dict:
@@ -281,7 +282,7 @@ class TestRoundTrips(unittest.TestCase):
         found = update.snapshot_scores(doc)
         model = doc["models"][0]
         changes: list = []
-        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, self.EVALS, changes)
+        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, self.VALS, changes)
         update.apply_score(doc, model, "m", "mmlu_pro", 79.4, self.VALS, changes)
         self.assertEqual(len(changes), 2)
         self.assertEqual(update.undo_round_trips(doc, found, changes), [])
@@ -292,7 +293,7 @@ class TestRoundTrips(unittest.TestCase):
         found = update.snapshot_scores(doc)
         model = doc["models"][0]
         changes: list = []
-        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, self.EVALS, changes)
+        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, self.VALS, changes)
         self.assertEqual(update.undo_round_trips(doc, found, changes), changes)
         self.assertNotEqual(model["scores_updated"]["mmlu_pro"], "2026-09-01")
 

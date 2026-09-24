@@ -8,7 +8,7 @@ ran: the AA-only pass in 2ab9ab0 replaced four evals.report values with
 Artificial Analysis' own, and the next full refresh put evals.report back.
 
 _precedence.py declares the rank instead and apply_score() enforces it. These
-tests pin the rungs, the shared authority of AA's publication surfaces, and
+tests pin the rungs, the Coding Agent Index above the rest of AA, and
 the property the change exists for: the stored value is the same whichever
 subset of the ingests runs, and in whatever order.
 """
@@ -37,6 +37,7 @@ from _precedence import (
     RANK_BENCHMARK_SITE,
     RANK_CURATED,
     RANK_HAND_ENTERED,
+    RANK_THIRD_PARTY_RUN,
     RANKED_PREFIXES,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
@@ -70,8 +71,10 @@ def model_with(score=None, source=None, key="ifbench") -> dict:
 
 class TestRungs(unittest.TestCase):
     def test_artificial_analysis_leads(self) -> None:
+        self.assertEqual(source_rank(AA_CODING_AGENTS_SOURCE_URL), RANK_AA_CODING_AGENTS)
         self.assertEqual(source_rank(AA_PAGE), RANK_AA)
-        self.assertEqual(RANK_AA, min(rank for _, rank in RANKED_PREFIXES))
+        ranks = sorted({rank for _, rank in RANKED_PREFIXES})
+        self.assertEqual(ranks[:2], [RANK_AA_CODING_AGENTS, RANK_AA])
 
     def test_benchmarks_own_leaderboards(self) -> None:
         for url in (
@@ -88,14 +91,34 @@ class TestRungs(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
 
+    def test_third_party_runs(self) -> None:
+        for url in VALS_RERUN_KEY_URLS.values():
+            with self.subTest(url=url):
+                self.assertEqual(source_rank(url), RANK_THIRD_PARTY_RUN)
+
     def test_curated_third_parties(self) -> None:
-        for url in (
-            *EVALS_REPORT_KEY_URLS.values(),
-            *VALS_RERUN_KEY_URLS.values(),
-            DEEPSWE_SOURCE_URL,
-        ):
+        # evals.report and benchlm.ai (DEEPSWE_SOURCE_URL) compile results
+        # someone else produced, so they rank under a third party's own run.
+        for url in (*EVALS_REPORT_KEY_URLS.values(), DEEPSWE_SOURCE_URL):
             with self.subTest(url=url):
                 self.assertEqual(source_rank(url), RANK_CURATED)
+        self.assertLess(RANK_THIRD_PARTY_RUN, RANK_CURATED)
+
+    def test_vals_run_outranks_evals_report_on_mmlu_pro(self) -> None:
+        # Issue #227: both publish mmlu_pro, and while they shared a rung the
+        # stored value was whichever ingest ran last.
+        vals = VALS_KEY_URLS["mmlu_pro"]
+        evals = EVALS_REPORT_KEY_URLS["mmlu_pro"]
+        self.assertTrue(may_overwrite(vals, evals))
+        self.assertFalse(may_overwrite(evals, vals))
+        for order in ((evals, vals), (vals, evals)):
+            with self.subTest(order=order):
+                model = model_with(key="mmlu_pro")
+                values = {evals: 80.9, vals: 79.4}
+                for url in order:
+                    update.apply_score(DOC, model, "m", "mmlu_pro", values[url], url, [])
+                self.assertEqual(model["scores"]["mmlu_pro"], 79.4)
+                self.assertEqual(model["scores_source"]["mmlu_pro"], vals)
 
     def test_vals_own_boards_rank_as_first_party(self) -> None:
         # Vals is curated for the boards it re-runs and first-party for the ones
@@ -139,12 +162,40 @@ class TestRungs(unittest.TestCase):
 
 
 class TestSameHostFamilies(unittest.TestCase):
-    """Every AA publication has the same authority."""
+    """AA's surfaces outrank everyone else, and the Coding Agent Index the rest of AA."""
 
-    def test_coding_agent_index_is_aa_rank(self) -> None:
+    def test_coding_agent_index_outranks_the_model_pages(self) -> None:
+        # Issue #227: both write terminal_bench_4_0 under different harnesses,
+        # and on one rung each refresh flipped the value back and forth.
         self.assertEqual(source_rank(AA_CODING_AGENTS_SOURCE_URL), RANK_AA_CODING_AGENTS)
-        self.assertEqual(RANK_AA_CODING_AGENTS, RANK_AA)
         self.assertEqual(source_rank(AA_PAGE), RANK_AA)
+        self.assertLess(RANK_AA_CODING_AGENTS, RANK_AA)
+        self.assertTrue(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, AA_PAGE))
+        self.assertFalse(may_overwrite(AA_PAGE, AA_CODING_AGENTS_SOURCE_URL))
+
+    def test_agent_run_lands_whichever_aa_ingest_runs_last(self) -> None:
+        for order in ((AA_PAGE, AA_CODING_AGENTS_SOURCE_URL),
+                      (AA_CODING_AGENTS_SOURCE_URL, AA_PAGE)):
+            with self.subTest(order=order):
+                model = model_with(key="terminal_bench_4_0")
+                values = {AA_PAGE: 49.0, AA_CODING_AGENTS_SOURCE_URL: 54.5}
+                for url in order:
+                    update.apply_score(DOC, model, "m", "terminal_bench_4_0", values[url], url, [])
+                self.assertEqual(model["scores"]["terminal_bench_4_0"], 54.5)
+                self.assertEqual(
+                    model["scores_source"]["terminal_bench_4_0"], AA_CODING_AGENTS_SOURCE_URL
+                )
+
+    def test_equal_agent_run_takes_credit_from_a_model_page(self) -> None:
+        model = model_with(54.5, AA_PAGE, "terminal_bench_4_0")
+        n = update.apply_score(
+            DOC, model, "m", "terminal_bench_4_0", 54.5, AA_CODING_AGENTS_SOURCE_URL, []
+        )
+        self.assertEqual(n, 1)
+        self.assertEqual(model["scores_source"]["terminal_bench_4_0"], AA_CODING_AGENTS_SOURCE_URL)
+        self.assertEqual(
+            update.apply_score(DOC, model, "m", "terminal_bench_4_0", 49.0, AA_PAGE, []), 0
+        )
 
     def test_coding_agent_index_outranks_the_aggregates(self) -> None:
         self.assertTrue(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, HF_CARD))
@@ -582,22 +633,35 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertLess(source_rank(url), RANK_HAND_ENTERED)
 
-    def test_rungs_keep_aa_agent_alias_at_the_top(self) -> None:
+    def test_rungs_are_distinct_and_ordered(self) -> None:
         self.assertEqual(
             [
+                RANK_AA_CODING_AGENTS,
                 RANK_AA,
                 RANK_BENCHMARK_SITE,
+                RANK_THIRD_PARTY_RUN,
                 RANK_CURATED,
-                RANK_AA_CODING_AGENTS,
                 RANK_AGGREGATE,
                 RANK_HAND_ENTERED,
             ],
-            [1, 2, 3, 1, 5, 6],
+            [0, 1, 2, 3, 4, 5, 6],
         )
         self.assertEqual(
             sorted({rank for _, rank in RANKED_PREFIXES}),
-            [RANK_AA, RANK_BENCHMARK_SITE, RANK_CURATED,
-             RANK_AGGREGATE],
+            [RANK_AA_CODING_AGENTS, RANK_AA, RANK_BENCHMARK_SITE,
+             RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE],
+        )
+
+    def test_every_tbench_board_ranks_as_the_benchmarks_own_site(self) -> None:
+        for version in ("4.0", "2.1", "2.0"):
+            with self.subTest(version=version):
+                url = f"https://www.tbench.ai/leaderboard/terminal-bench/{version}"
+                self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
+        # The host root is not a board, and the 3.0 board feeds no column.
+        self.assertEqual(source_rank("https://www.tbench.ai"), RANK_HAND_ENTERED)
+        self.assertEqual(
+            source_rank("https://www.tbench.ai/leaderboard/terminal-bench/3.0"),
+            RANK_HAND_ENTERED,
         )
 
     def test_prefixes_are_tried_longest_first(self) -> None:

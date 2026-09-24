@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Review and update Terminal-Bench 4.0 to Artificial Analysis name mappings.
+"""Review and update Terminal-Bench (4.0, 2.1, 2.0) to Artificial Analysis name mappings.
 
 llm.json tracks open-weight models only, so names the source reports as
 closed-weight are recorded as __closed_weights__ without prompting. Pass
