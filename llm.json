@@ -4545,7 +4545,7 @@
         "aa_lcr": 77.3,
         "critpt": 1.7,
         "aime_2025": null,
-        "aime_2026": 91.3,
+        "aime_2026": 93.3,
         "gpqa_diamond": 89.3,
         "hle": 29,
         "mmlu_pro": 87.8,
@@ -4603,7 +4603,7 @@
         "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
-        "aime_2026": "2026-02-23",
+        "aime_2026": "2026-09-24",
         "gpqa_diamond": "2026-02-23",
         "hle": "2026-08-07",
         "mmlu_pro": "2026-08-23",
@@ -4864,6 +4864,11 @@
           {
             "date": "2026-02-23",
             "score": 91.3,
+            "source": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
+          },
+          {
+            "date": "2026-09-24",
+            "score": 93.3,
             "source": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
           }
         ],
@@ -9904,12 +9909,12 @@
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
         "deepswe_1_1": null,
-        "deepswe_1_0": "https://x.com/AiBattle_/status/2061412711657857253",
+        "deepswe_1_0": "https://deepswe.datacurve.ai",
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
         "frontiercode_1_1": null,
         "frontiercode_extended_1_1": null,
-        "frontiercode_1_0": "https://cognition.ai/blog/frontier-code",
+        "frontiercode_1_0": "https://cognition.com/frontiercode",
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": "https://www.swe-marathon.org",
         "vibe_code_bench_1_1": "https://www.vals.ai/benchmarks/vibe-code",
@@ -9985,14 +9990,14 @@
           {
             "date": "2026-06-18",
             "score": 0.2,
-            "source": "https://x.com/AiBattle_/status/2061412711657857253"
+            "source": "https://deepswe.datacurve.ai"
           }
         ],
         "frontiercode_1_0": [
           {
             "date": "2026-08-06",
             "score": 6.0,
-            "source": "https://cognition.ai/blog/frontier-code"
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "swe_marathon_1_0": [
@@ -13993,7 +13998,7 @@
         "gdpval_aa": 1045,
         "agents_last_exam": null,
         "aa_briefcase": 945,
-        "browsecomp": 67.1,
+        "browsecomp": 84.2,
         "aa_omniscience": -18.5,
         "aa_omniscience_hallucination": 74.1,
         "aa_omniscience_accuracy": 32,
@@ -14051,7 +14056,7 @@
         "gdpval_aa": "2026-09-19",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-19",
-        "browsecomp": "2026-04-28",
+        "browsecomp": "2026-09-24",
         "aa_omniscience": "2026-08-01",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
@@ -14261,6 +14266,11 @@
           {
             "date": "2026-04-28",
             "score": 67.1,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-09-24",
+            "score": 84.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
@@ -18292,7 +18302,7 @@
         "frontiercode_extended_1_1": "https://cognition.com/frontiercode",
         "frontiercode_1_0": "https://cognition.com/frontiercode",
         "swe_marathon_1_1": "https://www.swe-marathon.org",
-        "swe_marathon_1_0": "https://evals.report/benchmarks/swe-marathon",
+        "swe_marathon_1_0": "https://www.swe-marathon.org",
         "vibe_code_bench_1_1": "https://www.vals.ai/benchmarks/vibe-code",
         "programbench_almost": "https://programbench.com/extended",
         "livecodebench": "https://www.vals.ai/benchmarks/lcb",
@@ -18441,7 +18451,7 @@
           {
             "date": "2026-07-27",
             "score": 13.0,
-            "source": "https://evals.report/benchmarks/swe-marathon"
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -49493,7 +49503,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe_1_1": "https://llm-stats.com/models/glm-5.3-flash",
+        "deepswe_1_1": "https://benchlm.ai/benchmarks/deepSwe",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
@@ -49531,7 +49541,7 @@
         "gpqa_diamond": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "hle": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
-        "mmmu_pro": "https://www.vals.ai/models/zai_glm-5.3-flash",
+        "mmmu_pro": "https://www.vals.ai/benchmarks/mmmu",
         "osworld_verified": null,
         "zerobench": null,
         "mathvista_mini": null,
@@ -49561,7 +49571,7 @@
           {
             "date": "2026-08-26",
             "score": 63.4,
-            "source": "https://llm-stats.com/models/glm-5.3-flash"
+            "source": "https://benchlm.ai/benchmarks/deepSwe"
           }
         ],
         "frontiercode_1_1": [
@@ -49735,7 +49745,7 @@
           {
             "date": "2026-08-21",
             "score": 86,
-            "source": "https://www.vals.ai/models/zai_glm-5.3-flash"
+            "source": "https://www.vals.ai/benchmarks/mmmu"
           }
         ],
         "charxiv_reasoning": [
@@ -49811,7 +49821,7 @@
         "ifbench": 81.3,
         "itbench_aa": null,
         "gdpval_aa": 1610,
-        "agents_last_exam": 1,
+        "agents_last_exam": 24.3,
         "aa_briefcase": 1595,
         "browsecomp": null,
         "aa_omniscience": -9.7,
@@ -49869,7 +49879,7 @@
         "ifbench": "2026-08-26",
         "itbench_aa": null,
         "gdpval_aa": "2026-09-19",
-        "agents_last_exam": "2026-09-04",
+        "agents_last_exam": "2026-09-24",
         "aa_briefcase": "2026-09-21",
         "browsecomp": null,
         "aa_omniscience": "2026-08-27",
@@ -50045,6 +50055,11 @@
           {
             "date": "2026-09-04",
             "score": 1,
+            "source": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+          },
+          {
+            "date": "2026-09-24",
+            "score": 24.3,
             "source": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
           }
         ],
@@ -51388,7 +51403,7 @@
         "toolathlon": "https://huggingface.co/tencent/Hy4-preview",
         "tau3_bench_banking": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/models/hy4-preview",
+        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -51507,7 +51522,7 @@
           {
             "date": "2026-08-29",
             "score": 83.7,
-            "source": "https://llm-stats.com/models/hy4-preview"
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
         "gdpval_aa": [
