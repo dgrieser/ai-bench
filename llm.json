@@ -184,7 +184,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35), OSWorld 2.0 (0.15).",
       "settings": [
         "derived",
         "index scale"
@@ -1731,7 +1731,7 @@
         "coding_index": 22522,
         "tooling_index": 33775,
         "knowledge_index": 18100,
-        "vision_index": 11318,
+        "vision_index": 11309,
         "trust_index": 40248,
         "aa_intelligence_index": 7.5,
         "swe_bench_verified": 68.0,
@@ -2150,8 +2150,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -2179,7 +2179,7 @@
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 33804,
-        "vision_index": 23750,
+        "vision_index": 23747,
         "trust_index": 39620,
         "aa_intelligence_index": 14.9,
         "swe_bench_verified": 59.2,
@@ -2514,8 +2514,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -4980,7 +4980,7 @@
         "coding_index": 47316,
         "tooling_index": 53651,
         "knowledge_index": 69981,
-        "vision_index": 66595,
+        "vision_index": 66563,
         "trust_index": 54460,
         "aa_intelligence_index": 18.4,
         "swe_bench_verified": 76.4,
@@ -5492,8 +5492,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -5530,7 +5530,7 @@
         "coding_index": 35679,
         "tooling_index": 52037,
         "knowledge_index": 63301,
-        "vision_index": 52321,
+        "vision_index": 52307,
         "trust_index": 53555,
         "aa_intelligence_index": 15.6,
         "swe_bench_verified": 72.0,
@@ -5991,8 +5991,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -6029,7 +6029,7 @@
         "coding_index": null,
         "tooling_index": 60810,
         "knowledge_index": 61614,
-        "vision_index": 55851,
+        "vision_index": 55839,
         "trust_index": 56172,
         "aa_intelligence_index": 22.9,
         "swe_bench_verified": 72.4,
@@ -6448,8 +6448,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -6486,7 +6486,7 @@
         "coding_index": null,
         "tooling_index": 44902,
         "knowledge_index": 56728,
-        "vision_index": 43393,
+        "vision_index": 43390,
         "trust_index": 52927,
         "aa_intelligence_index": 19.3,
         "swe_bench_verified": 69.2,
@@ -6893,8 +6893,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -6931,7 +6931,7 @@
         "coding_index": null,
         "tooling_index": 38135,
         "knowledge_index": 47064,
-        "vision_index": 37888,
+        "vision_index": 37893,
         "trust_index": 50129,
         "aa_intelligence_index": 13.7,
         "swe_bench_verified": null,
@@ -7338,8 +7338,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -7376,7 +7376,7 @@
         "coding_index": null,
         "tooling_index": 34408,
         "knowledge_index": 33215,
-        "vision_index": 33583,
+        "vision_index": 33590,
         "trust_index": 45396,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
@@ -7763,8 +7763,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -7801,7 +7801,7 @@
         "coding_index": null,
         "tooling_index": 13590,
         "knowledge_index": 13768,
-        "vision_index": 12894,
+        "vision_index": 12954,
         "trust_index": 42587,
         "aa_intelligence_index": 6.9,
         "swe_bench_verified": null,
@@ -8186,8 +8186,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -8223,7 +8223,7 @@
         "coding_index": null,
         "tooling_index": 7367,
         "knowledge_index": 14528,
-        "vision_index": 172,
+        "vision_index": 188,
         "trust_index": 41463,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
@@ -8598,8 +8598,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -10810,7 +10810,7 @@
         "coding_index": 25185,
         "tooling_index": 26917,
         "knowledge_index": 50160,
-        "vision_index": 27118,
+        "vision_index": 27120,
         "trust_index": 55264,
         "aa_intelligence_index": 11.3,
         "swe_bench_verified": null,
@@ -11217,8 +11217,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -12812,7 +12812,7 @@
         "coding_index": 36979,
         "tooling_index": 51822,
         "knowledge_index": 60393,
-        "vision_index": 45356,
+        "vision_index": 45353,
         "trust_index": 54967,
         "aa_intelligence_index": 19,
         "swe_bench_verified": 80.9,
@@ -13242,8 +13242,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -13643,8 +13643,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -13672,7 +13672,7 @@
         "coding_index": null,
         "tooling_index": 16687,
         "knowledge_index": 39543,
-        "vision_index": 18781,
+        "vision_index": 18772,
         "trust_index": 50416,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": null,
@@ -14031,8 +14031,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -14060,7 +14060,7 @@
         "coding_index": null,
         "tooling_index": 11438,
         "knowledge_index": 32459,
-        "vision_index": 11318,
+        "vision_index": 11309,
         "trust_index": 46760,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
@@ -14419,8 +14419,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -14448,7 +14448,7 @@
         "coding_index": 35005,
         "tooling_index": 45543,
         "knowledge_index": 62581,
-        "vision_index": 53212,
+        "vision_index": 53208,
         "trust_index": 58660,
         "aa_intelligence_index": 18.2,
         "swe_bench_verified": 73.4,
@@ -14910,8 +14910,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -14943,7 +14943,7 @@
         "coding_index": 42811,
         "tooling_index": 54384,
         "knowledge_index": 66824,
-        "vision_index": 52123,
+        "vision_index": 52117,
         "trust_index": 60576,
         "aa_intelligence_index": 21.4,
         "swe_bench_verified": 70,
@@ -15399,8 +15399,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -17548,7 +17548,7 @@
         "coding_index": 32070,
         "tooling_index": 50276,
         "knowledge_index": 44985,
-        "vision_index": 33102,
+        "vision_index": 33101,
         "trust_index": 57089,
         "aa_intelligence_index": 14.2,
         "swe_bench_verified": 66.4,
@@ -18002,8 +18002,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -18031,7 +18031,7 @@
         "coding_index": 16243,
         "tooling_index": 24537,
         "knowledge_index": 17602,
-        "vision_index": 17135,
+        "vision_index": 17124,
         "trust_index": 33104,
         "aa_intelligence_index": 6,
         "swe_bench_verified": null,
@@ -18418,8 +18418,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -18447,7 +18447,7 @@
         "coding_index": null,
         "tooling_index": 26121,
         "knowledge_index": 26007,
-        "vision_index": 19423,
+        "vision_index": 19471,
         "trust_index": 46200,
         "aa_intelligence_index": 10.3,
         "swe_bench_verified": null,
@@ -18797,8 +18797,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -18830,7 +18830,7 @@
         "coding_index": null,
         "tooling_index": 11585,
         "knowledge_index": 13197,
-        "vision_index": 5286,
+        "vision_index": 5299,
         "trust_index": 18646,
         "aa_intelligence_index": 5.7,
         "swe_bench_verified": null,
@@ -19164,8 +19164,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -19193,7 +19193,7 @@
         "coding_index": null,
         "tooling_index": 42154,
         "knowledge_index": 62761,
-        "vision_index": 31397,
+        "vision_index": 31398,
         "trust_index": 57802,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
@@ -19563,8 +19563,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -19592,7 +19592,7 @@
         "coding_index": null,
         "tooling_index": 52901,
         "knowledge_index": 60847,
-        "vision_index": 60402,
+        "vision_index": 60404,
         "trust_index": 56625,
         "aa_intelligence_index": 19.5,
         "swe_bench_verified": 76.5,
@@ -19955,8 +19955,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -19984,7 +19984,7 @@
         "coding_index": 9524,
         "tooling_index": 9395,
         "knowledge_index": 11015,
-        "vision_index": 3632,
+        "vision_index": 3646,
         "trust_index": 25137,
         "aa_intelligence_index": 3.8,
         "swe_bench_verified": null,
@@ -20367,8 +20367,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -21412,7 +21412,7 @@
         "coding_index": 63314,
         "tooling_index": 70030,
         "knowledge_index": 84576,
-        "vision_index": 74271,
+        "vision_index": 74131,
         "trust_index": 68357,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
@@ -21891,10 +21891,11 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "osworld_verified"
+            "osworld_verified",
+            "osworld_2_0"
           ],
-          "of": 5,
-          "share": 0.618
+          "of": 6,
+          "share": 0.638
         },
         "trust_index": {
           "measured": [
@@ -22570,7 +22571,7 @@
         "coding_index": 13458,
         "tooling_index": 11940,
         "knowledge_index": 20184,
-        "vision_index": 19111,
+        "vision_index": 19158,
         "trust_index": 46601,
         "aa_intelligence_index": 8.1,
         "swe_bench_verified": null,
@@ -22992,8 +22993,8 @@
             "mathvista_mini",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mathvista_mini"
           ]
@@ -23023,7 +23024,7 @@
         "coding_index": 19043,
         "tooling_index": 15903,
         "knowledge_index": 30288,
-        "vision_index": 24974,
+        "vision_index": 25019,
         "trust_index": 48903,
         "aa_intelligence_index": 10,
         "swe_bench_verified": null,
@@ -23455,8 +23456,8 @@
             "mathvista_mini",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mathvista_mini"
           ]
@@ -27295,7 +27296,7 @@
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 40353,
-        "vision_index": 27290,
+        "vision_index": 27330,
         "trust_index": 43556,
         "aa_intelligence_index": 13.4,
         "swe_bench_verified": 23,
@@ -27661,8 +27662,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "mmmu_pro",
             "mathvista_mini",
@@ -38403,8 +38404,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -38431,7 +38432,7 @@
         "coding_index": 13493,
         "tooling_index": 17547,
         "knowledge_index": 14773,
-        "vision_index": 13832,
+        "vision_index": 13820,
         "trust_index": 30086,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
@@ -38819,8 +38820,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -38847,7 +38848,7 @@
         "coding_index": 9876,
         "tooling_index": 14357,
         "knowledge_index": 16454,
-        "vision_index": 6997,
+        "vision_index": 7005,
         "trust_index": 40371,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
@@ -39235,8 +39236,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -39597,7 +39598,7 @@
         "coding_index": 13197,
         "tooling_index": 10316,
         "knowledge_index": 14773,
-        "vision_index": 15487,
+        "vision_index": 15475,
         "trust_index": 31285,
         "aa_intelligence_index": 4.9,
         "swe_bench_verified": null,
@@ -39981,8 +39982,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -40009,7 +40010,7 @@
         "coding_index": null,
         "tooling_index": 2465,
         "knowledge_index": 11151,
-        "vision_index": 2051,
+        "vision_index": 2062,
         "trust_index": 17912,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
@@ -40362,8 +40363,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -41979,8 +41980,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -43739,8 +43740,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -44034,7 +44035,7 @@
         "coding_index": 54434,
         "tooling_index": 70402,
         "knowledge_index": 83586,
-        "vision_index": 47054,
+        "vision_index": 47045,
         "trust_index": 64562,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
@@ -44497,8 +44498,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.491,
+          "of": 6,
+          "share": 0.466,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -45898,7 +45899,7 @@
         "coding_index": 48002,
         "tooling_index": 53541,
         "knowledge_index": 78659,
-        "vision_index": 58360,
+        "vision_index": 58346,
         "trust_index": 62983,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
@@ -46417,8 +46418,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 6,
+          "share": 0.948,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -46464,7 +46465,7 @@
         "coding_index": 61001,
         "tooling_index": 68686,
         "knowledge_index": 88295,
-        "vision_index": 73633,
+        "vision_index": 73819,
         "trust_index": 68963,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
@@ -47003,10 +47004,11 @@
           "measured": [
             "mmmu_pro",
             "osworld_verified",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.759,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -47506,7 +47508,7 @@
         "coding_index": 89406,
         "tooling_index": 88914,
         "knowledge_index": 95424,
-        "vision_index": 87018,
+        "vision_index": 86998,
         "trust_index": 64912,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
@@ -48053,8 +48055,8 @@
             "osworld_verified",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "osworld_verified",
             "charxiv_reasoning"
@@ -48417,7 +48419,7 @@
         "coding_index": 48888,
         "tooling_index": 51012,
         "knowledge_index": 74563,
-        "vision_index": 61233,
+        "vision_index": 61234,
         "trust_index": 60494,
         "aa_intelligence_index": 25.2,
         "swe_bench_verified": 71,
@@ -48835,8 +48837,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -48874,7 +48876,7 @@
         "coding_index": 50374,
         "tooling_index": 58023,
         "knowledge_index": 83162,
-        "vision_index": 72714,
+        "vision_index": 72712,
         "trust_index": 70398,
         "aa_intelligence_index": 26,
         "swe_bench_verified": 74,
@@ -49314,8 +49316,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -49353,7 +49355,7 @@
         "coding_index": 59619,
         "tooling_index": 73268,
         "knowledge_index": 80545,
-        "vision_index": 47374,
+        "vision_index": 47365,
         "trust_index": 64461,
         "aa_intelligence_index": 27.8,
         "swe_bench_verified": 82.2,
@@ -49794,8 +49796,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.491,
+          "of": 6,
+          "share": 0.466,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -50153,7 +50155,7 @@
         "coding_index": 77909,
         "tooling_index": 90893,
         "knowledge_index": 93004,
-        "vision_index": 98293,
+        "vision_index": 98270,
         "trust_index": 67253,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
@@ -50598,8 +50600,8 @@
             "mmmu_pro",
             "osworld_verified"
           ],
-          "of": 5,
-          "share": 0.618,
+          "of": 6,
+          "share": 0.586,
           "second_hand": [
             "osworld_verified"
           ]
@@ -51802,7 +51804,7 @@
         "coding_index": 52958,
         "tooling_index": 65325,
         "knowledge_index": 63498,
-        "vision_index": 55134,
+        "vision_index": 55123,
         "trust_index": 59413,
         "aa_intelligence_index": 17.5,
         "swe_bench_verified": 76,
@@ -52214,8 +52216,8 @@
             "osworld_verified",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "osworld_verified",
             "charxiv_reasoning"
@@ -53230,7 +53232,7 @@
         "coding_index": 70257,
         "tooling_index": 85496,
         "knowledge_index": 79518,
-        "vision_index": 75082,
+        "vision_index": 75042,
         "trust_index": 63399,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
@@ -53670,8 +53672,8 @@
             "osworld_verified",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "osworld_verified",
             "charxiv_reasoning"
@@ -56067,8 +56069,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.491,
+          "of": 6,
+          "share": 0.466,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -56103,7 +56105,7 @@
         "coding_index": 77043,
         "tooling_index": 94782,
         "knowledge_index": 89529,
-        "vision_index": 93171,
+        "vision_index": 93160,
         "trust_index": 69889,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
@@ -56545,8 +56547,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.491,
+          "of": 6,
+          "share": 0.466,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -56581,7 +56583,7 @@
         "coding_index": 82148,
         "tooling_index": 91480,
         "knowledge_index": 83295,
-        "vision_index": 82742,
+        "vision_index": 82725,
         "trust_index": 65011,
         "aa_intelligence_index": 39.8,
         "swe_bench_verified": null,
@@ -57003,8 +57005,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 5,
-          "share": 0.491,
+          "of": 6,
+          "share": 0.466,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -59966,8 +59968,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -59998,7 +60000,7 @@
         "coding_index": null,
         "tooling_index": 54485,
         "knowledge_index": 73032,
-        "vision_index": 78452,
+        "vision_index": 78451,
         "trust_index": 58576,
         "aa_intelligence_index": 24.6,
         "swe_bench_verified": null,
@@ -60313,8 +60315,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -60346,7 +60348,7 @@
         "coding_index": 94767,
         "tooling_index": 96926,
         "knowledge_index": 97606,
-        "vision_index": 88131,
+        "vision_index": 88110,
         "trust_index": 65487,
         "aa_intelligence_index": 50.8,
         "swe_bench_verified": 97,
@@ -60895,8 +60897,8 @@
             "osworld_verified",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.745
+          "of": 6,
+          "share": 0.707
         },
         "trust_index": {
           "measured": [
@@ -60929,7 +60931,7 @@
         "coding_index": 81002,
         "tooling_index": 85169,
         "knowledge_index": 92249,
-        "vision_index": 71184,
+        "vision_index": 71139,
         "trust_index": 64409,
         "aa_intelligence_index": 38.2,
         "swe_bench_verified": 79.6,
@@ -61397,8 +61399,8 @@
             "osworld_verified",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.745,
+          "of": 6,
+          "share": 0.707,
           "second_hand": [
             "osworld_verified"
           ]
@@ -61433,7 +61435,7 @@
         "coding_index": 96097,
         "tooling_index": 98232,
         "knowledge_index": 98542,
-        "vision_index": 99579,
+        "vision_index": 99571,
         "trust_index": 65995,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
@@ -61962,8 +61964,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         },
         "trust_index": {
           "measured": [
@@ -61996,7 +61998,7 @@
         "coding_index": 80415,
         "tooling_index": 80135,
         "knowledge_index": 84556,
-        "vision_index": 76541,
+        "vision_index": 76514,
         "trust_index": 52990,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
@@ -62498,8 +62500,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         },
         "trust_index": {
           "measured": [
@@ -62532,7 +62534,7 @@
         "coding_index": 86171,
         "tooling_index": 84900,
         "knowledge_index": 91037,
-        "vision_index": 85296,
+        "vision_index": 85276,
         "trust_index": 58437,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
@@ -63015,8 +63017,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         },
         "trust_index": {
           "measured": [
@@ -63050,7 +63052,7 @@
         "coding_index": 89645,
         "tooling_index": 89281,
         "knowledge_index": 97602,
-        "vision_index": 89144,
+        "vision_index": 89141,
         "trust_index": 55535,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
@@ -63596,8 +63598,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         },
         "trust_index": {
           "measured": [
@@ -63631,7 +63633,7 @@
         "coding_index": 97502,
         "tooling_index": 93130,
         "knowledge_index": 98579,
-        "vision_index": 95064,
+        "vision_index": 95060,
         "trust_index": 67396,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
@@ -64105,8 +64107,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         },
         "trust_index": {
           "measured": [
@@ -66209,7 +66211,7 @@
         "coding_index": 88844,
         "tooling_index": 92962,
         "knowledge_index": 95081,
-        "vision_index": 77384,
+        "vision_index": 77434,
         "trust_index": null,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
@@ -66553,8 +66555,8 @@
           "measured": [
             "osworld_verified"
           ],
-          "of": 5,
-          "share": 0.255,
+          "of": 6,
+          "share": 0.241,
           "second_hand": [
             "osworld_verified"
           ]
@@ -66580,7 +66582,7 @@
         "coding_index": 85700,
         "tooling_index": 87241,
         "knowledge_index": null,
-        "vision_index": 71686,
+        "vision_index": 71714,
         "trust_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
@@ -66861,8 +66863,8 @@
           "measured": [
             "osworld_verified"
           ],
-          "of": 5,
-          "share": 0.255,
+          "of": 6,
+          "share": 0.241,
           "second_hand": [
             "osworld_verified"
           ]
@@ -66889,7 +66891,7 @@
         "coding_index": 98442,
         "tooling_index": 98719,
         "knowledge_index": 99526,
-        "vision_index": 96189,
+        "vision_index": 96184,
         "trust_index": null,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
@@ -67251,8 +67253,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 5,
-          "share": 0.364
+          "of": 6,
+          "share": 0.345
         }
       }
     },
@@ -67276,7 +67278,7 @@
         "coding_index": 81490,
         "tooling_index": 82280,
         "knowledge_index": 87585,
-        "vision_index": 64654,
+        "vision_index": 64638,
         "trust_index": null,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": null,
@@ -67622,8 +67624,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         }
       }
     },
@@ -67993,8 +67995,8 @@
             "mmmu_pro",
             "zerobench"
           ],
-          "of": 5,
-          "share": 0.491
+          "of": 6,
+          "share": 0.466
         }
       }
     }
