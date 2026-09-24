@@ -124,6 +124,13 @@ RANK_HAND_ENTERED = 6
 # resolve per benchmark key.
 AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
+# The Verified board and OSWorld 2.0 live on two sites of the same lab, one
+# credited per column; every tracked OSWorld 2.0 release shares the 2.0 site's
+# page.
+OSWORLD_V2_SOURCE_URL = canonical(fetch_osworld.OSWORLD_V2_SITE_URL)
+OSWORLD_KEY_URLS = {
+    key: canonical(fetch_osworld.source_url(key)) for key in fetch_osworld.KEYS
+}
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
@@ -208,6 +215,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         ("https://twitter.com/ArtificialAnlys", RANK_AA),
         (AA_MODEL_PAGE_PREFIX, RANK_AA),
         (OSWORLD_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (OSWORLD_V2_SOURCE_URL, RANK_BENCHMARK_SITE),
         (TOOLATHLON_SOURCE_URL, RANK_BENCHMARK_SITE),
         (MCP_ATLAS_SOURCE_URL, RANK_BENCHMARK_SITE),
         (REAL_SWE_SOURCE_URL, RANK_BENCHMARK_SITE),

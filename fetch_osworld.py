@@ -1,5 +1,45 @@
 #!/usr/bin/env python3
-"""Fetch OSWorld-Verified leaderboard data from the official Excel file."""
+"""Fetch OSWorld-Verified and OSWorld 2.0 scores from their official boards.
+
+XLANG Lab publishes the two generations of OSWorld on two sites, and this
+script reads both. Every row it reports names the llm.json column it feeds
+(``benchmark``), so update.py never has to guess which board a label came from.
+
+**OSWorld-Verified** (``osworld_verified``) is read from the results workbook
+the original site links (os-world.github.io, which now redirects to
+osworld-v1.xlang.ai since 2.0 got a site of its own). Only the Foundation E2E
+GUI setup is read -- no extra accessibility tree, no coding-based actions, no
+multiple rollouts, 100 steps -- and a model's runs under it are averaged.
+
+**OSWorld 2.0** is 108 long-horizon workflows on a separate site,
+osworld-v2.xlang.ai, whose leaderboard hydrates from one JSON file. That file
+carries every run the board can show, and the board's own filters say which of
+them are one measurement:
+
+  * *Release.* The task set has been released three times -- 2026.06.24 (the
+    paper's), 2026.08.08, and the bug-fix 2.1 the maintainers now recommend --
+    each with its own task files, assets and mocked websites, and the scores do
+    not carry over: Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and
+    44.3 on 2.1. So a release gets a column of its own, the same rule
+    _revisions.py applies to every other re-released board, and a release in
+    RELEASES below is the only way a row reaches one. A release earns a column
+    once enough models are scored on it to rank: 2026.06.24 carries seven,
+    2026.08.08 two and 2.1 one, so only 2026.06.24 has one today. The others
+    are skipped and reported on stderr with how many models each scores, never
+    folded into a neighbour, so a release that fills up is noticed.
+  * *Step budget.* Rows are published at 150, 300 and 500 steps; the paper's
+    primary metric is at 500, and that is the only budget read.
+  * *Dataset scope.* The "offline set" is the 82 tasks runnable without
+    internet access, a subset scored separately; only the full set is read.
+  * *Metric.* Binary accuracy -- the share of tasks fully completed -- is the
+    board's default sort and the paper's primary metric. The partial score (the
+    share of scoring checkpoints passed) rides along on every row but is never
+    the reported score.
+
+What is left per model is one row per (reasoning effort, tool setting) run, and
+update.py keeps the best of them per column, which is the ranking the board
+itself shows.
+"""
 
 from __future__ import annotations
 
@@ -15,9 +55,16 @@ from typing import Any
 
 from _fetch_checks import check_percentages, require_columns, require_rows
 
-OSWORLD_XLSX_URL = "https://os-world.github.io/static/data/osworld_verified_results.xlsx"
+VERIFIED_KEY = "osworld_verified"
+
+# The workbook's own host. os-world.github.io still serves it, but only as a
+# 301 to plain-http osworld-v1.xlang.ai, so the download goes straight to the
+# https URL instead.
+OSWORLD_XLSX_URL = "https://osworld-v1.xlang.ai/static/data/osworld_verified_results.xlsx"
 # Human-facing site the workbook belongs to; stored as the per-score source
 # URL because the .xlsx identifies a download, not a page a reader can open.
+# Kept at the address every stored osworld_verified score already cites, which
+# redirects to the v1 site.
 OSWORLD_SITE_URL = "https://os-world.github.io"
 SHEET_NAME = "Eval Results"
 
@@ -43,6 +90,42 @@ REQUIRED_COLUMNS = (
 )
 
 
+# OSWorld 2.0's own site, which is what a score is credited to, and the file its
+# leaderboard renders from.
+OSWORLD_V2_SITE_URL = "https://osworld-v2.xlang.ai"
+OSWORLD_V2_JSON_URL = f"{OSWORLD_V2_SITE_URL}/static/data/leaderboard/official-results.json"
+# What the payload has to call itself before any row of it is read: a file that
+# starts describing another benchmark is not OSWorld 2.0 any more.
+V2_BENCHMARK_VERSION = "OSWorld 2.0"
+# The full task set every release tracked here scores. A board that starts
+# dividing by something else has changed what binary accuracy means.
+V2_DATASET_SIZE = 108
+V2_STEP_BUDGET = 500
+V2_DATASET_SCOPE = "full"
+V2_METRIC = "binaryAccuracy"
+
+# Release label, as the payload spells it -> the llm.json column it feeds.
+# 2026.08.08 and 2.1 are deliberately absent until enough models are scored on
+# them to rank (see the module docstring); adding one here needs its column in
+# llm.json too.
+RELEASES: dict[str, str] = {
+    "v2026.06.24": "osworld_2_0",
+}
+
+# The fields a 2.0 row has to carry to be read at all. Without one of them the
+# row cannot be placed on the board's own filters, so it is a layout change,
+# not a row to skip.
+V2_REQUIRED_FIELDS = ("model", "stepBudget", V2_METRIC)
+
+# Every column this script can report a row for.
+KEYS = (VERIFIED_KEY, *RELEASES.values())
+
+
+def source_url(key: str) -> str:
+    """The page a score in column ``key`` is credited to."""
+    return OSWORLD_SITE_URL if key == VERIFIED_KEY else OSWORLD_V2_SITE_URL
+
+
 def _excel_serial_to_iso(value: Any) -> str | None:
     if isinstance(value, datetime):
         return value.date().isoformat()
@@ -56,10 +139,11 @@ def _excel_serial_to_iso(value: Any) -> str | None:
     return None
 
 
-def fetch_xlsx_bytes(url: str) -> bytes:
+def fetch_bytes(url: str) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read()
+
 
 
 def parse_rows(data: bytes) -> list[dict[str, Any]]:
@@ -129,49 +213,194 @@ def aggregate(rows: list[dict[str, Any]], foundation_only: bool) -> list[dict[st
         latest = max(model_rows, key=lambda r: _excel_serial_to_iso(r["date"]) or "")
         aggregated.append(
             {
+                "benchmark": VERIFIED_KEY,
                 "model": model,
-                "success_rate": avg,
+                "score": avg,
                 "date": _excel_serial_to_iso(latest["date"]),
                 "approach_type": latest["approach_type"],
                 "runs": len(scores),
             }
         )
 
-    aggregated.sort(key=lambda r: r["success_rate"], reverse=True)
+    aggregated.sort(key=lambda r: r["score"], reverse=True)
     return aggregated
 
 
-def get_scores(foundation_only: bool = True) -> list[dict[str, Any]]:
-    data = fetch_xlsx_bytes(OSWORLD_XLSX_URL)
+def get_verified_scores(foundation_only: bool = True) -> list[dict[str, Any]]:
+    data = fetch_bytes(OSWORLD_XLSX_URL)
     rows = parse_rows(data)
     scores = aggregate(rows, foundation_only=foundation_only)
     # A setup cell spelled differently ("no" for "No", "100 steps" for 100)
     # drops every row from the Foundation filter without touching the header.
     require_rows(scores, OSWORLD_XLSX_URL, "Foundation E2E GUI rows" if foundation_only else "rows")
-    check_percentages(scores, OSWORLD_XLSX_URL, "success_rate")
+    check_percentages(scores, OSWORLD_XLSX_URL, "score")
+    return scores
+
+
+def check_v2_payload(payload: Any) -> list[dict[str, Any]]:
+    """The payload's result rows, once it is the board this script expects.
+
+    Raises on anything that would change what a row means without changing its
+    shape: another benchmark's file, a different task count, or a metric that
+    is no longer called what it was.
+    """
+    if not isinstance(payload, dict) or not isinstance(payload.get("results"), list):
+        raise ValueError(f"{OSWORLD_V2_JSON_URL} returned no results list")
+    version = payload.get("benchmarkVersion")
+    if version != V2_BENCHMARK_VERSION:
+        raise ValueError(
+            f"{OSWORLD_V2_JSON_URL} describes {version!r}, not {V2_BENCHMARK_VERSION!r} "
+            "-- refusing to read another benchmark's scores into the OSWorld 2.0 columns."
+        )
+    size = payload.get("datasetSize")
+    if size != V2_DATASET_SIZE:
+        raise ValueError(
+            f"{OSWORLD_V2_JSON_URL} scores {size!r} tasks, not {V2_DATASET_SIZE} "
+            "-- the task set changed; refusing to report it as the same column."
+        )
+    metrics = payload.get("metrics")
+    if not isinstance(metrics, dict) or V2_METRIC not in metrics:
+        raise ValueError(
+            f"{OSWORLD_V2_JSON_URL} no longer declares the {V2_METRIC!r} metric "
+            f"(metrics: {metrics!r}) -- the layout changed; refusing to guess."
+        )
+    results = payload["results"]
+    require_rows(results, OSWORLD_V2_JSON_URL, "OSWorld 2.0 results")
+    for index, row in enumerate(results):
+        if not isinstance(row, dict):
+            raise ValueError(f"{OSWORLD_V2_JSON_URL}: result {index} is not an object")
+        require_columns(row.keys(), V2_REQUIRED_FIELDS, f"{OSWORLD_V2_JSON_URL} result {index}")
+    return results
+
+
+def _v2_release(row: dict[str, Any], payload: dict[str, Any]) -> str | None:
+    """The release a row was run on, resolved the way the board resolves it.
+
+    The paper's rows name none and inherit the payload's default, so a row is
+    only as dated as the file says it is -- the same fallback chain the site's
+    leaderboard.js walks.
+    """
+    for value in (
+        row.get("releaseVersion"),
+        row.get("taskVersion"),
+        payload.get("defaultResultReleaseVersion"),
+        payload.get("taskVersion"),
+    ):
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def _v2_in_scope(row: dict[str, Any], payload: dict[str, Any], scope: str) -> bool:
+    """Whether the board lists this row under ``scope``, as leaderboard.js decides."""
+    row_scope = (
+        row.get("datasetScope") or row.get("scope")
+        or payload.get("defaultResultDatasetScope") or "full"
+    )
+    available = row.get("availableScopes")
+    return row_scope == scope or (isinstance(available, list) and scope in available)
+
+
+def parse_v2(payload: Any) -> list[dict[str, Any]]:
+    """One entry per official full-set run at the 500-step budget, per tracked release."""
+    results = check_v2_payload(payload)
+    rows: list[dict[str, Any]] = []
+    unknown: dict[str, set[str]] = defaultdict(set)
+    for result in results:
+        if result.get("official") is not True:
+            continue
+        if result.get("stepBudget") != V2_STEP_BUDGET:
+            continue
+        if not _v2_in_scope(result, payload, V2_DATASET_SCOPE):
+            continue
+        model = result.get("model")
+        if not isinstance(model, str) or not model.strip():
+            continue
+        release = _v2_release(result, payload)
+        key = RELEASES.get(release or "")
+        if key is None:
+            unknown[release or "<none>"].add(model.strip())
+            continue
+        score = result.get(V2_METRIC)
+        if not isinstance(score, (int, float)) or isinstance(score, bool):
+            continue
+        partial = result.get("partialScore")
+        rows.append(
+            {
+                "benchmark": key,
+                "model": model.strip(),
+                "score": score,
+                "partial_score": partial if isinstance(partial, (int, float)) else None,
+                "release": release,
+                "reasoning": result.get("reasoning"),
+                "tool_setting": result.get("toolSetting"),
+                "step_budget": result.get("stepBudget"),
+            }
+        )
+    for release, models in sorted(unknown.items()):
+        # Not an error: a release is only filed once llm.json has a column
+        # for it. Reported with its field size, so a release that has gathered
+        # enough models to rank is noticed rather than lost.
+        print(
+            f"fetch_osworld.py: skipped OSWorld 2.0 release {release!r}, which has "
+            f"no llm.json column: {len(models)} model(s) scored "
+            f"({', '.join(sorted(models))})",
+            file=sys.stderr,
+        )
+    require_rows(rows, OSWORLD_V2_JSON_URL, "official full-set 500-step OSWorld 2.0 rows")
+    check_percentages(rows, OSWORLD_V2_JSON_URL, "score")
+    order = list(RELEASES.values())
+    rows.sort(key=lambda r: (order.index(r["benchmark"]), -r["score"]))
+    return rows
+
+
+def get_v2_scores() -> list[dict[str, Any]]:
+    data = fetch_bytes(OSWORLD_V2_JSON_URL)
+    try:
+        payload = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"{OSWORLD_V2_JSON_URL} returned no JSON: {exc}") from exc
+    return parse_v2(payload)
+
+
+def get_scores(foundation_only: bool = True, boards: str = "all") -> list[dict[str, Any]]:
+    """Rows for the requested boards: "verified", "v2", or "all" (both)."""
+    scores: list[dict[str, Any]] = []
+    if boards in ("all", "verified"):
+        scores.extend(get_verified_scores(foundation_only=foundation_only))
+    if boards in ("all", "v2"):
+        scores.extend(get_v2_scores())
     return scores
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Fetch OSWorld-Verified leaderboard scores.")
+    parser = argparse.ArgumentParser(
+        description="Fetch OSWorld-Verified and OSWorld 2.0 leaderboard scores."
+    )
     parser.add_argument(
         "--format",
         choices=["table", "json", "names"],
         default="table",
         help="Output format (default: table).",
     )
+    parser.add_argument(
+        "--board",
+        choices=["all", "verified", "v2"],
+        default="all",
+        help="Which board to read: OSWorld-Verified, OSWorld 2.0, or both (default).",
+    )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "--foundation-only",
         action="store_true",
         default=True,
-        help="Only include Foundation E2E GUI entries (default).",
+        help="Only include Foundation E2E GUI entries from OSWorld-Verified (default).",
     )
     group.add_argument(
         "--all",
         action="store_true",
         dest="all_entries",
-        help="Include all entries regardless of setup.",
+        help="Include all OSWorld-Verified entries regardless of setup.",
     )
     return parser.parse_args()
 
@@ -179,31 +408,29 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     foundation_only = not args.all_entries
-    scores = get_scores(foundation_only=foundation_only)
+    scores = get_scores(foundation_only=foundation_only, boards=args.board)
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
     elif args.format == "names":
-        for entry in scores:
-            print(entry["model"])
+        # One name per line even where a model is on several boards or runs:
+        # the mapping is by label, not by row.
+        for name in dict.fromkeys(entry["model"] for entry in scores):
+            print(name)
     else:
-        col_widths = [
-            max(len("MODEL"), max((len(e["model"]) for e in scores), default=0)),
-            7,
-            10,
-            4,
-        ]
-        fmt = f"{{:<{col_widths[0]}}}  {{:>{col_widths[1]}}}  {{:<{col_widths[2]}}}  {{}}"
-        print(fmt.format("MODEL", "SCORE", "DATE", "APPROACH"))
+        key_width = max(len("COLUMN"), max((len(e["benchmark"]) for e in scores), default=0))
+        model_width = max(len("MODEL"), max((len(e["model"]) for e in scores), default=0))
+        fmt = f"{{:<{key_width}}}  {{:<{model_width}}}  {{:>7}}  {{}}"
+        print(fmt.format("COLUMN", "MODEL", "SCORE", "DETAILS"))
         for entry in scores:
-            print(
-                fmt.format(
-                    entry["model"],
-                    str(entry["success_rate"]),
-                    entry.get("date") or "",
-                    entry.get("approach_type") or "",
+            if entry["benchmark"] == VERIFIED_KEY:
+                details = f"{entry.get('date') or ''}  {entry.get('approach_type') or ''}"
+            else:
+                details = (
+                    f"{entry.get('release')}  {entry.get('reasoning') or ''}  "
+                    f"{entry.get('tool_setting') or ''}  partial {entry.get('partial_score')}"
                 )
-            )
+            print(fmt.format(entry["benchmark"], entry["model"], str(entry["score"]), details))
     return 0
 
 

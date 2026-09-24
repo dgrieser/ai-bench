@@ -24,7 +24,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
-| **OSWorld** | Research | JSON API |
+| **OSWorld** | Research (benchmark's own leaderboards) | Results workbook (Verified) + the JSON the OSWorld 2.0 board renders from |
 | **Spheron** | Infrastructure | JSON API |
 | **LLMStats** | Community Aggregator | JSON API |
 | **Evals Report** | Research | JSON API |
@@ -359,7 +359,8 @@ Output: llm.json (unified dataset)
 ./fetch_frontierswe.py                  # both published boards, V2 and V1
 ./fetch_frontierswe.py --revision v1    # or pin one revision
 ./fetch_real_swe.py                     # Real-SWE, from Specific Labs' own board
-./fetch_osworld.py
+./fetch_osworld.py                      # OSWorld-Verified, and OSWorld 2.0 release 2026.06.24
+./fetch_osworld.py --board v2           # or one board (verified, v2)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
 ./fetch_swe_marathon.py                 # both published boards, 1.0 and 1.1
@@ -698,7 +699,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
 | 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only — they write a null, a value from a custom source (below), or a value credited to the same page they are reading, which is that page refreshing its own number; never another fetcher's; where they overlap, llm-stats runs first and so claims the gap. |
@@ -898,7 +899,7 @@ why, is in that section's table.
 
 ### Benchmarks that publish more than one revision
 
-Four benchmarks in this table have re-run themselves, and in every case the
+Five benchmarks in this table have re-run themselves, and in every case the
 re-run changed the task set, the verification or the scoring — so a 1.0 number
 and a 1.1 number are two different measurements that happen to share a name.
 Each revision gets its own column, the way `terminal_bench_2_0` and
@@ -912,6 +913,7 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
+| **OSWorld 2.0** | `osworld_2_0` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release gets a column once enough models are scored on it to rank: 2026.06.24 carries seven, including every open-weight run, while 2026.08.08 carries two and 2.1 one, all closed — so only `osworld_2_0` (2026.06.24) exists today. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the
@@ -1056,6 +1058,13 @@ Analysis runs itself, plus three assembled the same way the tool-use columns are
 | **ZeroBench** (`zerobench`) | `fetch_zerobench.py`, the maintainers' own board | evals.report's `zerobench` table, then Hugging Face model cards |
 | **MathVista-mini** (`mathvista_mini`) | evals.report's `mathvista` table | Hugging Face model cards |
 | **CharXiv Reasoning** (`charxiv_reasoning`) | Hugging Face model cards | evals.report's `charxiv` table, where it also overwrites |
+
+OSWorld-Verified (`osworld_verified`), the GUI-agent column, leads from the
+benchmark's own results workbook (`fetch_osworld.py`, Foundation E2E GUI runs
+only). Behind it come evals.report's `osworld` table, Verified rows only, and
+then the Hugging Face cards. That table names no revision, but its numbers do:
+every row sits on the Verified scale (47-86%), where no OSWorld 2.0 run on any
+release reaches 45. So it never feeds `osworld_2_0`.
 
 Two of the three still lead from an aggregator, which is unusual here and worth
 saying why. MathVista's board stopped at the 2024 field — nothing on it is in
@@ -2054,8 +2063,8 @@ be worth less evidence than one expensive one.
 At **0.18** the bars are 1.386 of 7.70 (Coding, 59 of 163 models ranked, after the
 [Terminal-Bench 4.0 admission](#coding-index) took the group's denominator from 7.30
 to 7.70 and 0.45 of scored weight off every model measured on 2.1 alone), 1.161 of
-6.45 (Tooling, 113 ranked), 0.666 of 3.70 (Knowledge, 155 ranked), 0.495 of 2.75
-(Vision, 58 ranked) and 0.423 of 2.35 (Trust, 148 ranked, now that
+6.45 (Tooling, 113 ranked), 0.666 of 3.70 (Knowledge, 155 ranked), 0.522 of 2.90
+(Vision, 62 ranked) and 0.423 of 2.35 (Trust, 148 ranked, now that
 [AA-Omniscience Accuracy](#why-the-anchor-cannot-stand-alone) is fetched).
 
 Coverage does not spread evenly across models, it clusters, and the threshold should
@@ -2131,8 +2140,8 @@ and every model it ranks has that score, so the floor of its coverage ladder sit
 for the same reason — its anchor is 57% of today's effective weight and carried by every
 model it ranks. What filters both columns is availability of the underlying run: the
 modality gate for one, whether Artificial Analysis has run the model at all for the
-other — see [Why the evidence bar is inert
-here](#why-the-evidence-bar-is-inert-here) and [The evidence bar is inert here
+other — see [Why the evidence bar is nearly inert
+here](#why-the-evidence-bar-is-nearly-inert-here) and [The evidence bar is inert here
 too](#the-evidence-bar-is-inert-here-too).
 
 Knowledge is the column the threshold does the least for, at any setting: its members
@@ -2427,9 +2436,10 @@ three cite their own.
 The axis is **anything that starts with pixels**: college-level question
 answering over figures and diagrams, mathematical reasoning in visual contexts,
 reasoning over the charts in a scientific paper, deliberately-hard multi-step
-visual puzzles, and driving a real desktop GUI from screenshots. That last one
-is why the column is not called "vision-language" — OSWorld measures visual
-*agency*, not visual question answering, and it is the member the other four
+visual puzzles, and driving a real desktop GUI from screenshots, on short tasks
+(OSWorld-Verified) and on multi-hour workflows (OSWorld 2.0). That last kind is
+why the column is not called "vision-language" — OSWorld measures visual
+*agency*, not visual question answering, and it is what the other members
 cannot stand in for.
 
 **It ranks 58 of 160 models, and the 102 blanks are the point.** Only a
@@ -2467,7 +2477,7 @@ the two thirds of the table it leaves blank, and by separating the frontier once
 general capability stops explaining the ranking.
 
 Contributing benchmarks and why they carry the weight they do (total group
-weight **2.75**):
+weight **2.90**):
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
@@ -2476,6 +2486,7 @@ weight **2.75**):
 | MathVista-mini | 0.35 | The saturated member, and the most redundant. Median **86.0**, p75 87.4, best 90.3 — the entire top of the field is packed inside three points, and **2.9 points** separate first from fifth, the flattest head anywhere in this index. It is also mean Spearman **0.94** against the other four, including **0.96 with MMMU Pro** and 0.97 with ZeroBench, so most of its vote is already cast by members that measure more. Public since 2023, so it carries the contamination profile three years of exposure buys, and 12 of its 14 values are card self-reports. Kept because the mid-field is where it still separates models — the coverage-backbone role GPQA Diamond plays at 0.30 in the [Knowledge index](#knowledge-index). |
 | ZeroBench | 0.35 | The opposite failure mode, which is why it lands on the same rung rather than above it. Its *design* is the best in the group: 100 hand-crafted multi-step questions built so that nothing solves them, which makes it the one member structurally immune to the saturation MathVista is already suffering. Its *measurement* is the weakest. Median **3.0**, best 12.0, three models tied at 0.0 — and at 100 questions the binomial standard error near p = 0.1 is about 3 points, so the whole observed 0-12 range is a few standard errors wide and a single question moves a rank. 11 scored models from 3 creators, 9 of them card self-reports. It is a headroom sentinel that will earn weight as models climb, not a discriminator today. Its exposure to a flattered variant slipping in through `update.py`'s best-value-wins Hugging Face ingest is handled in the benchmark-name mapping — see [Vision](#vision) above. |
 | CharXiv Reasoning | 0.35 | The same rung as the two small members, for the opposite reason to either: the *column* is the second best in the group and the *provenance* the weakest. It is the *second-widest* member — **21 scored models across 7 creators**, against ZeroBench's 16, OSWorld's 15 and MathVista's 14 — and the only one that is neither saturated nor at the floor: median **78.1**, best 89.4, worst 41.3, and **8.6 points** between first and fifth, a head as live as ZeroBench's on a scale that actually resolves. Mean Spearman **0.89** against the other four, below MathVista's 0.94 and ZeroBench's 0.92, and **0.88 with MMMU Pro** where MathVista is 0.96 — so it re-votes less of the anchor than either. It also measures something no other member does: reading quantities off the figures of a real paper, which is the one visual task the models in this table are actually pointed at for work. What holds it to 0.35 is everything about where the numbers come from. **18 of the 21 are lab self-reports** and only one is a vetted run (an evals.report Verified row); **12 of the 21 are one creator's** release family, so the column ranks Qwen against Qwen over two thirds of its field; the benchmark's own leaderboard is frozen at the 2024-25 field and cannot check any of it; and the same question set is published in two other forms — a descriptive split and a code-interpreter run — that a card may report under a near-identical label, worth 6 to 34 points, which is why one aggregator that carries it is deliberately not read (see [Vision](#vision) above). |
+| OSWorld 2.0 | 0.15 | The floor, as a sentinel rather than a discriminator. On design it is the strongest agency measurement in the table: 108 long-horizon workflows, each taking a skilled human a median of about 1.6 hours, graded on full completion at a 500-step budget, where the best official run finishes about a fifth of the tasks and open-weight models a twentieth. That makes it the one member with real headroom at the top. Today it measures almost nothing here. Only release 2026.06.24 has a column (see [the revision table](#benchmarks-that-publish-more-than-one-revision)), and it scores **2 tracked models, tied at 4.6** (`minimax-m3` and `kimi-k2-6`). That is one comparison, a tie, between two models MMMU Pro and OSWorld-Verified already compare, and all it does is pull their values together. It moves nobody a rank at 0.15, or at anything up to 0.7, so the weight is not load-bearing. What the floor buys is that a release with a real field starts counting the day it gets a column. Re-price it then; on design it would sit next to OSWorld-Verified. |
 
 ### Why GDPval-AA is left out
 
@@ -2507,31 +2518,36 @@ silently admitting 44 models, and the first objection above stands whatever the
 weight. GDPval-AA remains a column in the table and a member of the Tooling
 index; it is simply not evidence about vision.
 
-### Why the evidence bar is inert here
+### Why the evidence bar is nearly inert here
 
-Coverage does not spread across this group, it **steps**, because every one of
-the 58 ranked models has MMMU Pro and nothing else is scored on a model MMMU Pro
-is not:
+Coverage does not spread across this group, it **steps**. Every ranked model
+but two has MMMU Pro:
 
 | share of weight | models | what they have |
 | --- | --- | --- |
-| 1.000 | 7 | all five |
-| 0.745 | 8 | MMMU Pro + OSWorld + CharXiv, or + three of the small members |
-| 0.618 | 7 | MMMU Pro + two small members, or + OSWorld |
-| 0.491 | 8 | MMMU Pro + CharXiv, or + ZeroBench |
-| 0.364 | 28 | MMMU Pro alone |
+| 0.948 | 7 | the five short-task members |
+| 0.759 | 1 | MMMU Pro + both OSWorlds + CharXiv |
+| 0.707 | 7 | MMMU Pro + OSWorld-Verified + one small member, or + three small members |
+| 0.638 | 1 | MMMU Pro + both OSWorlds |
+| 0.586 | 7 | MMMU Pro + two small members, or + OSWorld-Verified |
+| 0.466 | 11 | MMMU Pro + CharXiv, or + ZeroBench |
+| 0.345 | 26 | MMMU Pro alone |
+| 0.241 | 2 | OSWorld-Verified alone (`mimo-v2-6-pro`, `mimo-v2-6-flash`) |
 
-The floor of that ladder is 0.364, so `MIN_SCORED_FRACTION` would have to exceed
-**0.36** to cut anybody: Vision ranks the same 58 models at every setting from
-0.05 to 0.36. The [18% bar](#why-the-evidence-bar-is-18) is completely inert
-here and **no per-index override is needed** — the modality gate is already
-doing the filtering the bar does elsewhere, and doing it on better evidence.
+The two models ranked on OSWorld-Verified alone are the floor, at 0.241. So
+`MIN_SCORED_FRACTION` would have to pass **0.24** to cut anybody, and 0.35 to
+cut anyone measured on MMMU Pro. At the [18% bar](#why-the-evidence-bar-is-18)
+Vision ranks all 62, and **no per-index override is needed**: the modality gate
+does the filtering here that the bar does elsewhere. The margin is thin for the
+two OSWorld-only models, though. OSWorld-Verified has to keep at least 0.18 of
+the group's weight for them to stay ranked, which rules out any weight below
+0.49 at today's total.
 
-The honest weakness that leaves is the mirror image of Knowledge's: **28 of the
-58 ranked models are measured on MMMU Pro alone**, and only 22 of 58 carry at
+The honest weakness that leaves is the mirror image of Knowledge's: **26 of the
+62 ranked models are measured on MMMU Pro alone**, and only 23 of 62 carry at
 least half the group's weight, where the Knowledge index gets that property for
 free from its own density. For most of this column's field the ranking *is*
-MMMU Pro, and it should be read that way — `--top` prints an `N/5 measured`
+MMMU Pro, and it should be read that way — `--top` prints an `N/6 measured`
 column next to every value for exactly this reason.
 
 **This is the column the redesign changed most, and not in its own favour.**
@@ -2554,8 +2570,8 @@ discounted for. If the group's benchmarks really do agree that closely, ranking
 on one of them is nearly as good as ranking on all five, and the arithmetic
 should say so. But it means the top of this column rests on a single
 measurement in a way the other four do not, and a reader should treat the
-`N/5 measured` count as part of the value rather than a footnote to it. The
-[modality gate](#why-the-evidence-bar-is-inert-here), not the shrinkage, is
+`N/6 measured` count as part of the value rather than a footnote to it. The
+[modality gate](#why-the-evidence-bar-is-nearly-inert-here), not the shrinkage, is
 what keeps unmeasured models out.
 
 Two other properties of the current field:
@@ -2734,7 +2750,7 @@ same 148 models from 0.45 down to 0.18, and gains exactly one more at 0.05 —
 42.6% of the group on its own, every one of the 148 ranked models has that
 score, and 11 of the 12 the column leaves out have no score in any member —
 `agents-a1` is the twelfth. As with
-[Vision](#why-the-evidence-bar-is-inert-here), what filters this column is the
+[Vision](#why-the-evidence-bar-is-nearly-inert-here), what filters this column is the
 availability of the underlying run, not the threshold.
 
 ## Openness Classification

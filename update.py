@@ -54,6 +54,7 @@ from _precedence import (
     FRONTIERSWE_SOURCE_URL,
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
+    OSWORLD_KEY_URLS,
     OSWORLD_SOURCE_URL,
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
@@ -315,7 +316,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-osworld",
         action="store_true",
-        help="Skip fetching scores from osworld.",
+        help="Skip fetching OSWorld-Verified and OSWorld 2.0 scores.",
     )
     parser.add_argument(
         "--skip-huggingface",
@@ -1307,7 +1308,15 @@ def build_fetch_osworld_cmd(script: Path) -> list[str]:
 
 def fetch_osworld_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """OSWorld-Verified and the OSWorld 2.0 releases, one column each.
+
+    fetch_osworld.py names the column on every row -- the Verified workbook
+    feeds osworld_verified, each tracked OSWorld 2.0 release its own column --
+    so a model on several boards arrives once per board and is ranked only
+    against that board's runs. One mapping file serves both boards: they are
+    one lab's leaderboards and share most of their labels.
+    """
     cmd = build_fetch_osworld_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -1318,9 +1327,12 @@ def fetch_osworld_data(
         raise RuntimeError("Unexpected osworld JSON format: expected a list")
 
     osworld_to_slug = load_osworld_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
     for row in payload:
         if not isinstance(row, dict):
+            continue
+        key = row.get("benchmark")
+        if key not in OSWORLD_KEY_URLS:
             continue
         osworld_name = row.get("model")
         if not isinstance(osworld_name, str) or not osworld_name:
@@ -1328,35 +1340,21 @@ def fetch_osworld_data(
         slug = osworld_to_slug.get(osworld_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "success_rate")
-    return by_slug
+        # OSWorld 2.0 publishes a row per (reasoning effort, tool setting) run;
+        # the board ranks by the best of them, so the collision rule matches it.
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
 
 
 def update_osworld_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        osworld_model = by_slug.get(slug)
-        if osworld_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "osworld_verified", osworld_model.get("success_rate"),
-            OSWORLD_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, OSWORLD_KEY_URLS["osworld_verified"],
+        key_urls=OSWORLD_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_huggingface_cmd(script: Path) -> list[str]:
@@ -3024,7 +3022,7 @@ def main() -> int:
         )
         changes.extend(aa_coding_agents_changes)
 
-    osworld_by_slug: dict[str, dict[str, Any]] = {}
+    osworld_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     osworld_matched = 0
     osworld_updated = 0
     if not args.skip_osworld:
@@ -3389,7 +3387,7 @@ def main() -> int:
     if not args.skip_aa_coding_agents:
         print(f"models returned by aa_coding_agents: {len(aa_coding_agents_by_slug)}")
     if not args.skip_osworld:
-        print(f"models returned by osworld: {len(osworld_by_slug)}")
+        print(f"models returned by osworld: {revision_model_count(osworld_by_slug)}" + revision_breakdown(osworld_by_slug))
     if not args.skip_llmstats:
         print(f"models returned by llmstats: {len(llmstats_by_slug)}")
     if not args.skip_huggingface:

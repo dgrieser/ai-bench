@@ -77,7 +77,6 @@ class TestRowFetchers(unittest.TestCase):
     """The ingests that read one score field off a whole source row."""
 
     CASES = [
-        ("osworld", "success_rate", "fetch_osworld_data"),
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("real_swe", "score", "fetch_real_swe_data"),
         ("programbench", "score", "fetch_programbench_data"),
@@ -132,6 +131,22 @@ class TestRowFetchers(unittest.TestCase):
                     by_key = update.fetch_tbench_data(SCRIPT, mapping)
                 self.assertEqual(by_key["terminal_bench_2_1"]["m"]["score"], 45.0)
                 self.assertEqual(by_key["terminal_bench_4_0"]["m"]["score"], 20.0)
+
+    def test_osworld_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
+        # fetch_osworld.py names the column on every row, the Verified board and
+        # each tracked OSWorld 2.0 release alike, so the fold is per column.
+        mapping = write_json({"Model": "m", "Model [high]": "m"})
+        rows = [
+            {"benchmark": "osworld_2_0", "model": "Model", "score": 3.0},
+            {"benchmark": "osworld_2_0", "model": "Model [high]", "score": 4.6},
+            {"benchmark": "osworld_verified", "model": "Model", "score": 70.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_osworld_data(SCRIPT, mapping)
+                self.assertEqual(by_key["osworld_2_0"]["m"]["score"], 4.6)
+                self.assertEqual(by_key["osworld_verified"]["m"]["score"], 70.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
         for source, func_name, base, revision, extra in self.REVISION_CASES:
