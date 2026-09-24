@@ -16,7 +16,6 @@ from typing import Any
 import _history
 import derive_indexes
 from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
-from _source_quality import is_secondary_source, secondary_source_error
 from _selector import (
     clear_selector,
     find_matches,
@@ -179,9 +178,8 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
     parser.add_argument(
         "--score-url",
         metavar="URL",
-        help="Page the scores this run changes were published on: the model card, paper, "
-        "vendor announcement or benchmark leaderboard, not a news, blog or social post that "
-        "repeats them. Required whenever the run writes a score; clearing one needs none.",
+        help="Page the scores this run changes were read from. Required whenever the run "
+        "writes a score; clearing one needs none.",
     )
 
     reserved_flags = {
@@ -263,19 +261,13 @@ def parse_score_source(raw: str | None) -> str | None:
     Naming the page a number was actually read from is not cosmetic -- it moves
     the value onto that page's rung of _precedence.source_rank(), where only
     that page's own rung or better replaces it -- and it is the only way a
-    reader can check the number. It must be where the score was published:
-    a hand entry often leads a column no scraper reaches, so a news story or
-    social post retelling somebody's table would be the column's word on it
-    (_source_quality.py, issue #229).
+    reader can check the number (issue #229).
     """
-    url = parse_url_field(raw, "--score-url")
-    if url is not None and is_secondary_source(url):
-        raise ValueError(f"Invalid --score-url: {secondary_source_error(url)}")
-    return url
+    return parse_url_field(raw, "--score-url")
 
 
 def require_score_source(url: str | None, score_updates: dict[str, Any]) -> None:
-    """Refuse a run that writes a score without naming where it was published.
+    """Refuse a run that writes a score without naming the page it was read from.
 
     Clearing a score needs no page, so only a non-null value asks for one.
     """
@@ -284,22 +276,21 @@ def require_score_source(url: str | None, score_updates: dict[str, Any]) -> None
         raise ValueError(
             "--score-url is required to write a score ("
             + ", ".join(written)
-            + "): name the model card, paper, vendor announcement or benchmark "
-            "leaderboard the number was published on."
+            + "): name the page the number was read from."
         )
 
 
 def prompt_score_source() -> str:
-    """Ask for the page the scores just typed in were published on, until one is valid."""
+    """Ask for the page the scores just typed in were read from, until one is valid."""
     while True:
-        answer = input("  Source page for these scores (model card, paper or leaderboard): ")
+        answer = input("  Source page for these scores: ")
         try:
             url = parse_score_source(answer)
         except ValueError as exc:
             print(f"  {exc}")
             continue
         if url is None:
-            print("  A score needs the page it was published on.")
+            print("  A score needs the page it was read from.")
             continue
         return url
 

@@ -276,7 +276,7 @@ class TestHandEditProvenance(unittest.TestCase):
         self.assertEqual(self.edit("--bench=42.5", f"--score-url={URL_A}").returncode, 0)
         self.assertEqual(self.model()["scores_updated"]["bench"], date.today().isoformat())
 
-    def test_a_score_needs_the_page_it_was_published_on(self) -> None:
+    def test_a_score_needs_the_page_it_was_read_from(self) -> None:
         """Issue #229: unsourced hand entries sat in llm.json with nothing to check them by."""
         for flags in ((), ("--score-url=null",), ("--score-url=",)):
             with self.subTest(flags=flags):
@@ -296,20 +296,6 @@ class TestHandEditProvenance(unittest.TestCase):
         self.edit("--bench=1", "--other=2", f"--score-url={URL_A}")
         self.assertEqual(self.edit("--bench=null", "--other=3", f"--score-url={URL_B}").returncode, 0)
         self.assertEqual(self.model()["scores_source"], {"bench": None, "other": URL_B})
-
-    def test_a_retelling_is_not_a_source(self) -> None:
-        """A news, blog or social post that repeats a number is not where it was published."""
-        for url in (
-            "https://x.com/someone/status/1",
-            "https://www.datacamp.com/blog/qwen3-8-max",
-            "https://gist.github.com/someone/abc",
-            "https://someone.substack.com/p/scores",
-        ):
-            with self.subTest(url=url):
-                result = self.edit("--bench=1", f"--score-url={url}")
-                self.assertEqual(result.returncode, 1)
-                self.assertIn("primary publication", result.stderr)
-                self.assertEqual(self.model()["scores"], {})
 
     def test_the_stamp_covers_every_score_the_run_changes(self) -> None:
         """One sitting is one leaderboard read on one day."""

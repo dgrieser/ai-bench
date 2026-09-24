@@ -218,10 +218,9 @@ jobs:
       # still green, which is the failure mode the whole file is arranged
       # against.
       #
-      # test_hand_sources.py checks what the answers this run applies are
-      # allowed to cite: every score names the page it was published on, and
-      # none a news, blog or social post. A hand entry is often the only value
-      # in its column, so a retelling it cites is the column's word on it.
+      # test_hand_sources.py checks that every score in llm.json names the
+      # page it was read from. A hand entry is often the only value in its
+      # column, so an unsourced one is a number nobody can check.
       #
       # test_fetch_warnings.py guards the line between a warning and a failure.
       # Drawn too wide, a bug in this repository reads as a flaky source and

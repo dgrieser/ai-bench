@@ -49,7 +49,6 @@ import edit
 import propose
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _scores import editable_benchmarks
-from _source_quality import is_secondary_source, secondary_source_error
 
 HERE = Path(__file__).resolve().parent
 ADD_SCRIPT = HERE / "add.py"
@@ -723,14 +722,13 @@ def _score_date(record: dict[str, Any], has_scores: bool) -> str | None:
 
 
 def _score_url(record: dict[str, Any], has_scores: bool, writes_score: bool) -> str | None:
-    """The page the scores in this record were published on, or None.
+    """The page the scores in this record were read from, or None.
 
     Required whenever the record writes a number (edit.py refuses the run
     otherwise, which would take the rest of the batch down after it): the page
     moves the value onto that page's rung of _precedence.source_rank(), and it
     is the only thing a reader can check the number against. A record that only
-    clears scores has nothing to credit. The page must be the publication
-    itself, not a news, blog or social post retelling it (_source_quality.py).
+    clears scores has nothing to credit.
     """
     raw = record.get("score_url")
     if raw is not None and not has_scores:
@@ -741,14 +739,11 @@ def _score_url(record: dict[str, Any], has_scores: bool, writes_score: bool) -> 
     if not url:
         if writes_score:
             raise AnswerError(
-                "'score_url' is required with a score: name the model card, paper, "
-                "vendor announcement or leaderboard it was published on"
+                "'score_url' is required with a score: name the page it was read from"
             )
         return None
     if not url.startswith(("http://", "https://")):
         raise AnswerError(f"{raw!r} is not a URL starting with http:// or https://")
-    if is_secondary_source(url):
-        raise AnswerError(secondary_source_error(url))
     return url
 
 

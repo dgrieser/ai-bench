@@ -422,9 +422,8 @@ Output: llm.json (unified dataset)
 ./edit.py --json llm.json [model-slug]
 ./edit.py -m devstral-2 --creator=Mistral --creator-url=https://mistral.ai/
 
-# ... and a score, which needs the page it was published on (the model card,
-# paper, vendor announcement or benchmark leaderboard -- not a news, blog or
-# social post repeating it); --score-date defaults to today
+# ... and a score, which needs the page it was read from; --score-date
+# defaults to today
 ./edit.py -m devstral-2 --swe-bench-verified=72.2 \
           --score-date=2026-08-06 --score-url=https://example.com/leaderboard
 
@@ -700,7 +699,7 @@ already gives row collisions inside a single source.
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2 — *for the boards it re-runs*. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only; where they overlap, llm-stats runs first and so claims the gap. |
-| 6 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written and must be the primary publication: the model card, paper, vendor announcement or leaderboard. News, blog, social and paste hosts (`_source_quality.SECONDARY_HOSTS`) are refused, and `test_hand_sources.py` holds llm.json to both rules: in a column no scraper reaches a hand entry is the column's only word, often at the top of it. A hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
+| 6 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
 Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value

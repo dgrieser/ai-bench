@@ -410,7 +410,7 @@ class TestModelEdits(AnswersTestCase):
         flags = [a for a in run.call_args[0][0] if a.startswith("--score-")]
         self.assertEqual(flags, ["--score-url=https://example.com/board"])
 
-    def test_a_score_needs_the_page_it_was_published_on(self) -> None:
+    def test_a_score_needs_the_page_it_was_read_from(self) -> None:
         """Refused here, before the batch runs: edit.py would refuse it mid-batch."""
         for extra in ({}, {"score_url": None}, {"score_url": "  "}):
             with self.subTest(extra=extra):
@@ -422,15 +422,6 @@ class TestModelEdits(AnswersTestCase):
     def test_clearing_a_score_needs_no_page(self) -> None:
         answer = self.accepted({"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": None}})
         self.assertIsNone(answer.score_url)
-
-    def test_a_retelling_is_not_a_page(self) -> None:
-        for value in ("https://x.com/someone/status/1", "https://www.thenextweb.com/news/x"):
-            with self.subTest(value=value):
-                self.refused(
-                    {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"hle": 1},
-                     "score_url": value},
-                    "primary publication",
-                )
 
     def test_provenance_needs_a_score_to_stamp(self) -> None:
         """A params edit has nothing to date or credit."""

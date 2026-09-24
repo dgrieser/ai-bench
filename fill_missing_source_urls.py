@@ -35,7 +35,6 @@ import _history
 import _prompts
 import fetch_spheron
 from _scores import editable_benchmarks, stamp_score_source, stamp_score_updated
-from _source_quality import is_secondary_source, secondary_source_error
 from _spheron_mapping import hf_path_from_url
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().parent / "llm.json"
@@ -69,7 +68,7 @@ class Gap:
     kind: str
     label: str
     detail: str
-    value_kind: str  # "url", "source" (a score's page) or "date"
+    value_kind: str  # "url" or "date"
     apply: Callable[[str], None]
     candidates: list[tuple[str, str]] = field(default_factory=list)
 
@@ -86,14 +85,6 @@ def parse_url(raw: str) -> str:
     return text
 
 
-def parse_source_url(raw: str) -> str:
-    """A score's page: a URL, and where the score was published (_source_quality.py)."""
-    url = parse_url(raw)
-    if is_secondary_source(url):
-        raise ValueError(secondary_source_error(url))
-    return url
-
-
 def parse_date(raw: str) -> str:
     text = raw.strip()
     try:
@@ -102,7 +93,7 @@ def parse_date(raw: str) -> str:
         raise ValueError("expected a date like 2026-08-06") from None
 
 
-PARSERS = {"url": parse_url, "source": parse_source_url, "date": parse_date}
+PARSERS = {"url": parse_url, "date": parse_date}
 
 
 def dedupe(candidates: list[tuple[str, str]]) -> list[tuple[str, str]]:
@@ -286,25 +277,19 @@ def model_gaps(doc: dict[str, Any], model: dict[str, Any], corpus: Corpus) -> li
                     kind="score-source",
                     label=label,
                     detail=f"score {score} has no source URL",
-                    value_kind="source",
+                    value_kind="url",
                     apply=lambda value, m=model, k=key: stamp_score_source(m, k, value),
-                    # A retelling the file already cites is not offered as a
-                    # one-keystroke answer; the parser would refuse it anyway.
-                    candidates=[
-                        (u, why)
-                        for u, why in dedupe(
-                            [
-                                *((u, f"{key} benchmark page") for u in benchmark_urls(benchmarks[key])),
-                                *((u, "used by other scores of this model") for u in top(own_sources, 2)),
-                                *(
-                                    (u, f"most common source for {key}")
-                                    for u in corpus.common_sources(key, model, 2)
-                                ),
-                                (model.get("url"), "this model's page"),
-                            ]
-                        )
-                        if not is_secondary_source(u)
-                    ],
+                    candidates=dedupe(
+                        [
+                            *((u, f"{key} benchmark page") for u in benchmark_urls(benchmarks[key])),
+                            *((u, "used by other scores of this model") for u in top(own_sources, 2)),
+                            *(
+                                (u, f"most common source for {key}")
+                                for u in corpus.common_sources(key, model, 2)
+                            ),
+                            (model.get("url"), "this model's page"),
+                        ]
+                    ),
                 )
             )
 
