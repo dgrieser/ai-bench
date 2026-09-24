@@ -845,7 +845,8 @@ def apply_score(
       * fill_only: only fill nulls, never overwrite (the low-trust rule the
         Hugging Face and llm-stats aggregates follow) -- except a value from a
         custom source, a page no fetcher writes (_precedence.is_fetcher_source),
-        which every fetcher may replace;
+        which every fetcher may replace, and a value credited to the very page
+        being read, which is that page refreshing its own number;
       * a fetcher reporting the very number a custom source gave takes over its
         credit, so the value is attributed to a page this repo re-reads;
       * fill_urls_only (--fill-source-urls): scores and dates stay untouched;
@@ -881,7 +882,8 @@ def apply_score(
 
     stored_url = score_source(model, key)
     custom = not is_fetcher_source(stored_url)
-    if fill_only and old_value is not None and not custom:
+    own = stored_url is not None and canonical(stored_url) == canonical(url)
+    if fill_only and old_value is not None and not (custom or own):
         return 0
     # Never overwrite an existing non-null value with null.
     if old_value is not None and new_value is None:

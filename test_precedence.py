@@ -283,8 +283,8 @@ class TestCustomSources(unittest.TestCase):
                     self.assertEqual(model["scores"]["ifbench"], 38.0)
                     self.assertEqual(model["scores_source"]["ifbench"], url)
 
-    def test_a_fill_only_fetcher_still_leaves_a_fetchers_value(self) -> None:
-        for stored in (AA_PAGE, EVALS_IFBENCH, HF_CARD, LLMSTATS_SOURCE_URL):
+    def test_a_fill_only_fetcher_still_leaves_another_fetchers_value(self) -> None:
+        for stored in (AA_PAGE, EVALS_IFBENCH, HF_CARD):
             with self.subTest(stored=stored):
                 model = model_with(score=10.0, source=stored)
                 n = update.apply_score(
@@ -312,6 +312,40 @@ class TestCustomSources(unittest.TestCase):
         n = update.apply_score(DOC, model, "m", "ifbench", 38.0, LLMSTATS_SOURCE_URL, [])
         self.assertEqual(n, 0)
         self.assertEqual(model["scores_source"]["ifbench"], HF_CARD)
+
+    def test_a_fill_only_fetcher_refreshes_its_own_value(self) -> None:
+        """Same page, new number: the source updating itself, not an overwrite."""
+        for url in (HF_CARD, LLMSTATS_SOURCE_URL):
+            with self.subTest(url=url):
+                model = model_with(score=10.0, source=url)
+                changes: list = []
+                n = update.apply_score(DOC, model, "m", "ifbench", 38.0, url, changes, fill_only=True)
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores"]["ifbench"], 38.0)
+                self.assertEqual(model["scores_source"]["ifbench"], url)
+                self.assertEqual(changes, [("m", "ifbench", 10.0, 38.0)])
+
+    def test_own_page_is_matched_on_its_canonical_form(self) -> None:
+        model = model_with(score=10.0, source=HF_CARD)
+        n = update.apply_score(
+            DOC, model, "m", "ifbench", 38.0, f"{HF_CARD}/?tab=card", [], fill_only=True
+        )
+        self.assertEqual(n, 1)
+
+    def test_another_card_of_the_same_fetcher_is_not_its_own(self) -> None:
+        model = model_with(score=10.0, source=HF_CARD)
+        n = update.apply_score(
+            DOC, model, "m", "ifbench", 38.0, f"{HUGGING_FACE_PREFIX}/google/gemma-4-31b-it",
+            [], fill_only=True,
+        )
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores"]["ifbench"], 10.0)
+
+    def test_null_never_replaces_its_own_value(self) -> None:
+        model = model_with(score=10.0, source=HF_CARD)
+        n = update.apply_score(DOC, model, "m", "ifbench", None, HF_CARD, [], fill_only=True)
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores"]["ifbench"], 10.0)
 
     def test_null_never_replaces_a_custom_value(self) -> None:
         model = model_with(score=10.0, source=HAND_ENTERED)

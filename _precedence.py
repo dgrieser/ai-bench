@@ -48,7 +48,8 @@ The rungs, strongest first:
   5. ``RANK_AGGREGATE`` -- cross-benchmark aggregates that republish numbers
      nobody in the chain ran: llm-stats and the Hugging Face model cards. Both
      ingests are fill-only, so in practice they reach a column only where it is
-     still null.
+     still null, custom-sourced, or credited to the very page they are
+     re-reading.
   6. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
      ``edit.py``. Its attribution is whatever page the entry cited, or null
      when a hand edit cleared it (``stamp_score_source`` takes None for exactly
