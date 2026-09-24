@@ -123,7 +123,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         failing = fails or set()
 
         def reader(
-            repo: str, slug: str | None = None
+            repo: str, slug: str | None = None, failures: list[str] | None = None
         ) -> tuple[dict[str, float], dict[str, str]]:
             if repo in failing:
                 raise RuntimeError("HTTP Error 401: Unauthorized")
@@ -137,7 +137,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         reads: list[str] = []
 
         def counting(
-            repo: str, slug: str | None = None
+            repo: str, slug: str | None = None, failures: list[str] | None = None
         ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
             return {}, {}
@@ -161,7 +161,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         reads: list[str] = []
 
         def counting(
-            repo: str, slug: str | None = None
+            repo: str, slug: str | None = None, failures: list[str] | None = None
         ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
             return {}, {}
@@ -177,7 +177,7 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         reads: list[str] = []
 
         def counting(
-            repo: str, slug: str | None = None
+            repo: str, slug: str | None = None, failures: list[str] | None = None
         ) -> tuple[dict[str, float], dict[str, str]]:
             reads.append(repo)
             return {}, {}

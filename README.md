@@ -705,6 +705,18 @@ Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
 came from a *strictly* better-ranked source.
 
+Rank also stops mattering once a source drops a score. A value credited to a
+fetcher's page (`_precedence.is_fetcher_source`) whose page was read in this run
+but no longer reports it -- the model removed from the board, or re-run under a
+new label -- may be replaced by any other fetcher that reports it in the same run,
+fill-only aggregates included (`update.replace_dropped_scores`). It runs once
+after every ingest, so ingest order does not matter, and the best-ranked
+candidate wins. A score is never nulled for going unreported: with no candidate
+it stays. A failed fetcher drops nothing: a page not read at all (a failed or
+skipped fetch), every page an ingest step read before it raised, and a Hugging
+Face card whose metadata could not be loaded (`"partial": true` from
+`fetch_huggingface.py`) are all excluded. Nothing carries over between runs.
+
 The Coding Agent Index shares AA's rank 1 and is no longer fill-only. When AA
 surfaces disagree, the later AA ingest wins (the coding-agent ingest follows the
 model-page ingest in a full update). Missing results never erase stored scores.

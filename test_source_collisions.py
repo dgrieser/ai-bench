@@ -339,6 +339,18 @@ class TestLlmstatsMerge(unittest.TestCase):
 
 
 class TestHuggingfaceMerge(unittest.TestCase):
+    def test_a_partial_card_is_a_failed_page(self) -> None:
+        """Its missing scores are not ones it stopped reporting (#226)."""
+        mapping = write_json({"IFEval": "ifeval"})
+        update.RUN_REPORTS = update.RunReports()
+        rows = [
+            {"model": "m", "repo": "org/m-part", "scores": {"IFEval": 30.0}, "partial": True},
+            {"model": "n", "repo": "org/n-full", "scores": {"IFEval": 45.0}},
+        ]
+        with stub_run(rows):
+            update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertEqual(update.RUN_REPORTS.failed_pages, {"https://huggingface.co/org/m-part"})
+
     def test_repeated_rows_take_the_best_run(self) -> None:
         mapping = write_json({"IFEval": "ifeval"})
         rows = [
