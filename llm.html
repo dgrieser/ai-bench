@@ -2736,6 +2736,12 @@
       height: 13px;
     }
 
+    .axis-chip-count {
+      color: var(--subtle);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
     .axis-chip.no-score {
       color: var(--subtle);
     }
@@ -8252,13 +8258,19 @@
           // A chip greys out only when *nobody* on the chart scored the axis:
           // with several models, one score is enough for the axis to be
           // carrying information.
-          const scored = models.some((model) => Number.isFinite(toNumber(model.scores?.[key])));
+          const scoredCount = models.filter((model) => Number.isFinite(toNumber(model.scores?.[key]))).length;
+          const scored = scoredCount > 0;
+          // On a comparison, a chip some models lack carries the same "k/N"
+          // count as its axis label on the chart, so the gaps show up here too.
+          const count = models.length > 1 && scoredCount < models.length
+            ? `<span class="axis-chip-count" aria-label="${escapeAttr(`${scoredCount} of ${models.length} models scored`)}">${scoredCount}/${models.length}</span>`
+            : "";
           const tip = tipAttrs(benchmarkTipFields(key));
           const removeLabel = canRemove
             ? `Remove ${getBenchmarkFullName(key)} from the chart`
             : `A radar needs at least ${RADAR_MIN_AXES} axes`;
           return `<span class="axis-chip${scored ? "" : " no-score"}"${tip}>` +
-            `${renderBenchmarkIcon(key)}<span class="axis-chip-name">${escapeHtml(getBenchmarkLabel(key))}</span>` +
+            `${renderBenchmarkIcon(key)}<span class="axis-chip-name">${escapeHtml(getBenchmarkLabel(key))}</span>${count}` +
             `<button type="button" class="axis-chip-x" data-action="remove-axis" data-key="${escapeAttr(key)}"${canRemove ? "" : " disabled"} aria-label="${escapeAttr(removeLabel)}">&times;</button>` +
             `</span>`;
         }).join("");
