@@ -838,6 +838,10 @@ class RunReports:
     read_pages: set[str] = field(default_factory=set)
     # Pages whose read failed partway: what they did not report proves nothing.
     failed_pages: set[str] = field(default_factory=set)
+    # benchmark -> pages read this run through a feed that carried that
+    # benchmark for no model at all (AA's API-only fields when the API sent
+    # none of them): silence there says nothing about the page.
+    blind: dict[str, set[str]] = field(default_factory=dict)
     # Pages read by the ingest step now running, so a failure can mark them.
     step_pages: set[str] = field(default_factory=set)
     # (model, benchmark) -> canonical pages that reported a number for it.
@@ -863,11 +867,16 @@ class RunReports:
         return (
             page in self.read_pages
             and page not in self.failed_pages
+            and page not in self.blind.get(key, set())
             and page not in self.reported.get((slug, key), set())
         )
 
     def failed(self, url: str) -> None:
         self.failed_pages.add(canonical(url))
+
+    def could_not_show(self, key: str, urls) -> None:
+        """These pages were read, but nothing this run could have shown key on them."""
+        self.blind.setdefault(key, set()).update(canonical(url) for url in urls)
 
 
 RUN_REPORTS = RunReports()
@@ -1159,6 +1168,10 @@ def update_scores(
     updated = 0
     seen_eval_keys: set[str] = set()
     changes: list[tuple[str, str, Any, Any]] = []
+    # Which benchmarks this run's AA data carried for any model at all, and
+    # every page it was read from: see RunReports.blind.
+    delivered: set[str] = set()
+    all_read_pages: set[str] = set()
 
     for model in models:
         slug = model.get("name")
@@ -1206,6 +1219,7 @@ def update_scores(
             for aa_slug in aa_model.get("_aa_slugs") or [aa_model.get("slug")]
             if isinstance(aa_slug, str) and aa_slug
         }
+        all_read_pages |= read_pages
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
             aa_value = None
             aa_key_used = None
@@ -1215,6 +1229,8 @@ def update_scores(
                     aa_key_used = aa_key
                     break
             new_value = transform(aa_value)
+            if new_value is not None:
+                delivered.add(llm_key)
             if new_value is None and not fill_urls_only:
                 if complete:
                     updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
@@ -1225,6 +1241,16 @@ def update_scores(
                 doc, model, slug, llm_key, new_value, url, changes,
                 fill_urls_only=fill_urls_only,
             )
+
+    # The API-only fields (MMLU-Pro, AA-LCR, the tau benches...) arrive with
+    # the API record or not at all. A run whose API answer carried one for no
+    # model -- a tier without it, a field renamed upstream -- still reads every
+    # page for the rest, and without this the #226 pass would take that
+    # silence for AA withdrawing all of them: the 2026-09-24 11:48 refresh
+    # handed 21 mmlu_pro and 22 aa_lcr rows to model cards that way.
+    if not fill_urls_only:
+        for llm_key in SCORE_MAPPINGS.keys() - delivered:
+            RUN_REPORTS.could_not_show(llm_key, all_read_pages)
 
     return matched, updated, seen_eval_keys, changes
 

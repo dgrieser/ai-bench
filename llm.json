@@ -1295,10 +1295,10 @@
       },
       "scores": {
         "coding_index": 25236,
-        "tooling_index": 35403,
-        "knowledge_index": 25030,
+        "tooling_index": 35168,
+        "knowledge_index": 24911,
         "vision_index": null,
-        "trust_index": 47924,
+        "trust_index": 47666,
         "aa_intelligence_index": 8.6,
         "swe_bench_verified": 72.2,
         "swe_bench_multimodal": null,
@@ -1729,10 +1729,10 @@
       },
       "scores": {
         "coding_index": 22522,
-        "tooling_index": 33772,
-        "knowledge_index": 18100,
+        "tooling_index": 33568,
+        "knowledge_index": 17989,
         "vision_index": 11309,
-        "trust_index": 40248,
+        "trust_index": 40079,
         "aa_intelligence_index": 7.5,
         "swe_bench_verified": 68.0,
         "swe_bench_multimodal": null,
@@ -2178,9 +2178,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33804,
+        "knowledge_index": 33808,
         "vision_index": 23747,
-        "trust_index": 39620,
+        "trust_index": 39554,
         "aa_intelligence_index": 14.9,
         "swe_bench_verified": 59.2,
         "swe_bench_multimodal": null,
@@ -2542,9 +2542,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 62888,
+        "knowledge_index": 62675,
         "vision_index": null,
-        "trust_index": 49143,
+        "trust_index": 48931,
         "aa_intelligence_index": 17,
         "swe_bench_verified": 74.4,
         "swe_bench_multimodal": null,
@@ -2913,9 +2913,9 @@
       "scores": {
         "coding_index": 43270,
         "tooling_index": null,
-        "knowledge_index": 58118,
+        "knowledge_index": 58021,
         "vision_index": null,
-        "trust_index": 53234,
+        "trust_index": 54192,
         "aa_intelligence_index": 22.8,
         "swe_bench_verified": 74.2,
         "swe_bench_multimodal": null,
@@ -2956,7 +2956,7 @@
         "aa_omniscience": -38.9,
         "aa_omniscience_hallucination": 88.1,
         "aa_omniscience_accuracy": 26.2,
-        "aa_lcr": 69.5,
+        "aa_lcr": 73.3,
         "critpt": 1.1,
         "aime_2025": 88.3,
         "aime_2026": null,
@@ -3015,7 +3015,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": "2026-09-10",
         "aime_2026": null,
@@ -3074,7 +3074,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/minimax-m2-5",
-        "aa_lcr": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5",
+        "aa_lcr": "https://artificialanalysis.ai/models/minimax-m2-5",
         "critpt": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aime_2025": "https://www.vals.ai/benchmarks/aime",
         "aime_2026": null,
@@ -3237,11 +3237,6 @@
             "date": "2026-09-04",
             "score": 73.3,
             "source": "https://artificialanalysis.ai/models/minimax-m2-5"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 69.5,
-            "source": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5"
           }
         ],
         "critpt": [
@@ -3337,10 +3332,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -3357,9 +3349,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 21397,
+        "knowledge_index": 21032,
         "vision_index": null,
-        "trust_index": 46792,
+        "trust_index": 46548,
         "aa_intelligence_index": 9.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -3714,10 +3706,10 @@
       },
       "scores": {
         "coding_index": 26991,
-        "tooling_index": 30007,
-        "knowledge_index": 32064,
+        "tooling_index": 29965,
+        "knowledge_index": 32070,
         "vision_index": null,
-        "trust_index": 37515,
+        "trust_index": 37478,
         "aa_intelligence_index": 9.2,
         "swe_bench_verified": 70.6,
         "swe_bench_multimodal": null,
@@ -4140,10 +4132,10 @@
       },
       "scores": {
         "coding_index": 21414,
-        "tooling_index": 21095,
-        "knowledge_index": 37842,
+        "tooling_index": 20855,
+        "knowledge_index": 37847,
         "vision_index": null,
-        "trust_index": 47423,
+        "trust_index": 47255,
         "aa_intelligence_index": 9.8,
         "swe_bench_verified": 22.0,
         "swe_bench_multimodal": null,
@@ -4172,7 +4164,7 @@
         "terminal_bench_hard": 5.3,
         "toolathlon": null,
         "tau3_bench_banking": 5.4,
-        "tau2_bench_telecom": 26.3,
+        "tau2_bench_telecom": 28.1,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 50.7,
@@ -4190,7 +4182,7 @@
         "aime_2026": 87.5,
         "gpqa_diamond": 70.7,
         "hle": 10.3,
-        "mmlu_pro": 80.9,
+        "mmlu_pro": 80.5,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4231,7 +4223,7 @@
         "terminal_bench_hard": "2026-02-13",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-01",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-02-13",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -4249,7 +4241,7 @@
         "aime_2026": "2026-08-11",
         "gpqa_diamond": "2026-02-13",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4290,7 +4282,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
-        "tau2_bench_telecom": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
@@ -4308,7 +4300,7 @@
         "aime_2026": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
         "gpqa_diamond": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "hle": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
-        "mmlu_pro": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
+        "mmlu_pro": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4378,11 +4370,6 @@
             "date": "2026-02-13",
             "score": 28.1,
             "source": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 26.3,
-            "source": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507"
           }
         ],
         "ifbench": [
@@ -4491,11 +4478,6 @@
             "date": "2026-08-23",
             "score": 80.5,
             "source": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 80.9,
-            "source": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507"
           }
         ]
       },
@@ -4539,10 +4521,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.558,
-          "second_hand": [
-            "tau2_bench_telecom"
-          ]
+          "share": 0.558
         },
         "knowledge_index": {
           "measured": [
@@ -4554,10 +4533,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -4583,10 +4559,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 25372,
-        "knowledge_index": 42815,
+        "tooling_index": 24828,
+        "knowledge_index": 43051,
         "vision_index": null,
-        "trust_index": 49995,
+        "trust_index": 49792,
         "aa_intelligence_index": 11.2,
         "swe_bench_verified": 74.5,
         "swe_bench_multimodal": null,
@@ -4615,7 +4591,7 @@
         "terminal_bench_hard": 9.8,
         "toolathlon": null,
         "tau3_bench_banking": 6.2,
-        "tau2_bench_telecom": 43.9,
+        "tau2_bench_telecom": 41.5,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 60.7,
@@ -4633,7 +4609,7 @@
         "aime_2026": null,
         "gpqa_diamond": 75.9,
         "hle": 12.6,
-        "mmlu_pro": 82.7,
+        "mmlu_pro": 82.4,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4674,7 +4650,7 @@
         "terminal_bench_hard": "2026-02-13",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-01",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-02-13",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -4692,7 +4668,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-02-13",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4733,7 +4709,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
-        "tau2_bench_telecom": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
@@ -4751,7 +4727,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "hle": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
-        "mmlu_pro": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking",
+        "mmlu_pro": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -4814,11 +4790,6 @@
             "date": "2026-02-13",
             "score": 41.5,
             "source": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 43.9,
-            "source": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking"
           }
         ],
         "ifbench": [
@@ -4901,11 +4872,6 @@
             "date": "2026-08-23",
             "score": 82.4,
             "source": "https://artificialanalysis.ai/models/qwen3-next-80b-a3b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 82.7,
-            "source": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking"
           }
         ]
       },
@@ -4934,10 +4900,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.434,
-          "second_hand": [
-            "tau2_bench_telecom"
-          ]
+          "share": 0.434
         },
         "knowledge_index": {
           "measured": [
@@ -4949,10 +4912,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -4978,10 +4938,10 @@
       },
       "scores": {
         "coding_index": 47316,
-        "tooling_index": 53320,
-        "knowledge_index": 69981,
+        "tooling_index": 53092,
+        "knowledge_index": 69994,
         "vision_index": 66563,
-        "trust_index": 54460,
+        "trust_index": 55818,
         "aa_intelligence_index": 18.4,
         "swe_bench_verified": 76.4,
         "swe_bench_multimodal": null,
@@ -5022,7 +4982,7 @@
         "aa_omniscience": -30.8,
         "aa_omniscience_hallucination": 88.9,
         "aa_omniscience_accuracy": 30.8,
-        "aa_lcr": 68.7,
+        "aa_lcr": 77.3,
         "critpt": 1.7,
         "aime_2025": null,
         "aime_2026": 93.3,
@@ -5081,7 +5041,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": "2026-09-24",
@@ -5140,7 +5100,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
@@ -5334,11 +5294,6 @@
             "date": "2026-09-04",
             "score": 77.3,
             "source": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 68.7,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B"
           }
         ],
         "critpt": [
@@ -5509,10 +5464,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -5528,10 +5480,10 @@
       },
       "scores": {
         "coding_index": 35679,
-        "tooling_index": 52037,
-        "knowledge_index": 63301,
+        "tooling_index": 52149,
+        "knowledge_index": 63318,
         "vision_index": 52307,
-        "trust_index": 53555,
+        "trust_index": 54862,
         "aa_intelligence_index": 15.6,
         "swe_bench_verified": 72.0,
         "swe_bench_multimodal": null,
@@ -5572,7 +5524,7 @@
         "aa_omniscience": -41.5,
         "aa_omniscience_hallucination": 87.1,
         "aa_omniscience_accuracy": 24.4,
-        "aa_lcr": 66.9,
+        "aa_lcr": 76.3,
         "critpt": 0.6,
         "aime_2025": null,
         "aime_2026": null,
@@ -5631,7 +5583,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": null,
@@ -5690,7 +5642,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b",
         "aime_2025": null,
         "aime_2026": null,
@@ -5851,11 +5803,6 @@
             "date": "2026-09-04",
             "score": 76.3,
             "source": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 66.9,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B"
           }
         ],
         "critpt": [
@@ -6008,10 +5955,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -6027,10 +5971,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 60365,
-        "knowledge_index": 61614,
+        "tooling_index": 60432,
+        "knowledge_index": 61632,
         "vision_index": 55839,
-        "trust_index": 56172,
+        "trust_index": 57717,
         "aa_intelligence_index": 22.9,
         "swe_bench_verified": 72.4,
         "swe_bench_multimodal": null,
@@ -6071,7 +6015,7 @@
         "aa_omniscience": -44,
         "aa_omniscience_hallucination": 81.5,
         "aa_omniscience_accuracy": 20.7,
-        "aa_lcr": 66.1,
+        "aa_lcr": 77.7,
         "critpt": 0.9,
         "aime_2025": null,
         "aime_2026": 90.8,
@@ -6130,7 +6074,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": "2026-09-24",
@@ -6189,7 +6133,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-27b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-27B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-27b",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/Qwen/Qwen3.5-27B",
@@ -6314,11 +6258,6 @@
             "date": "2026-09-04",
             "score": 77.7,
             "source": "https://artificialanalysis.ai/models/qwen3-5-27b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 66.1,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-27B"
           }
         ],
         "critpt": [
@@ -6465,10 +6404,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -6484,10 +6420,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 46077,
-        "knowledge_index": 56728,
+        "tooling_index": 46143,
+        "knowledge_index": 56674,
         "vision_index": 43390,
-        "trust_index": 52927,
+        "trust_index": 54413,
         "aa_intelligence_index": 19.3,
         "swe_bench_verified": 69.2,
         "swe_bench_multimodal": null,
@@ -6528,7 +6464,7 @@
         "aa_omniscience": -48.1,
         "aa_omniscience_hallucination": 85.4,
         "aa_omniscience_accuracy": 20.1,
-        "aa_lcr": 58.5,
+        "aa_lcr": 72,
         "critpt": 0.9,
         "aime_2025": null,
         "aime_2026": 93.3,
@@ -6587,7 +6523,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": "2026-08-11",
@@ -6646,7 +6582,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
@@ -6764,11 +6700,6 @@
             "date": "2026-09-04",
             "score": 72,
             "source": "https://artificialanalysis.ai/models/qwen3-5-35b-a3b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 58.5,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B"
           }
         ],
         "critpt": [
@@ -6910,10 +6841,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -6929,10 +6857,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 38137,
-        "knowledge_index": 47064,
+        "tooling_index": 37833,
+        "knowledge_index": 46971,
         "vision_index": 37893,
-        "trust_index": 50129,
+        "trust_index": 51139,
         "aa_intelligence_index": 13.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -6973,7 +6901,7 @@
         "aa_omniscience": -53.5,
         "aa_omniscience_hallucination": 83.6,
         "aa_omniscience_accuracy": 16.4,
-        "aa_lcr": 63,
+        "aa_lcr": 70,
         "critpt": 0.3,
         "aime_2025": null,
         "aime_2026": 92.5,
@@ -7032,7 +6960,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": "2026-08-11",
@@ -7091,7 +7019,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-9b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-9B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/Qwen/Qwen3.5-9B",
@@ -7207,11 +7135,6 @@
             "date": "2026-09-04",
             "score": 70,
             "source": "https://artificialanalysis.ai/models/qwen3-5-9b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 63,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-9B"
           }
         ],
         "critpt": [
@@ -7355,10 +7278,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -7374,10 +7294,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 34413,
-        "knowledge_index": 33215,
+        "tooling_index": 34259,
+        "knowledge_index": 33114,
         "vision_index": 33590,
-        "trust_index": 45396,
+        "trust_index": 46383,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7418,7 +7338,7 @@
         "aa_omniscience": -58.4,
         "aa_omniscience_hallucination": 86.6,
         "aa_omniscience_accuracy": 15.1,
-        "aa_lcr": 57,
+        "aa_lcr": 63,
         "critpt": 0,
         "aime_2025": null,
         "aime_2026": null,
@@ -7477,7 +7397,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-23",
         "aime_2025": null,
         "aime_2026": null,
@@ -7536,7 +7456,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-4b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-4B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-4b",
         "aime_2025": null,
         "aime_2026": null,
@@ -7640,11 +7560,6 @@
             "date": "2026-09-04",
             "score": 63,
             "source": "https://artificialanalysis.ai/models/qwen3-5-4b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 57,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-4B"
           }
         ],
         "critpt": [
@@ -7780,10 +7695,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -7799,10 +7711,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 13591,
-        "knowledge_index": 13768,
+        "tooling_index": 13791,
+        "knowledge_index": 13772,
         "vision_index": 12954,
-        "trust_index": 42587,
+        "trust_index": 41568,
         "aa_intelligence_index": 6.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -7843,7 +7755,7 @@
         "aa_omniscience": -60.2,
         "aa_omniscience_hallucination": 74.2,
         "aa_omniscience_accuracy": 8.1,
-        "aa_lcr": 25.6,
+        "aa_lcr": 21,
         "critpt": 0,
         "aime_2025": null,
         "aime_2026": null,
@@ -7902,7 +7814,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-23",
         "aime_2025": null,
         "aime_2026": null,
@@ -7961,7 +7873,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-2b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-2B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-2b",
         "aime_2025": null,
         "aime_2026": null,
@@ -8070,11 +7982,6 @@
             "date": "2026-09-04",
             "score": 21,
             "source": "https://artificialanalysis.ai/models/qwen3-5-2b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 25.6,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-2B"
           }
         ],
         "critpt": [
@@ -8202,10 +8109,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -8221,10 +8125,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 7367,
-        "knowledge_index": 14528,
+        "tooling_index": 7546,
+        "knowledge_index": 14532,
         "vision_index": 188,
-        "trust_index": 41463,
+        "trust_index": 40501,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -8265,7 +8169,7 @@
         "aa_omniscience": -54.5,
         "aa_omniscience_hallucination": 61.3,
         "aa_omniscience_accuracy": 4.2,
-        "aa_lcr": 4.7,
+        "aa_lcr": 9,
         "critpt": 0,
         "aime_2025": null,
         "aime_2026": null,
@@ -8324,7 +8228,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-23",
         "aime_2025": null,
         "aime_2026": null,
@@ -8383,7 +8287,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
-        "aa_lcr": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
+        "aa_lcr": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "critpt": "https://artificialanalysis.ai/models/qwen3-5-0-8b",
         "aime_2025": null,
         "aime_2026": null,
@@ -8483,11 +8387,6 @@
             "date": "2026-09-04",
             "score": 9,
             "source": "https://artificialanalysis.ai/models/qwen3-5-0-8b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 4.7,
-            "source": "https://huggingface.co/Qwen/Qwen3.5-0.8B"
           }
         ],
         "critpt": [
@@ -8614,10 +8513,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -8633,10 +8529,10 @@
       "context": "1m",
       "scores": {
         "coding_index": 27827,
-        "tooling_index": 38579,
-        "knowledge_index": 61228,
+        "tooling_index": 38626,
+        "knowledge_index": 60949,
         "vision_index": null,
-        "trust_index": 52120,
+        "trust_index": 52886,
         "aa_intelligence_index": 12.8,
         "swe_bench_verified": 53.7,
         "swe_bench_multimodal": null,
@@ -8665,7 +8561,7 @@
         "terminal_bench_hard": 28.8,
         "toolathlon": null,
         "tau3_bench_banking": 10.3,
-        "tau2_bench_telecom": 64.4,
+        "tau2_bench_telecom": 67.8,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 71.5,
@@ -8677,7 +8573,7 @@
         "aa_omniscience": -41.5,
         "aa_omniscience_hallucination": 87,
         "aa_omniscience_accuracy": 24.3,
-        "aa_lcr": 58.3,
+        "aa_lcr": 65.7,
         "critpt": 3.1,
         "aime_2025": 90.2,
         "aime_2026": 90,
@@ -8724,7 +8620,7 @@
         "terminal_bench_hard": "2026-03-11",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-07",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-03-11",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -8736,7 +8632,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-01",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": "2026-03-11",
         "aime_2026": "2026-08-11",
@@ -8783,7 +8679,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
-        "tau2_bench_telecom": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
@@ -8795,7 +8691,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
-        "aa_lcr": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+        "aa_lcr": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "critpt": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b",
         "aime_2025": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
         "aime_2026": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
@@ -8900,11 +8796,6 @@
             "date": "2026-03-11",
             "score": 67.8,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 64.4,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16"
           }
         ],
         "ifbench": [
@@ -8973,11 +8864,6 @@
             "date": "2026-09-04",
             "score": 65.7,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 58.3,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16"
           }
         ],
         "critpt": [
@@ -9065,10 +8951,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.651,
-          "second_hand": [
-            "tau2_bench_telecom"
-          ]
+          "share": 0.651
         },
         "knowledge_index": {
           "measured": [
@@ -9094,10 +8977,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -9114,9 +8994,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 22673,
+        "knowledge_index": 22675,
         "vision_index": null,
-        "trust_index": 32131,
+        "trust_index": 32053,
         "aa_intelligence_index": 11.5,
         "swe_bench_verified": 54.4,
         "swe_bench_multimodal": null,
@@ -9145,7 +9025,7 @@
         "terminal_bench_hard": 10.6,
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": 72.8,
+        "tau2_bench_telecom": 79.5,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 43.1,
@@ -9204,7 +9084,7 @@
         "terminal_bench_hard": "2026-03-11",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-03-11",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -9263,7 +9143,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/longcat-flash-lite",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/longcat-flash-lite",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/longcat-flash-lite",
@@ -9337,11 +9217,6 @@
             "date": "2026-03-11",
             "score": 79.5,
             "source": "https://artificialanalysis.ai/models/longcat-flash-lite"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 72.8,
-            "source": "https://huggingface.co/meituan-longcat/LongCat-Flash-Lite"
           }
         ],
         "ifbench": [
@@ -9471,10 +9346,10 @@
       },
       "scores": {
         "coding_index": 29294,
-        "tooling_index": 32062,
-        "knowledge_index": 40170,
+        "tooling_index": 31747,
+        "knowledge_index": 40009,
         "vision_index": null,
-        "trust_index": 38734,
+        "trust_index": 38582,
         "aa_intelligence_index": 9,
         "swe_bench_verified": 34.0,
         "swe_bench_multimodal": null,
@@ -9521,7 +9396,7 @@
         "aime_2026": null,
         "gpqa_diamond": 68.8,
         "hle": 11,
-        "mmlu_pro": 71.6,
+        "mmlu_pro": 74.8,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -9580,7 +9455,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-02-13",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -9639,7 +9514,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/gpt-oss-20b",
         "hle": "https://artificialanalysis.ai/models/gpt-oss-20b",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/gpt-oss-20b",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -9817,11 +9692,6 @@
             "date": "2026-08-23",
             "score": 74.8,
             "source": "https://artificialanalysis.ai/models/gpt-oss-20b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 71.6,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -9904,10 +9774,10 @@
       },
       "scores": {
         "coding_index": 31282,
-        "tooling_index": 40729,
-        "knowledge_index": 53244,
+        "tooling_index": 40665,
+        "knowledge_index": 53809,
         "vision_index": null,
-        "trust_index": 47933,
+        "trust_index": 47780,
         "aa_intelligence_index": 11.6,
         "swe_bench_verified": 33.6,
         "swe_bench_multimodal": null,
@@ -9954,7 +9824,7 @@
         "aime_2026": null,
         "gpqa_diamond": 78.2,
         "hle": 19.6,
-        "mmlu_pro": 79.2,
+        "mmlu_pro": 80.8,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10013,7 +9883,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-02-13",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10072,7 +9942,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/gpt-oss-120b",
         "hle": "https://artificialanalysis.ai/models/gpt-oss-120b",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/gpt-oss-120b",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10274,11 +10144,6 @@
             "date": "2026-09-10",
             "score": 80.8,
             "source": "https://artificialanalysis.ai/models/gpt-oss-120b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 79.2,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -10362,10 +10227,10 @@
       },
       "scores": {
         "coding_index": 23806,
-        "tooling_index": 28865,
-        "knowledge_index": 48312,
+        "tooling_index": 28256,
+        "knowledge_index": 48396,
         "vision_index": null,
-        "trust_index": 50484,
+        "trust_index": 49763,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": 38.8,
         "swe_bench_multimodal": null,
@@ -10394,7 +10259,7 @@
         "terminal_bench_hard": 13.6,
         "toolathlon": null,
         "tau3_bench_banking": 6,
-        "tau2_bench_telecom": 42.2,
+        "tau2_bench_telecom": 40.9,
         "mcp_atlas": null,
         "bfcl_v4": 53.8,
         "ifbench": 71.1,
@@ -10406,13 +10271,13 @@
         "aa_omniscience": -51.6,
         "aa_omniscience_hallucination": 83.3,
         "aa_omniscience_accuracy": 17.3,
-        "aa_lcr": 35.9,
+        "aa_lcr": 38,
         "critpt": 0.9,
         "aime_2025": 91,
         "aime_2026": null,
         "gpqa_diamond": 75.7,
         "hle": 11.4,
-        "mmlu_pro": 78.3,
+        "mmlu_pro": 79.4,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10453,7 +10318,7 @@
         "terminal_bench_hard": "2026-03-12",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-01",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-03-12",
         "mcp_atlas": null,
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
@@ -10465,13 +10330,13 @@
         "aa_omniscience": "2026-08-01",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": "2026-03-12",
         "aime_2026": null,
         "gpqa_diamond": "2026-03-12",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10512,7 +10377,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
-        "tau2_bench_telecom": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "mcp_atlas": null,
         "bfcl_v4": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
         "ifbench": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
@@ -10524,13 +10389,13 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
-        "aa_lcr": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "aa_lcr": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "critpt": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "aime_2025": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "hle": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
-        "mmlu_pro": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "mmlu_pro": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -10600,11 +10465,6 @@
             "date": "2026-03-12",
             "score": 40.9,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 42.2,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
           }
         ],
         "bfcl_v4": [
@@ -10671,11 +10531,6 @@
             "date": "2026-09-04",
             "score": 38,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 35.9,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
           }
         ],
         "critpt": [
@@ -10711,11 +10566,6 @@
             "date": "2026-08-23",
             "score": 79.4,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-nano-30b-a3b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 78.3,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
           }
         ]
       },
@@ -10762,8 +10612,7 @@
           "of": 11,
           "share": 0.636,
           "second_hand": [
-            "bfcl_v4",
-            "tau2_bench_telecom"
+            "bfcl_v4"
           ]
         },
         "knowledge_index": {
@@ -10776,10 +10625,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -10789,10 +10635,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -10808,10 +10651,10 @@
       },
       "scores": {
         "coding_index": 25185,
-        "tooling_index": 26915,
-        "knowledge_index": 50160,
+        "tooling_index": 26760,
+        "knowledge_index": 50176,
         "vision_index": 27120,
-        "trust_index": 55264,
+        "trust_index": 54976,
         "aa_intelligence_index": 11.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -11244,10 +11087,10 @@
       },
       "scores": {
         "coding_index": 44768,
-        "tooling_index": 50602,
-        "knowledge_index": 72995,
+        "tooling_index": 50498,
+        "knowledge_index": 72510,
         "vision_index": null,
-        "trust_index": 66991,
+        "trust_index": 66973,
         "aa_intelligence_index": 22.8,
         "swe_bench_verified": 73.8,
         "swe_bench_multimodal": null,
@@ -11742,9 +11585,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 29972,
+        "knowledge_index": 29835,
         "vision_index": null,
-        "trust_index": 27194,
+        "trust_index": 27117,
         "aa_intelligence_index": 6.6,
         "swe_bench_verified": 34.0,
         "swe_bench_multimodal": null,
@@ -12089,9 +11932,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34763,
+        "knowledge_index": 34594,
         "vision_index": null,
-        "trust_index": 38285,
+        "trust_index": 38225,
         "aa_intelligence_index": 8.8,
         "swe_bench_verified": 45.0,
         "swe_bench_multimodal": null,
@@ -12435,10 +12278,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 10742,
-        "knowledge_index": 44272,
+        "tooling_index": 10671,
+        "knowledge_index": 44281,
         "vision_index": null,
-        "trust_index": 47995,
+        "trust_index": 47970,
         "aa_intelligence_index": 8.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -12810,10 +12653,10 @@
       },
       "scores": {
         "coding_index": 36979,
-        "tooling_index": 50767,
-        "knowledge_index": 60393,
+        "tooling_index": 50691,
+        "knowledge_index": 60339,
         "vision_index": 45353,
-        "trust_index": 54967,
+        "trust_index": 54517,
         "aa_intelligence_index": 19,
         "swe_bench_verified": 80.9,
         "swe_bench_multimodal": null,
@@ -13269,10 +13112,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 41745,
-        "knowledge_index": 44723,
+        "tooling_index": 41676,
+        "knowledge_index": 44559,
         "vision_index": 38916,
-        "trust_index": 52329,
+        "trust_index": 52091,
         "aa_intelligence_index": 16.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -13670,10 +13513,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 16687,
-        "knowledge_index": 39543,
+        "tooling_index": 16488,
+        "knowledge_index": 39480,
         "vision_index": 18772,
-        "trust_index": 50416,
+        "trust_index": 50124,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14058,10 +13901,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 11438,
-        "knowledge_index": 32459,
+        "tooling_index": 11323,
+        "knowledge_index": 32461,
         "vision_index": 11309,
-        "trust_index": 46760,
+        "trust_index": 46474,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -14446,10 +14289,10 @@
       },
       "scores": {
         "coding_index": 35005,
-        "tooling_index": 45533,
-        "knowledge_index": 62581,
+        "tooling_index": 45641,
+        "knowledge_index": 62527,
         "vision_index": 53208,
-        "trust_index": 58660,
+        "trust_index": 58304,
         "aa_intelligence_index": 18.2,
         "swe_bench_verified": 73.4,
         "swe_bench_multimodal": null,
@@ -14941,10 +14784,10 @@
       },
       "scores": {
         "coding_index": 42811,
-        "tooling_index": 54383,
-        "knowledge_index": 66824,
+        "tooling_index": 54612,
+        "knowledge_index": 66840,
         "vision_index": 52117,
-        "trust_index": 60576,
+        "trust_index": 60446,
         "aa_intelligence_index": 21.4,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": 25.7,
@@ -15430,10 +15273,10 @@
       },
       "scores": {
         "coding_index": 73851,
-        "tooling_index": 79843,
-        "knowledge_index": 82071,
+        "tooling_index": 79823,
+        "knowledge_index": 82063,
         "vision_index": null,
-        "trust_index": 54003,
+        "trust_index": 54297,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 88.8,
         "swe_bench_multimodal": null,
@@ -16017,10 +15860,10 @@
       },
       "scores": {
         "coding_index": 52465,
-        "tooling_index": 70806,
-        "knowledge_index": 70771,
+        "tooling_index": 70930,
+        "knowledge_index": 70782,
         "vision_index": null,
-        "trust_index": 61291,
+        "trust_index": 61360,
         "aa_intelligence_index": 25.3,
         "swe_bench_verified": 74.4,
         "swe_bench_multimodal": null,
@@ -16479,10 +16322,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 10079,
-        "knowledge_index": 14052,
+        "tooling_index": 9895,
+        "knowledge_index": 14057,
         "vision_index": null,
-        "trust_index": 38221,
+        "trust_index": 38025,
         "aa_intelligence_index": 6.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -16826,10 +16669,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 8098,
-        "knowledge_index": 8505,
+        "tooling_index": 8026,
+        "knowledge_index": 8512,
         "vision_index": null,
-        "trust_index": 25003,
+        "trust_index": 24760,
         "aa_intelligence_index": 5.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17186,10 +17029,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 16558,
-        "knowledge_index": 14571,
+        "tooling_index": 16682,
+        "knowledge_index": 14575,
         "vision_index": null,
-        "trust_index": 33124,
+        "trust_index": 33093,
         "aa_intelligence_index": 7.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -17546,10 +17389,10 @@
       },
       "scores": {
         "coding_index": 32070,
-        "tooling_index": 50273,
-        "knowledge_index": 44985,
+        "tooling_index": 50427,
+        "knowledge_index": 44697,
         "vision_index": 33101,
-        "trust_index": 57089,
+        "trust_index": 56638,
         "aa_intelligence_index": 14.2,
         "swe_bench_verified": 66.4,
         "swe_bench_multimodal": null,
@@ -18029,10 +17872,10 @@
       },
       "scores": {
         "coding_index": 16243,
-        "tooling_index": 24536,
-        "knowledge_index": 17602,
+        "tooling_index": 23985,
+        "knowledge_index": 17439,
         "vision_index": 17124,
-        "trust_index": 33104,
+        "trust_index": 33014,
         "aa_intelligence_index": 6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18445,10 +18288,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 26122,
-        "knowledge_index": 26007,
+        "tooling_index": 26130,
+        "knowledge_index": 26011,
         "vision_index": 19471,
-        "trust_index": 46200,
+        "trust_index": 45964,
         "aa_intelligence_index": 10.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -18828,10 +18671,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 11585,
-        "knowledge_index": 13197,
+        "tooling_index": 11952,
+        "knowledge_index": 13203,
         "vision_index": 5299,
-        "trust_index": 18646,
+        "trust_index": 18386,
         "aa_intelligence_index": 5.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19191,10 +19034,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 42149,
-        "knowledge_index": 62761,
+        "tooling_index": 41761,
+        "knowledge_index": 62784,
         "vision_index": 31398,
-        "trust_index": 57802,
+        "trust_index": 57464,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -19590,10 +19433,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 53053,
-        "knowledge_index": 60847,
+        "tooling_index": 52969,
+        "knowledge_index": 60864,
         "vision_index": 60404,
-        "trust_index": 56625,
+        "trust_index": 56524,
         "aa_intelligence_index": 19.5,
         "swe_bench_verified": 76.5,
         "swe_bench_multimodal": null,
@@ -19982,10 +19825,10 @@
       },
       "scores": {
         "coding_index": 9524,
-        "tooling_index": 9395,
-        "knowledge_index": 11015,
+        "tooling_index": 9324,
+        "knowledge_index": 10958,
         "vision_index": 3646,
-        "trust_index": 25137,
+        "trust_index": 24894,
         "aa_intelligence_index": 3.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -20394,10 +20237,10 @@
       },
       "scores": {
         "coding_index": 41573,
-        "tooling_index": 38991,
-        "knowledge_index": 46337,
+        "tooling_index": 38361,
+        "knowledge_index": 46347,
         "vision_index": null,
-        "trust_index": 50188,
+        "trust_index": 49817,
         "aa_intelligence_index": 9.9,
         "swe_bench_verified": 67.6,
         "swe_bench_multimodal": null,
@@ -20827,10 +20670,10 @@
       },
       "scores": {
         "coding_index": 68210,
-        "tooling_index": 79590,
-        "knowledge_index": 90596,
+        "tooling_index": 79591,
+        "knowledge_index": 90592,
         "vision_index": null,
-        "trust_index": 68497,
+        "trust_index": 68444,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 82.8,
         "swe_bench_multimodal": null,
@@ -21410,10 +21253,10 @@
       },
       "scores": {
         "coding_index": 63314,
-        "tooling_index": 70063,
-        "knowledge_index": 84576,
+        "tooling_index": 69753,
+        "knowledge_index": 84088,
         "vision_index": 74131,
-        "trust_index": 68357,
+        "trust_index": 68482,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
         "swe_bench_multimodal": null,
@@ -21922,9 +21765,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 32342,
+        "knowledge_index": 32348,
         "vision_index": null,
-        "trust_index": 50704,
+        "trust_index": 50693,
         "aa_intelligence_index": 7.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -22248,9 +22091,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 14978,
+        "knowledge_index": 14982,
         "vision_index": null,
-        "trust_index": 30521,
+        "trust_index": 30448,
         "aa_intelligence_index": 5.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -22569,10 +22412,10 @@
       "context": "10m",
       "scores": {
         "coding_index": 13458,
-        "tooling_index": 11940,
-        "knowledge_index": 20184,
+        "tooling_index": 11843,
+        "knowledge_index": 20729,
         "vision_index": 19158,
-        "trust_index": 46601,
+        "trust_index": 46360,
         "aa_intelligence_index": 8.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -22619,7 +22462,7 @@
         "aime_2026": null,
         "gpqa_diamond": 58.7,
         "hle": 3.8,
-        "mmlu_pro": 69.6,
+        "mmlu_pro": 75.2,
         "mmmu_pro": 52.9,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -22678,7 +22521,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -22737,7 +22580,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/llama-4-scout",
         "hle": "https://artificialanalysis.ai/models/llama-4-scout",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/llama-4-scout",
         "mmmu_pro": "https://artificialanalysis.ai/models/llama-4-scout",
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -22901,11 +22744,6 @@
             "date": "2026-08-23",
             "score": 75.2,
             "source": "https://artificialanalysis.ai/models/llama-4-scout"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 69.6,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ],
         "mmmu_pro": [
@@ -23022,10 +22860,10 @@
       "context": "1m",
       "scores": {
         "coding_index": 19043,
-        "tooling_index": 15904,
-        "knowledge_index": 30288,
+        "tooling_index": 15755,
+        "knowledge_index": 30172,
         "vision_index": 25019,
-        "trust_index": 48903,
+        "trust_index": 48694,
         "aa_intelligence_index": 10,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -23486,9 +23324,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 18468,
+        "knowledge_index": 18684,
         "vision_index": null,
-        "trust_index": 44787,
+        "trust_index": 44748,
         "aa_intelligence_index": 5.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -23535,7 +23373,7 @@
         "aime_2026": null,
         "gpqa_diamond": 57.5,
         "hle": 3.8,
-        "mmlu_pro": 70.4,
+        "mmlu_pro": 71.4,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -23594,7 +23432,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -23653,7 +23491,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/phi-4",
         "hle": "https://artificialanalysis.ai/models/phi-4",
-        "mmlu_pro": "https://huggingface.co/microsoft/phi-4",
+        "mmlu_pro": "https://artificialanalysis.ai/models/phi-4",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -23758,11 +23596,6 @@
             "date": "2026-08-23",
             "score": 71.4,
             "source": "https://artificialanalysis.ai/models/phi-4"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 70.4,
-            "source": "https://huggingface.co/microsoft/phi-4"
           }
         ]
       },
@@ -23792,10 +23625,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -23819,9 +23649,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 28908,
+        "knowledge_index": 28750,
         "vision_index": null,
-        "trust_index": 45995,
+        "trust_index": 45961,
         "aa_intelligence_index": 6.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -24139,9 +23969,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26064,
+        "knowledge_index": 26066,
         "vision_index": null,
-        "trust_index": 47688,
+        "trust_index": 47661,
         "aa_intelligence_index": 6.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -24453,9 +24283,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20831,
+        "knowledge_index": 20696,
         "vision_index": null,
-        "trust_index": 34661,
+        "trust_index": 34594,
         "aa_intelligence_index": 5.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -24772,9 +24602,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16033,
+        "knowledge_index": 15939,
         "vision_index": null,
-        "trust_index": 33203,
+        "trust_index": 33134,
         "aa_intelligence_index": 5.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -25098,9 +24928,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 15042,
+        "knowledge_index": 14956,
         "vision_index": null,
-        "trust_index": 36767,
+        "trust_index": 36585,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -25432,9 +25262,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 10045,
+        "knowledge_index": 9995,
         "vision_index": null,
-        "trust_index": 26816,
+        "trust_index": 26726,
         "aa_intelligence_index": 5.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -25765,10 +25595,10 @@
       "context": "512k",
       "scores": {
         "coding_index": 43816,
-        "tooling_index": 38645,
-        "knowledge_index": 55604,
+        "tooling_index": 38485,
+        "knowledge_index": 55261,
         "vision_index": null,
-        "trust_index": 49807,
+        "trust_index": 49482,
         "aa_intelligence_index": 10.8,
         "swe_bench_verified": 63.2,
         "swe_bench_multimodal": null,
@@ -25797,7 +25627,7 @@
         "terminal_bench_hard": 22.7,
         "toolathlon": null,
         "tau3_bench_banking": 5.8,
-        "tau2_bench_telecom": 94.7,
+        "tau2_bench_telecom": 90.1,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 56.3,
@@ -25856,7 +25686,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-14",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -25915,7 +25745,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/trinity-large-thinking",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/trinity-large-thinking",
-        "tau2_bench_telecom": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/trinity-large-thinking",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/trinity-large-thinking",
@@ -26008,11 +25838,6 @@
             "date": "2026-06-25",
             "score": 90.1,
             "source": "https://artificialanalysis.ai/models/trinity-large-thinking"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 94.7,
-            "source": "https://huggingface.co/arcee-ai/Trinity-Large-Thinking"
           }
         ],
         "ifbench": [
@@ -26150,10 +25975,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.558,
-          "second_hand": [
-            "tau2_bench_telecom"
-          ]
+          "share": 0.558
         },
         "knowledge_index": {
           "measured": [
@@ -26195,7 +26017,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 47746,
+        "knowledge_index": 47767,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 7.5,
@@ -26588,7 +26410,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34434,
+        "knowledge_index": 34442,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 7.9,
@@ -26976,9 +26798,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16801,
+        "knowledge_index": 16701,
         "vision_index": null,
-        "trust_index": 36349,
+        "trust_index": 36285,
         "aa_intelligence_index": 5.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -27295,9 +27117,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40353,
+        "knowledge_index": 40305,
         "vision_index": 27330,
-        "trust_index": 43556,
+        "trust_index": 44017,
         "aa_intelligence_index": 13.4,
         "swe_bench_verified": 23,
         "swe_bench_multimodal": null,
@@ -27326,7 +27148,7 @@
         "terminal_bench_hard": 14.4,
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": 69,
+        "tau2_bench_telecom": 69.3,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 69.1,
@@ -27338,7 +27160,7 @@
         "aa_omniscience": -59.4,
         "aa_omniscience_hallucination": 91.9,
         "aa_omniscience_accuracy": 17,
-        "aa_lcr": 50,
+        "aa_lcr": 50.3,
         "critpt": 0.3,
         "aime_2025": 88,
         "aime_2026": null,
@@ -27385,7 +27207,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -27397,7 +27219,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-08-01",
         "critpt": "2026-08-01",
         "aime_2025": "2026-06-25",
         "aime_2026": null,
@@ -27444,7 +27266,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
@@ -27456,7 +27278,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
-        "aa_lcr": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker",
+        "aa_lcr": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "critpt": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "aime_2025": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker",
         "aime_2026": null,
@@ -27521,11 +27343,6 @@
             "date": "2026-06-25",
             "score": 69.3,
             "source": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 69,
-            "source": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker"
           }
         ],
         "ifbench": [
@@ -27561,11 +27378,6 @@
             "date": "2026-08-01",
             "score": 50.3,
             "source": "https://artificialanalysis.ai/models/apriel-v1-6-15b-thinker"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 50,
-            "source": "https://huggingface.co/ServiceNow-AI/Apriel-1.6-15b-Thinker"
           }
         ],
         "critpt": [
@@ -27678,10 +27490,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -27696,10 +27505,10 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 33604,
-        "knowledge_index": 45496,
+        "tooling_index": 33214,
+        "knowledge_index": 45312,
         "vision_index": null,
-        "trust_index": 44249,
+        "trust_index": 44123,
         "aa_intelligence_index": 13.9,
         "swe_bench_verified": 73.1,
         "swe_bench_multimodal": null,
@@ -27746,7 +27555,7 @@
         "aime_2026": null,
         "gpqa_diamond": 73.8,
         "hle": 9,
-        "mmlu_pro": 83.1,
+        "mmlu_pro": 83.6,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -27805,7 +27614,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-09-03",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -27864,7 +27673,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/deepseek-v3-2-0925",
         "hle": "https://artificialanalysis.ai/models/deepseek-v3-2-0925",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/deepseek-v3-2-0925",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28040,11 +27849,6 @@
             "date": "2026-09-03",
             "score": 83.6,
             "source": "https://artificialanalysis.ai/models/deepseek-v3-2-0925"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 83.1,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -28115,9 +27919,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 59273,
+        "knowledge_index": 59845,
         "vision_index": null,
-        "trust_index": 53426,
+        "trust_index": 53171,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": 44.6,
         "swe_bench_multimodal": null,
@@ -28164,7 +27968,7 @@
         "aime_2026": null,
         "gpqa_diamond": 81.3,
         "hle": 15.8,
-        "mmlu_pro": 83.2,
+        "mmlu_pro": 84.9,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28223,7 +28027,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-09-10",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28282,7 +28086,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/deepseek-r1",
         "hle": "https://artificialanalysis.ai/models/deepseek-r1",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/deepseek-r1",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28408,11 +28212,6 @@
             "date": "2026-09-10",
             "score": 84.9,
             "source": "https://artificialanalysis.ai/models/deepseek-r1"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 83.2,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -28468,9 +28267,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 48645,
+        "knowledge_index": 49833,
         "vision_index": null,
-        "trust_index": 56471,
+        "trust_index": 56160,
         "aa_intelligence_index": 12.8,
         "swe_bench_verified": 64.2,
         "swe_bench_multimodal": null,
@@ -28517,7 +28316,7 @@
         "aime_2026": null,
         "gpqa_diamond": 78.2,
         "hle": 13,
-        "mmlu_pro": 81.2,
+        "mmlu_pro": 83.5,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28576,7 +28375,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28635,7 +28434,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/glm-4.5",
         "hle": "https://artificialanalysis.ai/models/glm-4.5",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/glm-4.5",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28766,11 +28565,6 @@
             "date": "2026-08-23",
             "score": 83.5,
             "source": "https://artificialanalysis.ai/models/glm-4.5"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 81.2,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -28826,9 +28620,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 31224,
+        "knowledge_index": 31825,
         "vision_index": null,
-        "trust_index": 38608,
+        "trust_index": 38555,
         "aa_intelligence_index": 11.1,
         "swe_bench_verified": 57.6,
         "swe_bench_multimodal": null,
@@ -28875,7 +28669,7 @@
         "aime_2026": null,
         "gpqa_diamond": 73.3,
         "hle": 7,
-        "mmlu_pro": 81.4,
+        "mmlu_pro": 81.5,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28934,7 +28728,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -28993,7 +28787,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/glm-4-5-air",
         "hle": "https://artificialanalysis.ai/models/glm-4-5-air",
-        "mmlu_pro": "https://huggingface.co/zai-org/GLM-4.5-Air",
+        "mmlu_pro": "https://artificialanalysis.ai/models/glm-4-5-air",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -29124,11 +28918,6 @@
             "date": "2026-08-23",
             "score": 81.5,
             "source": "https://artificialanalysis.ai/models/glm-4-5-air"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 81.4,
-            "source": "https://huggingface.co/zai-org/GLM-4.5-Air"
           }
         ]
       },
@@ -29158,10 +28947,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -29186,8 +28972,8 @@
       "context": "200k",
       "scores": {
         "coding_index": 32762,
-        "tooling_index": 47977,
-        "knowledge_index": 54928,
+        "tooling_index": 47967,
+        "knowledge_index": 54692,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 18.5,
@@ -29670,10 +29456,10 @@
       "context": "200k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 53071,
-        "knowledge_index": 66164,
+        "tooling_index": 52986,
+        "knowledge_index": 67713,
         "vision_index": null,
-        "trust_index": 49582,
+        "trust_index": 49344,
         "aa_intelligence_index": 22.2,
         "swe_bench_verified": 69.4,
         "swe_bench_multimodal": null,
@@ -29720,7 +29506,7 @@
         "aime_2026": null,
         "gpqa_diamond": 85.9,
         "hle": 27.4,
-        "mmlu_pro": 82.7,
+        "mmlu_pro": 85.6,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -29779,7 +29565,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -29838,7 +29624,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/glm-4-7",
         "hle": "https://artificialanalysis.ai/models/glm-4-7",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/glm-4-7",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30016,11 +29802,6 @@
             "date": "2026-08-23",
             "score": 85.6,
             "source": "https://artificialanalysis.ai/models/glm-4-7"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 82.7,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -30089,9 +29870,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 9638,
+        "knowledge_index": 9552,
         "vision_index": null,
-        "trust_index": 40042,
+        "trust_index": 39876,
         "aa_intelligence_index": 7.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -30400,9 +30181,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 31447,
+        "knowledge_index": 31354,
         "vision_index": null,
-        "trust_index": 49413,
+        "trust_index": 49052,
         "aa_intelligence_index": 7.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -30449,7 +30230,7 @@
         "aime_2026": null,
         "gpqa_diamond": 81.1,
         "hle": 3.3,
-        "mmlu_pro": 78.4,
+        "mmlu_pro": 77.6,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30508,7 +30289,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30567,7 +30348,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b",
         "hle": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b",
-        "mmlu_pro": "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT",
+        "mmlu_pro": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30672,11 +30453,6 @@
             "date": "2026-08-23",
             "score": 77.6,
             "source": "https://artificialanalysis.ai/models/ernie-4-5-300b-a47b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 78.4,
-            "source": "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT"
           }
         ]
       },
@@ -30706,10 +30482,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -30735,9 +30508,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 38332,
+        "knowledge_index": 38059,
         "vision_index": null,
-        "trust_index": 48122,
+        "trust_index": 47946,
         "aa_intelligence_index": 12.1,
         "swe_bench_verified": 56.0,
         "swe_bench_multimodal": null,
@@ -30784,7 +30557,7 @@
         "aime_2026": null,
         "gpqa_diamond": 72.6,
         "hle": 9.9,
-        "mmlu_pro": 82.7,
+        "mmlu_pro": 81.5,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30843,7 +30616,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -30902,7 +30675,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/seed-oss-36b-instruct",
         "hle": "https://artificialanalysis.ai/models/seed-oss-36b-instruct",
-        "mmlu_pro": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct",
+        "mmlu_pro": "https://artificialanalysis.ai/models/seed-oss-36b-instruct",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -31021,11 +30794,6 @@
             "date": "2026-08-23",
             "score": 81.5,
             "source": "https://artificialanalysis.ai/models/seed-oss-36b-instruct"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 82.7,
-            "source": "https://huggingface.co/ByteDance-Seed/Seed-OSS-36B-Instruct"
           }
         ]
       },
@@ -31055,10 +30823,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -31084,9 +30849,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26389,
+        "knowledge_index": 26426,
         "vision_index": null,
-        "trust_index": 37227,
+        "trust_index": 37040,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -31418,9 +31183,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 38496,
+        "knowledge_index": 38352,
         "vision_index": null,
-        "trust_index": 40994,
+        "trust_index": 40817,
         "aa_intelligence_index": 7.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -31745,9 +31510,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 17364,
+        "knowledge_index": 17260,
         "vision_index": null,
-        "trust_index": 21046,
+        "trust_index": 20797,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -32079,7 +31844,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 63739,
+        "knowledge_index": 63642,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 20.8,
@@ -32549,7 +32314,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 45711,
+        "knowledge_index": 45016,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -32808,7 +32573,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 66384,
+        "knowledge_index": 65891,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -33089,9 +32854,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 35641,
+        "knowledge_index": 36246,
         "vision_index": null,
-        "trust_index": 45702,
+        "trust_index": 45514,
         "aa_intelligence_index": 11.7,
         "swe_bench_verified": 56,
         "swe_bench_multimodal": null,
@@ -33138,7 +32903,7 @@
         "aime_2026": null,
         "gpqa_diamond": 69.7,
         "hle": 8.9,
-        "mmlu_pro": 81.1,
+        "mmlu_pro": 81.6,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -33197,7 +32962,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -33256,7 +33021,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/minimax-m1-80k",
         "hle": "https://artificialanalysis.ai/models/minimax-m1-80k",
-        "mmlu_pro": "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k",
+        "mmlu_pro": "https://artificialanalysis.ai/models/minimax-m1-80k",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -33375,11 +33140,6 @@
             "date": "2026-08-23",
             "score": 81.6,
             "source": "https://artificialanalysis.ai/models/minimax-m1-80k"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 81.1,
-            "source": "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k"
           }
         ]
       },
@@ -33409,10 +33169,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -33437,8 +33194,8 @@
       "context": "32k",
       "scores": {
         "coding_index": 21481,
-        "tooling_index": 20837,
-        "knowledge_index": 38776,
+        "tooling_index": 20827,
+        "knowledge_index": 38787,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 8.6,
@@ -33853,8 +33610,8 @@
       "context": "32k",
       "scores": {
         "coding_index": 19655,
-        "tooling_index": 19934,
-        "knowledge_index": 27278,
+        "tooling_index": 19925,
+        "knowledge_index": 27282,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 8.2,
@@ -34291,8 +34048,8 @@
       "context": "128k",
       "scores": {
         "coding_index": 16022,
-        "tooling_index": 17243,
-        "knowledge_index": 14756,
+        "tooling_index": 17234,
+        "knowledge_index": 14760,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 7.3,
@@ -34725,7 +34482,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16522,
+        "knowledge_index": 16519,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 7.2,
@@ -35050,10 +34807,10 @@
       "context": "256k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 25928,
-        "knowledge_index": 43194,
+        "tooling_index": 24868,
+        "knowledge_index": 43058,
         "vision_index": null,
-        "trust_index": 51109,
+        "trust_index": 50807,
         "aa_intelligence_index": 12,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -35082,7 +34839,7 @@
         "terminal_bench_hard": 15.2,
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": 32.5,
+        "tau2_bench_telecom": 33.3,
         "mcp_atlas": 12,
         "bfcl_v4": 52.2,
         "ifbench": 46.1,
@@ -35141,7 +34898,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": "2026-08-21",
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
@@ -35200,7 +34957,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "mcp_atlas": "https://evals.report/benchmarks/mcp-atlas",
         "bfcl_v4": "https://evals.report/benchmarks/bfcl",
         "ifbench": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
@@ -35260,11 +35017,6 @@
             "date": "2026-06-25",
             "score": 33.3,
             "source": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 32.5,
-            "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507"
           }
         ],
         "mcp_atlas": [
@@ -35380,8 +35132,7 @@
           "share": 0.333,
           "second_hand": [
             "mcp_atlas",
-            "bfcl_v4",
-            "tau2_bench_telecom"
+            "bfcl_v4"
           ]
         },
         "knowledge_index": {
@@ -35422,10 +35173,10 @@
       "context": "256k",
       "scores": {
         "coding_index": 31398,
-        "tooling_index": 31357,
-        "knowledge_index": 48157,
+        "tooling_index": 31668,
+        "knowledge_index": 49645,
         "vision_index": null,
-        "trust_index": 50365,
+        "trust_index": 50239,
         "aa_intelligence_index": 12.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -35454,7 +35205,7 @@
         "terminal_bench_hard": 13.6,
         "toolathlon": null,
         "tau3_bench_banking": 7.8,
-        "tau2_bench_telecom": 45.6,
+        "tau2_bench_telecom": 53.2,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 51.2,
@@ -35472,7 +35223,7 @@
         "aime_2026": null,
         "gpqa_diamond": 79,
         "hle": 15.9,
-        "mmlu_pro": 81.3,
+        "mmlu_pro": 84.3,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -35513,7 +35264,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": "2026-08-01",
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -35531,7 +35282,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -35572,7 +35323,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "toolathlon": null,
         "tau3_bench_banking": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
-        "tau2_bench_telecom": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
@@ -35590,7 +35341,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "hle": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -35653,11 +35404,6 @@
             "date": "2026-06-25",
             "score": 53.2,
             "source": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 45.6,
-            "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507"
           }
         ],
         "ifbench": [
@@ -35752,11 +35498,6 @@
             "date": "2026-08-23",
             "score": 84.3,
             "source": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 81.3,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -35797,10 +35538,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.558,
-          "second_hand": [
-            "tau2_bench_telecom"
-          ]
+          "share": 0.558
         },
         "knowledge_index": {
           "measured": [
@@ -35838,9 +35576,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33981,
+        "knowledge_index": 33883,
         "vision_index": null,
-        "trust_index": 52283,
+        "trust_index": 52046,
         "aa_intelligence_index": 11.9,
         "swe_bench_verified": 69.6,
         "swe_bench_multimodal": null,
@@ -36198,9 +35936,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26129,
+        "knowledge_index": 27800,
         "vision_index": null,
-        "trust_index": 41626,
+        "trust_index": 41443,
         "aa_intelligence_index": 9.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -36247,7 +35985,7 @@
         "aime_2026": null,
         "gpqa_diamond": 59.3,
         "hle": 7.4,
-        "mmlu_pro": 69.1,
+        "mmlu_pro": 76.4,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -36306,7 +36044,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-09-23",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -36365,7 +36103,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/qwq-32b",
         "hle": "https://artificialanalysis.ai/models/qwq-32b",
-        "mmlu_pro": "https://huggingface.co/Qwen/QwQ-32B",
+        "mmlu_pro": "https://artificialanalysis.ai/models/qwq-32b",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -36454,11 +36192,6 @@
             "date": "2026-08-23",
             "score": 76.4,
             "source": "https://artificialanalysis.ai/models/qwq-32b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 69.1,
-            "source": "https://huggingface.co/Qwen/QwQ-32B"
           }
         ]
       },
@@ -36486,10 +36219,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 0.568,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 0.568
         },
         "trust_index": {
           "measured": [
@@ -36515,7 +36245,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36544,
+        "knowledge_index": 36433,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 8.2,
@@ -36912,7 +36642,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 17804,
+        "knowledge_index": 17807,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": 5.3,
@@ -37292,9 +37022,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 35066,
+        "knowledge_index": 34975,
         "vision_index": null,
-        "trust_index": 45529,
+        "trust_index": 45524,
         "aa_intelligence_index": 10.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -37323,7 +37053,7 @@
         "terminal_bench_hard": 2.3,
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": 55.6,
+        "tau2_bench_telecom": 48.2,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 57.7,
@@ -37335,7 +37065,7 @@
         "aa_omniscience": -54.5,
         "aa_omniscience_hallucination": 89.6,
         "aa_omniscience_accuracy": 18.5,
-        "aa_lcr": 35,
+        "aa_lcr": 41,
         "critpt": 0,
         "aime_2025": 84.3,
         "aime_2026": null,
@@ -37382,7 +37112,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -37394,7 +37124,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-23",
         "aime_2025": "2026-09-20",
         "aime_2026": null,
@@ -37441,7 +37171,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "https://huggingface.co/upstage/Solar-Open-100B",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
@@ -37453,7 +37183,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
-        "aa_lcr": "https://huggingface.co/upstage/Solar-Open-100B",
+        "aa_lcr": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "critpt": "https://artificialanalysis.ai/models/solar-open-100b-reasoning",
         "aime_2025": "https://huggingface.co/upstage/Solar-Open-100B",
         "aime_2026": null,
@@ -37501,11 +37231,6 @@
             "date": "2026-06-25",
             "score": 48.2,
             "source": "https://artificialanalysis.ai/models/solar-open-100b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 55.6,
-            "source": "https://huggingface.co/upstage/Solar-Open-100B"
           }
         ],
         "ifbench": [
@@ -37541,11 +37266,6 @@
             "date": "2026-09-04",
             "score": 41,
             "source": "https://artificialanalysis.ai/models/solar-open-100b-reasoning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 35,
-            "source": "https://huggingface.co/upstage/Solar-Open-100B"
           }
         ],
         "critpt": [
@@ -37624,10 +37344,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -37643,9 +37360,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 37079,
+        "knowledge_index": 36393,
         "vision_index": null,
-        "trust_index": 39896,
+        "trust_index": 39683,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -37674,7 +37391,7 @@
         "terminal_bench_hard": 2.3,
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": 25.4,
+        "tau2_bench_telecom": 27.8,
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 54.4,
@@ -37692,7 +37409,7 @@
         "aime_2026": null,
         "gpqa_diamond": 66.1,
         "hle": 11,
-        "mmlu_pro": 72.1,
+        "mmlu_pro": 72.5,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -37733,7 +37450,7 @@
         "terminal_bench_hard": "2026-06-25",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "2026-09-24",
+        "tau2_bench_telecom": "2026-06-25",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
@@ -37751,7 +37468,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -37792,7 +37509,7 @@
         "terminal_bench_hard": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "toolathlon": null,
         "tau3_bench_banking": null,
-        "tau2_bench_telecom": "https://huggingface.co/tiiuae/Falcon-H1R-7B",
+        "tau2_bench_telecom": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/falcon-h1r-7b",
@@ -37810,7 +37527,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "hle": "https://artificialanalysis.ai/models/falcon-h1r-7b",
-        "mmlu_pro": "https://huggingface.co/tiiuae/Falcon-H1R-7B",
+        "mmlu_pro": "https://artificialanalysis.ai/models/falcon-h1r-7b",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -37852,11 +37569,6 @@
             "date": "2026-06-25",
             "score": 27.8,
             "source": "https://artificialanalysis.ai/models/falcon-h1r-7b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 25.4,
-            "source": "https://huggingface.co/tiiuae/Falcon-H1R-7B"
           }
         ],
         "ifbench": [
@@ -37927,11 +37639,6 @@
             "date": "2026-08-23",
             "score": 72.5,
             "source": "https://artificialanalysis.ai/models/falcon-h1r-7b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 72.1,
-            "source": "https://huggingface.co/tiiuae/Falcon-H1R-7B"
           }
         ]
       },
@@ -37961,10 +37668,7 @@
             "gpqa_diamond"
           ],
           "of": 6,
-          "share": 1.0,
-          "second_hand": [
-            "mmlu_pro"
-          ]
+          "share": 1.0
         },
         "trust_index": {
           "measured": [
@@ -37989,10 +37693,10 @@
       "context": "256k",
       "scores": {
         "coding_index": 21858,
-        "tooling_index": 25923,
-        "knowledge_index": 30928,
+        "tooling_index": 25502,
+        "knowledge_index": 31346,
         "vision_index": 25426,
-        "trust_index": 48848,
+        "trust_index": 48516,
         "aa_intelligence_index": 9.3,
         "swe_bench_verified": 41.4,
         "swe_bench_multimodal": null,
@@ -38039,7 +37743,7 @@
         "aime_2026": null,
         "gpqa_diamond": 68,
         "hle": 4.2,
-        "mmlu_pro": 79.8,
+        "mmlu_pro": 80.7,
         "mmmu_pro": 55.7,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -38098,7 +37802,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-06-25",
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -38157,7 +37861,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/mistral-large-3",
         "hle": "https://artificialanalysis.ai/models/mistral-large-3",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/mistral-large-3",
         "mmmu_pro": "https://artificialanalysis.ai/models/mistral-large-3",
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -38333,11 +38037,6 @@
             "date": "2026-08-23",
             "score": 80.7,
             "source": "https://artificialanalysis.ai/models/mistral-large-3"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 79.8,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ],
         "mmmu_pro": [
@@ -38430,10 +38129,10 @@
       "context": "256k",
       "scores": {
         "coding_index": 13493,
-        "tooling_index": 17546,
-        "knowledge_index": 14773,
+        "tooling_index": 17264,
+        "knowledge_index": 14689,
         "vision_index": 13820,
-        "trust_index": 30086,
+        "trust_index": 30064,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -38846,10 +38545,10 @@
       "context": "256k",
       "scores": {
         "coding_index": 9876,
-        "tooling_index": 14357,
-        "knowledge_index": 16454,
+        "tooling_index": 14205,
+        "knowledge_index": 16357,
         "vision_index": 7005,
-        "trust_index": 40371,
+        "trust_index": 40154,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -39263,9 +38962,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 28590,
+        "knowledge_index": 28576,
         "vision_index": null,
-        "trust_index": 44501,
+        "trust_index": 44241,
         "aa_intelligence_index": 11.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -39596,10 +39295,10 @@
       "context": "128k",
       "scores": {
         "coding_index": 13197,
-        "tooling_index": 10317,
-        "knowledge_index": 14773,
+        "tooling_index": 10237,
+        "knowledge_index": 14689,
         "vision_index": 15475,
-        "trust_index": 31285,
+        "trust_index": 31027,
         "aa_intelligence_index": 4.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -40008,10 +39707,10 @@
       "context": "128k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 2465,
-        "knowledge_index": 11151,
+        "tooling_index": 2447,
+        "knowledge_index": 11094,
         "vision_index": 2062,
-        "trust_index": 17912,
+        "trust_index": 17647,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -40389,10 +40088,10 @@
       "context": "32k",
       "scores": {
         "coding_index": null,
-        "tooling_index": 1451,
-        "knowledge_index": 11736,
+        "tooling_index": 1441,
+        "knowledge_index": 11674,
         "vision_index": null,
-        "trust_index": 39516,
+        "trust_index": 39459,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -40733,9 +40432,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20937,
+        "knowledge_index": 20800,
         "vision_index": null,
-        "trust_index": 48144,
+        "trust_index": 48119,
         "aa_intelligence_index": 5.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -41052,9 +40751,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 4322,
+        "knowledge_index": 4276,
         "vision_index": null,
-        "trust_index": 44792,
+        "trust_index": 44755,
         "aa_intelligence_index": 5.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -41323,9 +41022,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 11107,
+        "knowledge_index": 9971,
         "vision_index": null,
-        "trust_index": 44792,
+        "trust_index": 44755,
         "aa_intelligence_index": 7.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -41372,7 +41071,7 @@
         "aime_2026": null,
         "gpqa_diamond": 51,
         "hle": 3.1,
-        "mmlu_pro": 75.5,
+        "mmlu_pro": 70.9,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -41431,7 +41130,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-06-25",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": "2026-09-22",
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -41490,7 +41189,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/grok-2-1212",
         "hle": "https://artificialanalysis.ai/models/grok-2-1212",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/grok-2-1212",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -41560,11 +41259,6 @@
             "date": "2026-08-23",
             "score": 70.9,
             "source": "https://artificialanalysis.ai/models/grok-2-1212"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 75.5,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ],
         "mmmu_pro": [
@@ -41619,10 +41313,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 36292,
-        "knowledge_index": 39201,
+        "tooling_index": 35989,
+        "knowledge_index": 39206,
         "vision_index": 41353,
-        "trust_index": 52669,
+        "trust_index": 52426,
         "aa_intelligence_index": 14.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -42007,7 +41701,7 @@
       },
       "scores": {
         "coding_index": 33342,
-        "tooling_index": 35058,
+        "tooling_index": 35050,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -42307,7 +42001,7 @@
       },
       "scores": {
         "coding_index": 55602,
-        "tooling_index": 57211,
+        "tooling_index": 57186,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -42607,7 +42301,7 @@
       },
       "scores": {
         "coding_index": 71345,
-        "tooling_index": 70103,
+        "tooling_index": 70078,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -42907,10 +42601,10 @@
       },
       "scores": {
         "coding_index": 50564,
-        "tooling_index": 58626,
-        "knowledge_index": 79279,
+        "tooling_index": 56492,
+        "knowledge_index": 79277,
         "vision_index": null,
-        "trust_index": 66910,
+        "trust_index": 68553,
         "aa_intelligence_index": 22.9,
         "swe_bench_verified": 69,
         "swe_bench_multimodal": null,
@@ -42938,7 +42632,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 36.4,
         "toolathlon": 34.3,
-        "tau3_bench_banking": 22.6,
+        "tau3_bench_banking": 14.2,
         "tau2_bench_telecom": 83.3,
         "mcp_atlas": 63.1,
         "bfcl_v4": null,
@@ -42951,7 +42645,7 @@
         "aa_omniscience": -0.4,
         "aa_omniscience_hallucination": 29.7,
         "aa_omniscience_accuracy": 22.6,
-        "aa_lcr": 65.4,
+        "aa_lcr": 79.3,
         "critpt": 3.1,
         "aime_2025": null,
         "aime_2026": null,
@@ -42997,7 +42691,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": "2026-06-29",
         "toolathlon": "2026-08-01",
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-07",
         "tau2_bench_telecom": "2026-06-29",
         "mcp_atlas": "2026-09-17",
         "bfcl_v4": null,
@@ -43010,7 +42704,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": null,
@@ -43056,7 +42750,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "toolathlon": "https://toolathlon.xyz/docs/leaderboard",
-        "tau3_bench_banking": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "mcp_atlas": "https://labs.scale.com/leaderboard/mcp_atlas",
         "bfcl_v4": null,
@@ -43069,7 +42763,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
-        "aa_lcr": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+        "aa_lcr": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "critpt": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "aime_2025": null,
         "aime_2026": null,
@@ -43185,11 +42879,6 @@
             "date": "2026-08-07",
             "score": 14.2,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 22.6,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
           }
         ],
         "tau2_bench_telecom": [
@@ -43270,11 +42959,6 @@
             "date": "2026-09-04",
             "score": 79.3,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 65.4,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
           }
         ],
         "critpt": [
@@ -43352,10 +43036,7 @@
             "ifbench"
           ],
           "of": 11,
-          "share": 0.829,
-          "second_hand": [
-            "tau3_bench_banking"
-          ]
+          "share": 0.829
         },
         "knowledge_index": {
           "measured": [
@@ -43376,10 +43057,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -43405,10 +43083,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 30285,
-        "knowledge_index": 37106,
+        "tooling_index": 29817,
+        "knowledge_index": 37144,
         "vision_index": 36451,
-        "trust_index": 41254,
+        "trust_index": 41028,
         "aa_intelligence_index": 9.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -44033,10 +43711,10 @@
       },
       "scores": {
         "coding_index": 54434,
-        "tooling_index": 70440,
-        "knowledge_index": 83586,
+        "tooling_index": 70528,
+        "knowledge_index": 83577,
         "vision_index": 47045,
-        "trust_index": 64562,
+        "trust_index": 64328,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -44541,10 +44219,10 @@
       },
       "scores": {
         "coding_index": 79593,
-        "tooling_index": 83152,
-        "knowledge_index": 89754,
+        "tooling_index": 83099,
+        "knowledge_index": 89748,
         "vision_index": null,
-        "trust_index": 52252,
+        "trust_index": 52617,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 96.4,
         "swe_bench_multimodal": null,
@@ -45135,10 +44813,10 @@
       },
       "scores": {
         "coding_index": 39874,
-        "tooling_index": 48110,
-        "knowledge_index": 69739,
+        "tooling_index": 47829,
+        "knowledge_index": 69750,
         "vision_index": null,
-        "trust_index": 58348,
+        "trust_index": 57965,
         "aa_intelligence_index": 19.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -45521,9 +45199,9 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 67033,
+        "knowledge_index": 69231,
         "vision_index": null,
-        "trust_index": 60254,
+        "trust_index": 59949,
         "aa_intelligence_index": 22,
         "swe_bench_verified": 60.2,
         "swe_bench_multimodal": null,
@@ -45570,7 +45248,7 @@
         "aime_2026": null,
         "gpqa_diamond": 83.8,
         "hle": 23.8,
-        "mmlu_pro": 81.1,
+        "mmlu_pro": 84.8,
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -45629,7 +45307,7 @@
         "aime_2026": null,
         "gpqa_diamond": "2026-07-20",
         "hle": "2026-08-07",
-        "mmlu_pro": "2026-09-24",
+        "mmlu_pro": "2026-08-23",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -45688,7 +45366,7 @@
         "aime_2026": null,
         "gpqa_diamond": "https://artificialanalysis.ai/models/kimi-k2-thinking",
         "hle": "https://artificialanalysis.ai/models/kimi-k2-thinking",
-        "mmlu_pro": "https://www.vals.ai/benchmarks/mmlu_pro",
+        "mmlu_pro": "https://artificialanalysis.ai/models/kimi-k2-thinking",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0": null,
@@ -45838,11 +45516,6 @@
             "date": "2026-08-23",
             "score": 84.8,
             "source": "https://artificialanalysis.ai/models/kimi-k2-thinking"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 81.1,
-            "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
         ]
       },
@@ -45897,10 +45570,10 @@
       },
       "scores": {
         "coding_index": 48002,
-        "tooling_index": 53542,
-        "knowledge_index": 78659,
+        "tooling_index": 53428,
+        "knowledge_index": 78671,
         "vision_index": 58346,
-        "trust_index": 62983,
+        "trust_index": 63766,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": null,
@@ -45941,7 +45614,7 @@
         "aa_omniscience": -7.3,
         "aa_omniscience_hallucination": 65.7,
         "aa_omniscience_accuracy": 35.2,
-        "aa_lcr": 70,
+        "aa_lcr": 78,
         "critpt": 3.1,
         "aime_2025": 93.8,
         "aime_2026": 95.8,
@@ -46000,7 +45673,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": "2026-09-10",
         "aime_2026": "2026-07-28",
@@ -46059,7 +45732,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/kimi-k2-5",
-        "aa_lcr": "https://huggingface.co/moonshotai/Kimi-K2.5",
+        "aa_lcr": "https://artificialanalysis.ai/models/kimi-k2-5",
         "critpt": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aime_2025": "https://www.vals.ai/benchmarks/aime",
         "aime_2026": "https://artificialanalysis.ai/models/kimi-k2-5",
@@ -46274,11 +45947,6 @@
             "date": "2026-09-04",
             "score": 78,
             "source": "https://artificialanalysis.ai/models/kimi-k2-5"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 70,
-            "source": "https://huggingface.co/moonshotai/Kimi-K2.5"
           }
         ],
         "critpt": [
@@ -46434,10 +46102,7 @@
             "ifbench"
           ],
           "of": 4,
-          "share": 1.0,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 1.0
         }
       }
     },
@@ -46463,10 +46128,10 @@
       },
       "scores": {
         "coding_index": 61001,
-        "tooling_index": 69415,
-        "knowledge_index": 88295,
+        "tooling_index": 69518,
+        "knowledge_index": 88288,
         "vision_index": 73819,
-        "trust_index": 68963,
+        "trust_index": 69078,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
         "swe_bench_multimodal": null,
@@ -47047,10 +46712,10 @@
       },
       "scores": {
         "coding_index": 65584,
-        "tooling_index": 70369,
-        "knowledge_index": 80857,
+        "tooling_index": 70351,
+        "knowledge_index": 80850,
         "vision_index": null,
-        "trust_index": 59609,
+        "trust_index": 59767,
         "aa_intelligence_index": 25.8,
         "swe_bench_verified": 78.2,
         "swe_bench_multimodal": null,
@@ -47506,10 +47171,10 @@
       },
       "scores": {
         "coding_index": 89406,
-        "tooling_index": 89526,
-        "knowledge_index": 95424,
+        "tooling_index": 90844,
+        "knowledge_index": 95423,
         "vision_index": 86998,
-        "trust_index": 64912,
+        "trust_index": 67971,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -47537,7 +47202,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": 76.5,
-        "tau3_bench_banking": 33.4,
+        "tau3_bench_banking": 46,
         "tau2_bench_telecom": null,
         "mcp_atlas": 82.3,
         "bfcl_v4": null,
@@ -47550,7 +47215,7 @@
         "aa_omniscience": 19.7,
         "aa_omniscience_hallucination": 53.2,
         "aa_omniscience_accuracy": 47.6,
-        "aa_lcr": 74.7,
+        "aa_lcr": 88.7,
         "critpt": 23.4,
         "aime_2025": null,
         "aime_2026": null,
@@ -47596,7 +47261,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "2026-08-01",
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-07",
         "tau2_bench_telecom": null,
         "mcp_atlas": "2026-08-21",
         "bfcl_v4": null,
@@ -47609,7 +47274,7 @@
         "aa_omniscience": "2026-08-07",
         "aa_omniscience_hallucination": "2026-08-07",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-01",
         "aime_2025": null,
         "aime_2026": null,
@@ -47656,7 +47321,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "https://huggingface.co/moonshotai/Kimi-K3",
-        "tau3_bench_banking": "https://huggingface.co/moonshotai/Kimi-K3",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/kimi-k3",
         "tau2_bench_telecom": null,
         "mcp_atlas": "https://labs.scale.com/leaderboard/mcp_atlas",
         "bfcl_v4": null,
@@ -47669,7 +47334,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/kimi-k3",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/kimi-k3",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/kimi-k3",
-        "aa_lcr": "https://huggingface.co/moonshotai/Kimi-K3",
+        "aa_lcr": "https://artificialanalysis.ai/models/kimi-k3",
         "critpt": "https://artificialanalysis.ai/models/kimi-k3",
         "aime_2025": null,
         "aime_2026": null,
@@ -47834,11 +47499,6 @@
             "date": "2026-08-07",
             "score": 46,
             "source": "https://artificialanalysis.ai/models/kimi-k3"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 33.4,
-            "source": "https://huggingface.co/moonshotai/Kimi-K3"
           }
         ],
         "mcp_atlas": [
@@ -47939,11 +47599,6 @@
             "date": "2026-09-04",
             "score": 88.7,
             "source": "https://artificialanalysis.ai/models/kimi-k3"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 74.7,
-            "source": "https://huggingface.co/moonshotai/Kimi-K3"
           }
         ],
         "critpt": [
@@ -48034,7 +47689,6 @@
           "of": 11,
           "share": 0.798,
           "second_hand": [
-            "tau3_bench_banking",
             "toolathlon"
           ]
         },
@@ -48069,10 +47723,7 @@
             "aa_lcr"
           ],
           "of": 4,
-          "share": 0.872,
-          "second_hand": [
-            "aa_lcr"
-          ]
+          "share": 0.872
         }
       }
     },
@@ -48098,10 +47749,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 32782,
-        "knowledge_index": 40640,
+        "tooling_index": 32359,
+        "knowledge_index": 40646,
         "vision_index": null,
-        "trust_index": 54201,
+        "trust_index": 53914,
         "aa_intelligence_index": 10.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -48417,10 +48068,10 @@
       },
       "scores": {
         "coding_index": 48888,
-        "tooling_index": 51010,
-        "knowledge_index": 74563,
+        "tooling_index": 50828,
+        "knowledge_index": 74019,
         "vision_index": 61234,
-        "trust_index": 60494,
+        "trust_index": 60229,
         "aa_intelligence_index": 25.2,
         "swe_bench_verified": 71,
         "swe_bench_multimodal": null,
@@ -48874,10 +48525,10 @@
       },
       "scores": {
         "coding_index": 50374,
-        "tooling_index": 57418,
-        "knowledge_index": 83162,
+        "tooling_index": 57274,
+        "knowledge_index": 82742,
         "vision_index": 72712,
-        "trust_index": 70398,
+        "trust_index": 70421,
         "aa_intelligence_index": 26,
         "swe_bench_verified": 74,
         "swe_bench_multimodal": null,
@@ -49353,10 +49004,10 @@
       },
       "scores": {
         "coding_index": 59619,
-        "tooling_index": 73319,
-        "knowledge_index": 80545,
+        "tooling_index": 72828,
+        "knowledge_index": 80470,
         "vision_index": 47365,
-        "trust_index": 64461,
+        "trust_index": 64125,
         "aa_intelligence_index": 27.8,
         "swe_bench_verified": 82.2,
         "swe_bench_multimodal": null,
@@ -49384,7 +49035,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": 54.4,
-        "tau3_bench_banking": 15.5,
+        "tau3_bench_banking": 18.8,
         "tau2_bench_telecom": null,
         "mcp_atlas": 79.2,
         "bfcl_v4": null,
@@ -49443,7 +49094,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "2026-08-01",
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-07",
         "tau2_bench_telecom": null,
         "mcp_atlas": "2026-08-21",
         "bfcl_v4": null,
@@ -49502,7 +49153,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "https://toolathlon.xyz/docs/leaderboard",
-        "tau3_bench_banking": "https://huggingface.co/thinkingmachines/Inkling-Small",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/inkling-small",
         "tau2_bench_telecom": null,
         "mcp_atlas": "https://labs.scale.com/leaderboard/mcp_atlas",
         "bfcl_v4": null,
@@ -49610,11 +49261,6 @@
             "date": "2026-08-07",
             "score": 18.8,
             "source": "https://artificialanalysis.ai/models/inkling-small"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 15.5,
-            "source": "https://huggingface.co/thinkingmachines/Inkling-Small"
           }
         ],
         "mcp_atlas": [
@@ -49775,7 +49421,6 @@
           "of": 11,
           "share": 0.736,
           "second_hand": [
-            "tau3_bench_banking",
             "gdpval_aa",
             "ifbench"
           ]
@@ -49839,10 +49484,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 66184,
-        "knowledge_index": 68503,
+        "tooling_index": 66953,
+        "knowledge_index": 68516,
         "vision_index": null,
-        "trust_index": 60489,
+        "trust_index": 60021,
         "aa_intelligence_index": 21.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -50153,10 +49798,10 @@
       },
       "scores": {
         "coding_index": 77909,
-        "tooling_index": 91102,
-        "knowledge_index": 93004,
+        "tooling_index": 91221,
+        "knowledge_index": 93002,
         "vision_index": 98270,
-        "trust_index": 67253,
+        "trust_index": 67370,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
         "swe_bench_multimodal": null,
@@ -50639,10 +50284,10 @@
       },
       "scores": {
         "coding_index": 41597,
-        "tooling_index": 59334,
-        "knowledge_index": 67434,
+        "tooling_index": 59757,
+        "knowledge_index": 67068,
         "vision_index": null,
-        "trust_index": 58917,
+        "trust_index": 58657,
         "aa_intelligence_index": 24.9,
         "swe_bench_verified": 65.2,
         "swe_bench_multimodal": null,
@@ -51079,10 +50724,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 48741,
-        "knowledge_index": 45391,
+        "tooling_index": 49241,
+        "knowledge_index": 45401,
         "vision_index": null,
-        "trust_index": 53665,
+        "trust_index": 53345,
         "aa_intelligence_index": 15.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -51423,10 +51068,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 23129,
-        "knowledge_index": 41481,
+        "tooling_index": 27892,
+        "knowledge_index": 41490,
         "vision_index": null,
-        "trust_index": 50470,
+        "trust_index": 50031,
         "aa_intelligence_index": 8.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -51454,7 +51099,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": 5.7,
+        "tau3_bench_banking": 7.2,
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": 56.9,
@@ -51513,7 +51158,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-23",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": "2026-08-21",
@@ -51572,7 +51217,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "https://huggingface.co/LiquidAI/LFM2.5-2.6B",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/lfm2-5-2-6b",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": "https://huggingface.co/LiquidAI/LFM2.5-2.6B",
@@ -51633,11 +51278,6 @@
             "date": "2026-08-23",
             "score": 7.2,
             "source": "https://artificialanalysis.ai/models/lfm2-5-2-6b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 5.7,
-            "source": "https://huggingface.co/LiquidAI/LFM2.5-2.6B"
           }
         ],
         "bfcl_v4": [
@@ -51756,7 +51396,6 @@
           "of": 11,
           "share": 0.419,
           "second_hand": [
-            "tau3_bench_banking",
             "bfcl_v4",
             "ifbench"
           ]
@@ -51807,10 +51446,10 @@
       },
       "scores": {
         "coding_index": 52958,
-        "tooling_index": 65335,
-        "knowledge_index": 63498,
+        "tooling_index": 65616,
+        "knowledge_index": 63516,
         "vision_index": 55123,
-        "trust_index": 59413,
+        "trust_index": 61468,
         "aa_intelligence_index": 17.5,
         "swe_bench_verified": 76,
         "swe_bench_multimodal": null,
@@ -51851,7 +51490,7 @@
         "aa_omniscience": -32.9,
         "aa_omniscience_hallucination": 81.9,
         "aa_omniscience_accuracy": 27,
-        "aa_lcr": 80,
+        "aa_lcr": 83.3,
         "critpt": 2.6,
         "aime_2025": null,
         "aime_2026": 94.7,
@@ -51910,7 +51549,7 @@
         "aa_omniscience": "2026-08-11",
         "aa_omniscience_hallucination": "2026-08-11",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-11",
         "aime_2025": null,
         "aime_2026": "2026-08-11",
@@ -51969,7 +51608,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/muse-glimmer",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/muse-glimmer",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/muse-glimmer",
-        "aa_lcr": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
+        "aa_lcr": "https://artificialanalysis.ai/models/muse-glimmer",
         "critpt": "https://artificialanalysis.ai/models/muse-glimmer",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
@@ -52107,11 +51746,6 @@
             "date": "2026-09-04",
             "score": 83.3,
             "source": "https://artificialanalysis.ai/models/muse-glimmer"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 80,
-            "source": "https://huggingface.co/meta-models/Muse-Glimmer-30B"
           }
         ],
         "critpt": [
@@ -52238,7 +51872,6 @@
           "of": 4,
           "share": 1.0,
           "second_hand": [
-            "aa_lcr",
             "ifbench"
           ]
         }
@@ -52261,10 +51894,10 @@
       },
       "scores": {
         "coding_index": 33001,
-        "tooling_index": 49222,
-        "knowledge_index": 48952,
+        "tooling_index": 47501,
+        "knowledge_index": 48825,
         "vision_index": null,
-        "trust_index": 55642,
+        "trust_index": 55515,
         "aa_intelligence_index": 12.9,
         "swe_bench_verified": 52.8,
         "swe_bench_multimodal": null,
@@ -52292,7 +51925,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": 9.3,
+        "tau3_bench_banking": 8.9,
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -52305,7 +51938,7 @@
         "aa_omniscience": -17.7,
         "aa_omniscience_hallucination": 37.6,
         "aa_omniscience_accuracy": 14.4,
-        "aa_lcr": 52,
+        "aa_lcr": 60.3,
         "critpt": 0,
         "aime_2025": null,
         "aime_2026": null,
@@ -52351,7 +51984,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-13",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -52364,7 +51997,7 @@
         "aa_omniscience": "2026-08-13",
         "aa_omniscience_hallucination": "2026-08-13",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-23",
         "aime_2025": null,
         "aime_2026": null,
@@ -52410,7 +52043,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -52423,7 +52056,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
-        "aa_lcr": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+        "aa_lcr": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "critpt": "https://artificialanalysis.ai/models/nemotron-3-5-lightning",
         "aime_2025": null,
         "aime_2026": null,
@@ -52497,11 +52130,6 @@
             "date": "2026-08-13",
             "score": 8.9,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 9.3,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
           }
         ],
         "ifbench": [
@@ -52573,11 +52201,6 @@
             "date": "2026-09-04",
             "score": 60.3,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 52,
-            "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
           }
         ],
         "critpt": [
@@ -52645,7 +52268,6 @@
           "of": 11,
           "share": 0.465,
           "second_hand": [
-            "tau3_bench_banking",
             "ifbench"
           ]
         },
@@ -52673,7 +52295,6 @@
           "of": 4,
           "share": 1.0,
           "second_hand": [
-            "aa_lcr",
             "ifbench"
           ]
         }
@@ -52696,10 +52317,10 @@
       },
       "scores": {
         "coding_index": 88014,
-        "tooling_index": 94063,
-        "knowledge_index": 92300,
+        "tooling_index": 94137,
+        "knowledge_index": 92297,
         "vision_index": null,
-        "trust_index": 70731,
+        "trust_index": 70695,
         "aa_intelligence_index": 44.8,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -53235,10 +52856,10 @@
       },
       "scores": {
         "coding_index": 70257,
-        "tooling_index": 85531,
-        "knowledge_index": 79518,
+        "tooling_index": 85765,
+        "knowledge_index": 79030,
         "vision_index": 75042,
-        "trust_index": 63399,
+        "trust_index": 63607,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
         "swe_bench_multimodal": 38.6,
@@ -53721,10 +53342,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 58896,
-        "knowledge_index": 80209,
+        "tooling_index": 61596,
+        "knowledge_index": 80201,
         "vision_index": null,
-        "trust_index": 65244,
+        "trust_index": 65217,
         "aa_intelligence_index": 24.7,
         "swe_bench_verified": 70.4,
         "swe_bench_multimodal": null,
@@ -53752,7 +53373,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": 28.3,
         "toolathlon": null,
-        "tau3_bench_banking": 19.6,
+        "tau3_bench_banking": 21.6,
         "tau2_bench_telecom": null,
         "mcp_atlas": 58.2,
         "bfcl_v4": null,
@@ -53765,7 +53386,7 @@
         "aa_omniscience": -1.8,
         "aa_omniscience_hallucination": 25.4,
         "aa_omniscience_accuracy": 18.8,
-        "aa_lcr": 62.3,
+        "aa_lcr": 71.7,
         "critpt": 5.7,
         "aime_2025": null,
         "aime_2026": 95.7,
@@ -53811,7 +53432,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": "2026-09-20",
         "toolathlon": null,
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-17",
         "tau2_bench_telecom": null,
         "mcp_atlas": "2026-09-20",
         "bfcl_v4": null,
@@ -53824,7 +53445,7 @@
         "aa_omniscience": "2026-08-17",
         "aa_omniscience_hallucination": "2026-08-17",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-17",
         "aime_2025": null,
         "aime_2026": "2026-08-17",
@@ -53870,7 +53491,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": "https://huggingface.co/upstage/Solar-Open2-250B",
         "toolathlon": null,
-        "tau3_bench_banking": "https://huggingface.co/upstage/Solar-Open2-250B",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/solar-open2-250b",
         "tau2_bench_telecom": null,
         "mcp_atlas": "https://huggingface.co/upstage/Solar-Open2-250B",
         "bfcl_v4": null,
@@ -53883,7 +53504,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/solar-open2-250b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/solar-open2-250b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/solar-open2-250b",
-        "aa_lcr": "https://huggingface.co/upstage/Solar-Open2-250B",
+        "aa_lcr": "https://artificialanalysis.ai/models/solar-open2-250b",
         "critpt": "https://artificialanalysis.ai/models/solar-open2-250b",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/upstage/Solar-Open2-250B",
@@ -53945,11 +53566,6 @@
             "date": "2026-08-17",
             "score": 21.6,
             "source": "https://artificialanalysis.ai/models/solar-open2-250b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 19.6,
-            "source": "https://huggingface.co/upstage/Solar-Open2-250B"
           }
         ],
         "mcp_atlas": [
@@ -53999,11 +53615,6 @@
             "date": "2026-09-04",
             "score": 71.7,
             "source": "https://artificialanalysis.ai/models/solar-open2-250b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 62.3,
-            "source": "https://huggingface.co/upstage/Solar-Open2-250B"
           }
         ],
         "critpt": [
@@ -54064,7 +53675,6 @@
           "of": 11,
           "share": 0.519,
           "second_hand": [
-            "tau3_bench_banking",
             "mcp_atlas",
             "terminal_bench_hard",
             "ifbench"
@@ -54094,7 +53704,6 @@
           "of": 4,
           "share": 1.0,
           "second_hand": [
-            "aa_lcr",
             "ifbench"
           ]
         }
@@ -54117,10 +53726,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 59077,
-        "knowledge_index": 79076,
+        "tooling_index": 62068,
+        "knowledge_index": 79070,
         "vision_index": null,
-        "trust_index": 61693,
+        "trust_index": 61257,
         "aa_intelligence_index": 22.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -54148,7 +53757,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": 13,
+        "tau3_bench_banking": 16.1,
         "tau2_bench_telecom": 98,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -54161,7 +53770,7 @@
         "aa_omniscience": -8.2,
         "aa_omniscience_hallucination": 33,
         "aa_omniscience_accuracy": 18.6,
-        "aa_lcr": 66,
+        "aa_lcr": 70,
         "critpt": 8.9,
         "aime_2025": null,
         "aime_2026": 97.1,
@@ -54207,7 +53816,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-08-17",
         "tau2_bench_telecom": "2026-08-17",
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -54220,7 +53829,7 @@
         "aa_omniscience": "2026-08-17",
         "aa_omniscience_hallucination": "2026-08-17",
         "aa_omniscience_accuracy": "2026-08-29",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-08-17",
         "aime_2025": null,
         "aime_2026": "2026-08-17",
@@ -54266,7 +53875,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": null,
-        "tau3_bench_banking": "https://huggingface.co/skt/A.X-K2",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/a-x-k2",
         "tau2_bench_telecom": "https://huggingface.co/skt/A.X-K2",
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -54279,7 +53888,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/a-x-k2",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/a-x-k2",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/a-x-k2",
-        "aa_lcr": "https://huggingface.co/skt/A.X-K2",
+        "aa_lcr": "https://artificialanalysis.ai/models/a-x-k2",
         "critpt": "https://artificialanalysis.ai/models/a-x-k2",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/skt/A.X-K2",
@@ -54327,11 +53936,6 @@
             "date": "2026-08-17",
             "score": 16.1,
             "source": "https://artificialanalysis.ai/models/a-x-k2"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 13,
-            "source": "https://huggingface.co/skt/A.X-K2"
           }
         ],
         "tau2_bench_telecom": [
@@ -54393,11 +53997,6 @@
             "date": "2026-09-04",
             "score": 70,
             "source": "https://artificialanalysis.ai/models/a-x-k2"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 66,
-            "source": "https://huggingface.co/skt/A.X-K2"
           }
         ],
         "critpt": [
@@ -54450,7 +54049,6 @@
           "of": 11,
           "share": 0.388,
           "second_hand": [
-            "tau3_bench_banking",
             "tau2_bench_telecom",
             "ifbench"
           ]
@@ -54475,7 +54073,6 @@
           "of": 4,
           "share": 1.0,
           "second_hand": [
-            "aa_lcr",
             "ifbench"
           ]
         }
@@ -54499,7 +54096,7 @@
       "scores": {
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40203,
+        "knowledge_index": 40213,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -54736,8 +54333,8 @@
       },
       "scores": {
         "coding_index": 83367,
-        "tooling_index": 84435,
-        "knowledge_index": 92825,
+        "tooling_index": 84493,
+        "knowledge_index": 92831,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -55053,8 +54650,8 @@
       },
       "scores": {
         "coding_index": 62853,
-        "tooling_index": 66059,
-        "knowledge_index": 73590,
+        "tooling_index": 66028,
+        "knowledge_index": 73577,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -55370,8 +54967,8 @@
       },
       "scores": {
         "coding_index": 41280,
-        "tooling_index": 45058,
-        "knowledge_index": 63836,
+        "tooling_index": 45054,
+        "knowledge_index": 63841,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -55687,10 +55284,10 @@
       },
       "scores": {
         "coding_index": 71252,
-        "tooling_index": 88016,
-        "knowledge_index": 78691,
+        "tooling_index": 87880,
+        "knowledge_index": 78686,
         "vision_index": 55178,
-        "trust_index": 53294,
+        "trust_index": 53631,
         "aa_intelligence_index": 34.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -56113,10 +55710,10 @@
       },
       "scores": {
         "coding_index": 77043,
-        "tooling_index": 95839,
-        "knowledge_index": 89529,
+        "tooling_index": 95888,
+        "knowledge_index": 89523,
         "vision_index": 93160,
-        "trust_index": 69889,
+        "trust_index": 69913,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
         "swe_bench_multimodal": null,
@@ -56604,10 +56201,10 @@
       },
       "scores": {
         "coding_index": 82148,
-        "tooling_index": 91629,
-        "knowledge_index": 83295,
+        "tooling_index": 91449,
+        "knowledge_index": 83287,
         "vision_index": 82725,
-        "trust_index": 65011,
+        "trust_index": 65142,
         "aa_intelligence_index": 39.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -57066,10 +56663,10 @@
       },
       "scores": {
         "coding_index": 21617,
-        "tooling_index": 25435,
-        "knowledge_index": 40543,
+        "tooling_index": 25208,
+        "knowledge_index": 40551,
         "vision_index": null,
-        "trust_index": 52112,
+        "trust_index": 51822,
         "aa_intelligence_index": 9.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -57473,10 +57070,10 @@
       },
       "scores": {
         "coding_index": 22719,
-        "tooling_index": 33591,
-        "knowledge_index": 49763,
+        "tooling_index": 33547,
+        "knowledge_index": 49648,
         "vision_index": null,
-        "trust_index": 53050,
+        "trust_index": 52785,
         "aa_intelligence_index": 11.1,
         "swe_bench_verified": 47.7,
         "swe_bench_multimodal": null,
@@ -57917,10 +57514,10 @@
       },
       "scores": {
         "coding_index": 29305,
-        "tooling_index": 47216,
-        "knowledge_index": 54536,
+        "tooling_index": 47428,
+        "knowledge_index": 54588,
         "vision_index": null,
-        "trust_index": 55072,
+        "trust_index": 54767,
         "aa_intelligence_index": 14.8,
         "swe_bench_verified": 57,
         "swe_bench_multimodal": null,
@@ -58330,8 +57927,8 @@
       },
       "scores": {
         "coding_index": 77951,
-        "tooling_index": 85964,
-        "knowledge_index": 91184,
+        "tooling_index": 86019,
+        "knowledge_index": 91186,
         "vision_index": null,
         "trust_index": null,
         "aa_intelligence_index": null,
@@ -58704,10 +58301,10 @@
       },
       "scores": {
         "coding_index": 63346,
-        "tooling_index": 79056,
-        "knowledge_index": 80744,
+        "tooling_index": 78981,
+        "knowledge_index": 80737,
         "vision_index": null,
-        "trust_index": 69158,
+        "trust_index": 70345,
         "aa_intelligence_index": 30.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -58735,7 +58332,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": 65.3,
-        "tau3_bench_banking": 34,
+        "tau3_bench_banking": 34.2,
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -58748,7 +58345,7 @@
         "aa_omniscience": -3,
         "aa_omniscience_hallucination": 25.9,
         "aa_omniscience_accuracy": 23,
-        "aa_lcr": 76,
+        "aa_lcr": 80,
         "critpt": 4.6,
         "aime_2025": null,
         "aime_2026": null,
@@ -58794,7 +58391,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "2026-09-16",
-        "tau3_bench_banking": "2026-09-24",
+        "tau3_bench_banking": "2026-09-04",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -58807,7 +58404,7 @@
         "aa_omniscience": "2026-09-04",
         "aa_omniscience_hallucination": "2026-09-04",
         "aa_omniscience_accuracy": "2026-09-24",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-04",
         "critpt": "2026-09-04",
         "aime_2025": null,
         "aime_2026": null,
@@ -58853,7 +58450,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "toolathlon": "https://huggingface.co/IFM/K2-Horizon-375B-A23B",
-        "tau3_bench_banking": "https://huggingface.co/IFM/K2-Horizon-375B-A23B",
+        "tau3_bench_banking": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
         "tau2_bench_telecom": null,
         "mcp_atlas": null,
         "bfcl_v4": null,
@@ -58866,7 +58463,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
         "aa_omniscience_accuracy": "https://huggingface.co/IFM/K2-Horizon-375B-A23B",
-        "aa_lcr": "https://huggingface.co/IFM/K2-Horizon-375B-A23B",
+        "aa_lcr": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
         "critpt": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
         "aime_2025": null,
         "aime_2026": null,
@@ -58945,11 +58542,6 @@
             "date": "2026-09-04",
             "score": 34.2,
             "source": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 34,
-            "source": "https://huggingface.co/IFM/K2-Horizon-375B-A23B"
           }
         ],
         "gdpval_aa": [
@@ -59012,11 +58604,6 @@
             "date": "2026-09-04",
             "score": 80,
             "source": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 76,
-            "source": "https://huggingface.co/IFM/K2-Horizon-375B-A23B"
           }
         ],
         "critpt": [
@@ -59077,7 +58664,6 @@
           "of": 11,
           "share": 0.574,
           "second_hand": [
-            "tau3_bench_banking",
             "toolathlon"
           ]
         },
@@ -59100,8 +58686,7 @@
           "of": 4,
           "share": 0.872,
           "second_hand": [
-            "aa_omniscience_accuracy",
-            "aa_lcr"
+            "aa_omniscience_accuracy"
           ]
         }
       }
@@ -59123,10 +58708,10 @@
       },
       "scores": {
         "coding_index": 19659,
-        "tooling_index": 48335,
-        "knowledge_index": 50941,
+        "tooling_index": 48769,
+        "knowledge_index": 50795,
         "vision_index": null,
-        "trust_index": 56369,
+        "trust_index": 55653,
         "aa_intelligence_index": 12.5,
         "swe_bench_verified": 46.4,
         "swe_bench_multimodal": null,
@@ -59167,7 +58752,7 @@
         "aa_omniscience": -11.7,
         "aa_omniscience_hallucination": 21.9,
         "aa_omniscience_accuracy": 8.4,
-        "aa_lcr": 59,
+        "aa_lcr": 59.3,
         "critpt": 0.3,
         "aime_2025": 86.5,
         "aime_2026": 86.5,
@@ -59226,7 +58811,7 @@
         "aa_omniscience": "2026-09-07",
         "aa_omniscience_hallucination": "2026-09-07",
         "aa_omniscience_accuracy": "2026-09-07",
-        "aa_lcr": "2026-09-24",
+        "aa_lcr": "2026-09-07",
         "critpt": "2026-09-07",
         "aime_2025": "2026-09-07",
         "aime_2026": "2026-09-07",
@@ -59285,7 +58870,7 @@
         "aa_omniscience": "https://artificialanalysis.ai/models/minicpm5-2b",
         "aa_omniscience_hallucination": "https://artificialanalysis.ai/models/minicpm5-2b",
         "aa_omniscience_accuracy": "https://artificialanalysis.ai/models/minicpm5-2b",
-        "aa_lcr": "https://huggingface.co/openbmb/MiniCPM5-2B",
+        "aa_lcr": "https://artificialanalysis.ai/models/minicpm5-2b",
         "critpt": "https://artificialanalysis.ai/models/minicpm5-2b",
         "aime_2025": "https://huggingface.co/openbmb/MiniCPM5-2B",
         "aime_2026": "https://huggingface.co/openbmb/MiniCPM5-2B",
@@ -59444,11 +59029,6 @@
             "date": "2026-09-07",
             "score": 59.3,
             "source": "https://artificialanalysis.ai/models/minicpm5-2b"
-          },
-          {
-            "date": "2026-09-24",
-            "score": 59,
-            "source": "https://huggingface.co/openbmb/MiniCPM5-2B"
           }
         ],
         "critpt": [
@@ -59565,7 +59145,6 @@
           "of": 4,
           "share": 1.0,
           "second_hand": [
-            "aa_lcr",
             "ifbench"
           ]
         }
@@ -59588,10 +59167,10 @@
       },
       "scores": {
         "coding_index": 90417,
-        "tooling_index": 87745,
-        "knowledge_index": 84802,
+        "tooling_index": 87829,
+        "knowledge_index": 84795,
         "vision_index": 67252,
-        "trust_index": 44811,
+        "trust_index": 44774,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -60034,10 +59613,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 54471,
-        "knowledge_index": 73032,
+        "tooling_index": 54409,
+        "knowledge_index": 73037,
         "vision_index": 78451,
-        "trust_index": 58576,
+        "trust_index": 58611,
         "aa_intelligence_index": 24.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -60382,10 +59961,10 @@
       },
       "scores": {
         "coding_index": 94767,
-        "tooling_index": 97093,
+        "tooling_index": 96929,
         "knowledge_index": 97606,
         "vision_index": 88110,
-        "trust_index": 65487,
+        "trust_index": 65523,
         "aa_intelligence_index": 50.8,
         "swe_bench_verified": 97,
         "swe_bench_multimodal": 59.4,
@@ -60965,10 +60544,10 @@
       },
       "scores": {
         "coding_index": 81002,
-        "tooling_index": 85250,
-        "knowledge_index": 92249,
+        "tooling_index": 85281,
+        "knowledge_index": 92246,
         "vision_index": 71139,
-        "trust_index": 64409,
+        "trust_index": 64476,
         "aa_intelligence_index": 38.2,
         "swe_bench_verified": 79.6,
         "swe_bench_multimodal": 28.1,
@@ -61469,10 +61048,10 @@
       },
       "scores": {
         "coding_index": 96097,
-        "tooling_index": 97387,
+        "tooling_index": 97418,
         "knowledge_index": 98542,
         "vision_index": 99571,
-        "trust_index": 65995,
+        "trust_index": 66253,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.7,
@@ -62040,10 +61619,10 @@
       },
       "scores": {
         "coding_index": 80415,
-        "tooling_index": 80863,
-        "knowledge_index": 84556,
+        "tooling_index": 80857,
+        "knowledge_index": 84546,
         "vision_index": 76514,
-        "trust_index": 52990,
+        "trust_index": 53418,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
         "swe_bench_multimodal": null,
@@ -62576,10 +62155,10 @@
       },
       "scores": {
         "coding_index": 86171,
-        "tooling_index": 87222,
-        "knowledge_index": 91037,
+        "tooling_index": 87165,
+        "knowledge_index": 91033,
         "vision_index": 85276,
-        "trust_index": 58437,
+        "trust_index": 58699,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -63094,10 +62673,10 @@
       },
       "scores": {
         "coding_index": 89645,
-        "tooling_index": 91273,
-        "knowledge_index": 97602,
+        "tooling_index": 91224,
+        "knowledge_index": 97601,
         "vision_index": 89141,
-        "trust_index": 55535,
+        "trust_index": 55919,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
         "swe_bench_multimodal": null,
@@ -63675,10 +63254,10 @@
       },
       "scores": {
         "coding_index": 97502,
-        "tooling_index": 92314,
+        "tooling_index": 92168,
         "knowledge_index": 98579,
         "vision_index": 95060,
-        "trust_index": 67396,
+        "trust_index": 67510,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -64190,7 +63769,7 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 85415,
+        "tooling_index": 84479,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -64444,10 +64023,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 53282,
-        "knowledge_index": 69655,
+        "tooling_index": 53220,
+        "knowledge_index": 69667,
         "vision_index": null,
-        "trust_index": 56965,
+        "trust_index": 56990,
         "aa_intelligence_index": 22.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -64771,10 +64350,10 @@
       },
       "scores": {
         "coding_index": 11129,
-        "tooling_index": 13890,
-        "knowledge_index": 16702,
+        "tooling_index": 13892,
+        "knowledge_index": 16706,
         "vision_index": null,
-        "trust_index": 41845,
+        "trust_index": 41798,
         "aa_intelligence_index": 3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -65150,10 +64729,10 @@
       },
       "scores": {
         "coding_index": 22776,
-        "tooling_index": 44684,
-        "knowledge_index": 47461,
+        "tooling_index": 44655,
+        "knowledge_index": 47472,
         "vision_index": null,
-        "trust_index": 51814,
+        "trust_index": 51810,
         "aa_intelligence_index": 15.6,
         "swe_bench_verified": 68.6,
         "swe_bench_multimodal": null,
@@ -65530,10 +65109,10 @@
       },
       "scores": {
         "coding_index": 46111,
-        "tooling_index": 67364,
-        "knowledge_index": 60275,
+        "tooling_index": 67338,
+        "knowledge_index": 60293,
         "vision_index": null,
-        "trust_index": 53862,
+        "trust_index": 53869,
         "aa_intelligence_index": 20.6,
         "swe_bench_verified": 70.6,
         "swe_bench_multimodal": null,
@@ -65898,10 +65477,10 @@
       },
       "scores": {
         "coding_index": null,
-        "tooling_index": 59007,
-        "knowledge_index": 70479,
+        "tooling_index": 58964,
+        "knowledge_index": 70490,
         "vision_index": null,
-        "trust_index": 63731,
+        "trust_index": 63373,
         "aa_intelligence_index": 25.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -66261,7 +65840,7 @@
       },
       "scores": {
         "coding_index": 88844,
-        "tooling_index": 92998,
+        "tooling_index": 93021,
         "knowledge_index": 95081,
         "vision_index": 77434,
         "trust_index": null,
@@ -66632,7 +66211,7 @@
       },
       "scores": {
         "coding_index": 85700,
-        "tooling_index": 87315,
+        "tooling_index": 87356,
         "knowledge_index": null,
         "vision_index": 71714,
         "trust_index": null,
@@ -66941,7 +66520,7 @@
       },
       "scores": {
         "coding_index": 98442,
-        "tooling_index": 90630,
+        "tooling_index": 90700,
         "knowledge_index": 99526,
         "vision_index": 96184,
         "trust_index": null,
@@ -67336,8 +66915,8 @@
       },
       "scores": {
         "coding_index": 81490,
-        "tooling_index": 82193,
-        "knowledge_index": 87585,
+        "tooling_index": 82234,
+        "knowledge_index": 87581,
         "vision_index": 64638,
         "trust_index": null,
         "aa_intelligence_index": 37.3,
@@ -67707,8 +67286,8 @@
       },
       "scores": {
         "coding_index": 92889,
-        "tooling_index": 92055,
-        "knowledge_index": 96830,
+        "tooling_index": 92115,
+        "knowledge_index": 96831,
         "vision_index": 90250,
         "trust_index": null,
         "aa_intelligence_index": 47.5,

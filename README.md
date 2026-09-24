@@ -719,7 +719,10 @@ candidate wins. A score is never nulled for going unreported: with no candidate
 it stays. A failed fetcher drops nothing: a page not read at all (a failed or
 skipped fetch), every page an ingest step read before it raised, and a Hugging
 Face card whose metadata could not be loaded (`"partial": true` from
-`fetch_huggingface.py`) are all excluded. Nothing carries over between runs.
+`fetch_huggingface.py`) are all excluded. So is an AA model page for a column
+this run's AA data carried for no model at all: MMLU-Pro, AA-LCR and the tau
+benches come only with the API record, and an answer without them says nothing
+about any one page. Nothing carries over between runs.
 
 The Coding Agent Index is not fill-only, and at rank 0 it outranks the model
 pages: where both AA surfaces report a column, the agent run lands whether or

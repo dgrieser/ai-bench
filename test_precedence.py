@@ -523,6 +523,45 @@ class TestDroppedScores(unittest.TestCase):
         update.replace_dropped_scores(DOC, [])
         self.assertEqual(model["scores"]["ifbench"], 39.6)
 
+    def aa_run(self, doc: dict, evaluations: dict) -> None:
+        """One AA ingest: every model of doc gets its own page and these evaluations."""
+        by_slug = {
+            m["name"]: update.merge_aa_models(
+                [{"slug": m["name"], "name": m["name"], "evaluations": dict(evaluations[m["name"]])}]
+            )
+            for m in doc["models"]
+        }
+        update.update_scores(doc, by_slug)
+
+    def aa_doc(self) -> dict:
+        page = "https://artificialanalysis.ai/models/{}"
+        models = []
+        for name in ("m", "other"):
+            model = model_with(score=80.5, source=page.format(name), key="mmlu_pro")
+            model["name"] = name
+            models.append(model)
+        return {"benchmarks": {}, "models": models}
+
+    def test_a_field_aa_sent_for_no_model_is_not_dropped(self) -> None:
+        """2026-09-24: the API sent no MMLU-Pro at all, the pages were read for
+        the rest, and every AA mmlu_pro with a card behind it went to the card."""
+        doc = self.aa_doc()
+        self.aa_run(doc, {"m": {"ifbench": 0.4}, "other": {"ifbench": 0.5}})
+        model = doc["models"][0]
+        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, HF_CARD, [], fill_only=True)
+        update.replace_dropped_scores(doc, [])
+        self.assertEqual(model["scores"]["mmlu_pro"], 80.5)
+        self.assertEqual(model["scores_source"]["mmlu_pro"], "https://artificialanalysis.ai/models/m")
+
+    def test_a_field_aa_sent_for_another_model_still_drops(self) -> None:
+        doc = self.aa_doc()
+        self.aa_run(doc, {"m": {"ifbench": 0.4}, "other": {"mmlu_pro": 0.81}})
+        model = doc["models"][0]
+        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, HF_CARD, [], fill_only=True)
+        update.replace_dropped_scores(doc, [])
+        self.assertEqual(model["scores"]["mmlu_pro"], 80.9)
+        self.assertEqual(model["scores_source"]["mmlu_pro"], HF_CARD)
+
     def test_the_url_backfill_records_nothing(self) -> None:
         model = model_with(score=39.6, source=None)
         update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, [], fill_urls_only=True)
