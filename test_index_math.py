@@ -656,6 +656,57 @@ class TestCoverageRecord(unittest.TestCase):
         self.assertNotIn("index_coverage", doc["models"][2])
 
 
+class TestCalibrationFile(unittest.TestCase):
+    """The ratios live in index-calibration.json, written by --calibrate -w."""
+
+    def setUp(self) -> None:
+        import tempfile
+
+        self.dir = tempfile.TemporaryDirectory()
+        self.path = Path(self.dir.name) / "calibration.json"
+
+    def tearDown(self) -> None:
+        self.dir.cleanup()
+
+    def test_a_missing_or_broken_file_calibrates_nothing(self) -> None:
+        self.assertEqual(di.load_calibration(self.path), {})
+        self.path.write_text("not json")
+        self.assertEqual(di.load_calibration(self.path), {})
+        self.path.write_text('{"coding_index": {"transfer_ratio": "x"}}')
+        self.assertEqual(di.load_calibration(self.path), {})
+
+    def test_written_ratios_are_read_back(self) -> None:
+        key = di.INDEXES[0].key
+        self.assertTrue(di.write_calibration({key: (0.01234, 99)}, self.path))
+        self.assertEqual(di.load_calibration(self.path), {key: 0.012})
+        stored = json.loads(self.path.read_text())[key]
+        self.assertEqual(stored["sample"], 99)
+        self.assertIn("calibrated", stored)
+
+    def test_an_unchanged_measurement_does_not_touch_the_file(self) -> None:
+        """Otherwise the date alone would make a commit every night."""
+        key = di.INDEXES[0].key
+        di.write_calibration({key: (0.012, 99)}, self.path)
+        stored = json.loads(self.path.read_text())
+        stored[key]["calibrated"] = "2000-01-01"
+        self.path.write_text(json.dumps(stored))
+        self.assertFalse(di.write_calibration({key: (0.0121, 140)}, self.path))
+        self.assertEqual(json.loads(self.path.read_text())[key]["sample"], 99)
+
+    def test_an_index_that_could_not_be_measured_keeps_its_ratio(self) -> None:
+        first, second = di.INDEXES[0].key, di.INDEXES[1].key
+        di.write_calibration({first: (0.01, 5), second: (0.02, 5)}, self.path)
+        di.write_calibration({first: (0.03, 5)}, self.path)
+        self.assertEqual(
+            di.load_calibration(self.path), {first: 0.03, second: 0.02}
+        )
+
+    def test_the_stored_ratio_reaches_the_index(self) -> None:
+        spec = index(("p", 1.0))
+        self.assertEqual(di.calibrated([spec], {"idx": 0.5})[0].transfer_ratio, 0.5)
+        self.assertEqual(di.calibrated([spec], {})[0].transfer_ratio, 0.0)
+
+
 class TestLiveIndexes(unittest.TestCase):
     """The configured indexes, rather than a synthetic one."""
 

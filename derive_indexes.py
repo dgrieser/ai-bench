@@ -144,12 +144,11 @@ class IndexDef(NamedTuple):
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
     It is in shares of the group, so the five are directly comparable with each
-    other and with MIN_SCORED_FRACTION: Coding's 0.012 leaves a fully measured
-    model 98.8% of its distance from the middle, Trust's 1.524 leaves it 40%.
-    It sets how hard a thinly covered model is pulled toward the middle (see
-    coverage_reliability), and it is measured rather than chosen: run
-    ./derive_indexes.py --calibrate to re-derive it. 0.0 means never calibrated
-    and shrinks nobody.
+    other and with MIN_SCORED_FRACTION. It sets how hard a thinly covered model
+    is pulled toward the middle (see coverage_reliability), and it is measured
+    rather than chosen: ./derive_indexes.py --calibrate -w re-derives it into
+    CALIBRATION_JSON, which a nightly workflow does, and INDEXES picks the
+    stored value up at import. 0.0 means never calibrated and shrinks nobody.
     """
 
     key: str
@@ -300,20 +299,6 @@ INDEXES: list[IndexDef] = [
             ("programbench_almost", 0.5),
             ("swe_bench_verified", 0.15),
         ],
-        # The lowest of the five, and now well clear of tooling: coding
-        # benchmarks predict each other well. Hold one out and the rest miss it
-        # by an eighty-third of the spread between models, so a fully measured
-        # model keeps 98.8% of its distance from the middle and one at the 18%
-        # bar keeps 94%. That is the data's verdict rather than a preference: a
-        # model placing top-decile on three coding benchmarks really is
-        # unlikely to be mid-field on the rest. Re-measured by --calibrate
-        # after the SWE Atlas promotion, 0.016 -> 0.015, after Vibe Code Bench
-        # joined, 0.015 -> 0.013, and after ProgramBench, 0.013 -> 0.012 --
-        # each time a broadly scored member gave the group more overlap to
-        # predict its own held-out parts from. The FrontierCode Main ->
-        # Extended swap in between moved nothing, which is what swapping one
-        # board for a near-identical one should do.
-        transfer_ratio=0.012,
     ),
     IndexDef(
         key="tooling_index",
@@ -333,11 +318,6 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_hard", 0.3),
             ("ifbench", 0.2),
         ],
-        # A hair above the coding group, over the widest group here, so this
-        # shrinks little: 98.4% kept when fully measured, 92% at the 18% bar.
-        # Re-measured by --calibrate after the 4.0 admission, 0.019 -> 0.016,
-        # and unmoved since: the changes after it were all coding-group ones.
-        transfer_ratio=0.016,
     ),
     IndexDef(
         key="knowledge_index",
@@ -366,11 +346,6 @@ INDEXES: list[IndexDef] = [
             # honesty, which is why they are worth aggregating there and not
             # here.
         ],
-        # Five times the coding group's, which is not what the members'
-        # correlations with each other suggest -- and is the point of measuring
-        # it held out rather than reading it off a correlation. A fully
-        # measured model keeps 93% of its distance, one at the 18% bar 71%.
-        transfer_ratio=0.072,
     ),
     IndexDef(
         key="vision_index",
@@ -391,13 +366,6 @@ INDEXES: list[IndexDef] = [
             # visual evidence at all -- see README, "Why GDPval-AA is left
             # out".
         ],
-        # The vision members correlate 0.93-0.97 with each other, yet held out
-        # they miss by nine times what the coding group's do. Correlation over
-        # the handful of models scored on two small boards is a far weaker
-        # guarantee than it looks. Still mild in absolute terms: a model on
-        # MMMU Pro alone -- 36% of the group, and half this column's field --
-        # keeps 91% of its distance.
-        transfer_ratio=0.034,
     ),
     IndexDef(
         key="trust_index",
@@ -423,19 +391,93 @@ INDEXES: list[IndexDef] = [
             # whose whole subject is trustworthiness -- see README, "What the
             # Trust index leaves out".
         ],
-        # A hundred times the coding group's, and the reason this parameter is
-        # per-index rather than global. A hallucination rate, an accuracy, a
-        # long-context recall and an instruction-following score are nearly
-        # separate constructs, and the models sit close together on all of
-        # them, so the between-model variance this is divided by is small while
-        # the disagreement above it is not. Above 1.0 it means one member says
-        # less about the next than the field's own spread does, and it bites
-        # accordingly: a model carrying the 1.0 anchor alone keeps 22% of its
-        # distance from the middle, one measured throughout 40%. That is the
-        # column honestly reporting how little it can lean on partial evidence.
-        transfer_ratio=1.524,
     ),
 ]
+
+# Where each index's calibrated transfer_ratio is kept. It is data rather than a
+# constant in INDEXES because it is a measurement of llm.json and moves when
+# llm.json does: typed into the source it went stale between hand re-runs --
+# Knowledge carried 0.072 while the file itself calibrated to 0.046. The
+# nightly "calibrate indexes" workflow re-measures it with
+# `--calibrate --write` and commits this file together with the llm.json the
+# new values produce.
+CALIBRATION_JSON = Path(__file__).resolve().parent / "index-calibration.json"
+
+
+def load_calibration(path: Path = CALIBRATION_JSON) -> dict[str, float]:
+    """index key -> stored transfer_ratio. A missing or malformed file, or
+    entry, yields nothing for that index, which leaves it uncalibrated (0.0,
+    shrinking nobody) rather than failing the whole refresh."""
+    try:
+        stored = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(stored, dict):
+        return {}
+    ratios: dict[str, float] = {}
+    for key, entry in stored.items():
+        ratio = entry.get("transfer_ratio") if isinstance(entry, dict) else None
+        if isinstance(ratio, (int, float)) and not isinstance(ratio, bool) and ratio >= 0:
+            ratios[key] = float(ratio)
+    return ratios
+
+
+def calibrated(
+    indexes: list[IndexDef], ratios: dict[str, float]
+) -> list[IndexDef]:
+    """`indexes` with each transfer_ratio taken from `ratios` where it has one."""
+    return [
+        index._replace(transfer_ratio=ratios[index.key])
+        if index.key in ratios
+        else index
+        for index in indexes
+    ]
+
+
+INDEXES = calibrated(INDEXES, load_calibration())
+
+
+def write_calibration(
+    results: dict[str, tuple[float, int]], path: Path = CALIBRATION_JSON
+) -> bool:
+    """Store freshly measured ratios, keeping the previous entry for an index
+    that could not be measured this time; returns whether the file changed.
+
+    Rounded to three places, the precision the ratios were always quoted at:
+    finer than that is calibration noise, and writing it would churn the file
+    and llm.json every night for no change anyone could read. An entry whose
+    rounded ratio holds is kept as it was, sample and date included, so
+    "calibrated" is the date the ratio last moved.
+    """
+    try:
+        previous = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        previous = {}
+    if not isinstance(previous, dict):
+        previous = {}
+    stored: dict[str, Any] = {}
+    for index in INDEXES:
+        if index.key in results:
+            ratio, sample = results[index.key]
+            old = previous.get(index.key)
+            # Only a change in the ratio itself is news: the sample grows with
+            # every model added, and recording that alone would commit every
+            # night for a file whose effect on the ranking had not moved.
+            if isinstance(old, dict) and old.get("transfer_ratio") == round(ratio, 3):
+                stored[index.key] = old
+                continue
+            stored[index.key] = {
+                "transfer_ratio": round(ratio, 3),
+                "sample": sample,
+                "calibrated": time.strftime("%Y-%m-%d", time.gmtime()),
+            }
+        elif index.key in previous:
+            stored[index.key] = previous[index.key]
+    if stored == previous:
+        return False
+    path.write_text(json.dumps(stored, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
+    return True
+
 
 # A benchmark that has re-run itself keeps a column per revision, because the
 # two are not comparable as published (see _revisions.py). For the *index* that
@@ -1681,7 +1723,7 @@ def main() -> int:
         "--calibrate",
         action="store_true",
         help="Re-measure each index's transfer_ratio by leave-one-benchmark-out "
-        "and print the values to paste into INDEXES. Writes nothing, and takes "
+        "and print it; with --write, store it in index-calibration.json. Takes "
         "a few minutes: it refits every index once per contributing benchmark.",
     )
     args = parser.parse_args()
@@ -1715,19 +1757,31 @@ def main() -> int:
 
     if args.calibrate:
         print(
-            "Leave-one-benchmark-out calibration. Paste a changed ratio into "
-            "INDEXES; nothing is written here.\n"
+            "Leave-one-benchmark-out calibration"
+            + (f", written to {CALIBRATION_JSON.name}" if args.write else " (dry-run)")
+            + ".\n"
         )
+        results: dict[str, tuple[float, int]] = {}
         for index in INDEXES:
             measured = calibrate(models, doc, index)
             if measured is None:
                 print(f"  {index.key:16} too few benchmarks to hold one out")
                 continue
             ratio, sample = measured
+            results[index.key] = measured
             print(
                 f"  {index.key:16} transfer_ratio={ratio:.3f} "
                 f"(was {index.transfer_ratio:.3f}, n={sample})"
             )
+        if not args.write:
+            print("\ndry-run only, pass --write to store the ratios")
+        elif write_calibration(results):
+            print(
+                f"\nWrote {CALIBRATION_JSON}; run ./derive_indexes.py -w to "
+                "refit llm.json with the new ratios"
+            )
+        else:
+            print(f"\n{CALIBRATION_JSON.name} is up to date")
         return 0
 
     all_changes: list[tuple[str, str, int | None, int | None]] = []

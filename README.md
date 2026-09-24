@@ -462,10 +462,11 @@ Output: llm.json (unified dataset)
 ./derive_indexes.py llm.json -w
 
 # Re-measure how far one benchmark speaks for the rest of its index, by
-# leave-one-benchmark-out. Prints a transfer_ratio per index to paste into
-# INDEXES; writes nothing, and takes a few minutes. Worth re-running whenever a
-# group gains or loses a member.
+# leave-one-benchmark-out. Prints a transfer_ratio per index; --write stores
+# them in index-calibration.json (then refit with -w). Takes a few minutes. The
+# nightly "calibrate indexes" workflow runs both.
 ./derive_indexes.py --calibrate
+./derive_indexes.py --calibrate --write && ./derive_indexes.py -w
 
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
@@ -2184,29 +2185,40 @@ are easy to get wrong:
   its own target. That bug shipped in the first draft of this work and understated
   every ratio by between two and nine times; `test_index_math.py` now pins it.
 
+**It is re-measured every night.** The ratios are a measurement of `llm.json`,
+so they move when it does, and typed into `INDEXES` they went stale between hand
+re-runs — Knowledge carried 0.072 for weeks while the file itself calibrated to
+0.046. They now live in [`index-calibration.json`](index-calibration.json) (ratio,
+plus the sample size and date of the run that last moved it), which `derive_indexes.py` reads at import. The
+`calibrate indexes` workflow (`.github/workflows/calibrate-indexes.yml`, 03:41 UTC)
+runs `--calibrate --write`, refits `llm.json` with the new ratios, and commits both
+together, so the published ranking is always the one the committed ratios produce.
+It shares the refresh's concurrency group, so the two never push over each other.
+Ratios are stored to three places, the precision they were always quoted at, so
+calibration noise below that does not churn the file — a night whose ratios all
+round the same commits nothing — and an index that cannot be
+measured on a given night keeps its previous ratio.
+
+What a ratio means for a model is `Σshare / (Σshare + transfer_ratio)`, the share
+of its distance from the middle it keeps. At the ratios in the file when the
+nightly run was introduced:
+
 | Index | `transfer_ratio` | A model on 18% of the group keeps | Fully measured keeps |
 | --- | --- | --- | --- |
-| Coding | 0.012 | 94% | 98.8% |
-| Tooling | 0.016 | 92% | 98.4% |
-| Vision | 0.034 | 84% | 97% |
-| Knowledge | 0.072 | 71% | 93% |
-| **Trust** | **1.524** | **11%** | **40%** |
+| Coding | 0.016 | 92% | 98.4% |
+| Tooling | 0.021 | 90% | 97.9% |
+| Vision | 0.028 | 87% | 97% |
+| Knowledge | 0.048 | 79% | 95% |
+| **Trust** | **1.583** | **10%** | **39%** |
 
 The ratio is a share of the group, so these five are directly comparable with each
 other and with `MIN_SCORED_FRACTION`, and scaling a group's weights cannot move
-them. Coding and Tooling were 0.015 and 0.019 until
-[Terminal-Bench 4.0 joined both groups](#coding-index); re-running `--calibrate`
-afterwards put them on the same 0.016, which is what the instruction below to
-re-calibrate after a membership change is for. Two changes since have each been
-re-measured: [FrontierCode's Main → Extended
-swap](#frontiercode-extended-in-the-coding-group) returned Coding's 0.016 unchanged,
-the expected answer for swapping one board for a near-identical one instead of adding
-weight, and [the SWE Atlas promotion](#why-swe-atlas-contributes-two-tracks) took it
-to **0.015**. [Vibe Code Bench's admission](#why-vibe-code-bench-enters-at-075) took
-it to **0.013** and [ProgramBench's](#why-programbench-enters-at-050) to
-**0.012**, the lowest ratio in the file: a member scored on 35 models, and then
-another on 22, is more overlap for the rest of the group to predict a held-out
-one from.
+them. Before the nightly run they were re-measured by hand after membership
+changes, and the history of those runs is recorded in the sections about each
+change: Coding went 0.016 → 0.015 → 0.013 → 0.012 as SWE Atlas, Vibe Code Bench and
+ProgramBench joined — a broadly scored member gives the rest of the group more
+overlap to predict a held-out one from — and the FrontierCode Main → Extended swap
+moved nothing, the expected answer for swapping one board for a near-identical one.
 
 **Trust is a hundred times the coding group, and that is the finding, not a
 quirk.** A hallucination rate, an accuracy, a long-context recall and an
@@ -2214,7 +2226,7 @@ instruction-following score are nearly separate constructs; the models also sit
 close together on all of them, so the between-model variance the ratio is divided
 by is small while the disagreement above it is not. Past 1.0 it means one member
 says less about the next than the field's own spread does. The column pays for that
-honestly: even a model measured on all four keeps only 40% of its distance from the
+honestly: even a model measured on all four keeps only about 40% of its distance from the
 middle, which is why the Trust column is visibly more compressed than the other
 four. That is not a defect in the column, it is the column declining to extrapolate
 from evidence that does not support it.
@@ -2230,8 +2242,8 @@ columns were 1.55 of a 7.30 denominator and are 1.10 of 7.70 since
 how far a thin measurement is believed; the bar decides whether it is reported at
 all, and they are separate knobs for exactly this reason. Whether that is
 right is now an empirical question with an answer on this page rather than a policy
-baked into the arithmetic, and the answer moves when the data does: re-run
-`--calibrate` after a group gains or loses a member.
+baked into the arithmetic, and the answer moves when the data does — which is why
+it is re-measured every night.
 
 ## Tooling Index
 
@@ -2527,10 +2539,11 @@ The old method capped it: a model measured on MMMU Pro alone could not score
 above 68,182 however well it did, because the 64% of the weight it was missing
 was filled at the median and never above it, so the head was reserved for
 models measured on more of the group. That cap is gone with the imputation that
-produced it, and the coverage shrinkage does not replace it here — Vision's
-calibrated `transfer_ratio` is **0.010**, the lowest of the five, so a model on
-MMMU Pro alone keeps 99.0% of its distance from the middle and could reach
-**98,618**. `claude-fable-5-1` tops the column at **99,471** on that one
+produced it, and the coverage shrinkage does not replace it here — when this was
+written Vision's calibrated `transfer_ratio` was **0.010**, the lowest of the
+five, so a model on MMMU Pro alone kept 99.0% of its distance from the middle and
+could reach **98,618** (see [the nightly
+calibration](#how-far-one-benchmark-speaks-for-the-others) for today's ratio). `claude-fable-5-1` tops the column at **99,471** on that one
 benchmark.
 
 That is the calibration being believed rather than a hole in it: MMMU Pro
@@ -2613,7 +2626,7 @@ choose between, knowing which is more capable tells you close to nothing about
 which will make something up. That head-on independence is sharper than it was
 before this column started shrinking partial evidence hard (see
 [below](#how-far-one-benchmark-speaks-for-the-others)): with a
-`transfer_ratio` of 1.524, a model measured on two of the four members is barely
+`transfer_ratio` above 1.5, a model measured on two of the four members is barely
 allowed to leave the middle of the field, and what survives at the top is the
 models that carry the whole group.
 
@@ -3204,6 +3217,7 @@ ai-bench/
 ├── _*_mapping.py               # Mapping application modules (22 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
+├── index-calibration.json      # Each index's transfer_ratio, re-measured nightly (calibrate-indexes.yml)
 │
 ├── _scores.py                  # Score rounding grid, timestamps, derived-column helper
 ├── _revisions.py               # Benchmark revisions: labels, order, and the column each feeds
