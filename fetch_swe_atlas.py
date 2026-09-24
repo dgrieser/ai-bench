@@ -53,8 +53,12 @@ HEADERS = {
     )
 }
 
-# Reasoning-effort modifiers that trail a model name (case-insensitive).
-_EFFORT_RE = re.compile(r"\b(?:xhigh|x-high|high|medium|low|max)\b", re.IGNORECASE)
+# Reasoning-effort modifiers that trail a model name (case-insensitive). Only
+# a word standing on its own is one: Scale writes the effort after a space
+# ("Opus 5 (Claude Code) xHigh", "Gpt 5.4 xHigh (Mini-SWE-Agent)"), while a
+# hyphen joins a word that is part of the name, so "Qwen3.8-Max" stays its own
+# model instead of collapsing onto the base "qwen3.8" (issue #233).
+_EFFORT_RE = re.compile(r"(?<![\w-])(?:xhigh|x-high|high|medium|low|max)(?![\w-])", re.IGNORECASE)
 
 
 def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
