@@ -68,24 +68,30 @@ class TestV2Filters(unittest.TestCase):
         )
 
     def test_each_tracked_release_feeds_its_own_column(self) -> None:
-        rows = parse(payload(
-            result("Alpha", 20.6),
-            result("Alpha", 44.33, releaseVersion="v2.1"),
-        ))
+        releases = {"v2026.06.24": "osworld_2_0", "v9.9": "osworld_9_9"}
+        with mock.patch.object(osw, "RELEASES", releases):
+            rows = parse(payload(
+                result("Alpha", 20.6),
+                result("Alpha", 44.33, releaseVersion="v9.9"),
+            ))
         self.assertEqual(
             {r["benchmark"]: r["score"] for r in rows},
-            {"osworld_2_0": 20.6, "osworld_2_1": 44.33},
+            {"osworld_2_0": 20.6, "osworld_9_9": 44.33},
         )
 
-    def test_an_untracked_release_is_skipped_and_reported(self) -> None:
+    def test_untracked_releases_are_skipped_and_reported_with_their_field(self) -> None:
         err = io.StringIO()
         with redirect_stderr(err):
             rows = osw.parse_v2(payload(
                 result("Alpha", 20.6),
                 result("Alpha", 31.43, releaseVersion="v2026.08.08"),
+                result("Beta", 27.34, releaseVersion="v2026.08.08"),
+                result("Alpha", 44.33, releaseVersion="v2.1"),
             ))
         self.assertEqual([r["release"] for r in rows], ["v2026.06.24"])
-        self.assertIn("v2026.08.08", err.getvalue())
+        report = err.getvalue()
+        self.assertIn("'v2026.08.08', which has no llm.json column: 2 model(s)", report)
+        self.assertIn("'v2.1', which has no llm.json column: 1 model(s)", report)
 
     def test_only_the_500_step_budget_is_read(self) -> None:
         rows = parse(payload(
@@ -97,10 +103,10 @@ class TestV2Filters(unittest.TestCase):
 
     def test_the_offline_set_is_not_the_full_set(self) -> None:
         rows = parse(payload(
-            result("Alpha", 48.65, releaseVersion="v2.1", datasetScope="offline"),
-            result("Alpha", 44.33, releaseVersion="v2.1", datasetScope="full"),
+            result("Alpha", 22.1, datasetScope="offline"),
+            result("Alpha", 20.6, datasetScope="full"),
         ))
-        self.assertEqual([r["score"] for r in rows], [44.33])
+        self.assertEqual([r["score"] for r in rows], [20.6])
 
     def test_a_row_listed_under_both_scopes_is_read(self) -> None:
         rows = parse(payload(
@@ -182,9 +188,7 @@ class TestIngest(unittest.TestCase):
         matched, updated, _ = update.update_osworld_scores(doc, by_key)
         self.assertEqual((matched, updated), (1, len(osw.KEYS)))
         self.assertEqual(model["scores_source"]["osworld_verified"], "https://os-world.github.io")
-        for key in ("osworld_2_0", "osworld_2_1"):
-            with self.subTest(key=key):
-                self.assertEqual(model["scores_source"][key], "https://osworld-v2.xlang.ai")
+        self.assertEqual(model["scores_source"]["osworld_2_0"], "https://osworld-v2.xlang.ai")
 
     def test_every_column_the_reader_can_fill_exists_in_llm_json(self) -> None:
         benchmarks = json.loads(

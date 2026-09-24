@@ -16,17 +16,17 @@ osworld-v2.xlang.ai, whose leaderboard hydrates from one JSON file. That file
 carries every run the board can show, and the board's own filters say which of
 them are one measurement:
 
-  * *Release.* The task set has been re-released twice -- 2026.06.24 (the
+  * *Release.* The task set has been released three times -- 2026.06.24 (the
     paper's), 2026.08.08, and the bug-fix 2.1 the maintainers now recommend --
     each with its own task files, assets and mocked websites, and the scores do
     not carry over: Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and
-    44.3 on 2.1. So each release llm.json tracks has its own column, the same
-    rule _revisions.py applies to every other re-released board, and a release
-    in RELEASES below is the only way a row reaches one. 2026.08.08 has no
-    column: 2.1 superseded it five weeks later, and the one model it scores
-    that no tracked release does is GPT-5.6 Sol, a closed one. A release this
-    script does not know is skipped and reported on stderr, never folded into
-    a neighbour.
+    44.3 on 2.1. So a release gets a column of its own, the same rule
+    _revisions.py applies to every other re-released board, and a release in
+    RELEASES below is the only way a row reaches one. A release earns a column
+    once enough models are scored on it to rank: 2026.06.24 carries seven,
+    2026.08.08 two and 2.1 one, so only 2026.06.24 has one today. The others
+    are skipped and reported on stderr with how many models each scores, never
+    folded into a neighbour, so a release that fills up is noticed.
   * *Step budget.* Rows are published at 150, 300 and 500 steps; the paper's
     primary metric is at 500, and that is the only budget read.
   * *Dataset scope.* The "offline set" is the 82 tasks runnable without
@@ -105,10 +105,11 @@ V2_DATASET_SCOPE = "full"
 V2_METRIC = "binaryAccuracy"
 
 # Release label, as the payload spells it -> the llm.json column it feeds.
-# 2026.08.08 is deliberately absent (see the module docstring).
+# 2026.08.08 and 2.1 are deliberately absent until enough models are scored on
+# them to rank (see the module docstring); adding one here needs its column in
+# llm.json too.
 RELEASES: dict[str, str] = {
     "v2026.06.24": "osworld_2_0",
-    "v2.1": "osworld_2_1",
 }
 
 # The fields a 2.0 row has to carry to be read at all. Without one of them the
@@ -304,7 +305,7 @@ def parse_v2(payload: Any) -> list[dict[str, Any]]:
     """One entry per official full-set run at the 500-step budget, per tracked release."""
     results = check_v2_payload(payload)
     rows: list[dict[str, Any]] = []
-    unknown: dict[str, int] = defaultdict(int)
+    unknown: dict[str, set[str]] = defaultdict(set)
     for result in results:
         if result.get("official") is not True:
             continue
@@ -318,7 +319,7 @@ def parse_v2(payload: Any) -> list[dict[str, Any]]:
         release = _v2_release(result, payload)
         key = RELEASES.get(release or "")
         if key is None:
-            unknown[release or "<none>"] += 1
+            unknown[release or "<none>"].add(model.strip())
             continue
         score = result.get(V2_METRIC)
         if not isinstance(score, (int, float)) or isinstance(score, bool):
@@ -336,17 +337,20 @@ def parse_v2(payload: Any) -> list[dict[str, Any]]:
                 "step_budget": result.get("stepBudget"),
             }
         )
-    for release, count in sorted(unknown.items()):
+    for release, models in sorted(unknown.items()):
         # Not an error: a release is only filed once llm.json has a column
-        # for it. Reported so a new one is noticed rather than lost.
+        # for it. Reported with its field size, so a release that has gathered
+        # enough models to rank is noticed rather than lost.
         print(
-            f"fetch_osworld.py: skipped {count} OSWorld 2.0 row(s) on release "
-            f"{release!r}, which has no llm.json column",
+            f"fetch_osworld.py: skipped OSWorld 2.0 release {release!r}, which has "
+            f"no llm.json column: {len(models)} model(s) scored "
+            f"({', '.join(sorted(models))})",
             file=sys.stderr,
         )
     require_rows(rows, OSWORLD_V2_JSON_URL, "official full-set 500-step OSWorld 2.0 rows")
     check_percentages(rows, OSWORLD_V2_JSON_URL, "score")
-    rows.sort(key=lambda r: (KEYS.index(r["benchmark"]), -r["score"]))
+    order = list(RELEASES.values())
+    rows.sort(key=lambda r: (order.index(r["benchmark"]), -r["score"]))
     return rows
 
 

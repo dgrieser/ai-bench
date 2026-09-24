@@ -125,7 +125,8 @@ RANK_HAND_ENTERED = 6
 AA_CODING_AGENTS_SOURCE_URL = canonical(fetch_aa_coding_agents.URL)
 OSWORLD_SOURCE_URL = canonical(fetch_osworld.OSWORLD_SITE_URL)
 # The Verified board and OSWorld 2.0 live on two sites of the same lab, one
-# credited per column; both OSWorld 2.0 releases share the 2.0 site's page.
+# credited per column; every tracked OSWorld 2.0 release shares the 2.0 site's
+# page.
 OSWORLD_V2_SOURCE_URL = canonical(fetch_osworld.OSWORLD_V2_SITE_URL)
 OSWORLD_KEY_URLS = {
     key: canonical(fetch_osworld.source_url(key)) for key in fetch_osworld.KEYS

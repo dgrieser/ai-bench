@@ -162,7 +162,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
         (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
-        # Both tracked OSWorld 2.0 releases come off the one 2.0 site, which a
+        # Every tracked OSWorld 2.0 release comes off the one 2.0 site, which a
         # reader opens; the JSON file it renders from is not a page.
         (
             fetch_osworld.OSWORLD_V2_SITE_URL,
