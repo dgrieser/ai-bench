@@ -18,11 +18,22 @@ import math
 import unittest
 from pathlib import Path
 
+import _precedence
 import derive_indexes as di
 
 
+# A first-hand source for every fixture score, so the tests below read the
+# comparison arithmetic at full weight; TestSecondHand covers the discount.
+FIRST_HAND = "https://artificialanalysis.ai/models/fixture"
+SECOND_HAND = "https://huggingface.co/org/fixture"
+
+
 def model(name: str, **scores) -> dict:
-    return {"name": name, "scores": dict(scores)}
+    return {
+        "name": name,
+        "scores": dict(scores),
+        "scores_source": {key: FIRST_HAND for key in scores},
+    }
 
 
 DOC: dict = {"benchmarks": {}}
@@ -520,6 +531,129 @@ class TestCalibrationIsHeldOut(unittest.TestCase):
         self.assertIsNone(
             di.calibrate(models, DOC, index(("p", 1.0), ("q", 1.0)))
         )
+
+
+class TestTieTolerance(unittest.TestCase):
+    """Scores one step of the column's rounding grid apart split the comparison;
+    the stored precision does not get to decide it."""
+
+    def test_one_grid_step_apart_is_a_tie(self) -> None:
+        record = di.comparisons(
+            [model("a", b=88.4), model("c", b=88.3)], DOC, index(("b", 1.0))
+        )
+        self.assertEqual(record.wins[("a", "c")], 0.5)
+
+    def test_two_grid_steps_apart_is_decided(self) -> None:
+        record = di.comparisons(
+            [model("a", b=88.5), model("c", b=88.3)], DOC, index(("b", 1.0))
+        )
+        self.assertEqual(record.wins[("a", "c")], 1.0)
+
+    def test_the_grid_is_the_columns_own(self) -> None:
+        """A column rounded to whole points ties at one point, not at 0.1."""
+        doc = {"benchmarks": {"b": {"decimals": 0}}}
+        record = di.comparisons(
+            [model("a", b=41.0), model("c", b=40.0)], doc, index(("b", 1.0))
+        )
+        self.assertEqual(record.wins[("a", "c")], 0.5)
+        doc = {"benchmarks": {"b": {"round_to": 5}}}
+        record = di.comparisons(
+            [model("a", b=45.0), model("c", b=40.0)], doc, index(("b", 1.0))
+        )
+        self.assertEqual(record.wins[("a", "c")], 0.5)
+
+
+class TestSecondHand(unittest.TestCase):
+    """A comparison involving a second-hand score counts less than one between
+    two first-hand scores, and a self-report alone cannot decide a pair at
+    full weight."""
+
+    def second_hand(self, name: str, **scores) -> dict:
+        entry = model(name, **scores)
+        entry["scores_source"] = {key: SECOND_HAND for key in scores}
+        return entry
+
+    def test_a_second_hand_pair_counts_the_second_hand_weight(self) -> None:
+        record = di.comparisons(
+            [model("hi", b=90.0), self.second_hand("lo", b=10.0)],
+            DOC,
+            index(("b", 1.0)),
+        )
+        self.assertAlmostEqual(record.pairs[("hi", "lo")], di.SECOND_HAND_WEIGHT)
+        self.assertAlmostEqual(record.wins[("hi", "lo")], di.SECOND_HAND_WEIGHT)
+
+    def test_first_hand_pairs_on_the_same_board_keep_full_weight(self) -> None:
+        record = di.comparisons(
+            [model("a", b=90.0), model("c", b=50.0), self.second_hand("s", b=10.0)],
+            DOC,
+            index(("b", 1.0)),
+        )
+        self.assertAlmostEqual(record.pairs[("a", "c")], 0.5)
+        self.assertAlmostEqual(record.pairs[("a", "s")], 0.5 * di.SECOND_HAND_WEIGHT)
+
+    def test_the_share_and_coverage_are_unchanged(self) -> None:
+        """The discount is on the evidence, not on what the model was measured
+        on: the evidence bar and the coverage record read the same share."""
+        models = [model("a", b=90.0), self.second_hand("s", b=10.0)]
+        spec = index(("b", 1.0))
+        self.assertEqual(di.comparisons(models, DOC, spec).weight, {"b": 1.0})
+        coverage = di.index_coverage(models, spec)
+        self.assertEqual(coverage["s"]["share"], 1.0)
+        self.assertEqual(coverage["s"]["second_hand"], ["b"])
+        self.assertNotIn("second_hand", coverage["a"])
+
+    def test_a_curated_source_is_second_hand_and_a_re_run_is_not(self) -> None:
+        curated = model("m", b=1.0)
+        curated["scores_source"] = {
+            "b": next(iter(_precedence.EVALS_REPORT_KEY_URLS.values()))
+        }
+        self.assertTrue(di.is_second_hand(curated, "b", {}))
+        rerun = model("m", b=1.0)
+        rerun["scores_source"] = {"b": _precedence.VALS_RERUN_KEY_URLS["mmlu_pro"]}
+        self.assertFalse(di.is_second_hand(rerun, "b", {}))
+
+
+class TestCoverageRecord(unittest.TestCase):
+    def test_it_counts_the_live_benchmarks_and_their_share(self) -> None:
+        models = [
+            model("full", p=90.0, q=80.0),
+            model("half", p=10.0),
+            model("other", q=20.0),
+        ]
+        coverage = di.index_coverage(models, index(("p", 3.0), ("q", 1.0)))
+        self.assertEqual(
+            coverage["full"], {"measured": ["p", "q"], "of": 2, "share": 1.0}
+        )
+        self.assertEqual(coverage["half"], {"measured": ["p"], "of": 2, "share": 0.75})
+
+    def test_a_benchmark_nobody_can_be_ranked_on_is_not_counted(self) -> None:
+        models = [model("a", p=90.0, lone=1.0), model("b", p=10.0)]
+        coverage = di.index_coverage(models, index(("p", 1.0), ("lone", 1.0)))
+        self.assertEqual(coverage["a"], {"measured": ["p"], "of": 1, "share": 1.0})
+
+    def test_an_unmeasured_model_has_no_record(self) -> None:
+        models = [model("a", p=90.0), model("b", p=10.0), model("none")]
+        self.assertNotIn("none", di.index_coverage(models, index(("p", 1.0))))
+
+    def test_only_ranked_models_carry_a_record_in_llm_json(self) -> None:
+        spec = index(("p", 1.0))
+        doc = {
+            "benchmarks": {},
+            "models": [model("a", p=90.0), model("b", p=10.0), model("c")],
+        }
+        doc["models"][2]["index_coverage"] = {"idx": {"stale": True}}
+        values = {"a": 60000, "b": 40000, "c": None}
+        saved = di.INDEXES
+        di.INDEXES = [spec]
+        try:
+            changed = di.apply_coverage(
+                doc, {"idx": (values, di.index_coverage(doc["models"], spec))}
+            )
+        finally:
+            di.INDEXES = saved
+        self.assertEqual(changed, 3)
+        self.assertEqual(doc["models"][0]["index_coverage"]["idx"]["measured"], ["p"])
+        self.assertNotIn("index_coverage", doc["models"][2])
 
 
 class TestLiveIndexes(unittest.TestCase):

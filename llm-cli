@@ -10,19 +10,11 @@ The derived index columns are not computed here: derive_indexes.py fits them
 from head-to-head comparisons and writes them into llm.json, and this script
 sorts on the stored number like any other benchmark.
 
-What is computed here is a "sortGroups" composite, for any group llm.json
-defines (it defines none today). That math mirrors llm.html exactly, and it is
-the older percentile approach the index columns have since moved off:
-tie-averaged percentile ranks, missing benchmarks imputed at or below
-percentile 0.5 (a gap can drag a model down, never lift it), division by the
-group's total weight, and models measured on less than "minScoredFraction" of
-that weight left unranked. A benchmark marked "lower_is_better" in llm.json has
-its percentile inverted and sorts smallest-value-first, so it still reads
-best-first.
+A benchmark marked "lower_is_better" in llm.json sorts smallest-value-first,
+so it still reads best-first.
 
 On a terminal the table is fitted to the window: benchmark columns that don't
-fit are dropped, least important first (importance = weight in the default
-sort group, then llm.json order). Pass --all to see every column instead,
+fit are dropped, last in llm.json order first. Pass --all to see every column instead,
 paged through `less -RS` so you can scroll horizontally with the arrow keys.
 Piped output always contains every column.
 
@@ -106,89 +98,10 @@ def parse_unit_number(raw):
 def is_lower_better(doc, key):
     """Benchmarks where a smaller number is the better result (e.g. a
     hallucination rate). Everything that ranks asks this instead of assuming
-    "bigger is better": the best-in-table mark, group percentiles, and the sort
-    direction — the descending default still means best-first, so such a column
+    "bigger is better": the best-in-table mark and the sort direction — the descending default still means best-first, so such a column
     compares against its numbers."""
     benchmark = (doc.get("benchmarks") or {}).get(key) or {}
     return benchmark.get("lower_is_better") is True
-
-
-def percentile_map(models, key, doc):
-    entries = []
-    for model in models:
-        value = to_number((model.get("scores") or {}).get(key))
-        if math.isfinite(value):
-            entries.append((model["name"], value))
-    if len(entries) < 2:
-        return None
-    entries.sort(key=lambda e: e[1])
-    n = len(entries)
-    lower = is_lower_better(doc, key)
-    result = {}
-    i = 0
-    while i < n:
-        j = i
-        while j + 1 < n and nearly_equal(entries[j + 1][1], entries[i][1]):
-            j += 1
-        pct = ((i + j) / 2) / (n - 1)
-        for k in range(i, j + 1):
-            # A percentile is "how good", so a lower-is-better benchmark flips:
-            # the smallest value is the 1.0 end.
-            result[entries[k][0]] = 1 - pct if lower else pct
-        i = j + 1
-    return result
-
-
-def finite_number(value, fallback):
-    """llm.html guards every weight it reads with Number.isFinite, which rejects
-    booleans, null and NaN alike; isinstance() would let a bool through."""
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        return fallback
-    return value if math.isfinite(value) else fallback
-
-
-def group_benchmark_entries(group):
-    raw = group.get("benchmarks") or []
-    decay = finite_number(group.get("decay"), 0.6)
-    entries = []
-    for i, entry in enumerate(raw):
-        obj = {"key": entry} if isinstance(entry, str) else (entry or {})
-        entries.append((obj.get("key"), finite_number(obj.get("weight"), decay ** i)))
-    return entries
-
-
-def compute_group_composite(models, group, doc):
-    entries = group_benchmark_entries(group)
-    pct_maps = [percentile_map(models, key, doc) for key, _ in entries]
-    weights = [w if pm is not None else 0.0 for (_, w), pm in zip(entries, pct_maps)]
-    total_weight = sum(weights)
-    min_scored_fraction = finite_number(group.get("minScoredFraction"), 0.0)
-    min_scored_weight = min_scored_fraction * total_weight
-
-    result = {}
-    for model in models:
-        sum_weight = 0.0
-        sum_weighted = 0.0
-        for weight, pm in zip(weights, pct_maps):
-            if pm is None:
-                continue
-            pct = pm.get(model["name"])
-            if pct is None:
-                continue
-            sum_weight += weight
-            sum_weighted += weight * pct
-        # Too little measured weight: unranked rather than mostly-imputed.
-        if sum_weight <= 0 or sum_weight < min_scored_weight:
-            result[model["name"]] = None
-            continue
-        missing_weight = total_weight - sum_weight
-        # Blanks are filled between the median (0.5) and the level the model has
-        # actually shown, trusting the latter in proportion to coverage, but
-        # never above the median: a gap can hurt, it cannot lift.
-        own = sum_weighted / sum_weight
-        fill = min(0.5 + (own - 0.5) * (sum_weight / total_weight), 0.5)
-        result[model["name"]] = (sum_weighted + fill * missing_weight) / total_weight
-    return result
 
 
 def value_for_sort(model, key):
@@ -205,42 +118,23 @@ def value_for_sort(model, key):
     return to_number((model.get("scores") or {}).get(key))
 
 
-def default_sort_group(doc):
-    groups = doc.get("sortGroups") or []
-    configured = doc.get("defaultSort")
-    group = next((g for g in groups if g.get("key") == configured), None)
-    if group is None and not configured and groups:
-        group = groups[0]
-    return group
+def sort_models(models, doc):
+    """Order `models` for display on the stored defaultSort column.
 
-
-def sort_models(models, doc, pool=None):
-    """Order `models` for display, ranking them against `pool`.
-
-    The two differ when the closed reference rows are hidden: they are left out
-    of the table and stay in the ranking, the same way derive_indexes.py counts
-    them in the stored index columns. Ranking the visible rows among themselves
-    instead would have the sort disagree with the Coding column beside it.
+    The derived index columns are already ranked against the whole field, the
+    closed reference rows included, so hiding those rows here leaves the
+    visible order exactly as the Coding column beside it says.
     """
-    group = default_sort_group(doc)
     configured = doc.get("defaultSort")
-    pool = models if pool is None else pool
 
-    flipped = False
-    if group is not None:
-        composite = compute_group_composite(pool, group, doc)
-        sort_label = group.get("label") or group.get("key")
-        keyed = [(composite.get(m["name"]), m) for m in models]
-    else:
-        key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
-        sort_label = ((doc.get("benchmarks") or {}).get(key) or {}).get("name") or key
-        keyed = [(value_for_sort(m, key), m) for m in models]
-        # A lower-is-better benchmark compares its numbers the other way round,
-        # so the descending default still puts the best value on top. Group
-        # composites are already "how good" scores and never flip.
-        flipped = is_lower_better(doc, key)
+    key = configured or (list(doc.get("benchmarks") or {}) or ["name"])[0]
+    sort_label = ((doc.get("benchmarks") or {}).get(key) or {}).get("name") or key
+    keyed = [(value_for_sort(m, key), m) for m in models]
+    # A lower-is-better benchmark compares its numbers the other way round,
+    # so the descending default still puts the best value on top.
+    flipped = is_lower_better(doc, key)
 
-    ascending = group is None and configured in ("name", "creator", "vram_fp16", "vram_int8", "vram_int4")
+    ascending = configured in ("name", "creator", "vram_fp16", "vram_int8", "vram_int4")
     direction = (1 if ascending else -1) * (-1 if flipped else 1)
 
     def sort_key(item):
@@ -254,16 +148,6 @@ def sort_models(models, doc, pool=None):
 
     keyed.sort(key=sort_key)
     return [m for _, m in keyed], sort_label
-
-
-def benchmark_priority(doc, benchmark_keys):
-    """Benchmark keys ordered by importance: default-sort-group weight
-    descending first, remaining keys in llm.json order."""
-    group = default_sort_group(doc)
-    weighted = group_benchmark_entries(group) if group else []
-    in_group = [key for key, _ in sorted(weighted, key=lambda e: -e[1]) if key in benchmark_keys]
-    rest = [key for key in benchmark_keys if key not in in_group]
-    return in_group + rest
 
 
 def is_recent(model, today):
@@ -311,19 +195,12 @@ def best_scores(models, benchmark_keys, doc):
 def fit_columns(doc, benchmark_keys, widths_by_key, term_width):
     """Pick the columns that fit the terminal. Model and Params always stay;
     everything else competes by importance: creator and context first, then
-    the default-sort group's benchmarks by weight, then the VRAM estimates,
-    then the remaining benchmarks. Returns (fixed_keys, benchmark_keys) in
-    display order."""
-    bench_priority = benchmark_priority(doc, benchmark_keys)
-    group = default_sort_group(doc)
-    group_keys = [key for key, _ in group_benchmark_entries(group)] if group else []
-    in_group = [key for key in bench_priority if key in group_keys]
-    rest = [key for key in bench_priority if key not in group_keys]
+    the VRAM estimates, then the benchmarks in llm.json order. Returns
+    (fixed_keys, benchmark_keys) in display order."""
     candidates = (
         ["creator", "context"]
-        + in_group
         + ["vram_int4", "vram_int8", "vram_fp16"]
-        + rest
+        + list(benchmark_keys)
     )
 
     kept = {"name", "params"}
@@ -480,7 +357,7 @@ def main() -> int:
 
     is_tty = sys.stdout.isatty()
     use_color = args.color or (not args.no_color and is_tty)
-    models, sort_label = sort_models(models, doc, pool)
+    models, sort_label = sort_models(models, doc)
 
     shown_keys = benchmark_keys
     fixed_keys = None

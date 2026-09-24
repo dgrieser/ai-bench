@@ -1565,9 +1565,8 @@
       color: var(--text);
     }
 
-    /* Sorted column: subtle tint — only for a regular single-column sort, not
-       the grouped-sort diamonds (those are marked with .group-indicator). */
-    thead th:has(.sort-indicator:not(.group-indicator)) {
+    /* Sorted column: subtle tint. */
+    thead th:has(.sort-indicator) {
       background: #e2e1de !important;
       color: var(--text) !important;
       border-bottom-color: #c9c8c4 !important;
@@ -1588,7 +1587,7 @@
       transform: none;
     }
 
-    thead th:has(.sort-indicator:not(.group-indicator)):hover {
+    thead th:has(.sort-indicator):hover {
       background: #d8d7d3 !important;
     }
 
@@ -1859,24 +1858,6 @@
       color: var(--accent);
       font-weight: 800;
       font-size: 0.72rem;
-    }
-
-    /* Grouped-sort marker: every benchmark in the active group gets a golden
-       diamond — distinct in both shape and colour from the single-column
-       triangle so the group span is obvious. */
-    .sort-indicator.group-indicator {
-      font-size: 0.58rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, #fceabb 0%, #f0c64b 35%, #d4af37 60%, #a67c00 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      text-shadow: 0 0 3px rgba(212, 175, 55, 0.45);
-    }
-
-    thead th.bench-head .sort-indicator.group-indicator {
-      top: 11px; /* 2px below the standard bench-head indicator position */
     }
 
     .bench-head {
@@ -2992,6 +2973,22 @@
       align-items: center;
       gap: 5px;
       font-weight: 600;
+    }
+
+    /* A derived index value that rests on one benchmark: the superscript says
+       how many it was measured on, the slip names which. */
+    .index-thin-mark {
+      /* Hung into the cell padding, so the digits stay on the column's
+         right edge with every other value. */
+      margin-left: 1px;
+      margin-right: -0.6em;
+      color: var(--muted);
+      font-size: 0.62em;
+      font-weight: 600;
+    }
+
+    .bench-flag.bench-flag-thin {
+      border-style: dashed;
     }
 
     .bench-flag {
@@ -4455,21 +4452,12 @@
       color: var(--text);
     }
 
-    [data-theme="dark"] thead th:has(.sort-indicator:not(.group-indicator)) {
+    [data-theme="dark"] thead th:has(.sort-indicator) {
       background: #252422 !important;
       border-bottom-color: #3a3936 !important;
     }
 
-    [data-theme="dark"] .sort-indicator.group-indicator {
-      background: linear-gradient(135deg, #fff1c2 0%, #ffd34d 40%, #e6b422 70%, #b8860b 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      text-shadow: 0 0 4px rgba(255, 211, 77, 0.5);
-    }
-
-    [data-theme="dark"] thead th:has(.sort-indicator:not(.group-indicator)):hover {
+    [data-theme="dark"] thead th:has(.sort-indicator):hover {
       background: #2c2b28 !important;
     }
 
@@ -5059,7 +5047,6 @@
       const state = {
         data: null,
         benchmarkKeys: [],
-        sortGroups: [],
         headerWidthsByKey: {},
         filteredModels: [],
         filters: {
@@ -5514,7 +5501,6 @@
       function init(data) {
         state.data = data;
         state.benchmarkKeys = getOrderedBenchmarkKeys(data.benchmarks);
-        state.sortGroups = Array.isArray(data.sortGroups) ? data.sortGroups : [];
         // Drop hidden keys that no longer exist in the freshly loaded data.
         state.filters.hiddenBenchmarks = state.filters.hiddenBenchmarks
           .filter((key) => state.benchmarkKeys.includes(key));
@@ -5930,17 +5916,12 @@
           label: columnSortLabel(column.key)
         }));
 
-        const groupSortOptions = (state.sortGroups || []).map((group) => ({
-          key: groupSortKey(group.key),
-          label: group.label || group.key
-        }));
-
         const benchmarkSortOptions = visibleBenchmarkKeys().map((key) => ({
           key,
           label: getBenchmarkFullName(key)
         }));
 
-        const sortOptions = [...fixedSortOptions, ...groupSortOptions, ...benchmarkSortOptions];
+        const sortOptions = [...fixedSortOptions, ...benchmarkSortOptions];
         ui.sortMode.innerHTML = sortOptions.map((option) => {
           const ascLabel = `${option.label} ↑`;
           const descLabel = `${option.label} ↓`;
@@ -6421,22 +6402,15 @@
       }
 
       function sortModels(models) {
-        // Grouped sort: collapse several benchmarks into one priority-weighted
-        // composite computed over the current (filtered) model set, then sort
-        // on that single number. Computed once per sort, not per comparison.
-        const group = getSortGroup(state.sort.key);
-        const composite = group ? computeGroupComposite(models, group) : null;
-
         // "desc" always means best-first, so a lower-is-better benchmark
         // compares its numbers the other way round: ▼ puts the smallest value
-        // on top and ▲ the largest. Group composites are already "how good"
-        // scores, so they never flip.
-        const flipped = !composite && isLowerBetter(state.sort.key);
+        // on top and ▲ the largest.
+        const flipped = isLowerBetter(state.sort.key);
         const directionFactor = (state.sort.direction === "asc" ? 1 : -1) * (flipped ? -1 : 1);
 
         models.sort((a, b) => {
-          const left = composite ? composite.get(a) : valueForSort(a, state.sort.key);
-          const right = composite ? composite.get(b) : valueForSort(b, state.sort.key);
+          const left = valueForSort(a, state.sort.key);
+          const right = valueForSort(b, state.sort.key);
 
           const leftMissing = left == null || Number.isNaN(left);
           const rightMissing = right == null || Number.isNaN(right);
@@ -6459,31 +6433,14 @@
         });
       }
 
-      function groupSortKey(key) {
-        return `group:${key}`;
-      }
-
-      // Default sort comes from llm.json: data.defaultSort names either a
-      // sort-group key or a plain column/benchmark key. Falls back to the
-      // first sort group, then the first benchmark column.
+      // Default sort comes from llm.json: data.defaultSort names a column or
+      // benchmark key. Falls back to the first benchmark column.
       function defaultSortKey() {
-        const groups = state.sortGroups || [];
         const configured = state.data?.defaultSort;
         if (typeof configured === "string" && configured) {
-          const group = groups.find((g) => g.key === configured);
-          return group ? groupSortKey(group.key) : configured;
-        }
-        if (groups.length) {
-          return groupSortKey(groups[0].key);
+          return configured;
         }
         return state.benchmarkKeys[0] || "name";
-      }
-
-      function getSortGroup(key) {
-        if (typeof key !== "string" || !key.startsWith("group:")) {
-          return null;
-        }
-        return (state.sortGroups || []).find((group) => groupSortKey(group.key) === key) || null;
       }
 
       // Per-benchmark percentile rank in [0,1] over present models. Ties share
@@ -6519,77 +6476,6 @@
           i = j + 1;
         }
         return map;
-      }
-
-      // Group benchmark entries may be plain keys or { key, weight } objects.
-      // Explicit weights express benchmark reliability; entries without one
-      // fall back to geometric decay by list position (decay^i).
-      function groupBenchmarkEntries(group) {
-        const raw = Array.isArray(group.benchmarks) ? group.benchmarks : [];
-        const decay = Number.isFinite(group.decay) ? group.decay : 0.6;
-        return raw.map((entry, i) => {
-          const obj = typeof entry === "string" ? { key: entry } : entry || {};
-          const weight = Number.isFinite(obj.weight) ? obj.weight : Math.pow(decay, i);
-          return { key: obj.key, weight };
-        });
-      }
-
-      // Reliability-weighted normalized composite for a sort group.
-      // - Each benchmark normalized to a percentile rank (kills scale differences).
-      // - Each benchmark's weight comes from groupBenchmarkEntries (explicit
-      //   weight, or decay^i by position), so the most reliable benchmarks lead
-      //   and lower-weighted ones fill gaps / break ties.
-      // - Missing benchmarks are imputed, not skipped: absence is ignorance, not
-      //   evidence of a bottom rank. The fill starts at percentile 0.5 (median
-      //   model) and slides toward the level the model has actually demonstrated
-      //   as its coverage grows, but is capped at the median --
-      //   fill = min(0.5 + (own - 0.5) * coverageShare, 0.5) -- so a blank can
-      //   hold a strong model back or drag a weak one down, but can never lift
-      //   anyone: a sparsely measured model cannot outrank a well-tested one on
-      //   imputed strength alone. Every model divides by the same total weight,
-      //   which keeps composites comparable and the ranking invariant to
-      //   rescaling all weights (coverageShare is a ratio, so no absolute weight
-      //   magnitude leaks into the fill).
-      // - Benchmarks nobody can be ranked on (fewer than 2 scored models) are
-      //   left out of the total so they don't dilute anyone.
-      // - A model measured on less than group.minScoredFraction of the total
-      //   weight is left unranked rather than scored: its composite would be
-      //   mostly imputation, and reporting that as a rank implies evidence that
-      //   does not exist.
-      // Returns a Map(model -> composite|null); null sinks to the bottom like a
-      // missing value (model had no scores in the group, or too few to rank).
-      function computeGroupComposite(models, group) {
-        const entries = groupBenchmarkEntries(group);
-        const pctMaps = entries.map((entry) => percentileMap(models, entry.key));
-        const weights = entries.map((entry, i) => (pctMaps[i] ? entry.weight : 0));
-        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-        const minScoredFraction = Number.isFinite(group.minScoredFraction)
-          ? group.minScoredFraction
-          : 0;
-        const minScoredWeight = minScoredFraction * totalWeight;
-
-        const result = new Map();
-        models.forEach((model) => {
-          let sumWeight = 0;
-          let sumWeighted = 0;
-          entries.forEach((entry, i) => {
-            const pctMap = pctMaps[i];
-            if (!pctMap) return;
-            const pct = pctMap.get(model);
-            if (pct === undefined) return;
-            sumWeight += weights[i];
-            sumWeighted += weights[i] * pct;
-          });
-          if (sumWeight <= 0 || sumWeight < minScoredWeight) {
-            result.set(model, null);
-            return;
-          }
-          const missingWeight = totalWeight - sumWeight;
-          const own = sumWeighted / sumWeight;
-          const fill = Math.min(0.5 + (own - 0.5) * (sumWeight / totalWeight), 0.5);
-          result.set(model, (sumWeighted + fill * missingWeight) / totalWeight);
-        });
-        return result;
       }
 
       function valueForSort(model, key) {
@@ -7360,29 +7246,16 @@
       function renderHeaderCell(header) {
         const isSorted = state.sort.key === header.key;
 
-        // When a grouped sort is active, every benchmark in the group is marked
-        // with a diamond, so the contributing columns are visible at a glance
-        // even though no single column "is" the sort key.
-        const group = getSortGroup(state.sort.key);
-        const groupEntries = group ? groupBenchmarkEntries(group) : [];
-        const groupEntry = groupEntries.find((entry) => entry.key === header.key);
-        const inGroup = groupEntry !== undefined;
-
         let indicator = "";
         if (isSorted) {
           const sortSymbol = state.sort.direction === "desc" ? "▼" : "▲";
           indicator = `<span class="sort-indicator">${sortSymbol}</span>`;
-        } else if (inGroup) {
-          indicator = `<span class="sort-indicator group-indicator">◆</span>`;
         }
 
         const className = header.className ? ` ${header.className}` : "";
         const metaLines = [];
         if (isSorted) {
           metaLines.push(state.sort.direction === "desc" ? "Sorted best first" : "Sorted worst first");
-        }
-        if (inGroup) {
-          metaLines.push(`Counts toward “${group.label || group.key}” · weight ${groupEntry.weight}`);
         }
         // What the view is doing with this column, then what the column is:
         // the benchmark's own meta says which run it holds, and replacing it
@@ -7569,9 +7442,10 @@
           // Only whether it is fresh reaches the cell: the red the class paints
           // is flat, the same one a new model's name gets.
           const className = `num${isTop ? " top-score" : ""}${fresh ? " fresh-score" : ""}`;
+          const thin = hasValue ? indexThinMark(model, key) : "";
           const content = isTop
-            ? `<span class="top-score-mark">${formatScore(value, key)}</span>`
-            : formatScore(value, key);
+            ? `<span class="top-score-mark">${formatScore(value, key)}</span>${thin}`
+            : `${formatScore(value, key)}${thin}`;
           return `<td class="${className}"${style}${tipAttr}>${content}</td>`;
         }).join("");
 
@@ -8062,8 +7936,7 @@
       /* ── Radar profile ──
          Every axis is the model's percentile rank across the whole index —
          the one scale that makes a 0–100000 composite index, a 0–100 pass
-         rate and a flipped lower-is-better rate comparable, and the same
-         normalization the sort-group composites use. Ranks come from
+         rate and a flipped lower-is-better rate comparable. Ranks come from
          percentileMap over the raw models, cached per benchmark because a
          detail page asks for the same handful over and over. */
 
@@ -8640,6 +8513,7 @@
           meta: [
             a.ranked ? `Percentile ${Math.round(a.pct * 100)} of ${rankedCount(a.key)} ranked models` : "",
             a.scored && !a.ranked ? "Too few models ran this benchmark to rank it." : "",
+            ...(a.scored ? indexCoverageLines(model, a.key) : []),
             updated ? `Updated ${updated}` : ""
           ].filter(Boolean).join("\n"),
           url: source || benchmarkLinks(bench)[0] || ""
@@ -8807,8 +8681,12 @@
             const updated = model.scores_updated?.[key] || "";
             const source = recentLinkUrl(model.scores_source?.[key]);
             const fresh = scored && scoreFreshness(model, key) > 0;
+            const coverage = scored ? indexCoverage(model, key) : null;
             const flags = [
               bench.derived ? `<span class="bench-flag">derived</span>` : "",
+              coverage
+                ? `<span class="bench-flag${coverage.measured.length === 1 ? " bench-flag-thin" : ""}"${tipAttrs({ eyebrow: "Coverage", body: indexCoverageLines(model, key).join("\n") })}>${indexCoverageLabel(coverage)}</span>`
+                : "",
               isLowerBetter(key) ? `<span class="bench-flag">lower is better</span>` : ""
             ].join("");
             return `
@@ -9411,7 +9289,7 @@
           ranked: scored && Number.isFinite(pct)
         }));
         const score = scored
-          ? `<span class="compare-score">${formatScore(value, key)}</span>`
+          ? `<span class="compare-score">${formatScore(value, key)}${indexThinMark(model, key)}</span>`
           : `<span class="na">&mdash;</span>`;
         const rank = Number.isFinite(pct) ? `p${Math.round(pct * 100)}` : "&mdash;";
         return `<td class="${classes}"${tip}>${score}<span class="compare-pct">${rank}</span></td>`;
@@ -10189,6 +10067,53 @@
         return state.data?.benchmarks?.[key]?.derived === true;
       }
 
+      // What one derived index value rests on: the index_coverage record
+      // derive_indexes.py writes beside it — how many of the index's
+      // benchmarks the model was measured on, the share of the weight those
+      // cover, and which inputs are converted archive scores or second-hand
+      // numbers. null for a column that is not derived, or a model it does not
+      // rank.
+      function indexCoverage(model, key) {
+        if (!isDerivedBenchmark(key)) return null;
+        const record = model?.index_coverage?.[key];
+        return record && Array.isArray(record.measured) && Number.isFinite(record.of)
+          ? record
+          : null;
+      }
+
+      function indexCoverageLabel(record) {
+        return `${record.measured.length} of ${record.of} benchmark${record.of === 1 ? "" : "s"}`;
+      }
+
+      // The lines a score slip shows under an index value, so a Vision score
+      // resting on MMMU Pro alone says so where it is read.
+      function indexCoverageLines(model, key) {
+        const record = indexCoverage(model, key);
+        if (!record) return [];
+        const names = (keys) => keys.map((k) => getBenchmarkLabel(k)).join(", ");
+        const share = Number.isFinite(record.share) ? ` · ${Math.round(record.share * 100)}% of the weight` : "";
+        const lines = [
+          `Rests on ${indexCoverageLabel(record)}${share}: ${names(record.measured)}`
+        ];
+        if (record.converted?.length) {
+          lines.push(`Converted from an archived board: ${names(record.converted)}`);
+        }
+        if (record.second_hand?.length) {
+          lines.push(`Second-hand, compared at reduced weight: ${names(record.second_hand)}`);
+        }
+        return lines;
+      }
+
+      // The superscript an index value wears when it rests on one benchmark:
+      // it is that benchmark's ranking and nothing more, so the cell says so
+      // and the slip names which.
+      function indexThinMark(model, key) {
+        const record = indexCoverage(model, key);
+        return record && record.measured.length === 1
+          ? `<sup class="index-thin-mark" aria-label="measured on one benchmark">1</sup>`
+          : "";
+      }
+
       // Column headers use short_name to stay narrow; lists with room (the
       // benchmark picker, the sort dropdown) use the full name.
       function getBenchmarkFullName(key) {
@@ -10587,7 +10512,7 @@
             // export whose benchmarks map has lost a key must not still carry
             // that key's source URL or its history, or the document describes
             // a column it no longer declares.
-            ["scores", "scores_updated", "scores_source", "scores_history"].forEach((field) => {
+            ["scores", "scores_updated", "scores_source", "scores_history", "index_coverage"].forEach((field) => {
               if (pruned[field]) pruned[field] = withoutKeys(pruned[field], hidden);
             });
             return pruned;
@@ -10893,6 +10818,7 @@
             iconKey: key,
             body: scoreTipBody(key),
             meta: [
+              ...indexCoverageLines(model, key),
               updated ? `Updated ${updated}${newness}` : "",
               aaRunLabel(source, model),
               source ? "" : "No source recorded for this score."
