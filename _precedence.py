@@ -23,28 +23,38 @@ single source.
 
 The rungs, strongest first:
 
-  1. ``RANK_AA`` -- Artificial Analysis' evaluations, including the API, model
-     pages, Coding Agent Index and official social posts. Locked at the top: nothing
-     overwrites an AA number except a later AA number.
+  0. ``RANK_AA_CODING_AGENTS`` -- Artificial Analysis' Coding Agent Index. It
+     shares Terminal-Bench 4.0 (and could share DeepSWE) with AA's other
+     surfaces, but runs each model under its vendor's own coding agent rather
+     than AA's single harness, so the two AA readings of one column differ by
+     design. Both used to sit on rung 1, where each refresh let the model pages
+     overwrite the index and the index overwrite them back; the index is ranked
+     above them instead, so its run is the one that lands wherever both report.
+  1. ``RANK_AA`` -- Artificial Analysis' other evaluations: the API, model
+     pages and official social posts. Nothing but AA overwrites them.
   2. ``RANK_BENCHMARK_SITE`` -- the leaderboard run by the team that owns the
      benchmark. First-party for the one column it publishes, and no two members
      of this rung publish the same column, so their relative order is
      unobservable and none is needed.
-  3. ``RANK_CURATED`` -- a third party that re-runs or vets what it publishes.
-     evals.report qualifies because it keeps only Official and Verified rows
-     (``fetch_evals_report.TRUSTED_STATUSES``); benchlm.ai republishes without
-     a status of its own, and is here because it is a compiler of results
-     rather than a lab reporting on itself. Vals AI qualifies on the other
-     half of the definition: it runs every model itself, on its own harness and
-     its own held-out sets, so its numbers are measurements rather than
-     republished ones -- but of benchmarks it does not own, which is what keeps
-     it off rung 2 next to the boards themselves. Its own benchmarks are
-     the exception, and they are ranked as what they are: for a board Vals
-     authored, runs and solely publishes -- ``vibe_code_bench_1_1`` today --
-     the Vals page *is* the benchmark's leaderboard, so it sits on rung 2
-     with the other first-party boards. ``fetch_vals.VALS_OWN_BENCHMARKS``
-     draws the line, and it moves the rank of one board, not of the source.
-     ``RANK_AA_CODING_AGENTS`` is an alias for rank 1, not a separate rung.
+  3. ``RANK_THIRD_PARTY_RUN`` -- a third party that runs the models itself.
+     Vals AI runs every model on its own harness and its own held-out sets, so
+     its numbers are measurements rather than republished ones -- but of
+     benchmarks it does not own, which is what keeps it off rung 2 next to the
+     boards themselves. Its own benchmarks are the exception, and they are
+     ranked as what they are: for a board Vals authored, runs and solely
+     publishes -- ``vibe_code_bench_1_1`` today -- the Vals page *is* the
+     benchmark's leaderboard, so it sits on rung 2 with the other first-party
+     boards. ``fetch_vals.VALS_OWN_BENCHMARKS`` draws the line, and it moves
+     the rank of one board, not of the source.
+  4. ``RANK_CURATED`` -- a third party that compiles or vets other people's
+     results rather than running them. evals.report keeps only Official and
+     Verified rows (``fetch_evals_report.TRUSTED_STATUSES``), but either kind
+     is a number someone else produced, under that lab's own prompts and
+     settings; benchlm.ai republishes one revision of Datacurve's DeepSWE board
+     without a status of its own. Both used to share rung 3 with Vals, and on
+     ``mmlu_pro`` -- which evals.report and Vals both publish -- that made the
+     stored value whichever of the two ran last, so ``--skip-vals`` left a
+     different number than a full run. A uniform run outranks a compilation.
   5. ``RANK_AGGREGATE`` -- cross-benchmark aggregates that republish numbers
      nobody in the chain ran: llm-stats and the Hugging Face model cards. Both
      ingests are fill-only, so in practice they reach a column only where it is
@@ -57,6 +67,11 @@ The rungs, strongest first:
      until a source measures it, and any scraper may overwrite it -- the
      fill-only aggregates of rung 5 included, which otherwise never replace a
      stored value (``is_fetcher_source``).
+
+Apart from the pages of one source, no two sources that can overwrite each
+other share a rung: rung 2 holds that by construction, rungs 0-4 by the split
+above, and the two aggregates on rung 5 are fill-only, so neither ever
+replaces the other's value.
 
 Two sources on the same rung may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -94,10 +109,11 @@ import fetch_zerobench
 from _revisions import revision_key
 from fill_source_urls import canonical
 
+RANK_AA_CODING_AGENTS = 0
 RANK_AA = 1
 RANK_BENCHMARK_SITE = 2
-RANK_CURATED = 3
-RANK_AA_CODING_AGENTS = RANK_AA
+RANK_THIRD_PARTY_RUN = 3
+RANK_CURATED = 4
 RANK_AGGREGATE = 5
 RANK_HAND_ENTERED = 6
 
@@ -121,6 +137,8 @@ PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
+# benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
+# Datacurve's own page is DATACURVE_SOURCE_URL below.
 DEEPSWE_SOURCE_URL = canonical(fetch_deepswe.URL)
 # The leaderboard page, not the JSON artifact it hydrates from.
 DATACURVE_SOURCE_URL = canonical(fetch_datacurve.SITE_URL)
@@ -137,7 +155,13 @@ FRONTIERSWE_KEY_URLS = {
 FRONTIERCODE_SOURCE_URL = canonical(fetch_frontiercode.LEADERBOARD_URL)
 SWE_MARATHON_SOURCE_URL = canonical(fetch_swe_marathon.URL)
 # The versioned leaderboard, not the app root the payload is read from: the
-# root would prefix-match the 2.0 and 2.1 boards on the same host too.
+# root would prefix-match the 2.0 and 2.1 boards on the same host too. Those
+# two are left unregistered on purpose: no fetcher reads them (the homepage
+# payload is always the current board, and ?version= does not change it), so
+# the only values credited to them are hand entries, and ranking the pages as
+# first-party would lock a typed number above Vals' measured one with nothing
+# to ever refresh it. They rank as hand-entered, like any page no scraper
+# reads; a fetcher for them should register them here in the same change.
 TBENCH_SOURCE_URL = canonical(fetch_tbench.LEADERBOARD_URL)
 # The leaderboard page, not the JSON endpoint it hydrates from.
 AGENTS_LAST_EXAM_SOURCE_URL = canonical(fetch_agents_last_exam.LEADERBOARD_URL)
@@ -177,8 +201,9 @@ HUGGING_FACE_PREFIX = canonical(fetch_huggingface.HF_BASE)
 def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
     """(page prefix, rank) pairs, longest prefix first.
 
-    Longest-first allows specific pages to override a host-wide rule.
-    All Artificial Analysis surfaces currently share the top rank.
+    Longest-first allows specific pages to override a host-wide rule: the
+    Coding Agent Index lives under the artificialanalysis.ai host and outranks
+    it.
     """
     pairs: list[tuple[str, int]] = [
         ("https://artificialanalysis.ai", RANK_AA),
@@ -201,7 +226,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
         *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),
-        *((url, RANK_CURATED) for url in VALS_RERUN_KEY_URLS.values()),
+        *((url, RANK_THIRD_PARTY_RUN) for url in VALS_RERUN_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
         (AA_CODING_AGENTS_SOURCE_URL, RANK_AA_CODING_AGENTS),
         (LLMSTATS_SOURCE_URL, RANK_AGGREGATE),
@@ -214,7 +239,7 @@ RANKED_PREFIXES = _ranked_prefixes()
 
 
 def source_rank(url: str | None) -> int:
-    """Rank of the source that published a score, 1 (strongest) to 6.
+    """Rank of the source that published a score, 0 (strongest) to 6.
 
     An unrecognised page ranks as hand-entered, and so does None: both mean the
     number reached llm.json through a person rather than through a scraper this
@@ -245,7 +270,7 @@ def is_fetcher_source(url: str | None) -> bool:
 def may_overwrite(new_url: str | None, stored_url: str | None) -> bool:
     """Whether a score read from new_url may replace one credited to stored_url.
 
-    Equal ranks pass: that is a source refreshing its own number, or two pages
-    of equal standing, where the later write is the newer measurement.
+    Equal ranks pass: that is a source refreshing its own number, or another
+    page of the same source (one AA model page replacing another's credit).
     """
     return source_rank(new_url) <= source_rank(stored_url)

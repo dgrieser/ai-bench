@@ -695,9 +695,11 @@ already gives row collisions inside a single source.
 
 | Rank | Source | Why there |
 | --- | --- | --- |
-| 1 | **Artificial Analysis** (API, model pages, Coding Agent Index, official social posts) | Authority across all AA surfaces regardless of harness. AA replaces other sources and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
+| 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
+| 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld, DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
-| 3 | **Curated third parties** — evals.report, benchlm.ai, Vals AI | evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai has no status of its own but is a compiler of results rather than a lab reporting on itself. Vals AI is here on the other half of the definition: it runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2 — *for the boards it re-runs*. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
+| 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
+| 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only — they write a null, a value from a custom source (below), or a value credited to the same page they are reading, which is that page refreshing its own number; never another fetcher's; where they overlap, llm-stats runs first and so claims the gap. |
 | 6 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
@@ -717,9 +719,15 @@ skipped fetch), every page an ingest step read before it raised, and a Hugging
 Face card whose metadata could not be loaded (`"partial": true` from
 `fetch_huggingface.py`) are all excluded. Nothing carries over between runs.
 
-The Coding Agent Index shares AA's rank 1 and is no longer fill-only. When AA
-surfaces disagree, the later AA ingest wins (the coding-agent ingest follows the
-model-page ingest in a full update). Missing results never erase stored scores.
+The Coding Agent Index is not fill-only, and at rank 0 it outranks the model
+pages: where both AA surfaces report a column, the agent run lands whether or
+not the model-page ingest ran, and in either order. Missing results never erase
+stored scores.
+
+tbench.ai's 2.0 and 2.1 boards are deliberately unranked. `fetch_tbench.py`
+reads only the 4.0 board (the site's payload is always the current one), so a
+value credited to a 2.x page was typed in by hand, and ranking it as first-party
+would lock that number above Vals' measured one with nothing to refresh it.
 
 The rungs are where they are because of what actually disagrees. Where both a
 first-party run and a self-report exist for one model they differ by a point or
@@ -731,10 +739,10 @@ happened to call the ingests, so a run that skipped evals.report left AA's
 numbers and the next full refresh replaced them — a 17-value round trip
 (commits `2ab9ab0`…`0c24cc9`). SWE-bench Multimodal, ZeroBench, MathVista-mini
 and CharXiv Reasoning sit the other way round and need no exception: nothing
-first-party is scraped for them, so evals.report leads at rank 3 unopposed, with
+first-party is scraped for them, so evals.report leads at rank 4 unopposed, with
 the model cards filling gaps beneath it. CharXiv is the thinnest case of the
 four — evals.report has only two trusted open-weight rows there, so in practice
-the cards carry the column and rank 3 confirms two of its values rather than
+the cards carry the column and rank 4 confirms two of its values rather than
 leading it.
 
 ### What Vals AI contributes
@@ -744,7 +752,7 @@ publishes a standard error, a latency and a cost per test beside every accuracy.
 For the boards it re-runs that makes it a second uniform run of a column that
 already has a publisher, so it never leads one: at rank 3 it fills gaps under
 Artificial Analysis and under each benchmark's own board, and displaces the
-model-card self-reports below it. Its *own* benchmarks are the exception, and
+compilations (evals.report) and model-card self-reports below it. Its *own* benchmarks are the exception, and
 `fetch_vals.VALS_OWN_BENCHMARKS` names them: for a board Vals authored, runs and
 solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today —
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other

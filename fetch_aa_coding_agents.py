@@ -11,8 +11,9 @@ the model pages and the v2 API report neither.
 Terminal-Bench 4.0 it shares with the model pages, and the two disagree by
 design: here each model runs under its own vendor's agent (Claude Code, Codex,
 Opencode), on the model pages under AA's single harness, so Opus 5 scores 54.5
-here and 49.0 there. Both surfaces have top source priority; the later AA
-ingest may refresh an earlier AA value regardless of harness differences.
+here and 49.0 there. Where both report a model this surface wins
+(_precedence.RANK_AA_CODING_AGENTS ranks it above the model pages), so the
+stored value does not depend on which of the two ingests ran last.
 
 The page is a Next.js App Router app; requesting it with an "RSC: 1" header
 returns the flight payload, in which every leaderboard row is a plain JSON

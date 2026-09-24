@@ -984,10 +984,11 @@ def apply_score(
         return 0
     if old_value == new_value:
         # An equal AA measurement still takes ownership of a lower-ranked
-        # score, so later non-AA updates cannot displace AA's authority.
-        # So does any fetcher confirming a custom source's number.
+        # score, so later non-AA updates cannot displace AA's authority -- and
+        # the Coding Agent Index, ranked above the other AA surfaces, takes it
+        # from them too. So does any fetcher confirming a custom source's number.
         if new_value is not None and (
-            (source_rank(url) == RANK_AA and source_rank(stored_url) > RANK_AA)
+            (source_rank(url) <= RANK_AA and source_rank(stored_url) > source_rank(url))
             or (custom and is_fetcher_source(url))
         ):
             stamp_score_source(model, key, url)
@@ -1288,8 +1289,9 @@ def update_aa_coding_agents_scores(
 
         matched += 1
         for benchmark_key, new_value in aa_coding_agents_scores.items():
-            # All AA evaluations are authoritative, including refreshed agent
-            # runs. Source precedence prevents non-AA ingests replacing them.
+            # Ranked above every other source, AA's model pages included
+            # (_precedence.RANK_AA_CODING_AGENTS), so the agent run is the one
+            # that lands wherever both AA surfaces report a column.
             updated += apply_score(
                 doc, model, slug, benchmark_key, new_value,
                 AA_CODING_AGENTS_SOURCE_URL, changes,
@@ -3005,11 +3007,11 @@ def main() -> int:
         )
         changes.extend(aa_changes)
 
-    # Fill-only, ahead of the other gap-fillers (llm-stats, Hugging Face) so a
-    # gap AA measured directly is filled by that measurement rather than a
-    # self-report. The benchmarks' leading sources -- the AA model pages for
-    # Terminal-Bench 2.1, benchlm/datacurve for DeepSWE, Scale for SWE Atlas --
-    # are unaffected either way: they overwrite, this ingest never does.
+    # Not fill-only: the Coding Agent Index is the strongest rung
+    # (_precedence.RANK_AA_CODING_AGENTS), so it replaces what the model pages
+    # above wrote for Terminal-Bench 4.0, and Datacurve/benchlm for DeepSWE and
+    # Scale for SWE Atlas, wherever it reports the model. Rank, not this call's
+    # position, decides that: a run that skips the model pages ends the same.
     aa_coding_agents_by_slug: dict[str, dict[str, Any]] = {}
     aa_coding_agents_matched = 0
     aa_coding_agents_updated = 0

@@ -92,9 +92,12 @@ BENCHMARKS: dict[str, str] = {
     # Three revisions of Terminal-Bench, each on its own page and each stamping
     # its version into the metadata ("4.0" / "2.1" / "2.0"), so none can be
     # mistaken for another -- the version trap that keeps SWE-Marathon out of
-    # the evals.report ingest does not apply here. tbench.ai owns all three
-    # columns and outranks this source, so these fill gaps rather than displace
-    # the board. Only "terminal-bench-4" is version-pinned, because its slug
+    # the evals.report ingest does not apply here. What outranks this source
+    # differs per revision: only the 4.0 board is scraped from tbench.ai
+    # (fetch_tbench.py), and it ranks under AA's two surfaces and over Vals on
+    # that column; 2.1 is led by AA's model pages; tbench.ai's 2.0 board is not
+    # scraped at all, so on 2.0 Vals is the strongest scraped source and leads.
+    # Only "terminal-bench-4" is version-pinned, because its slug
     # names the major and not the revision -- see VERSIONS below.
     "terminal-bench-4": "terminal_bench_4_0",
     "terminal-bench-2-1": "terminal_bench_2_1",
@@ -123,7 +126,7 @@ BENCHMARKS: dict[str, str] = {
 # The boards Vals authors, runs and publishes itself, as opposed to the ones it
 # re-runs from someone else's task set. For its own boards the page is the
 # benchmark's leaderboard, not a second opinion on one, so _precedence.py ranks
-# these at RANK_BENCHMARK_SITE and the rest at RANK_CURATED. Declared here, with
+# these at RANK_BENCHMARK_SITE and the rest at RANK_THIRD_PARTY_RUN. Declared here, with
 # the table above, so a board added to BENCHMARKS is classified in the same
 # place it is ingested.
 VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code"})
