@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-10 - DeepSeek - https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+      "question": "Add newly released model 'deepseek-v4-1-flash-non-reasoning' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "deepseek-v4-1-flash-non-reasoning",
+      "universe": null
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
