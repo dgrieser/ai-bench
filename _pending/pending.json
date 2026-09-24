@@ -40,6 +40,123 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "claude-opus-5-5",
+          "reason": "exact to Claude Opus 5.5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to Claude Opus 5.5, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map evals.report model 'Claude Opus 5.5' to llm.json model",
+      "route": "update_evals_report_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Claude Opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-luna",
+          "reason": "exact to GPT-6 Luna, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to GPT-6 Luna, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6 Luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to GPT-6 Luna, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6 Luna, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map evals.report model 'GPT-6 Luna' to llm.json model",
+      "route": "update_evals_report_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GPT-6 Luna",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6 Sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6 Sol, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "exact to GPT-6 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to GPT-6 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to GPT-6 Sol, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map evals.report model 'GPT-6 Sol' to llm.json model",
+      "route": "update_evals_report_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GPT-6 Sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map evals.report model 'dots3-note Preview' to llm.json model",
+      "route": "update_evals_report_mapping.py",
+      "route_kind": "mapping",
+      "subject": "dots3-note Preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "ling-3-0-flash",
           "reason": "drop suffix to a variant, most components match"
