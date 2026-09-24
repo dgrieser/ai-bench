@@ -147,6 +147,172 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "exact to GLM-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "exact to GLM-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "exact to GLM-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "exact to GLM-5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "exact to GLM-5.1, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'GLM-5.1' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GLM-5.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-luna",
+          "reason": "exact to GPT-5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to GPT-5, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'GPT-5' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GPT-5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "exact to Kimi K2 Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-6",
+          "reason": "exact to Kimi K2 Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-thinking",
+          "reason": "exact to Kimi K2 Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-7-code",
+          "reason": "exact to Kimi K2 Instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-linear-48b-a3b-instruct",
+          "reason": "exact to Kimi K2 Instruct, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Kimi K2 Instruct' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Kimi K2 Instruct",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "exact to MiniMax M2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "exact to MiniMax M2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "drop short code to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'MiniMax M2' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MiniMax M2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "exact to MiniMax M2.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "exact to MiniMax M2.1, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'MiniMax M2.1' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MiniMax M2.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Opus 4.7' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Opus 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "ling-3-0-flash",
           "reason": "drop suffix to a variant, most components match"
         },
