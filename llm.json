@@ -184,7 +184,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35), OSWorld 2.0 2026.06.24 (0.15).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: MMMU Pro (1), OSWorld-Verified (0.7), MathVista-mini (0.35), ZeroBench (0.35), CharXiv Reasoning (0.35), OSWorld 2.0 2026.06.24 (0.15), OSWorld 2.0 2026.08.08 (0.15), OSWorld 2.0 Vendor (0.15).",
       "settings": [
         "derived",
         "index scale"
@@ -1788,7 +1788,7 @@
         "coding_index": 22494,
         "tooling_index": 33801,
         "knowledge_index": 17989,
-        "vision_index": 11136,
+        "vision_index": 11105,
         "trust_index": 40609,
         "aa_intelligence_index": 7.5,
         "swe_bench_verified": 68.0,
@@ -2218,8 +2218,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -2247,7 +2247,7 @@
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 33808,
-        "vision_index": 23379,
+        "vision_index": 23362,
         "trust_index": 39709,
         "aa_intelligence_index": 14.9,
         "swe_bench_verified": 59.2,
@@ -2588,8 +2588,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -5060,7 +5060,7 @@
         "coding_index": 47328,
         "tooling_index": 52679,
         "knowledge_index": 69994,
-        "vision_index": 65564,
+        "vision_index": 65503,
         "trust_index": 56321,
         "aa_intelligence_index": 18.4,
         "swe_bench_verified": 76.4,
@@ -5578,8 +5578,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -5613,7 +5613,7 @@
         "coding_index": 35661,
         "tooling_index": 51881,
         "knowledge_index": 63318,
-        "vision_index": 51438,
+        "vision_index": 51403,
         "trust_index": 55105,
         "aa_intelligence_index": 15.6,
         "swe_bench_verified": 72.0,
@@ -6080,8 +6080,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -6115,7 +6115,7 @@
         "coding_index": null,
         "tooling_index": 60326,
         "knowledge_index": 61632,
-        "vision_index": 54947,
+        "vision_index": 54909,
         "trust_index": 58117,
         "aa_intelligence_index": 22.9,
         "swe_bench_verified": 72.4,
@@ -6535,8 +6535,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -6570,7 +6570,7 @@
         "coding_index": null,
         "tooling_index": 46371,
         "knowledge_index": 56674,
-        "vision_index": 42680,
+        "vision_index": 42679,
         "trust_index": 54756,
         "aa_intelligence_index": 19.3,
         "swe_bench_verified": 69.2,
@@ -6978,8 +6978,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -7013,7 +7013,7 @@
         "coding_index": null,
         "tooling_index": 38113,
         "knowledge_index": 46971,
-        "vision_index": 37257,
+        "vision_index": 37280,
         "trust_index": 51273,
         "aa_intelligence_index": 13.7,
         "swe_bench_verified": null,
@@ -7421,8 +7421,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -7456,7 +7456,7 @@
         "coding_index": null,
         "tooling_index": 34418,
         "knowledge_index": 33114,
-        "vision_index": 33018,
+        "vision_index": 33055,
         "trust_index": 46375,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
@@ -7844,8 +7844,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "osworld_verified",
             "mathvista_mini",
@@ -7879,7 +7879,7 @@
         "coding_index": null,
         "tooling_index": 13722,
         "knowledge_index": 13772,
-        "vision_index": 12797,
+        "vision_index": 12941,
         "trust_index": 42303,
         "aa_intelligence_index": 6.9,
         "swe_bench_verified": null,
@@ -8265,8 +8265,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.641,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -8299,7 +8299,7 @@
         "coding_index": null,
         "tooling_index": 7952,
         "knowledge_index": 14532,
-        "vision_index": 187,
+        "vision_index": 223,
         "trust_index": 41204,
         "aa_intelligence_index": 6.1,
         "swe_bench_verified": null,
@@ -8675,8 +8675,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.641,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -10866,7 +10866,7 @@
         "coding_index": 25187,
         "tooling_index": 26960,
         "knowledge_index": 50176,
-        "vision_index": 26696,
+        "vision_index": 26690,
         "trust_index": 55694,
         "aa_intelligence_index": 11.3,
         "swe_bench_verified": null,
@@ -11284,8 +11284,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -12927,7 +12927,7 @@
         "coding_index": 37020,
         "tooling_index": 50450,
         "knowledge_index": 60339,
-        "vision_index": 44657,
+        "vision_index": 44647,
         "trust_index": 54801,
         "aa_intelligence_index": 19,
         "swe_bench_verified": 80.9,
@@ -13368,8 +13368,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -13397,7 +13397,7 @@
         "coding_index": null,
         "tooling_index": 41599,
         "knowledge_index": 44559,
-        "vision_index": 38306,
+        "vision_index": 38300,
         "trust_index": 52277,
         "aa_intelligence_index": 16.7,
         "swe_bench_verified": null,
@@ -13775,8 +13775,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -13804,7 +13804,7 @@
         "coding_index": null,
         "tooling_index": 17022,
         "knowledge_index": 39480,
-        "vision_index": 18484,
+        "vision_index": 18452,
         "trust_index": 51101,
         "aa_intelligence_index": 8.9,
         "swe_bench_verified": null,
@@ -14169,8 +14169,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -14198,7 +14198,7 @@
         "coding_index": null,
         "tooling_index": 11345,
         "knowledge_index": 32461,
-        "vision_index": 11136,
+        "vision_index": 11105,
         "trust_index": 47507,
         "aa_intelligence_index": 7.8,
         "swe_bench_verified": null,
@@ -14563,8 +14563,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -14592,7 +14592,7 @@
         "coding_index": 34950,
         "tooling_index": 45460,
         "knowledge_index": 62527,
-        "vision_index": 52348,
+        "vision_index": 52334,
         "trust_index": 59300,
         "aa_intelligence_index": 18.2,
         "swe_bench_verified": 73.4,
@@ -15060,8 +15060,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -15093,7 +15093,7 @@
         "coding_index": 42728,
         "tooling_index": 54190,
         "knowledge_index": 66840,
-        "vision_index": 51309,
+        "vision_index": 51293,
         "trust_index": 61378,
         "aa_intelligence_index": 21.4,
         "swe_bench_verified": 70,
@@ -15560,8 +15560,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -17744,7 +17744,7 @@
         "coding_index": 32037,
         "tooling_index": 50135,
         "knowledge_index": 44697,
-        "vision_index": 32581,
+        "vision_index": 32573,
         "trust_index": 57032,
         "aa_intelligence_index": 14.2,
         "swe_bench_verified": 66.4,
@@ -18209,8 +18209,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -18238,7 +18238,7 @@
         "coding_index": 16249,
         "tooling_index": 24562,
         "knowledge_index": 17439,
-        "vision_index": 16862,
+        "vision_index": 16827,
         "trust_index": 33687,
         "aa_intelligence_index": 6,
         "swe_bench_verified": null,
@@ -18636,8 +18636,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -18665,7 +18665,7 @@
         "coding_index": null,
         "tooling_index": 26466,
         "knowledge_index": 26011,
-        "vision_index": 19128,
+        "vision_index": 19241,
         "trust_index": 46367,
         "aa_intelligence_index": 10.3,
         "swe_bench_verified": null,
@@ -19021,8 +19021,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mathvista_mini",
             "charxiv_reasoning"
@@ -19054,7 +19054,7 @@
         "coding_index": null,
         "tooling_index": 11808,
         "knowledge_index": 13203,
-        "vision_index": 5221,
+        "vision_index": 5240,
         "trust_index": 20411,
         "aa_intelligence_index": 5.7,
         "swe_bench_verified": null,
@@ -19394,8 +19394,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -19423,7 +19423,7 @@
         "coding_index": null,
         "tooling_index": 42144,
         "knowledge_index": 62784,
-        "vision_index": 30904,
+        "vision_index": 30898,
         "trust_index": 58186,
         "aa_intelligence_index": 13.1,
         "swe_bench_verified": null,
@@ -19804,8 +19804,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -19833,7 +19833,7 @@
         "coding_index": null,
         "tooling_index": 52397,
         "knowledge_index": 60864,
-        "vision_index": 59483,
+        "vision_index": 59517,
         "trust_index": 56880,
         "aa_intelligence_index": 19.5,
         "swe_bench_verified": 76.5,
@@ -20202,8 +20202,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -20231,7 +20231,7 @@
         "coding_index": 9548,
         "tooling_index": 9552,
         "knowledge_index": 10958,
-        "vision_index": 3594,
+        "vision_index": 3617,
         "trust_index": 25733,
         "aa_intelligence_index": 3.8,
         "swe_bench_verified": null,
@@ -20620,8 +20620,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -21687,7 +21687,7 @@
         "coding_index": 63265,
         "tooling_index": 69493,
         "knowledge_index": 84088,
-        "vision_index": 73377,
+        "vision_index": 73348,
         "trust_index": 69210,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
@@ -22175,8 +22175,8 @@
             "osworld_verified",
             "osworld_2_0_2026_06_24"
           ],
-          "of": 6,
-          "share": 0.638
+          "of": 8,
+          "share": 0.578
         },
         "trust_index": {
           "measured": [
@@ -22880,7 +22880,7 @@
         "coding_index": 13474,
         "tooling_index": 11881,
         "knowledge_index": 20729,
-        "vision_index": 18834,
+        "vision_index": 18945,
         "trust_index": 46999,
         "aa_intelligence_index": 8.1,
         "swe_bench_verified": null,
@@ -23303,8 +23303,8 @@
             "mathvista_mini",
             "zerobench"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mathvista_mini"
           ]
@@ -23334,7 +23334,7 @@
         "coding_index": 19058,
         "tooling_index": 15798,
         "knowledge_index": 30172,
-        "vision_index": 24561,
+        "vision_index": 24665,
         "trust_index": 48995,
         "aa_intelligence_index": 10,
         "swe_bench_verified": null,
@@ -23772,8 +23772,8 @@
             "mathvista_mini",
             "zerobench"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mathvista_mini"
           ]
@@ -27813,7 +27813,7 @@
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 40305,
-        "vision_index": 26873,
+        "vision_index": 26965,
         "trust_index": 43630,
         "aa_intelligence_index": 13.4,
         "swe_bench_verified": 23,
@@ -28180,8 +28180,8 @@
             "mathvista_mini",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "mmmu_pro",
             "mathvista_mini",
@@ -38865,7 +38865,7 @@
         "coding_index": 21877,
         "tooling_index": 26280,
         "knowledge_index": 31346,
-        "vision_index": 25030,
+        "vision_index": 25020,
         "trust_index": 48941,
         "aa_intelligence_index": 9.3,
         "swe_bench_verified": 41.4,
@@ -39284,8 +39284,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -39312,7 +39312,7 @@
         "coding_index": 13508,
         "tooling_index": 17323,
         "knowledge_index": 14689,
-        "vision_index": 13609,
+        "vision_index": 13572,
         "trust_index": 30495,
         "aa_intelligence_index": 5.5,
         "swe_bench_verified": null,
@@ -39711,8 +39711,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -39739,7 +39739,7 @@
         "coding_index": 9902,
         "tooling_index": 14368,
         "knowledge_index": 16357,
-        "vision_index": 6899,
+        "vision_index": 6907,
         "trust_index": 40673,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
@@ -40133,8 +40133,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -40501,7 +40501,7 @@
         "coding_index": 13209,
         "tooling_index": 10467,
         "knowledge_index": 14689,
-        "vision_index": 15239,
+        "vision_index": 15202,
         "trust_index": 31970,
         "aa_intelligence_index": 4.9,
         "swe_bench_verified": null,
@@ -40891,8 +40891,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -40919,7 +40919,7 @@
         "coding_index": null,
         "tooling_index": 2953,
         "knowledge_index": 11094,
-        "vision_index": 2035,
+        "vision_index": 2050,
         "trust_index": 20049,
         "aa_intelligence_index": 4.8,
         "swe_bench_verified": null,
@@ -41278,8 +41278,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -42571,7 +42571,7 @@
         "coding_index": null,
         "tooling_index": 36389,
         "knowledge_index": 39206,
-        "vision_index": 40709,
+        "vision_index": 40702,
         "trust_index": 52835,
         "aa_intelligence_index": 14.2,
         "swe_bench_verified": null,
@@ -42936,8 +42936,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -44371,7 +44371,7 @@
         "coding_index": null,
         "tooling_index": 30285,
         "knowledge_index": 37144,
-        "vision_index": 35878,
+        "vision_index": 35870,
         "trust_index": 41654,
         "aa_intelligence_index": 9.5,
         "swe_bench_verified": null,
@@ -44710,8 +44710,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -45011,7 +45011,7 @@
         "coding_index": 54408,
         "tooling_index": 69639,
         "knowledge_index": 83577,
-        "vision_index": 46329,
+        "vision_index": 46309,
         "trust_index": 65401,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
@@ -45485,8 +45485,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.466,
+          "of": 8,
+          "share": 0.422,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -46904,7 +46904,7 @@
         "coding_index": 47983,
         "tooling_index": 52923,
         "knowledge_index": 78671,
-        "vision_index": 57401,
+        "vision_index": 57349,
         "trust_index": 64739,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
@@ -47424,8 +47424,8 @@
             "zerobench",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.948,
+          "of": 8,
+          "share": 0.859,
           "second_hand": [
             "mathvista_mini",
             "zerobench",
@@ -47468,7 +47468,7 @@
         "coding_index": 61009,
         "tooling_index": 69127,
         "knowledge_index": 88288,
-        "vision_index": 73275,
+        "vision_index": 73200,
         "trust_index": 70173,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
@@ -48021,8 +48021,8 @@
             "charxiv_reasoning",
             "osworld_2_0_2026_06_24"
           ],
-          "of": 6,
-          "share": 0.759,
+          "of": 8,
+          "share": 0.688,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -48528,7 +48528,7 @@
         "coding_index": 89404,
         "tooling_index": 91088,
         "knowledge_index": 95423,
-        "vision_index": 87146,
+        "vision_index": 87192,
         "trust_index": 69726,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
@@ -49075,13 +49075,15 @@
           "measured": [
             "mmmu_pro",
             "osworld_verified",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.688,
           "second_hand": [
             "osworld_verified",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ]
         },
         "trust_index": {
@@ -49444,7 +49446,7 @@
         "coding_index": 48839,
         "tooling_index": 50639,
         "knowledge_index": 74019,
-        "vision_index": 60303,
+        "vision_index": 60339,
         "trust_index": 61182,
         "aa_intelligence_index": 25.2,
         "swe_bench_verified": 71,
@@ -49868,8 +49870,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -49907,7 +49909,7 @@
         "coding_index": 50309,
         "tooling_index": 56865,
         "knowledge_index": 82742,
-        "vision_index": 71721,
+        "vision_index": 71719,
         "trust_index": 71259,
         "aa_intelligence_index": 26,
         "swe_bench_verified": 74,
@@ -50353,8 +50355,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -50392,7 +50394,7 @@
         "coding_index": 59609,
         "tooling_index": 71878,
         "knowledge_index": 80470,
-        "vision_index": 46620,
+        "vision_index": 46601,
         "trust_index": 65184,
         "aa_intelligence_index": 27.8,
         "swe_bench_verified": 82.2,
@@ -50833,8 +50835,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.466,
+          "of": 8,
+          "share": 0.422,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -51198,7 +51200,7 @@
         "coding_index": 77913,
         "tooling_index": 91152,
         "knowledge_index": 93002,
-        "vision_index": 98292,
+        "vision_index": 98242,
         "trust_index": 68678,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
@@ -51654,8 +51656,8 @@
             "mmmu_pro",
             "osworld_verified"
           ],
-          "of": 6,
-          "share": 0.586,
+          "of": 8,
+          "share": 0.531,
           "second_hand": [
             "osworld_verified"
           ]
@@ -52880,7 +52882,7 @@
         "coding_index": 52937,
         "tooling_index": 64771,
         "knowledge_index": 63516,
-        "vision_index": 54304,
+        "vision_index": 54258,
         "trust_index": 61819,
         "aa_intelligence_index": 17.5,
         "swe_bench_verified": 76,
@@ -53298,8 +53300,8 @@
             "osworld_verified",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.641,
           "second_hand": [
             "osworld_verified",
             "charxiv_reasoning"
@@ -54326,7 +54328,7 @@
         "coding_index": 70318,
         "tooling_index": 85682,
         "knowledge_index": 79030,
-        "vision_index": 74310,
+        "vision_index": 73861,
         "trust_index": 64392,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
@@ -54782,13 +54784,15 @@
           "measured": [
             "mmmu_pro",
             "osworld_verified",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.688,
           "second_hand": [
             "osworld_verified",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ]
         },
         "trust_index": {
@@ -56803,7 +56807,7 @@
         "coding_index": 71201,
         "tooling_index": 87971,
         "knowledge_index": 78686,
-        "vision_index": 54362,
+        "vision_index": 54359,
         "trust_index": 53818,
         "aa_intelligence_index": 34.8,
         "swe_bench_verified": null,
@@ -57204,8 +57208,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.466,
+          "of": 8,
+          "share": 0.422,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -57240,7 +57244,7 @@
         "coding_index": 77045,
         "tooling_index": 96016,
         "knowledge_index": 89523,
-        "vision_index": 93264,
+        "vision_index": 93164,
         "trust_index": 71007,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
@@ -57701,8 +57705,8 @@
             "mmmu_pro",
             "charxiv_reasoning"
           ],
-          "of": 6,
-          "share": 0.466,
+          "of": 8,
+          "share": 0.422,
           "second_hand": [
             "charxiv_reasoning"
           ]
@@ -57737,7 +57741,7 @@
         "coding_index": 82184,
         "tooling_index": 91508,
         "knowledge_index": 83287,
-        "vision_index": 82838,
+        "vision_index": 80951,
         "trust_index": 66071,
         "aa_intelligence_index": 39.8,
         "swe_bench_verified": null,
@@ -58175,12 +58179,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466,
+          "of": 8,
+          "share": 0.469,
           "second_hand": [
-            "charxiv_reasoning"
+            "charxiv_reasoning",
+            "osworld_2_0_vendor"
           ]
         },
         "trust_index": {
@@ -60779,7 +60785,7 @@
         "coding_index": 90385,
         "tooling_index": 88357,
         "knowledge_index": 84795,
-        "vision_index": 66262,
+        "vision_index": 66302,
         "trust_index": 50175,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
@@ -61206,8 +61212,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -61239,7 +61245,7 @@
         "coding_index": null,
         "tooling_index": 63164,
         "knowledge_index": 73037,
-        "vision_index": 78012,
+        "vision_index": 77914,
         "trust_index": 62134,
         "aa_intelligence_index": 24.6,
         "swe_bench_verified": null,
@@ -61575,8 +61581,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.312
         },
         "trust_index": {
           "measured": [
@@ -61609,7 +61615,7 @@
         "coding_index": 94767,
         "tooling_index": 96979,
         "knowledge_index": 97606,
-        "vision_index": 88207,
+        "vision_index": 90327,
         "trust_index": 66770,
         "aa_intelligence_index": 50.8,
         "swe_bench_verified": 97,
@@ -62176,10 +62182,15 @@
           "measured": [
             "mmmu_pro",
             "osworld_verified",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_2026_08_08",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.707
+          "of": 8,
+          "share": 0.734,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -62212,7 +62223,7 @@
         "coding_index": 81019,
         "tooling_index": 84711,
         "knowledge_index": 92246,
-        "vision_index": 70213,
+        "vision_index": 70200,
         "trust_index": 70103,
         "aa_intelligence_index": 38.2,
         "swe_bench_verified": 79.6,
@@ -62706,8 +62717,8 @@
             "osworld_verified",
             "zerobench"
           ],
-          "of": 6,
-          "share": 0.707,
+          "of": 8,
+          "share": 0.641,
           "second_hand": [
             "osworld_verified"
           ]
@@ -62743,7 +62754,7 @@
         "coding_index": 96097,
         "tooling_index": 97535,
         "knowledge_index": 98542,
-        "vision_index": 99573,
+        "vision_index": 99023,
         "trust_index": 67772,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
@@ -63291,10 +63302,14 @@
         },
         "vision_index": {
           "measured": [
-            "mmmu_pro"
+            "mmmu_pro",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.359,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -63327,7 +63342,7 @@
         "coding_index": 80422,
         "tooling_index": 79929,
         "knowledge_index": 84546,
-        "vision_index": 75638,
+        "vision_index": 75751,
         "trust_index": 53726,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
@@ -63845,10 +63860,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.469,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -63881,7 +63900,7 @@
         "coding_index": 86171,
         "tooling_index": 86044,
         "knowledge_index": 91033,
-        "vision_index": 85385,
+        "vision_index": 84686,
         "trust_index": 59115,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
@@ -64383,10 +64402,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.469,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -64420,7 +64443,7 @@
         "coding_index": 89645,
         "tooling_index": 90295,
         "knowledge_index": 97601,
-        "vision_index": 89284,
+        "vision_index": 87385,
         "trust_index": 56490,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
@@ -64992,10 +65015,15 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_2026_08_08",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.516,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -65029,7 +65057,7 @@
         "coding_index": 97502,
         "tooling_index": 92625,
         "knowledge_index": 98579,
-        "vision_index": 95139,
+        "vision_index": 95079,
         "trust_index": 68967,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
@@ -65522,10 +65550,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.469,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -67736,7 +67768,7 @@
         "coding_index": 88817,
         "tooling_index": 92943,
         "knowledge_index": 95081,
-        "vision_index": 76995,
+        "vision_index": 77502,
         "trust_index": 70306,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
@@ -68112,8 +68144,8 @@
           "measured": [
             "osworld_verified"
           ],
-          "of": 6,
-          "share": 0.241,
+          "of": 8,
+          "share": 0.219,
           "second_hand": [
             "osworld_verified"
           ]
@@ -68148,7 +68180,7 @@
         "coding_index": 85706,
         "tooling_index": 87286,
         "knowledge_index": null,
-        "vision_index": 70982,
+        "vision_index": 71110,
         "trust_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
@@ -68435,8 +68467,8 @@
           "measured": [
             "osworld_verified"
           ],
-          "of": 6,
-          "share": 0.241,
+          "of": 8,
+          "share": 0.219,
           "second_hand": [
             "osworld_verified"
           ]
@@ -68463,7 +68495,7 @@
         "coding_index": 98442,
         "tooling_index": 90573,
         "knowledge_index": 99526,
-        "vision_index": 96241,
+        "vision_index": 97002,
         "trust_index": 69780,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
@@ -68865,10 +68897,14 @@
         },
         "vision_index": {
           "measured": [
-            "mmmu_pro"
+            "mmmu_pro",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.345
+          "of": 8,
+          "share": 0.359,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -68901,7 +68937,7 @@
         "coding_index": 81471,
         "tooling_index": 82104,
         "knowledge_index": 87581,
-        "vision_index": 63684,
+        "vision_index": 65796,
         "trust_index": 64533,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": null,
@@ -69279,10 +69315,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.469,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -69315,7 +69355,7 @@
         "coding_index": 92890,
         "tooling_index": 92468,
         "knowledge_index": 96831,
-        "vision_index": 90398,
+        "vision_index": 90395,
         "trust_index": 68637,
         "aa_intelligence_index": 47.5,
         "swe_bench_verified": null,
@@ -69701,10 +69741,14 @@
         "vision_index": {
           "measured": [
             "mmmu_pro",
-            "zerobench"
+            "zerobench",
+            "osworld_2_0_vendor"
           ],
-          "of": 6,
-          "share": 0.466
+          "of": 8,
+          "share": 0.469,
+          "second_hand": [
+            "osworld_2_0_vendor"
+          ]
         },
         "trust_index": {
           "measured": [
@@ -69736,7 +69780,7 @@
         "coding_index": null,
         "tooling_index": 73310,
         "knowledge_index": null,
-        "vision_index": 77669,
+        "vision_index": 77543,
         "trust_index": null,
         "aa_intelligence_index": null,
         "swe_bench_verified": 78.4,
@@ -69988,8 +70032,8 @@
           "measured": [
             "mmmu_pro"
           ],
-          "of": 6,
-          "share": 0.345,
+          "of": 8,
+          "share": 0.312,
           "second_hand": [
             "mmmu_pro"
           ]

@@ -369,6 +369,19 @@ INDEXES: list[IndexDef] = [
             # models are scored on one release to rank -- see README, "Vision
             # Index".
             ("osworld_2_0_2026_06_24", 0.15),
+            # 2026.08.08 is the same official cell on the first re-release and
+            # joins at the same floor for the same reason: two models today
+            # (claude-opus-5 31.4 over gpt-5-6-sol 27.3), both closed and both
+            # already ranked through MMMU Pro, so it is one comparison. Re-price
+            # with 2026.06.24 once either release has a field.
+            ("osworld_2_0_2026_08_08", 0.15),
+            # The vendor column is the widest OSWorld 2.0 field (12 models, nine
+            # with no other OSWorld score), but it files every lab headline as
+            # published, binary and partial alike -- Qwen's binary 19.4 sits
+            # against partial scores of 45-82 -- so a weight that lets it steer
+            # a rank would rank that artefact. Held at the floor; worth 0.35
+            # only once binary and partial rows are told apart.
+            ("osworld_2_0_vendor", 0.15),
             # Deliberately not aggregated, though it is the widest multimodal
             # column in llm.json: gdpval_aa scores visual *output* (documents,
             # slides, diagrams) produced in AA's agentic harness, so what it
