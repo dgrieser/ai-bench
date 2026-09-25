@@ -83,6 +83,7 @@ class TestRowFetchers(unittest.TestCase):
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
+        ("openrouter", "score", "fetch_openrouter_data"),
     ]
 
     # The revision-split sources file rows under a column per revision, so the

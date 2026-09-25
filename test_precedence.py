@@ -30,13 +30,16 @@ from _precedence import (
     HUGGING_FACE_PREFIX,
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
+    OPENROUTER_PREFIX,
     OSWORLD_SOURCE_URL,
     RANK_AA,
     RANK_AA_CODING_AGENTS,
     RANK_AGGREGATE,
     RANK_BENCHMARK_SITE,
     RANK_CURATED,
+    RANK_ENDPOINT_RUN,
     RANK_HAND_ENTERED,
+    RANK_MODEL_CARD,
     RANK_THIRD_PARTY_RUN,
     RANKED_PREFIXES,
     SWE_ATLAS_KEY_URLS,
@@ -57,6 +60,7 @@ DOC: dict = {"benchmarks": {"gdpval_aa": {"range": [-1000, 3000]}}}
 AA_PAGE = "https://artificialanalysis.ai/models/gemma-4-31b"
 EVALS_IFBENCH = EVALS_REPORT_KEY_URLS["ifbench"]
 HF_CARD = f"{HUGGING_FACE_PREFIX}/google/gemma-4-31b"
+OPENROUTER_PAGE = f"{OPENROUTER_PREFIX}/google/gemma-4-31b-it"
 HAND_ENTERED = "https://thenextweb.com/news/some-benchmark-writeup"
 
 
@@ -145,7 +149,11 @@ class TestRungs(unittest.TestCase):
 
     def test_aggregates(self) -> None:
         self.assertEqual(source_rank(LLMSTATS_SOURCE_URL), RANK_AGGREGATE)
-        self.assertEqual(source_rank(HF_CARD), RANK_AGGREGATE)
+        self.assertEqual(source_rank(OPENROUTER_PAGE), RANK_ENDPOINT_RUN)
+        self.assertEqual(source_rank(HF_CARD), RANK_MODEL_CARD)
+        self.assertLess(RANK_AGGREGATE, RANK_ENDPOINT_RUN)
+        self.assertLess(RANK_ENDPOINT_RUN, RANK_MODEL_CARD)
+        self.assertLess(RANK_MODEL_CARD, RANK_HAND_ENTERED)
 
     def test_unattributed_and_unknown_rank_as_hand_entered(self) -> None:
         self.assertEqual(source_rank(None), RANK_HAND_ENTERED)
@@ -645,6 +653,72 @@ class TestIngestsGoThroughTheGate(unittest.TestCase):
         self.assertEqual(model["scores_source"]["ifbench"], EVALS_IFBENCH)
 
 
+class TestOpenRouter(unittest.TestCase):
+    """OpenRouter's endpoint runs seed GPQA Diamond for every other fetcher to
+    take over -- llm-stats' fill-only ingest included -- except the model
+    cards, which rank below them."""
+
+    KEY = "gpqa_diamond"
+
+    def test_every_fetcher_but_the_model_cards_takes_it_over(self) -> None:
+        for url, fill_only in (
+            (AA_PAGE, False),
+            (EVALS_REPORT_KEY_URLS["mmlu_pro"], False),
+            (VALS_KEY_URLS["mmlu_pro"], False),
+            (LLMSTATS_SOURCE_URL, True),
+        ):
+            with self.subTest(url=url):
+                model = model_with(score=80.0, source=OPENROUTER_PAGE, key=self.KEY)
+                n = update.apply_score(
+                    DOC, model, "m", self.KEY, 85.0, url, [], fill_only=fill_only
+                )
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores"][self.KEY], 85.0)
+                self.assertEqual(model["scores_source"][self.KEY], url)
+
+    def test_a_model_card_leaves_it_alone(self) -> None:
+        model = model_with(score=80.0, source=OPENROUTER_PAGE, key=self.KEY)
+        n = update.apply_score(DOC, model, "m", self.KEY, 85.0, HF_CARD, [], fill_only=True)
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores"][self.KEY], 80.0)
+        self.assertEqual(model["scores_source"][self.KEY], OPENROUTER_PAGE)
+
+    def test_it_replaces_a_model_card_and_a_hand_entry(self) -> None:
+        for stored in (HF_CARD, HAND_ENTERED, None):
+            with self.subTest(stored=stored):
+                model = model_with(score=80.0, source=stored, key=self.KEY)
+                n = update.apply_score(DOC, model, "m", self.KEY, 85.0, OPENROUTER_PAGE, [])
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores_source"][self.KEY], OPENROUTER_PAGE)
+
+    def test_it_never_replaces_a_better_rung(self) -> None:
+        for stored in (AA_PAGE, EVALS_REPORT_KEY_URLS["mmlu_pro"], LLMSTATS_SOURCE_URL):
+            with self.subTest(stored=stored):
+                model = model_with(score=80.0, source=stored, key=self.KEY)
+                n = update.apply_score(DOC, model, "m", self.KEY, 85.0, OPENROUTER_PAGE, [])
+                self.assertEqual(n, 0)
+                self.assertEqual(model["scores_source"][self.KEY], stored)
+
+    def test_it_refreshes_its_own_value(self) -> None:
+        model = model_with(score=80.0, source=OPENROUTER_PAGE, key=self.KEY)
+        n = update.apply_score(DOC, model, "m", self.KEY, 85.0, OPENROUTER_PAGE, [])
+        self.assertEqual(n, 1)
+        self.assertEqual(model["scores"][self.KEY], 85.0)
+
+    def test_the_yield_is_openrouters_alone(self) -> None:
+        # llm-stats outranks the model cards too, but both are fill-only and
+        # neither replaces the other's value: the exception is one rung's.
+        self.assertTrue(precedence.yields_to_fill_only(LLMSTATS_SOURCE_URL, OPENROUTER_PAGE))
+        self.assertFalse(precedence.yields_to_fill_only(HF_CARD, OPENROUTER_PAGE))
+        self.assertFalse(precedence.yields_to_fill_only(LLMSTATS_SOURCE_URL, HF_CARD))
+        model = model_with(score=80.0, source=HF_CARD, key=self.KEY)
+        n = update.apply_score(
+            DOC, model, "m", self.KEY, 85.0, LLMSTATS_SOURCE_URL, [], fill_only=True
+        )
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores_source"][self.KEY], HF_CARD)
+
+
 class TestEveryScrapedPageIsRanked(unittest.TestCase):
     """A source whose page is not in the table ranks as hand-entered, which
     would quietly let the aggregates overwrite it. Every URL update.py stamps
@@ -664,6 +738,7 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
             FRONTIERSWE_SOURCE_URL,
             FRONTIERCODE_SOURCE_URL,
             SWE_MARATHON_SOURCE_URL,
+            OPENROUTER_PAGE,
             HF_CARD,
             *SWE_ATLAS_KEY_URLS.values(),
             *EVALS_REPORT_KEY_URLS.values(),
@@ -681,14 +756,17 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
                 RANK_THIRD_PARTY_RUN,
                 RANK_CURATED,
                 RANK_AGGREGATE,
+                RANK_ENDPOINT_RUN,
+                RANK_MODEL_CARD,
                 RANK_HAND_ENTERED,
             ],
-            [0, 1, 2, 3, 4, 5, 6],
+            [0, 1, 2, 3, 4, 5, 6, 7, 8],
         )
         self.assertEqual(
             sorted({rank for _, rank in RANKED_PREFIXES}),
             [RANK_AA_CODING_AGENTS, RANK_AA, RANK_BENCHMARK_SITE,
-             RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE],
+             RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE,
+             RANK_ENDPOINT_RUN, RANK_MODEL_CARD],
         )
 
     def test_every_tbench_board_ranks_as_the_benchmarks_own_site(self) -> None:

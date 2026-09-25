@@ -322,7 +322,7 @@ stderr shows how long the run actually waited for that fetcher.
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
 │  fetch_tbench.py          │ fetch_vals.py               │
-│  fetch_zerobench.py       │                             │
+│  fetch_zerobench.py       │ fetch_openrouter.py         │
 │  artificialanalysis.py                                  │
 └────────────────┬────────────────────────────────────────┘
                  │
@@ -369,6 +369,8 @@ Output: llm.json (unified dataset)
 ./fetch_zerobench.py                    # ZeroBench, the maintainers' own board only
 ./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
+./fetch_openrouter.py --model openai/gpt-6-sol   # GPQA Diamond, median of OpenRouter's endpoint runs
+./fetch_openrouter.py --format names    # the catalogue ids the mapping is reviewed against
 ./fetch_evals_report.py
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
 ./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
@@ -702,8 +704,10 @@ already gives row collisions inside a single source.
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
-| 5 | **Cross-benchmark aggregates** — llm-stats, Hugging Face model cards | Republished numbers nobody in the chain ran. Both fill-only — they write a null, a value from a custom source (below), or a value credited to the same page they are reading, which is that page refreshing its own number; never another fetcher's; where they overlap, llm-stats runs first and so claims the gap. |
-| 6 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
+| 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter value (rank 6); never another fetcher's. |
+| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs (a 0) left out. A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces a model card's number and a hand entry. |
+| 7 | **Model cards** — Hugging Face | A lab's own report under its own prompts and settings. Fill-only like llm-stats, on the same terms but without the OpenRouter exception, so it never replaces an OpenRouter run. It shared rank 5 with llm-stats until OpenRouter was read; neither ever replaces the other's value, so the split changed nothing between the two, and where they overlap llm-stats runs first and so claims the gap. |
+| 8 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
 Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -1140,8 +1144,8 @@ agrees exactly on seven and is high by 6.0–6.5 on the four newest and stronges
 — `kimi-k3` 91.3 against the card's 84.8, `qwen3-8-27b` 90.2 against 83.7,
 `qwen3-8-flash-next` 90.6 against 84.6, `kimi-k2-6` 86.7 against 80.4, each of
 them the with-tools figure its own card publishes beside the plain one. Both
-ingests are fill-only and rank equal ([source precedence](#source-precedence)),
-and llm-stats runs first, so mapping it would claim the null the card value
+ingests are fill-only, so neither replaces the other's value
+([source precedence](#source-precedence)), and llm-stats runs first, so mapping it would claim the null the card value
 wants and put a tool-assisted number at the head of the column — where the
 ranking work happens. Measured over the 22 models the two channels cover
 together: card values leading give a top-5 spread of 8.4 points and nothing at
@@ -1238,6 +1242,18 @@ load leaves every page field empty, which is not AA saying it has no number.
 HLE and GPQA Diamond are read off the model pages as well as the API: the
 free API tier carries neither, so without the page a row that switched run
 would lose both.
+
+GPQA Diamond has one more source below AA: `fetch_openrouter.py`, OpenRouter's
+own run of the benchmark against each provider endpoint serving a model, reported
+as the median over the endpoints. It is there for the models AA has not run yet
+(`claude-opus-5-5`, `gpt-6-luna` and `gpt-6-sol` when it was added) and ranks
+under every other fetcher except the model cards
+([source precedence](#source-precedence)), so it gives the column up the moment
+anything better reports it. The mapping (`model-name-mapping-openrouter-to-artificialanalysis.json`)
+is keyed by catalogue id, variants (`:free`, `:batch`) folded onto the plain id,
+and doubles as the list of model pages the fetcher reads. OpenRouter publishes
+tau2-bench airline the same way; llm.json has no column for it, and the
+Artificial Analysis table the pages mirror is ignored in favour of AA itself.
 
 AA reports an untested benchmark as null. A `0` is a measurement — CritPt and
 ZeroBench floors are real — and is written like any other score, so a
@@ -3254,9 +3270,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (22 files)
-├── update_*_mapping.py         # Mapping sync scripts (22 files)
-├── _*_mapping.py               # Mapping application modules (22 files)
+├── fetch_*.py                  # Benchmark data fetchers (23 files)
+├── update_*_mapping.py         # Mapping sync scripts (23 files)
+├── _*_mapping.py               # Mapping application modules (23 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 ├── index-calibration.json      # Each index's transfer_ratio, re-measured nightly (calibrate-indexes.yml)

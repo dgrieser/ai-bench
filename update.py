@@ -31,6 +31,7 @@ import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
+import fetch_openrouter
 import fetch_osworld
 import fetch_programbench
 import fetch_real_swe
@@ -68,6 +69,7 @@ from _precedence import (
     is_fetcher_source,
     may_overwrite,
     source_rank,
+    yields_to_fill_only,
 )
 from _reference import apply_reference_flags, missing_reference_models
 from _scores import (
@@ -87,6 +89,7 @@ from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
 from _bfcl_mapping import load_bfcl_to_slug_mapping
 from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
+from _openrouter_mapping import load_openrouter_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -131,6 +134,7 @@ VALS_SCRIPT = Path(__file__).resolve().with_name("fetch_vals.py")
 SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py")
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
+OPENROUTER_SCRIPT = Path(__file__).resolve().with_name("fetch_openrouter.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -412,6 +416,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-llmstats",
         action="store_true",
         help="Skip fetching scores from llm-stats.com.",
+    )
+    parser.add_argument(
+        "--skip-openrouter",
+        action="store_true",
+        help="Skip fetching GPQA Diamond scores from OpenRouter's model pages.",
     )
     return parser.parse_args()
 
@@ -945,8 +954,10 @@ def apply_score(
       * fill_only: only fill nulls, never overwrite (the low-trust rule the
         Hugging Face and llm-stats aggregates follow) -- except a value from a
         custom source, a page no fetcher writes (_precedence.is_fetcher_source),
-        which every fetcher may replace, and a value credited to the very page
-        being read, which is that page refreshing its own number;
+        which every fetcher may replace, a value credited to the very page
+        being read, which is that page refreshing its own number, and an
+        OpenRouter value when the fill-only source outranks it
+        (_precedence.yields_to_fill_only);
       * a fetcher reporting the very number a custom source gave takes over its
         credit, so the value is attributed to a page this repo re-reads;
       * fill_urls_only (--fill-source-urls): scores and dates stay untouched;
@@ -985,7 +996,9 @@ def apply_score(
     stored_url = score_source(model, key)
     custom = not is_fetcher_source(stored_url)
     own = stored_url is not None and canonical(stored_url) == canonical(url)
-    if fill_only and old_value is not None and not (custom or own):
+    if fill_only and old_value is not None and not (
+        custom or own or yields_to_fill_only(url, stored_url)
+    ):
         if new_value is not None and new_value != old_value:
             RUN_REPORTS.refused.setdefault((slug, key), []).append((model, new_value, url))
         return 0
@@ -2692,6 +2705,77 @@ def update_llmstats_scores(
     return matched, updated, changes
 
 
+def build_fetch_openrouter_cmd(script: Path, models: list[str]) -> list[str]:
+    cmd = [sys.executable, str(script), "--format", "json"]
+    for model in models:
+        cmd.extend(["--model", model])
+    return cmd
+
+
+def fetch_openrouter_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    # Per-model like Spheron: the mapped ids are the pages that get read.
+    openrouter_to_slug = load_openrouter_to_slug_mapping(mapping_path)
+    models = sorted(openrouter_to_slug)
+    if not models:
+        return {}
+
+    cmd = build_fetch_openrouter_cmd(script, models)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_openrouter.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected openrouter JSON format: expected a list")
+
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        slug = openrouter_to_slug.get(row.get("model"))
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_openrouter_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        openrouter_model = by_slug.get(slug)
+        if openrouter_model is None:
+            continue
+        source = openrouter_model.get("source")
+        if not isinstance(source, str) or not source:
+            continue
+
+        matched += 1
+        # Not fill-only: rank decides (_precedence.RANK_ENDPOINT_RUN), so the
+        # model cards and hand entries yield to it and every other fetcher,
+        # llm-stats' fill-only ingest included, takes it over.
+        updated += apply_score(
+            doc, model, slug, fetch_openrouter.BENCHMARK, openrouter_model.get("score"),
+            source, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
 def snapshot_scores(doc: dict[str, Any]) -> dict[str, tuple[dict, dict, dict]]:
     """Each model's scores, dates and sources as the run found them."""
     snapshot: dict[str, tuple[dict, dict, dict]] = {}
@@ -2821,6 +2905,7 @@ def main() -> int:
     swe_marathon_path = SWE_MARATHON_SCRIPT
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
+    openrouter_path = OPENROUTER_SCRIPT
     aa_coding_agents_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-aa-coding-agents-to-artificialanalysis.json"
     )
@@ -2881,6 +2966,9 @@ def main() -> int:
     llmstats_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llmstats-to-artificialanalysis.json"
     )
+    openrouter_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-openrouter-to-artificialanalysis.json"
+    )
     aa_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llm-to-artificialanalysis.json"
     )
@@ -2920,6 +3008,7 @@ def main() -> int:
 
     slugs = unique_names(models)
     spheron_paths = sorted(load_spheron_to_slug_mapping(spheron_mapping_path))
+    openrouter_models = sorted(load_openrouter_to_slug_mapping(openrouter_mapping_path))
     listed: list[list[str]] = []
     if not args.skip_aa:
         listed.append(build_list_models_cmd(aa_path))
@@ -2929,6 +3018,8 @@ def main() -> int:
         listed.append(build_fetch_osworld_cmd(osworld_path))
     if not args.skip_llmstats:
         listed.append(build_fetch_llmstats_cmd(llmstats_path))
+    if not args.skip_openrouter and openrouter_models:
+        listed.append(build_fetch_openrouter_cmd(openrouter_path, openrouter_models))
     if not args.skip_huggingface:
         listed.append(build_fetch_huggingface_cmd(huggingface_path))
     if not args.skip_toolathlon:
@@ -3079,6 +3170,21 @@ def main() -> int:
             doc, llmstats_by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(llmstats_changes)
+
+    openrouter_by_slug: dict[str, dict[str, Any]] = {}
+    openrouter_matched = 0
+    openrouter_updated = 0
+    if not args.skip_openrouter:
+        openrouter_by_slug = source_data(
+            fetch_failures, fetch_openrouter_data, openrouter_path, openrouter_mapping_path
+        )
+        openrouter_matched, openrouter_updated, openrouter_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_openrouter_scores",
+            update_openrouter_scores,
+            doc, openrouter_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(openrouter_changes)
 
     huggingface_by_slug: dict[str, dict[str, Any]] = {}
     hf_matched = 0
@@ -3417,6 +3523,8 @@ def main() -> int:
         print(f"models returned by osworld: {revision_model_count(osworld_by_slug)}" + revision_breakdown(osworld_by_slug))
     if not args.skip_llmstats:
         print(f"models returned by llmstats: {len(llmstats_by_slug)}")
+    if not args.skip_openrouter:
+        print(f"models returned by openrouter: {len(openrouter_by_slug)}")
     if not args.skip_huggingface:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_toolathlon:
@@ -3475,6 +3583,8 @@ def main() -> int:
         print(f"models matched on osworld: {osworld_matched}")
     if not args.skip_llmstats:
         print(f"models matched on llmstats: {llmstats_matched}")
+    if not args.skip_openrouter:
+        print(f"models matched on openrouter: {openrouter_matched}")
     if not args.skip_huggingface:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_toolathlon:
@@ -3520,6 +3630,8 @@ def main() -> int:
         print(f"{action} from osworld: {osworld_updated}")
     if not args.skip_llmstats:
         print(f"{action} from llmstats: {llmstats_updated}")
+    if not args.skip_openrouter:
+        print(f"{action} from openrouter: {openrouter_updated}")
     if not args.skip_huggingface:
         print(f"{action} from huggingface: {hf_updated}")
         if not args.fill_source_urls:
