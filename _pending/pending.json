@@ -36,40 +36,6 @@
       "route_kind": "aa-mapping",
       "subject": "mimo-v2-6-flash",
       "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "dots3-note-prev",
-          "reason": "exact to dots3-note Preview, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map evals.report model 'dots3-note Preview' to llm.json model",
-      "route": "update_evals_report_mapping.py",
-      "route_kind": "mapping",
-      "subject": "dots3-note Preview",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "dots3-note-prev",
-          "reason": "exact to dots3-note-prev, exact match"
-        }
-      ],
-      "default": "dots3-note-prev",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'dots-studio/dots3-note-prev' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "subject": "dots-studio/dots3-note-prev",
-      "universe": "models"
     }
   ]
 }
