@@ -965,7 +965,7 @@ def apply_score(
         custom source, a page no fetcher writes (_precedence.is_fetcher_source),
         which every fetcher may replace, a value credited to the very page
         being read, which is that page refreshing its own number, and an
-        OpenRouter value when the fill-only source outranks it
+        OpenRouter or Epoch AI hub value when the fill-only source outranks it
         (_precedence.yields_to_fill_only);
       * a fetcher reporting the very number a custom source gave takes over its
         credit, so the value is attributed to a page this repo re-reads;
@@ -2845,8 +2845,9 @@ def update_epoch_scores(
 
         matched += 1
         # Not fill-only: rank decides (_precedence.RANK_BENCHMARKING_HUB), so
-        # AA, the boards and Vals keep their numbers and the compilations,
-        # aggregates, endpoint runs, model cards and hand entries yield to it.
+        # it takes a cell only from the model cards and hand entries, and
+        # every other fetcher -- llm-stats' fill-only ingest included
+        # (_precedence.yields_to_fill_only) -- takes a hub value over.
         for benchmark_key, row in epoch_rows.items():
             updated += apply_score(
                 doc, model, slug, benchmark_key, row.get("score"),

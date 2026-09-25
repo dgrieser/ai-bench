@@ -201,6 +201,118 @@ class TestRead(unittest.TestCase):
         )
 
 
+def rows_file(page: str, rows: list[dict]) -> dict[str, str]:
+    """One benchmark's file with whatever extra columns its rows carry."""
+    bench = fe.BENCHMARKS[page]
+    fields = list(dict.fromkeys([fe.VERSION_COLUMN, bench.column, *(k for r in rows for k in r)]))
+    return {bench.file: csv_text(rows, fields)}
+
+
+def osworld_payload(results: list[dict]) -> dict:
+    import fetch_osworld
+
+    return {
+        "benchmarkVersion": fetch_osworld.V2_BENCHMARK_VERSION,
+        "datasetSize": fetch_osworld.V2_DATASET_SIZE,
+        "metrics": {fetch_osworld.V2_METRIC: {}},
+        "results": results,
+    }
+
+
+def osworld_run(model: str, reasoning: str, tool: str, accuracy: float, release: str,
+                budget: int = 500, scope: str = "full") -> dict:
+    return {
+        "model": model, "reasoning": reasoning, "toolSetting": tool, "stepBudget": budget,
+        "binaryAccuracy": accuracy, "releaseVersion": release, "datasetScope": scope,
+    }
+
+
+class TestFilteredMirrors(unittest.TestCase):
+    def test_terminal_bench_keeps_the_rows_citing_the_2_0_board(self) -> None:
+        zf = archive(rows_file("terminal-bench", [
+            {fe.VERSION_COLUMN: "glm-5.2_max", "Accuracy mean": 0.5,
+             "Source": "https://www.tbench.ai/leaderboard/terminal-bench/2.0", "Source Link": ""},
+            {fe.VERSION_COLUMN: "glm-5.2_high", "Accuracy mean": 0.6,
+             "Source": "Terminal-Bench v2 Leaderboard", "Source Link": ""},
+            {fe.VERSION_COLUMN: "gpt-5.6-sol_max", "Accuracy mean": 0.7,
+             "Source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0", "Source Link": ""},
+            {fe.VERSION_COLUMN: "mystery", "Accuracy mean": 0.8, "Source": "", "Source Link": ""},
+        ]))
+        rows = fe.get_scores(["terminal-bench"], archive=zf)
+        self.assertEqual([(r["version"], r["key"]) for r in rows],
+                         [("glm-5.2_high", "terminal_bench_2_0"), ("glm-5.2_max", "terminal_bench_2_0")])
+
+    def test_osworld_verified_is_percent_board_rows_within_100_steps(self) -> None:
+        zf = archive(rows_file("os-world", [
+            {fe.VERSION_COLUMN: "glm-5.2_max", "Score": 62.9, "Agent": "x (100 steps)",
+             "Source link": "https://os-world.github.io/"},
+            {fe.VERSION_COLUMN: "glm-5.2_high", "Score": 66.0, "Agent": "x (500 steps)",
+             "Source link": "https://os-world.github.io/"},
+            {fe.VERSION_COLUMN: "gpt-5.6-sol_max", "Score": 66.3, "Agent": "Vendor",
+             "Source link": "https://www.anthropic.com/news/x"},
+            {fe.VERSION_COLUMN: "mystery", "Score": 50.0, "Agent": "Mystery",
+             "Source link": "https://os-world.github.io/"},
+        ]))
+        rows = fe.get_scores(["os-world"], archive=zf)
+        self.assertEqual([(r["version"], r["score"]) for r in rows],
+                         [("glm-5.2_max", 62.9), ("mystery", 50.0)])
+        self.assertEqual({r["key"] for r in rows}, {"osworld_verified"})
+
+    def test_osworld_verified_refuses_a_fraction_scale(self) -> None:
+        zf = archive(rows_file("os-world", [
+            {fe.VERSION_COLUMN: v, "Score": x, "Agent": "a (100 steps)",
+             "Source link": "https://os-world.github.io/"}
+            for v, x in (("a", 0.6), ("b", 0.5), ("c", 0.4), ("d", 0.3), ("e", 0.2))
+        ]))
+        with self.assertRaises(ValueError):
+            fe.get_scores(["os-world"], archive=zf)
+
+
+class TestOsworldReleases(unittest.TestCase):
+    BOARD = osworld_payload([
+        osworld_run("Claude Opus 5", "max", "batch tool", 31.43, "v2026.08.08"),
+        osworld_run("Claude Opus 5", "max", "batch tool", 44.33, "v2.1"),
+        osworld_run("Claude Opus 5", "max", "batch tool", 34.72, "v2026.08.08", scope="offline"),
+        osworld_run("MiniMax M3", "enabled", "standard", 4.6, "v2026.06.24"),
+        osworld_run("Kimi 2.6", "enabled", "standard", 4.6, "v2026.06.24"),
+        osworld_run("Kimi 2.6", "enabled", "standard", 3.0, "v2026.06.24", budget=150),
+    ])
+
+    def read(self, rows: list[dict]) -> list[dict]:
+        zf = archive(rows_file("osworld-2", rows))
+        return fe.get_scores(["osworld-2"], archive=zf, fetch_json=lambda url: self.BOARD)
+
+    def row(self, version, name, reasoning, tool, accuracy) -> dict:
+        return {fe.VERSION_COLUMN: version, "Binary accuracy": accuracy, "Name": name,
+                "Reasoning": reasoning, "Tool setting": tool}
+
+    def test_each_row_lands_on_the_release_of_the_run_it_copies(self) -> None:
+        rows = self.read([
+            self.row("glm-5.2_max", "Claude Opus 5 (max)", "max", "batch tool", 0.3143),
+            self.row("glm-5.2_high", "MiniMax M3 (enabled)", "enabled", "standard", 0.046),
+        ])
+        self.assertEqual(
+            {r["version"]: r["key"] for r in rows},
+            {"glm-5.2_max": "osworld_2_0_2026_08_08", "glm-5.2_high": "osworld_2_0_2026_06_24"},
+        )
+
+    def test_a_row_matching_no_tracked_run_is_left_out(self) -> None:
+        rows = self.read([
+            self.row("glm-5.2_max", "Claude Opus 5 (max)", "max", "batch tool", 0.3143),
+            # 2.1 has no column; the offline set and the 150-step run are not
+            # what a dated column holds.
+            self.row("glm-5.2_high", "Claude Opus 5 (max)", "max", "batch tool", 0.4433),
+            self.row("gpt-5.6-sol_max", "Claude Opus 5 (max)", "max", "batch tool", 0.3472),
+            self.row("mystery", "Kimi 2.6 (enabled)", "enabled", "standard", 0.03),
+        ])
+        self.assertEqual([r["version"] for r in rows], ["glm-5.2_max"])
+
+    def test_every_release_column_is_one_it_may_write(self) -> None:
+        import fetch_osworld
+
+        self.assertTrue(set(fetch_osworld.RELEASES.values()) <= fe.possible_keys())
+
+
 class TestIngest(unittest.TestCase):
     def test_scores_land_with_the_hub_page(self) -> None:
         doc = {

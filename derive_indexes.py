@@ -598,7 +598,7 @@ def revision_factors(models: list[dict[str, Any]]) -> dict[str, RevisionFactor]:
 # beside Vals' re-run beside a lab's model-card claim, and a pair across them
 # compares harnesses as much as models. A score whose source ranks at or below
 # SECOND_HAND_RANK (see _precedence: curated compilations, aggregators,
-# OpenRouter's endpoint runs, model cards and hand entries -- a number someone
+# OpenRouter's endpoint runs, Epoch AI's hub, model cards and hand entries -- a number someone
 # else produced under their own prompts and settings, which this repository
 # only read) is second-hand, and
 # any comparison it takes part in counts SECOND_HAND_WEIGHT of a first-hand

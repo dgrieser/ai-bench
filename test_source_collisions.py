@@ -238,7 +238,7 @@ class TestEpochMerge(unittest.TestCase):
     def test_a_row_for_a_column_or_page_it_does_not_read_is_dropped(self) -> None:
         mapping = write_json({"Model": "m"})
         rows = [
-            self.row("Model", "hle", "hle", 40.0),
+            self.row("Model", "weirdml", "weirdml", 40.0),
             self.row("Model", "deepswe", "deepswe_1_2", 70.0),
             {**self.row("Model", "gpqa-diamond", "gpqa_diamond", 80.0),
              "source": "https://example.com/gpqa"},

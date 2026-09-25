@@ -9,17 +9,24 @@ per benchmark, one row per model configuration ("glm-5.2_max"), plus
 CC BY 4.0 -- free to reuse with credit, which llm.json's ``credits`` carries
 and llm.html prints under the benchmarks (see EPOCH_CREDIT below).
 
-The hub holds two kinds of file, and five of them are read:
+The hub holds two kinds of file, and eleven of them are read:
 
   * Epoch's own runs, the same harness for every model: GPQA Diamond and
-    SWE-bench Verified. A third-party measurement of a benchmark someone else
-    owns -- the relation Vals AI stands in.
-  * Mirrors of a benchmark's own leaderboard (the ``*_external.csv`` files),
-    each row citing the board it came from: DeepSWE (Datacurve), FrontierSWE
-    and FrontierCode (Cognition). Their numbers are the board's.
+    SWE-bench Verified.
+  * Mirrors of someone else's board (the ``*_external.csv`` files), each row
+    citing the board it came from: DeepSWE (Datacurve), FrontierSWE, FrontierCode
+    (Cognition), Terminal-Bench 2.0, OSWorld-Verified, OSWorld 2.0, Humanity's
+    Last Exam, and CritPt and SciCode as Artificial Analysis runs them.
 
-The three mirrors feed revision columns, and the rule for those is that a
-source which does not say which revision it measured does not write to one
+Every one of them is a second source here, ranked just above the model cards
+(_precedence.RANK_BENCHMARKING_HUB): whatever the board itself, AA, Vals or
+any compilation reports takes the cell over, so the hub fills gaps rather than
+deciding a column. That is also why the mirrors whose rows cannot all be
+checked are read at all -- a row the board would not carry is overruled the
+moment the board reports that model.
+
+Three mirrors feed revision columns, and the rule for those is that a source
+which does not say which revision it measured does not write to one
 (_revisions.py). The CSVs name none, but Epoch's page for each benchmark does:
 its title is "DeepSWE v1.1" or "FrontierSWE (v2)", and FrontierCode's, whose
 title is bare, says it uses "only the current 1.1 revision". So each mirror's
@@ -28,18 +35,25 @@ revision llm.json has no column for, drops that benchmark with a warning
 instead of guessing -- the silent version bump a pinned column would invite,
 where v1.2 numbers land in deepswe_1_1, cannot happen.
 
-Deliberately not read, though the hub carries them:
+OSWorld 2.0 splits by release, and the hub keeps each model's newest runs in
+one file with no release on the row or the page. The release is read off the
+official board instead: a hub row is filed under the release of the one board
+run with the same model, reasoning setting and binary accuracy, and a row that
+matches no run, or runs on two releases, is dropped and counted.
 
-  * Terminal-Bench 2.0 -- the file holds the board's unverified self-reports
-    beside its verified runs with nothing to tell them apart; 64 of its rows are
-    unverified submissions on tbench.ai, which terminal_bench_2_0 excludes.
-  * OSWorld 2.0 -- one file mixes releases (MiniMax M3 and Kimi K2.6 at 4.6 are
-    the 2026.06.24 release, Opus 5 at 31.4 the 2026.08.08 one), and neither
-    file nor page says which row is which. Those are separate columns here.
-  * OSWorld, HLE, CritPt, SciCode -- OSWorld's file is the pre-Verified series
-    at mixed step budgets; HLE's is the full multimodal set rather than the
-    text-only subset the column tracks; CritPt and SciCode mirror an older cut
-    of Artificial Analysis, which artificialanalysis.py reads at the source.
+What each of the others holds, and where it differs from its column:
+
+  * Terminal-Bench 2.0 -- rows citing the 2.0 board only. The file carries the
+    board's unverified submissions beside its verified runs with nothing to
+    tell them apart; terminal_bench_2_0 is read from the verified runs, so an
+    unverified number stands only until the board verifies that model.
+  * OSWorld-Verified -- the board's rows at a step budget of 100 or less; a
+    vendor announcement the file also carries is dropped.
+  * Humanity's Last Exam -- the full set, about a tenth of it multimodal, where
+    the hle column is AA's text-only run: a hub number stands in a cell AA has
+    not measured.
+  * CritPt, SciCode -- Artificial Analysis' own boards as Epoch last copied
+    them; artificialanalysis.py reads the current ones and outranks the copy.
 
 Every row is one configuration; update.py folds a model's configurations onto
 one llm.json slug per column, best run first, the rule every leaderboard ingest
@@ -60,8 +74,9 @@ import urllib.error
 import urllib.request
 import zipfile
 from dataclasses import dataclass
+from typing import Callable
 
-from _fetch_checks import check_fractions, require_columns, require_rows
+from _fetch_checks import check_fractions, check_percentages, require_columns, require_rows
 from _revisions import KNOWN_REVISIONS, known_revision_key, revision_key, subset_base
 
 SITE_URL = "https://epoch.ai"
@@ -103,7 +118,10 @@ class Benchmark:
 
     ``key`` is the column for a benchmark with one; ``base`` (and ``subset``)
     name a revision-split one instead, whose column is resolved from the
-    revision Epoch's page states.
+    revision Epoch's page states; ``releases`` files each row under the OSWorld
+    2.0 release the official board ran it on. ``percent`` marks a file already
+    in percentages (the hub's own metadata gives it a 0.01 scale), and ``keep``
+    is the row filter for a file that holds rows its column does not.
     """
 
     file: str
@@ -111,6 +129,26 @@ class Benchmark:
     key: str | None = None
     base: str | None = None
     subset: str | None = None
+    releases: bool = False
+    percent: bool = False
+    keep: Callable[[dict[str, str]], bool] | None = None
+
+
+_STEPS_RE = re.compile(r"\((\d+)\s+steps?\)", re.IGNORECASE)
+
+
+def _tbench_2_0_row(row: dict[str, str]) -> bool:
+    """A Terminal-Bench row citing the 2.0 board, by link or by name."""
+    source = f"{row.get('Source') or ''} {row.get('Source Link') or ''}".lower()
+    return "terminal-bench/2.0" in source or "terminal-bench v2 leaderboard" in source
+
+
+def _osworld_verified_row(row: dict[str, str]) -> bool:
+    """An OSWorld-Verified board row at a budget the column takes (<= 100 steps)."""
+    if not (row.get("Source link") or "").startswith("https://os-world.github.io"):
+        return False
+    steps = _STEPS_RE.search(row.get("Agent") or "")
+    return steps is None or int(steps.group(1)) <= 100
 
 
 # Epoch's page slug (epoch.ai/benchmarks/<slug>) -> the file behind it.
@@ -129,6 +167,18 @@ BENCHMARKS: dict[str, Benchmark] = {
     "frontiercode": Benchmark(
         "frontiercode_external.csv", "Main score", base="frontiercode", subset="main"
     ),
+    # Epoch's page is "Terminal-Bench 2.0"; the rows are filtered to the ones
+    # citing that board, so a later board filed in the same file stays out.
+    "terminal-bench": Benchmark(
+        "terminalbench_external.csv", "Accuracy mean", key="terminal_bench_2_0", keep=_tbench_2_0_row
+    ),
+    "os-world": Benchmark(
+        "os_world_external.csv", "Score", key="osworld_verified", percent=True, keep=_osworld_verified_row
+    ),
+    "osworld-2": Benchmark("osworld_2_external.csv", "Binary accuracy", releases=True),
+    "hle": Benchmark("hle_external.csv", "Accuracy", key="hle"),
+    "critpt": Benchmark("critpt_external.csv", "Accuracy", key="critpt"),
+    "scicode": Benchmark("scicode_external.csv", "Score", key="scicode"),
 }
 
 
@@ -143,6 +193,9 @@ def possible_keys() -> set[str]:
     for bench in BENCHMARKS.values():
         if bench.key:
             keys.add(bench.key)
+            continue
+        if bench.releases:
+            keys.update(osworld_release_keys())
             continue
         base = subset_base(bench.base, bench.subset)
         keys.update(revision_key(base, label) for label in KNOWN_REVISIONS.get(base, ()))
@@ -243,12 +296,16 @@ def page_revision(page_html: str) -> str | None:
 def resolve_key(page: str, bench: Benchmark, fetch_page=None) -> tuple[str | None, str | None]:
     """(column, revision) one benchmark's rows are filed under.
 
-    A fixed-key benchmark needs no page. A revision-split one reads its page,
-    and a page that names no revision, or one llm.json has no column for,
-    resolves to no column -- which drops the benchmark rather than guessing.
+    A fixed-key benchmark needs no page, and neither does OSWorld 2.0, whose
+    column is resolved per row (RELEASE_PER_ROW). A revision-split one reads
+    its page, and a page that names no revision, or one llm.json has no column
+    for, resolves to no column -- which drops the benchmark rather than
+    guessing.
     """
     if bench.key:
         return bench.key, None
+    if bench.releases:
+        return RELEASE_PER_ROW, None
     fetch_page = fetch_page or (lambda url: fetch_bytes(url).decode("utf-8", errors="replace"))
     url = page_url(page)
     print(f"Fetching {url} ...", file=sys.stderr)
@@ -266,19 +323,93 @@ def resolve_key(page: str, bench: Benchmark, fetch_page=None) -> tuple[str | Non
     return key, revision
 
 
+# resolve_key()'s answer for a benchmark whose rows each find their own column.
+RELEASE_PER_ROW = "<per row>"
+
+_TRAILING_PARENS_RE = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def _norm_label(label: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", label.lower()).strip()
+
+
+def osworld_release_keys() -> tuple[str, ...]:
+    import fetch_osworld
+
+    return tuple(fetch_osworld.RELEASES.values())
+
+
+def osworld_board(fetch_json=None) -> list[tuple[str, str, str, float, str | None]]:
+    """(model, reasoning, tool setting, binary accuracy %, column) for every official full-set
+    run at the 500-step budget on OSWorld 2.0's own board.
+
+    The column is None for a release llm.json has no column for, so a hub row
+    matching only such a run is dropped rather than filed next door.
+    """
+    import fetch_osworld
+
+    if fetch_json is None:
+        print(f"Fetching {fetch_osworld.OSWORLD_V2_JSON_URL} ...", file=sys.stderr)
+        payload = json.loads(fetch_bytes(fetch_osworld.OSWORLD_V2_JSON_URL))
+    else:
+        payload = fetch_json(fetch_osworld.OSWORLD_V2_JSON_URL)
+    runs: list[tuple[str, str, str, float, str | None]] = []
+    for row in fetch_osworld.check_v2_payload(payload):
+        # The board's own percentage, on the full task set at the tracked
+        # budget: the runs fetch_osworld.py files, and the only ones the hub's
+        # binary accuracy can be a copy of.
+        accuracy = row.get(fetch_osworld.V2_METRIC)
+        if not isinstance(accuracy, (int, float)) or isinstance(accuracy, bool):
+            continue
+        if row.get("stepBudget") != fetch_osworld.V2_STEP_BUDGET:
+            continue
+        if not fetch_osworld._v2_in_scope(row, payload, fetch_osworld.V2_DATASET_SCOPE):
+            continue
+        release = fetch_osworld._v2_release(row, payload)
+        runs.append(
+            (
+                _norm_label(str(row.get("model") or "")),
+                str(row.get("reasoning") or "").strip().lower(),
+                _norm_label(str(row.get("toolSetting") or "")),
+                round(float(accuracy), 1),
+                fetch_osworld.RELEASES.get(release or ""),
+            )
+        )
+    return runs
+
+
+def osworld_release(row: dict[str, str], value: float, board: list) -> str | None:
+    """The column of the one board run a hub OSWorld 2.0 row copies, else None."""
+    label = _norm_label(_TRAILING_PARENS_RE.sub("", row.get("Name") or ""))
+    reasoning = (row.get("Reasoning") or "").strip().lower()
+    tool = _norm_label(row.get("Tool setting") or "")
+    accuracy = round(value * 100, 1)
+    keys = {
+        key
+        for model, effort, setting, score, key in board
+        if model == label
+        and score == accuracy
+        and (not effort or not reasoning or effort == reasoning)
+        and (not setting or not tool or setting == tool)
+    }
+    return keys.pop() if len(keys) == 1 else None
+
+
 def read_benchmark(
     archive: zipfile.ZipFile,
     models: dict[str, dict[str, object]],
     page: str,
     key: str | None,
     revision: str | None,
+    board: list | None = None,
 ) -> list[dict]:
     """One row per scored configuration in one benchmark's file."""
     bench = BENCHMARKS[page]
     source = f"{DATA_URL}:{bench.file}"
     rows = read_csv(archive, bench.file, (VERSION_COLUMN, bench.column))
     results: list[dict] = []
-    fractions: list[float] = []
+    values: list[float] = []
+    unplaced: list[str] = []
     for row in rows:
         version = (row.get(VERSION_COLUMN) or "").strip()
         raw = (row.get(bench.column) or "").strip()
@@ -290,35 +421,55 @@ def read_benchmark(
             value = float(raw)
         except ValueError:
             continue
+        # The scale is checked on every row of the file, kept or not, so a
+        # file that changed scale fails whatever the filter lets through.
+        values.append(value)
+        if bench.keep is not None and not bench.keep(row):
+            continue
+        row_key = key
+        if key == RELEASE_PER_ROW:
+            row_key = osworld_release(row, value, board or [])
+            if row_key is None:
+                unplaced.append(version)
+                continue
         model = models.get(version)
-        fractions.append(value)
         results.append(
             {
                 "benchmark": page,
-                "key": key,
+                "key": row_key,
                 "revision": revision,
                 "model": model["model"] if model else version,
                 "version": version,
                 "open_weights": model["open_weights"] if model else None,
-                "score": round(value * 100, 2),
+                "score": round(value if bench.percent else value * 100, 2),
                 "source": page_url(page),
             }
         )
+    if bench.percent:
+        check_percentages([{"score": v} for v in values], source)
+    else:
+        check_fractions(values, source, field=bench.column)
+    if unplaced:
+        print(
+            f"  {page}: {len(unplaced)} row(s) match no single tracked release on "
+            f"the official board and are not read: {', '.join(sorted(set(unplaced)))}",
+            file=sys.stderr,
+        )
     require_rows(results, source)
-    check_fractions(fractions, source, field=bench.column)
     results.sort(key=lambda r: -r["score"])
     return results
 
 
 def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None = None,
-               fetch_page=None) -> list[dict]:
+               fetch_page=None, fetch_json=None) -> list[dict]:
     """Return a list of dicts: benchmark, key, revision, model, version,
     open_weights, score, source.
 
     ``model`` is Epoch's model group (what the mapping is keyed by), ``version``
     the configuration the row measured, ``score`` a percentage, ``source`` the
     hub page the score is credited to. A benchmark whose revision cannot be
-    established contributes no rows.
+    established contributes no rows, and an OSWorld 2.0 row whose release
+    cannot be established is left out.
     """
     archive = archive or fetch_archive()
     models = load_models(archive)
@@ -327,7 +478,8 @@ def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None =
         key, revision = resolve_key(page, BENCHMARKS[page], fetch_page)
         if key is None:
             continue
-        results.extend(read_benchmark(archive, models, page, key, revision))
+        board = osworld_board(fetch_json) if key == RELEASE_PER_ROW else None
+        results.extend(read_benchmark(archive, models, page, key, revision, board))
     return results
 
 
