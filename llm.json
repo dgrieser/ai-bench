@@ -54379,7 +54379,7 @@
         "osworld_verified": 84.3,
         "osworld_2_0_2026_06_24": null,
         "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
+        "osworld_2_0_vendor": 19.4,
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 83.7
@@ -54440,7 +54440,7 @@
         "osworld_verified": "2026-08-15",
         "osworld_2_0_2026_06_24": null,
         "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
+        "osworld_2_0_vendor": "2026-09-25",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09"
@@ -54501,7 +54501,7 @@
         "osworld_verified": "https://huggingface.co/Qwen/Qwen3.8-27B",
         "osworld_2_0_2026_06_24": null,
         "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
+        "osworld_2_0_vendor": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.8-27B"
@@ -54707,6 +54707,13 @@
             "date": "2026-08-15",
             "score": 84.3,
             "source": "https://huggingface.co/Qwen/Qwen3.8-27B"
+          }
+        ],
+        "osworld_2_0_vendor": [
+          {
+            "date": "2026-09-25",
+            "score": 19.4,
+            "source": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
           }
         ],
         "charxiv_reasoning": [
