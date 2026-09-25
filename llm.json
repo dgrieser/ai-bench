@@ -606,7 +606,7 @@
     "livecodebench": {
       "name": "LiveCodeBench",
       "short_name": "LCBench",
-      "category": "Coding",
+      "category": "Software Engineering",
       "description": "Contamination-resistant coding benchmark that continuously collects new problems; evaluates code generation, self-repair, code execution, and test output prediction.",
       "settings": [
         "Pass@1",
@@ -626,7 +626,7 @@
     "scicode": {
       "name": "SciCode",
       "short_name": "SciCode",
-      "category": "Scientific Coding",
+      "category": "Software Engineering",
       "description": "Scientific coding benchmark evaluating code generation and problem solving in scientific domains.",
       "settings": [
         "main problem",
@@ -643,7 +643,7 @@
     "terminal_bench_4_0": {
       "name": "Terminal-Bench 4.0",
       "short_name": "Term 4.0",
-      "category": "Agentic Coding & Terminal Use",
+      "category": "Agentic Tool Use",
       "description": "Current Terminal-Bench release: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials.",
       "settings": [
         "Resolved %",
@@ -667,7 +667,7 @@
     "terminal_bench_2_1": {
       "name": "Terminal-Bench 2.1",
       "short_name": "Term 2.1",
-      "category": "Agentic Coding & Terminal Use",
+      "category": "Agentic Tool Use",
       "description": "Terminal-Bench 2.1 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
       "settings": [
         "Resolved %",
@@ -688,7 +688,7 @@
     "terminal_bench_2_0": {
       "name": "Terminal-Bench 2.0",
       "short_name": "Term 2.0",
-      "category": "Agentic Coding & Terminal Use",
+      "category": "Agentic Tool Use",
       "description": "Terminal-Bench 2.0 is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery.",
       "settings": [
         "Resolved %",
@@ -706,7 +706,7 @@
     "terminal_bench_hard": {
       "name": "Terminal-Bench Hard",
       "short_name": "Term Hard",
-      "category": "Agentic Coding & Terminal Use",
+      "category": "Agentic Tool Use",
       "description": "Hard subset of Terminal-Bench tasks; benchmark of real terminal tasks in sandboxed environments with test scripts.",
       "settings": [
         "Resolved %",
@@ -845,7 +845,7 @@
     "itbench_aa": {
       "name": "ITBench-AA",
       "short_name": "ITBench",
-      "category": "IT Operations",
+      "category": "Real-world Professional Work",
       "description": "Artificial Analysis' independent implementation of IBM's ITBench, SRE track: 59 Kubernetes incident scenarios (40 from IBM's public release, 19 shared privately by the ITBench team) in which the agent, given shell access to an offline snapshot of alerts, events, traces, metrics and application topology, must identify the entities that caused the failure. Metric is average precision at full recall: a task scores TP/(TP+FP) when no contributing factor is missed, 0 otherwise.",
       "settings": [
         "precision @ full recall",
@@ -1050,7 +1050,7 @@
     "aime_2025": {
       "name": "AIME 2025",
       "short_name": "AIME25",
-      "category": "Competition Math",
+      "category": "Scientific Reasoning",
       "description": "American Invitational Mathematics Examination, 2025: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
       "settings": [
         "Pass@1",
@@ -1072,7 +1072,7 @@
     "aime_2026": {
       "name": "AIME 2026",
       "short_name": "AIME26",
-      "category": "Competition Math",
+      "category": "Scientific Reasoning",
       "description": "American Invitational Mathematics Examination, 2026: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
       "settings": [
         "Pass@1",
@@ -1153,7 +1153,7 @@
     "mmmu_pro": {
       "name": "MMMU Pro",
       "short_name": "MMMUPro",
-      "category": "Vision-language Reasoning",
+      "category": "Visual Reasoning",
       "description": "Vision-centric extension of MMMU that rigorously evaluates large multimodal models on challenging, college-level tasks requiring expert, cross‑disciplinary understanding and integrated visual–text reasoning.",
       "settings": [
         "accuracy",
@@ -1176,7 +1176,7 @@
     "osworld_verified": {
       "name": "OSWorld-Verified",
       "short_name": "OSW V",
-      "category": "GUI Agent",
+      "category": "Visual Reasoning",
       "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment, scored by task success rate. The benchmark's own board is read first, on its Foundation E2E GUI setup at max 100 steps; a model it has not run carries the OSWorld-Verified score its lab reports (model card, launch post, or an aggregator republishing one), whose step budget and harness are the lab's own.",
       "settings": [
         "task success rate",
@@ -1196,7 +1196,7 @@
     "osworld_2_0_2026_06_24": {
       "name": "OSWorld 2.0 2026.06.24",
       "short_name": "OSW 2.0J",
-      "category": "GUI Agent",
+      "category": "Visual Reasoning",
       "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2026.06.24, the one the paper reports, as run on the benchmark's own board. The task set has been re-released since (2026.08.08, then the bug-fix 2.1) with new task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1 — so 2026.08.08 has a column of its own and 2.1 gets one once enough models are scored on it. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
       "settings": [
         "binary accuracy",
@@ -1221,7 +1221,7 @@
     "osworld_2_0_2026_08_08": {
       "name": "OSWorld 2.0 2026.08.08",
       "short_name": "OSW 2.0A",
-      "category": "GUI Agent",
+      "category": "Visual Reasoning",
       "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2026.08.08, the first re-release, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 31.4 here and 44.3 on the bug-fix 2.1 — so 2026.06.24 is a separate column and 2.1 gets one once enough models are scored on it. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
       "settings": [
         "binary accuracy",
@@ -1246,7 +1246,7 @@
     "osworld_2_0_vendor": {
       "name": "OSWorld 2.0 Vendor",
       "short_name": "OSW 2.0V",
-      "category": "GUI Agent",
+      "category": "Visual Reasoning",
       "description": "OSWorld 2.0 as each model's own lab reports it — the model card or launch post, as republished by llm-stats — rather than a run from the benchmark's own board. Labs do not agree on what they report: some give binary accuracy (the share of tasks fully completed), others the partial checkpoint score, which reads two to three times higher; some ran release 2026.06.24, others 2026.08.08 or 2.1, on the full 108-task set or the 82-task offline set, and many do not say which. The column follows llm-stats and files every headline as published, so it compares a lab's models with each other, not one lab with another; the official release columns beside it are the controlled comparison.",
       "settings": [
         "vendor-reported",
@@ -1266,7 +1266,7 @@
     "zerobench": {
       "name": "ZeroBench",
       "short_name": "ZeroBench",
-      "category": "Vision-language Reasoning",
+      "category": "Visual Reasoning",
       "description": "Deliberately \"impossible\" visual reasoning benchmark: 100 hand-crafted, multi-step questions over natural and synthetic images, scored as accuracy on the main set. Built for headroom — open-weight models sit in the low tens of percent, and the 334 subquestions are a separate score series this column does not mix in.",
       "settings": [
         "Pass@1",
@@ -1288,7 +1288,7 @@
     "mathvista_mini": {
       "name": "MathVista-mini",
       "short_name": "MathVista",
-      "category": "Visual Math Reasoning",
+      "category": "Visual Reasoning",
       "description": "Mathematical reasoning in visual contexts — figure QA, geometry, math word problems, textbook and visual QA — scored as answer accuracy on MathVista's 1,000-example testmini split, the split published runs report.",
       "settings": [
         "accuracy",
@@ -1309,7 +1309,7 @@
     "charxiv_reasoning": {
       "name": "CharXiv Reasoning",
       "short_name": "CharXiv",
-      "category": "Vision-language Reasoning",
+      "category": "Visual Reasoning",
       "description": "Reasoning over scientific charts: 2,323 figures taken from arXiv papers, each with four open-ended reasoning questions whose answers have to be read off the chart itself rather than recalled. This column is the reasoning split (\"RQ\") without tool use — the descriptive split is a different, far easier question set, and a run allowed a code interpreter is a different measurement again.",
       "settings": [
         "accuracy",
