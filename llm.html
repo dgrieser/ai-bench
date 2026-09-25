@@ -2377,6 +2377,101 @@
       text-decoration: underline;
     }
 
+    /* ── Credits panel ────────────────────────────── */
+
+    /* Attribution the data's licences ask for, printed under the benchmarks it
+       applies to. One card per credited publisher, laid out like a benchmark
+       card, with the citation in the publisher's own words. */
+    .credits-panel {
+      margin: 0;
+      padding: 20px 20px 28px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-alt);
+    }
+
+    .credits-panel h2 {
+      margin: 0 0 10px;
+      color: var(--subtle);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .credits-list {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .credit-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: var(--surface);
+      min-width: 0;
+    }
+
+    .credit-head {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .credit-name {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+    }
+
+    .credit-name:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .credit-license {
+      padding: 1px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      line-height: 1.6;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .credit-license:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .credit-citation,
+    .credit-uses {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.82rem;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .credit-uses {
+      color: var(--subtle);
+      font-size: 0.76rem;
+    }
+
+    @media (max-width: 860px) {
+      .credits-panel {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 20px;
+      }
+    }
+
     /* ── Sources panel ────────────────────────────── */
 
     .sources-panel {
@@ -6545,6 +6640,7 @@
           ui.content.innerHTML = `
             <div class="empty">No models match your filters.</div>
             ${renderBenchmarkDirectory()}
+            ${renderCreditsDirectory()}
             ${renderSourcesDirectory()}
           `;
           return;
@@ -6599,6 +6695,7 @@
           </div>
           ${renderRecentPanel()}
           ${renderBenchmarkDirectory()}
+          ${renderCreditsDirectory()}
           ${renderSourcesDirectory()}
         `;
 
@@ -7086,6 +7183,64 @@
           <section class="benchmarks-panel" aria-label="Benchmark and column reference">
             <h2>Reference</h2>
             <div class="benchmarks-list">${items}</div>
+          </section>
+        `;
+      }
+
+      // Scores credited to a page under a credit's url: which columns they fill
+      // and how many there are, read off scores_source rather than stored with
+      // the credit, so the line cannot drift from the data it describes.
+      function creditUsage(credit) {
+        const root = String(credit?.url || "").replace(/\/+$/, "");
+        const counts = new Map();
+        if (!root) return counts;
+        (state.data?.models || []).forEach((model) => {
+          Object.entries(model?.scores_source || {}).forEach(([key, url]) => {
+            if (typeof url !== "string" || model.scores?.[key] == null) return;
+            if (url !== root && !url.startsWith(`${root}/`)) return;
+            counts.set(key, (counts.get(key) || 0) + 1);
+          });
+        });
+        return counts;
+      }
+
+      function renderCreditsDirectory() {
+        const credits = (Array.isArray(state.data?.credits) ? state.data.credits : [])
+          .filter((credit) => credit && typeof credit.name === "string" && credit.name.trim());
+        if (!credits.length) {
+          return "";
+        }
+
+        const items = credits.map((credit) => {
+          const name = credit.url
+            ? `<a class="credit-name" href="${escapeAttr(credit.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(credit.name)}</a>`
+            : `<span class="credit-name">${escapeHtml(credit.name)}</span>`;
+          const license = credit.license
+            ? (credit.license_url
+              ? `<a class="credit-license" href="${escapeAttr(credit.license_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(credit.license)}</a>`
+              : `<span class="credit-license">${escapeHtml(credit.license)}</span>`)
+            : "";
+          const usage = creditUsage(credit);
+          const total = [...usage.values()].reduce((sum, n) => sum + n, 0);
+          const columns = [...usage.keys()]
+            .sort((a, b) => state.benchmarkKeys.indexOf(a) - state.benchmarkKeys.indexOf(b))
+            .map((key) => state.data?.benchmarks?.[key]?.name || key);
+          const uses = total
+            ? `<p class="credit-uses">${total} score${total === 1 ? "" : "s"} in ${escapeHtml(columns.join(", "))}</p>`
+            : "";
+          return `
+            <article class="credit-item">
+              <div class="credit-head">${name}${license}</div>
+              ${credit.citation ? `<p class="credit-citation">${escapeHtml(credit.citation)}</p>` : ""}
+              ${uses}
+            </article>
+          `;
+        }).join("");
+
+        return `
+          <section class="credits-panel" aria-label="Credits">
+            <h2>Credits</h2>
+            <div class="credits-list">${items}</div>
           </section>
         `;
       }

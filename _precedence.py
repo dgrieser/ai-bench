@@ -46,7 +46,21 @@ The rungs, strongest first:
      benchmark's leaderboard, so it sits on rung 2 with the other first-party
      boards. ``fetch_vals.VALS_OWN_BENCHMARKS`` draws the line, and it moves
      the rank of one board, not of the source.
-  4. ``RANK_CURATED`` -- a third party that compiles or vets other people's
+  4. ``RANK_BENCHMARKING_HUB`` -- Epoch AI's Benchmarking Hub. It carries
+     two kinds of page, and both sit here, on a rung of their own: Epoch's own
+     runs (GPQA Diamond, SWE-bench Verified), a uniform harness over every
+     model the way Vals' are, and mirrors of a benchmark's own board (DeepSWE,
+     FrontierSWE, FrontierCode), whose numbers are the board's. Under Vals,
+     because it was added as the second source for columns Vals and the boards
+     already lead, and a run of one harness is not made better than another's
+     by arriving later. Over the compilations below, because both of its
+     halves beat what those do: its own runs are measurements, and its mirrors
+     name the revision they copied (fetch_epoch.py reads it off the hub page
+     and refuses a benchmark whose page names none), where evals.report and
+     benchlm.ai publish no revision and this repo infers it from their
+     numbers. Not fill-only, so it replaces the aggregates, the endpoint runs,
+     the model cards and hand entries by rank.
+  5. ``RANK_CURATED`` -- a third party that compiles or vets other people's
      results rather than running them. evals.report keeps only Official and
      Verified rows (``fetch_evals_report.TRUSTED_STATUSES``), but either kind
      is a number someone else produced, under that lab's own prompts and
@@ -55,12 +69,12 @@ The rungs, strongest first:
      ``mmlu_pro`` -- which evals.report and Vals both publish -- that made the
      stored value whichever of the two ran last, so ``--skip-vals`` left a
      different number than a full run. A uniform run outranks a compilation.
-  5. ``RANK_AGGREGATE`` -- llm-stats, a cross-benchmark aggregate that
+  6. ``RANK_AGGREGATE`` -- llm-stats, a cross-benchmark aggregate that
      republishes numbers nobody in the chain ran. Its ingest is fill-only, so
      in practice it reaches a column only where it is still null,
      custom-sourced, credited to the very page it is re-reading, or credited to
-     rung 6 below, which is the one fetcher rung that yields to it.
-  6. ``RANK_ENDPOINT_RUN`` -- OpenRouter's own GPQA Diamond runs, one per
+     rung 7 below, which is the one fetcher rung that yields to it.
+  7. ``RANK_ENDPOINT_RUN`` -- OpenRouter's own GPQA Diamond runs, one per
      provider endpoint serving a model, of which fetch_openrouter.py reports
      the median. A run rather than a republished number, but of whatever
      deployment each provider serves -- quantized, on its own inference stack,
@@ -70,23 +84,23 @@ The rungs, strongest first:
      ingest included (``yields_to_fill_only``), and only the model cards below
      leave it alone. It is not fill-only itself, so it replaces a card's number
      and a hand entry the way any better rung does.
-  7. ``RANK_MODEL_CARD`` -- the Hugging Face model cards, a lab's own report
+  8. ``RANK_MODEL_CARD`` -- the Hugging Face model cards, a lab's own report
      under its own prompts and settings. Fill-only like llm-stats, and ranked
      under OpenRouter because a card is the flattered variant of a number
-     OpenRouter at least measured. It shared rung 5 with llm-stats before
+     OpenRouter at least measured. It shared a rung with llm-stats before
      OpenRouter was read; both ingests are fill-only and neither replaces the
      other's value, so the split changes nothing between the two of them.
-  8. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
+  9. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
      ``edit.py``. Its attribution is whatever page the entry cited, or null
      when a hand edit cleared it (``stamp_score_source`` takes None for exactly
      that), and either way it is the weakest rung: a hand entry seeds a column
      until a source measures it, and any scraper may overwrite it -- the
-     fill-only aggregates of rungs 5 and 7 included, which otherwise never
+     fill-only aggregates of rungs 6 and 8 included, which otherwise never
      replace a stored value (``is_fetcher_source``).
 
 Apart from the pages of one source, no two sources that can overwrite each
-other share a rung: rung 2 holds that by construction, rungs 0-4 by the split
-above, and rungs 5 to 7 by one each.
+other share a rung: rung 2 holds that by construction, rungs 0-5 by the split
+above, and rungs 6 to 8 by one each.
 
 Two sources on the same rung may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -106,6 +120,7 @@ import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
+import fetch_epoch
 import fetch_evals_report
 import fetch_frontiercode
 import fetch_frontierswe
@@ -129,11 +144,12 @@ RANK_AA_CODING_AGENTS = 0
 RANK_AA = 1
 RANK_BENCHMARK_SITE = 2
 RANK_THIRD_PARTY_RUN = 3
-RANK_CURATED = 4
-RANK_AGGREGATE = 5
-RANK_ENDPOINT_RUN = 6
-RANK_MODEL_CARD = 7
-RANK_HAND_ENTERED = 8
+RANK_BENCHMARKING_HUB = 4
+RANK_CURATED = 5
+RANK_AGGREGATE = 6
+RANK_ENDPOINT_RUN = 7
+RANK_MODEL_CARD = 8
+RANK_HAND_ENTERED = 9
 
 # Per-score source pages, stamped into models[].scores_source alongside every
 # score write, and the identities the ranks below are hung on. Stored
@@ -158,7 +174,7 @@ REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # the host, including the per-run pages.
 PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
-# cards under another roof, which is rung 5; fetch_zerobench.py never reads it.
+# cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
@@ -218,6 +234,12 @@ VALS_RERUN_KEY_URLS = {
 # measured, and the Hugging Face ingest with the card it read.
 AA_MODEL_PAGE_PREFIX = canonical(artificialanalysis.MODEL_PAGE_URL.format(""))
 HUGGING_FACE_PREFIX = canonical(fetch_huggingface.HF_BASE)
+# Epoch AI's hub: one page per benchmark read, each crediting its scores. The
+# pages rather than the host, so a hand entry citing some other Epoch page (a
+# report, a chart of a benchmark this repo does not read) stays hand-entered.
+EPOCH_PAGE_URLS = {
+    page: canonical(fetch_epoch.page_url(page)) for page in fetch_epoch.BENCHMARKS
+}
 # OpenRouter is per-model the same way: each score cites the page of the model
 # it was read off, so the rank hangs on the host.
 OPENROUTER_PREFIX = canonical(fetch_openrouter.SITE_URL)
@@ -254,6 +276,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),
         *((url, RANK_THIRD_PARTY_RUN) for url in VALS_RERUN_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
+        *((url, RANK_BENCHMARKING_HUB) for url in EPOCH_PAGE_URLS.values()),
         (AA_CODING_AGENTS_SOURCE_URL, RANK_AA_CODING_AGENTS),
         (LLMSTATS_SOURCE_URL, RANK_AGGREGATE),
         (OPENROUTER_PREFIX, RANK_ENDPOINT_RUN),
@@ -266,7 +289,7 @@ RANKED_PREFIXES = _ranked_prefixes()
 
 
 def source_rank(url: str | None) -> int:
-    """Rank of the source that published a score, 0 (strongest) to 8.
+    """Rank of the source that published a score, 0 (strongest) to 9.
 
     An unrecognised page ranks as hand-entered, and so does None: both mean the
     number reached llm.json through a person rather than through a scraper this
