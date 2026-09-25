@@ -27,10 +27,12 @@ implementation said the day a model was added.
 
 from __future__ import annotations
 
+import io
 import json
 import os
 import re
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
 
 import fetch_huggingface
@@ -336,10 +338,13 @@ class TestLlmStatsResolution(unittest.TestCase):
             os.environ[fetch_llmstats.LEADERBOARD_CACHE_TTL_VAR] = self._ttl
 
     @staticmethod
-    def _run(payload, detail_for):
+    def _run(payload, detail_for, boards=None):
         def fake_fetch_json(url, timeout=60):
             if url == fetch_llmstats.URL:
                 return payload
+            for benchmark_id in fetch_llmstats.BOARD_FIELDS.values():
+                if url == fetch_llmstats.BOARD_URL.format(benchmark_id=benchmark_id):
+                    return {"models": (boards or {}).get(benchmark_id, [])}
             return detail_for(url.rsplit("/", 1)[-1])
         original = fetch_llmstats.fetch_json
         fetch_llmstats.fetch_json = fake_fetch_json
@@ -402,6 +407,8 @@ class TestLlmStatsResolution(unittest.TestCase):
         def fake_fetch_json(url, timeout=60):
             if url == fetch_llmstats.URL:
                 return payload
+            if "/leaderboard/benchmarks/" in url:
+                return {"models": []}
             model_id = url.rsplit("/", 1)[-1]
             return {"benchmarks": [{"benchmark_id": fetch_llmstats.HLE_BENCHMARK_ID,
                                     "analysis_method": details[model_id]}]}
@@ -464,6 +471,45 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertEqual(got["m"]["scicode"], 0.5)
         self.assertEqual(got["m"]["gpqa"], 0.9)
 
+    def test_a_board_score_is_published_under_its_own_label(self) -> None:
+        # OSWorld 2.0 has no flat field: its scores come off the board's own
+        # endpoint, onto the model's record or, for a model the flat endpoint
+        # never scored, a record of its own.
+        payload = [
+            {"model_id": "a", "license": "mit", "gpqa_score": 0.9},
+            {"model_id": "b", "license": "proprietary"},
+        ]
+        boards = {"osworld-2.0": [
+            {"model_id": "a", "score": 0.194},
+            {"model_id": "b", "score": 0.818},
+            {"model_id": "c", "score": 0.5},
+            {"model_id": "d", "score": None},
+        ]}
+        got = self._run(payload, lambda _mid: {"benchmarks": []}, boards)
+        self.assertEqual(got["a"], {"gpqa": 0.9, "osworld_2_0": 0.194})
+        self.assertEqual(got["b"], {"osworld_2_0": 0.818})
+        self.assertEqual(got["c"], {"osworld_2_0": 0.5})
+        self.assertNotIn("d", got)
+
+    def test_a_failed_board_read_costs_only_that_board(self) -> None:
+        payload = [{"model_id": "a", "license": "mit", "gpqa_score": 0.9}]
+
+        def fake_fetch_json(url, timeout=60):
+            if url == fetch_llmstats.URL:
+                return payload
+            if "/leaderboard/benchmarks/" in url:
+                raise OSError("board down")
+            return {"benchmarks": []}
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = fake_fetch_json
+        try:
+            with redirect_stderr(io.StringIO()):
+                results = fetch_llmstats.get_scores()
+        finally:
+            fetch_llmstats.fetch_json = original
+        self.assertEqual({r["model"]: r["scores"] for r in results}, {"a": {"gpqa": 0.9}})
+
     def test_the_label_list_agrees_with_the_resolved_one(self) -> None:
         # benchmark_labels() exists to answer "which names need reviewing?"
         # without the per-model tool-mode pass, which was 63 seconds of a
@@ -482,7 +528,13 @@ class TestLlmStatsResolution(unittest.TestCase):
             for board in (fetch_llmstats.HLE_BENCHMARK_ID,
                           *fetch_llmstats.NO_TOOL_FIELDS.values())
         ]}
-        resolved = self._run(payload, lambda _mid: detail)
+        # And every board read beside the flat endpoint scores someone, so its
+        # label is in the resolved set too.
+        boards = {
+            benchmark_id: [{"model_id": "a", "score": 0.2}]
+            for benchmark_id in fetch_llmstats.BOARD_FIELDS.values()
+        }
+        resolved = self._run(payload, lambda _mid: detail, boards)
         expected = sorted({label for scores in resolved.values() for label in scores})
 
         original = fetch_llmstats.fetch_json

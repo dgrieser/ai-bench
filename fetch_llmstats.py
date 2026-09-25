@@ -111,6 +111,19 @@ _NON_DEFAULT_SCAFFOLD_RE = re.compile(
 )
 
 
+# Boards the flat endpoint carries no field for, read from llm-stats' own
+# per-benchmark endpoint instead: published label -> benchmark_id. OSWorld 2.0
+# is the one today. It is a board of lab self-reports that mixes binary accuracy
+# with the partial checkpoint score, and releases 2026.06.24, 2026.08.08 and
+# 2.1, often without saying which -- so it feeds a column that says exactly
+# that (osworld_2_0_vendor), never one of the per-release columns the
+# benchmark's own board fills.
+BOARD_URL = "https://api.zeroeval.com/leaderboard/benchmarks/{benchmark_id}/details"
+BOARD_FIELDS = {
+    "osworld_2_0": "osworld-2.0",
+}
+
+
 def non_default_scaffold(method: str | None) -> bool:
     """True when the note says the run used a swarm or an explicit context manager."""
     if not isinstance(method, str) or not method.strip():
@@ -210,7 +223,7 @@ def benchmark_labels() -> list[str]:
     not asked again -- whereas the reverse mistake, a label that never reaches
     review, is the one that loses a benchmark silently.
     """
-    labels: set[str] = set()
+    labels: set[str] = set(BOARD_FIELDS)
     for item in fetch_leaderboard():
         if isinstance(item, dict):
             labels.update(_flat_scores(item))
@@ -351,6 +364,37 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
         print(f"  other gated columns: dropped {rejected} run with tools or a non-default scaffold", file=sys.stderr)
 
 
+def board_scores(benchmark_id: str, timeout: int = 60) -> dict[str, float]:
+    """model_id -> 0-1 score on one llm-stats board, from its details endpoint.
+
+    A failed request or a changed layout yields nothing, with a warning: the
+    board's column simply gets no llm-stats scores this refresh, which is what
+    happens to a flat field that goes missing too.
+    """
+    url = BOARD_URL.format(benchmark_id=urllib.parse.quote(benchmark_id, safe=""))
+    try:
+        payload = fetch_json(url, timeout=timeout)
+    except (urllib.error.URLError, OSError, ValueError) as exc:
+        print(f"warning: board {benchmark_id}: fetch failed: {exc}", file=sys.stderr)
+        return {}
+    models = payload.get("models") if isinstance(payload, dict) else None
+    if not isinstance(models, list):
+        print(f"warning: board {benchmark_id}: no models list in {url}", file=sys.stderr)
+        return {}
+    out: dict[str, float] = {}
+    for entry in models:
+        if not isinstance(entry, dict):
+            continue
+        model_id = entry.get("model_id")
+        score = entry.get("score")
+        if not isinstance(model_id, str) or not model_id:
+            continue
+        if not isinstance(score, (int, float)) or isinstance(score, bool):
+            continue
+        out.setdefault(model_id, float(score))
+    return out
+
+
 def get_scores(resolve_hle: bool = True) -> list[dict]:
     """Return a list of dicts with keys: model, name, license, open_weights, scores.
 
@@ -365,24 +409,37 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
     licences turn it off.
     """
     results: list[dict] = []
+    by_id: dict[str, dict] = {}
     for item in fetch_leaderboard():
         if not isinstance(item, dict):
             continue
         model_id = item.get("model_id")
-        if not isinstance(model_id, str) or not model_id:
+        if not isinstance(model_id, str) or not model_id or model_id in by_id:
             continue
-        scores = _flat_scores(item)
-        if not scores:
-            continue
-        results.append(
-            {
-                "model": model_id,
-                "name": item.get("name"),
-                "license": item.get("license"),
-                "open_weights": license_open(item.get("license")),
-                "scores": scores,
-            }
-        )
+        # Kept even without a flat score: a board read below may give it one.
+        record = {
+            "model": model_id,
+            "name": item.get("name"),
+            "license": item.get("license"),
+            "open_weights": license_open(item.get("license")),
+            "scores": _flat_scores(item),
+        }
+        results.append(record)
+        by_id[model_id] = record
+
+    for label, benchmark_id in BOARD_FIELDS.items():
+        for model_id, score in board_scores(benchmark_id).items():
+            record = by_id.get(model_id)
+            if record is None:
+                # On the board but not on the leaderboard: no licence to read,
+                # but the score is still the model's own.
+                record = {
+                    "model": model_id, "name": None, "license": None,
+                    "open_weights": None, "scores": {},
+                }
+                results.append(record)
+                by_id[model_id] = record
+            record["scores"][label] = score
 
     if resolve_hle:
         resolve_tool_modes(results)

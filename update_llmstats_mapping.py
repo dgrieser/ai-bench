@@ -52,6 +52,7 @@ DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 BENCHMARK_ALIASES = {
     "gpqa": "gpqa_diamond",
     "osworld": "osworld_verified",
+    "osworld_2_0": "osworld_2_0_vendor",
 }
 
 _DATE_SUFFIX_RE = re.compile(r"-\d{6,8}$")

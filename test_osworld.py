@@ -64,11 +64,11 @@ class TestV2Filters(unittest.TestCase):
         rows = parse(payload(result("Alpha", 20.6)))
         self.assertEqual(
             [(r["benchmark"], r["model"], r["score"], r["release"]) for r in rows],
-            [("osworld_2_0", "Alpha", 20.6, "v2026.06.24")],
+            [("osworld_2_0_2026_06_24", "Alpha", 20.6, "v2026.06.24")],
         )
 
     def test_each_tracked_release_feeds_its_own_column(self) -> None:
-        releases = {"v2026.06.24": "osworld_2_0", "v9.9": "osworld_9_9"}
+        releases = {"v2026.06.24": "osworld_2_0_2026_06_24", "v9.9": "osworld_9_9"}
         with mock.patch.object(osw, "RELEASES", releases):
             rows = parse(payload(
                 result("Alpha", 20.6),
@@ -76,7 +76,7 @@ class TestV2Filters(unittest.TestCase):
             ))
         self.assertEqual(
             {r["benchmark"]: r["score"] for r in rows},
-            {"osworld_2_0": 20.6, "osworld_9_9": 44.33},
+            {"osworld_2_0_2026_06_24": 20.6, "osworld_9_9": 44.33},
         )
 
     def test_untracked_releases_are_skipped_and_reported_with_their_field(self) -> None:
@@ -85,13 +85,23 @@ class TestV2Filters(unittest.TestCase):
             rows = osw.parse_v2(payload(
                 result("Alpha", 20.6),
                 result("Alpha", 31.43, releaseVersion="v2026.08.08"),
-                result("Beta", 27.34, releaseVersion="v2026.08.08"),
                 result("Alpha", 44.33, releaseVersion="v2.1"),
+                result("Beta", 45.0, releaseVersion="v2.1"),
             ))
-        self.assertEqual([r["release"] for r in rows], ["v2026.06.24"])
+        self.assertEqual([r["release"] for r in rows], ["v2026.06.24", "v2026.08.08"])
         report = err.getvalue()
-        self.assertIn("'v2026.08.08', which has no llm.json column: 2 model(s)", report)
-        self.assertIn("'v2.1', which has no llm.json column: 1 model(s)", report)
+        self.assertNotIn("v2026.08.08", report)
+        self.assertIn("'v2.1', which has no llm.json column: 2 model(s)", report)
+
+    def test_the_two_tracked_releases_feed_their_dated_columns(self) -> None:
+        rows = parse(payload(
+            result("Alpha", 20.6),
+            result("Alpha", 31.43, releaseVersion="v2026.08.08"),
+        ))
+        self.assertEqual(
+            [(r["benchmark"], r["score"]) for r in rows],
+            [("osworld_2_0_2026_06_24", 20.6), ("osworld_2_0_2026_08_08", 31.43)],
+        )
 
     def test_only_the_500_step_budget_is_read(self) -> None:
         rows = parse(payload(
@@ -188,7 +198,7 @@ class TestIngest(unittest.TestCase):
         matched, updated, _ = update.update_osworld_scores(doc, by_key)
         self.assertEqual((matched, updated), (1, len(osw.KEYS)))
         self.assertEqual(model["scores_source"]["osworld_verified"], "https://os-world.github.io")
-        self.assertEqual(model["scores_source"]["osworld_2_0"], "https://osworld-v2.xlang.ai")
+        self.assertEqual(model["scores_source"]["osworld_2_0_2026_06_24"], "https://osworld-v2.xlang.ai")
 
     def test_every_column_the_reader_can_fill_exists_in_llm_json(self) -> None:
         benchmarks = json.loads(
@@ -200,14 +210,14 @@ class TestIngest(unittest.TestCase):
 
     def test_rows_for_an_unknown_column_are_ignored(self) -> None:
         rows = [
-            {"benchmark": "osworld_2_0", "model": "Alpha", "score": 4.6},
+            {"benchmark": "osworld_2_0_2026_06_24", "model": "Alpha", "score": 4.6},
             {"benchmark": "osworld_9_9", "model": "Alpha", "score": 99.0},
         ]
         proc = mock.Mock(returncode=0, stdout=json.dumps(rows), stderr="")
         with mock.patch.object(update, "run_fetch", return_value=proc), \
                 mock.patch.object(update, "load_osworld_to_slug_mapping", return_value={"Alpha": "alpha"}):
             by_key = update.fetch_osworld_data(update.OSWORLD_SCRIPT, mock.Mock())
-        self.assertEqual(by_key, {"osworld_2_0": {"alpha": rows[0]}})
+        self.assertEqual(by_key, {"osworld_2_0_2026_06_24": {"alpha": rows[0]}})
 
 
 if __name__ == "__main__":
