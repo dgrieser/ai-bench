@@ -576,6 +576,40 @@ input:disabled, select:disabled {
 }
 input.unknown { border-color: var(--bad); background: var(--bad-soft); }
 
+/* The add card's name field: a list drawn by hand rather than a datalist,
+   because a datalist cannot be told to wait for three letters, to match
+   anywhere in a slug, or to stop at fifty. */
+.combo { position: relative; }
+.combo-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + .25rem);
+  left: 0;
+  right: 0;
+  max-height: 18rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: .25rem;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-1), 0 8px 24px rgba(0, 0, 0, .12);
+}
+.combo-list[hidden] { display: none; }
+.combo-list li {
+  padding: .45rem .6rem;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font: 400 .875rem/1.35 var(--font-mono);
+  overflow-wrap: anywhere;
+}
+.combo-list li .detail { color: var(--muted); font-family: var(--font-ui); }
+.combo-list li mark { background: var(--accent-soft); color: inherit; border-radius: 2px; }
+.combo-list li[aria-selected="true"], .combo-list li:hover { background: var(--surface-2); }
+.combo-list li.more { cursor: default; color: var(--faint); font-family: var(--font-ui); }
+.combo-list li.more:hover { background: none; }
+
 select {
   appearance: none;
   padding-right: 2rem;
@@ -1124,6 +1158,107 @@ const creatorUrlFiller = (inputs, initial) => {
     input.oninput();
   };
 };
+
+/* A free-text field with a list under it: from `min` letters on, up to `max`
+   of `values()` that contain what is typed, anywhere and ignoring case. The
+   field stays the answer -- picking a row only writes it in and fires the
+   field's own oninput, so typed and picked names take the same road. */
+const COMBO_MIN = 3;
+const COMBO_MAX = 50;
+function comboBox(input, values, { detail = () => "", min = COMBO_MIN, max = COMBO_MAX } = {}) {
+  const listId = `c-${Math.random().toString(36).slice(2)}`;
+  const list = el("ul", { id: listId, className: "combo-list", hidden: true });
+  list.setAttribute("role", "listbox");
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-autocomplete", "list");
+  input.setAttribute("aria-controls", listId);
+  input.setAttribute("aria-expanded", "false");
+  input.autocomplete = "off";
+  let rows = [];
+  let active = -1;
+
+  const close = () => {
+    list.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    active = -1;
+  };
+  const highlight = (index) => {
+    active = index;
+    rows.forEach((row, i) => row.setAttribute("aria-selected", String(i === index)));
+    if (rows[index]) rows[index].scrollIntoView({ block: "nearest" });
+  };
+  const pick = (value) => {
+    input.value = value;
+    close();
+    if (input.oninput) input.oninput();
+  };
+  const withMark = (value, needle) => {
+    const at = value.toLowerCase().indexOf(needle);
+    if (at < 0) return [value];
+    return [value.slice(0, at), el("mark", {}, value.slice(at, at + needle.length)),
+      value.slice(at + needle.length)];
+  };
+  const draw = () => {
+    const needle = input.value.trim().toLowerCase();
+    rows = [];
+    if (needle.length < min || input.disabled) { close(); return; }
+    const hits = [];
+    let total = 0;
+    for (const value of values()) {
+      if (!value.toLowerCase().includes(needle)) continue;
+      total += 1;
+      if (hits.length < max) hits.push(value);
+    }
+    // Nothing to offer, or only what is already typed: the list would only
+    // sit over the status line below.
+    if (!hits.length || (hits.length === 1 && hits[0] === input.value.trim())) {
+      close();
+      return;
+    }
+    rows = hits.map((value) => {
+      const row = el("li", {}, [
+        ...withMark(value, needle),
+        detail(value) ? el("span", { className: "detail" }, detail(value)) : null,
+      ].filter(Boolean));
+      row.setAttribute("role", "option");
+      row.dataset.value = value;
+      // mousedown, not click: a click lands after the blur that closes the list.
+      row.onmousedown = (event) => { event.preventDefault(); pick(value); };
+      return row;
+    });
+    const more = total > hits.length
+      ? el("li", { className: "more" }, `${total - hits.length} more -- keep typing to narrow it`)
+      : null;
+    list.replaceChildren(...rows, ...(more ? [more] : []));
+    list.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+    active = -1;
+  };
+
+  input.addEventListener("input", draw);
+  input.addEventListener("focus", draw);
+  input.addEventListener("blur", close);
+  input.addEventListener("keydown", (event) => {
+    if (list.hidden) {
+      if (event.key === "ArrowDown") { draw(); if (!list.hidden) event.preventDefault(); }
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      highlight(Math.min(active + 1, rows.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      highlight(Math.max(active - 1, 0));
+    } else if (event.key === "Enter" && active >= 0) {
+      event.preventDefault();
+      pick(rows[active].dataset.value);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    }
+  });
+  return el("div", { className: "combo" }, [input, list]);
+}
 
 const el = (tag, props = {}, kids = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -2123,7 +2258,11 @@ function renderAddModel() {
       Boolean(draft.name.trim()) && !SLUG_RE.test(draft.name.trim()));
     commit();
   };
-  card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameInput]), status);
+  /* The AA slugs the site does not carry yet: the names most likely to be
+     wanted here, and the ones whose scores arrive without a mapping. */
+  const offered = () => (state.aa.slugs || []).filter((slug) => !known.has(slug));
+  const nameBox = comboBox(nameInput, offered, { detail: aaSlugDetail });
+  card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameBox]), status);
 
   /* Held so the creator field can reach the creator url field below it: the
      handler runs long after the loop, by which time both are in here. */
