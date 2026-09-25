@@ -137,15 +137,15 @@ class TestRowFetchers(unittest.TestCase):
         # each tracked OSWorld 2.0 release alike, so the fold is per column.
         mapping = write_json({"Model": "m", "Model [high]": "m"})
         rows = [
-            {"benchmark": "osworld_2_0", "model": "Model", "score": 3.0},
-            {"benchmark": "osworld_2_0", "model": "Model [high]", "score": 4.6},
+            {"benchmark": "osworld_2_0_2026_06_24", "model": "Model", "score": 3.0},
+            {"benchmark": "osworld_2_0_2026_06_24", "model": "Model [high]", "score": 4.6},
             {"benchmark": "osworld_verified", "model": "Model", "score": 70.0},
         ]
         for order in (rows, list(reversed(rows))):
             with self.subTest(first=order[0]["model"]):
                 with stub_run(order):
                     by_key = update.fetch_osworld_data(SCRIPT, mapping)
-                self.assertEqual(by_key["osworld_2_0"]["m"]["score"], 4.6)
+                self.assertEqual(by_key["osworld_2_0_2026_06_24"]["m"]["score"], 4.6)
                 self.assertEqual(by_key["osworld_verified"]["m"]["score"], 70.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:

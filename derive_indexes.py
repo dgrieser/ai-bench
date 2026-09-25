@@ -360,14 +360,15 @@ INDEXES: list[IndexDef] = [
             # OSWorld 2.0 is the one long-horizon computer-use run in the table
             # -- 108 multi-hour workflows where the best official run completes
             # a fifth and open-weight models a twentieth -- so it is the member
-            # with the most headroom. But only its 2026.06.24 release has a
-            # column, and two models this file tracks are scored on it, tied at
-            # 4.6: one comparison, a tie between two models MMMU Pro and
-            # OSWorld-Verified already compare. At 0.15 it moves nobody a rank,
+            # with the most headroom. Only its 2026.06.24 release is aggregated
+            # (2026.08.08 scores two closed models; the vendor column mixes
+            # binary and partial scores), and two models this file tracks are
+            # scored on it, tied at 4.6: one comparison, a tie between two
+            # models MMMU Pro and OSWorld-Verified already compare. At 0.15 it moves nobody a rank,
             # and it stays inert up to 0.7. Worth re-pricing once enough tracked
             # models are scored on one release to rank -- see README, "Vision
             # Index".
-            ("osworld_2_0", 0.15),
+            ("osworld_2_0_2026_06_24", 0.15),
             # Deliberately not aggregated, though it is the widest multimodal
             # column in llm.json: gdpval_aa scores visual *output* (documents,
             # slides, diagrams) produced in AA's agentic harness, so what it
