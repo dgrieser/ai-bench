@@ -600,6 +600,18 @@ _PAGE_FLOAT_FIELDS = [
     ("hle", "hle"),
     ("gpqa", "gpqa"),
     ("harveyLab", "harvey_lab"),
+    # AA's September 2026 cut of the free API tier left its evaluations block
+    # with the three composite indices and nothing else. These three used to be
+    # API-only -- the page carried no fallback, since the API always sent them
+    # -- so on free they would simply stop arriving, and update.py would read
+    # the silence as AA withdrawing them. The pages carry every one.
+    ("tau2", "tau2"),
+    ("tauBanking", "tau_banking"),
+    ("lcr", "lcr"),
+    # The Omniscience split used to sit in an "omniscienceBreakdown" object;
+    # the payload flattened it onto the record itself.
+    ("omniscienceAccuracy", "omniscience_accuracy"),
+    ("omniscienceHallucinationRate", "omniscience_hallucination_rate"),
     ("automationBenchPartialScore", "automation_bench_partial_score"),
     ("enterpriseOpsGym", "enterprise_ops_gym"),
     ("intelligenceIndex", "intelligence_index"),
@@ -614,10 +626,6 @@ _PAGE_BOOL_FIELDS = [
 ]
 
 _PAGE_OBJECT_FIELDS = {
-    "omniscienceBreakdown": [
-        ("accuracy", "omniscience_accuracy", float),
-        ("hallucinationRate", "omniscience_hallucination_rate", float),
-    ],
     # The capture stops at the first "}", i.e. inside the leading "overall"
     # sub-object, so "elo" is Briefcase's composite Elo rather than the
     # analytical-quality or presentation Elo that follow it.
@@ -648,15 +656,32 @@ _PAGE_OBJECT_FIELDS = {
 }
 
 
-def _parse_metrics_block(text: str, slug: str):
-    slug_anchor = f'"slug":"{slug}"'
-    slug_pos = text.find(slug_anchor)
+def _metrics_chunk(text: str, slug: str) -> str:
+    """The page's own metrics record, from its "microevalsEnabled" onward.
+
+    Capped at 5000 characters, and at the next record's "microevalsEnabled":
+    the page lists comparison models right after the current one with the same
+    keys, so on a short record the window would otherwise run into the next
+    model's, and a field the current record lacks would be read off its
+    neighbour.
+    """
+    slug_pos = text.find(f'"slug":"{slug}"')
     if slug_pos == -1:
-        return {}
+        return ""
     me_pos = text.find('"microevalsEnabled"', slug_pos)
     if me_pos == -1:
+        return ""
+    end = me_pos + 5000
+    next_record = text.find('"microevalsEnabled"', me_pos + 1, end)
+    if next_record != -1:
+        end = next_record
+    return text[me_pos:end]
+
+
+def _parse_metrics_block(text: str, slug: str):
+    chunk = _metrics_chunk(text, slug)
+    if not chunk:
         return {}
-    chunk = text[me_pos : me_pos + 5000]
 
     result = {}
 
@@ -800,14 +825,11 @@ def _audit_page_fields(slugs) -> int:
         if text is None:
             print(f"  {slug}: page could not be read, skipped", file=sys.stderr)
             continue
-        normalized = _normalize_page_text(text)
-        anchor = normalized.find(f'"slug":"{slug}"')
-        start = normalized.find('"microevalsEnabled"', anchor) if anchor != -1 else -1
-        if start == -1:
+        chunk = _metrics_chunk(_normalize_page_text(text), slug)
+        if not chunk:
             print(f"  {slug}: no metrics block on the page, skipped", file=sys.stderr)
             continue
         read.append(slug)
-        chunk = normalized[start : start + 5000]
         for key in expected:
             if f'"{key}"' in chunk:
                 seen[key] += 1
@@ -903,10 +925,11 @@ def _extract_mmmu_pro(m: dict):
     return _fetch_page_metrics(m.get("slug", "")).get("mmmu_pro")
 
 
-# Benchmarks the model pages carry. Pro now answers most of them itself, so
-# these fill the gaps rather than override: a page value is used where the API
-# sent none, which is every one of them on the free tier and the handful below
-# that no endpoint carries at all.
+# Benchmarks the model pages carry. Pro answers most of them itself, so these
+# fill the gaps rather than override: a page value is used where the API sent
+# none, which is every one of them on the free tier -- whose evaluations block
+# is down to the Intelligence, Coding and Agentic indices -- and the handful
+# below that no endpoint carries at all.
 _PAGE_EVALS = [
     "omniscience",
     "omniscience_accuracy",
@@ -920,6 +943,9 @@ _PAGE_EVALS = [
     "harvey_lab",
     "automation_bench_partial_score",
     "enterprise_ops_gym",
+    "tau2",
+    "tau_banking",
+    "lcr",
     "terminalbench_4_0",
     "terminalbench_v2_1",
     "terminalbench_hard",
@@ -1129,10 +1155,11 @@ def _print_table(models, output):
         ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
         ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0"], "terminalbench_4_0")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
-        ("tau^2 Bench Telecom", lambda m: _extract_eval_any(m, ["tau2"])),
-        ("AA-LCR", lambda m: _extract_eval_any(m, ["lcr"])),
-        ("HLE", lambda m: _extract_eval_any(m, ["hle"])),
-        ("GPQA Diamond", lambda m: _extract_eval_any(m, ["gpqa_diamond", "gpqa"])),
+        ("tau^2 Bench Telecom", lambda m: _extract_eval_or_page(m, ["tau2"], "tau2")),
+        ("tau^3 Bench Banking", lambda m: _extract_eval_or_page(m, ["tau_banking"], "tau_banking")),
+        ("AA-LCR", lambda m: _extract_eval_or_page(m, ["lcr"], "lcr")),
+        ("HLE", lambda m: _extract_eval_or_page(m, ["hle"], "hle")),
+        ("GPQA Diamond", lambda m: _extract_eval_or_page(m, ["gpqa_diamond", "gpqa"], "gpqa")),
         ("LiveCodeBench", lambda m: _extract_eval_or_page(m, ["livecodebench"], "livecodebench")),
         ("SciCode", lambda m: _extract_eval_or_page(m, ["scicode"], "scicode")),
         ("IFBench", lambda m: _extract_eval_or_page(m, ["ifbench"], "ifbench")),
@@ -1156,6 +1183,7 @@ def _print_table(models, output):
         "Terminal-Bench 4.0",
         "Terminal-Bench v2.1",
         "tau^2 Bench Telecom",
+        "tau^3 Bench Banking",
         "AA-LCR",
         "HLE",
         "GPQA Diamond",

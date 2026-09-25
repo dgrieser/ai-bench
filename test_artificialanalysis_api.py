@@ -393,11 +393,14 @@ MODEL_PAGE = (
     '"intelligenceIndexIsEstimated":false,'
     '"capabilities":{"financeAndAccounting":54.879570063518685,'
     '"legal":57.291863099419025,"engineering":54.014034523937966},'
+    '"omniscience":37.5,"omniscienceAccuracy":0.6015,'
+    '"omniscienceHallucinationRate":0.4512,'
     '"mlcrOverall":0.555555555555556,"harveyLab":0.93457808655377,'
-    '"itBenchSre":null,"tau2":null,"terminalbenchHard":null,'
+    '"itBenchSre":null,"tau2":null,"tauBanking":0.612371134020619,'
+    '"terminalbenchHard":null,'
     '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
-    '"scicode":0.563657407407407,"hle":0.548656163113994,'
-    '"gpqa":0.912121212121212}}'
+    '"scicode":0.563657407407407,"lcr":0.743333333333333,'
+    '"hle":0.548656163113994,"gpqa":0.912121212121212}}'
 )
 
 
@@ -471,6 +474,66 @@ class TestHleAndGpqaOnTheModelPages(unittest.TestCase):
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
             aa._enrich_structured_metrics([model])
         self.assertEqual(model["evaluations"]["hle"], 0.5)
+
+
+class TestFieldsTheFreeTierDropped(unittest.TestCase):
+    """What AA's September 2026 free-tier cut left to the pages.
+
+    The free route's evaluations block is down to the Intelligence, Coding and
+    Agentic indices. τ²-Telecom, τ³-Banking and AA-LCR used to arrive with the
+    API record only, so on free they stopped arriving at all -- and update.py
+    has a column for each.
+    """
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_each_is_read_under_the_name_the_page_uses(self) -> None:
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["tau_banking"], 0.612371134020619)
+        self.assertAlmostEqual(metrics["lcr"], 0.743333333333333)
+        # null is AA saying it has not run the model, not a missing field.
+        self.assertIn("tau2", metrics)
+        self.assertIsNone(metrics["tau2"])
+
+    def test_the_flattened_omniscience_split_is_read(self) -> None:
+        # The payload dropped the "omniscienceBreakdown" object and put both
+        # halves on the record itself.
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["omniscience_accuracy"], 0.6015)
+        self.assertAlmostEqual(metrics["omniscience_hallucination_rate"], 0.4512)
+        self.assertNotIn("omniscienceBreakdown", aa._PAGE_OBJECT_FIELDS)
+
+    def test_they_reach_the_keys_update_reads(self) -> None:
+        import update
+
+        model = {"slug": "claude-opus-5"}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        evals = model["evaluations"]
+        for column in ("tau3_bench_banking", "aa_lcr", "aa_omniscience_accuracy", "aa_omniscience_hallucination"):
+            with self.subTest(column=column):
+                (aa_key, *_), _transform = update.SCORE_MAPPINGS[column]
+                self.assertIsNotNone(evals.get(aa_key))
+        self.assertIn("tau2", aa._PAGE_EVALS)
+
+    def test_an_api_value_is_not_displaced(self) -> None:
+        model = {"slug": "claude-opus-5", "evaluations": {"lcr": 0.5}}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        self.assertEqual(model["evaluations"]["lcr"], 0.5)
+
+    def test_a_field_the_record_lacks_is_not_read_off_the_next_model(self) -> None:
+        # The page lists comparison models right after the current one, with
+        # the same keys. A short record must not borrow its neighbour's value.
+        page = (
+            '{"currentModel":{"slug":"phi-4","microevalsEnabled":true,'
+            '"tau2":0,"lcr":0}},{"slug":"other","microevalsEnabled":true,'
+            '"tau2":0.19,"lcr":0,"tauBanking":0.3}'
+        )
+        metrics = aa._parse_metrics_block(page, "phi-4")
+        self.assertEqual(metrics["tau2"], 0.0)
+        self.assertNotIn("tau_banking", metrics)
 
 
 class TestPageFieldsThatWentStale(unittest.TestCase):

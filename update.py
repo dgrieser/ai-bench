@@ -1242,12 +1242,13 @@ def update_scores(
                 fill_urls_only=fill_urls_only,
             )
 
-    # The API-only fields (MMLU-Pro, AA-LCR, the tau benches...) arrive with
-    # the API record or not at all. A run whose API answer carried one for no
-    # model -- a tier without it, a field renamed upstream -- still reads every
-    # page for the rest, and without this the #226 pass would take that
+    # An API-only field (MMLU-Pro, which the model pages do not carry) arrives
+    # with the API record or not at all. A run whose API answer carried one for
+    # no model -- a tier without it, a field renamed upstream -- still reads
+    # every page for the rest, and without this the #226 pass would take that
     # silence for AA withdrawing all of them: the 2026-09-24 11:48 refresh
-    # handed 21 mmlu_pro and 22 aa_lcr rows to cards, Vals and evals.report.
+    # handed 21 mmlu_pro and 22 aa_lcr rows to cards, Vals and evals.report,
+    # back when AA-LCR and the tau benches were read off the API alone too.
     if not fill_urls_only:
         for llm_key in SCORE_MAPPINGS.keys() - delivered:
             RUN_REPORTS.could_not_show(llm_key, all_read_pages)

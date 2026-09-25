@@ -720,9 +720,11 @@ it stays. A failed fetcher drops nothing: a page not read at all (a failed or
 skipped fetch), every page an ingest step read before it raised, and a Hugging
 Face card whose metadata could not be loaded (`"partial": true` from
 `fetch_huggingface.py`) are all excluded. So is an AA model page for a column
-this run's AA data carried for no model at all: MMLU-Pro, AA-LCR and the tau
-benches come only with the API record, and an answer without them says nothing
-about any one page. Nothing carries over between runs.
+this run's AA data carried for no model at all: MMLU-Pro comes only with the
+API record (the model pages do not carry it), and an answer without it says
+nothing about any one page. AA-LCR and the tau benches were in the same place
+until the free tier dropped them; they are read off the model pages now, which
+do say something about each page. Nothing carries over between runs.
 
 The Coding Agent Index is not fill-only, and at rank 0 it outranks the model
 pages: where both AA surfaces report a column, the agent run lands whether or
@@ -3009,7 +3011,8 @@ open-weights flag, the context window, the parameter counts, the Hugging Face
 url and most of the benchmarks natively — those no longer cost a page fetch —
 but AA-Briefcase, IT-Bench SRE, Apex Agents, the Harvey and AutomationBench
 rows, the openness breakdown and the creator's own url appear on the pages
-only. A page value is used where the API sent none; it never overrides one that
+only. MMLU-Pro is the other way round: the API is the only place it appears,
+and it is gone from the pages entirely. A page value is used where the API sent none; it never overrides one that
 arrived.
 
 **The page's own field names drift, and a stale one fails silently.** The page
@@ -3036,6 +3039,7 @@ nothing:
 | `terminalbenchV21` | `terminalBench21`, with `terminalBench40` beside it |
 | `harveyLabCriteriaPass` | `harveyLab` — read as `harvey_lab`, since the name no longer says the number is a criteria-pass rate and nothing on the page does either |
 | `agenticIndex` | *gone.* AA replaced the composite with a per-industry `capabilities` block (finance, strategy, legal, healthcare, engineering, economics) that `llm.json` has no column for. The Agentic Index column is API-only now |
+| `omniscienceBreakdown` | *flattened.* Its `accuracy` and `hallucinationRate` are `omniscienceAccuracy` and `omniscienceHallucinationRate` on the record itself now |
 | `codingIndex` | *gone*, the same way — and nothing read it: the Coding Index column has always taken `artificial_analysis_coding_index` off the API record, and `coding_index` is this file's own derived column, not AA's |
 
 `./artificialanalysis.py --audit-page-fields` is that audit, kept: it reads a
@@ -3044,14 +3048,25 @@ and exits non-zero if any name the parser expects is missing from all of them.
 It also lists the numbers the pages carry that nothing here reads, which is how
 a new evaluation like Terminal-Bench 4.0 announces itself.
 
-**On the free tier the pages carry nearly everything.** Its `evaluations` block
-holds three composite indices — Intelligence, Coding and Agentic — and its
+**On the free tier the pages carry nearly everything.** Since AA's
+September 2026 change to the free tier, its `evaluations` block holds three
+composite indices — Intelligence, Coding and Agentic — and nothing else, and its
 `performance` block the medians only; there is no licensing, parameter,
-context-window or Hugging Face field on the record at all. A measured
-free-tier run of `gpt-oss-120b` returns 20 populated benchmarks, 17 of them
-scraped. That is why the page fetch is retried and why a page failure is
-logged under `--verbose` rather than passed over: on free it is the source, not
-the fallback.
+context-window or Hugging Face field on the record at all. τ²-Bench Telecom
+(`tau2`), τ³-Bench Banking (`tauBanking`) and AA-LCR (`lcr`) used to come off the
+API record alone, so the cut would have left their columns unfed; they are
+read off the page's `currentModel` record now like the rest, and filled 95
+empty or stale cells on the first run. MMLU-Pro is the one AA column the pages
+do not carry, so on free it keeps its last value (the run marks it blind rather
+than dropped, above). A measured free-tier run of `gpt-oss-120b` returns 27
+populated benchmarks, 24 of them scraped. That is why the page fetch is retried
+and why a page failure is logged under `--verbose` rather than passed over: on
+free it is the source, not the fallback.
+
+The page lists comparison models right after the current one, with the same
+keys, so the metrics record is read only up to the next record's
+`microevalsEnabled`: a field the current model lacks is never read off its
+neighbour.
 
 ## Model Size and Context Fields
 
