@@ -39,6 +39,7 @@ import fetch_frontierswe
 import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
+import fetch_openrouter
 import fetch_osworld
 import fetch_programbench
 import fetch_real_swe
@@ -88,6 +89,14 @@ COVERED_BY = [
     (
         fetch_osworld.OSWORLD_V2_JSON_URL,
         fetch_osworld.OSWORLD_V2_SITE_URL,
+    ),
+    (
+        f"{fetch_openrouter.MODEL_PAGE_URL.format(model='<author>/<model>')} (per-model pages)",
+        fetch_openrouter.MODELS_PAGE_URL,
+    ),
+    (
+        fetch_openrouter.MODELS_API_URL,
+        fetch_openrouter.MODELS_PAGE_URL,
     ),
 ]
 
@@ -169,6 +178,10 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
             tuple(key for key in fetch_osworld.KEYS if key != fetch_osworld.VERIFIED_KEY),
         ),
         (spheron_root(), ()),
+        # OpenRouter's scores live on one page per model, each credited in
+        # models[].scores_source; the catalogue is what the panel links. It
+        # carries no score itself, so it stays off benchmarks.gpqa_diamond.
+        (fetch_openrouter.MODELS_PAGE_URL, ()),
     ]
     for slug, key in fetch_evals_report.BENCHMARKS.items():
         items.append((fetch_evals_report.BASE_URL.format(slug=slug), (key,)))
