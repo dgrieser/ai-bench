@@ -351,6 +351,32 @@ Output: llm.json (unified dataset)
         + benchmark-name-mapping.json files (benchmark aliases)
 ```
 
+### Page Addresses
+
+Every view of `llm.html` is a link. A model's page is `#model/<slug>`, a
+comparison `#compare/<slug>,<slug>` with its radar axes in `?axes=`, and the
+table carries its filters and sort in the same kind of query on a bare hash,
+written as they change (with `replaceState`, so the back button is not flooded):
+
+| Parameter | Filter | Example |
+| --- | --- | --- |
+| `q` | Search | `q=qwen` |
+| `ref` | Closed reference models shown | `ref=1` |
+| `models` | Compare-models selection, by slug | `models=glm-5-3,kimi-k3` |
+| `hide` / `show` | Hidden benchmark columns, or the shown ones when that list is shorter | `show=openbench_index,coding_index` |
+| `added` | Date-added window | `added=d30`, `added=y2026` |
+| `sort`, `dir` | Sort column and `asc` direction | `sort=params&dir=asc` |
+| `gpu`, `cards` | GPU model and card count | `gpu=RTX%205090&cards=2` |
+| `vram` | Custom VRAM budget in GB | `vram=64` |
+| `vendor` | GPU vendor alone | `vendor=AMD` |
+| `reserve` | Reserved VRAM share in percent | `reserve=10` |
+
+Only what differs from the default is written, so the untouched table has no
+fragment at all, and an absent parameter always means its default: a pasted
+link opens on the view it was copied from, whatever the reader had set before.
+The "Leaderboard" link on a model page or a comparison returns to the table's
+current address.
+
 ## Command Reference
 
 ### Data Collection & Synchronization
@@ -477,8 +503,8 @@ Output: llm.json (unified dataset)
 ### Utilities
 
 ```bash
-# Recompute the derived index columns, Coding, Tooling, Knowledge, Vision and
-# Trust
+# Recompute the derived index columns, Coding, Tooling, Knowledge, Vision,
+# Trust and Security, and the OpenBench Index averaged from four of them
 # (dry-run; -w to persist)
 ./derive_indexes.py llm.json
 ./derive_indexes.py llm.json -w
@@ -1596,11 +1622,56 @@ update_*_mapping.py (syncs mapping files with fresh API data)
 llm.json (unified, deduplicated dataset)
 ```
 
+## OpenBench Index
+
+The first benchmark column, **Index**, is the site's overall score and the
+table's default sort (`defaultSort` in `llm.json`). `derive_indexes.py` writes
+it to each model's `scores.openbench_index` after the fitted indexes below, and
+a ranked value cites this section
+(`https://github.com/dgrieser/ai-bench#openbench-index`).
+
+It is a weighted mean of four of those indexes, not a fit of its own:
+
+| Index | Weight | Why |
+| --- | --- | --- |
+| [Coding](#coding-index) (`coding_index`) | 0.30 | What an open-weight model is most often run for, level with Tooling |
+| [Tooling](#tooling-index) (`tooling_index`) | 0.30 | Agentic tool use: the other half of putting a model to work |
+| [Trust](#trust-index) (`trust_index`) | 0.25 | A capable model that makes things up is a liability in either use |
+| [Knowledge](#knowledge-index) (`knowledge_index`) | 0.15 | Recall matters, but it is the easiest of the four to supplement with retrieval |
+
+```
+index = round(0.30 × coding + 0.30 × tooling + 0.25 × trust + 0.15 × knowledge)
+```
+
+- **Why a mean works here.** Every fitted index reports the same quantity on the
+  same scale — the expected win rate against the ranked field × 100,000 — so a
+  weighted mean of them is an expected win rate too, averaged over the four
+  constructs in the stated proportion, and it stays on the 0–100,000 scale. A
+  model at 55,000 wins 55% of the head-to-heads, weighted that way.
+- **Why not one big fit.** Refitting Bradley–Terry over the union of the member
+  benchmarks would hand the vote to whichever group has the most benchmarks
+  (Coding has 16, Trust 4). Averaging the finished indexes gives each group
+  exactly its share.
+- **All four or nothing.** A model gets a value only when it is ranked on
+  Coding, Tooling, Trust *and* Knowledge. A missing component is not imputed,
+  and the remaining weights are not renormalised: a model scored on three of
+  the four would otherwise read as the same kind of number as one measured on
+  all of them. When it was added, 75 of 166 models qualified.
+- **Vision and Security are left out.** Both are specialist columns that rank
+  few models (13 for Security), so requiring them would leave almost the whole
+  open field without an overall score, and neither is what most readers pick a
+  general model on.
+- **It carries no `index_coverage` record** of its own: what it rests on is its
+  four components, and each of those keeps its own record.
+
+The weights live in `OPENBENCH_INDEX` in `derive_indexes.py`; they are relative
+in the sense that only ratios matter, but are kept summing to 1.
+
 ## Coding Index
 
-The first benchmark column, **Coding**, is not scraped: `derive_indexes.py` computes
+The **Coding** column is not scraped: `derive_indexes.py` computes
 it from the coding benchmarks already in the file and writes it to each model's
-`scores.coding_index`. It is also the table's default sort. The
+`scores.coding_index`. The
 [Tooling](#tooling-index), [Knowledge](#knowledge-index) and
 [Vision](#vision-index) indexes are its siblings — same script, same math,
 different contributing benchmarks.

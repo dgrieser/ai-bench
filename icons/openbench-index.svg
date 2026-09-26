@@ -1,0 +1,86 @@
+<!-- OpenBench's overall index: the site's own mark, simplified to flat colour
+     (the pink C, the three benchmark bars and the B, without the gradients,
+     shadow and dark ground of openbenchindex_mark.svg), inside the two-tone
+     ring the Coding, Tooling, Knowledge, Vision, Trust and Security marks
+     share. Ring geometry is copied from coding-index.svg so the marks line
+     up, and the viewBox is the same crop to the drawing — see .tip-icon in
+     llm.html. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="357.12 332.16 821.76 845.44"
+  fill="none"
+>
+  <!-- The B is the page's ink, not the logo's fixed white: on a transparent
+       ground white vanishes on the light theme. Same two values as the other
+       index marks; an <img> cannot read the page's custom property, so they
+       are copied here and have to be changed alongside it. -->
+  <style>
+    .ink { fill: #111111; }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #e0ddd7; }
+    }
+  </style>
+
+  <!-- Outer ring: pink section -->
+  <path
+    d="M 483.10 478.51
+       A 391.14 403.21 0 1 1 1040.78 1043.75"
+    stroke="#FD2179"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- Outer ring: blue section -->
+  <path
+    d="M 1040.78 1043.75
+       A 391.14 403.21 0 0 1 483.10 478.51"
+    stroke="#0170FE"
+    stroke-width="37"
+    stroke-linecap="butt"
+  />
+
+  <!-- The logo, in openbenchindex_mark.svg's own coordinates, centred on the
+       ring and scaled to sit clear of it. -->
+  <g transform="translate(762 761) scale(0.52) translate(-840 -668)">
+    <!-- Benchmark bars, behind the C -->
+    <g fill="#0170FE">
+      <path d="M511 782 H555 Q565 782 565 792 V906 H501 V792 Q501 782 511 782 Z"/>
+      <path d="M606 719 H650 Q660 719 660 729 V906 H596 V729 Q596 719 606 719 Z"/>
+      <path d="M702 645 H746 Q756 645 756 655 V906 H692 V655 Q692 645 702 645 Z"/>
+    </g>
+
+    <!-- The C: an annulus cut open on the vertical -->
+    <path
+      fill="#FD2179"
+      d="M768 393.28 A307.75 307.75 0 1 0 768 943.78 L768 857.88
+         A234.30 234.30 0 1 1 768 479.79 Z"
+    />
+
+    <!-- The B -->
+    <path
+      class="ink"
+      fill="#111111"
+      fill-rule="evenodd"
+      d="M821 363.5 H1055
+         C1138.46 365.45 1208.71 441.53 1207 525
+         C1206.86 575.70 1184.77 619.58 1145 652
+         C1192.90 688.56 1222.74 739.05 1221 799
+         C1223.47 886.31 1149.14 965.47 1064 972.5
+         H821
+         C813.75 971.78 807.33 965.96 806 959
+         V799
+         C829.27 759.39 845.04 716.68 844 667
+         C844.74 617.45 830.00 574.30 806 535
+         V379
+         C806.21 370.98 814.01 365.51 821 363.5 Z
+         M880 437.5 H1055
+         C1099.34 440.34 1137.33 481.70 1136 527
+         C1137.03 572.94 1097.15 615.28 1052 618.5
+         H880 Z
+         M880 691.5 H1060
+         C1109.94 697.30 1152.12 744.48 1151 796
+         C1151.75 847.25 1109.11 894.71 1059 900.5
+         H880 Z"
+    />
+  </g>
+</svg>

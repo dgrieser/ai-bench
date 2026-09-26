@@ -4,7 +4,8 @@ aggregate: the Coding index from the coding benchmarks, the Tooling index from
 the agentic tool-use benchmarks, the Knowledge index from the knowledge and
 reasoning benchmarks, the Vision index from the multimodal ones, the Trust
 index from the honesty, grounding and instruction-compliance ones, the Security
-index from the offensive-security ones.
+index from the offensive-security ones -- and, from four of those, the overall
+OpenBench Index (see OPENBENCH_INDEX), a fixed weighted mean rather than a fit.
 
 Unlike every other column, a derived index is not scraped: it is computed from
 scores already in llm.json, so it has to be recomputed whenever any of them
@@ -497,6 +498,79 @@ def calibrated(
 
 
 INDEXES = calibrated(INDEXES, load_calibration())
+
+
+class CompositeDef(NamedTuple):
+    """The overall column: a fixed weighted mean of some of the fitted indexes.
+
+    Not a fit of its own. Every index above already reports the same quantity
+    -- the expected win rate against the ranked field, x SCALE -- so a weighted
+    mean of them is an expected win rate too, averaged over what the reader is
+    taken to care about in that proportion. Refitting Bradley-Terry over the
+    union of the member benchmarks would let the widest group (Coding, 16
+    benchmarks) outvote the narrowest (Trust, 4) by sheer count; a mean of the
+    finished indexes gives each group exactly its stated share.
+
+    A model gets a value only when it is ranked on every component. A missing
+    component is not imputed and the remaining weights are not renormalised:
+    a model unranked on Trust would otherwise be scored on Coding and Tooling
+    alone and read as the same kind of number as one measured on all four.
+    """
+
+    key: str
+    fallback_source_url: str
+    components: list[tuple[str, float]]
+
+
+# Coding and Tooling carry the most, level with each other: they are what an
+# open-weight model is run for here. Trust comes next -- a capable model that
+# makes things up is a liability in every one of those uses -- and Knowledge
+# last, since recall is the easiest of the four to supplement with retrieval.
+# Vision and Security are left out: both are specialist columns that rank too
+# few models (a model without images or offensive-security runs would never be
+# scored at all), and neither is what most readers pick a model on. The
+# weights sum to 1, so the column stays on the 0..SCALE scale of its inputs.
+OPENBENCH_INDEX = CompositeDef(
+    key="openbench_index",
+    fallback_source_url="https://github.com/dgrieser/ai-bench#openbench-index",
+    components=[
+        ("coding_index", 0.30),
+        ("tooling_index", 0.30),
+        ("trust_index", 0.25),
+        ("knowledge_index", 0.15),
+    ],
+)
+
+
+def compute_composite(
+    models: list[dict[str, Any]], composite: CompositeDef = OPENBENCH_INDEX
+) -> dict[str, int | None]:
+    """model name -> the composite, from the component values each model
+    already carries in "scores" (so the components must be applied first), or
+    None when any component is missing."""
+    total = sum(weight for _, weight in composite.components)
+    values: dict[str, int | None] = {}
+    for model in models:
+        name = model.get("name")
+        if not isinstance(name, str):
+            continue
+        scores = model.get("scores") if isinstance(model.get("scores"), dict) else {}
+        parts = [(scores.get(key), weight) for key, weight in composite.components]
+        if total <= 0 or any(
+            isinstance(value, bool) or not isinstance(value, (int, float))
+            for value, _ in parts
+        ):
+            values[name] = None
+            continue
+        values[name] = int(round(sum(value * weight for value, weight in parts) / total))
+    return values
+
+
+def composite_declared(doc: dict[str, Any], composite: CompositeDef = OPENBENCH_INDEX) -> bool:
+    """Whether llm.json declares the composite column. It is opt-in the way
+    every column is: a file (or a test fixture) without the declaration simply
+    carries no composite, and the fitted indexes are unaffected."""
+    return isinstance((doc.get("benchmarks") or {}).get(composite.key), dict)
 
 
 def write_calibration(
@@ -1496,6 +1570,15 @@ def validate(doc: dict[str, Any]) -> list[str]:
                 f'"{index.key}" cannot aggregate a derived column: '
                 + ", ".join(sorted(derived))
             )
+    if composite_declared(doc):
+        stray = [
+            key for key, _ in OPENBENCH_INDEX.components if key not in index_keys
+        ]
+        if stray:
+            problems.append(
+                f'"{OPENBENCH_INDEX.key}" averages fitted indexes only, not: '
+                + ", ".join(stray)
+            )
     return problems
 
 
@@ -1618,6 +1701,16 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
         )
         report(index.key, started)
     apply_coverage(doc, per_index)
+    # Last, because it reads the component values just written -- and last
+    # applied is first in each model's maps, which is where the overall column
+    # belongs.
+    if composite_declared(doc):
+        changes.extend(
+            (OPENBENCH_INDEX.key, name, old, new)
+            for name, old, new in apply_index(
+                doc, OPENBENCH_INDEX, compute_composite(models)
+            )
+        )
     return changes
 
 
@@ -1644,10 +1737,10 @@ def refresh_and_report(
             file=sys.stderr,
         )
         return []
-    for index in INDEXES:
-        moved = sum(1 for key, *_ in changes if key == index.key)
+    for key in [OPENBENCH_INDEX.key, *(index.key for index in INDEXES)]:
+        moved = sum(1 for changed, *_ in changes if changed == key)
         if moved:
-            print(f"Recomputed {index.key} for {moved} model(s)")
+            print(f"Recomputed {key} for {moved} model(s)")
     return changes
 
 
@@ -1711,8 +1804,38 @@ def report_stored(
                     print(f"  {rank:2d}. {fmt(value):>9s}  {name:40s} {describe(coverage)}")
         print()
 
+    if composite_declared(doc):
+        print_composite(
+            {name: stored[name].get(OPENBENCH_INDEX.key) for name in stored}, top
+        )
+
     print("Reported from the stored values; nothing recomputed.")
     return 0
+
+
+def print_composite(values: dict[str, Any], top: int) -> None:
+    """The overall column's line and top list, in the shape every fitted
+    index prints."""
+    ranked = sorted(
+        (
+            (value, name)
+            for name, value in values.items()
+            if isinstance(value, int) and not isinstance(value, bool)
+        ),
+        reverse=True,
+    )
+    weights = ", ".join(
+        f"{key} {weight:g}" for key, weight in OPENBENCH_INDEX.components
+    )
+    print(
+        f"{OPENBENCH_INDEX.key}: {len(values)} model(s): {len(ranked)} ranked, "
+        f"{len(values) - len(ranked)} unranked (not ranked on all of {weights})"
+    )
+    if top and ranked:
+        print(f"\nTop {min(top, len(ranked))} by {OPENBENCH_INDEX.key}:")
+        for rank, (value, name) in enumerate(ranked[:top], start=1):
+            print(f"  {rank:2d}. {fmt(value):>9s}  {name}")
+    print()
 
 
 def print_conversions(factors: dict[str, RevisionFactor]) -> None:
@@ -1899,8 +2022,23 @@ def main() -> int:
                     )
         print()
 
-    report("all indexes", started_all)
     recovered = apply_coverage(doc, per_index)
+    if composite_declared(doc):
+        # After the loop: it averages the values apply_index just wrote.
+        values = compute_composite(models)
+        url = source_url(doc, OPENBENCH_INDEX)
+        restamped += sum(
+            1
+            for name, value in values.items()
+            if (by_name[name].get("scores_source") or {}).get(OPENBENCH_INDEX.key)
+            != (url if value is not None else None)
+        )
+        changes = apply_index(doc, OPENBENCH_INDEX, values)
+        all_changes.extend(
+            (OPENBENCH_INDEX.key, name, old, new) for name, old, new in changes
+        )
+        print_composite(values, args.top)
+    report("all indexes", started_all)
 
     if not all_changes and not restamped and not recovered:
         print("The derived indexes are up to date. Nothing to do.")

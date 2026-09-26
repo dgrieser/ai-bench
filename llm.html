@@ -5200,6 +5200,12 @@
           pending: [],
           query: ""
         },
+        // Set while restoreTableFromHash drives the controls, so the handlers
+        // it goes through neither render nor rewrite the address halfway.
+        restoringTable: false,
+        // GPU parameters the address asked for before gpu.json had arrived;
+        // initGpuBar applies them once it has.
+        pendingGpuHash: null,
         gpu: {
           list: [],
           visible: [],
@@ -5873,6 +5879,11 @@
             state.sort.direction = "desc";
             ui.search.value = "";
             ui.sortMode.value = sortModeValue(state.sort.key, state.sort.direction);
+            // The filters were just cleared, and the address has to say so, or
+            // the router would put the previous view straight back.
+            if (state.route.view === "table") {
+              history.replaceState(null, "", `${location.pathname}${location.search}`);
+            }
             init(imported);
           } catch (err) {
             ui.content.innerHTML = `<div class="status error">Import failed: ${escapeHtml(err.message || "Invalid JSON file.")}</div>`;
@@ -6283,6 +6294,228 @@
         });
       }
 
+      /* ── The table in the address ──
+         The same arrangement the comparison page makes with its axes: the
+         table's filters and sort ride in the hash's query ("#?sort=params&
+         ref=1"), so a filtered view is a link, a reload keeps it, and the
+         back button returns from a model page to exactly what was showing.
+
+         Every change is written with replaceState, as the axes are: narrowing
+         a table is a view tweak, and the back button has no business walking
+         back through each keystroke of a search. Only what differs from the
+         default is written, so the untouched table is a bare address.
+
+         The address is the whole state, not a patch on it: a parameter that is
+         absent means its default. That is what makes a pasted link open on
+         the view it was copied from, whatever the reader had set before. */
+
+      const TABLE_LIST_SEP = ",";
+
+      // Written by hand rather than through URLSearchParams, which would escape
+      // the commas a list is made of (see parseHash).
+      function encodeHashValue(value) {
+        return encodeURIComponent(String(value)).replace(/%2C/gi, TABLE_LIST_SEP);
+      }
+
+      function splitHashList(raw) {
+        const seen = new Set();
+        return String(raw || "").split(TABLE_LIST_SEP)
+          .map((part) => part.trim())
+          .filter((part) => part && !seen.has(part) && seen.add(part));
+      }
+
+      function isSortableKey(key) {
+        return FIXED_COLUMNS.some((column) => column.key === key) || state.benchmarkKeys.includes(key);
+      }
+
+      // The GPU filter's part of the address. The card list arrives after the
+      // table, so until it has, whatever the address asked for is carried over
+      // as it was rather than dropped by the first write.
+      function gpuHashParams() {
+        if (!state.gpu.list.length) {
+          return state.pendingGpuHash ? Object.entries(state.pendingGpuHash) : [];
+        }
+        const params = [];
+        const gpu = state.gpu;
+        if (gpu.budget && gpu.selected) {
+          params.push(["gpu", gpu.selected.model]);
+          if (gpu.count > 1) {
+            params.push(["cards", gpu.count]);
+          }
+        } else if (gpu.budget && gpu.custom) {
+          params.push(["vram", formatGb(gpu.budget)]);
+        } else if (gpu.vendor !== "all" && gpu.vendor !== "custom") {
+          params.push(["vendor", gpu.vendor]);
+        }
+        if (gpu.reserve > 0) {
+          params.push(["reserve", reservePercent()]);
+        }
+        return params;
+      }
+
+      function tableHashParams() {
+        const params = [];
+        const search = ui.search.value.trim();
+        if (state.filters.search && search) {
+          params.push(["q", search]);
+        }
+        if (state.filters.includeReference) {
+          params.push(["ref", "1"]);
+        }
+        if (state.filters.selectedModels.length) {
+          params.push(["models", state.filters.selectedModels.map(modelSlug).join(TABLE_LIST_SEP)]);
+        }
+        // Whichever of the two lists is shorter: hiding three columns and
+        // keeping three are both short links.
+        const hidden = state.filters.hiddenBenchmarks.filter((key) => state.benchmarkKeys.includes(key));
+        if (hidden.length) {
+          const shown = visibleBenchmarkKeys();
+          params.push(hidden.length <= shown.length
+            ? ["hide", hidden.join(TABLE_LIST_SEP)]
+            : ["show", shown.join(TABLE_LIST_SEP)]);
+        }
+        if (state.filters.addedWindow !== "all") {
+          params.push(["added", state.filters.addedWindow]);
+        }
+        if (state.sort.key !== defaultSortKey()) {
+          params.push(["sort", state.sort.key]);
+        }
+        if (state.sort.direction === "asc") {
+          params.push(["dir", "asc"]);
+        }
+        params.push(...gpuHashParams());
+        return params;
+      }
+
+      // The table's address, "" for the untouched table.
+      function tableHash() {
+        const params = tableHashParams();
+        return params.length
+          ? `#?${params.map(([key, value]) => `${key}=${encodeHashValue(value)}`).join("&")}`
+          : "";
+      }
+
+      // replaceState fires no hashchange, so nothing re-renders behind this.
+      function syncTableHash() {
+        if (state.route.view !== "table" || state.restoringTable) {
+          return;
+        }
+        const next = tableHash();
+        if (next === (location.hash === "#" ? "" : location.hash)) {
+          return;
+        }
+        // An empty hash still leaves a "#" behind, so the untouched table drops
+        // the fragment altogether instead.
+        history.replaceState(null, "", next || `${location.pathname}${location.search}`);
+      }
+
+      // The links that lead back to the table from a model page or a
+      // comparison carry its address, so they return to the view that was left.
+      function tableHref() {
+        return tableHash() || "#";
+      }
+
+      // Brings the filters, the sort and every control showing them in line
+      // with the address. Renders nothing: renderRoute does that once, after.
+      function restoreTableFromHash(query) {
+        state.restoringTable = true;
+        try {
+          const search = (query.get("q") || "").trim();
+          ui.search.value = search;
+          state.filters.search = search.toLowerCase();
+
+          // Before the model list, because it decides which models may be in
+          // it: setIncludeReference drops reference rows from the selection.
+          setIncludeReference(query.get("ref") === "1");
+          state.filters.selectedModels = splitHashList(query.get("models"))
+            .map((slug) => state.modelsBySlug.get(decodeSlug(slug)))
+            .filter((model) => model && (state.filters.includeReference || !isReferenceModel(model)))
+            .map((model) => model.name || "Unknown");
+          updateCompareWidget();
+
+          let hidden = [];
+          if (query.has("show")) {
+            const shown = new Set(splitHashList(query.get("show")));
+            // A list naming no column the file has would hide every column;
+            // that is a stale link, not a request for an empty table.
+            if (state.benchmarkKeys.some((key) => shown.has(key))) {
+              hidden = state.benchmarkKeys.filter((key) => !shown.has(key));
+            }
+          } else {
+            hidden = splitHashList(query.get("hide")).filter((key) => state.benchmarkKeys.includes(key));
+          }
+          if (hidden.join() !== state.filters.hiddenBenchmarks.join()) {
+            state.benchmarkKeys.forEach((key) => delete state.columnWidths[key]);
+          }
+          state.filters.hiddenBenchmarks = hidden;
+          updateBenchmarkWidget();
+
+          const added = query.get("added") || "all";
+          const offered = [...ui.addedWindow.options].some((option) => option.value === added);
+          setAddedWindow(offered ? added : "all");
+
+          const sortKey = query.get("sort");
+          state.sort.key = sortKey && isSortableKey(sortKey) ? sortKey : defaultSortKey();
+          state.sort.direction = query.get("dir") === "asc" ? "asc" : "desc";
+          ensureSortVisible();
+          populateSortOptions();
+
+          const gpuParams = {};
+          ["gpu", "cards", "vram", "vendor", "reserve"].forEach((key) => {
+            if (query.has(key)) {
+              gpuParams[key] = query.get(key);
+            }
+          });
+          state.pendingGpuHash = Object.keys(gpuParams).length ? gpuParams : null;
+          if (state.gpu.list.length) {
+            restoreGpuFromHash();
+          }
+        } finally {
+          state.restoringTable = false;
+        }
+      }
+
+      // The GPU half of restoreTableFromHash, run again by initGpuBar when the
+      // card list lands after the table did. The controls are driven through
+      // the same functions a click uses, so the bar cannot end up showing one
+      // thing and filtering on another.
+      function restoreGpuFromHash() {
+        const params = state.pendingGpuHash || {};
+        state.pendingGpuHash = null;
+        const wasRestoring = state.restoringTable;
+        state.restoringTable = true;
+        try {
+          gpuResetBar();
+          const vendorOffered = (vendor) => [...ui.gpuVendor.options].some((option) => option.value === vendor);
+          const card = params.gpu
+            ? (state.gpu.list.find((gpu) => gpu.model === params.gpu && gpu.manufacturer === params.vendor)
+              || state.gpu.list.find((gpu) => gpu.model === params.gpu))
+            : null;
+          const vram = parseFloat(String(params.vram || "").replace(",", "."));
+          if (card) {
+            state.gpu.count = clampGpuCount(Number(params.cards) || 1);
+            ui.gpuCount.value = String(state.gpu.count);
+            setGpuCountDisabled(false);
+            gpuSelect(card);
+          } else if (Number.isFinite(vram) && vram > 0) {
+            state.gpu.custom = true;
+            state.gpu.vendor = "custom";
+            ui.gpuVendor.value = "custom";
+            ui.gpuVram.value = formatGb(vram);
+            setGpuCountDisabled(true);
+            gpuSetBudget(vram);
+          } else if (params.vendor && params.vendor !== "custom" && vendorOffered(params.vendor)) {
+            state.gpu.vendor = params.vendor;
+            ui.gpuVendor.value = params.vendor;
+          }
+          if (params.reserve) {
+            gpuSetReserve(parseInt(params.reserve, 10));
+          }
+        } finally {
+          state.restoringTable = wasRestoring;
+        }
+      }
+
       function applyAndRender() {
         if (!state.data) {
           return;
@@ -6291,6 +6524,11 @@
         // showing (a debounced input resolving after navigation); the table
         // waits until the route is back.
         if (state.route.view !== "table") {
+          return;
+        }
+        // Restoring the address drives the controls one at a time; the table
+        // is drawn once, when they all agree.
+        if (state.restoringTable) {
           return;
         }
 
@@ -6309,6 +6547,7 @@
         renderTable();
         updateMeta();
         updateFilterGlow();
+        syncTableHash();
       }
 
       // Marks controls that currently constrain the table so CSS can
@@ -7476,7 +7715,7 @@
         // the NEW badge beside its name already says the whole row is new —
         // marking each cell as well would be the same news thirty times over.
         if (isRecentModel(model)) return 0;
-        // A derived column (Coding, Tooling, Knowledge, Vision, Trust, Security) is recomputed
+        // A derived column (Index, Coding, Tooling, Knowledge, Vision, Trust, Security) is recomputed
         // from the others, so its date moves whenever any input moves. That
         // is arithmetic catching up, not a new measurement, and the inputs
         // that did change are marked in their own cells.
@@ -7741,7 +7980,7 @@
           const slug = decodeSlug(match[1]);
           return { view: "model", slug, slugs: [slug], axes };
         }
-        return { view: "table", slug: "", slugs: [], axes };
+        return { view: "table", slug: "", slugs: [], axes, query };
       }
 
       function renderRoute() {
@@ -7798,6 +8037,7 @@
           window.scrollTo(0, 0);
         } else {
           document.title = state.data.title || "OpenBench Index";
+          restoreTableFromHash(route.query);
           applyAndRender();
           // The table was rendered synchronously just now, so the page is
           // already tall enough for the old position to land where it was.
@@ -7871,7 +8111,7 @@
           } else if (action === "compare-remove") {
             location.hash = compareHash(state.route.slugs.filter((s) => s !== slug));
           } else if (action === "compare-clear") {
-            location.hash = "";
+            location.hash = tableHref();
           } else if (action === "compare-copy") {
             copyCompareLink(actionEl);
           }
@@ -8013,7 +8253,7 @@
         closeTip();
         ui.content.innerHTML = `
           <section class="detail-head">
-            <a class="detail-back" href="#">&larr; Leaderboard</a>
+            <a class="detail-back" href="${escapeAttr(tableHref())}">&larr; Leaderboard</a>
           </section>
           <div class="empty">No model called &ldquo;${escapeHtml(slug)}&rdquo; is in the index.</div>
         `;
@@ -8031,7 +8271,7 @@
         return `
           <section class="detail-head">
             <div class="detail-head-main">
-              <a class="detail-back" href="#">&larr; Leaderboard</a>
+              <a class="detail-back" href="${escapeAttr(tableHref())}">&larr; Leaderboard</a>
               <h2 class="detail-name${isReferenceModel(model) ? " model-reference" : ""}">${isNew ? renderNewBadge(model.date_added) : ""}${withReferenceLock(model, escapeHtml(model.name || "Unknown"))}</h2>
               <p class="detail-byline">${creatorUrl
                 ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>`
@@ -9052,7 +9292,7 @@
         closeTip();
         ui.content.innerHTML = `
           <section class="detail-head">
-            <a class="detail-back" href="#">&larr; Leaderboard</a>
+            <a class="detail-back" href="${escapeAttr(tableHref())}">&larr; Leaderboard</a>
           </section>
           <div class="empty">No model called ${slugs.map((slug) => `&ldquo;${escapeHtml(slug)}&rdquo;`).join(" or ")} is in the index.</div>
         `;
@@ -9117,7 +9357,7 @@
         return `
           <section class="detail-head compare-head">
             <div class="detail-head-main">
-              <a class="detail-back" href="#">&larr; Leaderboard</a>
+              <a class="detail-back" href="${escapeAttr(tableHref())}">&larr; Leaderboard</a>
               <h2 class="detail-name compare-name">${heading}</h2>
               <div class="compare-actions">${compareHeadActions(models)}</div>
               ${notes}
@@ -9536,6 +9776,12 @@
         if (!state.gpu.eventsBound) {
           bindGpuEvents();
           state.gpu.eventsBound = true;
+        }
+        // An address that asked for a GPU filter could not have it applied
+        // before the cards were known.
+        if (state.pendingGpuHash) {
+          restoreGpuFromHash();
+          applyAndRender();
         }
       }
 
