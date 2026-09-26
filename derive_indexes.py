@@ -3,7 +3,8 @@
 aggregate: the Coding index from the coding benchmarks, the Tooling index from
 the agentic tool-use benchmarks, the Knowledge index from the knowledge and
 reasoning benchmarks, the Vision index from the multimodal ones, the Trust
-index from the honesty, grounding and instruction-compliance ones.
+index from the honesty, grounding and instruction-compliance ones, the Security
+index from the offensive-security ones.
 
 Unlike every other column, a derived index is not scraped: it is computed from
 scores already in llm.json, so it has to be recomputed whenever any of them
@@ -121,7 +122,7 @@ import _history
 from _reference import apply_reference_flags
 from _precedence import RANK_CURATED, source_rank
 from _scores import score_step, stamp_score_updated
-# The five indexes are the slowest thing this repository does that is not a
+# The six indexes are the slowest thing this repository does that is not a
 # network call -- about 41 seconds of a 279-second refresh, spent twice over,
 # and nothing in either log said which of them it went to, because the only
 # per-index line printed is a count of models.
@@ -143,7 +144,7 @@ class IndexDef(NamedTuple):
     `transfer_ratio` is how far a whole index's worth of one benchmark misses
     the rest of the index, over the variance between models -- how much of what
     a benchmark tells you is about this model rather than about this benchmark.
-    It is in shares of the group, so the five are directly comparable with each
+    It is in shares of the group, so the six are directly comparable with each
     other and with MIN_SCORED_FRACTION. It sets how hard a thinly covered model
     is pulled toward the middle (see coverage_reliability), and it is measured
     rather than chosen: ./derive_indexes.py --calibrate -w re-derives it into
@@ -416,6 +417,41 @@ INDEXES: list[IndexDef] = [
             # self-reports, which is disqualifying provenance for a column
             # whose whole subject is trustworthiness -- see README, "What the
             # Trust index leaves out".
+        ],
+    ),
+    IndexDef(
+        key="security_index",
+        fallback_source_url="https://github.com/dgrieser/ai-bench#security-index",
+        contributing=[
+            # The anchor: 869 exploitation tasks over three targets, nobody
+            # near the ceiling (33.7 on the board, 42.4 claimed) and an 18.9-
+            # point top-five spread. Its weakness is the floor -- most models
+            # below the frontier solve almost none -- which is what the members
+            # beneath it are for.
+            ("exploitgym", 1.0),
+            # The one member nobody self-reports: Vals runs every model itself
+            # on a private set, so its comparisons count in full where the
+            # llm-stats and model-card values the other three lean on count
+            # SECOND_HAND_WEIGHT. Below the anchor only because its headline
+            # pools a PoC task with a patch task that is near its ceiling for
+            # everyone (82-88%), so its spread is the PoC half's.
+            ("cyberbench_1_1", 0.9),
+            # The snapshot vendors report (260505, 183 tasks). Wide spread and
+            # far from its ceiling, but the maintainers' own board is six rows
+            # frozen since June, so nearly every value is a lab's claim under a
+            # harness it chose.
+            ("sec_bench_pro", 0.6),
+            # The widest open-weight coverage of the four and the least
+            # resolving: Level 1 hands the agent the vulnerability description,
+            # vendors' pipelines already reach 0.95-0.99, and the model-focused
+            # values cluster at 77-95 at the top. Kept for the mid-field it
+            # still separates (23.5 to 77.2) and at a weight that lets it
+            # break ties rather than set the order.
+            ("cybergym", 0.4),
+            # Deliberately not aggregated: exploitbench is 41 V8 tasks from one
+            # target, its official board has not moved since June, the top of
+            # the field self-reports 100%, and a third-party repository claims
+            # to hold its answers -- see README, "Security Index".
         ],
     ),
 ]

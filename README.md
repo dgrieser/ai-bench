@@ -34,7 +34,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
-| **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench) | Astro island props |
+| **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench and CyberBench) | Astro island props |
 | **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
 | **Epoch AI Benchmarking Hub** | Independent evaluator (own runs) and mirror of benchmark boards; a second source, CC BY 4.0 | One zip of CSVs, plus each revision-split benchmark's hub page (and OSWorld 2.0's official board, for releases) |
@@ -720,8 +720,8 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
 | 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
-| 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
 | 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs (a 0) left out. A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
@@ -1240,16 +1240,16 @@ the same four columns that are wrong for Knowledge are right there.
 
 ## Cybersecurity
 
-Four columns measure offensive security work, and they sit in **no derived
-index**. Each is an agentic coding task at heart — write a crashing input, turn
-a crash into an exploit — and each correlates with the Coding index across the
-few models both cover (Spearman 0.76 to 0.95 over 7 to 12 models). But it
-measures a dual-use specialty that labs now train for directly (Xiaomi's
-MiMo-V2.6 cards describe cyber tasks in the RL mix), and almost every
-open-weight number is the lab's own report under a harness it chose. Voting
-that into the Coding index would pay a specialisation as general coding, and a
-Security index of its own would rank some twenty models on self-reports. The
-columns are shown, not voted. The research behind these choices is
+Five columns measure offensive security work. Each is an agentic coding task at
+heart — write a crashing input, turn a crash into an exploit — and each
+correlates with the Coding index across the few models both cover (Spearman
+0.76 to 0.95 over 7 to 12 models). But it measures a dual-use specialty that
+labs now train for directly (Xiaomi's MiMo-V2.6 cards describe cyber tasks in
+the RL mix), and almost every open-weight number is the lab's own report under
+a harness it chose. Voting that into the Coding index would pay a
+specialisation as general coding, so four of them feed an index of their own,
+the [Security index](#security-index), and nothing else. The research behind
+these choices is
 [docs/security-benchmarks-2026-09.md](docs/security-benchmarks-2026-09.md).
 
 | Column | What the agent does | Leading source (rank) | Gap fillers | What the column refuses |
@@ -1257,6 +1257,7 @@ columns are shown, not voted. The research behind these choices is
 | `cybergym` | Writes a PoC that crashes one of 1,507 real OSS-Fuzz vulnerabilities, given its description (Level 1) | cybergym.io (2) | llm-stats board, model cards | `focus: agent` rows (a security vendor's pipeline around the model, 0.87-0.99 where the model alone reaches 0.77-0.85); multi-model systems; pass@10 (`score_x1` differing from `score_10`) and 30-trial rows |
 | `exploitgym` | Turns a crashing input into a flag-capturing exploit; 869 tasks across userspace, V8 and the kernel; counted only when a judge confirms the intended bug was used | cybergym.io (2) | llm-stats board, model cards | Any budget but 6 hours (the maintainers run 2; vendors quote 6); subset runs; the retired 898-task v0 set; agent rows |
 | `exploitbench` | Climbs a five-tier ladder toward a V8 exploit on 41 N-day bugs; the score is mean ladder coverage | llm-stats board (5) | Epoch's copy of the board (7), model cards | AutoNudge runs, where the harness keeps prompting the agent |
+| `cyberbench_1_1` | Writes a PoC that triggers an OSS-Fuzz vulnerability, then a patch that fixes it, on Vals' private set | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; the column is the board's pooled headline. Version-pinned to 1.1 in `fetch_vals.VERSIONS`, since the slug names no revision |
 | `sec_bench_pro` | Writes a PoC for a real bug in V8 or SpiderMonkey from a vague report, with no crash trace | SEC-bench Pro's own board (2) | llm-stats board, model cards | Every snapshot but 260505 (the 344-task 260617 adds the Linux kernel and scores the same model up to 12 points higher); the completed-only rate, which drops timeouts |
 
 The sources are thinner than they look. cybergym.io's CyberGym board runs no
@@ -2216,7 +2217,7 @@ Re-running `--calibrate` after the admission left the coding group's
 
 ### Why the evidence bar is 18%
 
-`MIN_SCORED_FRACTION` is the one number all five derived indexes share: sum the
+`MIN_SCORED_FRACTION` is the one number all six derived indexes share: sum the
 weights of the contributing benchmarks a model actually has a score on, and if that is
 below `MIN_SCORED_FRACTION × total group weight`, the model is `null` instead of
 ranked. It is a share of *weight*, not a count of benchmarks — three cheap columns can
@@ -2289,7 +2290,7 @@ gatekeeper, because [the data says coding benchmarks transfer](#how-far-one-benc
 Whether a thinly measured model is ranked at all is therefore decided here and nowhere
 else, which is an argument for holding 18% rather than lowering it.
 
-The setting is global to all five indexes today. They do not want the same thing —
+The setting is global to all six indexes today. They do not want the same thing —
 Tooling gains 4 models between 0.20 and 0.15 where Coding gains 22, Knowledge is
 flat across almost the whole range, and Vision and Trust are flat across all of it — so
 if they ever need to diverge, the place for it is a per-index override on `IndexDef`,
@@ -2919,6 +2920,60 @@ score, and 11 of the 12 the column leaves out have no score in any member —
 [Vision](#why-the-evidence-bar-is-nearly-inert-here), what filters this column is the
 availability of the underlying run, not the threshold.
 
+## Security Index
+
+The sixth derived column, **Security**, ranks offensive-security capability:
+finding the input that crashes a real program, and turning a crash into a
+working exploit. Same script (`derive_indexes.py`), same comparison-and-fit
+math, shrinkage and coverage rules as [above](#coding-index), computed over
+four of the five [Cybersecurity](#cybersecurity) columns and written to each
+model's `scores.security_index`. Ranked values cite this section
+(`https://github.com/dgrieser/ai-bench#security-index`).
+
+| Benchmark | Weight | Why there |
+| --- | --- | --- |
+| ExploitGym (`exploitgym`) | 1.0 | The anchor. 869 tasks across userspace, V8 and the kernel; nobody near the ceiling (33.7 on the board, 42.4 claimed) and an 18.9-point top-five spread. Floor-compressed — most models below the frontier solve almost none — which the members beneath it cover |
+| CyberBench v1.1 (`cyberbench_1_1`) | 0.9 | The one member nobody self-reports: Vals runs every model itself on a private set, so its comparisons count in full while the lab-reported values in the other three count half (`SECOND_HAND_WEIGHT`). Under the anchor because its headline pools a PoC task with a patch task near its ceiling for everyone (82-88%) |
+| SEC-bench Pro (`sec_bench_pro`) | 0.6 | Wide spread, far from its ceiling, on the 183-task snapshot vendors report; but the maintainers' own board is six rows frozen since June, so nearly every value is a lab's claim |
+| CyberGym (`cybergym`) | 0.4 | The widest open-weight coverage and the least resolving: Level 1 hands the agent the description, vendor pipelines already reach 0.95-0.99, and model-focused values cluster at 77-95 at the top. Kept for the mid-field it still separates, at a weight that breaks ties rather than sets the order |
+
+**ExploitBench is left out**: 41 V8 tasks from one target, an official board
+that has not moved since June, a self-reported 100% at the top, and a
+third-party repository claiming to hold its answers. It stays a column.
+
+**It ranks 13 models** — 7 open-weight, 6 of the closed reference rows — which
+makes it the thinnest index here by a wide margin, and every reading of it
+should start from that. The six models carrying only a CyberGym score
+(`deepseek-v4-pro`, `deepseek-v4-flash`, `deepseek-v4-flash-vision`,
+`hy4-preview`, `atria-dawn-preview`, `glm-4-7`) are unranked: CyberGym is 0.4 of
+2.9, 13.8% of the index, under the [18% evidence bar](#why-the-evidence-bar-is-18).
+That is the bar doing its job — a column that clusters its top at 77-95 is not
+enough to place a model on offensive security.
+
+When it was added it read, top to bottom: `gpt-5-6-sol` 86.8k,
+`deepseek-v4-1-flash` 73.3k, `mimo-v2-6-flash` 71.0k, `mimo-v2-6-pro` 70.8k,
+`gpt-5-6-terra` 70.1k, `gpt-6-astra` 60.7k, `claude-opus-5` 54.7k,
+`claude-fable-5-1` 54.3k, `glm-5-3` 42.0k, `gpt-5-6-luna` 39.3k, `glm-5-2`
+17.4k, `kimi-k2-5` 7.2k, `minimax-m2-5` 2.2k. Two things in that order are
+about the instruments rather than the models:
+
+- **Refusals score as failures.** `gpt-6-astra` tops every lab-reported board
+  it is on (42.4 ExploitGym, 85.4 SEC-bench Pro) and sits sixth, because Vals'
+  CyberBench has it at 41.1 with **0%** on the PoC half — the signature of a
+  model declining the task under Vals' harness, not of one failing it. Being
+  Vals' own run, that comparison counts double the lab-reported ones. The
+  Claude rows carry the same kind of risk: Anthropic reports its safeguards
+  blocking Fable 5 on part of ExploitBench.
+- **Almost everything above the fold is a self-report.** Of the 31 values
+  behind the ranked field, 6 are Vals' CyberBench runs and 2 the SEC-bench
+  maintainers' own; the other 23 are labs' numbers — 16 read off llm-stats, 7
+  off cybergym.io, which ranks them but hosts the labs' own submissions.
+
+Calibrated on its first night at `transfer_ratio` 0.132 over 20 leave-one-out
+samples — far above the other capability indexes (0.015-0.051), which says what
+the table does: with four members and thirteen models, one benchmark speaks for
+the rest only loosely.
+
 ## Openness Classification
 
 The `_openness.py` module classifies models as:
@@ -3541,7 +3596,7 @@ rather than leaving the reader to subtract log timestamps:
 - `update.py` times each fetcher subprocess *and* each in-process phase --
   the per-source update passes, the index refresh, the history sync, the
   write -- so its parts add up to its whole.
-- `derive_indexes.py` times each of the five indexes separately, both when
+- `derive_indexes.py` times each of the six indexes separately, both when
   run as a script and when update.py refreshes the columns in memory.
 - `_llmstats_mapping` and `_huggingface_mapping` time their scrapes, and
   `_openness` times its three sources when it rebuilds.

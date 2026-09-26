@@ -25,6 +25,11 @@ reference rows). Snapshot: 2026-09-25.
 > all, read from Epoch AI's copy of its board (the hub fetcher had landed in the
 > meantime) plus the llm-stats board and model cards. See README,
 > "Cybersecurity".
+>
+> **Follow-up (2026-09-26).** The Security index shipped with the §4 weights
+> (ExploitGym 1.0, CyberBench v1.1 0.9, SEC-bench Pro 0.6, CyberGym 0.4),
+> after Vals' CyberBench was added as `cyberbench_1_1`. It ranks 13 models. See
+> README, "Security Index".
 
 ---
 
