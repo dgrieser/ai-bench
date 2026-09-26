@@ -185,7 +185,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience (1), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience (1), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3), Humanity's Last Exam Diamond (0.3).",
       "settings": [
         "derived",
         "index scale"
@@ -1532,10 +1532,10 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 33972,
+        "openbench_index": 33975,
         "coding_index": 25247,
         "tooling_index": 35377,
-        "knowledge_index": 24942,
+        "knowledge_index": 24961,
         "vision_index": null,
         "trust_index": 48173,
         "security_index": null,
@@ -1975,8 +1975,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -2001,10 +2001,10 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29724,
+        "openbench_index": 29728,
         "coding_index": 22545,
         "tooling_index": 33801,
-        "knowledge_index": 18029,
+        "knowledge_index": 18055,
         "vision_index": 11105,
         "trust_index": 40464,
         "security_index": null,
@@ -2451,8 +2451,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -2487,7 +2487,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33878,
+        "knowledge_index": 33895,
         "vision_index": 23361,
         "trust_index": 39552,
         "security_index": null,
@@ -2842,8 +2842,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -2881,7 +2881,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 62685,
+        "knowledge_index": 62668,
         "vision_index": null,
         "trust_index": 49066,
         "security_index": null,
@@ -3249,8 +3249,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -3282,7 +3282,7 @@
         "openbench_index": null,
         "coding_index": 43029,
         "tooling_index": null,
-        "knowledge_index": 58007,
+        "knowledge_index": 57992,
         "vision_index": null,
         "trust_index": 54528,
         "security_index": 2240,
@@ -3723,8 +3723,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -3762,7 +3762,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 21086,
+        "knowledge_index": 21109,
         "vision_index": null,
         "trust_index": 47006,
         "security_index": null,
@@ -4121,8 +4121,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -4147,10 +4147,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 31289,
+        "openbench_index": 31292,
         "coding_index": 27036,
         "tooling_index": 30152,
-        "knowledge_index": 32061,
+        "knowledge_index": 32082,
         "vision_index": null,
         "trust_index": 37292,
         "security_index": null,
@@ -4582,8 +4582,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -4611,7 +4611,7 @@
         "openbench_index": 30353,
         "coding_index": 21530,
         "tooling_index": 21335,
-        "knowledge_index": 37860,
+        "knowledge_index": 37863,
         "vision_index": null,
         "trust_index": 47258,
         "security_index": null,
@@ -5044,8 +5044,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -5073,7 +5073,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 25501,
-        "knowledge_index": 43060,
+        "knowledge_index": 43056,
         "vision_index": null,
         "trust_index": 49969,
         "security_index": null,
@@ -5453,8 +5453,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -5479,10 +5479,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 54585,
+        "openbench_index": 54581,
         "coding_index": 47255,
         "tooling_index": 52679,
-        "knowledge_index": 70008,
+        "knowledge_index": 69982,
         "vision_index": 65496,
         "trust_index": 56414,
         "security_index": null,
@@ -6010,8 +6010,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -6056,10 +6056,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 49584,
+        "openbench_index": 49581,
         "coding_index": 35774,
         "tooling_index": 51881,
-        "knowledge_index": 63286,
+        "knowledge_index": 63262,
         "vision_index": 51404,
         "trust_index": 55179,
         "security_index": null,
@@ -6536,8 +6536,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -6585,7 +6585,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 60326,
-        "knowledge_index": 61596,
+        "knowledge_index": 61573,
         "vision_index": 54873,
         "trust_index": 58236,
         "security_index": null,
@@ -7015,8 +7015,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -7064,7 +7064,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 46371,
-        "knowledge_index": 56650,
+        "knowledge_index": 56630,
         "vision_index": 42679,
         "trust_index": 54825,
         "security_index": null,
@@ -7487,8 +7487,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -7536,7 +7536,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 38113,
-        "knowledge_index": 46957,
+        "knowledge_index": 46949,
         "vision_index": 37293,
         "trust_index": 51288,
         "security_index": null,
@@ -7966,8 +7966,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -8015,7 +8015,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 34418,
-        "knowledge_index": 33097,
+        "knowledge_index": 33113,
         "vision_index": 33048,
         "trust_index": 46315,
         "security_index": null,
@@ -8413,8 +8413,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -8462,7 +8462,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 13722,
-        "knowledge_index": 13841,
+        "knowledge_index": 13886,
         "vision_index": 12911,
         "trust_index": 42182,
         "security_index": null,
@@ -8859,8 +8859,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -8906,7 +8906,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 7952,
-        "knowledge_index": 14618,
+        "knowledge_index": 14662,
         "vision_index": 223,
         "trust_index": 41067,
         "security_index": null,
@@ -9293,8 +9293,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -9337,10 +9337,10 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 42397,
+        "openbench_index": 42394,
         "coding_index": 27918,
         "tooling_index": 38641,
-        "knowledge_index": 60973,
+        "knowledge_index": 60956,
         "vision_index": null,
         "trust_index": 53132,
         "security_index": null,
@@ -9801,8 +9801,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -9834,7 +9834,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 22686,
+        "knowledge_index": 22708,
         "vision_index": null,
         "trust_index": 31629,
         "security_index": null,
@@ -10183,8 +10183,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -10217,7 +10217,7 @@
         "openbench_index": 34091,
         "coding_index": 29370,
         "tooling_index": 32015,
-        "knowledge_index": 40036,
+        "knowledge_index": 40035,
         "vision_index": null,
         "trust_index": 38682,
         "security_index": null,
@@ -10645,8 +10645,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -10672,10 +10672,10 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 41661,
+        "openbench_index": 41659,
         "coding_index": 31427,
         "tooling_index": 40538,
-        "knowledge_index": 53828,
+        "knowledge_index": 53815,
         "vision_index": null,
         "trust_index": 47988,
         "security_index": null,
@@ -11129,8 +11129,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -11155,10 +11155,10 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 35686,
+        "openbench_index": 35684,
         "coding_index": 23928,
         "tooling_index": 28888,
-        "knowledge_index": 48420,
+        "knowledge_index": 48410,
         "vision_index": null,
         "trust_index": 50312,
         "security_index": null,
@@ -11588,8 +11588,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -11614,10 +11614,10 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 37126,
+        "openbench_index": 37124,
         "coding_index": 25216,
         "tooling_index": 26960,
-        "knowledge_index": 50192,
+        "knowledge_index": 50180,
         "vision_index": 26690,
         "trust_index": 55777,
         "security_index": null,
@@ -12049,8 +12049,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -12085,10 +12085,10 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 56481,
+        "openbench_index": 56478,
         "coding_index": 44686,
         "tooling_index": 50239,
-        "knowledge_index": 72536,
+        "knowledge_index": 72520,
         "vision_index": null,
         "trust_index": 68492,
         "security_index": null,
@@ -12593,8 +12593,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -12622,7 +12622,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 29872,
+        "knowledge_index": 29894,
         "vision_index": null,
         "trust_index": 22164,
         "security_index": null,
@@ -12975,8 +12975,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -13007,7 +13007,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34581,
+        "knowledge_index": 34595,
         "vision_index": null,
         "trust_index": 33767,
         "security_index": null,
@@ -13360,8 +13360,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -13392,7 +13392,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11090,
-        "knowledge_index": 44227,
+        "knowledge_index": 44228,
         "vision_index": null,
         "trust_index": 43930,
         "security_index": null,
@@ -13776,8 +13776,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -13802,10 +13802,10 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 48993,
+        "openbench_index": 48990,
         "coding_index": 36984,
         "tooling_index": 50450,
-        "knowledge_index": 60303,
+        "knowledge_index": 60280,
         "vision_index": 44647,
         "trust_index": 54871,
         "security_index": null,
@@ -14260,8 +14260,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -14299,7 +14299,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 41599,
-        "knowledge_index": 44547,
+        "knowledge_index": 44543,
         "vision_index": 38300,
         "trust_index": 52307,
         "security_index": null,
@@ -14691,8 +14691,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -14730,7 +14730,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 17022,
-        "knowledge_index": 39560,
+        "knowledge_index": 39565,
         "vision_index": 18450,
         "trust_index": 51114,
         "security_index": null,
@@ -15109,8 +15109,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -15148,7 +15148,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11345,
-        "knowledge_index": 32576,
+        "knowledge_index": 32594,
         "vision_index": 11105,
         "trust_index": 47464,
         "security_index": null,
@@ -15527,8 +15527,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -15563,10 +15563,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 48379,
+        "openbench_index": 48376,
         "coding_index": 35016,
         "tooling_index": 45460,
-        "knowledge_index": 62517,
+        "knowledge_index": 62493,
         "vision_index": 52334,
         "trust_index": 59436,
         "security_index": null,
@@ -16051,8 +16051,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -16093,10 +16093,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 54466,
+        "openbench_index": 54462,
         "coding_index": 42657,
         "tooling_index": 54190,
-        "knowledge_index": 66837,
+        "knowledge_index": 66812,
         "vision_index": 51292,
         "trust_index": 61544,
         "security_index": null,
@@ -16575,8 +16575,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -16617,10 +16617,10 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 72148,
+        "openbench_index": 72144,
         "coding_index": 73811,
         "tooling_index": 80057,
-        "knowledge_index": 82125,
+        "knowledge_index": 82096,
         "vision_index": null,
         "trust_index": 54675,
         "security_index": null,
@@ -17217,8 +17217,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "trust_index": {
           "measured": [
@@ -17246,10 +17246,10 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 63145,
+        "openbench_index": 63141,
         "coding_index": 52373,
         "tooling_index": 70574,
-        "knowledge_index": 70805,
+        "knowledge_index": 70779,
         "vision_index": null,
         "trust_index": 62562,
         "security_index": null,
@@ -17710,8 +17710,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -17741,7 +17741,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 10152,
-        "knowledge_index": 14133,
+        "knowledge_index": 14177,
         "vision_index": null,
         "trust_index": 38391,
         "security_index": null,
@@ -18086,8 +18086,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -18118,7 +18118,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 8387,
-        "knowledge_index": 8595,
+        "knowledge_index": 8641,
         "vision_index": null,
         "trust_index": 25472,
         "security_index": null,
@@ -18476,8 +18476,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -18508,7 +18508,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 16612,
-        "knowledge_index": 14639,
+        "knowledge_index": 14683,
         "vision_index": null,
         "trust_index": 33127,
         "security_index": null,
@@ -18866,8 +18866,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -18895,10 +18895,10 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 45629,
+        "openbench_index": 45628,
         "coding_index": 32000,
         "tooling_index": 50135,
-        "knowledge_index": 44696,
+        "knowledge_index": 44690,
         "vision_index": 32573,
         "trust_index": 57135,
         "security_index": null,
@@ -19377,8 +19377,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "aime_2025"
           ]
@@ -19413,10 +19413,10 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 23223,
+        "openbench_index": 23227,
         "coding_index": 16240,
         "tooling_index": 24562,
-        "knowledge_index": 17468,
+        "knowledge_index": 17495,
         "vision_index": 16825,
         "trust_index": 33450,
         "security_index": null,
@@ -19831,8 +19831,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -19867,7 +19867,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 26466,
-        "knowledge_index": 26104,
+        "knowledge_index": 26135,
         "vision_index": 19241,
         "trust_index": 46307,
         "security_index": null,
@@ -20238,8 +20238,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "vision_index": {
           "measured": [
@@ -20280,7 +20280,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11808,
-        "knowledge_index": 13329,
+        "knowledge_index": 13395,
         "vision_index": 5241,
         "trust_index": 20062,
         "security_index": null,
@@ -20637,8 +20637,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -20673,7 +20673,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 42144,
-        "knowledge_index": 62825,
+        "knowledge_index": 62800,
         "vision_index": 30899,
         "trust_index": 58307,
         "security_index": null,
@@ -21068,8 +21068,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -21107,7 +21107,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 52397,
-        "knowledge_index": 60860,
+        "knowledge_index": 60829,
         "vision_index": 59516,
         "trust_index": 56981,
         "security_index": null,
@@ -21493,8 +21493,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -21526,10 +21526,10 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 13731,
+        "openbench_index": 13736,
         "coding_index": 9530,
         "tooling_index": 9552,
-        "knowledge_index": 11020,
+        "knowledge_index": 11053,
         "vision_index": 3617,
         "trust_index": 25415,
         "security_index": null,
@@ -21935,8 +21935,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -21968,10 +21968,10 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 43751,
+        "openbench_index": 43750,
         "coding_index": 41684,
         "tooling_index": 38971,
-        "knowledge_index": 46365,
+        "knowledge_index": 46360,
         "vision_index": null,
         "trust_index": 50399,
         "security_index": null,
@@ -22410,8 +22410,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -22436,10 +22436,10 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 75270,
+        "openbench_index": 75263,
         "coding_index": 68036,
         "tooling_index": 79446,
-        "knowledge_index": 90647,
+        "knowledge_index": 90605,
         "vision_index": null,
         "trust_index": 69712,
         "security_index": 17368,
@@ -23042,8 +23042,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "trust_index": {
           "measured": [
@@ -23076,10 +23076,10 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 69803,
+        "openbench_index": 69799,
         "coding_index": 63207,
         "tooling_index": 69493,
-        "knowledge_index": 84159,
+        "knowledge_index": 84130,
         "vision_index": 73355,
         "trust_index": 69477,
         "security_index": null,
@@ -23582,8 +23582,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -23620,7 +23620,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 32430,
+        "knowledge_index": 32439,
         "vision_index": null,
         "trust_index": 46644,
         "security_index": null,
@@ -23952,8 +23952,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -23984,7 +23984,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 15062,
+        "knowledge_index": 15092,
         "vision_index": null,
         "trust_index": 25792,
         "security_index": null,
@@ -24312,8 +24312,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -24341,10 +24341,10 @@
       },
       "context": "10m",
       "scores": {
-        "openbench_index": 22452,
+        "openbench_index": 22456,
         "coding_index": 13458,
         "tooling_index": 11881,
-        "knowledge_index": 20758,
+        "knowledge_index": 20781,
         "vision_index": 18885,
         "trust_index": 46948,
         "security_index": null,
@@ -24782,8 +24782,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -24819,10 +24819,10 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 27250,
+        "openbench_index": 27251,
         "coding_index": 19129,
         "tooling_index": 15798,
-        "knowledge_index": 30185,
+        "knowledge_index": 30197,
         "vision_index": 24763,
         "trust_index": 48975,
         "security_index": null,
@@ -25275,8 +25275,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -25315,7 +25315,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 7592,
-        "knowledge_index": 18713,
+        "knowledge_index": 18739,
         "vision_index": null,
         "trust_index": 40303,
         "security_index": null,
@@ -25668,8 +25668,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -25695,7 +25695,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 28784,
+        "knowledge_index": 28798,
         "vision_index": null,
         "trust_index": 41530,
         "security_index": null,
@@ -26032,8 +26032,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -26060,7 +26060,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26138,
+        "knowledge_index": 26169,
         "vision_index": null,
         "trust_index": 43374,
         "security_index": null,
@@ -26381,8 +26381,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -26412,7 +26412,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20749,
+        "knowledge_index": 20773,
         "vision_index": null,
         "trust_index": 30045,
         "security_index": null,
@@ -26748,8 +26748,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -26776,7 +26776,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16008,
+        "knowledge_index": 16037,
         "vision_index": null,
         "trust_index": 28798,
         "security_index": null,
@@ -27112,8 +27112,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -27140,7 +27140,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 15024,
+        "knowledge_index": 15054,
         "vision_index": null,
         "trust_index": 36606,
         "security_index": null,
@@ -27476,8 +27476,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -27504,7 +27504,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 10061,
+        "knowledge_index": 10094,
         "vision_index": null,
         "trust_index": 27087,
         "security_index": null,
@@ -27840,8 +27840,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -27865,10 +27865,10 @@
       },
       "context": "512k",
       "scores": {
-        "openbench_index": 45642,
+        "openbench_index": 45640,
         "coding_index": 43927,
         "tooling_index": 38941,
-        "knowledge_index": 55305,
+        "knowledge_index": 55290,
         "vision_index": null,
         "trust_index": 49943,
         "security_index": null,
@@ -28292,8 +28292,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -28324,7 +28324,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 47795,
+        "knowledge_index": 47787,
         "vision_index": null,
         "trust_index": 40262,
         "security_index": null,
@@ -28749,8 +28749,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -28777,7 +28777,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 34459,
+        "knowledge_index": 34476,
         "vision_index": null,
         "trust_index": 35710,
         "security_index": null,
@@ -29197,8 +29197,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -29225,7 +29225,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16740,
+        "knowledge_index": 16768,
         "vision_index": null,
         "trust_index": 31651,
         "security_index": null,
@@ -29561,8 +29561,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -29589,7 +29589,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40311,
+        "knowledge_index": 40310,
         "vision_index": 26968,
         "trust_index": 43529,
         "security_index": null,
@@ -29968,8 +29968,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -30016,7 +30016,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 33851,
-        "knowledge_index": 45321,
+        "knowledge_index": 45315,
         "vision_index": null,
         "trust_index": 44311,
         "security_index": null,
@@ -30436,8 +30436,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -30464,7 +30464,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 59858,
+        "knowledge_index": 59843,
         "vision_index": null,
         "trust_index": 53720,
         "security_index": null,
@@ -30814,8 +30814,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -30842,7 +30842,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 49843,
+        "knowledge_index": 49832,
         "vision_index": null,
         "trust_index": 56992,
         "security_index": null,
@@ -31197,8 +31197,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -31225,7 +31225,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 31816,
+        "knowledge_index": 31827,
         "vision_index": null,
         "trust_index": 38619,
         "security_index": null,
@@ -31580,8 +31580,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -31605,10 +31605,10 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 43929,
+        "openbench_index": 43927,
         "coding_index": 33293,
         "tooling_index": 48527,
-        "knowledge_index": 54717,
+        "knowledge_index": 54703,
         "vision_index": null,
         "trust_index": 44703,
         "security_index": null,
@@ -32140,8 +32140,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -32168,7 +32168,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 52315,
-        "knowledge_index": 67702,
+        "knowledge_index": 67685,
         "vision_index": null,
         "trust_index": 49562,
         "security_index": null,
@@ -32590,8 +32590,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -32618,7 +32618,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 9685,
+        "knowledge_index": 9796,
         "vision_index": null,
         "trust_index": 40399,
         "security_index": null,
@@ -32938,8 +32938,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.568
+          "of": 7,
+          "share": 0.525
         },
         "trust_index": {
           "measured": [
@@ -32966,7 +32966,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 31315,
+        "knowledge_index": 31326,
         "vision_index": null,
         "trust_index": 50176,
         "security_index": null,
@@ -33302,8 +33302,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -33330,7 +33330,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 38069,
+        "knowledge_index": 38071,
         "vision_index": null,
         "trust_index": 48018,
         "security_index": null,
@@ -33673,8 +33673,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -33701,7 +33701,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26440,
+        "knowledge_index": 26457,
         "vision_index": null,
         "trust_index": 37550,
         "security_index": null,
@@ -34037,8 +34037,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -34065,7 +34065,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 38363,
+        "knowledge_index": 38365,
         "vision_index": null,
         "trust_index": 41390,
         "security_index": null,
@@ -34401,8 +34401,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -34429,7 +34429,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 17290,
+        "knowledge_index": 17318,
         "vision_index": null,
         "trust_index": 21854,
         "security_index": null,
@@ -34765,8 +34765,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -34793,7 +34793,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 63645,
+        "knowledge_index": 63628,
         "vision_index": null,
         "trust_index": 47541,
         "security_index": null,
@@ -35298,8 +35298,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -35328,7 +35328,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 45141,
+        "knowledge_index": 45177,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -35595,8 +35595,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.324,
+          "of": 7,
+          "share": 0.3,
           "second_hand": [
             "mmlu_pro",
             "aime_2025",
@@ -35617,7 +35617,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 65959,
+        "knowledge_index": 65892,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -35904,8 +35904,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.568,
+          "of": 7,
+          "share": 0.525,
           "second_hand": [
             "hle",
             "mmlu_pro",
@@ -35928,7 +35928,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36261,
+        "knowledge_index": 36266,
         "vision_index": null,
         "trust_index": 45528,
         "security_index": null,
@@ -36271,8 +36271,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -36296,10 +36296,10 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 29329,
+        "openbench_index": 29330,
         "coding_index": 21577,
         "tooling_index": 20053,
-        "knowledge_index": 38825,
+        "knowledge_index": 38833,
         "vision_index": null,
         "trust_index": 44065,
         "security_index": null,
@@ -36760,8 +36760,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -36785,10 +36785,10 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 27395,
+        "openbench_index": 27399,
         "coding_index": 19759,
         "tooling_index": 20428,
-        "knowledge_index": 27328,
+        "knowledge_index": 27357,
         "vision_index": null,
         "trust_index": 44959,
         "security_index": null,
@@ -37269,8 +37269,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -37294,10 +37294,10 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 20208,
+        "openbench_index": 20215,
         "coding_index": 15965,
         "tooling_index": 16342,
-        "knowledge_index": 14786,
+        "knowledge_index": 14833,
         "vision_index": null,
         "trust_index": 33192,
         "security_index": null,
@@ -37773,8 +37773,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865
+          "of": 7,
+          "share": 0.8
         },
         "trust_index": {
           "measured": [
@@ -37801,7 +37801,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 16692,
+        "knowledge_index": 16855,
         "vision_index": null,
         "trust_index": 37477,
         "security_index": null,
@@ -38153,8 +38153,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.432
+          "of": 7,
+          "share": 0.4
         },
         "trust_index": {
           "measured": [
@@ -38179,7 +38179,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 25447,
-        "knowledge_index": 43076,
+        "knowledge_index": 43072,
         "vision_index": null,
         "trust_index": 51529,
         "security_index": null,
@@ -38544,8 +38544,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -38572,10 +38572,10 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 39026,
+        "openbench_index": 39024,
         "coding_index": 31395,
         "tooling_index": 31886,
-        "knowledge_index": 49652,
+        "knowledge_index": 49642,
         "vision_index": null,
         "trust_index": 50375,
         "security_index": null,
@@ -38979,8 +38979,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -39007,7 +39007,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 33923,
+        "knowledge_index": 33931,
         "vision_index": null,
         "trust_index": 53005,
         "security_index": null,
@@ -39369,8 +39369,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -39397,7 +39397,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 27911,
+        "knowledge_index": 27990,
         "vision_index": null,
         "trust_index": 42065,
         "security_index": null,
@@ -39708,8 +39708,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.568
+          "of": 7,
+          "share": 0.525
         },
         "trust_index": {
           "measured": [
@@ -39736,7 +39736,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36423,
+        "knowledge_index": 36428,
         "vision_index": null,
         "trust_index": 43148,
         "security_index": null,
@@ -40157,8 +40157,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -40187,7 +40187,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 17855,
+        "knowledge_index": 17883,
         "vision_index": null,
         "trust_index": 23648,
         "security_index": null,
@@ -40598,8 +40598,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -40629,7 +40629,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 35005,
+        "knowledge_index": 35011,
         "vision_index": null,
         "trust_index": 45994,
         "security_index": null,
@@ -40965,8 +40965,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -40997,7 +40997,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 36423,
+        "knowledge_index": 36427,
         "vision_index": null,
         "trust_index": 40297,
         "security_index": null,
@@ -41333,8 +41333,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -41358,10 +41358,10 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 31397,
+        "openbench_index": 31398,
         "coding_index": 21929,
         "tooling_index": 26280,
-        "knowledge_index": 31359,
+        "knowledge_index": 31370,
         "vision_index": 25019,
         "trust_index": 48920,
         "security_index": null,
@@ -41797,8 +41797,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -41829,10 +41829,10 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 19012,
+        "openbench_index": 19016,
         "coding_index": 13496,
         "tooling_index": 17323,
-        "knowledge_index": 14739,
+        "knowledge_index": 14769,
         "vision_index": 13571,
         "trust_index": 30221,
         "security_index": null,
@@ -42248,8 +42248,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -42280,10 +42280,10 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 19873,
+        "openbench_index": 19877,
         "coding_index": 9887,
         "tooling_index": 14368,
-        "knowledge_index": 16430,
+        "knowledge_index": 16458,
         "vision_index": 6907,
         "trust_index": 40529,
         "security_index": null,
@@ -42694,8 +42694,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -42729,7 +42729,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 28608,
+        "knowledge_index": 28622,
         "vision_index": null,
         "trust_index": 44957,
         "security_index": null,
@@ -43065,8 +43065,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -43090,10 +43090,10 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 17237,
+        "openbench_index": 17241,
         "coding_index": 13187,
         "tooling_index": 10467,
-        "knowledge_index": 14750,
+        "knowledge_index": 14780,
         "vision_index": 15200,
         "trust_index": 31713,
         "security_index": null,
@@ -43500,8 +43500,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -43535,7 +43535,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 2953,
-        "knowledge_index": 11170,
+        "knowledge_index": 11203,
         "vision_index": 2050,
         "trust_index": 19698,
         "security_index": null,
@@ -43911,8 +43911,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -43946,7 +43946,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 2266,
-        "knowledge_index": 11754,
+        "knowledge_index": 11786,
         "vision_index": null,
         "trust_index": 34765,
         "security_index": null,
@@ -44299,8 +44299,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -44327,7 +44327,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 20902,
+        "knowledge_index": 20925,
         "vision_index": null,
         "trust_index": 43997,
         "security_index": null,
@@ -44656,8 +44656,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -44684,7 +44684,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 4421,
+        "knowledge_index": 4544,
         "vision_index": null,
         "trust_index": 44957,
         "security_index": null,
@@ -44959,8 +44959,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.459
+          "of": 7,
+          "share": 0.425
         },
         "trust_index": {
           "measured": [
@@ -44985,7 +44985,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 10077,
+        "knowledge_index": 10189,
         "vision_index": null,
         "trust_index": 44957,
         "security_index": null,
@@ -45280,8 +45280,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.568
+          "of": 7,
+          "share": 0.525
         },
         "trust_index": {
           "measured": [
@@ -45307,7 +45307,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 36389,
-        "knowledge_index": 39217,
+        "knowledge_index": 39222,
         "vision_index": 40702,
         "trust_index": 52874,
         "security_index": null,
@@ -45686,8 +45686,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -46712,10 +46712,10 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 61354,
+        "openbench_index": 61350,
         "coding_index": 50454,
         "tooling_index": 56184,
-        "knowledge_index": 79299,
+        "knowledge_index": 79272,
         "vision_index": null,
         "trust_index": 69872,
         "security_index": null,
@@ -47188,8 +47188,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "trust_index": {
           "measured": [
@@ -47227,7 +47227,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 30285,
-        "knowledge_index": 37177,
+        "knowledge_index": 37186,
         "vision_index": 35870,
         "trust_index": 41524,
         "security_index": null,
@@ -47580,8 +47580,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -47912,10 +47912,10 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 66153,
+        "openbench_index": 66148,
         "coding_index": 54382,
         "tooling_index": 69639,
-        "knowledge_index": 83607,
+        "knowledge_index": 83577,
         "vision_index": 46309,
         "trust_index": 65622,
         "security_index": null,
@@ -48405,8 +48405,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -48455,10 +48455,10 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 75499,
+        "openbench_index": 75439,
         "coding_index": 79698,
         "tooling_index": 83408,
-        "knowledge_index": 89829,
+        "knowledge_index": 89425,
         "vision_index": null,
         "trust_index": 52372,
         "security_index": null,
@@ -49052,10 +49052,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "trust_index": {
           "measured": [
@@ -49093,10 +49094,10 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 51455,
+        "openbench_index": 51449,
         "coding_index": 40017,
         "tooling_index": 47380,
-        "knowledge_index": 69782,
+        "knowledge_index": 69743,
         "vision_index": null,
         "trust_index": 59073,
         "security_index": null,
@@ -49478,8 +49479,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -49516,7 +49517,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 69252,
+        "knowledge_index": 69235,
         "vision_index": null,
         "trust_index": 61120,
         "security_index": null,
@@ -49879,8 +49880,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "trust_index": {
           "measured": [
@@ -49915,10 +49916,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 58273,
+        "openbench_index": 58271,
         "coding_index": 47833,
         "tooling_index": 52923,
-        "knowledge_index": 78723,
+        "knowledge_index": 78707,
         "vision_index": 57376,
         "trust_index": 64951,
         "security_index": 7195,
@@ -50465,8 +50466,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0
+          "of": 7,
+          "share": 0.925
         },
         "vision_index": {
           "measured": [
@@ -50525,10 +50526,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 69872,
+        "openbench_index": 69867,
         "coding_index": 60895,
         "tooling_index": 69127,
-        "knowledge_index": 88355,
+        "knowledge_index": 88321,
         "vision_index": 73207,
         "trust_index": 70450,
         "security_index": null,
@@ -51102,8 +51103,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -51151,10 +51152,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 67918,
+        "openbench_index": 67912,
         "coding_index": 65509,
         "tooling_index": 70107,
-        "knowledge_index": 80875,
+        "knowledge_index": 80833,
         "vision_index": null,
         "trust_index": 60408,
         "security_index": null,
@@ -51604,8 +51605,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -51640,10 +51641,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 86006,
+        "openbench_index": 85839,
         "coding_index": 89525,
         "tooling_index": 91088,
-        "knowledge_index": 95458,
+        "knowledge_index": 94343,
         "vision_index": 87194,
         "trust_index": 70015,
         "security_index": null,
@@ -52212,10 +52213,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "vision_index": {
           "measured": [
@@ -52267,7 +52269,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 33165,
-        "knowledge_index": 40787,
+        "knowledge_index": 40796,
         "vision_index": null,
         "trust_index": 54808,
         "security_index": null,
@@ -52578,8 +52580,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -52613,10 +52615,10 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 56273,
+        "openbench_index": 56269,
         "coding_index": 48805,
         "tooling_index": 50639,
-        "knowledge_index": 74023,
+        "knowledge_index": 73996,
         "vision_index": 60338,
         "trust_index": 61346,
         "security_index": null,
@@ -53057,8 +53059,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -53100,10 +53102,10 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 62437,
+        "openbench_index": 62433,
         "coding_index": 50256,
         "tooling_index": 56865,
-        "knowledge_index": 82760,
+        "knowledge_index": 82731,
         "vision_index": 71717,
         "trust_index": 71548,
         "security_index": null,
@@ -53566,8 +53568,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -53609,10 +53611,10 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 67858,
+        "openbench_index": 67853,
         "coding_index": 59559,
         "tooling_index": 71878,
-        "knowledge_index": 80508,
+        "knowledge_index": 80480,
         "vision_index": 46600,
         "trust_index": 65401,
         "security_index": null,
@@ -54069,8 +54071,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -54122,7 +54124,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 65774,
-        "knowledge_index": 68527,
+        "knowledge_index": 68488,
         "vision_index": null,
         "trust_index": 61073,
         "security_index": null,
@@ -54433,8 +54435,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -54463,10 +54465,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 81888,
+        "openbench_index": 81879,
         "coding_index": 77812,
         "tooling_index": 91152,
-        "knowledge_index": 93065,
+        "knowledge_index": 93006,
         "vision_index": 98188,
         "trust_index": 68955,
         "security_index": null,
@@ -54938,8 +54940,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -54979,10 +54981,10 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 55021,
+        "openbench_index": 55017,
         "coding_index": 41410,
         "tooling_index": 58594,
-        "knowledge_index": 67052,
+        "knowledge_index": 67026,
         "vision_index": null,
         "trust_index": 59847,
         "security_index": null,
@@ -55424,8 +55426,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "trust_index": {
           "measured": [
@@ -55457,7 +55459,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 48867,
-        "knowledge_index": 45416,
+        "knowledge_index": 45414,
         "vision_index": null,
         "trust_index": 54143,
         "security_index": null,
@@ -55803,8 +55805,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -55836,7 +55838,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 28245,
-        "knowledge_index": 41585,
+        "knowledge_index": 41588,
         "vision_index": null,
         "trust_index": 51146,
         "security_index": null,
@@ -56204,8 +56206,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -56241,10 +56243,10 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 60350,
+        "openbench_index": 60344,
         "coding_index": 52984,
         "tooling_index": 64771,
-        "knowledge_index": 63500,
+        "knowledge_index": 63466,
         "vision_index": 54259,
         "trust_index": 61992,
         "security_index": null,
@@ -56677,8 +56679,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -56724,10 +56726,10 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 45617,
+        "openbench_index": 45615,
         "coding_index": 33131,
         "tooling_index": 47426,
-        "knowledge_index": 48830,
+        "knowledge_index": 48820,
         "vision_index": null,
         "trust_index": 56500,
         "security_index": null,
@@ -57145,8 +57147,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -57182,10 +57184,10 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 86009,
+        "openbench_index": 86126,
         "coding_index": 87817,
         "tooling_index": 92475,
-        "knowledge_index": 92352,
+        "knowledge_index": 93134,
         "vision_index": null,
         "trust_index": 72275,
         "security_index": 42039,
@@ -57755,10 +57757,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "trust_index": {
           "measured": [
@@ -57795,10 +57798,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 74805,
+        "openbench_index": 74801,
         "coding_index": 70293,
         "tooling_index": 85682,
-        "knowledge_index": 79086,
+        "knowledge_index": 79059,
         "vision_index": 73865,
         "trust_index": 64600,
         "security_index": null,
@@ -58271,8 +58274,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -58323,7 +58326,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 60650,
-        "knowledge_index": 80211,
+        "knowledge_index": 80184,
         "vision_index": null,
         "trust_index": 66640,
         "security_index": null,
@@ -58697,8 +58700,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892,
+          "of": 7,
+          "share": 0.825,
           "second_hand": [
             "mmlu_pro"
           ]
@@ -58737,7 +58740,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 61197,
-        "knowledge_index": 79061,
+        "knowledge_index": 79019,
         "vision_index": null,
         "trust_index": 62619,
         "security_index": null,
@@ -59099,8 +59102,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -59136,7 +59139,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 40427,
+        "knowledge_index": 40509,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -59375,8 +59378,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.324,
+          "of": 7,
+          "share": 0.3,
           "second_hand": [
             "mmlu_pro",
             "aime_2025",
@@ -59404,7 +59407,7 @@
         "openbench_index": null,
         "coding_index": 83500,
         "tooling_index": 84468,
-        "knowledge_index": 93037,
+        "knowledge_index": 92886,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -59723,8 +59726,8 @@
             "hle",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.324,
+          "of": 7,
+          "share": 0.3,
           "second_hand": [
             "hle",
             "gpqa_diamond"
@@ -59751,7 +59754,7 @@
         "openbench_index": null,
         "coding_index": 62471,
         "tooling_index": 64911,
-        "knowledge_index": 73736,
+        "knowledge_index": 73553,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -60070,8 +60073,8 @@
             "hle",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.324,
+          "of": 7,
+          "share": 0.3,
           "second_hand": [
             "hle",
             "gpqa_diamond"
@@ -60098,7 +60101,7 @@
         "openbench_index": null,
         "coding_index": 41101,
         "tooling_index": 44355,
-        "knowledge_index": 63825,
+        "knowledge_index": 63693,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -60417,8 +60420,8 @@
             "hle",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.324,
+          "of": 7,
+          "share": 0.3,
           "second_hand": [
             "hle",
             "gpqa_diamond"
@@ -60442,10 +60445,10 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 73068,
+        "openbench_index": 73062,
         "coding_index": 71336,
         "tooling_index": 87971,
-        "knowledge_index": 78716,
+        "knowledge_index": 78674,
         "vision_index": 54359,
         "trust_index": 53876,
         "security_index": null,
@@ -60869,8 +60872,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -60910,10 +60913,10 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 83164,
+        "openbench_index": 83158,
         "coding_index": 76976,
         "tooling_index": 96016,
-        "knowledge_index": 89591,
+        "knowledge_index": 89553,
         "vision_index": 93154,
         "trust_index": 71311,
         "security_index": null,
@@ -61390,8 +61393,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -61431,10 +61434,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 81193,
+        "openbench_index": 81186,
         "coding_index": 82215,
         "tooling_index": 91508,
-        "knowledge_index": 83341,
+        "knowledge_index": 83297,
         "vision_index": 80947,
         "trust_index": 66300,
         "security_index": null,
@@ -61890,8 +61893,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -61940,7 +61943,7 @@
         "openbench_index": 33608,
         "coding_index": 21651,
         "tooling_index": 25852,
-        "knowledge_index": 40635,
+        "knowledge_index": 40634,
         "vision_index": null,
         "trust_index": 53046,
         "security_index": null,
@@ -62345,8 +62348,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -62379,10 +62382,10 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 37884,
+        "openbench_index": 37882,
         "coding_index": 22827,
         "tooling_index": 33817,
-        "knowledge_index": 49721,
+        "knowledge_index": 49710,
         "vision_index": null,
         "trust_index": 53731,
         "security_index": null,
@@ -62824,8 +62827,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -62858,10 +62861,10 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 45052,
+        "openbench_index": 45050,
         "coding_index": 29350,
         "tooling_index": 47095,
-        "knowledge_index": 54666,
+        "knowledge_index": 54651,
         "vision_index": null,
         "trust_index": 55674,
         "security_index": null,
@@ -63267,8 +63270,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -63304,7 +63307,7 @@
         "openbench_index": null,
         "coding_index": 77959,
         "tooling_index": 85979,
-        "knowledge_index": 91350,
+        "knowledge_index": 91238,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -63691,8 +63694,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.486,
+          "of": 7,
+          "share": 0.45,
           "second_hand": [
             "hle",
             "critpt",
@@ -63717,10 +63720,10 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 71199,
+        "openbench_index": 71193,
         "coding_index": 63367,
         "tooling_index": 78435,
-        "knowledge_index": 80744,
+        "knowledge_index": 80702,
         "vision_index": null,
         "trust_index": 66188,
         "security_index": null,
@@ -64131,8 +64134,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -64161,10 +64164,10 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 42181,
+        "openbench_index": 42179,
         "coding_index": 19741,
         "tooling_index": 48428,
-        "knowledge_index": 50836,
+        "knowledge_index": 50824,
         "vision_index": null,
         "trust_index": 56419,
         "security_index": null,
@@ -64617,8 +64620,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.925,
           "second_hand": [
             "mmlu_pro",
             "aime_2025"
@@ -64655,10 +64658,10 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 78903,
+        "openbench_index": 78896,
         "coding_index": 90412,
         "tooling_index": 88357,
-        "knowledge_index": 84859,
+        "knowledge_index": 84814,
         "vision_index": 66300,
         "trust_index": 50173,
         "security_index": 73282,
@@ -65132,8 +65135,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.7,
           "second_hand": [
             "gpqa_diamond"
           ]
@@ -65190,7 +65193,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 63164,
-        "knowledge_index": 72997,
+        "knowledge_index": 72957,
         "vision_index": 77910,
         "trust_index": 62322,
         "security_index": null,
@@ -65543,8 +65546,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "vision_index": {
           "measured": [
@@ -65581,10 +65584,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88996,
+        "openbench_index": 88872,
         "coding_index": 95003,
         "tooling_index": 96979,
-        "knowledge_index": 97636,
+        "knowledge_index": 96813,
         "vision_index": 90345,
         "trust_index": 67023,
         "security_index": 54725,
@@ -66187,10 +66190,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "vision_index": {
           "measured": [
@@ -66242,10 +66246,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 81245,
+        "openbench_index": 81237,
         "coding_index": 81286,
         "tooling_index": 84711,
-        "knowledge_index": 92310,
+        "knowledge_index": 92258,
         "vision_index": 70304,
         "trust_index": 70398,
         "security_index": null,
@@ -66754,8 +66758,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -66797,10 +66801,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89920,
+        "openbench_index": 89929,
         "coding_index": 96218,
         "tooling_index": 97535,
-        "knowledge_index": 98567,
+        "knowledge_index": 98624,
         "vision_index": 98975,
         "trust_index": 68038,
         "security_index": 54342,
@@ -67379,10 +67383,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "vision_index": {
           "measured": [
@@ -67430,10 +67435,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 74350,
+        "openbench_index": 74346,
         "coding_index": 80782,
         "tooling_index": 79929,
-        "knowledge_index": 84608,
+        "knowledge_index": 84578,
         "vision_index": 75722,
         "trust_index": 53782,
         "security_index": 39325,
@@ -67990,8 +67995,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -68045,10 +68050,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 80203,
+        "openbench_index": 80197,
         "coding_index": 86375,
         "tooling_index": 86044,
-        "knowledge_index": 91102,
+        "knowledge_index": 91058,
         "vision_index": 84699,
         "trust_index": 59249,
         "security_index": 70115,
@@ -68589,8 +68594,8 @@
             "mmlu_pro",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.825
         },
         "vision_index": {
           "measured": [
@@ -68645,10 +68650,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 82824,
+        "openbench_index": 82779,
         "coding_index": 89820,
         "tooling_index": 90295,
-        "knowledge_index": 97623,
+        "knowledge_index": 97324,
         "vision_index": 87356,
         "trust_index": 56585,
         "security_index": 86817,
@@ -69273,10 +69278,11 @@
             "hle",
             "critpt",
             "mmlu_pro",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.892
+          "of": 7,
+          "share": 0.9
         },
         "vision_index": {
           "measured": [
@@ -69331,10 +69337,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89116,
+        "openbench_index": 89257,
         "coding_index": 97441,
         "tooling_index": 92625,
-        "knowledge_index": 98558,
+        "knowledge_index": 99503,
         "vision_index": 95810,
         "trust_index": 69248,
         "security_index": 60725,
@@ -69878,10 +69884,11 @@
             "aa_omniscience",
             "hle",
             "critpt",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.775
         },
         "vision_index": {
           "measured": [
@@ -70229,7 +70236,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 63495,
-        "knowledge_index": 65796,
+        "knowledge_index": 65760,
         "vision_index": null,
         "trust_index": 60365,
         "security_index": null,
@@ -70582,8 +70589,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.7,
           "second_hand": [
             "gpqa_diamond"
           ]
@@ -70615,10 +70622,10 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 19751,
+        "openbench_index": 19758,
         "coding_index": 11164,
         "tooling_index": 14567,
-        "knowledge_index": 16822,
+        "knowledge_index": 16867,
         "vision_index": null,
         "trust_index": 38034,
         "security_index": null,
@@ -71007,8 +71014,8 @@
             "aime_2025",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.865,
+          "of": 7,
+          "share": 0.8,
           "second_hand": [
             "aime_2025"
           ]
@@ -71040,10 +71047,10 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 41565,
+        "openbench_index": 41564,
         "coding_index": 22801,
         "tooling_index": 47858,
-        "knowledge_index": 47515,
+        "knowledge_index": 47508,
         "vision_index": null,
         "trust_index": 52961,
         "security_index": null,
@@ -71437,8 +71444,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -71467,10 +71474,10 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 57333,
+        "openbench_index": 57329,
         "coding_index": 46287,
         "tooling_index": 68153,
-        "knowledge_index": 60333,
+        "knowledge_index": 60303,
         "vision_index": null,
         "trust_index": 55806,
         "security_index": null,
@@ -71845,8 +71852,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -71878,7 +71885,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": 62212,
-        "knowledge_index": 70491,
+        "knowledge_index": 70452,
         "vision_index": null,
         "trust_index": 59034,
         "security_index": null,
@@ -72246,8 +72253,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757
+          "of": 7,
+          "share": 0.7
         },
         "trust_index": {
           "measured": [
@@ -72276,10 +72283,10 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 86284,
+        "openbench_index": 86275,
         "coding_index": 88835,
         "tooling_index": 92943,
-        "knowledge_index": 93998,
+        "knowledge_index": 93943,
         "vision_index": 77518,
         "trust_index": 70602,
         "security_index": 70806,
@@ -72715,8 +72722,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.7,
           "second_hand": [
             "gpqa_diamond"
           ]
@@ -73169,10 +73176,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88948,
+        "openbench_index": 89005,
         "coding_index": 98155,
         "tooling_index": 90573,
-        "knowledge_index": 98748,
+        "knowledge_index": 99127,
         "vision_index": 96402,
         "trust_index": 70070,
         "security_index": null,
@@ -73626,10 +73633,11 @@
             "aa_omniscience",
             "hle",
             "critpt",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.775,
           "second_hand": [
             "gpqa_diamond"
           ]
@@ -73674,10 +73682,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78035,
+        "openbench_index": 78028,
         "coding_index": 80415,
         "tooling_index": 82104,
-        "knowledge_index": 87270,
+        "knowledge_index": 87225,
         "vision_index": 65722,
         "trust_index": 64756,
         "security_index": null,
@@ -74089,8 +74097,8 @@
             "critpt",
             "gpqa_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.7,
           "second_hand": [
             "gpqa_diamond"
           ]
@@ -74135,10 +74143,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 87345,
+        "openbench_index": 87468,
         "coding_index": 92940,
         "tooling_index": 92468,
-        "knowledge_index": 96625,
+        "knowledge_index": 97444,
         "vision_index": 90346,
         "trust_index": 68914,
         "security_index": null,
@@ -74563,10 +74571,11 @@
             "aa_omniscience",
             "hle",
             "critpt",
-            "gpqa_diamond"
+            "gpqa_diamond",
+            "hle_diamond"
           ],
-          "of": 6,
-          "share": 0.757,
+          "of": 7,
+          "share": 0.775,
           "second_hand": [
             "gpqa_diamond"
           ]
