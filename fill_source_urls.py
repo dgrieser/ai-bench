@@ -38,6 +38,7 @@ import fetch_epoch
 import fetch_evals_report
 import fetch_frontiercode
 import fetch_frontierswe
+import fetch_hle_diamond
 import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
@@ -108,6 +109,10 @@ COVERED_BY = [
     (
         fetch_sec_bench.DATA_URL,
         fetch_sec_bench.URL,
+    ),
+    (
+        f"{fetch_hle_diamond.SITE_URL}/_next/static/chunks/app/blog/hle-diamond/page-<build>.js",
+        fetch_hle_diamond.URL,
     ),
     (
         f"{fetch_epoch.DATA_URL} (one archive, every benchmark)",
@@ -190,6 +195,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
         # The snapshot the column is pinned to, not the site root (the newer one).
         (fetch_sec_bench.URL, (fetch_sec_bench.KEY,)),
+        # The announcement post; the JS chunk its chart reads is not a page.
+        (fetch_hle_diamond.URL, (fetch_hle_diamond.KEY,)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         # Every tracked OSWorld 2.0 release comes off the one 2.0 site, which a
         # reader opens; the JSON file it renders from is not a page.

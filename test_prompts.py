@@ -281,6 +281,7 @@ class TestPromptHooks(CollectModeBase):
             ("update_epoch_mapping", "prompt_slug_for_epoch_name", (name, [])),
             ("update_cybergym_mapping", "prompt_slug_for_cybergym_name", (name, [])),
             ("update_sec_bench_mapping", "prompt_slug_for_sec_bench_name", (name, [])),
+            ("update_hle_diamond_mapping", "prompt_slug_for_hle_diamond_name", (name, [])),
             ("update_spheron_mapping", "prompt_slug_for_spheron_path", (name, [], None)),
         ]
         for module_name, func_name, args in cases:
