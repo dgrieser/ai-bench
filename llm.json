@@ -1,7 +1,7 @@
 {
   "title": "OpenBench Index",
   "subtitle": "Aggregated benchmark scores of open-weight LLMs across many benchmark suites.",
-  "defaultSort": "coding_index",
+  "defaultSort": "openbench_index",
   "history_since": "2026-09-11",
   "columns": {
     "name": {
@@ -114,6 +114,27 @@
     }
   ],
   "benchmarks": {
+    "openbench_index": {
+      "name": "OpenBench Index",
+      "short_name": "Index",
+      "category": "Composite Index",
+      "derived": true,
+      "decimals": 0,
+      "range": [
+        0,
+        100000
+      ],
+      "description": "Weighted mean of four OpenBench indexes, each an expected win rate against ranked models × 100,000: Coding (0.30), Tooling (0.30), Trust (0.25), Knowledge (0.15). Only models ranked on all four carry a value.",
+      "settings": [
+        "derived",
+        "index scale",
+        "weighted mean"
+      ],
+      "icon_svg": "icons/openbench-index.svg",
+      "urls": [
+        "https://github.com/dgrieser/ai-bench#openbench-index"
+      ]
+    },
     "coding_index": {
       "name": "OpenBench Coding Index",
       "short_name": "Coding",
@@ -1490,6 +1511,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "openbench_index": 33972,
         "coding_index": 25247,
         "tooling_index": 35377,
         "knowledge_index": 24942,
@@ -1558,6 +1580,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -1625,6 +1648,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -1953,6 +1977,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "openbench_index": 29724,
         "coding_index": 22545,
         "tooling_index": 33801,
         "knowledge_index": 18029,
@@ -2021,6 +2046,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -2088,6 +2114,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -2430,6 +2457,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 33878,
@@ -2498,6 +2526,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -2565,6 +2594,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -2818,6 +2848,7 @@
         "url": "https://static.stepfun.com/blog/step-3.5-flash"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 62685,
@@ -2886,6 +2917,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -2953,6 +2985,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -3213,6 +3246,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 43029,
         "tooling_index": null,
         "knowledge_index": 58007,
@@ -3281,6 +3315,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -3348,6 +3383,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -3687,6 +3723,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 21086,
@@ -3755,6 +3792,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -3822,6 +3860,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -4069,6 +4108,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 31289,
         "coding_index": 27036,
         "tooling_index": 30152,
         "knowledge_index": 32061,
@@ -4137,6 +4177,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -4204,6 +4245,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -4524,6 +4566,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 30353,
         "coding_index": 21530,
         "tooling_index": 21335,
         "knowledge_index": 37860,
@@ -4592,6 +4635,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -4659,6 +4703,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -4980,6 +5025,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 25501,
         "knowledge_index": 43060,
@@ -5048,6 +5094,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -5115,6 +5162,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -5383,6 +5431,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 54585,
         "coding_index": 47255,
         "tooling_index": 52679,
         "knowledge_index": 70008,
@@ -5451,6 +5500,7 @@
         "charxiv_reasoning": 80.8
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -5518,6 +5568,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -5954,6 +6005,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 49584,
         "coding_index": 35774,
         "tooling_index": 51881,
         "knowledge_index": 63286,
@@ -6022,6 +6074,7 @@
         "charxiv_reasoning": 77.2
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -6089,6 +6142,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -6474,6 +6528,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 60326,
         "knowledge_index": 61596,
@@ -6542,6 +6597,7 @@
         "charxiv_reasoning": 79.5
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -6609,6 +6665,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -6947,6 +7004,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 46371,
         "knowledge_index": 56650,
@@ -7015,6 +7073,7 @@
         "charxiv_reasoning": 77.5
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -7082,6 +7141,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -7413,6 +7473,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 38113,
         "knowledge_index": 46957,
@@ -7481,6 +7542,7 @@
         "charxiv_reasoning": 73
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -7548,6 +7610,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -7886,6 +7949,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 34418,
         "knowledge_index": 33097,
@@ -7954,6 +8018,7 @@
         "charxiv_reasoning": 70.8
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -8021,6 +8086,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -8327,6 +8393,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 13722,
         "knowledge_index": 13841,
@@ -8395,6 +8462,7 @@
         "charxiv_reasoning": 58.8
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -8462,6 +8530,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -8765,6 +8834,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 7952,
         "knowledge_index": 14618,
@@ -8833,6 +8903,7 @@
         "charxiv_reasoning": 41.3
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -8900,6 +8971,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -9193,6 +9265,7 @@
       },
       "context": "1m",
       "scores": {
+        "openbench_index": 42397,
         "coding_index": 27918,
         "tooling_index": 38641,
         "knowledge_index": 60973,
@@ -9261,6 +9334,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -9328,6 +9402,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -9681,6 +9756,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 22686,
@@ -9749,6 +9825,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -9816,6 +9893,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -10058,6 +10136,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
+        "openbench_index": 34091,
         "coding_index": 29370,
         "tooling_index": 32015,
         "knowledge_index": 40036,
@@ -10126,6 +10205,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -10193,6 +10273,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -10510,6 +10591,7 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
+        "openbench_index": 41661,
         "coding_index": 31427,
         "tooling_index": 40538,
         "knowledge_index": 53828,
@@ -10578,6 +10660,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -10645,6 +10728,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -10987,6 +11071,7 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
+        "openbench_index": 35686,
         "coding_index": 23928,
         "tooling_index": 28888,
         "knowledge_index": 48420,
@@ -11055,6 +11140,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -11122,6 +11208,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -11440,6 +11527,7 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
+        "openbench_index": 37126,
         "coding_index": 25216,
         "tooling_index": 26960,
         "knowledge_index": 50192,
@@ -11508,6 +11596,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -11575,6 +11664,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -11905,6 +11995,7 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
+        "openbench_index": 56481,
         "coding_index": 44686,
         "tooling_index": 50239,
         "knowledge_index": 72536,
@@ -11973,6 +12064,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -12040,6 +12132,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -12433,6 +12526,7 @@
         "url": "https://www.sarvam.ai/models"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 29872,
@@ -12501,6 +12595,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -12568,6 +12663,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -12812,6 +12908,7 @@
         "url": "https://www.sarvam.ai/models"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 34581,
@@ -12880,6 +12977,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -12947,6 +13045,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -13191,6 +13290,7 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11090,
         "knowledge_index": 44227,
@@ -13259,6 +13359,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -13326,6 +13427,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -13598,6 +13700,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "openbench_index": 48993,
         "coding_index": 36984,
         "tooling_index": 50450,
         "knowledge_index": 60303,
@@ -13666,6 +13769,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -13733,6 +13837,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -14086,6 +14191,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 41599,
         "knowledge_index": 44547,
@@ -14154,6 +14260,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -14221,6 +14328,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -14511,6 +14619,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 17022,
         "knowledge_index": 39560,
@@ -14579,6 +14688,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -14646,6 +14756,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -14923,6 +15034,7 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11345,
         "knowledge_index": 32576,
@@ -14991,6 +15103,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -15058,6 +15171,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -15335,6 +15449,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 48379,
         "coding_index": 35016,
         "tooling_index": 45460,
         "knowledge_index": 62517,
@@ -15403,6 +15518,7 @@
         "charxiv_reasoning": 78
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -15470,6 +15586,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -15859,6 +15976,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 54466,
         "coding_index": 42657,
         "tooling_index": 54190,
         "knowledge_index": 66837,
@@ -15927,6 +16045,7 @@
         "charxiv_reasoning": 78.4
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -15994,6 +16113,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -16377,6 +16497,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
+        "openbench_index": 72148,
         "coding_index": 73811,
         "tooling_index": 80057,
         "knowledge_index": 82125,
@@ -16445,6 +16566,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -16512,6 +16634,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -17000,6 +17123,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
+        "openbench_index": 63145,
         "coding_index": 52373,
         "tooling_index": 70574,
         "knowledge_index": 70805,
@@ -17068,6 +17192,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -17135,6 +17260,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -17486,6 +17612,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 10152,
         "knowledge_index": 14133,
@@ -17554,6 +17681,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -17621,6 +17749,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -17857,6 +17986,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 8387,
         "knowledge_index": 8595,
@@ -17925,6 +18055,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -17992,6 +18123,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -18241,6 +18373,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 16612,
         "knowledge_index": 14639,
@@ -18309,6 +18442,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -18376,6 +18510,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -18625,6 +18760,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
+        "openbench_index": 45629,
         "coding_index": 32000,
         "tooling_index": 50135,
         "knowledge_index": 44696,
@@ -18693,6 +18829,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -18760,6 +18897,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -19137,6 +19275,7 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
+        "openbench_index": 23223,
         "coding_index": 16240,
         "tooling_index": 24562,
         "knowledge_index": 17468,
@@ -19205,6 +19344,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -19272,6 +19412,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -19582,6 +19723,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 26466,
         "knowledge_index": 26104,
@@ -19650,6 +19792,7 @@
         "charxiv_reasoning": 49.1
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -19717,6 +19860,7 @@
         "charxiv_reasoning": "2026-09-20"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -19989,6 +20133,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 11808,
         "knowledge_index": 13329,
@@ -20057,6 +20202,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -20124,6 +20270,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -20376,6 +20523,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 42144,
         "knowledge_index": 62825,
@@ -20444,6 +20592,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -20511,6 +20660,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -20804,6 +20954,7 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 52397,
         "knowledge_index": 60860,
@@ -20872,6 +21023,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -20939,6 +21091,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -21220,6 +21373,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "openbench_index": 13731,
         "coding_index": 9530,
         "tooling_index": 9552,
         "knowledge_index": 11020,
@@ -21288,6 +21442,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -21355,6 +21510,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -21656,6 +21812,7 @@
         "url": "https://cohere.com/"
       },
       "scores": {
+        "openbench_index": 43751,
         "coding_index": 41684,
         "tooling_index": 38971,
         "knowledge_index": 46365,
@@ -21724,6 +21881,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -21791,6 +21949,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -22118,6 +22277,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
+        "openbench_index": 75270,
         "coding_index": 68036,
         "tooling_index": 79446,
         "knowledge_index": 90647,
@@ -22186,6 +22346,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -22253,6 +22414,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -22752,6 +22914,7 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
+        "openbench_index": 69803,
         "coding_index": 63207,
         "tooling_index": 69493,
         "knowledge_index": 84159,
@@ -22820,6 +22983,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -22887,6 +23051,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -23287,6 +23452,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 32430,
@@ -23355,6 +23521,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -23422,6 +23589,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -23645,6 +23813,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 15062,
@@ -23713,6 +23882,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -23780,6 +23950,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -23999,6 +24170,7 @@
       },
       "context": "10m",
       "scores": {
+        "openbench_index": 22452,
         "coding_index": 13458,
         "tooling_index": 11881,
         "knowledge_index": 20758,
@@ -24067,6 +24239,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -24134,6 +24307,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -24471,6 +24645,7 @@
       },
       "context": "1m",
       "scores": {
+        "openbench_index": 27250,
         "coding_index": 19129,
         "tooling_index": 15798,
         "knowledge_index": 30185,
@@ -24539,6 +24714,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -24606,6 +24782,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -24958,6 +25135,7 @@
       },
       "context": "16k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 7592,
         "knowledge_index": 18713,
@@ -25026,6 +25204,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -25093,6 +25272,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -25332,6 +25512,7 @@
         "url": "https://allenai.org/olmo"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 28784,
@@ -25400,6 +25581,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -25467,6 +25649,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -25691,6 +25874,7 @@
       },
       "context": "64k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 26138,
@@ -25759,6 +25943,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -25826,6 +26011,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -26037,6 +26223,7 @@
       },
       "context": "64k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 20749,
@@ -26105,6 +26292,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -26172,6 +26360,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -26395,6 +26584,7 @@
       },
       "context": "64k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 16008,
@@ -26463,6 +26653,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -26530,6 +26721,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -26753,6 +26945,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 15024,
@@ -26821,6 +27014,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -26888,6 +27082,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -27111,6 +27306,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 10061,
@@ -27179,6 +27375,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -27246,6 +27443,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -27469,6 +27667,7 @@
       },
       "context": "512k",
       "scores": {
+        "openbench_index": 45642,
         "coding_index": 43927,
         "tooling_index": 38941,
         "knowledge_index": 55305,
@@ -27537,6 +27736,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -27604,6 +27804,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -27919,6 +28120,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 47795,
@@ -27987,6 +28189,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -28054,6 +28257,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -28366,6 +28570,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 34459,
@@ -28434,6 +28639,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -28501,6 +28707,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -28808,6 +29015,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 16740,
@@ -28876,6 +29084,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -28943,6 +29152,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -29166,6 +29376,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 40311,
@@ -29234,6 +29445,7 @@
         "charxiv_reasoning": 56
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -29301,6 +29513,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -29587,6 +29800,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 33851,
         "knowledge_index": 45321,
@@ -29655,6 +29869,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -29722,6 +29937,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -30029,6 +30245,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 59858,
@@ -30097,6 +30314,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -30164,6 +30382,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -30401,6 +30620,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 49843,
@@ -30469,6 +30689,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -30536,6 +30757,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -30778,6 +31000,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 31816,
@@ -30846,6 +31069,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -30913,6 +31137,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -31155,6 +31380,7 @@
       },
       "context": "200k",
       "scores": {
+        "openbench_index": 43929,
         "coding_index": 33293,
         "tooling_index": 48527,
         "knowledge_index": 54717,
@@ -31223,6 +31449,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -31290,6 +31517,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -31709,6 +31937,7 @@
       },
       "context": "200k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 52315,
         "knowledge_index": 67702,
@@ -31777,6 +32006,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -31844,6 +32074,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -32153,6 +32384,7 @@
       },
       "context": "1m",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 9685,
@@ -32221,6 +32453,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -32288,6 +32521,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -32495,6 +32729,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 31315,
@@ -32563,6 +32798,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -32630,6 +32866,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -32853,6 +33090,7 @@
       },
       "context": "512k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 38069,
@@ -32921,6 +33159,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -32988,6 +33227,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -33218,6 +33458,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 26440,
@@ -33286,6 +33527,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -33353,6 +33595,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -33576,6 +33819,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 38363,
@@ -33644,6 +33888,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -33711,6 +33956,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -33934,6 +34180,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 17290,
@@ -34002,6 +34249,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -34069,6 +34317,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -34292,6 +34541,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 63645,
@@ -34360,6 +34610,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -34427,6 +34678,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -34821,6 +35073,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 45141,
@@ -34889,6 +35142,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -34956,6 +35210,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -35104,6 +35359,7 @@
         "url": "https://longcat.chat/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 65959,
@@ -35172,6 +35428,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -35239,6 +35496,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -35409,6 +35667,7 @@
       },
       "context": "1m",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 36261,
@@ -35477,6 +35736,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -35544,6 +35804,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -35774,6 +36035,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": 29329,
         "coding_index": 21577,
         "tooling_index": 20053,
         "knowledge_index": 38825,
@@ -35842,6 +36104,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -35909,6 +36172,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -36257,6 +36521,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": 27395,
         "coding_index": 19759,
         "tooling_index": 20428,
         "knowledge_index": 27328,
@@ -36325,6 +36590,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -36392,6 +36658,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -36760,6 +37027,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": 20208,
         "coding_index": 15965,
         "tooling_index": 16342,
         "knowledge_index": 14786,
@@ -36828,6 +37096,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -36895,6 +37164,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -37258,6 +37528,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 16692,
@@ -37326,6 +37597,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -37393,6 +37665,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -37630,6 +37903,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 25447,
         "knowledge_index": 43076,
@@ -37698,6 +37972,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -37765,6 +38040,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -38020,6 +38296,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": 39026,
         "coding_index": 31395,
         "tooling_index": 31886,
         "knowledge_index": 49652,
@@ -38088,6 +38365,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -38155,6 +38433,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -38446,6 +38725,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 33923,
@@ -38514,6 +38794,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -38581,6 +38862,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -38830,6 +39112,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 27911,
@@ -38898,6 +39181,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -38965,6 +39249,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -39163,6 +39448,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 36423,
@@ -39231,6 +39517,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -39298,6 +39585,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -39608,6 +39896,7 @@
       },
       "context": "64k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 17855,
@@ -39676,6 +39965,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -39743,6 +40033,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -40044,6 +40335,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 35005,
@@ -40112,6 +40404,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -40179,6 +40472,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -40406,6 +40700,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 36423,
@@ -40474,6 +40769,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -40541,6 +40837,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -40764,6 +41061,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": 31397,
         "coding_index": 21929,
         "tooling_index": 26280,
         "knowledge_index": 31359,
@@ -40832,6 +41130,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -40899,6 +41198,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -41229,6 +41529,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": 19012,
         "coding_index": 13496,
         "tooling_index": 17323,
         "knowledge_index": 14739,
@@ -41297,6 +41598,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -41364,6 +41666,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -41674,6 +41977,7 @@
       },
       "context": "256k",
       "scores": {
+        "openbench_index": 19873,
         "coding_index": 9887,
         "tooling_index": 14368,
         "knowledge_index": 16430,
@@ -41742,6 +42046,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -41809,6 +42114,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -42114,6 +42420,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 28608,
@@ -42182,6 +42489,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -42249,6 +42557,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -42472,6 +42781,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": 17237,
         "coding_index": 13187,
         "tooling_index": 10467,
         "knowledge_index": 14750,
@@ -42540,6 +42850,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -42607,6 +42918,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -42908,6 +43220,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 2953,
         "knowledge_index": 11170,
@@ -42976,6 +43289,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -43043,6 +43357,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -43313,6 +43628,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 2266,
         "knowledge_index": 11754,
@@ -43381,6 +43697,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -43448,6 +43765,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -43688,6 +44006,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 20902,
@@ -43756,6 +44075,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -43823,6 +44143,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -44039,6 +44360,7 @@
       },
       "context": "32k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 4421,
@@ -44107,6 +44429,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -44174,6 +44497,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -44334,6 +44658,7 @@
       },
       "context": "128k",
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 10077,
@@ -44402,6 +44727,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -44469,6 +44795,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -44650,6 +44977,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 36389,
         "knowledge_index": 39217,
@@ -44718,6 +45046,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -44785,6 +45114,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -45062,6 +45392,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 33116,
         "tooling_index": 34838,
         "knowledge_index": null,
@@ -45130,6 +45461,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -45197,6 +45529,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,
@@ -45386,6 +45719,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 55344,
         "tooling_index": 56153,
         "knowledge_index": null,
@@ -45454,6 +45788,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -45521,6 +45856,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,
@@ -45710,6 +46046,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 71502,
         "tooling_index": 69233,
         "knowledge_index": null,
@@ -45778,6 +46115,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -45845,6 +46183,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,
@@ -46034,6 +46373,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
+        "openbench_index": 61354,
         "coding_index": 50454,
         "tooling_index": 56184,
         "knowledge_index": 79299,
@@ -46102,6 +46442,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -46169,6 +46510,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -46540,6 +46882,7 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 30285,
         "knowledge_index": 37177,
@@ -46608,6 +46951,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -46675,6 +47019,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -46936,6 +47281,7 @@
         "url": "https://github.com/InternScience"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": null,
@@ -47004,6 +47350,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": null,
@@ -47071,6 +47418,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": null,
@@ -47216,6 +47564,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
+        "openbench_index": 66153,
         "coding_index": 54382,
         "tooling_index": 69639,
         "knowledge_index": 83607,
@@ -47284,6 +47633,7 @@
         "charxiv_reasoning": 78.1
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -47351,6 +47701,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -47753,6 +48104,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
+        "openbench_index": 75499,
         "coding_index": 79698,
         "tooling_index": 83408,
         "knowledge_index": 89829,
@@ -47821,6 +48173,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -47888,6 +48241,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -48378,6 +48732,7 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
+        "openbench_index": 51455,
         "coding_index": 40017,
         "tooling_index": 47380,
         "knowledge_index": 69782,
@@ -48446,6 +48801,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -48513,6 +48869,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -48792,6 +49149,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 69252,
@@ -48860,6 +49218,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -48927,6 +49286,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -49188,6 +49548,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "openbench_index": 58273,
         "coding_index": 47833,
         "tooling_index": 52923,
         "knowledge_index": 78723,
@@ -49256,6 +49617,7 @@
         "charxiv_reasoning": 77.5
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -49323,6 +49685,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -49792,6 +50155,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "openbench_index": 69872,
         "coding_index": 60895,
         "tooling_index": 69127,
         "knowledge_index": 88355,
@@ -49860,6 +50224,7 @@
         "charxiv_reasoning": 80.4
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -49927,6 +50292,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -50412,6 +50778,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "openbench_index": 67918,
         "coding_index": 65509,
         "tooling_index": 70107,
         "knowledge_index": 80875,
@@ -50480,6 +50847,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -50547,6 +50915,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -50895,6 +51264,7 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
+        "openbench_index": 86006,
         "coding_index": 89525,
         "tooling_index": 91088,
         "knowledge_index": 95458,
@@ -50963,6 +51333,7 @@
         "charxiv_reasoning": 84.8
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -51031,6 +51402,7 @@
         "real_swe": "2026-09-23"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -51506,6 +51878,7 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 33165,
         "knowledge_index": 40787,
@@ -51574,6 +51947,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -51641,6 +52015,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -51849,6 +52224,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "openbench_index": 56273,
         "coding_index": 48805,
         "tooling_index": 50639,
         "knowledge_index": 74023,
@@ -51917,6 +52293,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -51984,6 +52361,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -52330,6 +52708,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "openbench_index": 62437,
         "coding_index": 50256,
         "tooling_index": 56865,
         "knowledge_index": 82760,
@@ -52398,6 +52777,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -52465,6 +52845,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -52833,6 +53214,7 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
+        "openbench_index": 67858,
         "coding_index": 59559,
         "tooling_index": 71878,
         "knowledge_index": 80508,
@@ -52901,6 +53283,7 @@
         "charxiv_reasoning": 77.4
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -52968,6 +53351,7 @@
         "charxiv_reasoning": "2026-09-16"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -53337,6 +53721,7 @@
         "url": "https://github.com/AI9Stars"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 65774,
         "knowledge_index": 68527,
@@ -53405,6 +53790,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -53472,6 +53858,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -53675,6 +54062,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 81888,
         "coding_index": 77812,
         "tooling_index": 91152,
         "knowledge_index": 93065,
@@ -53743,6 +54131,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -53810,6 +54199,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -54185,6 +54575,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
+        "openbench_index": 55021,
         "coding_index": 41410,
         "tooling_index": 58594,
         "knowledge_index": 67052,
@@ -54253,6 +54644,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -54320,6 +54712,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -54654,6 +55047,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 48867,
         "knowledge_index": 45416,
@@ -54722,6 +55116,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -54789,6 +55184,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -55027,6 +55423,7 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 28245,
         "knowledge_index": 41585,
@@ -55095,6 +55492,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -55162,6 +55560,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -55429,6 +55828,7 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
+        "openbench_index": 60350,
         "coding_index": 52984,
         "tooling_index": 64771,
         "knowledge_index": 63500,
@@ -55497,6 +55897,7 @@
         "charxiv_reasoning": 78.8
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -55564,6 +55965,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -55906,6 +56308,7 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
+        "openbench_index": 45617,
         "coding_index": 33131,
         "tooling_index": 47426,
         "knowledge_index": 48830,
@@ -55974,6 +56377,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -56041,6 +56445,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -56358,6 +56763,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
+        "openbench_index": 86009,
         "coding_index": 87817,
         "tooling_index": 92475,
         "knowledge_index": 92352,
@@ -56426,6 +56832,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -56494,6 +56901,7 @@
         "real_swe": "2026-09-23"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -56958,6 +57366,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 74805,
         "coding_index": 70293,
         "tooling_index": 85682,
         "knowledge_index": 79086,
@@ -57026,6 +57435,7 @@
         "charxiv_reasoning": 83.7
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -57093,6 +57503,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -57477,6 +57888,7 @@
         "url": "https://www.upstage.ai"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 60650,
         "knowledge_index": 80211,
@@ -57545,6 +57957,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -57612,6 +58025,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -57885,6 +58299,7 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 61197,
         "knowledge_index": 79061,
@@ -57953,6 +58368,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -58020,6 +58436,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -58278,6 +58695,7 @@
         "url": "https://nousresearch.com/releases"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": 40427,
@@ -58346,6 +58764,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "2026-09-26",
@@ -58413,6 +58832,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -58540,6 +58960,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 83500,
         "tooling_index": 84468,
         "knowledge_index": 93037,
@@ -58608,6 +59029,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -58675,6 +59097,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -58881,6 +59304,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 62471,
         "tooling_index": 64911,
         "knowledge_index": 73736,
@@ -58949,6 +59373,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -59016,6 +59441,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -59222,6 +59648,7 @@
         "url": "https://ornith.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 41101,
         "tooling_index": 44355,
         "knowledge_index": 63825,
@@ -59290,6 +59717,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -59357,6 +59785,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -59563,6 +59992,7 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
+        "openbench_index": 73068,
         "coding_index": 71336,
         "tooling_index": 87971,
         "knowledge_index": 78716,
@@ -59631,6 +60061,7 @@
         "charxiv_reasoning": 80.4
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -59698,6 +60129,7 @@
         "charxiv_reasoning": "2026-08-21"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -60025,6 +60457,7 @@
         "url": "https://z.ai/"
       },
       "scores": {
+        "openbench_index": 83164,
         "coding_index": 76976,
         "tooling_index": 96016,
         "knowledge_index": 89591,
@@ -60093,6 +60526,7 @@
         "charxiv_reasoning": 89.4
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -60160,6 +60594,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -60540,6 +60975,7 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
+        "openbench_index": 81193,
         "coding_index": 82215,
         "tooling_index": 91508,
         "knowledge_index": 83341,
@@ -60608,6 +61044,7 @@
         "charxiv_reasoning": 84.6
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -60675,6 +61112,7 @@
         "charxiv_reasoning": "2026-09-09"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -61040,6 +61478,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": 33608,
         "coding_index": 21651,
         "tooling_index": 25852,
         "knowledge_index": 40635,
@@ -61108,6 +61547,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -61175,6 +61615,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -61476,6 +61917,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": 37884,
         "coding_index": 22827,
         "tooling_index": 33817,
         "knowledge_index": 49721,
@@ -61544,6 +61986,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -61611,6 +62054,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -61949,6 +62393,7 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
+        "openbench_index": 45052,
         "coding_index": 29350,
         "tooling_index": 47095,
         "knowledge_index": 54666,
@@ -62017,6 +62462,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -62084,6 +62530,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -62386,6 +62833,7 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 77959,
         "tooling_index": 85979,
         "knowledge_index": 91350,
@@ -62454,6 +62902,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -62521,6 +62970,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -62796,6 +63246,7 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
+        "openbench_index": 71199,
         "coding_index": 63367,
         "tooling_index": 78435,
         "knowledge_index": 80744,
@@ -62864,6 +63315,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -62931,6 +63383,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -63234,6 +63687,7 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
+        "openbench_index": 42181,
         "coding_index": 19741,
         "tooling_index": 48428,
         "knowledge_index": 50836,
@@ -63302,6 +63756,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -63369,6 +63824,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -63722,6 +64178,7 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
+        "openbench_index": 78903,
         "coding_index": 90412,
         "tooling_index": 88357,
         "knowledge_index": 84859,
@@ -63790,6 +64247,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -63857,6 +64315,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -64248,6 +64707,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 63164,
         "knowledge_index": 72997,
@@ -64316,6 +64776,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -64383,6 +64844,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -64636,6 +65098,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
+        "openbench_index": 88996,
         "coding_index": 95003,
         "tooling_index": 96979,
         "knowledge_index": 97636,
@@ -64704,6 +65167,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -64771,6 +65235,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -65284,6 +65749,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
+        "openbench_index": 81245,
         "coding_index": 81286,
         "tooling_index": 84711,
         "knowledge_index": 92310,
@@ -65352,6 +65818,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -65419,6 +65886,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -65833,6 +66301,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
+        "openbench_index": 89920,
         "coding_index": 96218,
         "tooling_index": 97535,
         "knowledge_index": 98567,
@@ -65901,6 +66370,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -65969,6 +66439,7 @@
         "real_swe": "2026-09-23"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -66453,6 +66924,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 74350,
         "coding_index": 80782,
         "tooling_index": 79929,
         "knowledge_index": 84608,
@@ -66521,6 +66993,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -66588,6 +67061,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -67062,6 +67536,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 80203,
         "coding_index": 86375,
         "tooling_index": 86044,
         "knowledge_index": 91102,
@@ -67130,6 +67605,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -67197,6 +67673,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -67656,6 +68133,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 82824,
         "coding_index": 89820,
         "tooling_index": 90295,
         "knowledge_index": 97623,
@@ -67724,6 +68202,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -67792,6 +68271,7 @@
         "real_swe": "2026-09-23"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -68329,6 +68809,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 89116,
         "coding_index": 97441,
         "tooling_index": 92625,
         "knowledge_index": 98558,
@@ -68397,6 +68878,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -68465,6 +68947,7 @@
         "real_swe": "2026-09-23"
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -68920,6 +69403,7 @@
         "url": "https://huggingface.co/internlm"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 84883,
         "knowledge_index": null,
@@ -68988,6 +69472,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -69056,6 +69541,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,
@@ -69205,6 +69691,7 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 63495,
         "knowledge_index": 65796,
@@ -69273,6 +69760,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -69341,6 +69829,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -69588,6 +70077,7 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
+        "openbench_index": 19751,
         "coding_index": 11164,
         "tooling_index": 14567,
         "knowledge_index": 16822,
@@ -69656,6 +70146,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -69724,6 +70215,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -70007,6 +70499,7 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
+        "openbench_index": 41565,
         "coding_index": 22801,
         "tooling_index": 47858,
         "knowledge_index": 47515,
@@ -70075,6 +70568,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -70143,6 +70637,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -70428,6 +70923,7 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
+        "openbench_index": 57333,
         "coding_index": 46287,
         "tooling_index": 68153,
         "knowledge_index": 60333,
@@ -70496,6 +70992,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -70564,6 +71061,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -70830,6 +71328,7 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 62212,
         "knowledge_index": 70491,
@@ -70898,6 +71397,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -70966,6 +71466,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -71225,6 +71726,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "openbench_index": 86284,
         "coding_index": 88835,
         "tooling_index": 92943,
         "knowledge_index": 93998,
@@ -71293,6 +71795,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -71361,6 +71864,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -71716,6 +72220,7 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": 85736,
         "tooling_index": 87286,
         "knowledge_index": null,
@@ -71784,6 +72289,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -71852,6 +72358,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,
@@ -72106,6 +72613,7 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
+        "openbench_index": 88948,
         "coding_index": 98155,
         "tooling_index": 90573,
         "knowledge_index": 98748,
@@ -72174,6 +72682,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -72242,6 +72751,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -72598,6 +73108,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 78035,
         "coding_index": 80415,
         "tooling_index": 82104,
         "knowledge_index": 87270,
@@ -72666,6 +73177,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -72734,6 +73246,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -73053,6 +73566,7 @@
         "url": "https://openai.com/"
       },
       "scores": {
+        "openbench_index": 87345,
         "coding_index": 92940,
         "tooling_index": 92468,
         "knowledge_index": 96625,
@@ -73121,6 +73635,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": "2026-09-26",
         "coding_index": "2026-09-26",
         "tooling_index": "2026-09-25",
         "knowledge_index": "2026-09-26",
@@ -73189,6 +73704,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
@@ -73515,6 +74031,7 @@
         "url": "https://studio.dots.ai"
       },
       "scores": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": 73310,
         "knowledge_index": null,
@@ -73583,6 +74100,7 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "2026-09-25",
         "knowledge_index": null,
@@ -73651,6 +74169,7 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
+        "openbench_index": null,
         "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": null,

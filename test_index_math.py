@@ -722,5 +722,61 @@ class TestLiveIndexes(unittest.TestCase):
         self.assertLessEqual(di.BT_PRIOR, 1.0)
 
 
+class TestOpenBenchIndex(unittest.TestCase):
+    """The overall column: a fixed weighted mean of four fitted indexes."""
+
+    FOUR = {"coding_index": 80000, "tooling_index": 60000, "trust_index": 40000, "knowledge_index": 20000}
+
+    def test_the_weights_sum_to_one_and_rank_as_asked(self) -> None:
+        weights = dict(di.OPENBENCH_INDEX.components)
+        self.assertAlmostEqual(sum(weights.values()), 1.0)
+        # Coding and Tooling level and highest, Trust next, Knowledge last.
+        self.assertEqual(weights["coding_index"], weights["tooling_index"])
+        self.assertGreater(weights["tooling_index"], weights["trust_index"])
+        self.assertGreater(weights["trust_index"], weights["knowledge_index"])
+
+    def test_it_is_the_weighted_mean_of_its_components(self) -> None:
+        values = di.compute_composite([{"name": "m", "scores": dict(self.FOUR)}])
+        # 0.3*80000 + 0.3*60000 + 0.25*40000 + 0.15*20000
+        self.assertEqual(values, {"m": 55000})
+
+    def test_one_missing_component_leaves_it_unranked(self) -> None:
+        for missing in self.FOUR:
+            with self.subTest(missing=missing):
+                scores = {**self.FOUR, missing: None}
+                values = di.compute_composite([{"name": "m", "scores": scores}])
+                self.assertIsNone(values["m"])
+                del scores[missing]
+                values = di.compute_composite([{"name": "m", "scores": scores}])
+                self.assertIsNone(values["m"])
+
+    def test_it_is_written_first_with_its_source_and_only_when_declared(self) -> None:
+        benchmarks = {
+            key: {} for index in di.INDEXES for key, _ in index.contributing
+        }
+        benchmarks.update({index.key: {"derived": True} for index in di.INDEXES})
+        undeclared = {"benchmarks": dict(benchmarks), "models": [{"name": "m", "scores": {}}]}
+        di.refresh(undeclared)
+        self.assertNotIn(di.OPENBENCH_INDEX.key, undeclared["models"][0]["scores"])
+
+        declared = {
+            "benchmarks": {di.OPENBENCH_INDEX.key: {"derived": True, "urls": ["https://x/#o"]}, **benchmarks},
+            "models": [{"name": "m", "scores": {}}],
+        }
+        di.refresh(declared)
+        written = declared["models"][0]
+        self.assertEqual(next(iter(written["scores"])), di.OPENBENCH_INDEX.key)
+        self.assertIsNone(written["scores"][di.OPENBENCH_INDEX.key])
+        self.assertIsNone(written["scores_source"][di.OPENBENCH_INDEX.key])
+
+    def test_llm_json_holds_it_exactly_where_all_four_are_ranked(self) -> None:
+        doc = json.loads(Path(di.DEFAULT_LLM_JSON).read_text(encoding="utf-8"))
+        self.assertEqual(doc["defaultSort"], di.OPENBENCH_INDEX.key)
+        expected = di.compute_composite(doc["models"])
+        for entry in doc["models"]:
+            with self.subTest(model=entry["name"]):
+                self.assertEqual(entry["scores"].get(di.OPENBENCH_INDEX.key), expected[entry["name"]])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
