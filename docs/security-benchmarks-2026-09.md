@@ -20,6 +20,12 @@ reference rows). Snapshot: 2026-09-25.
   once about 20 models are covered and there is at least one independent run per benchmark.
   Vals' CyberBench is the missing independent anchor; see §6.
 
+> **Outcome (2026-09-26).** All four were added as columns in a new
+> `Cybersecurity` category, in no derived index. ExploitBench was added after
+> all, read from Epoch AI's copy of its board (the hub fetcher had landed in the
+> meantime) plus the llm-stats board and model cards. See README,
+> "Cybersecurity".
+
 ---
 
 ## 1. Summary

@@ -151,6 +151,11 @@ def _osworld_verified_row(row: dict[str, str]) -> bool:
     return steps is None or int(steps.group(1)) <= 100
 
 
+def _exploitbench_plain_row(row: dict[str, str]) -> bool:
+    """An ExploitBench run in the plain regime, not one AutoNudge kept prompting."""
+    return (row.get("Autonudge") or "").strip().lower() not in {"true", "1", "yes"}
+
+
 # Epoch's page slug (epoch.ai/benchmarks/<slug>) -> the file behind it.
 BENCHMARKS: dict[str, Benchmark] = {
     # Epoch's own runs. "Best score (across scorers)" is the column the hub's
@@ -179,6 +184,13 @@ BENCHMARKS: dict[str, Benchmark] = {
     "hle": Benchmark("hle_external.csv", "Accuracy", key="hle"),
     "critpt": Benchmark("critpt_external.csv", "Accuracy", key="critpt"),
     "scicode": Benchmark("scicode_external.csv", "Score", key="scicode"),
+    # A mirror of exploitbench.ai, whose own board is inlined in a hashed
+    # JavaScript chunk; each model is listed plain and under AutoNudge, where
+    # the harness keeps prompting the agent to continue, and only plain runs
+    # are the column.
+    "exploitbench": Benchmark(
+        "exploitbench_external.csv", "Mean capability", key="exploitbench", keep=_exploitbench_plain_row
+    ),
 }
 
 

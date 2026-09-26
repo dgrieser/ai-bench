@@ -84,6 +84,7 @@ class TestRowFetchers(unittest.TestCase):
         ("bfcl", "score", "fetch_bfcl_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
         ("openrouter", "score", "fetch_openrouter_data"),
+        ("sec_bench", "score", "fetch_sec_bench_data"),
     ]
 
     # The revision-split sources file rows under a column per revision, so the
@@ -148,6 +149,22 @@ class TestRowFetchers(unittest.TestCase):
                     by_key = update.fetch_osworld_data(SCRIPT, mapping)
                 self.assertEqual(by_key["osworld_2_0_2026_06_24"]["m"]["score"], 4.6)
                 self.assertEqual(by_key["osworld_verified"]["m"]["score"], 70.0)
+
+    def test_cybergym_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
+        # fetch_cybergym.py names the column on every row, CyberGym and
+        # ExploitGym alike, so the fold is per column, as OSWorld's is.
+        mapping = write_json({"Model": "m", "Model [high]": "m"})
+        rows = [
+            {"benchmark": "cybergym", "model": "Model", "score": 66.3},
+            {"benchmark": "cybergym", "model": "Model [high]", "score": 79.0},
+            {"benchmark": "exploitgym", "model": "Model", "score": 7.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_cybergym_data(SCRIPT, mapping)
+                self.assertEqual(by_key["cybergym"]["m"]["score"], 79.0)
+                self.assertEqual(by_key["exploitgym"]["m"]["score"], 7.0)
 
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
         for source, func_name, base, revision, extra in self.REVISION_CASES:

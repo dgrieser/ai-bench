@@ -131,6 +131,18 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 #     "HLE-Full" -- and it is left standing anyway, because refusing every
 #     unqualified entry would drop some 50 correct values to catch that one.
 #     AA covers kimi-k3, so nothing lands; see the audit's section 8.
+#
+# The four security columns are mapped from their plain and "(Pass@1)"
+# spellings, with one label parked for its unit rather than its run:
+#
+#   * "ExploitGym (2h / 6h)" is Z.ai's, and its cells are task counts at two
+#     budgets ("105 / 130" of 869), not percentages; the parser reads the cell
+#     as 105.0. It stays parked, and the column takes GLM-5.3's 15.0 from
+#     cybergym.io, which divides the 6-hour count by the task total. The
+#     percentage labels ("ExploitGym", "ExploitGym (Pass@1)") are mapped.
+#   * "SEC Bench Pro" and "SEC-Bench Pro (Pass@1)" are the 183-task 260505
+#     snapshot that sec_bench_pro is pinned to -- the one vendors report.
+#   * "MiMo Cyber Bench" is Xiaomi's in-house board and stays parked.
 
 UNMAPPABLE = "__unmappable__"
 

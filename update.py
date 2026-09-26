@@ -24,6 +24,7 @@ import derive_indexes
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
+import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
 import fetch_epoch
@@ -36,6 +37,7 @@ import fetch_openrouter
 import fetch_osworld
 import fetch_programbench
 import fetch_real_swe
+import fetch_sec_bench
 import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
@@ -48,6 +50,7 @@ from _precedence import (
     AA_CODING_AGENTS_SOURCE_URL,
     AGENTS_LAST_EXAM_SOURCE_URL,
     BFCL_SOURCE_URL,
+    CYBERGYM_KEY_URLS,
     DATACURVE_SOURCE_URL,
     DEEPSWE_SOURCE_URL,
     EPOCH_PAGE_URLS,
@@ -61,6 +64,7 @@ from _precedence import (
     OSWORLD_SOURCE_URL,
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
+    SEC_BENCH_SOURCE_URL,
     RANK_AA,
     SWE_ATLAS_KEY_URLS,
     SWE_MARATHON_SOURCE_URL,
@@ -91,6 +95,8 @@ from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
 from _bfcl_mapping import load_bfcl_to_slug_mapping
 from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
+from _cybergym_mapping import load_cybergym_to_slug_mapping
+from _sec_bench_mapping import load_sec_bench_to_slug_mapping
 from _openrouter_mapping import load_openrouter_to_slug_mapping
 from _epoch_mapping import load_epoch_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
@@ -124,6 +130,8 @@ DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
+CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
+SEC_BENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_sec_bench.py")
 PROGRAMBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_programbench.py")
 REAL_SWE_SCRIPT = Path(__file__).resolve().with_name("fetch_real_swe.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
@@ -345,6 +353,16 @@ def parse_args() -> argparse.Namespace:
         "--skip-zerobench",
         action="store_true",
         help="Skip fetching scores from the ZeroBench leaderboard.",
+    )
+    parser.add_argument(
+        "--skip-cybergym",
+        action="store_true",
+        help="Skip fetching CyberGym and ExploitGym scores from cybergym.io.",
+    )
+    parser.add_argument(
+        "--skip-sec-bench",
+        action="store_true",
+        help="Skip fetching scores from the SEC-bench Pro leaderboard.",
     )
     parser.add_argument(
         "--skip-bfcl",
@@ -1868,6 +1886,119 @@ def update_zerobench_scores(
     return matched, updated, changes
 
 
+def build_fetch_cybergym_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_cybergym_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """CyberGym and ExploitGym, one column each, off cybergym.io.
+
+    fetch_cybergym.py names the column on every row, as fetch_osworld.py does,
+    and one mapping file serves both boards: they are one site's leaderboards
+    and label models the same way.
+    """
+    cmd = build_fetch_cybergym_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_cybergym.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected cybergym JSON format: expected a list")
+
+    cybergym_to_slug = load_cybergym_to_slug_mapping(mapping_path)
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        key = row.get("benchmark")
+        if key not in CYBERGYM_KEY_URLS:
+            continue
+        name = row.get("model")
+        if not isinstance(name, str) or not name:
+            continue
+        slug = cybergym_to_slug.get(name)
+        if not slug:
+            continue
+        # A model run under two agents (GPT-5.4 in OpenAI's own and in Codex
+        # CLI) keeps its better row, as the board ranks it.
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
+
+
+def update_cybergym_scores(
+    doc: dict[str, Any],
+    by_key: dict[str, dict[str, dict[str, Any]]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    return apply_revision_scores(
+        doc, by_key, CYBERGYM_KEY_URLS[fetch_cybergym.CYBERGYM_KEY],
+        key_urls=CYBERGYM_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
+
+
+def build_fetch_sec_bench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_sec_bench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_sec_bench_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_sec_bench.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected sec_bench JSON format: expected a list")
+
+    sec_bench_to_slug = load_sec_bench_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        if not isinstance(name, str) or not name:
+            continue
+        slug = sec_bench_to_slug.get(name)
+        if not slug:
+            continue
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_sec_bench_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        row = by_slug.get(slug)
+        if row is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, fetch_sec_bench.KEY, row.get("score"),
+            SEC_BENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
 def build_fetch_bfcl_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -2988,6 +3119,8 @@ def main() -> int:
     llmstats_path = LLMSTATS_SCRIPT
     openrouter_path = OPENROUTER_SCRIPT
     epoch_path = EPOCH_SCRIPT
+    cybergym_path = CYBERGYM_SCRIPT
+    sec_bench_path = SEC_BENCH_SCRIPT
     aa_coding_agents_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-aa-coding-agents-to-artificialanalysis.json"
     )
@@ -3053,6 +3186,12 @@ def main() -> int:
     )
     epoch_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-epoch-to-artificialanalysis.json"
+    )
+    cybergym_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-cybergym-to-artificialanalysis.json"
+    )
+    sec_bench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-sec-bench-to-artificialanalysis.json"
     )
     aa_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llm-to-artificialanalysis.json"
@@ -3139,6 +3278,10 @@ def main() -> int:
         listed.append(build_fetch_mcp_atlas_cmd(mcp_atlas_path))
     if not args.skip_zerobench:
         listed.append(build_fetch_zerobench_cmd(zerobench_path))
+    if not args.skip_cybergym:
+        listed.append(build_fetch_cybergym_cmd(cybergym_path))
+    if not args.skip_sec_bench:
+        listed.append(build_fetch_sec_bench_cmd(sec_bench_path))
     if not args.skip_bfcl:
         listed.append(build_fetch_bfcl_cmd(bfcl_path))
     if not args.skip_spheron and spheron_paths:
@@ -3554,6 +3697,39 @@ def main() -> int:
         )
         changes.extend(zerobench_changes)
 
+    # The security boards: cybergym.io's CyberGym and ExploitGym, and the
+    # SEC-bench Pro snapshot the vendors report on. First-party each, over the
+    # llm-stats boards and model cards that repeat vendors' numbers for them.
+    cybergym_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
+    cybergym_matched = 0
+    cybergym_updated = 0
+    if not args.skip_cybergym:
+        cybergym_by_slug = source_data(
+            fetch_failures, fetch_cybergym_data, cybergym_path, cybergym_mapping_path
+        )
+        cybergym_matched, cybergym_updated, cybergym_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_cybergym_scores",
+            update_cybergym_scores,
+            doc, cybergym_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(cybergym_changes)
+
+    sec_bench_by_slug: dict[str, dict[str, Any]] = {}
+    sec_bench_matched = 0
+    sec_bench_updated = 0
+    if not args.skip_sec_bench:
+        sec_bench_by_slug = source_data(
+            fetch_failures, fetch_sec_bench_data, sec_bench_path, sec_bench_mapping_path
+        )
+        sec_bench_matched, sec_bench_updated, sec_bench_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_sec_bench_scores",
+            update_sec_bench_scores,
+            doc, sec_bench_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(sec_bench_changes)
+
     # And again: BFCL's own leaderboard over evals.report's mirror of it.
     bfcl_by_slug: dict[str, dict[str, Any]] = {}
     bfcl_matched = 0
@@ -3661,6 +3837,10 @@ def main() -> int:
         print(f"models returned by mcp_atlas: {len(mcp_atlas_by_slug)}")
     if not args.skip_zerobench:
         print(f"models returned by zerobench: {len(zerobench_by_slug)}")
+    if not args.skip_cybergym:
+        print(f"models returned by cybergym: {revision_model_count(cybergym_by_slug)}" + revision_breakdown(cybergym_by_slug))
+    if not args.skip_sec_bench:
+        print(f"models returned by sec_bench: {len(sec_bench_by_slug)}")
     if not args.skip_bfcl:
         print(f"models returned by bfcl: {len(bfcl_by_slug)}")
     if not args.skip_spheron:
@@ -3723,6 +3903,10 @@ def main() -> int:
         print(f"models matched on mcp_atlas: {mcp_atlas_matched}")
     if not args.skip_zerobench:
         print(f"models matched on zerobench: {zerobench_matched}")
+    if not args.skip_cybergym:
+        print(f"models matched on cybergym: {cybergym_matched}")
+    if not args.skip_sec_bench:
+        print(f"models matched on sec_bench: {sec_bench_matched}")
     if not args.skip_bfcl:
         print(f"models matched on bfcl: {bfcl_matched}")
     if not args.skip_spheron:
@@ -3774,6 +3958,10 @@ def main() -> int:
         print(f"{action} from mcp_atlas: {mcp_atlas_updated}")
     if not args.skip_zerobench:
         print(f"{action} from zerobench: {zerobench_updated}")
+    if not args.skip_cybergym:
+        print(f"{action} from cybergym: {cybergym_updated}")
+    if not args.skip_sec_bench:
+        print(f"{action} from sec_bench: {sec_bench_updated}")
     if not args.skip_bfcl:
         print(f"{action} from bfcl: {bfcl_updated}")
     if not args.skip_spheron:
