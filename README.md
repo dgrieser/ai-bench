@@ -37,6 +37,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench and CyberBench) | Astro island props |
 | **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
+| **HLE-Diamond (CAIS & Scale AI)** | Research (the maintainers' own runs, on the announcement post) | `JSON.parse` literals in the post's Next.js page chunk |
 | **Epoch AI Benchmarking Hub** | Independent evaluator (own runs) and mirror of benchmark boards; a second source, CC BY 4.0 | One zip of CSVs, plus each revision-split benchmark's hub page (and OSWorld 2.0's official board, for releases) |
 
 ## Core Data Structure
@@ -428,6 +429,7 @@ current address.
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
+./fetch_hle_diamond.py                  # HLE-Diamond, the maintainers' highest-effort, no-tools runs
 ./fetch_vals.py --benchmark swebench    # or pin one board
 ./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
 ./fetch_vals.py --benchmark programbench  # ProgramBench, Vals' wider re-run of it
@@ -445,6 +447,7 @@ current address.
 ./update_bfcl_mapping.py
 ./update_deepswe_mapping.py
 ./update_frontierswe_mapping.py
+./update_hle_diamond_mapping.py
 ./update_real_swe_mapping.py
 ./update_tbench_mapping.py
 ./update_agents_last_exam_mapping.py
@@ -746,7 +749,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
 | 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, HLE-Diamond's announcement post, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
@@ -1264,6 +1267,58 @@ Knowledge index leaves out](#what-the-knowledge-index-leaves-out)). In a column
 whose whole subject is that modality it is not a defect but the definition, so
 the same four columns that are wrong for Knowledge are right there.
 
+## HLE-Diamond
+
+`hle_diamond` is the Center for AI Safety and Scale AI's refined subset of
+Humanity's Last Exam, released 2026-09-22: 1,000 questions, 500 reasoning and 500
+knowledge, kept after a year of cleaning so each has a checked answer and can be
+answered closed-book. It sits next to `hle` as a column of its own, not inside it:
+a different question set is a different measurement, the same line drawn at
+HLE-Verified.
+
+| Column | Leading source (rank) | Gap fillers | What the column refuses |
+| --- | --- | --- | --- |
+| `hle_diamond` | The maintainers' runs on [lastexam.ai/blog/hle-diamond](https://lastexam.ai/blog/hle-diamond) (2) | model cards (`HLE-Diamond`, `cais/hle-diamond (no tools)`, …) | With-tools runs; the chart's reasoning-high view; the reasoning or knowledge half alone |
+
+There is no leaderboard to read — lastexam.ai's `/leaderboard` is a sign-in
+dashboard — so `fetch_hle_diamond.py` reads the announcement post. It has three
+views of its results, and only one is the column:
+
+- **Highest effort, no tools** — the column, because every column in this table
+  carries a model at its highest setting: *max* for GPT, Claude and Muse, *xhigh*
+  for Grok, *high* for Gemini, Kimi and GLM (the post: "Models are evaluated using
+  highest reasoning effort available"). It is the post's results table
+  (`headers: ["Model", "Accuracy"]`), which the server renders into the page's
+  React flight data; the fetcher reads it from there and stops if it finds none,
+  or two.
+- **Reasoning high** — the chart's default toggle, every model held at *high*: up
+  to six points lower (DeepSeek V4 Pro 19.1 → 13.4, GPT-6 Astra 66.2 → 60.6). It
+  exists only as a `JSON.parse` literal in the post's JS chunk, and is not read.
+- **With tools** (web search + code execution) — +19 to +31 points on the eight
+  models run both ways. Refused, as in `hle`.
+
+The post's reasoning/knowledge table is attached to a row only where its overall
+matches the headline: DeepSeek V4 Pro's row there is still its reasoning-high run
+(13.4 against the headline's 19.1), so the split is never the score.
+
+A row the chart marks text-only (GLM 5.3, "\* Text-only subset") skipped the image
+questions, because the model takes no images. It is kept: for a text-only model
+that subset is all of the benchmark it can sit. The fetcher reports it with
+`text_only: true`; the flag sits in the chart's model table in the JS chunk, so
+the chunk is still read for it.
+
+Nobody else publishes the column yet: llm-stats, Epoch and Artificial Analysis
+have no HLE-Diamond board, and no Hugging Face card prints it. The labels a card
+is likely to use are mapped ahead of time, and `cais/hle-diamond` is in
+`fetch_huggingface.TOOL_MODE_SENSITIVE_DATASETS` so a card's with-tools entry is
+split off and parked rather than kept as the best number. Like every model-card
+number, a card's only fills a model the post does not carry.
+
+When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
+`kimi-k3` (22.2) and `deepseek-v4-pro` (19.1), and six closed reference models. Gemini 3.8 Flash, Grok
+4.7 and Muse Spark 1.3 are closed and not in the table. It is in no derived index;
+see [what the Knowledge index leaves out](#what-the-knowledge-index-leaves-out).
+
 ## Cybersecurity
 
 Five columns measure offensive security work. Each is an agentic coding task at
@@ -1540,8 +1595,9 @@ and 53.73 on Codex, and no page says which of the three the column should
 carry. Two records of the *same* run are not that case -- one harness filed
 twice, on two dates or two Hub PRs, is one run reported twice -- and there the
 merged entry beats one still pending on an open PR, and a later date beats an
-earlier one. `cais/hle` is split by tool mode before any of this, because the gap there
-is worth a median 11.5 points (`TOOL_MODE_SENSITIVE_DATASETS`).
+earlier one. `cais/hle` and `cais/hle-diamond` are split by tool mode before any of
+this, because the gap there is worth a median 11.5 points on HLE and +19 to +31 on
+HLE-Diamond (`TOOL_MODE_SENSITIVE_DATASETS`).
 
 **The tables in the card body**, which are where most of the numbers are and
 all of the ambiguity. The whole ingest turns on one question -- which column is
@@ -2571,7 +2627,7 @@ Contributing benchmarks and why they carry the weight they do:
 
 ### What the Knowledge index leaves out
 
-Six columns in `llm.json` answer knowledge-shaped questions and are still not
+Seven columns in `llm.json` answer knowledge-shaped questions and are still not
 members. Each is kept as a column in the table, none is aggregated, and the reasons
 differ:
 
@@ -2621,6 +2677,9 @@ differ:
   beside it agrees at Spearman **0.95** (148 models) — close agreement being the
   problem, not the reassurance. Exactly why `aa_coding_index` was dropped from the
   [Coding index](#coding-index).
+- **HLE-Diamond** — not yet assessed. It was added with 9 models, only 3 of them
+  open-weight, all from one source, and whether it should sit beside HLE or replace
+  it is still open.
 
 ### Why the coverage rules barely bite here
 

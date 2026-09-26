@@ -85,6 +85,7 @@ class TestRowFetchers(unittest.TestCase):
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
         ("openrouter", "score", "fetch_openrouter_data"),
         ("sec_bench", "score", "fetch_sec_bench_data"),
+        ("hle_diamond", "score", "fetch_hle_diamond_data"),
     ]
 
     # The revision-split sources file rows under a column per revision, so the

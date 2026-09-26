@@ -123,6 +123,7 @@ import fetch_epoch
 import fetch_evals_report
 import fetch_frontiercode
 import fetch_frontierswe
+import fetch_hle_diamond
 import fetch_huggingface
 import fetch_llmstats
 import fetch_mcp_atlas
@@ -187,6 +188,9 @@ CYBERGYM_KEY_URLS = {
 # The snapshot page the column is pinned to, not the site build's data file:
 # the site root is the newer snapshot, a different task set.
 SEC_BENCH_SOURCE_URL = canonical(fetch_sec_bench.URL)
+# The announcement post, which is the maintainers' only public board; the chart
+# reads its data from the post's JS chunk, whose name changes every build.
+HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 # benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
@@ -284,6 +288,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
         (SEC_BENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (HLE_DIAMOND_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
         *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),

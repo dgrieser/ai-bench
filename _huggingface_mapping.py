@@ -131,6 +131,13 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 #     "HLE-Full" -- and it is left standing anyway, because refusing every
 #     unqualified entry would drop some 50 correct values to catch that one.
 #     AA covers kimi-k3, so nothing lands; see the audit's section 8.
+#   * HLE-Diamond is a column of its own (hle_diamond), never hle: 1,000 of the
+#     questions, refined, and a different question set. Its plain, no-tools and
+#     "Humanity's Last Exam Diamond" spellings are mapped before any card has
+#     printed one, and so is `cais/hle-diamond`, which is split by tool mode
+#     the same way; the with-tools spellings are parked. A self-report fills
+#     only what the maintainers' post does not carry, like every model-card
+#     number.
 #
 # The four security columns are mapped from their plain and "(Pass@1)"
 # spellings, with one label parked for its unit rather than its run:

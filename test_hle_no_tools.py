@@ -96,6 +96,9 @@ class TestNoWithToolsLabelIsMapped(unittest.TestCase):
             "HLE-Full (w/ tools)",
             "HLE-Verified¹",
             "cais/hle (with tools)",
+            "HLE-Diamond (w/ tools)",
+            "HLE-Diamond (with tools)",
+            "cais/hle-diamond (with tools)",
             # Parked in the provenance pass: each had produced a stored value
             # that was not this column's measurement.
             "ZeroBench (Pass@5)",
@@ -138,7 +141,7 @@ class TestNoMappedLabelContradictsItsColumn(unittest.TestCase):
 
     # Columns llm.json defines as no-tools runs.
     NO_TOOL_COLUMNS = {
-        "hle", "aime_2025", "aime_2026", "gpqa_diamond", "mmlu_pro", "mmmu_pro",
+        "hle", "hle_diamond", "aime_2025", "aime_2026", "gpqa_diamond", "mmlu_pro", "mmmu_pro",
         "scicode", "zerobench", "charxiv_reasoning", "mathvista_mini", "critpt",
     }
     TOOLS = re.compile(
@@ -317,7 +320,23 @@ class TestHuggingFaceNotes(unittest.TestCase):
         )
 
     def test_only_hle_is_tool_mode_sensitive(self) -> None:
-        self.assertEqual(fetch_huggingface.TOOL_MODE_SENSITIVE_DATASETS, {"cais/hle"})
+        self.assertEqual(
+            fetch_huggingface.TOOL_MODE_SENSITIVE_DATASETS, {"cais/hle", "cais/hle-diamond"}
+        )
+
+    def test_hle_diamond_splits_on_its_note_too(self) -> None:
+        payload = {
+            "evalResults": [
+                {"data": {"dataset": {"id": "cais/hle-diamond", "task_id": "hle-diamond"},
+                          "value": 22.2, "notes": "No tools"}},
+                {"data": {"dataset": {"id": "cais/hle-diamond", "task_id": "hle-diamond"},
+                          "value": 48.0, "notes": "With tools (search + code)"}},
+            ]
+        }
+        self.assertEqual(
+            fetch_huggingface.extract_eval_results(payload),
+            {"cais/hle-diamond (no tools)": 22.2, "cais/hle-diamond (with tools)": 48.0},
+        )
 
 
 class TestLlmStatsResolution(unittest.TestCase):

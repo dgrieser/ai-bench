@@ -1183,8 +1183,10 @@ def _eval_results_label(dataset: dict[str, Any]) -> str | None:
 #
 # HLE qualifies on the numbers: across the 25 models where one publisher states
 # both modes, tools are worth a median +11.5 points and up to +27.1. See
-# docs/hle-tool-mode-audit-2026-09.md.
-TOOL_MODE_SENSITIVE_DATASETS = {"cais/hle"}
+# docs/hle-tool-mode-audit-2026-09.md. HLE-Diamond, its refined subset, has the
+# same split and a larger gap: +19 to +31 points on the eight models its
+# maintainers ran both ways.
+TOOL_MODE_SENSITIVE_DATASETS = {"cais/hle", "cais/hle-diamond"}
 
 _WITH_TOOLS_RE = re.compile(
     r"\bwith(?:\s+|-)(?:tools?|search|browsing|retrieval)\b|\bw/\s*tools?\b|\btool[- ]augmented\b",
