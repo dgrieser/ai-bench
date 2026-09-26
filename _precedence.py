@@ -59,7 +59,7 @@ The rungs, strongest first:
      republishes numbers nobody in the chain ran. Its ingest is fill-only, so
      in practice it reaches a column only where it is still null,
      custom-sourced, credited to the very page it is re-reading, or credited to
-     rung 6 below, which is the one fetcher rung that yields to it.
+     one of rungs 6 and 7 below, the fetcher rungs that yield to it.
   6. ``RANK_ENDPOINT_RUN`` -- OpenRouter's own GPQA Diamond runs, one per
      provider endpoint serving a model, of which fetch_openrouter.py reports
      the median. A run rather than a republished number, but of whatever
@@ -67,26 +67,38 @@ The rungs, strongest first:
      now and then plainly broken -- so the number is the model as the API
      market serves it rather than as its lab or a uniform harness measured it.
      It seeds a column every other fetcher may take over, llm-stats' fill-only
-     ingest included (``yields_to_fill_only``), and only the model cards below
-     leave it alone. It is not fill-only itself, so it replaces a card's number
-     and a hand entry the way any better rung does.
-  7. ``RANK_MODEL_CARD`` -- the Hugging Face model cards, a lab's own report
+     ingest included (``yields_to_fill_only``), and only the hub and the model
+     cards below leave it alone. It is not fill-only itself, so it replaces
+     their numbers and a hand entry the way any better rung does.
+  7. ``RANK_BENCHMARKING_HUB`` -- Epoch AI's Benchmarking Hub: Epoch's own
+     GPQA Diamond and SWE-bench Verified runs, and its copies of nine other
+     people's boards. A second source for every column it feeds, so it sits
+     right above the model cards and yields to everything else, llm-stats'
+     fill-only ingest included (``yields_to_fill_only``): it fills a cell
+     nobody better reports and gives it up the moment someone does. That is
+     what lets it carry files whose rows are not all what the column holds --
+     Terminal-Bench 2.0's unverified submissions, HLE's full set against the
+     column's text-only run -- since the board or AA takes the cell over as
+     soon as it reports the model. Not fill-only itself, so it replaces a
+     card's number and a hand entry.
+  8. ``RANK_MODEL_CARD`` -- the Hugging Face model cards, a lab's own report
      under its own prompts and settings. Fill-only like llm-stats, and ranked
-     under OpenRouter because a card is the flattered variant of a number
-     OpenRouter at least measured. It shared rung 5 with llm-stats before
-     OpenRouter was read; both ingests are fill-only and neither replaces the
-     other's value, so the split changes nothing between the two of them.
-  8. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
+     under OpenRouter and the hub because a card is the flattered variant of a
+     number they at least measured or copied from a board. It shared a rung
+     with llm-stats before OpenRouter was read; both ingests are fill-only and
+     neither replaces the other's value, so the split changes nothing between
+     the two of them.
+  9. ``RANK_HAND_ENTERED`` -- a value typed in through ``add.py`` or
      ``edit.py``. Its attribution is whatever page the entry cited, or null
      when a hand edit cleared it (``stamp_score_source`` takes None for exactly
      that), and either way it is the weakest rung: a hand entry seeds a column
      until a source measures it, and any scraper may overwrite it -- the
-     fill-only aggregates of rungs 5 and 7 included, which otherwise never
+     fill-only aggregates of rungs 5 and 8 included, which otherwise never
      replace a stored value (``is_fetcher_source``).
 
 Apart from the pages of one source, no two sources that can overwrite each
 other share a rung: rung 2 holds that by construction, rungs 0-4 by the split
-above, and rungs 5 to 7 by one each.
+above, and rungs 5 to 8 by one each.
 
 Two sources on the same rung may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -106,6 +118,7 @@ import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
+import fetch_epoch
 import fetch_evals_report
 import fetch_frontiercode
 import fetch_frontierswe
@@ -132,8 +145,12 @@ RANK_THIRD_PARTY_RUN = 3
 RANK_CURATED = 4
 RANK_AGGREGATE = 5
 RANK_ENDPOINT_RUN = 6
-RANK_MODEL_CARD = 7
-RANK_HAND_ENTERED = 8
+RANK_BENCHMARKING_HUB = 7
+RANK_MODEL_CARD = 8
+RANK_HAND_ENTERED = 9
+
+# The fetcher rungs a fill-only ingest may still take a cell from.
+YIELDING_RANKS = frozenset({RANK_ENDPOINT_RUN, RANK_BENCHMARKING_HUB})
 
 # Per-score source pages, stamped into models[].scores_source alongside every
 # score write, and the identities the ranks below are hung on. Stored
@@ -158,7 +175,7 @@ REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # the host, including the per-run pages.
 PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
-# cards under another roof, which is rung 5; fetch_zerobench.py never reads it.
+# cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
@@ -218,6 +235,12 @@ VALS_RERUN_KEY_URLS = {
 # measured, and the Hugging Face ingest with the card it read.
 AA_MODEL_PAGE_PREFIX = canonical(artificialanalysis.MODEL_PAGE_URL.format(""))
 HUGGING_FACE_PREFIX = canonical(fetch_huggingface.HF_BASE)
+# Epoch AI's hub: one page per benchmark read, each crediting its scores. The
+# pages rather than the host, so a hand entry citing some other Epoch page (a
+# report, a chart of a benchmark this repo does not read) stays hand-entered.
+EPOCH_PAGE_URLS = {
+    page: canonical(fetch_epoch.page_url(page)) for page in fetch_epoch.BENCHMARKS
+}
 # OpenRouter is per-model the same way: each score cites the page of the model
 # it was read off, so the rank hangs on the host.
 OPENROUTER_PREFIX = canonical(fetch_openrouter.SITE_URL)
@@ -254,6 +277,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),
         *((url, RANK_THIRD_PARTY_RUN) for url in VALS_RERUN_KEY_URLS.values()),
         (DEEPSWE_SOURCE_URL, RANK_CURATED),
+        *((url, RANK_BENCHMARKING_HUB) for url in EPOCH_PAGE_URLS.values()),
         (AA_CODING_AGENTS_SOURCE_URL, RANK_AA_CODING_AGENTS),
         (LLMSTATS_SOURCE_URL, RANK_AGGREGATE),
         (OPENROUTER_PREFIX, RANK_ENDPOINT_RUN),
@@ -266,7 +290,7 @@ RANKED_PREFIXES = _ranked_prefixes()
 
 
 def source_rank(url: str | None) -> int:
-    """Rank of the source that published a score, 0 (strongest) to 8.
+    """Rank of the source that published a score, 0 (strongest) to 9.
 
     An unrecognised page ranks as hand-entered, and so does None: both mean the
     number reached llm.json through a person rather than through a scraper this
@@ -298,15 +322,14 @@ def yields_to_fill_only(new_url: str | None, stored_url: str | None) -> bool:
     """Whether a fill-only fetcher reading new_url may replace stored_url's value.
 
     Fill-only ingests never replace another fetcher's number -- except one on
-    RANK_ENDPOINT_RUN, which exists to be taken over: OpenRouter seeds GPQA
-    Diamond for models nobody else measured, and every better-ranked fetcher,
-    llm-stats included, may replace it. The model cards rank below it and so
-    still leave it alone.
+    a rung that exists to be taken over: OpenRouter's endpoint runs, which seed
+    GPQA Diamond for models nobody else measured, and Epoch AI's hub, a second
+    source for every column it feeds. Every better-ranked fetcher, llm-stats
+    included, may replace either. The model cards rank below both and so still
+    leave them alone.
     """
-    return (
-        source_rank(stored_url) == RANK_ENDPOINT_RUN
-        and source_rank(new_url) < RANK_ENDPOINT_RUN
-    )
+    stored = source_rank(stored_url)
+    return stored in YIELDING_RANKS and source_rank(new_url) < stored
 
 
 def may_overwrite(new_url: str | None, stored_url: str | None) -> bool:

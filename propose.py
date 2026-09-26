@@ -138,6 +138,9 @@ ROUTES: dict[str, dict[str, Route]] = {
     "update_openrouter_mapping.py": {
         "*": Route("_openrouter_mapping", "OPENROUTER_MAPPING", "add_openrouter_mapping", MODELS)
     },
+    "update_epoch_mapping.py": {
+        "*": Route("_epoch_mapping", "EPOCH_MAPPING", "add_epoch_mapping", MODELS)
+    },
     "update_mcp_atlas_mapping.py": {
         "*": Route("_mcp_atlas_mapping", "MCP_ATLAS_MAPPING", "add_mcp_atlas_mapping", MODELS)
     },

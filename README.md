@@ -35,6 +35,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench) | Astro island props |
+| **Epoch AI Benchmarking Hub** | Independent evaluator (own runs) and mirror of benchmark boards; a second source, CC BY 4.0 | One zip of CSVs, plus each revision-split benchmark's hub page (and OSWorld 2.0's official board, for releases) |
 
 ## Core Data Structure
 
@@ -112,6 +113,17 @@ That stamp moved when the score *changed*, so such an entry is the day the
 score was last written and not necessarily the day it arrived — the site labels
 those **first recorded** rather than calling them additions. From that day on,
 an entry with nothing before it really is a score arriving.
+
+Top-level **`credits`** is the attribution a source's licence asks for, one
+entry per credited publisher: `name`, `work`, `url`, `license`, `license_url`
+and the `citation` in the publisher's own words. `llm.html` prints it as a
+**Credits** panel under the benchmark reference, and adds a line counting the
+scores in the file whose `scores_source` sits under the credit's `url`, and in
+which columns — derived from the scores on every load rather than stored, so it
+cannot go stale. Epoch AI's hub is the one source today whose licence (CC BY
+4.0) asks for it; `fetch_epoch.EPOCH_CREDIT` is the entry as it must read, and
+`test_epoch.py` fails if `llm.json` drops it or carries a hub score without it.
+JSON and YAML exports carry the whole document and so the credits with it.
 
 The three score maps carry the full benchmark key set with null placeholders;
 `update.py` stamps date and source URL together whenever it writes a score, and
@@ -317,7 +329,7 @@ stderr shows how long the run actually waited for that fetcher.
 │  fetch_huggingface.py     │ fetch_deepswe.py            │
 │  fetch_frontierswe.py     │ fetch_osworld.py            │
 │  fetch_swe_atlas.py       │ fetch_swe_marathon.py       │
-│  fetch_spheron.py         │                             │
+│  fetch_spheron.py         │ fetch_epoch.py              │
 │  fetch_llmstats.py        │ fetch_evals_report.py       │
 │  fetch_frontiercode.py    │ fetch_datacurve.py          │
 │  fetch_mcp_atlas.py       │ fetch_bfcl.py               │
@@ -372,6 +384,9 @@ Output: llm.json (unified dataset)
 ./fetch_openrouter.py --model openai/gpt-6-sol   # GPQA Diamond, median of OpenRouter's endpoint runs
 ./fetch_openrouter.py --format names    # the catalogue ids the mapping is reviewed against
 ./fetch_evals_report.py
+./fetch_epoch.py                        # Epoch AI's hub: its own GPQA Diamond and SWE-bench Verified runs, and its copies of nine boards
+./fetch_epoch.py --benchmark osworld-2  # or one hub page (gpqa-diamond, deepswe, terminal-bench, os-world, hle, ...)
+./fetch_epoch.py --format names         # the model groups the mapping is reviewed against
 ./fetch_datacurve.py                    # DeepSWE, from the benchmark's own site
 ./fetch_datacurve.py --all-configs      # every harness/effort row, not the best
 ./fetch_datacurve.py --revision 1.0     # one revision instead of every published one
@@ -704,10 +719,11 @@ already gives row collisions inside a single source.
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
-| 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter value (rank 6); never another fetcher's. |
-| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs (a 0) left out. A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces a model card's number and a hand entry. |
-| 7 | **Model cards** — Hugging Face | A lab's own report under its own prompts and settings. Fill-only like llm-stats, on the same terms but without the OpenRouter exception, so it never replaces an OpenRouter run. It shared rank 5 with llm-stats until OpenRouter was read; neither ever replaces the other's value, so the split changed nothing between the two, and where they overlap llm-stats runs first and so claims the gap. |
-| 8 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
+| 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
+| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs (a 0) left out. A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
+| 7 | **Epoch AI's Benchmarking Hub** (`fetch_epoch.py`) | Epoch's own GPQA Diamond and SWE-bench Verified runs, and its copies of nine other boards. A second source for every column it feeds: it fills a cell nobody better reports and yields to every rank above, llm-stats' fill-only ingest included (the `yields_to_fill_only` exception OpenRouter has). That is what makes it safe to read files whose rows are not all what the column holds — see [what it contributes](#what-epoch-ai-contributes). Not fill-only, so it replaces a model card's number and a hand entry. |
+| 8 | **Model cards** — Hugging Face | A lab's own report under its own prompts and settings. Fill-only like llm-stats, on the same terms but without the OpenRouter and Epoch exception, so it never replaces their values. It shared a rank with llm-stats until OpenRouter was read; neither ever replaces the other's value, so the split changed nothing between the two, and where they overlap llm-stats runs first and so claims the gap. |
+| 9 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
 
 Two sources on the same rank may still overwrite each other, which is what lets
 a source refresh its own value: rank blocks a write only when the stored value
@@ -855,6 +871,64 @@ apart by a suffix. update.py keeps the best score across every path that reaches
 a slug, which is right for one model served by two providers and wrong for two
 models, so `test_vals.py` holds the mapping to one path per `llm.json` row and
 asks for a reason in `ALLOWED_DOUBLE` where a model really does arrive twice.
+
+### What Epoch AI contributes
+
+[Epoch AI's Benchmarking Hub](https://epoch.ai/benchmarks) publishes its whole
+dataset as one download, `benchmark_data.zip`, under CC BY 4.0: free to reuse
+with credit, which `llm.json`'s [`credits`](#llmjson-format) carries and
+`llm.html` prints. Every CSV in it is a row per model *configuration*
+(`glm-5.2_max`), and `model_metadata.csv` names the model each belongs to — its
+model group, `GLM-5.2` — and whether its weights are open. The mapping
+(`model-name-mapping-epoch-to-artificialanalysis.json`) is keyed by the group,
+so one entry covers every reasoning effort and provider copy; the best
+configuration wins, as on every board, and Epoch's own open-weights verdict is
+what `update_epoch_mapping.py` records closed weights by. Dated re-releases fold
+onto the base model the way the other mappings fold them (`DeepSeek V4 Pro
+0813` → `deepseek-v4-pro`), and Epoch's plain `DeepSeek-R1` is the January
+release, not the R1-0528 that `deepseek-r1` is, so it stays unmapped.
+
+It is a **second source** for every column it feeds, ranked 7 — right above the
+model cards ([source precedence](#source-precedence)). Anything else that
+reports a model takes the cell over, llm-stats' fill-only ingest included, so
+the hub fills gaps and never decides a column someone better covers. Eleven
+files are read:
+
+| Hub page | Column | What it is, and where it differs from the column |
+| --- | --- | --- |
+| `gpqa-diamond` | `gpqa_diamond` | Epoch's own run, "Best score (across scorers)" |
+| `swe-bench-verified` | `swe_bench_verified` | Epoch's own run, same score column |
+| `deepswe` | `deepswe_1_1` today | Copy of Datacurve's board; revision from the page title, "DeepSWE v1.1" |
+| `frontierswe` | `frontierswe_2_0` today | Copy of the FrontierSWE board; "FrontierSWE (v2)" |
+| `frontiercode` | `frontiercode_1_1` today | Copy of Cognition's **Main** board ("Our chart reports the Main score … using only the current 1.1 revision") |
+| `terminal-bench` | `terminal_bench_2_0` | Rows citing the 2.0 board only. The file mixes the board's unverified submissions (64 rows) in with its verified runs and cannot tell them apart; the column is read from the verified runs, so an unverified number stands only until the board, Vals or AA reports that model |
+| `os-world` | `osworld_verified` | The board's rows at a step budget of 100 or less, already in percent; a vendor announcement the file carries is dropped |
+| `osworld-2` | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08` | Each model's newest runs, with no release on row or page. Each row is filed under the release of the one official-board run with the same model, reasoning setting, tool setting and binary accuracy (full set, 500 steps); a row matching none, or only a release with no column (2.1), is dropped and counted on stderr |
+| `hle` | `hle` | The full set, about a tenth multimodal, where the column is AA's text-only run (Fable 5.1: 46.5 here, 59.1 on AA) — so a hub number stands only where AA has not measured the model |
+| `critpt` | `critpt` | Artificial Analysis' board as Epoch last copied it; AA's own reading outranks it |
+| `scicode` | `scicode` | Artificial Analysis' board as Epoch last copied it, which Epoch describes as the subproblem accuracy — the same number `artificialanalysis.py` stores here |
+
+The CSVs of the revision-split mirrors name no revision, and a source that does
+not say which revision it measured does not write to a revision column
+([below](#benchmarks-that-publish-more-than-one-revision)). Epoch's page for
+each does, so `fetch_epoch.py` reads the revision off the page on every run —
+the title first, then the methodology's "the current X revision" — and files the
+rows under `known_revision_key()`'s column. A page that names no revision, or one
+`llm.json` has no column for (a DeepSWE v1.2), drops that benchmark with a
+warning rather than filing it next door. Checked against the boards themselves
+when it was added: DeepSWE matched Datacurve's v1.1 artifact row for row,
+FrontierSWE the V2 board on every model both list, FrontierCode Cognition's 1.1
+Main block on 15 of 16, and all sixteen OSWorld 2.0 rows found their release.
+
+When it was added the hub matched 71 `llm.json` models and wrote five scores:
+`gpt-5-6-sol` FrontierSWE 2.0 32.2 (the only source attributing the board's
+"GPT-5.6" row, which the FrontierSWE mapping leaves unmapped), SciCode for
+`glm-4-6` (38.4) and `mimo-v2-flash` (25.9), Terminal-Bench 2.0 for
+`qwen3-5-9b` (9.2), and Terminal-Bench 2.0 for `qwen3-6-35b-a3b`, where a board
+run at 23.0 replaced the 51.5 the model card claims. Everywhere else it
+confirmed what a better rank already carries — an equal number from a
+lower-ranked source keeps its credit — and it stands ready as the second source
+for those columns.
 
 ### Tool Use and Instruction Following
 
@@ -3270,9 +3344,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (23 files)
-├── update_*_mapping.py         # Mapping sync scripts (23 files)
-├── _*_mapping.py               # Mapping application modules (23 files)
+├── fetch_*.py                  # Benchmark data fetchers (24 files)
+├── update_*_mapping.py         # Mapping sync scripts (24 files)
+├── _*_mapping.py               # Mapping application modules (24 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 ├── index-calibration.json      # Each index's transfer_ratio, re-measured nightly (calibrate-indexes.yml)

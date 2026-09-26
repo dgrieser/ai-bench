@@ -26,6 +26,7 @@ import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
+import fetch_epoch
 import fetch_evals_report
 import fetch_frontierswe
 import fetch_huggingface
@@ -49,6 +50,7 @@ from _precedence import (
     BFCL_SOURCE_URL,
     DATACURVE_SOURCE_URL,
     DEEPSWE_SOURCE_URL,
+    EPOCH_PAGE_URLS,
     EVALS_REPORT_KEY_URLS,
     FRONTIERCODE_SOURCE_URL,
     FRONTIERSWE_KEY_URLS,
@@ -90,6 +92,7 @@ from _bfcl_mapping import load_bfcl_to_slug_mapping
 from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
 from _openrouter_mapping import load_openrouter_to_slug_mapping
+from _epoch_mapping import load_epoch_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
 from _huggingface_mapping import load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
@@ -135,6 +138,7 @@ SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py"
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 OPENROUTER_SCRIPT = Path(__file__).resolve().with_name("fetch_openrouter.py")
+EPOCH_SCRIPT = Path(__file__).resolve().with_name("fetch_epoch.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
@@ -421,6 +425,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-openrouter",
         action="store_true",
         help="Skip fetching GPQA Diamond scores from OpenRouter's model pages.",
+    )
+    parser.add_argument(
+        "--skip-epoch",
+        action="store_true",
+        help="Skip fetching scores from Epoch AI's Benchmarking Hub.",
     )
     return parser.parse_args()
 
@@ -956,7 +965,7 @@ def apply_score(
         custom source, a page no fetcher writes (_precedence.is_fetcher_source),
         which every fetcher may replace, a value credited to the very page
         being read, which is that page refreshing its own number, and an
-        OpenRouter value when the fill-only source outranks it
+        OpenRouter or Epoch AI hub value when the fill-only source outranks it
         (_precedence.yields_to_fill_only);
       * a fetcher reporting the very number a custom source gave takes over its
         credit, so the value is attributed to a page this repo re-reads;
@@ -2776,6 +2785,78 @@ def update_openrouter_scores(
     return matched, updated, changes
 
 
+def build_fetch_epoch_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--benchmark", "all", "--format", "json"]
+
+
+def fetch_epoch_data(script: Path, mapping_path: Path) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_epoch_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_epoch.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected epoch JSON format: expected a list")
+
+    epoch_to_slug = load_epoch_to_slug_mapping(mapping_path)
+    # Only the columns fetch_epoch.py can file a row under, each credited to
+    # the hub page it was read from: a row naming anything else is not one
+    # this ingest knows how to rank.
+    known_keys = fetch_epoch.possible_keys()
+    known_pages = set(EPOCH_PAGE_URLS.values())
+    # slug -> {benchmark_key -> the best-scoring configuration's row}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        key = row.get("key")
+        source = row.get("source")
+        if key not in known_keys or not isinstance(source, str):
+            continue
+        if canonical(source) not in known_pages:
+            continue
+        slug = epoch_to_slug.get(row.get("model"))
+        if not slug:
+            continue
+        # A model's reasoning efforts and provider copies fold onto one slug;
+        # the best configuration wins, as on every board.
+        keep_best_row(by_slug.setdefault(slug, {}), key, row, "score")
+    return by_slug
+
+
+def update_epoch_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        epoch_rows = by_slug.get(slug)
+        if not epoch_rows:
+            continue
+
+        matched += 1
+        # Not fill-only: rank decides (_precedence.RANK_BENCHMARKING_HUB), so
+        # it takes a cell only from the model cards and hand entries, and
+        # every other fetcher -- llm-stats' fill-only ingest included
+        # (_precedence.yields_to_fill_only) -- takes a hub value over.
+        for benchmark_key, row in epoch_rows.items():
+            updated += apply_score(
+                doc, model, slug, benchmark_key, row.get("score"),
+                row["source"], changes, fill_urls_only=fill_urls_only,
+            )
+
+    return matched, updated, changes
+
+
 def snapshot_scores(doc: dict[str, Any]) -> dict[str, tuple[dict, dict, dict]]:
     """Each model's scores, dates and sources as the run found them."""
     snapshot: dict[str, tuple[dict, dict, dict]] = {}
@@ -2906,6 +2987,7 @@ def main() -> int:
     spheron_path = SPHERON_SCRIPT
     llmstats_path = LLMSTATS_SCRIPT
     openrouter_path = OPENROUTER_SCRIPT
+    epoch_path = EPOCH_SCRIPT
     aa_coding_agents_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-aa-coding-agents-to-artificialanalysis.json"
     )
@@ -2969,6 +3051,9 @@ def main() -> int:
     openrouter_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-openrouter-to-artificialanalysis.json"
     )
+    epoch_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-epoch-to-artificialanalysis.json"
+    )
     aa_model_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-llm-to-artificialanalysis.json"
     )
@@ -3020,6 +3105,8 @@ def main() -> int:
         listed.append(build_fetch_llmstats_cmd(llmstats_path))
     if not args.skip_openrouter and openrouter_models:
         listed.append(build_fetch_openrouter_cmd(openrouter_path, openrouter_models))
+    if not args.skip_epoch:
+        listed.append(build_fetch_epoch_cmd(epoch_path))
     if not args.skip_huggingface:
         listed.append(build_fetch_huggingface_cmd(huggingface_path))
     if not args.skip_toolathlon:
@@ -3185,6 +3272,21 @@ def main() -> int:
             doc, openrouter_by_slug, fill_urls_only=args.fill_source_urls
         )
         changes.extend(openrouter_changes)
+
+    epoch_by_slug: dict[str, dict[str, Any]] = {}
+    epoch_matched = 0
+    epoch_updated = 0
+    if not args.skip_epoch:
+        epoch_by_slug = source_data(
+            fetch_failures, fetch_epoch_data, epoch_path, epoch_mapping_path
+        )
+        epoch_matched, epoch_updated, epoch_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_epoch_scores",
+            update_epoch_scores,
+            doc, epoch_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(epoch_changes)
 
     huggingface_by_slug: dict[str, dict[str, Any]] = {}
     hf_matched = 0
@@ -3525,6 +3627,8 @@ def main() -> int:
         print(f"models returned by llmstats: {len(llmstats_by_slug)}")
     if not args.skip_openrouter:
         print(f"models returned by openrouter: {len(openrouter_by_slug)}")
+    if not args.skip_epoch:
+        print(f"models returned by epoch: {len(epoch_by_slug)}")
     if not args.skip_huggingface:
         print(f"models returned by huggingface: {len(huggingface_by_slug)}")
     if not args.skip_toolathlon:
@@ -3585,6 +3689,8 @@ def main() -> int:
         print(f"models matched on llmstats: {llmstats_matched}")
     if not args.skip_openrouter:
         print(f"models matched on openrouter: {openrouter_matched}")
+    if not args.skip_epoch:
+        print(f"models matched on epoch: {epoch_matched}")
     if not args.skip_huggingface:
         print(f"models matched on huggingface: {hf_matched}")
     if not args.skip_toolathlon:
@@ -3632,6 +3738,8 @@ def main() -> int:
         print(f"{action} from llmstats: {llmstats_updated}")
     if not args.skip_openrouter:
         print(f"{action} from openrouter: {openrouter_updated}")
+    if not args.skip_epoch:
+        print(f"{action} from epoch: {epoch_updated}")
     if not args.skip_huggingface:
         print(f"{action} from huggingface: {hf_updated}")
         if not args.fill_source_urls:

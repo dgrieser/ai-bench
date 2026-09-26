@@ -33,6 +33,7 @@ import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_datacurve
 import fetch_deepswe
+import fetch_epoch
 import fetch_evals_report
 import fetch_frontiercode
 import fetch_frontierswe
@@ -97,6 +98,10 @@ COVERED_BY = [
     (
         fetch_openrouter.MODELS_API_URL,
         fetch_openrouter.MODELS_PAGE_URL,
+    ),
+    (
+        f"{fetch_epoch.DATA_URL} (one archive, every benchmark)",
+        fetch_epoch.HUB_URL,
     ),
 ]
 
@@ -182,6 +187,15 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         # models[].scores_source; the catalogue is what the panel links. It
         # carries no score itself, so it stays off benchmarks.gpqa_diamond.
         (fetch_openrouter.MODELS_PAGE_URL, ()),
+        # Epoch AI's hub: the index is what the panel links, and each page read
+        # credits the scores it carries. A page with a fixed column covers it;
+        # a mirror's page covers whichever revision it names on the day, which
+        # a static list cannot know, so those stay sources-only.
+        (fetch_epoch.HUB_URL, ()),
+        *(
+            (fetch_epoch.page_url(page), (bench.key,) if bench.key else ())
+            for page, bench in fetch_epoch.BENCHMARKS.items()
+        ),
     ]
     for slug, key in fetch_evals_report.BENCHMARKS.items():
         items.append((fetch_evals_report.BASE_URL.format(slug=slug), (key,)))

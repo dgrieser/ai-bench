@@ -206,6 +206,47 @@ class TestValsMerge(unittest.TestCase):
                 self.assertEqual(by_slug["m"], {"mmlu_pro": 45.0, "gpqa_diamond": 80.0})
 
 
+class TestEpochMerge(unittest.TestCase):
+    """Epoch reports one row per configuration ("glm-5.2_max"), and the mapping
+    folds a model group's efforts -- and a dated re-release filed as its own
+    group -- onto one slug. Like Vals the fold is per column, and the best
+    configuration has to win whichever order the payload arrives in."""
+
+    def row(self, model: str, page: str, key: str, score: float) -> dict:
+        return {
+            "model": model, "version": f"{model}_x", "benchmark": page, "key": key,
+            "score": score, "source": f"https://epoch.ai/benchmarks/{page}",
+        }
+
+    def test_best_configuration_wins_per_key_in_either_order(self) -> None:
+        mapping = write_json({"Model": "m", "Model 0813": "m"})
+        rows = [
+            self.row("Model", "gpqa-diamond", "gpqa_diamond", 80.0),
+            self.row("Model", "frontiercode", "frontiercode_1_1", 17.6),
+            self.row("Model 0813", "gpqa-diamond", "gpqa_diamond", 70.0),
+            self.row("Model 0813", "frontiercode", "frontiercode_1_1", 28.6),
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_slug = update.fetch_epoch_data(SCRIPT, mapping)
+                self.assertEqual(
+                    {key: row["score"] for key, row in by_slug["m"].items()},
+                    {"gpqa_diamond": 80.0, "frontiercode_1_1": 28.6},
+                )
+
+    def test_a_row_for_a_column_or_page_it_does_not_read_is_dropped(self) -> None:
+        mapping = write_json({"Model": "m"})
+        rows = [
+            self.row("Model", "weirdml", "weirdml", 40.0),
+            self.row("Model", "deepswe", "deepswe_1_2", 70.0),
+            {**self.row("Model", "gpqa-diamond", "gpqa_diamond", 80.0),
+             "source": "https://example.com/gpqa"},
+        ]
+        with stub_run(rows):
+            self.assertEqual(update.fetch_epoch_data(SCRIPT, mapping), {})
+
+
 class TestRevisionRouting(unittest.TestCase):
     """DeepSWE, FrontierCode, FrontierSWE and SWE-Marathon keep a column per revision.
 

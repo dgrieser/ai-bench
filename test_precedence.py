@@ -24,6 +24,7 @@ from _precedence import (
     BFCL_SOURCE_URL,
     DATACURVE_SOURCE_URL,
     DEEPSWE_SOURCE_URL,
+    EPOCH_PAGE_URLS,
     EVALS_REPORT_KEY_URLS,
     FRONTIERCODE_SOURCE_URL,
     FRONTIERSWE_SOURCE_URL,
@@ -36,6 +37,7 @@ from _precedence import (
     RANK_AA_CODING_AGENTS,
     RANK_AGGREGATE,
     RANK_BENCHMARK_SITE,
+    RANK_BENCHMARKING_HUB,
     RANK_CURATED,
     RANK_ENDPOINT_RUN,
     RANK_HAND_ENTERED,
@@ -705,7 +707,7 @@ class TestOpenRouter(unittest.TestCase):
         self.assertEqual(n, 1)
         self.assertEqual(model["scores"][self.KEY], 85.0)
 
-    def test_the_yield_is_openrouters_alone(self) -> None:
+    def test_the_model_cards_never_take_it(self) -> None:
         # llm-stats outranks the model cards too, but both are fill-only and
         # neither replaces the other's value: the exception is one rung's.
         self.assertTrue(precedence.yields_to_fill_only(LLMSTATS_SOURCE_URL, OPENROUTER_PAGE))
@@ -717,6 +719,74 @@ class TestOpenRouter(unittest.TestCase):
         )
         self.assertEqual(n, 0)
         self.assertEqual(model["scores_source"][self.KEY], HF_CARD)
+
+
+class TestEpoch(unittest.TestCase):
+    """Epoch AI's hub is a second source: it ranks right above the model cards
+    and every other fetcher takes its value over, llm-stats' fill-only ingest
+    included."""
+
+    GPQA = EPOCH_PAGE_URLS["gpqa-diamond"]
+
+    def test_every_page_it_reads_ranks_on_its_rung(self) -> None:
+        for url in EPOCH_PAGE_URLS.values():
+            with self.subTest(url=url):
+                self.assertEqual(source_rank(url), RANK_BENCHMARKING_HUB)
+        self.assertLess(RANK_ENDPOINT_RUN, RANK_BENCHMARKING_HUB)
+        self.assertLess(RANK_BENCHMARKING_HUB, RANK_MODEL_CARD)
+
+    def test_other_epoch_pages_stay_hand_entered(self) -> None:
+        # The rung hangs on the pages the fetcher reads, not on the host.
+        for url in ("https://epoch.ai/benchmarks", "https://epoch.ai/benchmarks/weirdml",
+                    "https://epoch.ai/gradient-updates/some-post"):
+            with self.subTest(url=url):
+                self.assertEqual(source_rank(url), RANK_HAND_ENTERED)
+
+    def test_it_never_replaces_another_fetcher(self) -> None:
+        for key, stored in (
+            ("gpqa_diamond", AA_PAGE),
+            ("gpqa_diamond", VALS_KEY_URLS["gpqa_diamond"]),
+            ("frontiercode_1_1", FRONTIERCODE_SOURCE_URL),
+            ("frontiercode_1_1", EVALS_REPORT_KEY_URLS["frontiercode_1_1"]),
+            ("deepswe_1_1", DEEPSWE_SOURCE_URL),
+            ("gpqa_diamond", LLMSTATS_SOURCE_URL),
+            ("gpqa_diamond", OPENROUTER_PAGE),
+        ):
+            with self.subTest(stored=stored):
+                model = model_with(score=80.0, source=stored, key=key)
+                n = update.apply_score(DOC, model, "m", key, 85.0, self.GPQA, [])
+                self.assertEqual(n, 0)
+                self.assertEqual(model["scores_source"][key], stored)
+
+    def test_every_other_fetcher_takes_it_over(self) -> None:
+        for url, fill_only in (
+            (AA_PAGE, False),
+            (VALS_KEY_URLS["gpqa_diamond"], False),
+            (OPENROUTER_PAGE, False),
+            (LLMSTATS_SOURCE_URL, True),
+        ):
+            with self.subTest(url=url):
+                model = model_with(score=80.0, source=self.GPQA, key="gpqa_diamond")
+                n = update.apply_score(
+                    DOC, model, "m", "gpqa_diamond", 85.0, url, [], fill_only=fill_only
+                )
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores_source"]["gpqa_diamond"], url)
+
+    def test_it_replaces_a_model_card_and_a_hand_entry(self) -> None:
+        for stored in (HF_CARD, HAND_ENTERED, None):
+            with self.subTest(stored=stored):
+                model = model_with(score=80.0, source=stored, key="gpqa_diamond")
+                n = update.apply_score(DOC, model, "m", "gpqa_diamond", 85.0, self.GPQA, [])
+                self.assertEqual(n, 1)
+                self.assertEqual(model["scores_source"]["gpqa_diamond"], self.GPQA)
+
+    def test_a_model_card_leaves_it_alone(self) -> None:
+        self.assertFalse(precedence.yields_to_fill_only(HF_CARD, self.GPQA))
+        model = model_with(score=80.0, source=self.GPQA, key="gpqa_diamond")
+        n = update.apply_score(DOC, model, "m", "gpqa_diamond", 85.0, HF_CARD, [], fill_only=True)
+        self.assertEqual(n, 0)
+        self.assertEqual(model["scores_source"]["gpqa_diamond"], self.GPQA)
 
 
 class TestEveryScrapedPageIsRanked(unittest.TestCase):
@@ -740,6 +810,7 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
             SWE_MARATHON_SOURCE_URL,
             OPENROUTER_PAGE,
             HF_CARD,
+            *EPOCH_PAGE_URLS.values(),
             *SWE_ATLAS_KEY_URLS.values(),
             *EVALS_REPORT_KEY_URLS.values(),
         ]
@@ -757,16 +828,17 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
                 RANK_CURATED,
                 RANK_AGGREGATE,
                 RANK_ENDPOINT_RUN,
+                RANK_BENCHMARKING_HUB,
                 RANK_MODEL_CARD,
                 RANK_HAND_ENTERED,
             ],
-            [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         )
         self.assertEqual(
             sorted({rank for _, rank in RANKED_PREFIXES}),
             [RANK_AA_CODING_AGENTS, RANK_AA, RANK_BENCHMARK_SITE,
              RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE,
-             RANK_ENDPOINT_RUN, RANK_MODEL_CARD],
+             RANK_ENDPOINT_RUN, RANK_BENCHMARKING_HUB, RANK_MODEL_CARD],
         )
 
     def test_every_tbench_board_ranks_as_the_benchmarks_own_site(self) -> None:
