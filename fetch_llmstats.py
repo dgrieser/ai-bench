@@ -113,7 +113,7 @@ _NON_DEFAULT_SCAFFOLD_RE = re.compile(
 
 # Boards the flat endpoint carries no field for, read from llm-stats' own
 # per-benchmark endpoint instead: published label -> benchmark_id. OSWorld 2.0
-# is the one today. It is a board of lab self-reports that mixes binary accuracy
+# is the first. It is a board of lab self-reports that mixes binary accuracy
 # with the partial checkpoint score, and releases 2026.06.24, 2026.08.08 and
 # 2.1, often without saying which -- so it feeds a column that says exactly
 # that (osworld_2_0_vendor), never one of the per-release columns the
@@ -121,6 +121,14 @@ _NON_DEFAULT_SCAFFOLD_RE = re.compile(
 BOARD_URL = "https://api.zeroeval.com/leaderboard/benchmarks/{benchmark_id}/details"
 BOARD_FIELDS = {
     "osworld_2_0": "osworld-2.0",
+    # The security boards, every row a lab's self-report. cybergym.io and
+    # SEC-bench's own snapshot page outrank them; these fill the models those
+    # boards never ran, which is most of the open-weight field. ExploitBench's
+    # only other source is Epoch's copy of its board, which yields to these.
+    "cybergym": "cybergym",
+    "exploitgym": "exploitgym",
+    "exploitbench": "exploitbench",
+    "sec_bench_pro": "sec-bench-pro",
 }
 
 

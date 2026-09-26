@@ -35,6 +35,8 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench) | Astro island props |
+| **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
+| **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
 | **Epoch AI Benchmarking Hub** | Independent evaluator (own runs) and mirror of benchmark boards; a second source, CC BY 4.0 | One zip of CSVs, plus each revision-split benchmark's hub page (and OSWorld 2.0's official board, for releases) |
 
 ## Core Data Structure
@@ -398,6 +400,8 @@ Output: llm.json (unified dataset)
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
+./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
+./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
 ./fetch_vals.py --benchmark swebench    # or pin one board
 ./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
 ./fetch_vals.py --benchmark programbench  # ProgramBench, Vals' wider re-run of it
@@ -716,7 +720,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
 | 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, Vals AI *for Vibe Code Bench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench is Vals' own benchmark, so that page is a first-party leaderboard and ranks 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
@@ -891,7 +895,7 @@ release, not the R1-0528 that `deepseek-r1` is, so it stays unmapped.
 It is a **second source** for every column it feeds, ranked 7 — right above the
 model cards ([source precedence](#source-precedence)). Anything else that
 reports a model takes the cell over, llm-stats' fill-only ingest included, so
-the hub fills gaps and never decides a column someone better covers. Eleven
+the hub fills gaps and never decides a column someone better covers. Twelve
 files are read:
 
 | Hub page | Column | What it is, and where it differs from the column |
@@ -907,6 +911,7 @@ files are read:
 | `hle` | `hle` | The full set, about a tenth multimodal, where the column is AA's text-only run (Fable 5.1: 46.5 here, 59.1 on AA) — so a hub number stands only where AA has not measured the model |
 | `critpt` | `critpt` | Artificial Analysis' board as Epoch last copied it; AA's own reading outranks it |
 | `scicode` | `scicode` | Artificial Analysis' board as Epoch last copied it, which Epoch describes as the subproblem accuracy — the same number `artificialanalysis.py` stores here |
+| `exploitbench` | `exploitbench` | Copy of exploitbench.ai's board, whose own data is inlined in a hashed JavaScript chunk. Plain-regime rows only: each model is also listed under AutoNudge, where the harness keeps prompting the agent (see [Cybersecurity](#cybersecurity)) |
 
 The CSVs of the revision-split mirrors name no revision, and a source that does
 not say which revision it measured does not write to a revision column
@@ -1232,6 +1237,64 @@ the field rather than a measurement the rest of it is missing (see [What the
 Knowledge index leaves out](#what-the-knowledge-index-leaves-out)). In a column
 whose whole subject is that modality it is not a defect but the definition, so
 the same four columns that are wrong for Knowledge are right there.
+
+## Cybersecurity
+
+Four columns measure offensive security work, and they sit in **no derived
+index**. Each is an agentic coding task at heart — write a crashing input, turn
+a crash into an exploit — and each correlates with the Coding index across the
+few models both cover (Spearman 0.76 to 0.95 over 7 to 12 models). But it
+measures a dual-use specialty that labs now train for directly (Xiaomi's
+MiMo-V2.6 cards describe cyber tasks in the RL mix), and almost every
+open-weight number is the lab's own report under a harness it chose. Voting
+that into the Coding index would pay a specialisation as general coding, and a
+Security index of its own would rank some twenty models on self-reports. The
+columns are shown, not voted. The research behind these choices is
+[docs/security-benchmarks-2026-09.md](docs/security-benchmarks-2026-09.md).
+
+| Column | What the agent does | Leading source (rank) | Gap fillers | What the column refuses |
+| --- | --- | --- | --- | --- |
+| `cybergym` | Writes a PoC that crashes one of 1,507 real OSS-Fuzz vulnerabilities, given its description (Level 1) | cybergym.io (2) | llm-stats board, model cards | `focus: agent` rows (a security vendor's pipeline around the model, 0.87-0.99 where the model alone reaches 0.77-0.85); multi-model systems; pass@10 (`score_x1` differing from `score_10`) and 30-trial rows |
+| `exploitgym` | Turns a crashing input into a flag-capturing exploit; 869 tasks across userspace, V8 and the kernel; counted only when a judge confirms the intended bug was used | cybergym.io (2) | llm-stats board, model cards | Any budget but 6 hours (the maintainers run 2; vendors quote 6); subset runs; the retired 898-task v0 set; agent rows |
+| `exploitbench` | Climbs a five-tier ladder toward a V8 exploit on 41 N-day bugs; the score is mean ladder coverage | llm-stats board (5) | Epoch's copy of the board (7), model cards | AutoNudge runs, where the harness keeps prompting the agent |
+| `sec_bench_pro` | Writes a PoC for a real bug in V8 or SpiderMonkey from a vague report, with no crash trace | SEC-bench Pro's own board (2) | llm-stats board, model cards | Every snapshot but 260505 (the 344-task 260617 adds the Linux kernel and scores the same model up to 12 points higher); the completed-only rate, which drops timeouts |
+
+The sources are thinner than they look. cybergym.io's CyberGym board runs no
+current open-weight model itself: its model-focused rows are the labs' own
+submissions (DeepSeek, Zhipu, Moonshot), and the file is read because it filters
+them by field, not because someone independent ran them. ExploitGym's maintainers
+have run only older models, all at 2 hours; every row the column keeps is a lab's
+6-hour report. SEC-bench Pro's board *is* the maintainers' own run, but it has
+six rows, frozen since June, and its only open-weight runs are in OpenCode on
+Bedrock, where all three sit under 4%. Everything the llm-stats boards add is
+`self_reported`. Four traps are handled where the rows are read:
+
+- **Z.ai prints ExploitGym as task counts.** GLM-5.3's card has
+  `ExploitGym (2h / 6h) | 105 / 130`: solved tasks out of 869 at two budgets,
+  which the card parser reads as 105.0. That label stays `__unmappable__`; the
+  column takes 15.0 (130 / 869) from cybergym.io. The percentage labels
+  (`ExploitGym`, `ExploitGym (Pass@1)`) are mapped.
+- **SEC-bench Pro's vendors report the older snapshot.** OpenAI's system cards
+  say they ran the May set, and DeepSeek's and Xiaomi's numbers sit on the same
+  scale, so the column is pinned to 260505 and credited to its own page,
+  `sec-bench.github.io/260505/`. The site root is the newer snapshot and is not
+  a source for this column.
+- **A pipeline is not a model.** cybergym.io tags each row `focus: model` or
+  `focus: agent`; the column reads only the first. GLM-5.3 is 84.5 in Claude
+  Code and 97.2 inside Sangfor's pipeline on the same board.
+- **Dated re-releases fold** as elsewhere: `DeepSeek-V4-Pro` on the board is the
+  0813 checkpoint (its `source_url` says so) and lands on `deepseek-v4-pro`;
+  `DeepSeek-V4-Pro Preview` is a different release and stays unmapped.
+
+ExploitBench has no first-party fetcher on purpose: exploitbench.ai inlines its
+board in a content-hashed Next.js chunk and has not been updated since June,
+and Epoch mirrors it as a CSV. Its two open-weight board runs (Kimi K2.6 at
+16.3, MiniMax M2.7 at 13.3) come from there; the rest are labs' reports, topped
+by a self-reported 100% for GPT-6 Astra — the benchmark is already at its
+ceiling for the frontier. It is carried for completeness, not for resolution.
+
+When the columns were added they held 21 models: CyberGym 12, ExploitGym 10,
+ExploitBench 9, SEC-bench Pro 9.
 
 ## Mapping System
 
@@ -3344,9 +3407,9 @@ ai-bench/
 ├── update.py                   # Master orchestrator (fetch all)
 ├── prune.py                    # Remove invalid entries
 │
-├── fetch_*.py                  # Benchmark data fetchers (24 files)
-├── update_*_mapping.py         # Mapping sync scripts (24 files)
-├── _*_mapping.py               # Mapping application modules (24 files)
+├── fetch_*.py                  # Benchmark data fetchers (26 files)
+├── update_*_mapping.py         # Mapping sync scripts (26 files)
+├── _*_mapping.py               # Mapping application modules (26 files)
 │
 ├── derive_indexes.py           # Derived Coding, Tooling, Knowledge, Vision & Trust index columns (see above)
 ├── index-calibration.json      # Each index's transfer_ratio, re-measured nightly (calibrate-indexes.yml)

@@ -279,6 +279,8 @@ class TestPromptHooks(CollectModeBase):
             ("update_real_swe_mapping", "prompt_slug_for_real_swe_name", (name, [])),
             ("update_openrouter_mapping", "prompt_slug_for_openrouter_name", (name, [])),
             ("update_epoch_mapping", "prompt_slug_for_epoch_name", (name, [])),
+            ("update_cybergym_mapping", "prompt_slug_for_cybergym_name", (name, [])),
+            ("update_sec_bench_mapping", "prompt_slug_for_sec_bench_name", (name, [])),
             ("update_spheron_mapping", "prompt_slug_for_spheron_path", (name, [], None)),
         ]
         for module_name, func_name, args in cases:

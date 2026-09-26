@@ -31,6 +31,7 @@ import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
+import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
 import fetch_epoch
@@ -44,6 +45,7 @@ import fetch_openrouter
 import fetch_osworld
 import fetch_programbench
 import fetch_real_swe
+import fetch_sec_bench
 import fetch_spheron
 import fetch_swe_atlas
 import fetch_swe_marathon
@@ -98,6 +100,14 @@ COVERED_BY = [
     (
         fetch_openrouter.MODELS_API_URL,
         fetch_openrouter.MODELS_PAGE_URL,
+    ),
+    (
+        f"{fetch_cybergym.DATA_URL} (one file per board)",
+        fetch_cybergym.source_url(fetch_cybergym.CYBERGYM_KEY),
+    ),
+    (
+        fetch_sec_bench.DATA_URL,
+        fetch_sec_bench.URL,
     ),
     (
         f"{fetch_epoch.DATA_URL} (one archive, every benchmark)",
@@ -175,6 +185,11 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         # One page per Terminal-Bench revision, each covering its own column.
         *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
         (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
+        # cybergym.io's two boards, one page each; the JSON files they render
+        # from are not pages.
+        *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
+        # The snapshot the column is pinned to, not the site root (the newer one).
+        (fetch_sec_bench.URL, (fetch_sec_bench.KEY,)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),
         # Every tracked OSWorld 2.0 release comes off the one 2.0 site, which a
         # reader opens; the JSON file it renders from is not a page.

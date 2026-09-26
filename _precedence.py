@@ -116,6 +116,7 @@ import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
+import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
 import fetch_epoch
@@ -129,6 +130,7 @@ import fetch_openrouter
 import fetch_osworld
 import fetch_programbench
 import fetch_real_swe
+import fetch_sec_bench
 import fetch_swe_atlas
 import fetch_swe_marathon
 import fetch_tbench
@@ -177,6 +179,14 @@ PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
 # cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
+# cybergym.io publishes CyberGym and ExploitGym from one JSON file each; a
+# score cites the board's page, one per column, not the file.
+CYBERGYM_KEY_URLS = {
+    key: canonical(fetch_cybergym.source_url(key)) for key in fetch_cybergym.KEYS
+}
+# The snapshot page the column is pinned to, not the site build's data file:
+# the site root is the newer snapshot, a different task set.
+SEC_BENCH_SOURCE_URL = canonical(fetch_sec_bench.URL)
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 # benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
@@ -272,6 +282,8 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         *((url, RANK_BENCHMARK_SITE) for url in TBENCH_KEY_URLS.values()),
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
+        (SEC_BENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),
         *((url, RANK_BENCHMARK_SITE) for url in VALS_OWN_KEY_URLS.values()),
