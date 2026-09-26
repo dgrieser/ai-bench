@@ -331,6 +331,11 @@ INDEXES: list[IndexDef] = [
             ("mmlu_pro", 0.5),
             ("aime_2025", 0.4),
             ("gpqa_diamond", 0.3),
+            # 0.3 on thin evidence rather than weak signal: the least saturated
+            # knowledge column (24.6 points between first and fifth) and only
+            # 0.78 with hle on the models both carry, but 9 models, 3 of them
+            # open-weight, from one source. Raise it once others report it.
+            ("hle_diamond", 0.3),
             # Deliberately not aggregated, though they are knowledge columns in
             # llm.json: aa_omniscience_hallucination (the same AA run as
             # aa_omniscience, whose index already prices confident errors and

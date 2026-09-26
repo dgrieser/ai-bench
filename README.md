@@ -1316,8 +1316,8 @@ number, a card's only fills a model the post does not carry.
 
 When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
 `kimi-k3` (22.2) and `deepseek-v4-pro` (19.1), and six closed reference models. Gemini 3.8 Flash, Grok
-4.7 and Muse Spark 1.3 are closed and not in the table. It is in no derived index;
-see [what the Knowledge index leaves out](#what-the-knowledge-index-leaves-out).
+4.7 and Muse Spark 1.3 are closed and not in the table. It joins the
+[Knowledge index](#knowledge-index) at 0.3.
 
 ## Cybersecurity
 
@@ -2624,10 +2624,11 @@ Contributing benchmarks and why they carry the weight they do:
 | MMLU-Pro | 0.5 | The breadth column: ~12,000 questions across 14 disciplines, ten options instead of four, the trivial and mislabelled items MMLU had accumulated filtered out. Nothing else here covers ordinary academic knowledge across that many fields, and at 120 scored models from 37 creators it is the fourth-widest member, behind GPQA, HLE and AA-Omniscience. Below CritPt on two counts: only 55 of its 120 values are AA-run, the rest Hugging Face card self-reports at each lab's harness of choice; and the head is flat — 4.4 points between the best model and the fifth against a median of 79.4, so it sorts the mid-field and barely touches the leaders. |
 | AIME 2025 | 0.4 | The math column, and the member that overlaps the others least: mean Spearman **0.65**, the lowest of the six, and it owns the two weakest links in the set — 0.41 with AA-Omniscience and 0.51 with CritPt — because working out a competition problem is not recalling a fact. 81 scored models, 33 creators, 59 values AA-run. Weighted below MMLU-Pro because 15 integer-answer problems is a narrow instrument, the head is saturated (13 models at 90 or above, 3.5 points between first and fifth), and a 2025 exam has had a year of public exposure — the contamination risk the newer paper is written for. |
 | GPQA Diamond | 0.3 | The coverage backbone: 152 of 160 models, 44 creators, 134 of those values AA-run — the widest column in the index. It is here for reach and tie-breaking rather than for information, on both of the usual counts. Saturated: 20 models at 90 or above and **2.6 points** between the best model and the fifth, so it cannot separate the frontier at all. And redundant: mean Spearman **0.860** against the other five, narrowly the highest of the six, including 0.95 with MMLU-Pro and 0.93 with HLE — the two strongest links anywhere in this set — which is what a graduate-science multiple-choice test shares with a broad multiple-choice test and a hard mixed exam. What it buys is that almost nobody in the table is unmeasured, which keeps thinly measured models from being ranked on a corner of the construct. |
+| Humanity's Last Exam Diamond | 0.3 | CAIS and Scale AI's refined 1,000-question subset of HLE (500 reasoning, 500 knowledge), every value the maintainers' own run at each model's highest reasoning effort, no tools. On signal it would earn far more: the least saturated column in the index — best 66.2, median 41.6, **24.6 points** between first and fifth, where GPQA Diamond has 2.6 — and not a copy of its parent, **0.78** with HLE on the nine models both carry (0.88 with AA-Omniscience, 0.79 with CritPt, 0.22 with GPQA Diamond). Held to 0.3 by evidence rather than information: **9 models, 3 of them open-weight** (GLM 5.3 on the text-only subset), from a single release post, at an effort setting that differs by vendor. Even so it reorders the head — GPT-6 Astra moves from third to first, Opus 5.5 and Fable 5.1 each down one — while the ranked field moves a mean of 0.1 places and no model falls under the evidence bar. Worth raising to 0.6–0.7 once a second source or some 20 models report it, and then as a share of HLE's weight rather than on top of it, since the two are one exam family. |
 
 ### What the Knowledge index leaves out
 
-Seven columns in `llm.json` answer knowledge-shaped questions and are still not
+Six columns in `llm.json` answer knowledge-shaped questions and are still not
 members. Each is kept as a column in the table, none is aggregated, and the reasons
 differ:
 
@@ -2677,9 +2678,6 @@ differ:
   beside it agrees at Spearman **0.95** (148 models) — close agreement being the
   problem, not the reassurance. Exactly why `aa_coding_index` was dropped from the
   [Coding index](#coding-index).
-- **HLE-Diamond** — not yet assessed. It was added with 9 models, only 3 of them
-  open-weight, all from one source, and whether it should sit beside HLE or replace
-  it is still open.
 
 ### Why the coverage rules barely bite here
 
