@@ -3468,6 +3468,13 @@
             "source": null
           }
         ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 0,
+            "source": "https://sec-bench.github.io/260505"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -3529,13 +3536,6 @@
             "date": "2026-08-23",
             "score": 80.1,
             "source": "https://huggingface.co/MiniMaxAI/MiniMax-M2.5"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 0,
-            "source": "https://sec-bench.github.io/260505"
           }
         ]
       },
@@ -12088,6 +12088,13 @@
             "source": "https://artificialanalysis.ai/models/minimax-m2-7"
           }
         ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 13.3,
+            "source": "https://epoch.ai/benchmarks/exploitbench"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -12149,13 +12156,6 @@
             "date": "2026-09-10",
             "score": 80.4,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 13.3,
-            "source": "https://epoch.ai/benchmarks/exploitbench"
           }
         ]
       },
@@ -16594,6 +16594,13 @@
             "source": null
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 76.7,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -16655,13 +16662,6 @@
             "date": "2026-09-10",
             "score": 86.2,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 76.7,
-            "source": "https://www.cybergym.io/cybergym"
           }
         ]
       },
@@ -22249,6 +22249,20 @@
             "source": "https://artificialanalysis.ai/models/glm-5-2"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 77.2,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 4.5,
+            "source": "https://www.cybergym.io/exploitgym"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -22310,20 +22324,6 @@
             "date": "2026-09-10",
             "score": 86.7,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 77.2,
-            "source": "https://www.cybergym.io/cybergym"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 4.5,
-            "source": "https://www.cybergym.io/exploitgym"
           }
         ]
       },
@@ -31545,6 +31545,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 23.5,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -31606,13 +31613,6 @@
             "date": "2026-08-23",
             "score": 85.6,
             "source": "https://artificialanalysis.ai/models/glm-4-7"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 23.5,
-            "source": "https://www.cybergym.io/cybergym"
           }
         ]
       },
@@ -47487,6 +47487,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 83.3,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-13",
@@ -47553,13 +47560,6 @@
             "date": "2026-09-22",
             "score": 87,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 83.3,
-            "source": "https://www.cybergym.io/cybergym"
           }
         ]
       },
@@ -48826,6 +48826,20 @@
             "source": "https://huggingface.co/moonshotai/Kimi-K2.5"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 41.3,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 2.2,
+            "source": "https://sec-bench.github.io/260505"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -48929,20 +48943,6 @@
             "date": "2026-09-09",
             "score": 77.5,
             "source": "https://huggingface.co/moonshotai/Kimi-K2.5"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 41.3,
-            "source": "https://www.cybergym.io/cybergym"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 2.2,
-            "source": "https://sec-bench.github.io/260505"
           }
         ]
       },
@@ -49464,6 +49464,13 @@
             "source": "https://huggingface.co/moonshotai/Kimi-K2.6"
           }
         ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 16.3,
+            "source": "https://epoch.ai/benchmarks/exploitbench"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -49553,13 +49560,6 @@
             "date": "2026-09-09",
             "score": 80.4,
             "source": "https://huggingface.co/moonshotai/Kimi-K2.6"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 16.3,
-            "source": "https://epoch.ai/benchmarks/exploitbench"
           }
         ]
       },
@@ -55952,6 +55952,27 @@
             "source": "https://artificialanalysis.ai/models/glm-5-3"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 84.5,
+            "source": "https://www.cybergym.io/cybergym"
+          }
+        ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 15,
+            "source": "https://www.cybergym.io/exploitgym"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 54.4,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-19",
@@ -56006,27 +56027,6 @@
             "date": "2026-09-10",
             "score": 86.8,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 84.5,
-            "source": "https://www.cybergym.io/cybergym"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 15,
-            "source": "https://www.cybergym.io/exploitgym"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 54.4,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -58968,6 +58968,13 @@
             "source": "https://artificialanalysis.ai/models/deepseek-v4-flash-vision"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 75.3,
+            "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-27",
@@ -59041,13 +59048,6 @@
             "date": "2026-08-21",
             "score": 80.4,
             "source": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 75.3,
-            "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
           }
         ]
       },
@@ -61764,6 +61764,13 @@
             "source": "https://llm-stats.com/models/hy4-preview"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 78.4,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "critpt": [
           {
             "date": "2026-08-29",
@@ -61788,13 +61795,6 @@
             "date": "2026-08-29",
             "score": 43.4,
             "source": "https://huggingface.co/tencent/Hy4-preview"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 78.4,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -63080,6 +63080,27 @@
             "source": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 88.1,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 15.3,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 62.8,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-10",
@@ -63173,27 +63194,6 @@
             "date": "2026-09-15",
             "score": null,
             "source": null
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 88.1,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 15.3,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 62.8,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -64078,6 +64078,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 22,
+            "source": "https://www.cybergym.io/exploitgym"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -64182,13 +64189,6 @@
             "date": "2026-09-16",
             "score": 17.2,
             "source": "https://zerobench.github.io"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 22,
-            "source": "https://www.cybergym.io/exploitgym"
           }
         ]
       },
@@ -65828,6 +65828,27 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 12.4,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 33.2,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 48.9,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -65908,27 +65929,6 @@
             "date": "2026-09-16",
             "score": 13.4,
             "source": "https://zerobench.github.io"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 12.4,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 33.2,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 48.9,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -66400,6 +66400,27 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 23.2,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 52.9,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 57.7,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -66480,27 +66501,6 @@
             "date": "2026-09-16",
             "score": 14.2,
             "source": "https://zerobench.github.io"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 23.2,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 52.9,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 57.7,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -67043,6 +67043,27 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 33.7,
+            "source": "https://www.cybergym.io/exploitgym"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 73.5,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 71.2,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -67130,27 +67151,6 @@
             "date": "2026-09-16",
             "score": 22,
             "source": "https://zerobench.github.io"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 33.7,
-            "source": "https://www.cybergym.io/exploitgym"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 73.5,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 71.2,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -67640,6 +67640,27 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 42.4,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 100,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 85.4,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -67713,27 +67734,6 @@
             "date": "2026-09-22",
             "score": 43.2,
             "source": "https://zerobench.github.io"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 42.4,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 100,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 85.4,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -70379,6 +70379,34 @@
             "source": "https://artificialanalysis.ai/models/mimo-v2-6-pro"
           }
         ],
+        "cybergym": [
+          {
+            "date": "2026-09-26",
+            "score": 94,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitgym": [
+          {
+            "date": "2026-09-26",
+            "score": 17.8,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "exploitbench": [
+          {
+            "date": "2026-09-26",
+            "score": 47.9,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "sec_bench_pro": [
+          {
+            "date": "2026-09-26",
+            "score": 66.3,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-22",
@@ -70426,34 +70454,6 @@
             "date": "2026-09-22",
             "score": 82,
             "source": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL"
-          }
-        ],
-        "cybergym": [
-          {
-            "date": "2026-09-26",
-            "score": 94,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitgym": [
-          {
-            "date": "2026-09-26",
-            "score": 17.8,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "exploitbench": [
-          {
-            "date": "2026-09-26",
-            "score": 47.9,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "sec_bench_pro": [
-          {
-            "date": "2026-09-26",
-            "score": 66.3,
-            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ]
       },
@@ -70798,20 +70798,6 @@
             "source": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
           }
         ],
-        "gpqa_diamond": [
-          {
-            "date": "2026-09-25",
-            "score": 75,
-            "source": "https://openrouter.ai/xiaomi/mimo-v2.6-flash"
-          }
-        ],
-        "osworld_verified": [
-          {
-            "date": "2026-09-22",
-            "score": 80.8,
-            "source": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
-          }
-        ],
         "cybergym": [
           {
             "date": "2026-09-26",
@@ -70838,6 +70824,20 @@
             "date": "2026-09-26",
             "score": 47.5,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "gpqa_diamond": [
+          {
+            "date": "2026-09-25",
+            "score": 75,
+            "source": "https://openrouter.ai/xiaomi/mimo-v2.6-flash"
+          }
+        ],
+        "osworld_verified": [
+          {
+            "date": "2026-09-22",
+            "score": 80.8,
+            "source": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
           }
         ]
       },
