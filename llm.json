@@ -1292,15 +1292,15 @@
       "name": "Humanity's Last Exam Diamond",
       "short_name": "HLE-D",
       "category": "Reasoning & Knowledge",
-      "description": "HLE-Diamond, the Center for AI Safety and Scale AI's refined subset of Humanity's Last Exam: 1,000 questions, 500 testing reasoning and 500 testing expert knowledge, kept after a year of cleaning with input from the research community so that each has a verified answer and can be answered closed-book. A different question set from the 2,500-question HLE, so its own column rather than a reading of that one. Every value is the maintainers' own run, published with the release: every model at reasoning effort high, without tools, and the score is the mean of the two 500-question halves.",
+      "description": "HLE-Diamond, the Center for AI Safety and Scale AI's refined subset of Humanity's Last Exam: 1,000 questions, 500 testing reasoning and 500 testing expert knowledge, kept after a year of cleaning with input from the research community so that each has a verified answer and can be answered closed-book. A different question set from the 2,500-question HLE, so its own column rather than a reading of that one. Every value is the maintainers' own run, published with the release: each model at the highest reasoning effort it offers (max for GPT, Claude and Muse, xhigh for Grok, high for Gemini, Kimi and GLM), without tools.",
       "settings": [
         "1,000 questions",
-        "reasoning high",
+        "highest reasoning effort",
         "no tools"
       ],
       "excludes": [
         "with-tools runs (web search and code execution), worth +19 to +31 points on the models the maintainers ran both ways",
-        "the maintainers' highest-effort view, which runs each vendor at a different setting",
+        "the maintainers' reasoning-high view, every model held at high, up to 6 points lower",
         "runs on the text-only subset",
         "the full 2,500-question HLE and HLE-Verified, different question sets",
         "the reasoning-only or knowledge-only half on its own"
@@ -48514,7 +48514,7 @@
         "aime_2026": 96.4,
         "gpqa_diamond": 92.8,
         "hle": 41,
-        "hle_diamond": 13.4,
+        "hle_diamond": 19.1,
         "mmlu_pro": 87,
         "mmmu_pro": null,
         "osworld_verified": null,
@@ -48982,7 +48982,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 13.4,
+            "score": 19.1,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -65633,7 +65633,7 @@
         "aime_2026": null,
         "gpqa_diamond": 93.2,
         "hle": 54.9,
-        "hle_diamond": 38.6,
+        "hle_diamond": 41.3,
         "mmlu_pro": 91.6,
         "mmmu_pro": 84.7,
         "osworld_verified": 83.4,
@@ -66084,7 +66084,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 38.6,
+            "score": 41.3,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -66849,7 +66849,7 @@
         "aime_2026": null,
         "gpqa_diamond": 93.7,
         "hle": 59.1,
-        "hle_diamond": 51.3,
+        "hle_diamond": 54.1,
         "mmlu_pro": 92.4,
         "mmmu_pro": 90.6,
         "osworld_verified": null,
@@ -67295,7 +67295,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 51.3,
+            "score": 54.1,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -68697,7 +68697,7 @@
         "aime_2026": null,
         "gpqa_diamond": 94.1,
         "hle": 49.5,
-        "hle_diamond": 31.2,
+        "hle_diamond": 41.6,
         "mmlu_pro": 89.1,
         "mmmu_pro": 83.4,
         "osworld_verified": null,
@@ -69173,7 +69173,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 31.2,
+            "score": 41.6,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -69383,7 +69383,7 @@
         "aime_2026": null,
         "gpqa_diamond": 96.1,
         "hle": 54.7,
-        "hle_diamond": 60.6,
+        "hle_diamond": 66.2,
         "mmlu_pro": null,
         "mmmu_pro": 86.9,
         "osworld_verified": null,
@@ -69807,7 +69807,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 60.6,
+            "score": 66.2,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -73221,7 +73221,7 @@
         "aime_2026": null,
         "gpqa_diamond": 89.8,
         "hle": 61.4,
-        "hle_diamond": 55,
+        "hle_diamond": 61.2,
         "mmlu_pro": null,
         "mmmu_pro": 87.7,
         "osworld_verified": null,
@@ -73554,7 +73554,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 55,
+            "score": 61.2,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],
@@ -74187,7 +74187,7 @@
         "aime_2026": null,
         "gpqa_diamond": 92.4,
         "hle": 47.9,
-        "hle_diamond": 33.8,
+        "hle_diamond": 43.8,
         "mmlu_pro": null,
         "mmmu_pro": 83.3,
         "osworld_verified": null,
@@ -74496,7 +74496,7 @@
         "hle_diamond": [
           {
             "date": "2026-09-26",
-            "score": 33.8,
+            "score": 43.8,
             "source": "https://lastexam.ai/blog/hle-diamond"
           }
         ],

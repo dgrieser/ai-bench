@@ -429,7 +429,7 @@ current address.
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
-./fetch_hle_diamond.py                  # HLE-Diamond, the maintainers' reasoning-high, no-tools runs
+./fetch_hle_diamond.py                  # HLE-Diamond, the maintainers' highest-effort, no-tools runs
 ./fetch_vals.py --benchmark swebench    # or pin one board
 ./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
 ./fetch_vals.py --benchmark programbench  # ProgramBench, Vals' wider re-run of it
@@ -1278,38 +1278,42 @@ HLE-Verified.
 
 | Column | Leading source (rank) | Gap fillers | What the column refuses |
 | --- | --- | --- | --- |
-| `hle_diamond` | The maintainers' runs on [lastexam.ai/blog/hle-diamond](https://lastexam.ai/blog/hle-diamond) (2) | model cards (`HLE-Diamond`, `cais/hle-diamond (no tools)`, …) | With-tools runs; the post's highest-effort view; text-only-subset rows; the reasoning or knowledge half alone |
+| `hle_diamond` | The maintainers' runs on [lastexam.ai/blog/hle-diamond](https://lastexam.ai/blog/hle-diamond) (2) | model cards (`HLE-Diamond`, `cais/hle-diamond (no tools)`, …) | With-tools runs; the chart's reasoning-high view; text-only-subset rows; the reasoning or knowledge half alone |
 
 There is no leaderboard to read — lastexam.ai's `/leaderboard` is a sign-in
-dashboard — so `fetch_hle_diamond.py` reads the announcement post. The chart is a
-client component and its data is compiled into the post's JS chunk as
-`JSON.parse('...')` literals; the chunk's name changes with each build, so it is
-found in the page each time. The chart has three views, and only one is the column:
+dashboard — so `fetch_hle_diamond.py` reads the announcement post. It has three
+views of its results, and only one is the column:
 
-- **Reasoning high, no tools** — the chart's default and the column: every model at
-  the same effort. Each row is `[overall, reasoning, knowledge]`, and the overall
-  must be the mean of the two halves or the read stops, which is how a reordered
-  literal would show.
-- **Reasoning max** — "the highest reasoning effort available", which is *max* for
-  GPT, Claude and Muse, *xhigh* for Grok and still *high* for Gemini, Kimi and GLM.
-  Up to six points higher (DeepSeek V4 Pro 13.4 → 19.1, GPT-6 Astra 60.6 → 66.2)
-  and a different setting per vendor, so it is not read. It is the table the
-  server-rendered HTML carries, which is why the page's HTML is not the source.
+- **Highest effort, no tools** — the column, because every column in this table
+  carries a model at its highest setting: *max* for GPT, Claude and Muse, *xhigh*
+  for Grok, *high* for Gemini, Kimi and GLM (the post: "Models are evaluated using
+  highest reasoning effort available"). It is the post's results table
+  (`headers: ["Model", "Accuracy"]`), which the server renders into the page's
+  React flight data; the fetcher reads it from there and stops if it finds none,
+  or two.
+- **Reasoning high** — the chart's default toggle, every model held at *high*: up
+  to six points lower (DeepSeek V4 Pro 19.1 → 13.4, GPT-6 Astra 66.2 → 60.6). It
+  exists only as a `JSON.parse` literal in the post's JS chunk, and is not read.
 - **With tools** (web search + code execution) — +19 to +31 points on the eight
   models run both ways. Refused, as in `hle`.
 
-A row the post marks text-only (GLM 5.3, "\* Text-only subset") skipped the image
-questions and is dropped; its halves are not 500 each, so its overall would not pass
-the mean check either. Nobody else publishes the column yet: llm-stats, Epoch and
-Artificial Analysis have no HLE-Diamond board, and no Hugging Face card prints it.
-The card labels a card is likely to use are mapped ahead of time, and
-`cais/hle-diamond` is in `fetch_huggingface.TOOL_MODE_SENSITIVE_DATASETS` so a
-card's with-tools entry is split off and parked rather than kept as the best
-number. A card may report its own best effort rather than *high*; like every
-model-card number, it only fills a model the post does not carry.
+The post's reasoning/knowledge table is attached to a row only where its overall
+matches the headline: DeepSeek V4 Pro's row there is still its reasoning-high run
+(13.4 against the headline's 19.1), so the split is never the score.
+
+A row the chart marks text-only (GLM 5.3, "\* Text-only subset") skipped the image
+questions and is dropped; that flag sits in the chart's model table in the JS
+chunk, so the chunk is still read for it.
+
+Nobody else publishes the column yet: llm-stats, Epoch and Artificial Analysis
+have no HLE-Diamond board, and no Hugging Face card prints it. The labels a card
+is likely to use are mapped ahead of time, and `cais/hle-diamond` is in
+`fetch_huggingface.TOOL_MODE_SENSITIVE_DATASETS` so a card's with-tools entry is
+split off and parked rather than kept as the best number. Like every model-card
+number, a card's only fills a model the post does not carry.
 
 When the column was added it held 8 models: `kimi-k3` (22.2) and
-`deepseek-v4-pro` (13.4), and six closed reference models. Gemini 3.8 Flash, Grok
+`deepseek-v4-pro` (19.1), and six closed reference models. Gemini 3.8 Flash, Grok
 4.7 and Muse Spark 1.3 are closed and not in the table. It is in no derived index;
 see [what the Knowledge index leaves out](#what-the-knowledge-index-leaves-out).
 
