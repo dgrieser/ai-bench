@@ -7476,7 +7476,7 @@
         // the NEW badge beside its name already says the whole row is new —
         // marking each cell as well would be the same news thirty times over.
         if (isRecentModel(model)) return 0;
-        // A derived column (Coding, Tooling, Knowledge, Vision, Trust) is recomputed
+        // A derived column (Coding, Tooling, Knowledge, Vision, Trust, Security) is recomputed
         // from the others, so its date moves whenever any input moves. That
         // is arithmetic catching up, not a new measurement, and the inputs
         // that did change are marked in their own cells.
@@ -8102,10 +8102,10 @@
       // the picker refuses to reproduce.
       const RADAR_MAX_AXES = 16;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
-      const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index"];
+      const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index", "security_index"];
 
       /* ── Axis presets ──
-         "Default axes" is the five composite indexes — the profile every page
+         "Default axes" is the six composite indexes — the profile every page
          opens on. Each other preset opens one of those indexes up: the
          benchmarks it aggregates, in the weight order they carry there, so
          the chart answers "what is this index made of, and where does this
@@ -8147,6 +8147,11 @@
           id: "vision",
           label: "Vision",
           axes: ["mmmu_pro", "osworld_verified", "mathvista_mini", "zerobench", "charxiv_reasoning", "osworld_2_0_2026_06_24", "osworld_2_0_2026_08_08", "osworld_2_0_vendor"]
+        },
+        {
+          id: "security",
+          label: "Security",
+          axes: ["exploitgym", "cyberbench_1_1", "sec_bench_pro", "cybergym"]
         }
       ];
 
@@ -8286,7 +8291,7 @@
               score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
               bigger. `}Hover an axis for what it measures. Pick a preset above
-              &mdash; the five indexes, or the benchmarks one index is built from &mdash; or edit
+              &mdash; the six indexes, or the benchmarks one index is built from &mdash; or edit
               the axes chip by chip. The selection rides in this page's address, so a copied
               link reopens on it, and it is remembered on this device.</p>
           </section>
@@ -8362,7 +8367,7 @@
         const custom = current ? "" : `<option value="" selected disabled>Custom</option>`;
         const tip = tipAttrs({
           eyebrow: "Axis preset",
-          body: "Default axes charts the five composite indexes. Every other preset opens one index up and charts the benchmarks it aggregates instead, so the shape shows where the composite comes from. Editing the chips leaves the preset behind as a custom set."
+          body: "Default axes charts the six composite indexes. Every other preset opens one index up and charts the benchmarks it aggregates instead, so the shape shows where the composite comes from. Editing the chips leaves the preset behind as a custom set."
         });
         return `<select class="axis-preset" aria-label="Axis preset"${tip}>${custom}${options}</select>`;
       }

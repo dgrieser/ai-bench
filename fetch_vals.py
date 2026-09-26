@@ -42,7 +42,7 @@ Vals publishes far more boards than this reads -- its industry suites (Finance
 Agent, LegalBench, Harvey's legal agent benchmark, MedQA, the tax and mortgage
 evals), the indexes it composes from them (the Vals Index, the Multimodal
 Index, the Time Horizon Index), and academic boards no column tracks (MATH 500,
-MGSM, IOI, CyberBench, SRE Bench, SkillsBench, Code Migration, ProofBench,
+MGSM, IOI, SRE Bench, SkillsBench, Code Migration, ProofBench,
 SAGE, Terminal-Bench Science, VoiceCodeBench). All of them are deliberately
 absent: a board is ingested when llm.json has a column for it, and adding an
 entry to BENCHMARKS is all it takes to ingest one whose column arrives later.
@@ -119,6 +119,13 @@ BENCHMARKS: dict[str, str] = {
     # reason to read it. Read through TASKS at the "almost" task, which is the
     # metric the column stores -- see below.
     "programbench": "programbench_almost",
+    # CyberBench is Vals' own security board: agents write a PoC input that
+    # triggers an OSS-Fuzz vulnerability, then a patch that fixes it, on a
+    # private task set Vals runs every model through itself. Its own benchmark,
+    # so first-party like Vibe Code Bench, and version-pinned for the same
+    # reason: the slug names no revision. Read at "overall", the board's
+    # headline, which pools the PoC and patch tasks.
+    "cyber": "cyberbench_1_1",
 }
 
 # The boards Vals authors, runs and publishes itself, as opposed to the ones it
@@ -127,7 +134,7 @@ BENCHMARKS: dict[str, str] = {
 # these at RANK_BENCHMARK_SITE and the rest at RANK_THIRD_PARTY_RUN. Declared here, with
 # the table above, so a board added to BENCHMARKS is classified in the same
 # place it is ingested.
-VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code"})
+VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber"})
 
 # The version a board's column measures, for the boards whose slug does not
 # carry one. Vals stamps a version into every board's metadata but names only
@@ -152,6 +159,7 @@ VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code"})
 VERSIONS: dict[str, str] = {
     "terminal-bench-4": "4.0",
     "vibe-code": "1.1",
+    "cyber": "1.1",
 }
 
 # The task each board is read at. "overall" everywhere except where the board
