@@ -1278,7 +1278,7 @@ HLE-Verified.
 
 | Column | Leading source (rank) | Gap fillers | What the column refuses |
 | --- | --- | --- | --- |
-| `hle_diamond` | The maintainers' runs on [lastexam.ai/blog/hle-diamond](https://lastexam.ai/blog/hle-diamond) (2) | model cards (`HLE-Diamond`, `cais/hle-diamond (no tools)`, …) | With-tools runs; the chart's reasoning-high view; text-only-subset rows; the reasoning or knowledge half alone |
+| `hle_diamond` | The maintainers' runs on [lastexam.ai/blog/hle-diamond](https://lastexam.ai/blog/hle-diamond) (2) | model cards (`HLE-Diamond`, `cais/hle-diamond (no tools)`, …) | With-tools runs; the chart's reasoning-high view; the reasoning or knowledge half alone |
 
 There is no leaderboard to read — lastexam.ai's `/leaderboard` is a sign-in
 dashboard — so `fetch_hle_diamond.py` reads the announcement post. It has three
@@ -1302,8 +1302,10 @@ matches the headline: DeepSeek V4 Pro's row there is still its reasoning-high ru
 (13.4 against the headline's 19.1), so the split is never the score.
 
 A row the chart marks text-only (GLM 5.3, "\* Text-only subset") skipped the image
-questions and is dropped; that flag sits in the chart's model table in the JS
-chunk, so the chunk is still read for it.
+questions, because the model takes no images. It is kept: for a text-only model
+that subset is all of the benchmark it can sit. The fetcher reports it with
+`text_only: true`; the flag sits in the chart's model table in the JS chunk, so
+the chunk is still read for it.
 
 Nobody else publishes the column yet: llm-stats, Epoch and Artificial Analysis
 have no HLE-Diamond board, and no Hugging Face card prints it. The labels a card
@@ -1312,8 +1314,8 @@ is likely to use are mapped ahead of time, and `cais/hle-diamond` is in
 split off and parked rather than kept as the best number. Like every model-card
 number, a card's only fills a model the post does not carry.
 
-When the column was added it held 8 models: `kimi-k3` (22.2) and
-`deepseek-v4-pro` (19.1), and six closed reference models. Gemini 3.8 Flash, Grok
+When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
+`kimi-k3` (22.2) and `deepseek-v4-pro` (19.1), and six closed reference models. Gemini 3.8 Flash, Grok
 4.7 and Muse Spark 1.3 are closed and not in the table. It is in no derived index;
 see [what the Knowledge index leaves out](#what-the-knowledge-index-leaves-out).
 
@@ -2675,7 +2677,7 @@ differ:
   beside it agrees at Spearman **0.95** (148 models) — close agreement being the
   problem, not the reassurance. Exactly why `aa_coding_index` was dropped from the
   [Coding index](#coding-index).
-- **HLE-Diamond** — not yet assessed. It was added with 8 models, only 2 of them
+- **HLE-Diamond** — not yet assessed. It was added with 9 models, only 3 of them
   open-weight, all from one source, and whether it should sit beside HLE or replace
   it is still open.
 

@@ -34,9 +34,11 @@ with the headline table: DeepSeek V4 Pro's row there is still its reasoning-high
 run (13.4 against 19.1), so a split is decoration, never the score.
 
 A row the chart marks ``textOnly`` (GLM 5.3 today, "* Text-only subset") was
-run on the questions without images only, a different question set again, and
-is dropped. That flag lives in the chart's model table in the post's JS chunk,
-so the chunk is read for it.
+run on the questions without images only, because the model takes no images.
+It is kept -- for a text-only model that subset is the whole of the benchmark
+it can sit -- and reported with ``text_only: true`` so the difference is on
+record. That flag lives in the chart's model table in the post's JS chunk, so
+the chunk is read for it.
 """
 
 from __future__ import annotations
@@ -198,9 +200,7 @@ def parse_rows(html: str, js: str) -> list[dict]:
         score = percent(row[1])
         if score is None:
             continue
-        if (models.get(raw) or {}).get("textOnly"):
-            print(f"  dropped {raw}: run on the text-only subset", file=sys.stderr)
-            continue
+        text_only = bool((models.get(raw) or {}).get("textOnly"))
         reasoning, knowledge, overall = split.get(raw, (None, None, None))
         if overall != score:
             reasoning = knowledge = None
@@ -210,6 +210,7 @@ def parse_rows(html: str, js: str) -> list[dict]:
                 "raw": raw,
                 "reasoning": reasoning,
                 "knowledge": knowledge,
+                "text_only": text_only,
                 "score": score,
             }
         )
@@ -220,7 +221,8 @@ def get_scores(fetch=fetch_text) -> list[dict]:
     """One dict per model in the post's results table (highest effort, no tools).
 
     Keys: model, raw, reasoning, knowledge (None where the split table does not
-    agree with the headline), score (overall %), rank.
+    agree with the headline), text_only (run on the text-only subset), score
+    (overall %), rank.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
     html = fetch(URL)
@@ -262,11 +264,12 @@ def main() -> int:
             return "" if value is None else str(value)
 
         width = max((len(e["model"]) for e in scores), default=5)
-        print(f"{'MODEL':<{width}}  {'SCORE':>6}  {'REAS':>6}  {'KNOW':>6}")
+        print(f"{'MODEL':<{width}}  {'SCORE':>6}  {'REAS':>6}  {'KNOW':>6}  SUBSET")
         for e in scores:
             print(
                 f"{e['model']:<{width}}  {e['score']:>6}  "
-                f"{cell(e['reasoning']):>6}  {cell(e['knowledge']):>6}"
+                f"{cell(e['reasoning']):>6}  {cell(e['knowledge']):>6}  "
+                f"{'text-only' if e['text_only'] else ''}"
             )
     return 0
 

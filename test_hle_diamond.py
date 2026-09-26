@@ -6,8 +6,8 @@ its highest reasoning effort, every model at reasoning high, and with tools --
 and only the first is the column, because every column in the table carries a
 model at its highest setting. What these tests pin is that the reader takes the
 post's headline results table (highest effort, no tools), never the chart's
-reasoning-high literal or the with-tools table, drops rows run on the
-text-only subset, and stops rather than guesses when the table it reads is
+reasoning-high literal or the with-tools table, keeps rows run on the
+text-only subset but flags them, and stops rather than guesses when the table it reads is
 missing or doubled.
 """
 
@@ -83,7 +83,7 @@ class ReadsTheHighestEffortTable(unittest.TestCase):
         rows = hd.get_scores(fetch=fetcher())
         self.assertEqual(
             {r["model"]: r["score"] for r in rows},
-            {"GPT-6 Astra": 66.2, "Kimi K3": 22.2, "DeepSeek V4 Pro": 19.1},
+            {"GPT-6 Astra": 66.2, "GLM 5.3": 22.6, "Kimi K3": 22.2, "DeepSeek V4 Pro": 19.1},
         )
 
     def test_neither_reasoning_high_nor_tools_lands(self):
@@ -91,9 +91,10 @@ class ReadsTheHighestEffortTable(unittest.TestCase):
         for value in (60.6, 13.4, 82.9):
             self.assertNotIn(value, scores)
 
-    def test_text_only_rows_are_dropped(self):
-        rows = hd.get_scores(fetch=fetcher())
-        self.assertNotIn("GLM 5.3", [r["model"] for r in rows])
+    def test_text_only_rows_are_kept_and_flagged(self):
+        rows = {r["model"]: r for r in hd.get_scores(fetch=fetcher())}
+        self.assertTrue(rows["GLM 5.3"]["text_only"])
+        self.assertFalse(rows["GPT-6 Astra"]["text_only"])
 
     def test_split_kept_only_where_it_agrees(self):
         rows = {r["model"]: r for r in hd.get_scores(fetch=fetcher())}
