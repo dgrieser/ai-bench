@@ -72801,7 +72801,7 @@
         "vision_index": 71128,
         "trust_index": null,
         "security_index": 71021,
-        "aa_intelligence_index": null,
+        "aa_intelligence_index": 37.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -72871,7 +72871,7 @@
         "vision_index": "2026-09-26",
         "trust_index": null,
         "security_index": "2026-09-26",
-        "aa_intelligence_index": null,
+        "aa_intelligence_index": "2026-09-27",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -72941,7 +72941,7 @@
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": null,
         "security_index": "https://github.com/dgrieser/ai-bench#security-index",
-        "aa_intelligence_index": null,
+        "aa_intelligence_index": "https://artificialanalysis.ai/models/mimo-v2-6-flash",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -73004,6 +73004,13 @@
         "charxiv_reasoning": null
       },
       "scores_history": {
+        "aa_intelligence_index": [
+          {
+            "date": "2026-09-27",
+            "score": 37.9,
+            "source": "https://artificialanalysis.ai/models/mimo-v2-6-flash"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-22",
@@ -73171,6 +73178,10 @@
             "cybergym"
           ]
         }
+      },
+      "aa_variant": {
+        "slug": "mimo-v2-6-flash",
+        "name": "MiMo-V2.6-Flash"
       }
     },
     {
