@@ -4637,6 +4637,43 @@
       background: rgba(0, 0, 0, 0.1);
     }
 
+    /* Touch has no hover to reveal a 6px strip under a fingertip, so on
+       coarse pointers the grab zone widens to a finger's width inside the
+       header's right edge and carries a visible grip line. touch-action: none
+       keeps the drag from being read as a pan of the table, which is what the
+       browser would otherwise do with a horizontal swipe there. */
+    .col-resize-handle {
+      touch-action: none;
+    }
+
+    @media (pointer: coarse) {
+      .col-resize-handle {
+        width: 22px;
+      }
+
+      .col-resize-handle::after {
+        content: "";
+        position: absolute;
+        top: 25%;
+        bottom: 25%;
+        right: 3px;
+        width: 2px;
+        border-radius: 1px;
+        background: var(--line);
+        transition: background-color 100ms ease;
+      }
+
+      .col-resize-handle.is-active {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      .col-resize-handle.is-active::after {
+        background: var(--accent);
+        top: 0;
+        bottom: 0;
+      }
+    }
+
     body.col-resizing {
       cursor: col-resize !important;
       user-select: none !important;
@@ -7573,21 +7610,34 @@
         });
         syncTableWidth(table);
 
-        // Attach mousedown listeners to resize handles
+        // Pointer events, so the same drag works with a mouse, a finger or a pen.
         table.querySelectorAll(".col-resize-handle").forEach((handle) => {
-          handle.addEventListener("mousedown", onResizeMouseDown);
+          handle.addEventListener("pointerdown", onResizePointerDown);
         });
       }
 
-      function onResizeMouseDown(e) {
+      // How far a touch has to travel before it counts as a resize rather than
+      // a tap. A tap on the (wide, touch-sized) grab zone is still a tap on the
+      // header, so it sorts like one.
+      const RESIZE_TAP_SLOP = 4;
+
+      function onResizePointerDown(e) {
+        // Primary button only for a mouse; a second finger joining a drag is ignored.
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        if (!e.isPrimary) return;
         e.preventDefault();
+        // Keep the press away from the header's own long-press slip and the
+        // row long-press further up the tree: this press is a drag.
         e.stopPropagation();
+        closeTip();
 
         const handle = e.currentTarget;
         const th = handle.closest("th");
         const key = handle.dataset.resizeKey;
         if (!th || !key) return;
 
+        const pointerId = e.pointerId;
+        const isMouse = e.pointerType === "mouse";
         const startX = e.clientX;
         const startWidth = th.getBoundingClientRect().width;
         const { minWidth, maxWidth } = getHeaderWidthConfig(key, th);
@@ -7606,35 +7656,80 @@
           });
         }
         const effectiveMaxWidth = Math.min(maxWidth, availableWidth - otherColumnsMinWidth);
+        let dragged = false;
 
+        // Capture keeps the move/up events coming to the handle even once the
+        // finger or cursor has left it, which a touch drag does straight away.
+        try {
+          handle.setPointerCapture(pointerId);
+        } catch (_) {
+          // Capture is best effort; the listeners below still see the events.
+        }
+        handle.classList.add("is-active");
         document.body.classList.add("col-resizing");
 
-        function onMouseMove(e) {
-          const newWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
-          th.style.width = newWidth + "px";
+        function widthAt(clientX) {
+          return Math.max(minWidth, Math.min(startWidth + (clientX - startX), effectiveMaxWidth));
+        }
+
+        function applyWidth(width) {
+          th.style.width = width + "px";
           th.style.minWidth = minWidth + "px";
           th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
           syncTableWidth(table);
         }
 
-        function onMouseUp(e) {
-          document.removeEventListener("mousemove", onMouseMove);
-          document.removeEventListener("mouseup", onMouseUp);
+        function onPointerMove(ev) {
+          if (ev.pointerId !== pointerId) return;
+          if (!dragged && Math.abs(ev.clientX - startX) < RESIZE_TAP_SLOP) return;
+          dragged = true;
+          applyWidth(widthAt(ev.clientX));
+        }
+
+        function finish(ev, cancelled) {
+          if (ev.pointerId !== pointerId) return;
+          handle.removeEventListener("pointermove", onPointerMove);
+          handle.removeEventListener("pointerup", onPointerUp);
+          handle.removeEventListener("pointercancel", onPointerCancel);
+          handle.removeEventListener("lostpointercapture", onPointerCancel);
+          try {
+            handle.releasePointerCapture(pointerId);
+          } catch (_) {
+            // Already released.
+          }
+          handle.classList.remove("is-active");
           document.body.classList.remove("col-resizing");
 
-          const finalWidth = Math.max(minWidth, Math.min(startWidth + (e.clientX - startX), effectiveMaxWidth));
-          state.columnWidths[key] = finalWidth;
-          th.style.width = finalWidth + "px";
-          th.style.minWidth = minWidth + "px";
-          th.style.maxWidth = Number.isFinite(effectiveMaxWidth) ? effectiveMaxWidth + "px" : "none";
-          syncTableWidth(table);
+          if (dragged) {
+            const finalWidth = cancelled ? th.getBoundingClientRect().width : widthAt(ev.clientX);
+            state.columnWidths[key] = finalWidth;
+            applyWidth(finalWidth);
+          }
 
-          // Swallow the click event the browser fires after mouseup so sort doesn't trigger
-          th.addEventListener("click", (ev) => ev.stopPropagation(), { capture: true, once: true });
+          // Swallow the click the browser fires after the release so the drag
+          // doesn't also sort. A mouse press on the thin desktop handle never
+          // sorts; a touch that didn't travel was a tap and sorts as usual.
+          if (dragged || isMouse) {
+            const swallow = (clickEvent) => clickEvent.stopPropagation();
+            th.addEventListener("click", swallow, { capture: true, once: true });
+            // Not every drag ends in a click; don't let a stale listener eat
+            // the next real tap on this header.
+            setTimeout(() => th.removeEventListener("click", swallow, { capture: true }), 400);
+          }
         }
 
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener("mouseup", onMouseUp);
+        function onPointerUp(ev) {
+          finish(ev, false);
+        }
+
+        function onPointerCancel(ev) {
+          finish(ev, true);
+        }
+
+        handle.addEventListener("pointermove", onPointerMove);
+        handle.addEventListener("pointerup", onPointerUp);
+        handle.addEventListener("pointercancel", onPointerCancel);
+        handle.addEventListener("lostpointercapture", onPointerCancel);
       }
 
       function renderHeaderCell(header) {
