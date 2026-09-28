@@ -196,7 +196,7 @@ class TestRemovals(unittest.TestCase):
 
     def test_a_score_that_never_had_a_value_is_never_recorded(self) -> None:
         model = model_with()
-        _history.sync(doc_with(model))
+        self.assertEqual(_history.sync(doc_with(model)), 0)
         self.assertEqual(model.get(_history.HISTORY_FIELD, {}), {})
 
     def test_a_score_that_comes_back_reads_as_an_arrival(self) -> None:
