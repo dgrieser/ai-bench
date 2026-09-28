@@ -33,6 +33,23 @@
       "default": null,
       "if_previous": null,
       "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'nex-n2-5-max'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "nex-n2-5-max",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nex-n2-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
       "question": "Which Artificial Analysis slug is llm.json model 'nex-n2-5-mini'?",
       "route": "update_artificialanalysis_mapping.py",
       "route_kind": "aa-mapping",
@@ -60,44 +77,183 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "nex-n2-5-mini",
-          "reason": "exact to nex-agi/nex-n2.5-mini, most components match"
+          "option": "claude-sonnet-5",
+          "reason": "exact to Claude Sonnet 5.5, all components match"
         },
         {
           "confidence": "weak",
-          "option": "nex-n2-5-pro",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "claude-opus-5",
+          "reason": "exact to Claude Sonnet 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to Claude Sonnet 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Sonnet 5.5, most components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'nex-agi/nex-n2.5-mini' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map FrontierCode model 'Claude Sonnet 5.5' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
       "route_kind": "mapping",
-      "subject": "nex-agi/nex-n2.5-mini",
+      "subject": "Claude Sonnet 5.5",
       "universe": "models"
     },
     {
       "candidates": [
         {
           "confidence": "exact",
-          "option": "nex-n2-5-mini",
-          "reason": "exact to Nex-N2.5-mini, exact match"
+          "option": "nex-n2-5-max",
+          "reason": "exact to Nex-N2.5-max, exact match"
         },
         {
           "confidence": "weak",
           "option": "nex-n2-5-pro",
-          "reason": "exact to Nex-N2.5-mini, most components match"
+          "reason": "exact to Nex-N2.5-max, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-mini",
+          "reason": "exact to Nex-N2.5-max, most components match"
         }
       ],
-      "default": "nex-n2-5-mini",
+      "default": "nex-n2-5-max",
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'nex-agi/Nex-N2.5-mini' to llm.json model",
+      "question": "Map Spheron path 'nex-agi/Nex-N2.5-max' to llm.json model",
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "subject": "nex-agi/Nex-N2.5-mini",
+      "subject": "nex-agi/Nex-N2.5-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to claude-opus-5-5-range, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to claude-opus-5-5-range, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-opus-5-5-range' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-opus-5-5-range",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude-sonnet-5-5, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "exact to claude-sonnet-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to claude-sonnet-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-sonnet-5-5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-sonnet-5-5' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-sonnet-5-5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to claude-sonnet-5-range, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-sonnet-5-range' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-sonnet-5-range",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "command-a-plus",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'cohere/command-a-plus-05-2026' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "cohere/command-a-plus-05-2026",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-daybreak-blue' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "openai/gpt-daybreak-blue",
       "universe": "models"
     }
   ]
