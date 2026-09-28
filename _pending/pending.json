@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'Agnes-2.5-Pro-Beta' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Agnes-2.5-Pro-Beta",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
@@ -72,17 +83,6 @@
       "route_kind": "aa-mapping",
       "subject": "nex-n2-5-pro",
       "universe": "aa-slugs"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'openai/gpt-daybreak-blue' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "openai/gpt-daybreak-blue",
-      "universe": "models"
     }
   ]
 }
