@@ -6875,7 +6875,10 @@
       }
 
       function measureModelColumnInitialWidth(models) {
-        if (window.innerWidth <= 860) return 150;
+        // Narrow screens get a fixed width rather than the widest name, which
+        // would eat most of a phone's width. 168px fits a typical name in full
+        // (claude-sonnet-5-5 with its lock icon); longer ones ellipsize.
+        if (window.innerWidth <= 860) return 168;
         const probe = document.createElement("span");
         probe.className = "model-name-label";
         probe.style.position = "absolute";
