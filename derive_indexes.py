@@ -437,11 +437,21 @@ INDEXES: list[IndexDef] = [
             ("exploitgym", 1.0),
             # The one member nobody self-reports: Vals runs every model itself
             # on a private set, so its comparisons count in full where the
-            # llm-stats and model-card values the other three lean on count
+            # llm-stats and model-card values the other members lean on count
             # SECOND_HAND_WEIGHT. Below the anchor only because its headline
             # pools a PoC task with a patch task that is near its ceiling for
             # everyone (82-88%), so its spread is the PoC half's.
             ("cyberbench_1_1", 0.9),
+            # The revision 1.1 superseded: the same PoC + patch task on an
+            # older private set, archived since 2026-09-16. Below 1.1 because
+            # it is the old instrument, and because its PoC half carries the
+            # same refusal artefact harder -- claude-opus-5, gemini-3.8-flash
+            # and qwen3.7-plus score 0% there. Kept for its field: 26 models,
+            # six of ours measured on nothing else in this group. 0.65 is the
+            # least weight that lets a model with this column alone clear the
+            # evidence bar (0.65 / 3.55 = 18.3%); any less and those six stay
+            # unranked.
+            ("cyberbench_1_0", 0.65),
             # The snapshot vendors report (260505, 183 tasks). Wide spread and
             # far from its ceiling, but the maintainers' own board is six rows
             # frozen since June, so nearly every value is a lab's claim under a

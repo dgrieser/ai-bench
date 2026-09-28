@@ -1321,14 +1321,14 @@ When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
 
 ## Cybersecurity
 
-Five columns measure offensive security work. Each is an agentic coding task at
+Six columns measure offensive security work. Each is an agentic coding task at
 heart — write a crashing input, turn a crash into an exploit — and each
 correlates with the Coding index across the few models both cover (Spearman
 0.76 to 0.95 over 7 to 12 models). But it measures a dual-use specialty that
 labs now train for directly (Xiaomi's MiMo-V2.6 cards describe cyber tasks in
 the RL mix), and almost every open-weight number is the lab's own report under
 a harness it chose. Voting that into the Coding index would pay a
-specialisation as general coding, so four of them feed an index of their own,
+specialisation as general coding, so five of them feed an index of their own,
 the [Security index](#security-index), and nothing else. The research behind
 these choices is
 [docs/security-benchmarks-2026-09.md](docs/security-benchmarks-2026-09.md).
@@ -1339,6 +1339,7 @@ these choices is
 | `exploitgym` | Turns a crashing input into a flag-capturing exploit; 869 tasks across userspace, V8 and the kernel; counted only when a judge confirms the intended bug was used | cybergym.io (2) | llm-stats board, model cards | Any budget but 6 hours (the maintainers run 2; vendors quote 6); subset runs; the retired 898-task v0 set; agent rows |
 | `exploitbench` | Climbs a five-tier ladder toward a V8 exploit on 41 N-day bugs; the score is mean ladder coverage | llm-stats board (5) | Epoch's copy of the board (7), model cards | AutoNudge runs, where the harness keeps prompting the agent |
 | `cyberbench_1_1` | Writes a PoC that triggers an OSS-Fuzz vulnerability, then a patch that fixes it, on Vals' private set | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; the column is the board's pooled headline. Version-pinned to 1.1 in `fetch_vals.VERSIONS`, since the slug names no revision |
+| `cyberbench_1_0` | The same PoC + patch task on v1's older private set, which 1.1 superseded; archived since 2026-09-16 | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; any 1.1 run. The slug (`cyber-v1`) names the revision, so no pin is needed. Read for its field: 26 models, most never re-run on 1.1 |
 | `sec_bench_pro` | Writes a PoC for a real bug in V8 or SpiderMonkey from a vague report, with no crash trace | SEC-bench Pro's own board (2) | llm-stats board, model cards | Every snapshot but 260505 (the 344-task 260617 adds the Linux kernel and scores the same model up to 12 points higher); the completed-only rate, which drops timeouts |
 
 The sources are thinner than they look. cybergym.io's CyberGym board runs no
@@ -3054,14 +3055,15 @@ The sixth derived column, **Security**, ranks offensive-security capability:
 finding the input that crashes a real program, and turning a crash into a
 working exploit. Same script (`derive_indexes.py`), same comparison-and-fit
 math, shrinkage and coverage rules as [above](#coding-index), computed over
-four of the five [Cybersecurity](#cybersecurity) columns and written to each
+five of the six [Cybersecurity](#cybersecurity) columns and written to each
 model's `scores.security_index`. Ranked values cite this section
 (`https://github.com/dgrieser/ai-bench#security-index`).
 
 | Benchmark | Weight | Why there |
 | --- | --- | --- |
 | ExploitGym (`exploitgym`) | 1.0 | The anchor. 869 tasks across userspace, V8 and the kernel; nobody near the ceiling (33.7 on the board, 42.4 claimed) and an 18.9-point top-five spread. Floor-compressed — most models below the frontier solve almost none — which the members beneath it cover |
-| CyberBench v1.1 (`cyberbench_1_1`) | 0.9 | The one member nobody self-reports: Vals runs every model itself on a private set, so its comparisons count in full while the lab-reported values in the other three count half (`SECOND_HAND_WEIGHT`). Under the anchor because its headline pools a PoC task with a patch task near its ceiling for everyone (82-88%) |
+| CyberBench v1.1 (`cyberbench_1_1`) | 0.9 | The one member nobody self-reports: Vals runs every model itself on a private set, so its comparisons count in full while the lab-reported values in ExploitGym, SEC-bench Pro and CyberGym count half (`SECOND_HAND_WEIGHT`). Under the anchor because its headline pools a PoC task with a patch task near its ceiling for everyone (82-88%) |
+| CyberBench v1 (`cyberbench_1_0`) | 0.65 | The revision 1.1 superseded, on an older private set, archived since 2026-09-16; Vals-run like 1.1, so it counts in full. Under 1.1 because it is the old instrument and its PoC half carries the refusal artefact harder (`claude-opus-5`, `gemini-3.8-flash` and `qwen3.7-plus` score 0% there). Kept for its field of 26 models; 0.65 is the least weight at which a model with this column alone clears the evidence bar (0.65 of 3.55 is 18.3%) |
 | SEC-bench Pro (`sec_bench_pro`) | 0.6 | Wide spread, far from its ceiling, on the 183-task snapshot vendors report; but the maintainers' own board is six rows frozen since June, so nearly every value is a lab's claim |
 | CyberGym (`cybergym`) | 0.4 | The widest open-weight coverage and the least resolving: Level 1 hands the agent the description, vendor pipelines already reach 0.95-0.99, and model-focused values cluster at 77-95 at the top. Kept for the mid-field it still separates, at a weight that breaks ties rather than sets the order |
 
@@ -3101,6 +3103,19 @@ Calibrated on its first night at `transfer_ratio` 0.132 over 20 leave-one-out
 samples — far above the other capability indexes (0.015-0.051), which says what
 the table does: with four members and thirteen models, one benchmark speaks for
 the rest only loosely.
+
+**CyberBench v1 joined on 2026-09-28** as a fifth member at 0.65, for its
+field rather than its currency: 13 of our models carry a v1 score, and six of
+them (`kimi-k3`, `minimax-m3`, `kimi-k2-6`, `glm-5-3-flash`, `inkling-small`,
+`inkling`) are measured on nothing else in the group. Ranking those six on one
+column is exactly what 0.65 was chosen to allow, and no more — it clears the
+bar by 0.3 points. It also lifts `deepseek-v4-flash` and `hy4-preview` over the
+bar with their CyberGym score, and it pushes `minimax-m2-5`, whose only member
+is SEC-bench Pro (0.6 of 3.55, 16.9%), back under it. The index went from 14
+ranked models to 21 (14 open, 7 closed references). The same refusal caveat
+applies with more force: v1 has `claude-opus-5` at 0% on the PoC half, which
+takes it from 51.1k to 38.5k. Recalibrated with v1 in at `transfer_ratio` 0.215
+over 22 samples.
 
 ## Openness Classification
 

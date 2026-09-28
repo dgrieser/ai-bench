@@ -126,6 +126,14 @@ BENCHMARKS: dict[str, str] = {
     # reason: the slug names no revision. Read at "overall", the board's
     # headline, which pools the PoC and patch tasks.
     "cyber": "cyberbench_1_1",
+    # CyberBench v1, the revision 1.1 superseded, kept at a page of its own
+    # and archived there (last moved 2026-09-16). Same task, same PoC + patch
+    # headline, but a different task set, so it is a column of its own rather
+    # than a fill for the 1.1 one. Its field is the reason to read it: 26
+    # models, most of them from before 1.1 existed and never re-run on it. The
+    # slug names the revision, so no VERSIONS pin is needed -- a successor
+    # would arrive at a new URL, as 1.1 did.
+    "cyber-v1": "cyberbench_1_0",
 }
 
 # The boards Vals authors, runs and publishes itself, as opposed to the ones it
@@ -134,7 +142,7 @@ BENCHMARKS: dict[str, str] = {
 # these at RANK_BENCHMARK_SITE and the rest at RANK_THIRD_PARTY_RUN. Declared here, with
 # the table above, so a board added to BENCHMARKS is classified in the same
 # place it is ingested.
-VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber"})
+VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber", "cyber-v1"})
 
 # The version a board's column measures, for the boards whose slug does not
 # carry one. Vals stamps a version into every board's metadata but names only
