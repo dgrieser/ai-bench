@@ -76,54 +76,6 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to Claude Sonnet 5.5, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5",
-          "reason": "exact to Claude Sonnet 5.5, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5",
-          "reason": "exact to Claude Sonnet 5.5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "exact to Claude Sonnet 5.5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to Claude Sonnet 5.5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierCode model 'Claude Sonnet 5.5' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Claude Sonnet 5.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'anthropic/claude-sonnet-5.5' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "anthropic/claude-sonnet-5.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
           "option": "claude-opus-5",
           "reason": "exact to claude-opus-5-5-range, most components match"
@@ -156,43 +108,6 @@
       "route": "update_vals_mapping.py",
       "route_kind": "mapping",
       "subject": "anthropic/claude-opus-5-5-range",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to claude-sonnet-5-5, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5",
-          "reason": "exact to claude-sonnet-5-5, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5",
-          "reason": "exact to claude-sonnet-5-5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "exact to claude-sonnet-5-5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to claude-sonnet-5-5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'anthropic/claude-sonnet-5-5' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "anthropic/claude-sonnet-5-5",
       "universe": "models"
     },
     {
