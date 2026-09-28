@@ -27,6 +27,17 @@
       "default": null,
       "if_previous": null,
       "note": null,
+      "question": "Map OpenRouter model 'anthropic/claude-sonnet-5.5' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-sonnet-5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
       "question": "Map OpenRouter model 'nex-agi/nex-n2.5-mini' to llm.json model",
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
