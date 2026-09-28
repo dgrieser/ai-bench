@@ -33,8 +33,9 @@ import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
+import _fetch_warnings
 from _fetch_checks import check_percentages
-from _scale_labs import extract_board_rows, fetch_board_rows
+from _scale_labs import NoRowsError, extract_board_rows, fetch_board_rows
 
 
 BASE_URL = "https://labs.scale.com/leaderboard/sweatlas-{track}"
@@ -68,7 +69,9 @@ def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return resp.read().decode("utf-8", errors="replace")
         except (urllib.error.URLError, OSError) as exc:
-            if attempt == retries:
+            # A 404 or 403 says the same thing two seconds later; only a
+            # rate limit or a server/network error is worth asking again.
+            if attempt == retries or _is_final(exc):
                 raise
             wait = delay * attempt
             print(
@@ -77,6 +80,10 @@ def fetch_html(url: str, retries: int = 3, delay: float = 2.0) -> str:
             )
             time.sleep(wait)
     raise AssertionError("unreachable")
+
+
+def _is_final(exc: Exception) -> bool:
+    return isinstance(exc, urllib.error.HTTPError) and 400 <= exc.code < 500 and exc.code != 429
 
 
 def extract_rows(html: str, track: str) -> list[dict]:
@@ -121,12 +128,36 @@ def get_scores(tracks: list[str]) -> list[dict]:
         print(f"Fetching {url} ...", file=sys.stderr)
         return fetch_board_rows(fetch_html, url, f"sweatlas-{track}")
 
+    def try_track(track: str) -> list[dict] | Exception:
+        try:
+            return fetch_track(track)
+        except (urllib.error.URLError, OSError, NoRowsError) as exc:
+            return exc
+
     # One page per track on one host; fetched together, parsed in order.
     with ThreadPoolExecutor(max_workers=len(tracks) or 1) as pool:
-        pages = list(pool.map(fetch_track, tracks))
+        pages = list(pool.map(try_track, tracks))
+
+    # A track whose page is unreachable or momentarily empty (sweatlas-tw has
+    # 404'd for hours at a time while the other two served) costs that track
+    # only: its columns stay where the last good run left them, since scores
+    # are applied, never cleared. It is still a warning on the run. A page that
+    # is another board, or reads wrong, still fails the whole source, and so
+    # does every track failing at once.
+    failed = [(t, p) for t, p in zip(tracks, pages) if isinstance(p, Exception)]
+    if len(failed) == len(tracks):
+        raise failed[0][1]
+    for track, exc in failed:
+        url = BASE_URL.format(track=track)
+        print(f"warning: SWE Atlas track {track} skipped this run: {url}: {exc}", file=sys.stderr)
+        _fetch_warnings.record(
+            "fetch_swe_atlas.py", f"{url}: {exc}", source=f"swe_atlas ({track})"
+        )
 
     results: list[dict] = []
     for track, rows in zip(tracks, pages):
+        if isinstance(rows, Exception):
+            continue
         key = TRACKS[track]
         print(f"  parsed {len(rows)} rows for {track}", file=sys.stderr)
         track_rows: list[dict] = []

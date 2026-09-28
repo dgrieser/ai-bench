@@ -80,7 +80,10 @@ def load(path: Path) -> list[dict[str, Any]]:
             entry = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if isinstance(entry, dict) and entry.get("step"):
+        # The same failure can be recorded twice -- fetch_swe_atlas.py runs once
+        # for update_swe_atlas_mapping.py's names and once for update.py's
+        # scores -- and is one warning, not two.
+        if isinstance(entry, dict) and entry.get("step") and entry not in entries:
             entries.append(entry)
     return entries
 

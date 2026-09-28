@@ -64,6 +64,16 @@ class TestRecord(unittest.TestCase):
     def test_a_missing_file_is_no_warnings(self) -> None:
         self.assertEqual(_fetch_warnings.load(self.tmp / "absent"), [])
 
+    def test_the_same_failure_recorded_twice_is_one_warning(self) -> None:
+        """A fetcher run once for names and once for scores fails the same way twice."""
+        for _ in range(2):
+            _fetch_warnings.record("fetch_swe_atlas.py", "404", source="swe_atlas (tw)", path=self.path)
+        _fetch_warnings.record("fetch_swe_atlas.py", "404", source="swe_atlas (qna)", path=self.path)
+        self.assertEqual(
+            [e["source"] for e in _fetch_warnings.load(self.path)],
+            ["swe_atlas (tw)", "swe_atlas (qna)"],
+        )
+
 
 class TestAnnotate(unittest.TestCase):
     def test_the_title_carries_the_prefix_api_php_filters_on(self) -> None:
