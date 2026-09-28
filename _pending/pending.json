@@ -1,3 +1,70 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'minimax-m3-1-flash-preview'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "minimax-m3-1-flash-preview",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'nex-agi/nex-n2.5-mini' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nex-agi/nex-n2.5-mini",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'nex-agi/nex-n2.5-pro' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nex-agi/nex-n2.5-pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "exact to MiniMax-M3.1-Flash-Preview, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "minimax-m3-1-flash-preview",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'MiniMaxAI/MiniMax-M3.1-Flash-Preview' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MiniMaxAI/MiniMax-M3.1-Flash-Preview",
+      "universe": "models"
+    }
+  ]
 }
