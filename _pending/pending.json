@@ -76,6 +76,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to Claude Sonnet 5.5, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "claude-sonnet-5",
           "reason": "exact to Claude Sonnet 5.5, all components match"
@@ -135,6 +140,11 @@
         },
         {
           "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "claude-fable-5-1",
           "reason": "drop suffix to a variant, most components match"
         }
@@ -150,6 +160,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to claude-sonnet-5-5, exact match"
+        },
         {
           "confidence": "weak",
           "option": "claude-sonnet-5",
@@ -185,6 +200,11 @@
         {
           "confidence": "weak",
           "option": "claude-sonnet-5",
+          "reason": "exact to claude-sonnet-5-range, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
           "reason": "exact to claude-sonnet-5-range, most components match"
         },
         {
