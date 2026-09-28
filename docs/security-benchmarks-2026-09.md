@@ -30,6 +30,10 @@ reference rows). Snapshot: 2026-09-25.
 > (ExploitGym 1.0, CyberBench v1.1 0.9, SEC-bench Pro 0.6, CyberGym 0.4),
 > after Vals' CyberBench was added as `cyberbench_1_1`. It ranks 13 models. See
 > README, "Security Index".
+>
+> **Follow-up (2026-09-28).** Vals' superseded CyberBench v1 (archived at
+> `vals.ai/benchmarks/cyber-v1`, 26 models) was added as `cyberbench_1_0` and
+> joined the index at 0.65, under v1.1's 0.9. The index now ranks 21 models.
 
 ---
 

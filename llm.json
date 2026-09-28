@@ -245,7 +245,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), SEC-bench Pro (0.6), CyberGym (0.4).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), CyberBench v1 (0.65), SEC-bench Pro (0.6), CyberGym (0.4).",
       "settings": [
         "derived",
         "index scale"
@@ -1107,6 +1107,27 @@
       ],
       "urls": [
         "https://www.vals.ai/benchmarks/cyber"
+      ]
+    },
+    "cyberbench_1_0": {
+      "name": "CyberBench v1",
+      "short_name": "CyberB1",
+      "category": "Cybersecurity",
+      "description": "The first revision of Vals AI's own security benchmark, superseded by v1.1 and archived: an agent crafts a proof-of-concept input that triggers a real OSS-Fuzz vulnerability, then writes a source patch that fixes it, on a private task set Vals runs every model through on its own harness. The column is the board's headline, which pools the PoC and patch tasks. Its task set differs from v1.1's, so the two are separate columns; v1 is kept for its field of 26 models, most never re-run on v1.1. Several models score 0% on the PoC half, which reads as refusal under Vals' harness rather than failure.",
+      "settings": [
+        "overall (PoC + patch)",
+        "v1",
+        "Vals-run",
+        "private set",
+        "archived"
+      ],
+      "excludes": [
+        "the PoC-only and patch-only task scores",
+        "CyberBench v1.1, which has a column of its own",
+        "CyberGym, an unrelated benchmark on similar OSS-Fuzz material"
+      ],
+      "urls": [
+        "https://www.vals.ai/benchmarks/cyber-v1"
       ]
     },
     "aa_omniscience": {
@@ -3285,7 +3306,7 @@
         "knowledge_index": 57687,
         "vision_index": null,
         "trust_index": 54360,
-        "security_index": 2188,
+        "security_index": null,
         "aa_intelligence_index": 22.8,
         "swe_bench_verified": 74.2,
         "swe_bench_multimodal": null,
@@ -3355,7 +3376,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": null,
         "trust_index": "2026-09-28",
-        "security_index": "2026-09-28",
+        "security_index": null,
         "aa_intelligence_index": "2026-09-08",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -3424,7 +3445,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
+        "security_index": null,
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m2-5",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -3738,13 +3759,6 @@
           ],
           "of": 4,
           "share": 1.0
-        },
-        "security_index": {
-          "measured": [
-            "sec_bench_pro"
-          ],
-          "of": 4,
-          "share": 0.207
         }
       }
     },
@@ -16649,7 +16663,7 @@
         "knowledge_index": 81987,
         "vision_index": null,
         "trust_index": 54676,
-        "security_index": null,
+        "security_index": 42096,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 88.8,
         "swe_bench_multimodal": null,
@@ -16710,7 +16724,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 77.5
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -16719,7 +16734,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": null,
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -16779,7 +16794,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -16788,7 +16804,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-flash",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -16848,7 +16864,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -17123,6 +17140,13 @@
             "source": "https://www.cybergym.io/cybergym"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 77.5,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -17258,6 +17282,14 @@
           "second_hand": [
             "ifbench"
           ]
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0",
+            "cybergym"
+          ],
+          "of": 5,
+          "share": 0.296
         }
       }
     },
@@ -22475,7 +22507,7 @@
         "knowledge_index": 90651,
         "vision_index": null,
         "trust_index": 69698,
-        "security_index": 16140,
+        "security_index": 35531,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 82.8,
         "swe_bench_multimodal": null,
@@ -22536,7 +22568,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 77.4
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -22605,7 +22638,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -22674,7 +22708,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -22948,6 +22983,13 @@
             "source": "https://www.cybergym.io/exploitgym"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 77.4,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -23091,10 +23133,11 @@
         "security_index": {
           "measured": [
             "exploitgym",
+            "cyberbench_1_0",
             "cybergym"
           ],
-          "of": 4,
-          "share": 0.483
+          "of": 5,
+          "share": 0.577
         }
       }
     },
@@ -23115,7 +23158,7 @@
         "knowledge_index": 84085,
         "vision_index": 73305,
         "trust_index": 69474,
-        "security_index": null,
+        "security_index": 42177,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
         "swe_bench_multimodal": null,
@@ -23176,7 +23219,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 76.3
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -23185,7 +23229,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -23245,7 +23289,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -23254,7 +23299,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/minimax-m3",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -23314,7 +23359,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -23479,6 +23525,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 76.3,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-01",
@@ -23636,6 +23689,13 @@
           ],
           "of": 4,
           "share": 1.0
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -47958,7 +48018,7 @@
         "knowledge_index": 83360,
         "vision_index": 47610,
         "trust_index": 65565,
-        "security_index": null,
+        "security_index": 25836,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -48019,7 +48079,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 78.1
+        "charxiv_reasoning": 78.1,
+        "cyberbench_1_0": 64.1
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -48028,7 +48089,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-07-16",
         "swe_bench_multimodal": null,
@@ -48088,7 +48149,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-09"
+        "charxiv_reasoning": "2026-09-09",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -48097,7 +48159,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling",
         "swe_bench_verified": "https://huggingface.co/thinkingmachines/Inkling",
         "swe_bench_multimodal": null,
@@ -48157,7 +48219,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://evals.report/benchmarks/charxiv"
+        "charxiv_reasoning": "https://evals.report/benchmarks/charxiv",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -48318,6 +48381,13 @@
             "source": null
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 64.1,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-01",
@@ -48471,6 +48541,13 @@
           "second_hand": [
             "ifbench"
           ]
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -49962,7 +50039,7 @@
         "knowledge_index": 78505,
         "vision_index": 57901,
         "trust_index": 64892,
-        "security_index": 6598,
+        "security_index": 7469,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": null,
@@ -50540,8 +50617,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 4,
-          "share": 0.345
+          "of": 5,
+          "share": 0.282
         }
       }
     },
@@ -50572,7 +50649,7 @@
         "knowledge_index": 88262,
         "vision_index": 73193,
         "trust_index": 70564,
-        "security_index": null,
+        "security_index": 38141,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
         "swe_bench_multimodal": null,
@@ -50633,7 +50710,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 80.4
+        "charxiv_reasoning": 80.4,
+        "cyberbench_1_0": 74.4
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -50642,7 +50720,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -50702,7 +50780,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-09"
+        "charxiv_reasoning": "2026-09-09",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -50711,7 +50790,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k2-6",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -50771,7 +50850,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K2.6"
+        "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K2.6",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -51003,6 +51083,13 @@
             "source": "https://epoch.ai/benchmarks/exploitbench"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 74.4,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -51168,6 +51255,13 @@
           ],
           "of": 4,
           "share": 1.0
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -51687,7 +51781,7 @@
         "knowledge_index": 94362,
         "vision_index": 87229,
         "trust_index": 70137,
-        "security_index": null,
+        "security_index": 62439,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -51748,7 +51842,8 @@
         "osworld_2_0_vendor": 58.3,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 84.8
+        "charxiv_reasoning": 84.8,
+        "cyberbench_1_0": 79
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -51757,7 +51852,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-07-20",
         "swe_bench_multimodal": null,
@@ -51818,7 +51913,8 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
-        "real_swe": "2026-09-23"
+        "real_swe": "2026-09-23",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -51827,7 +51923,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k3",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -51888,7 +51984,8 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3",
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -52114,6 +52211,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 79,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -52282,6 +52386,13 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -53657,7 +53768,7 @@
         "knowledge_index": 80279,
         "vision_index": 47878,
         "trust_index": 65348,
-        "security_index": null,
+        "security_index": 30156,
         "aa_intelligence_index": 27.8,
         "swe_bench_verified": 82.2,
         "swe_bench_multimodal": null,
@@ -53718,7 +53829,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 77.4
+        "charxiv_reasoning": 77.4,
+        "cyberbench_1_0": 68.8
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -53727,7 +53839,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -53787,7 +53899,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-16"
+        "charxiv_reasoning": "2026-09-16",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -53796,7 +53909,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/inkling-small",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -53856,7 +53969,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://huggingface.co/thinkingmachines/Inkling-Small"
+        "charxiv_reasoning": "https://huggingface.co/thinkingmachines/Inkling-Small",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -53984,6 +54098,13 @@
             "date": "2026-09-15",
             "score": null,
             "source": null
+          }
+        ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 68.8,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
           }
         ],
         "aa_omniscience": [
@@ -54137,6 +54258,13 @@
           "second_hand": [
             "ifbench"
           ]
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -57230,7 +57358,7 @@
         "knowledge_index": 93161,
         "vision_index": null,
         "trust_index": 72391,
-        "security_index": 39325,
+        "security_index": 49060,
         "aa_intelligence_index": 44.8,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -57817,8 +57945,8 @@
             "exploitgym",
             "cybergym"
           ],
-          "of": 4,
-          "share": 0.483
+          "of": 5,
+          "share": 0.394
         }
       }
     },
@@ -60959,7 +61087,7 @@
         "knowledge_index": 89605,
         "vision_index": 93119,
         "trust_index": 71429,
-        "security_index": null,
+        "security_index": 34187,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
         "swe_bench_multimodal": null,
@@ -61020,7 +61148,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 89.4
+        "charxiv_reasoning": 89.4,
+        "cyberbench_1_0": 71.5
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -61029,7 +61158,7 @@
         "knowledge_index": "2026-09-27",
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -61089,7 +61218,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-09"
+        "charxiv_reasoning": "2026-09-09",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -61098,7 +61228,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -61158,7 +61288,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6"
+        "charxiv_reasoning": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -61310,6 +61441,13 @@
             "source": "https://artificialanalysis.ai/models/glm-5-3-flash"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 71.5,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-27",
@@ -61455,6 +61593,13 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0"
+          ],
+          "of": 5,
+          "share": 0.183
         }
       }
     },
@@ -63350,7 +63495,7 @@
         "knowledge_index": 91397,
         "vision_index": null,
         "trust_index": null,
-        "security_index": null,
+        "security_index": 19975,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -63411,7 +63556,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 57.5
       },
       "scores_updated": {
         "openbench_index": null,
@@ -63420,7 +63566,7 @@
         "knowledge_index": "2026-09-28",
         "vision_index": null,
         "trust_index": null,
-        "security_index": null,
+        "security_index": "2026-09-28",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -63480,7 +63626,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": null,
@@ -63489,7 +63636,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": null,
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -63549,7 +63696,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "swe_bench_multilingual": [
@@ -63663,6 +63811,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 57.5,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "critpt": [
           {
             "date": "2026-08-29",
@@ -63740,6 +63895,17 @@
             "hle",
             "critpt",
             "gpqa_diamond"
+          ]
+        },
+        "security_index": {
+          "measured": [
+            "cyberbench_1_0",
+            "cybergym"
+          ],
+          "of": 5,
+          "share": 0.296,
+          "second_hand": [
+            "cybergym"
           ]
         }
       }
@@ -64704,7 +64870,7 @@
         "knowledge_index": 84948,
         "vision_index": 67382,
         "trust_index": 50189,
-        "security_index": 70159,
+        "security_index": 72157,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -64765,7 +64931,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 78.8
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -64834,7 +65001,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": "2026-09-15",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -64903,7 +65071,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -65034,6 +65203,13 @@
             "date": "2026-09-26",
             "score": 73.7,
             "source": "https://www.vals.ai/benchmarks/cyber"
+          }
+        ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 78.8,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
           }
         ],
         "aa_omniscience": [
@@ -65201,10 +65377,11 @@
           "measured": [
             "exploitgym",
             "cyberbench_1_1",
+            "cyberbench_1_0",
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 4,
+          "of": 5,
           "share": 1.0,
           "second_hand": [
             "exploitgym",
@@ -65630,7 +65807,7 @@
         "knowledge_index": 96827,
         "vision_index": 90379,
         "trust_index": 66946,
-        "security_index": 51112,
+        "security_index": 38517,
         "aa_intelligence_index": 50.8,
         "swe_bench_verified": 97,
         "swe_bench_multimodal": 59.4,
@@ -65691,7 +65868,8 @@
         "osworld_2_0_vendor": 70.6,
         "zerobench": 17.2,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 40.7
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -65760,7 +65938,8 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -65829,7 +66008,8 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -66066,6 +66246,13 @@
             "source": "https://www.vals.ai/benchmarks/cyber"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 40.7,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -66262,10 +66449,11 @@
         "security_index": {
           "measured": [
             "exploitgym",
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cyberbench_1_0"
           ],
-          "of": 4,
-          "share": 0.655
+          "of": 5,
+          "share": 0.718
         }
       }
     },
@@ -66847,7 +67035,7 @@
         "knowledge_index": 98632,
         "vision_index": 98907,
         "trust_index": 67950,
-        "security_index": 52011,
+        "security_index": 51975,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.7,
@@ -67453,8 +67641,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 4,
-          "share": 0.31
+          "of": 5,
+          "share": 0.254
         }
       }
     },
@@ -67481,7 +67669,7 @@
         "knowledge_index": 84665,
         "vision_index": 76284,
         "trust_index": 53787,
-        "security_index": 36918,
+        "security_index": 59040,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
         "swe_bench_multimodal": null,
@@ -67542,7 +67730,8 @@
         "osworld_2_0_vendor": 45.6,
         "zerobench": 13.4,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 83.9
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -67611,7 +67800,8 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -67680,7 +67870,8 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -67904,6 +68095,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 83.9,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -68062,10 +68260,11 @@
         "security_index": {
           "measured": [
             "exploitgym",
+            "cyberbench_1_0",
             "sec_bench_pro"
           ],
-          "of": 4,
-          "share": 0.552,
+          "of": 5,
+          "share": 0.634,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -68096,7 +68295,7 @@
         "knowledge_index": 91106,
         "vision_index": 84766,
         "trust_index": 59224,
-        "security_index": 65467,
+        "security_index": 69456,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -68664,8 +68863,8 @@
             "exploitgym",
             "sec_bench_pro"
           ],
-          "of": 4,
-          "share": 0.552,
+          "of": 5,
+          "share": 0.451,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -68696,7 +68895,7 @@
         "knowledge_index": 97338,
         "vision_index": 87362,
         "trust_index": 56574,
-        "security_index": 81803,
+        "security_index": 87912,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
         "swe_bench_multimodal": null,
@@ -68757,7 +68956,8 @@
         "osworld_2_0_vendor": 62.6,
         "zerobench": 22,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "cyberbench_1_0": 88.1
       },
       "scores_updated": {
         "openbench_index": "2026-09-28",
@@ -68827,7 +69027,8 @@
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-09-23"
+        "real_swe": "2026-09-23",
+        "cyberbench_1_0": "2026-09-28"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -68897,7 +69098,8 @@
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -69167,6 +69369,13 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "cyberbench_1_0": [
+          {
+            "date": "2026-09-28",
+            "score": 88.1,
+            "source": "https://www.vals.ai/benchmarks/cyber-v1"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-09-11",
@@ -69350,10 +69559,11 @@
         "security_index": {
           "measured": [
             "exploitgym",
+            "cyberbench_1_0",
             "sec_bench_pro"
           ],
-          "of": 4,
-          "share": 0.552,
+          "of": 5,
+          "share": 0.634,
           "second_hand": [
             "sec_bench_pro"
           ]
@@ -69383,7 +69593,7 @@
         "knowledge_index": 99515,
         "vision_index": 95818,
         "trust_index": 69372,
-        "security_index": 58341,
+        "security_index": 60422,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -69957,8 +70167,8 @@
             "cyberbench_1_1",
             "sec_bench_pro"
           ],
-          "of": 4,
-          "share": 0.862,
+          "of": 5,
+          "share": 0.704,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -72329,7 +72539,7 @@
         "knowledge_index": 93993,
         "vision_index": 76407,
         "trust_index": 70722,
-        "security_index": 67421,
+        "security_index": 69780,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -72794,8 +73004,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 4,
-          "share": 1.0,
+          "of": 5,
+          "share": 0.817,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -72826,7 +73036,7 @@
         "knowledge_index": 77966,
         "vision_index": 54190,
         "trust_index": 63165,
-        "security_index": 68457,
+        "security_index": 70733,
         "aa_intelligence_index": 37.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -73296,8 +73506,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 4,
-          "share": 1.0,
+          "of": 5,
+          "share": 0.817,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -73333,7 +73543,7 @@
         "knowledge_index": 99140,
         "vision_index": 96402,
         "trust_index": 69957,
-        "security_index": 84060,
+        "security_index": 82941,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -73832,8 +74042,8 @@
           "measured": [
             "exploitgym"
           ],
-          "of": 4,
-          "share": 0.345,
+          "of": 5,
+          "share": 0.282,
           "second_hand": [
             "exploitgym"
           ]
