@@ -175,7 +175,9 @@ def sync(doc: dict[str, Any], today: str | None = None) -> int:
         sources = model.get("scores_source")
         sources = sources if isinstance(sources, dict) else {}
 
-        before = model.get(HISTORY_FIELD)
+        # An absent field and an empty history are the same file: a model
+        # with no score yet has nothing to record and nothing to delete.
+        before = model.get(HISTORY_FIELD, {})
         logs = dict(history(model))
 
         for key, value in scores.items():
