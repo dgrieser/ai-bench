@@ -1,14 +1,25 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to sonnet 5.5, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5",
+          "reason": "exact to sonnet 5.5, all components match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Agents' Last Exam model 'Agnes-2.5-Pro-Beta' to llm.json model",
-      "route": "update_agents_last_exam_mapping.py",
+      "question": "Map Coding Agent Index model 'sonnet 5.5' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
-      "subject": "Agnes-2.5-Pro-Beta",
+      "subject": "sonnet 5.5",
       "universe": "models"
     },
     {
