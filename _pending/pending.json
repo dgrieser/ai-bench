@@ -76,6 +76,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.1 Sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to GPT-6.1 Sol, most components match"
@@ -93,11 +98,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-luna",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
