@@ -7554,7 +7554,7 @@
         "vision_index": 35965,
         "trust_index": 50960,
         "security_index": null,
-        "aa_intelligence_index": 13.7,
+        "aa_intelligence_index": 11.2,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -7589,7 +7589,7 @@
         "itbench_aa": null,
         "gdpval_aa": 415,
         "agents_last_exam": null,
-        "aa_briefcase": null,
+        "aa_briefcase": 335,
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -7624,7 +7624,7 @@
         "vision_index": "2026-09-28",
         "trust_index": "2026-09-28",
         "security_index": null,
-        "aa_intelligence_index": "2026-09-08",
+        "aa_intelligence_index": "2026-09-29",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -7658,7 +7658,7 @@
         "itbench_aa": null,
         "gdpval_aa": "2026-09-28",
         "agents_last_exam": null,
-        "aa_briefcase": null,
+        "aa_briefcase": "2026-09-29",
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -7727,7 +7727,7 @@
         "itbench_aa": null,
         "gdpval_aa": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "agents_last_exam": null,
-        "aa_briefcase": null,
+        "aa_briefcase": "https://artificialanalysis.ai/models/qwen3-5-9b",
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -7759,6 +7759,11 @@
           {
             "date": "2026-09-08",
             "score": 13.7,
+            "source": "https://artificialanalysis.ai/models/qwen3-5-9b"
+          },
+          {
+            "date": "2026-09-29",
+            "score": 11.2,
             "source": "https://artificialanalysis.ai/models/qwen3-5-9b"
           }
         ],
@@ -7851,6 +7856,13 @@
           {
             "date": "2026-09-28",
             "score": 415,
+            "source": "https://artificialanalysis.ai/models/qwen3-5-9b"
+          }
+        ],
+        "aa_briefcase": [
+          {
+            "date": "2026-09-29",
+            "score": 335,
             "source": "https://artificialanalysis.ai/models/qwen3-5-9b"
           }
         ],
