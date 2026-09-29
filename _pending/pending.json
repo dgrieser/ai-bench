@@ -74,6 +74,43 @@
       "universe": "aa-slugs"
     },
     {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt-6.1-sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt-6.1-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt-6.1-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "gpt-6-1-sol",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gpt-6.1-sol'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "gpt-6.1-sol",
+      "universe": "models"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
