@@ -181,6 +181,23 @@ class TestIndexValues(unittest.TestCase):
 
 
 class TestOpennessGuard(unittest.TestCase):
+    """Run against a fixed list rather than reference-models.json: the admin
+    page edits that file, and the names below are about how a board spells a
+    reference model, not about which models happen to be on the list today."""
+
+    SLUGS = ["claude-fable-5-1", "claude-opus-5", "claude-sonnet-5", "gpt-5-6-luna"]
+
+    def setUp(self) -> None:
+        import tempfile
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "reference-models.json"
+        _reference.write_reference_slugs(self.SLUGS, path)
+        original = _reference.REFERENCE_MODELS
+        _reference.REFERENCE_MODELS = path
+        self.addCleanup(setattr, _reference, "REFERENCE_MODELS", original)
+
     def test_reference_names_are_never_auto_skipped(self) -> None:
         for name in ("Opus 5", "claude-opus-5", "Claude Opus 5", "claude-opus-5[high]",
                      "GPT-5.6 Luna", "Sonnet 5", "Fable 5.1"):
