@@ -3,6 +3,43 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt 6.1 sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt 6.1 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt 6.1 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'gpt 6.1 sol' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gpt 6.1 sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "minimax-m3",
           "reason": "drop suffix to a variant, most components match"
@@ -72,6 +109,43 @@
       "route_kind": "aa-mapping",
       "subject": "nex-n2-5-pro",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.1 Sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6.1 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6.1 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'GPT-6.1 Sol' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GPT-6.1 Sol",
+      "universe": "models"
     },
     {
       "candidates": [],
