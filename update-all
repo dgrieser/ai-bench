@@ -8,6 +8,10 @@
 #                                       queues every question in F, and records
 #                                       no answers, so the questions come back
 #                                       on the next interactive run
+#   ./update-all --mappings-only ...    the quick run: only the steps that ask
+#                                       questions -- check_new.py and every
+#                                       mapping updater, the updaters side by
+#                                       side -- and no scores at all
 #
 # Deliberately does not set -e: one dead scraper must not stop the rest. Exit
 # codes are collected and reported at the end instead.
@@ -23,10 +27,15 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 COLLECT_ARGS=()
 REPORT=""
+MAPPINGS_ONLY=""
+# How many mapping updaters the quick run lets read their boards at once. Each
+# is one scrape of one host, so the limit is politeness and runner memory, not
+# CPU.
+JOBS="${AI_BENCH_JOBS:-8}"
 
 usage() {
     cat <<'EOF'
-usage: update-all [--collect-prompts [FILE]]
+usage: update-all [--collect-prompts [FILE]] [--mappings-only]
 
   (no flags)                 interactive: prompts for new models and
                              unrecognised source names as it goes
@@ -34,6 +43,10 @@ usage: update-all [--collect-prompts [FILE]]
                              question in FILE (default pending-prompts.jsonl)
                              and records no answers, so the questions come back
                              on the next interactive run
+  --mappings-only            only re-collect the questions: check_new.py and the
+                             mapping updaters, no scores and no index. Requires
+                             --collect-prompts; the updaters run side by side
+                             (AI_BENCH_JOBS at a time, default 8)
 EOF
 }
 
@@ -51,6 +64,10 @@ while [ $# -gt 0 ]; do
             REPORT="${1#*=}"
             shift
             ;;
+        --mappings-only)
+            MAPPINGS_ONLY="yes"
+            shift
+            ;;
         -h|--help)
             usage
             exit 0
@@ -62,6 +79,12 @@ while [ $# -gt 0 ]; do
             ;;
     esac
 done
+
+if [ -n "$MAPPINGS_ONLY" ] && [ -z "$REPORT" ]; then
+    # Interactively, the updaters would all prompt on one terminal at once.
+    echo "--mappings-only needs --collect-prompts" 1>&2
+    exit 2
+fi
 
 if [ -n "$REPORT" ]; then
     # Exported so nested subprocesses (check_new.py -> add.py) collect too, and
@@ -177,6 +200,103 @@ report_timings() {
     printf '  %8s  total\n' "$(fmt_ms ${total})" 1>&2
 }
 
+# The updaters update-all runs: every update_*_mapping.py but one. SWE-Rebench
+# is unwired from the score pipeline; its fetcher and mapping updater remain
+# standalone tools, so nothing here needs their mappings. An array built by a
+# loop rather than read from a pipe: the sequential run below is interactive at
+# a terminal, and a loop fed by a pipe would hand the prompts that pipe as stdin.
+UPDATERS=()
+for s in "${SCRIPT_DIR}"/update_*.py; do
+    case "$(basename "$s")" in
+        update_rebench_mapping.py) continue ;;
+    esac
+    UPDATERS+=("$s")
+done
+
+# The quick run's fan-out: every mapping updater at once, JOBS at a time.
+#
+# Safe to run side by side because they share nothing they write. Each owns its
+# own mapping file (and in collect mode writes none of them), the questions go
+# to one report by appending a single line per write, and the two caches they
+# read -- the openness index and the response cache -- are warmed before the
+# fan-out by the caller, so no two of them rebuild the same cache at once.
+#
+# Output is held per updater and printed whole once all have finished, in the
+# order the sequential loop would have printed it: interleaved lines of twenty
+# scrapers are unreadable, and a failure has to be findable by name. Each one is
+# classified exactly as run() would -- a failed updater is a fetcher warning.
+run_parallel() {
+    local dir
+    dir=$(mktemp -d)
+    local labels=() s label
+    local started=$(now_ms)
+    for s in "$@"; do
+        label=$(basename "$s")
+        labels+=("$label")
+        while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do
+            wait -n 2>/dev/null || true
+        done
+        (
+            job_started=$(now_ms)
+            "$s" -w "${COLLECT_ARGS[@]}" >"${dir}/${label}.out" 2>"${dir}/${label}.err"
+            echo "$? $(( $(now_ms) - job_started ))" >"${dir}/${label}.status"
+        ) &
+    done
+    wait
+    local status elapsed
+    for label in "${labels[@]}"; do
+        echo "+ Running ${label} (side by side)" 1>&2
+        cat "${dir}/${label}.out"
+        cat "${dir}/${label}.err" 1>&2
+        read -r status elapsed <"${dir}/${label}.status" || { status=1; elapsed=0; }
+        TIMINGS+=("${label}	${elapsed}")
+        echo "+ ${label} took $(fmt_ms ${elapsed})" 1>&2
+        if [ "$status" -ne 0 ]; then
+            WARNINGS+=("${label} (exit ${status})")
+            if [ -n "${AI_BENCH_FETCH_WARNINGS:-}" ]; then
+                "${SCRIPT_DIR}/_fetch_warnings.py" record "$AI_BENCH_FETCH_WARNINGS" \
+                    --step "$label" \
+                    --message "$(grep -v '^[[:space:]]*$' "${dir}/${label}.err" | tail -n 3)"
+            fi
+        fi
+    done
+    echo "+ ${#labels[@]} mapping updaters took $(fmt_ms $(( $(now_ms) - started ))) side by side" 1>&2
+    rm -rf "$dir"
+}
+
+if [ -n "$MAPPINGS_ONLY" ]; then
+    # The quick run: what a person needs in order to answer the mapping
+    # questions for a model just added, and nothing that only moves scores.
+    # check_new.py first, as in the full run, so a new model's own question is
+    # in the same queue; then every board's names at once.
+    run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
+    # Warmed once, here, rather than raced for by twenty updaters: each would
+    # otherwise find the index missing and rebuild it from three sources.
+    run "openness index" python3 -c "import sys; sys.path.insert(0, '${SCRIPT_DIR}'); import _openness; _openness.open_index()"
+    run_parallel "${UPDATERS[@]}"
+
+    echo 1>&2
+    "${SCRIPT_DIR}/pending_prompts.py" "$REPORT" --format text 1>&2
+    report_timings
+    if [ ${#WARNINGS[@]} -gt 0 ]; then
+        echo 1>&2
+        echo "${#WARNINGS[@]} fetcher warning(s); their sources were skipped:" 1>&2
+        for w in "${WARNINGS[@]}"; do
+            echo "  - ${w}" 1>&2
+        done
+    fi
+    if [ ${#FAILED[@]} -gt 0 ]; then
+        echo 1>&2
+        echo "${#FAILED[@]} step(s) failed:" 1>&2
+        for f in "${FAILED[@]}"; do
+            echo "  - ${f}" 1>&2
+        done
+        exit 1
+    fi
+    [ ${#WARNINGS[@]} -gt 0 ] && exit $WARNINGS_ONLY_EXIT
+    exit 0
+fi
+
 # Record the pages the scrapers below read; independent of the scores, so first
 # and non-interactive either way.
 run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
@@ -186,12 +306,7 @@ run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
 # report-only otherwise.
 run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
 
-for s in "${SCRIPT_DIR}"/update_*.py; do
-    # SWE-Rebench is unwired from the score pipeline; its fetcher and mapping
-    # updater remain standalone tools, so nothing here needs their mappings.
-    case "$(basename "$s")" in
-        update_rebench_mapping.py) continue ;;
-    esac
+for s in "${UPDATERS[@]}"; do
     run "$(basename "$s")" "$s" -w "${COLLECT_ARGS[@]}"
 done
 

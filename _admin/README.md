@@ -33,6 +33,7 @@ browser  ──asks────►  api.php     "which repo, and where do I read
 
 browser  ──reads───►  <raw>/llm.json
                       <raw>/_pending/pending.json
+                      <raw>/_log/mappings.json
               raw.githubusercontent sends Access-Control-Allow-Origin: *,
               so reads need no token
 
@@ -165,10 +166,32 @@ tells you why.
   falls back to the full list — of models, of benchmark keys, or, for the
   "which AA slug is this model" question, of Artificial Analysis' own slugs,
   read from `_aa/models.json`.
+- **Updates** — what changed, day by day: models added, scores that arrived or
+  moved (from `llm.json`'s `date_added` and `scores_history`, the same data the
+  site's Recently Added panel reads), and every mapping written, with **who**
+  wrote it. That last part comes from `_log/mappings.json`, which the workflow
+  appends to just before each commit (`mapping_log.py record`; see
+  `_mapping_log.py`):
+
+  | label | meaning |
+  | --- | --- |
+  | *you* | an explicit mapping answer sent from this page |
+  | *automatic* | a write the pipeline made on its own: a mapping `add.py` re-pointed at a model the batch just added, a rename carried through every file, anything a refresh wrote |
+  | *proposal PR* | a merged proposal pull request |
+  | *commit* | any other commit, including merged code PRs |
+
+  Filter by kind (models, scores, mappings, only yours, only automatic), by
+  window (7 / 30 days / all) and by name. Tapping a model opens it on the
+  Models tab. History before the log existed was seeded once from git
+  (`./mapping_log.py backfill -w`); an admin batch's commit cannot be split
+  into what was asked and what followed from it after the fact, so those
+  entries are all *you* and marked as inferred.
 - **New models** — *Add it* runs `add.py` and records the answer; *Ignore it*
   writes `__ignored__`, which removes the entry and stops the slug being offered.
   (These are genuinely different records, not two values of one field — see the
   comment in `_answers.py`, and `_new_models.apply_decisions`.)
+
+  *Add all* / *Ignore all* answer every open card in one tap.
 
   Above those cards is **Add a model**, for the other direction: a release
   Artificial Analysis does not track, so nothing offered it and there is no
@@ -176,7 +199,9 @@ tells you why.
   the rest from AA when it happens to know the name, and leaves it blank when it
   does not. The name is checked as you type — it has to be a slug, and it says
   whether AA already publishes one exactly like it, which decides whether scores
-  arrive by themselves (see *A hand-added model and AA* below).
+  arrive by themselves (see *A hand-added model and AA* below). **+ Add another
+  model** adds a second card, and a third: a family released together is one
+  batch and one run. Only the name is required; the other fields fold away.
 - **Models** — edit every field `add.py` asks for — `params`, `context`, `url`,
   `creator`, `creator url`, `date added` — and any non-derived score. The two
   sets are the same on purpose: nothing is enterable once and then frozen.
@@ -221,7 +246,9 @@ tells you why.
   the open field, which is `reference-models.json` and nothing else: a list of
   Artificial Analysis slugs. *Carry another model* takes a slug AA publishes —
   the picker offers every one not already carried — and adds both halves at once,
-  the list entry and the `llm.json` row behind it, because a slug with no row is
+  the list entry and the `llm.json` row behind it — as many as you like per batch:
+pick or type one, it joins the batch, and the box empties for the next — because
+a slug with no row is
   inert and nothing would ever fill one in. *Stop carrying it* drops both, for
   the same reason from the other end: a row left behind is a closed model with
   its flag cleared, which the table then shows as an open-weight one. Its
@@ -368,6 +395,33 @@ dispatched, marks those cards *sent*, and disables them until the run is no
 longer in flight; everything else stays answerable. The lock survives a reload
 (that is the advice above, after all) and lifts only on a run list the page
 actually managed to read, never on a failed one.
+
+**The run mode** in the action bar decides what the run does after the answers:
+
+| | what it runs | about |
+| --- | --- | --- |
+| **Full** | the whole refresh, every score | 10 min |
+| **Quick** | `check_new.py` and every mapping updater, side by side (`update-all --mappings-only`); no `update.py`, so no scores | a couple of minutes |
+| **Record** | nothing; the answers only (`skip_refresh`) | 1 min |
+
+**Quick** is the one for adding a model. The model lands in `llm.json`, every
+board's names are matched against it and the queue is republished, so the
+mapping questions the new model raises are on the Queue tab by the time the page
+re-reads it — which it does by itself when the run finishes. Type the model's
+name into the Queue tab's filter: it matches candidates as well as subjects, so
+it gathers exactly those questions. Send the mappings with **Full** to get their
+scores now, or leave them for the next cron. The Runs tab has a **Quick run**
+button too, for a queue re-collect with no answers attached. An `api.php`
+older than the page does not announce `quick`, and the page then offers Full
+and Record only.
+
+**The draft survives a reload.** The batch being typed — answers, add-a-model
+cards, the run mode — is kept in `localStorage` (`ai-bench-admin-draft`), since
+a phone browser drops background tabs freely. Send and Clear empty it. A
+restored answer to a question the queue no longer asks is dropped on the first
+queue read, with a note, because the run would refuse the whole batch over it.
+The round **reload** button in the header re-reads everything without touching
+the draft; the tab is in the URL (`#updates`), so back steps through tabs.
 
 **"Record only, refresh later"** skips the score refresh, so the answer is
 recorded in about a minute instead of up to an hour. It is not an equivalent

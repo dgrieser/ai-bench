@@ -153,8 +153,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font: 400 16px/1.5 var(--font-ui);
-  /* The action bar is fixed; leave room for it and for the home indicator. */
-  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  /* The action bar is fixed; leave room for it -- three lines on a phone, with
+     the run mode's hint -- and for the home indicator. */
+  padding-bottom: calc(9.5rem + env(safe-area-inset-bottom));
   -webkit-font-smoothing: antialiased;
 }
 
@@ -872,6 +873,168 @@ ul.runs .run-warnings li { display: flex; gap: 0 .5rem; flex-wrap: wrap; padding
 .run-warnings strong { color: var(--text); font-weight: 500; }
 .run-warnings span { overflow-wrap: anywhere; min-width: 0; }
 
+/* --------------------------------------------------------------- phones */
+
+/* A tap is a tap: no 300ms wait for a double-tap zoom, and no grey flash on
+   Android over every control touched. */
+button, .opt, a, label.switch { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+/* 16px text in a field is what keeps a mobile browser from zooming the page in
+   when the field is focused -- and a field is focused on every answer typed. */
+input[type="text"], input[type="number"], input[type="search"],
+input[type="date"], input[type="url"], select { font-size: 1rem; }
+
+/* The run mode in the action bar: three choices, one line, fingertip-sized. */
+.seg {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: var(--surface-2);
+}
+.seg button {
+  min-height: 2.35rem;
+  padding: 0 .6rem;
+  border: 0;
+  border-radius: calc(var(--r) - 3px);
+  background: none;
+  color: var(--muted);
+  font: 500 .8125rem/1 var(--font-ui);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-1); }
+.seg button[aria-pressed="true"].quick { color: var(--accent); }
+#mode-hint { display: block; font-size: .75rem; font-weight: 400; color: var(--faint); }
+
+/* The header's reload: the same round control, spinning while it reads. */
+#reload.busy svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* A row of small actions over a list: bulk answers, filters. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  margin-bottom: .1rem;
+}
+.toolbar .grow { flex: 1 1 12rem; min-width: 0; }
+.toolbar select, .toolbar input { min-height: 2.5rem; }
+.toolbar .count { color: var(--faint); font-size: .8125rem; }
+
+/* The queued items in a multi-add card: one line each, removable. */
+.queued { display: grid; gap: .3rem; margin-top: .6rem; }
+.queued-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .35rem .35rem .65rem;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r);
+  background: var(--accent-soft);
+  font: 500 .875rem/1.35 var(--font-mono);
+}
+.queued-row > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.queued-row .detail { display: block; font: 400 .72rem/1.35 var(--font-ui); color: var(--muted); }
+.queued-row.sent { border-style: dashed; border-color: var(--line-strong); background: var(--surface-2); color: var(--muted); }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.tip-text { margin-top: .5rem; font-size: .8125rem; color: var(--accent); }
+
+/* ------------------------------------------------------------------ updates */
+
+.day { margin-top: 1.1rem; }
+.day:first-of-type { margin-top: .4rem; }
+.day-head {
+  position: sticky;
+  top: var(--header-h, 6.5rem);
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .15rem .6rem;
+  padding: .45rem .1rem;
+  margin-bottom: .4rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  font-size: .9375rem;
+  font-weight: 650;
+}
+.day-head .age { color: var(--muted); font-weight: 400; font-size: .8125rem; }
+.day-head .tally { margin-left: auto; color: var(--faint); font-weight: 400; font-size: .75rem; }
+
+.upd {
+  padding: .6rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+}
+.upd + .upd, .upd + details, details + .upd { margin-top: .4rem; }
+.upd-head { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem .5rem; }
+.upd-name {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: 600 .9rem/1.35 var(--font-mono);
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.upd-name:hover { color: var(--accent); text-decoration: underline; }
+.upd-note { color: var(--muted); font-size: .8125rem; }
+.upd-new { background: var(--bad-soft); color: var(--bad); }
+
+.score-chips { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .45rem; }
+.score-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .3rem;
+  max-width: 100%;
+  padding: .15rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: .75rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+a.score-chip:hover { border-color: var(--accent-line); }
+.score-chip .bench { font-weight: 500; color: var(--text); overflow-wrap: anywhere; }
+.score-chip .val { font: 600 .78rem/1 var(--font-mono); color: var(--text); }
+.score-chip .was { font-family: var(--font-mono); color: var(--faint); text-decoration: line-through; }
+.score-chip.gone .val { color: var(--bad); }
+
+.map-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .55rem;
+  align-items: start;
+}
+.map-row .pill { margin-top: .1rem; }
+.map-row .what { font: 500 .8125rem/1.45 var(--font-mono); overflow-wrap: anywhere; }
+.map-row .what .src { font-family: var(--font-ui); color: var(--muted); font-weight: 400; }
+.map-row .what .arrow { color: var(--faint); }
+.map-row .what .was { color: var(--faint); text-decoration: line-through; }
+.map-row .meta { grid-column: 2; color: var(--faint); font-size: .75rem; overflow-wrap: anywhere; }
+.map-row .meta a { color: inherit; }
+.pill.by-admin { background: var(--accent-soft); color: var(--accent); }
+.pill.by-auto { background: var(--warn-soft); color: var(--warn); }
+.pill.by-proposal { background: var(--good-soft); color: var(--good); }
+.pill.by-hand { background: var(--surface-2); color: var(--muted); }
+
+details.more-entries > summary {
+  margin-top: .4rem;
+  padding: .45rem .75rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r);
+  color: var(--muted);
+  font-size: .8125rem;
+  cursor: pointer;
+  list-style: none;
+}
+details.more-entries > summary::-webkit-details-marker { display: none; }
+details.more-entries[open] > summary { display: none; }
+
 @keyframes pulse { 50% { opacity: .3; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -904,6 +1067,14 @@ ul.runs .run-warnings li { display: flex; gap: 0 .5rem; flex-wrap: wrap; padding
             <path d="M12 3c2.5 2.4 3.8 5.5 3.8 9S14.5 18.6 12 21C9.5 18.6 8.2 15.5 8.2 12S9.5 5.4 12 3z"/>
           </svg>
         </a>
+        <!-- Re-reads the queue, llm.json and the runs without reloading the
+             page, so a drafted batch survives it. On a phone this is the
+             refresh; a browser reload is the heavier one. -->
+        <button class="icon-btn" id="reload" type="button" title="Re-read the data" aria-label="Re-read the queue, the index and the runs">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/>
+          </svg>
+        </button>
         <button class="icon-btn" id="theme" type="button" title="Theme" aria-label="Change theme">
           <!-- `on` on the default state, so the button is never blank before
                applyTheme() has run. -->
@@ -932,9 +1103,9 @@ ul.runs .run-warnings li { display: flex; gap: 0 .5rem; flex-wrap: wrap; padding
 <div class="bar">
   <div class="wrap">
     <span id="count"></span>
-    <label class="switch opts">
-      <input type="checkbox" id="skip"> record only
-    </label>
+    <!-- What the run does after applying the batch. Filled by renderMode():
+         Quick is offered only when api.php announces it. -->
+    <span class="seg opts" id="mode" role="group" aria-label="What the run does after the answers"></span>
     <span class="actions">
       <button class="btn ghost" id="clear" type="button">Clear</button>
       <button class="btn primary" id="send" type="button" disabled>Send</button>
@@ -984,7 +1155,19 @@ const state = {
      once, and only when the Models tab is opened. */
   aa: { slugs: null, models: null, error: "", asked: false },
   modelSearch: "",      // kept here so a re-render does not empty the tab
-  newModel: null,       // the hand-added model being typed: { name, fields }
+  /* The hand-added models being typed, one card each: [{ id, name, fields,
+     key }], where `key` is the record the card last put in the batch, so a card
+     can take back its own record without touching its neighbours'. */
+  newModels: [],
+  /* What the run does after the batch: "full" refreshes every score, "quick"
+     only re-collects the mapping queue, "record" stops at the answers. */
+  mode: "full",
+  quickOffered: false,  // whether api.php understands {"quick": true}
+  quicking: false,      // a bare quick run is being dispatched right now
+  /* The Updates tab. The mapping log is read once, when the tab is opened. */
+  mapLog: { entries: null, error: "", asked: false },
+  updates: { days: 30, show: "all", search: "" },
+  queueFilter: { source: "", text: "" },
   /* The closed models the index carries for reference: reference-models.json,
      read from the repository like everything else. null until it is read, and
      [] is a state the file cannot be in -- the list may never be emptied. */
@@ -1165,7 +1348,9 @@ const creatorUrlFiller = (inputs, initial) => {
    field's own oninput, so typed and picked names take the same road. */
 const COMBO_MIN = 3;
 const COMBO_MAX = 50;
-function comboBox(input, values, { detail = () => "", min = COMBO_MIN, max = COMBO_MAX } = {}) {
+function comboBox(input, values, {
+  detail = () => "", min = COMBO_MIN, max = COMBO_MAX, onPick = null,
+} = {}) {
   const listId = `c-${Math.random().toString(36).slice(2)}`;
   const list = el("ul", { id: listId, className: "combo-list", hidden: true });
   list.setAttribute("role", "listbox");
@@ -1191,6 +1376,9 @@ function comboBox(input, values, { detail = () => "", min = COMBO_MIN, max = COM
     input.value = value;
     close();
     if (input.oninput) input.oninput();
+    /* After oninput, so a caller that acts on a pick sees the field's own
+       handling of the value first. A pick is a choice; typing is not yet. */
+    if (onPick) onPick(value);
   };
   const withMark = (value, needle) => {
     const at = value.toLowerCase().indexOf(needle);
@@ -1260,6 +1448,18 @@ function comboBox(input, values, { detail = () => "", min = COMBO_MIN, max = COM
   return el("div", { className: "combo" }, [input, list]);
 }
 
+/* A field that holds a slug or a URL. A phone keyboard capitalises the first
+   letter and "corrects" the rest by default, which turns gpt-6-sol into
+   "Gpt-6-sol" and a slug into a word -- neither of which names anything. */
+const noAuto = (input) => {
+  input.autocapitalize = "none";
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.setAttribute("autocorrect", "off");
+  return input;
+};
+const slugInput = (props = {}) => noAuto(el("input", { type: "text", enterKeyHint: "done", ...props }));
+
 const el = (tag, props = {}, kids = []) => {
   const node = Object.assign(document.createElement(tag), props);
   for (const kid of [].concat(kids)) {
@@ -1305,6 +1505,116 @@ function cycleTheme() {
   const next = THEMES[(THEMES.indexOf(readTheme()) + 1) % THEMES.length];
   try { localStorage.setItem("theme", next); } catch { /* not worth failing over */ }
   applyTheme(next);
+}
+
+/* ------------------------------------------------------ the drafted batch */
+
+/* A sitting is typed on a phone, and a phone's browser drops a background tab
+   whenever it likes: switching to GitHub to look at a run was enough to lose
+   every answer picked so far. So the batch being drafted -- the records, the
+   add-a-model cards and the run mode -- is kept in localStorage and restored on
+   load. It is a draft, not a record of anything sent: Send and Clear empty it.
+
+   A restored answer to a queue question the queue no longer asks is dropped
+   on the first queue read (pruneDraft): answer.py would refuse it as a
+   question nothing asked, and a batch is all or nothing. */
+const DRAFT_KEY = "ai-bench-admin-draft";
+const MODE_KEY = "ai-bench-admin-mode";
+const MODES = ["full", "quick", "record"];
+
+function saveDraft() {
+  try {
+    const drafts = state.newModels.filter((d) => d.name.trim() || Object.keys(d.fields).length);
+    if (!state.answers.size && !drafts.length && !state.referenceDraft) {
+      localStorage.removeItem(DRAFT_KEY);
+      return;
+    }
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      answers: [...state.answers.entries()],
+      newModels: drafts.map(({ id, name, fields, key }) => ({ id, name, fields, key })),
+      referenceDraft: state.referenceDraft,
+    }));
+  } catch { /* private mode, a full quota: the draft is only a convenience */ }
+}
+
+function readDraft() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+    if (!stored) return;
+    if (Array.isArray(stored.answers)) {
+      for (const pair of stored.answers) {
+        if (Array.isArray(pair) && typeof pair[0] === "string" && pair[1] && typeof pair[1] === "object") {
+          state.answers.set(pair[0], pair[1]);
+        }
+      }
+    }
+    if (Array.isArray(stored.newModels)) {
+      state.newModels = stored.newModels
+        .filter((d) => d && typeof d.name === "string" && d.fields && typeof d.fields === "object")
+        .map((d) => ({ id: d.id || draftId(), name: d.name, fields: d.fields, key: d.key || "" }));
+    }
+    if (typeof stored.referenceDraft === "string") state.referenceDraft = stored.referenceDraft;
+  } catch { /* a half-written value: start clean */ }
+  try {
+    const mode = localStorage.getItem(MODE_KEY);
+    if (MODES.includes(mode)) state.mode = mode;
+  } catch { /* follow the default */ }
+}
+
+/* The records that answer a question of the queue, as opposed to the ones that
+   name a model -- the same split inferQueued draws for a sent batch. */
+const isQueueKey = (key) => !/^(model-(create|edit|rename)|reference-(add|remove)) /.test(key);
+
+function pruneDraft() {
+  const asked = new Set(state.questions.map(KEY));
+  let dropped = 0;
+  for (const key of [...state.answers.keys()]) {
+    if (isQueueKey(key) && !asked.has(key)) {
+      state.answers.delete(key);
+      dropped += 1;
+    }
+  }
+  if (dropped) saveDraft();
+  return dropped;
+}
+
+const draftId = () => Math.random().toString(36).slice(2, 10);
+
+function setMode(mode) {
+  state.mode = mode;
+  try { localStorage.setItem(MODE_KEY, mode); } catch { /* not worth failing over */ }
+  /* A full render, not just the footer: the add cards' Quick tip reads it. */
+  render();
+}
+
+/* What each mode costs, in the words the bar shows under the count. */
+const MODE_HINTS = {
+  full: "then refreshes every score (about 10 min)",
+  quick: "then only re-asks the mapping questions, no scores (a couple of minutes)",
+  record: "records the answers and stops (about a minute)",
+};
+
+/* Whether the batch creates a model. A new model's mappings are the questions
+   a Quick run exists to ask, so the page says so where it is added. */
+const batchAddsModels = () => [...state.answers.keys()]
+  .some((key) => /^(model-create|reference-add) /.test(key)
+    || state.answers.get(key)?.kind === "model-add");
+
+function renderMode() {
+  const box = document.getElementById("mode");
+  const offered = MODES.filter((mode) => mode !== "quick" || state.quickOffered);
+  if (!offered.includes(state.mode)) state.mode = "full";
+  const labels = { full: "Full", quick: "Quick", record: "Record" };
+  box.replaceChildren(...offered.map((mode) => {
+    const button = el("button", {
+      type: "button",
+      className: mode,
+      title: `${labels[mode]}: ${MODE_HINTS[mode]}`,
+      onclick: () => setMode(mode),
+    }, labels[mode]);
+    button.setAttribute("aria-pressed", String(state.mode === mode));
+    return button;
+  }));
 }
 
 /* --------------------------------------------------------- the run in flight */
@@ -1417,7 +1727,7 @@ function readSent() {
     const queued = Array.isArray(stored.queued)
       ? stored.queued.filter((k) => typeof k === "string" && keys.includes(k))
       : inferQueued(keys);
-    return { at: stored.at, keys, queued };
+    return { at: stored.at, keys, queued, mode: MODES.includes(stored.mode) ? stored.mode : "full" };
   } catch { return null; }   // private mode, blocked storage, half-written value
 }
 
@@ -1541,7 +1851,7 @@ async function settleSent() {
   const run = batchRun();
   const applied = await batchApplied(run);
   if (applied !== "no") rememberApplied(state.sent.queued);
-  state.settled = { run, applied, count: state.sent.keys.length };
+  state.settled = { run, applied, count: state.sent.keys.length, mode: state.sent.mode };
   noteSettled(state.settled);
   writeSent(null);
 }
@@ -1549,7 +1859,7 @@ async function settleSent() {
 /* What became of the batch, in words. Set here rather than where the poll
    notices the lock lift, because a reload settles too -- and the reload after a
    run is the page's own advice. */
-function noteSettled({ run, applied, count }) {
+function noteSettled({ run, applied, count, mode }) {
   if (applied === "no") {
     /* Worth saying rather than leaving to the run log: a batch is all or
        nothing, so a refused record took every other answer of that sitting
@@ -1571,6 +1881,13 @@ function noteSettled({ run, applied, count }) {
         + "its answers were applied: api.php did not report the step outcome. "
         + "They stay locked until the queue stops listing them; the run's log "
         + "says what happened.";
+  } else if (mode === "quick") {
+    /* The whole point of the quick run: say where the questions it collected
+       are, since that is what the person has been waiting on. */
+    state.ok = "The quick run has finished and the queue has just been re-read. "
+      + "Mapping questions for anything it added are on the Queue tab -- search it "
+      + "for the model's name. Scores arrive with the next full run; send the "
+      + "mappings with Full to have them sooner.";
   } else {
     /* It used to add that anything still listed is a question the run did not
        answer. That is only true once the queue it pushed has propagated, which
@@ -1696,6 +2013,13 @@ async function loadData() {
   if (queue.status === "fulfilled") {
     state.questions = queue.value.questions || [];
     state.stale = pruneApplied(state.questions);
+    /* A restored draft may answer a question an earlier run has since
+       answered; sending it would sink the batch. Said, not silently dropped. */
+    const dropped = pruneDraft();
+    if (dropped) {
+      state.warn = `${dropped} drafted answer(s) were dropped: the queue no longer `
+        + "asks those questions, so a run would have refused the whole batch.";
+    }
   } else {
     /* Until the first refresh publishes it there is nothing to answer, which is
        a state worth naming rather than showing as a failure. */
@@ -1724,6 +2048,26 @@ async function loadData() {
   render();
 }
 
+/* The mapping log, read once and only when the Updates tab wants it: it is the
+   largest file here after llm.json, and most sittings never open that tab. */
+async function ensureMapLog(force = false) {
+  if (!state.raw || (state.mapLog.asked && !force)) return;
+  state.mapLog.asked = true;
+  try {
+    const response = await fetch(bust(`${state.raw}/_log/mappings.json`), { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const body = await response.json();
+    state.mapLog = {
+      entries: (body.entries || []).filter((e) => e && typeof e.at === "string"),
+      error: "",
+      asked: true,
+    };
+  } catch (error) {
+    state.mapLog = { entries: null, error: String(error.message), asked: true };
+  }
+  if (state.tab === "updates") render();
+}
+
 async function loadRuns() {
   try {
     const response = await fetch(bust("api.php"), { cache: "no-store" });
@@ -1742,6 +2086,8 @@ async function loadRuns() {
     state.refreshable = Boolean(body.refresh);
     /* Announced as well: an older endpoint costs the Runs tab its warnings. */
     state.warningsOffered = Boolean(body.warnings);
+    /* And the quick run: an older endpoint costs the bar its Quick choice. */
+    state.quickOffered = Boolean(body.quick);
     loadRunWarnings();
     await settleSent();
     if (body.raw) state.raw = body.raw;
@@ -1905,7 +2251,7 @@ function refreshFooter() {
   const pending = state.answers.size;
   const room = MAX_RECORDS - pending;
   const count = document.getElementById("count");
-  count.textContent = !pending
+  const text = !pending
     ? "Nothing to send yet"
     : room < 0
       ? `${pending} answers -- ${-room} over the ${MAX_RECORDS} a batch holds; `
@@ -1915,6 +2261,12 @@ function refreshFooter() {
         : pending >= CAP_NOTICE_AT
           ? `${pending} of ${MAX_RECORDS} ready to send -- room for ${room} more`
           : `${pending} answer${pending === 1 ? "" : "s"} ready to send`;
+  /* The count, and under it what Send will do with them -- the choice beside
+     it is three words, and the cost of each is worth reading before sending. */
+  count.replaceChildren(text,
+    pending ? el("span", { id: "mode-hint" }, `Send ${MODE_HINTS[state.mode]}`) : "");
+  renderMode();
+  saveDraft();
   count.classList.toggle("ready", pending > 0 && pending < CAP_NOTICE_AT);
   count.classList.toggle("near", pending >= CAP_NOTICE_AT && room >= 0);
   count.classList.toggle("over", room < 0);
@@ -1971,6 +2323,7 @@ function render() {
 
   document.getElementById("view").replaceChildren(
     state.tab === "queue" ? renderQueue()
+      : state.tab === "updates" ? renderUpdates()
       : state.tab === "new" ? renderNew()
         : state.tab === "models" ? renderModels()
           : state.tab === "reference" ? renderReference()
@@ -2039,21 +2392,37 @@ function staleQueueNote() {
   ]));
 }
 
+const tabList = (mappingCount = null, newCount = null) => [
+  ["queue", "Queue", mappingCount],
+  ["new", "New models", newCount],
+  ["updates", "Updates", null],
+  ["models", "Models", null],
+  ["reference", "Reference", state.reference.slugs?.length ?? null],
+  ["runs", "Runs", null],
+];
+
+/* The tab lives in the URL, so a reload lands where it was and a phone's back
+   button steps back through the tabs instead of leaving the page. */
+function showTab(id, { push = true } = {}) {
+  if (!tabList().some(([tab]) => tab === id)) id = "queue";
+  const changed = state.tab !== id;
+  state.tab = id;
+  if (push && location.hash !== `#${id}`) history.pushState(null, "", `#${id}`);
+  render();
+  if (changed) window.scrollTo({ top: 0 });
+  /* The tab strip scrolls sideways on a phone; keep the chosen one in view. */
+  document.querySelector('#tabs button[aria-selected="true"]')
+    ?.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+
 function renderTabs() {
   const mappingCount = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE).length;
   const newCount = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE).length;
-  const tabs = [
-    ["queue", "Queue", mappingCount],
-    ["new", "New models", newCount],
-    ["models", "Models", null],
-    ["reference", "Reference", state.reference.slugs?.length ?? null],
-    ["runs", "Runs", null],
-  ];
   document.getElementById("tabs").replaceChildren(
-    ...tabs.map(([id, label, n]) => {
+    ...tabList(mappingCount, newCount).map(([id, label, n]) => {
       const button = el("button", {
         type: "button",
-        onclick: () => { state.tab = id; render(); },
+        onclick: () => showTab(id),
       }, label);
       button.setAttribute("aria-selected", String(state.tab === id));
       if (n !== null) button.append(el("span", { className: "badge" }, String(n)));
@@ -2079,6 +2448,16 @@ function option(text, why, { pressed, className = "", tag = "", note = null, onc
   return button;
 }
 
+const sourceOf = (question) => question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
+
+/* Whether a question is about `needle`: its subject, or any name offered as its
+   answer. The second half is the one that matters after a quick run -- a model
+   just added is a *candidate* on every board that lists it, not a subject, so
+   typing its name here gathers exactly the questions it raised. */
+const questionMatches = (question, needle) => !needle
+  || question.subject.toLowerCase().includes(needle)
+  || (question.candidates || []).some((c) => String(c.option).toLowerCase().includes(needle));
+
 function renderQueue() {
   const questions = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE);
   if (questions.some((q) => q.universe === "aa-slugs")) ensureAaSlugs();
@@ -2086,8 +2465,45 @@ function renderQueue() {
     return el("p", { className: "empty" },
       "Nothing pending. Every source name and benchmark label is mapped.");
   }
-  return el("div", { className: "stack" },
-    questions.map((question) => guard(renderQuestion(question), KEY(question))));
+  const box = el("div", { className: "stack" });
+  const list = el("div", { className: "stack" });
+
+  /* Filters, once there are enough questions to need them. Kept in state so
+     answering a card -- which re-renders -- does not throw them away. */
+  if (questions.length > 4) {
+    const counts = new Map();
+    for (const q of questions) counts.set(sourceOf(q), (counts.get(sourceOf(q)) || 0) + 1);
+    const source = el("select", {
+      onchange: () => { state.queueFilter.source = source.value; draw(); },
+    }, [el("option", { value: "" }, `All sources (${questions.length})`),
+      ...[...counts.entries()].sort().map(([name, n]) =>
+        el("option", { value: name, selected: state.queueFilter.source === name }, `${name} (${n})`))]);
+    const text = noAuto(el("input", {
+      type: "search",
+      placeholder: "Filter by name or candidate...",
+      value: state.queueFilter.text,
+      enterKeyHint: "search",
+    }));
+    text.oninput = () => { state.queueFilter.text = text.value; draw(); };
+    const shown = el("span", { className: "count" });
+    box.append(el("div", { className: "toolbar search" }, [
+      el("div", { className: "grow" }, text), el("div", {}, source), shown]));
+
+    const draw = () => {
+      const needle = state.queueFilter.text.trim().toLowerCase();
+      const found = questions.filter((q) => (!state.queueFilter.source
+        || sourceOf(q) === state.queueFilter.source) && questionMatches(q, needle));
+      shown.textContent = found.length === questions.length ? "" : `${found.length} shown`;
+      list.replaceChildren(...(found.length
+        ? found.map((question) => guard(renderQuestion(question), KEY(question)))
+        : [el("p", { className: "empty" }, "No question matches that filter.")]));
+    };
+    draw();
+  } else {
+    list.append(...questions.map((question) => guard(renderQuestion(question), KEY(question))));
+  }
+  box.append(list);
+  return box;
 }
 
 function renderQuestion(question) {
@@ -2095,9 +2511,8 @@ function renderQuestion(question) {
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
   card.append(el("div", { className: "subject" }, question.subject));
 
-  const source = question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
   const chips = el("div", { className: "chips" }, [
-    chip("source", source),
+    chip("source", sourceOf(question)),
     chip("answer", universeNoun(question), { prose: true }),
   ]);
   if (question.if_previous) {
@@ -2130,19 +2545,25 @@ function renderQuestion(question) {
      is usable; the value is checked again on the runner. */
   const universe = universeFor(question);
   if (universe.length) {
-    const listId = `u-${Math.random().toString(36).slice(2)}`;
     const freeform = chosen
       && chosen.answer !== "__unmappable__"
       && !(question.candidates || []).some((c) => c.option === chosen.answer);
     const noun = universeNoun(question, true);
-    const input = el("input", {
-      type: "text",
+    const input = slugInput({
       placeholder: `Search all ${universe.length} ${noun}...`,
       value: freeform ? chosen.answer : "",
     });
-    input.setAttribute("list", listId);
-    const list = el("datalist", { id: listId },
-      universe.slice(0, 2000).map((value) => el("option", { value })));
+    /* A list drawn by hand rather than a datalist: Android's datalist popup
+       covers the keyboard's suggestion strip, cannot be scrolled past a few
+       rows and does not match mid-word, which is how a slug is remembered. */
+    const list = comboBox(input, () => universe, {
+      min: 2,
+      detail: question.universe === "aa-slugs" ? aaSlugDetail
+        : question.universe === "benchmarks" ? (key) => {
+          const name = state.llm?.benchmarks?.[key]?.name;
+          return name && name !== key ? ` (${name})` : "";
+        } : () => "",
+    });
     /* An answer typed here is an answer, and until now it was the only one
        that did not look like one: a button turns solid when it is chosen, and
        a filled box looked exactly like a half-typed one. So the field carries
@@ -2150,7 +2571,7 @@ function renderQuestion(question) {
        because a name typed in by hand is the answer most likely to be wrong:
        nothing offered it. */
     const picked = el("div", {});
-    const field = el("div", { className: "field picker" }, [input, list, picked]);
+    const field = el("div", { className: "field picker" }, [list, picked]);
     const drawPicked = () => {
       const value = input.value.trim();
       const known = universe.includes(value);
@@ -2182,45 +2603,121 @@ function renderQuestion(question) {
 function renderNew() {
   ensureAaSlugs();
   const questions = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
-  const box = el("div", { className: "stack" }, renderAddModel());
+  const box = el("div", { className: "stack" }, renderAddModels());
   if (!questions.length) {
     box.append(el("p", { className: "empty" },
       "No new models waiting. Artificial Analysis has offered nothing this site "
       + "does not already track."));
     return box;
   }
-  box.append(...questions.map(renderNewQuestion));
+  box.append(renderNewBulk(questions), ...questions.map(renderNewQuestion));
   return box;
 }
 
-/* A model nothing offered. check_new.py finds the ones Artificial Analysis
+/* Every offered model answered the same way in one tap -- a release week can
+   put a dozen on this tab, and on a phone that was a dozen scrolls and taps.
+   Only the open questions: one already sent or answered stays as it is. */
+function renderNewBulk(questions) {
+  const open = questions.filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)));
+  const all = (record) => {
+    for (const question of open) setAnswer(question, record(question), false);
+    render();
+  };
+  const bar = el("div", { className: "toolbar" }, [
+    el("span", { className: "count grow" },
+      `${questions.length} offered by Artificial Analysis`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      onclick: () => all((q) => ({ kind: "model-add", name: q.subject })),
+    }, `Add all ${open.length}`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      onclick: () => all((q) => ({ kind: "new-model", subject: q.subject, answer: "__ignored__" })),
+    }, "Ignore all"),
+    el("button", {
+      type: "button", className: "btn ghost tiny",
+      disabled: !open.some((q) => answerOf(q)),
+      onclick: () => all(() => null),
+    }, "Reset"),
+  ]);
+  return bar;
+}
+
+/* Models nothing offered. check_new.py finds the ones Artificial Analysis
    publishes; this is the other direction -- a release AA does not track, or
    does not track yet -- so there is no question to answer and no slug to
-   accept. add.py builds the entry from what is typed here, filling anything
-   left blank from AA if it happens to know the name. */
-function renderAddModel() {
-  const draft = state.newModel || (state.newModel = { name: "", fields: {} });
-  const card = el("div", { className: "card" });
-  /* Locked only while the model *in the form* is the one in flight, so
-     "Add another" -- which clears the name -- hands the form back. */
-  const sentKey = `model-create  ${draft.name.trim()}`;
-  const sent = Boolean(draft.name.trim()) && isSent(sentKey);
+   accept. add.py builds each entry from what is typed here, filling anything
+   left blank from AA if it happens to know the name.
 
-  card.append(el("div", { className: "subject" }, "Add a model"));
+   One card per model, as many as a sitting needs: a family released together
+   is one batch, and one run adds them all. Each card owns one record in the
+   batch, remembered as the draft's `key`, so editing one never disturbs
+   another's. */
+const MODEL_CREATE_KEY = (name) => `model-create  ${name}`;
+
+function renderAddModels() {
+  if (!state.newModels.length) state.newModels.push({ id: draftId(), name: "", fields: {}, key: "" });
+  const box = el("div", { className: "stack" });
+
+  /* What is already on its way, from the batch that was sent rather than from
+     the cards: a card is gone once sent, so a reload shows the same thing. */
+  const flying = locked()
+    ? state.sent.keys.filter((key) => key.startsWith("model-create  "))
+      .map((key) => key.slice("model-create  ".length))
+    : [];
+  if (flying.length) {
+    const card = el("div", { className: "card" }, [
+      el("div", { className: "subject" }, flying.length === 1 ? "Being added" : `Being added (${flying.length})`),
+      el("div", { className: "queued" }, flying.map((name) =>
+        el("div", { className: "queued-row sent" }, el("span", {}, name)))),
+    ]);
+    box.append(lockCard(card));
+  }
+
+  state.newModels.forEach((draft, index) => box.append(renderAddModel(draft, index, flying)));
+
+  const another = el("button", { className: "btn ghost", type: "button" }, "+ Add another model");
+  another.onclick = () => {
+    state.newModels.push({ id: draftId(), name: "", fields: {}, key: "" });
+    render();
+    /* The new card is the last; put its name box under the thumb. */
+    const inputs = document.querySelectorAll("#view .add-model input");
+    inputs[inputs.length - 1]?.focus();
+  };
+  box.append(el("div", {}, another));
+  return box;
+}
+
+function renderAddModel(draft, index, flying) {
+  const card = el("div", { className: "card add-model" });
   const known = new Set((state.llm?.models || []).map((m) => m.name));
 
+  const discard = el("button", { className: "btn ghost tiny", type: "button" }, "Discard");
+  discard.onclick = () => {
+    if (draft.key) state.answers.delete(draft.key);
+    state.newModels = state.newModels.filter((d) => d !== draft);
+    render();
+  };
+  const hasContent = draft.name.trim() || Object.keys(draft.fields).length;
+  card.append(el("div", { className: "card-head" }, [
+    el("div", { className: "subject" }, index === 0 ? "Add a model" : "Add another model"),
+    state.newModels.length > 1 || hasContent ? discard : null,
+  ]));
+
   const status = el("div", { className: "chips" });
+  const tip = el("p", { className: "tip-text", hidden: true });
   const commit = () => {
-    for (const answerKey of [...state.answers.keys()]) {
-      if (answerKey.startsWith("model-create  ")) state.answers.delete(answerKey);
-    }
+    if (draft.key) state.answers.delete(draft.key);
+    draft.key = "";
     const name = draft.name.trim();
     const shaped = SLUG_RE.test(name);
     const taken = known.has(name);
     const broken = META_FIELDS.some(([f, type]) => type === "url" && badUrl(draft.fields[f]));
     /* Typed back in after being sent: the run is creating it, and a second
        record would have add.py refuse the whole batch for a duplicate name. */
-    const inFlight = isSent(`model-create  ${name}`);
+    const inFlight = flying.includes(name);
+    /* The same name on two cards is one entry twice, which answer.py refuses. */
+    const twice = state.newModels.some((d) => d !== draft && d.name.trim() === name);
 
     status.replaceChildren(...(!name ? [] : [
       !shaped
@@ -2230,28 +2727,33 @@ function renderAddModel() {
           ? chip("", "already tracked -- edit it on the Models tab", { prose: true, className: "now" })
           : inFlight
             ? chip("", "already sent -- the run is creating it", { prose: true, className: "now" })
-            : state.aa.slugs === null
-              ? chip("", "adding it as a new entry", { prose: true })
-              : state.aa.slugs.includes(name)
-                ? chip("", "an Artificial Analysis slug: its scores arrive on the next refresh",
-                  { prose: true })
-                : chip("", "not an AA slug: AA scores will need a mapping or a rename later",
-                  { prose: true }),
+            : twice
+              ? chip("", "named on another card too -- one entry per name", { prose: true, className: "now" })
+              : state.aa.slugs === null
+                ? chip("", "adding it as a new entry", { prose: true })
+                : state.aa.slugs.includes(name)
+                  ? chip("", `an Artificial Analysis slug${aaSlugDetail(name)}: its scores arrive on the next refresh`,
+                    { prose: true })
+                  : chip("", "not an AA slug: AA scores will need a mapping or a rename later",
+                    { prose: true }),
     ]));
 
-    if (shaped && !taken && !broken && !inFlight) {
+    const ok = shaped && !taken && !broken && !inFlight && !twice;
+    if (ok) {
       const fields = Object.fromEntries(
         Object.entries(draft.fields).filter(([, value]) => value !== null)
       );
-      state.answers.set(`model-create  ${name}`, { kind: "model-create", name, fields });
+      draft.key = MODEL_CREATE_KEY(name);
+      state.answers.set(draft.key, { kind: "model-create", name, fields });
     }
-    card.classList.toggle("answered", shaped && !taken && !broken);
+    card.classList.toggle("answered", ok);
+    tip.hidden = !ok || state.mode === "quick" || !state.quickOffered;
+    tip.textContent = "Tip: send with Quick and the run asks every board about this "
+      + "model in a couple of minutes, so its mappings can be answered in this sitting.";
     refreshFooter();
   };
 
-  const nameInput = el("input", {
-    type: "text", placeholder: "acme-model-1", value: draft.name, disabled: sent,
-  });
+  const nameInput = slugInput({ placeholder: "acme-model-1", value: draft.name });
   nameInput.oninput = () => {
     draft.name = nameInput.value;
     nameInput.classList.toggle("unknown",
@@ -2259,20 +2761,34 @@ function renderAddModel() {
     commit();
   };
   /* The AA slugs the site does not carry yet: the names most likely to be
-     wanted here, and the ones whose scores arrive without a mapping. */
+     wanted here, and the ones whose scores arrive without a mapping. Picking
+     one also fills the creator, when AA names it and nothing is typed. */
   const offered = () => (state.aa.slugs || []).filter((slug) => !known.has(slug));
-  const nameBox = comboBox(nameInput, offered, { detail: aaSlugDetail });
+  const nameBox = comboBox(nameInput, offered, {
+    detail: aaSlugDetail,
+    onPick: (slug) => {
+      const creator = state.aa.models?.get(slug)?.creator;
+      if (creator && !draft.fields.creator && inputs.creator) {
+        inputs.creator.value = creator;
+        inputs.creator.oninput();
+      }
+    },
+  });
   card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameBox]), status);
 
   /* Held so the creator field can reach the creator url field below it: the
      handler runs long after the loop, by which time both are in here. */
   const inputs = {};
   const fillCreatorUrl = creatorUrlFiller(inputs, "");
+  /* Only the name is needed; the rest folds away on a phone, where six empty
+     fields per card is a lot of scrolling for what add.py fills from AA. */
+  const more = el("details", { open: Object.keys(draft.fields).length > 0 });
+  more.append(el("summary", { className: "note-text", style: "cursor:pointer" },
+    "Details (optional): params, context, url, creator"));
   for (const [field, type, placeholder] of META_FIELDS) {
     if (field === "date_added") continue;   // add.py stamps the day it runs
-    const input = el("input", {
-      type, placeholder, value: draft.fields[field] ?? "", disabled: sent,
-    });
+    const input = el("input", { type, placeholder, value: draft.fields[field] ?? "" });
+    if (type === "url") { input.inputMode = "url"; noAuto(input); }
     inputs[field] = input;
     input.oninput = () => {
       const value = input.value.trim();
@@ -2282,24 +2798,15 @@ function renderAddModel() {
       if (field === "creator") fillCreatorUrl(value);
       commit();
     };
-    card.append(el("div", { className: "field" },
+    more.append(el("div", { className: "field" },
       [el("label", {}, field.replace(/_/g, " ")), input, suggestList(field, input)]));
   }
-
-  card.append(el("p", { className: "note-text" },
+  more.append(el("p", { className: "note-text" },
     "Anything left blank is filled from Artificial Analysis when it knows the "
     + "name, and stays empty when it does not. Scores land on the next refresh; "
     + "type them in on the Models tab if they are not coming from anywhere."));
+  card.append(more, tip);
 
-  if (sent) {
-    /* Appended after the lock, not before it: lockCard() disables every control
-       it finds, and this one is the way out of the locked state. */
-    const locked = guard(card, sentKey);
-    const another = el("button", { className: "btn ghost tiny", type: "button" }, "Add another");
-    another.onclick = () => { state.newModel = { name: "", fields: {} }; render(); };
-    locked.append(el("div", { className: "field" }, another));
-    return locked;
-  }
   commit();
   return card;
 }
@@ -2386,93 +2893,104 @@ function renderReference() {
   return box;
 }
 
-/* Carry one more. The slug has to be one AA publishes -- answer.py checks the
+/* Carry more. Each slug has to be one AA publishes -- answer.py checks the
    same thing on the runner -- because a name AA does not know collects nothing
-   and would sit in the table empty forever. */
+   and would sit in the table empty forever.
+
+   As many as a sitting needs: a slug picked from the list, or typed and added
+   with the button, joins the batch and the box empties for the next one. The
+   queued ones are listed in the card, each removable. */
 function renderReferenceAdd() {
   const card = el("div", { className: "card" });
-  card.append(el("div", { className: "subject" }, "Carry another model"));
+  card.append(el("div", { className: "subject" }, "Carry more models"));
 
-  /* Locked only while the slug *in the form* is the one in flight, so the way
-     out is to clear it -- same shape as Add a model on the New models tab. */
-  const sentSlug = state.referenceDraft.trim();
-  const sent = Boolean(sentSlug) && isSent(REFERENCE_ADD_KEY(sentSlug));
+  const queued = answerKeys("reference-add  ").map((key) => key.slice("reference-add  ".length));
+  const flying = locked()
+    ? state.sent.keys.filter((key) => key.startsWith("reference-add  "))
+      .map((key) => key.slice("reference-add  ".length))
+    : [];
+  const carried = new Set(state.reference.slugs || []);
 
-  const status = el("div", { className: "chips" });
-  const listId = "reference-aa-slugs";
-  const input = el("input", {
-    type: "text", placeholder: "gpt-6-astra", value: state.referenceDraft, disabled: sent,
-  });
-  input.setAttribute("list", listId);
-
-  const commit = () => {
-    for (const key of answerKeys("reference-add  ")) state.answers.delete(key);
-    const slug = state.referenceDraft.trim();
-    const shaped = SLUG_RE.test(slug);
-    const carried = (state.reference.slugs || []).includes(slug);
-    const known = state.aa.slugs === null || state.aa.slugs.includes(slug);
-    const sent = isSent(REFERENCE_ADD_KEY(slug));
-
-    status.replaceChildren(...(!slug ? [] : [
-      !shaped
-        ? chip("", "not a slug: lowercase words joined by single dots or dashes",
-          { prose: true, className: "now" })
-        : carried
-          ? chip("", "already carried -- it is one of the cards below", { prose: true, className: "now" })
-          : sent
-            ? chip("", "already sent -- the run is adding it", { prose: true, className: "now" })
-            : !known
-              ? chip("", "Artificial Analysis does not publish this slug, so nothing would "
-                + "find the model", { prose: true, className: "now" })
-              : chip("", [aaSlugSummary(slug), "the entry is created with it and "
-                + "scores land on the next refresh"].filter(Boolean).join(" -- "),
-                { prose: true }),
-    ]));
-
-    if (shaped && !carried && known && !sent) {
-      state.answers.set(REFERENCE_ADD_KEY(slug), { kind: "reference-add", name: slug });
+  /* Why a slug cannot be added, or "" when it can. */
+  const refusal = (slug) => {
+    if (!SLUG_RE.test(slug)) return "not a slug: lowercase words joined by single dots or dashes";
+    if (carried.has(slug)) return "already carried -- it is one of the cards below";
+    if (queued.includes(slug)) return "already in this batch";
+    if (flying.includes(slug)) return "already sent -- the run is adding it";
+    if (state.aa.slugs !== null && !state.aa.slugs.includes(slug)) {
+      return "Artificial Analysis does not publish this slug, so nothing would find the model";
     }
-    card.classList.toggle("answered", shaped && !carried && known && !sent);
-    refreshFooter();
+    return "";
   };
 
+  const status = el("div", { className: "chips" });
+  const input = slugInput({ placeholder: "gpt-6-astra", value: state.referenceDraft });
+  const add = el("button", { className: "btn ghost tiny", type: "button" }, "Add");
+  const draw = () => {
+    const slug = state.referenceDraft.trim();
+    const why = slug ? refusal(slug) : "";
+    add.disabled = !slug || Boolean(why);
+    status.replaceChildren(...(!slug ? [] : [why
+      ? chip("", why, { prose: true, className: "now" })
+      : chip("", [aaSlugSummary(slug), "Add puts it in this batch"].filter(Boolean).join(" -- "),
+        { prose: true })]));
+  };
+  const take = () => {
+    const slug = state.referenceDraft.trim();
+    if (!slug || refusal(slug)) { input.classList.add("unknown"); return; }
+    state.answers.set(REFERENCE_ADD_KEY(slug), { kind: "reference-add", name: slug });
+    state.referenceDraft = "";
+    render();
+    /* Straight back into the box for the next one. */
+    document.querySelector("#view .reference-add input")?.focus();
+  };
   input.oninput = () => {
     state.referenceDraft = input.value;
     input.classList.remove("unknown");
-    commit();
+    draw();
+    saveDraft();
   };
+  add.onclick = take;
+  const offered = () => (state.aa.slugs || []).filter((slug) => !carried.has(slug) && !queued.includes(slug));
+  const box = comboBox(input, offered, { detail: aaSlugDetail, min: 2, onPick: take });
+  /* After the list's own handler, which takes an Enter on a highlighted row
+     and marks it handled; a bare Enter adds what is typed. */
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.defaultPrevented) { event.preventDefault(); take(); }
+  });
+  card.classList.add("reference-add");
   card.append(el("div", { className: "field" }, [
     el("label", {}, "artificial analysis slug"),
-    input,
-    referenceSlugList(listId),
+    el("div", { className: "score-row" }, [box, add]),
   ]), status);
+
+  const rows = [
+    ...queued.map((slug) => el("div", { className: "queued-row" }, [
+      el("span", {}, [slug, aaSlugSummary(slug) ? el("span", { className: "detail" }, aaSlugSummary(slug)) : null]),
+      el("button", {
+        type: "button", className: "btn ghost tiny",
+        onclick: () => { state.answers.delete(REFERENCE_ADD_KEY(slug)); render(); },
+      }, "Remove"),
+    ])),
+    ...flying.map((slug) => el("div", { className: "queued-row sent" }, [
+      el("span", {}, [slug, el("span", { className: "detail" }, "sent -- the run is adding it")]),
+    ])),
+  ];
+  if (rows.length) card.append(el("div", { className: "queued" }, rows));
+  if (queued.length) {
+    card.classList.add("answered");
+    card.append(el("p", { className: "note-text" },
+      `${queued.length} to carry: each entry is created with its slug and its `
+      + "scores land on the next refresh."));
+  }
 
   if (state.aa.error) {
     card.append(el("p", { className: "note-text" },
       `The slug list could not be read (${state.aa.error}), so nothing is suggested `
       + "here. A slug typed in full is still checked on the runner."));
   }
-  commit();
-  if (sent) {
-    /* Appended after the lock, not before it: lockCard() disables every control
-       it finds, and this one is the way out of the locked state. */
-    const locked = guard(card, REFERENCE_ADD_KEY(sentSlug));
-    const another = el("button", { className: "btn ghost tiny", type: "button" }, "Carry another");
-    another.onclick = () => { state.referenceDraft = ""; render(); };
-    locked.append(el("div", { className: "field" }, another));
-    return locked;
-  }
+  draw();
   return card;
-}
-
-/* Every AA slug the page knows, minus the ones already carried. Capped the way
-   the Models tab's rename list is: a datalist of 700 is a browser problem. */
-function referenceSlugList(listId) {
-  const carried = new Set(state.reference.slugs || []);
-  const offered = (state.aa.slugs || []).filter((slug) => !carried.has(slug));
-  return el("datalist", { id: listId },
-    offered.slice(0, 2000).map((value) =>
-      el("option", { value, label: `${value}${aaSlugDetail(value)}` })));
 }
 
 function renderReferenceCard(slug) {
@@ -2561,9 +3079,7 @@ function referenceRenameBlock(slug, renameKey) {
     return block;
   }
 
-  const listId = `reference-rename-${slug}`;
-  const input = el("input", { type: "text", placeholder: "the slug AA uses now" });
-  input.setAttribute("list", listId);
+  const input = slugInput({ placeholder: "the slug AA uses now" });
   const apply = el("button", { className: "btn ghost tiny", type: "button" }, "Rename");
   apply.onclick = () => {
     const value = input.value.trim();
@@ -2582,9 +3098,9 @@ function referenceRenameBlock(slug, renameKey) {
   block.append(
     el("div", { className: "score-row" }, [
       el("label", {}, `one of ${state.aa.slugs.length} AA slugs`),
-      input,
+      comboBox(input, () => state.aa.slugs.filter((value) => !(state.reference.slugs || []).includes(value)),
+        { detail: aaSlugDetail, min: 2 }),
       apply,
-      referenceSlugList(listId),
     ]),
     el("p", { className: "note-text" },
       "For the same model under a new slug -- the name moves through llm.json, the "
@@ -2849,9 +3365,7 @@ function renameBlock(model, renameKey, rename) {
   }
   if (suggestions.length) block.append(options);
 
-  const listId = `aa-${Math.random().toString(36).slice(2)}`;
-  const input = el("input", { type: "text", placeholder: "type to search" });
-  input.setAttribute("list", listId);
+  const input = slugInput({ placeholder: "type to search" });
   const apply = el("button", { className: "btn ghost tiny", type: "button" }, "Rename");
   apply.onclick = () => {
     const value = input.value.trim();
@@ -2865,11 +3379,8 @@ function renameBlock(model, renameKey, rename) {
   block.append(
     el("div", { className: "score-row" }, [
       el("label", {}, `or one of ${state.aa.slugs.length} AA slugs`),
-      input,
+      comboBox(input, () => state.aa.slugs, { detail: aaSlugDetail, min: 2 }),
       apply,
-      el("datalist", { id: listId },
-        state.aa.slugs.slice(0, 2000).map((value) =>
-          el("option", { value, label: `${value}${aaSlugDetail(value)}` }))),
     ]),
     el("p", { className: "note-text" },
       suggestions.length
@@ -2889,6 +3400,262 @@ function setRename(model, renameKey, slug) {
   state.answers.delete(`model-edit  ${model.name}`);
   state.answers.set(renameKey, { kind: "model-rename", name: model.name, new_name: slug });
   render();
+}
+
+/* ── Updates ──
+   What changed, day by day: models added, scores that arrived or moved, and
+   mappings written -- the public page's Recently Added panel, plus the one
+   thing only this page can say, which is who made each mapping.
+
+   The scores and the models come from llm.json (scores_history and
+   date_added), read the same way the site reads them. The mappings come from
+   _log/mappings.json, which the workflow appends to just before each of its
+   commits: an answer sent from here is "you", a write the pipeline made by
+   itself -- a mapping re-pointed at a model just added, a rename carried
+   through every file -- is "automatic". */
+
+const UPDATE_PREVIEW = 8;    // entries a day shows before "N more"
+const UPDATE_WINDOWS = [[7, "7 days"], [30, "30 days"], [0, "All"]];
+const UPDATE_SHOWS = [["all", "Everything"], ["models", "Models"], ["scores", "Scores"],
+  ["mappings", "Mappings"], ["mine", "My mappings"], ["auto", "Automatic mappings"]];
+
+const BY_LABELS = {
+  admin: ["you", "answered from this page"],
+  auto: ["automatic", "written by the pipeline on its own"],
+  proposal: ["proposal PR", "merged from a proposal pull request"],
+  hand: ["commit", "changed by a commit to the repository"],
+};
+
+/* A day in the reader's own calendar, not UTC's, so a mapping sent at 1am is
+   filed under the day it was sent on. */
+const localDay = (iso) => {
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return String(iso).slice(0, 10);
+  return new Date(when.getTime() - when.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+};
+
+const dayAge = (day) => {
+  const days = Math.round((Date.parse(`${today()}T00:00:00`) - Date.parse(`${day}T00:00:00`)) / 86400000);
+  return days === 0 ? "today" : days === 1 ? "yesterday" : `${days} days ago`;
+};
+
+const benchLabel = (key) => {
+  const bench = state.llm?.benchmarks?.[key];
+  return bench?.short_name || bench?.name || key;
+};
+
+const shownValue = (value) => (value === null || value === undefined
+  ? "\u2014"
+  : Array.isArray(value) ? value.join(", ") : String(value));
+
+/* Every change in the window, grouped by day, newest day first. */
+function collectUpdates() {
+  const { days, show, search } = state.updates;
+  const since = days ? (() => {
+    const d = new Date(`${today()}T00:00:00`);
+    d.setDate(d.getDate() - days + 1);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  })() : "";
+  const needle = search.trim().toLowerCase();
+  const byDay = new Map();
+  const day = (date) => {
+    if (!byDay.has(date)) byDay.set(date, { date, models: new Map(), scores: new Map(), mappings: [] });
+    return byDay.get(date);
+  };
+  const wantModels = show === "all" || show === "models";
+  const wantScores = show === "all" || show === "scores";
+  const wantMaps = show === "all" || show === "mappings" || show === "mine" || show === "auto";
+
+  for (const model of state.llm?.models || []) {
+    const hit = !needle || model.name.toLowerCase().includes(needle);
+    if (!hit) continue;
+    const added = model.date_added;
+    if (wantModels && added && added >= since) day(added).models.set(model.name, { model, scores: [] });
+    if (!wantScores && !wantModels) continue;
+    for (const key of Object.keys(model.scores_history || {})) {
+      if (state.llm?.benchmarks?.[key]?.derived === true) continue;
+      for (const event of recordedHistory(model, key)) {
+        if (event.date < since) continue;
+        const entry = { key, ...event };
+        const arrival = day(event.date).models.get(model.name);
+        /* A new model's scores on the day it arrived belong to its arrival,
+           the way the site lists them: "arrived with 12 scores". */
+        if (arrival && event.date === added) {
+          arrival.scores.push(entry);
+        } else if (wantScores) {
+          const scores = day(event.date).scores;
+          if (!scores.has(model.name)) scores.set(model.name, { model, scores: [] });
+          scores.get(model.name).scores.push(entry);
+        }
+      }
+    }
+  }
+
+  if (wantMaps) {
+    for (const entry of state.mapLog.entries || []) {
+      if (show === "mine" && entry.by !== "admin") continue;
+      if (show === "auto" && entry.by !== "auto") continue;
+      const date = localDay(entry.at);
+      if (date < since) continue;
+      if (needle && ![entry.subject, shownValue(entry.value), shownValue(entry.previous), entry.route]
+        .some((text) => String(text).toLowerCase().includes(needle))) continue;
+      day(date).mappings.push(entry);
+    }
+  }
+
+  return [...byDay.values()]
+    .filter((d) => d.models.size || d.scores.size || d.mappings.length)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/* One score's change as a chip: the benchmark, what it was, what it is. */
+function scoreChip(event, model) {
+  const source = model.scores_history?.[event.key]?.find((e) => e.date === event.date)?.source || "";
+  const moved = event.kind.startsWith("was ");
+  const gone = event.value === null;
+  const label = [
+    el("span", { className: "bench" }, benchLabel(event.key)),
+    moved ? el("span", { className: "was" }, event.kind.slice(4)) : null,
+    el("span", { className: "val" }, gone ? "withdrawn" : String(event.value)),
+  ];
+  const title = `${event.key}: ${gone ? "withdrawn" : event.value} (${event.kind})`
+    + (source ? `\n${source}` : "\nno source recorded");
+  return /^https?:\/\//.test(source)
+    ? el("a", { className: `score-chip${gone ? " gone" : ""}`, href: source, target: "_blank", rel: "noreferrer", title }, label)
+    : el("span", { className: `score-chip${gone ? " gone" : ""}`, title }, label);
+}
+
+/* A model's name that opens it on the Models tab -- where a wrong score is
+   fixed -- rather than a dead label. */
+function modelLink(name) {
+  return el("button", {
+    type: "button",
+    className: "upd-name",
+    title: "Edit on the Models tab",
+    onclick: () => { state.modelSearch = name; showTab("models"); },
+  }, name);
+}
+
+function renderModelUpdate({ model, scores }, arrived) {
+  const moved = scores.filter((e) => e.kind.startsWith("was ")).length;
+  const note = arrived
+    ? (scores.length ? `arrived with ${scores.length} score${scores.length === 1 ? "" : "s"}` : "added")
+    : [scores.length - moved ? `${scores.length - moved} new` : "", moved ? `${moved} updated` : ""]
+      .filter(Boolean).join(", ");
+  return el("div", { className: "upd" }, [
+    el("div", { className: "upd-head" }, [
+      arrived ? el("span", { className: "pill upd-new" }, "new model") : null,
+      modelLink(model.name),
+      model.creator?.name ? el("span", { className: "upd-note" }, model.creator.name) : null,
+      note ? el("span", { className: "upd-note" }, `· ${note}`) : null,
+    ]),
+    scores.length
+      ? el("div", { className: "score-chips" },
+        scores.sort((a, b) => benchLabel(a.key).localeCompare(benchLabel(b.key)))
+          .map((event) => scoreChip(event, model)))
+      : null,
+  ]);
+}
+
+function renderMappingUpdate(entry) {
+  const [label, meaning] = BY_LABELS[entry.by] || [entry.by, ""];
+  const source = String(entry.route || "").replace(/^update_/, "").replace(/_mapping\.py$/, "");
+  const time = new Date(entry.at);
+  const link = entry.run || (entry.commit && state.repo
+    ? `https://github.com/${state.repo}/commit/${entry.commit}` : "");
+  const removed = entry.value === null || entry.value === undefined;
+  return el("div", { className: "upd map-row" }, [
+    el("span", {
+      className: `pill by-${entry.by}`,
+      title: meaning + (entry.inferred ? " -- credited from the commit it came in" : ""),
+    }, label),
+    el("div", { className: "what" }, [
+      el("span", { className: "src" }, `${source} · `),
+      entry.subject,
+      el("span", { className: "arrow" }, " \u2192 "),
+      removed ? el("span", { className: "was" }, shownValue(entry.previous)) : shownValue(entry.value),
+      !removed && entry.previous !== null && entry.previous !== undefined
+        ? el("span", { className: "was" }, ` ${shownValue(entry.previous)}`) : null,
+    ]),
+    el("div", { className: "meta" }, [
+      Number.isNaN(time.getTime()) ? "" : time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      removed ? " · mapping removed" : "",
+      entry.why ? ` · ${entry.why}` : "",
+      link ? " · " : "",
+      link ? el("a", { href: link, target: "_blank", rel: "noreferrer" }, entry.run ? "run" : entry.commit) : null,
+    ]),
+  ]);
+}
+
+function renderUpdates() {
+  ensureMapLog();
+  const box = el("div", { className: "stack" });
+
+  const search = noAuto(el("input", {
+    type: "search", placeholder: "Filter by model or source name...", value: state.updates.search,
+    enterKeyHint: "search",
+  }));
+  const windowSelect = el("select", {
+    onchange: () => { state.updates.days = Number(windowSelect.value); render(); },
+  }, UPDATE_WINDOWS.map(([days, label]) =>
+    el("option", { value: String(days), selected: state.updates.days === days }, label)));
+  const showSelect = el("select", {
+    onchange: () => { state.updates.show = showSelect.value; render(); },
+  }, UPDATE_SHOWS.map(([value, label]) =>
+    el("option", { value, selected: state.updates.show === value }, label)));
+  const list = el("div", {});
+  box.append(el("div", { className: "toolbar" }, [
+    el("div", { className: "grow" }, search), el("div", {}, showSelect), el("div", {}, windowSelect)]));
+  if (state.mapLog.error && state.updates.show !== "models" && state.updates.show !== "scores") {
+    box.append(el("p", { className: "note busy" }, state.mapLog.error.includes("404")
+      ? "No mapping log in the repository yet: mapping changes appear here from the first run that records them."
+      : `Could not read the mapping log (${state.mapLog.error}); scores and models are still listed.`));
+  }
+  box.append(list);
+
+  const draw = () => {
+    const days = collectUpdates();
+    if (!state.llm) {
+      list.replaceChildren(el("p", { className: "empty" }, "llm.json has not been read yet."));
+      return;
+    }
+    if (!days.length) {
+      list.replaceChildren(el("p", { className: "empty" },
+        state.updates.search.trim() ? "Nothing in this window matches that filter."
+          : "Nothing changed in this window."));
+      return;
+    }
+    list.replaceChildren(...days.map((d) => {
+      const entries = [
+        ...[...d.models.values()].map((row) => renderModelUpdate(row, true)),
+        ...[...d.scores.values()].sort((a, b) => a.model.name.localeCompare(b.model.name))
+          .map((row) => renderModelUpdate(row, false)),
+        ...d.mappings.slice().sort((a, b) => b.at.localeCompare(a.at)).map(renderMappingUpdate),
+      ];
+      const scoreCount = [...d.scores.values()].reduce((n, row) => n + row.scores.length, 0);
+      const tally = [
+        d.models.size ? `${d.models.size} model${d.models.size === 1 ? "" : "s"}` : "",
+        scoreCount ? `${scoreCount} score${scoreCount === 1 ? "" : "s"}` : "",
+        d.mappings.length ? `${d.mappings.length} mapping${d.mappings.length === 1 ? "" : "s"}` : "",
+      ].filter(Boolean).join(" · ");
+      const head = entries.slice(0, UPDATE_PREVIEW);
+      const tail = entries.slice(UPDATE_PREVIEW);
+      return el("section", { className: "day" }, [
+        el("h3", { className: "day-head" }, [
+          d.date, el("span", { className: "age" }, dayAge(d.date)), el("span", { className: "tally" }, tally),
+        ]),
+        ...head,
+        tail.length ? el("details", { className: "more-entries" }, [
+          el("summary", {}, `${tail.length} more ${tail.length === 1 ? "entry" : "entries"}`),
+          ...tail,
+        ]) : null,
+      ]);
+    }));
+  };
+  /* The box re-draws the list, not the page, so typing keeps its focus. */
+  search.oninput = () => { state.updates.search = search.value; draw(); };
+  draw();
+  return box;
 }
 
 const runLabel = (run) => (run.status === "completed"
@@ -2914,7 +3681,7 @@ function refreshBlocked() {
     return "api.php is older than this page and cannot start a run on its own. "
       + "Upload _admin/api.php alongside index.html -- ./_admin/deploy sends both.";
   }
-  if (state.refreshing) return "Asking GitHub to queue the run.";
+  if (state.refreshing || state.quicking) return "Asking GitHub to queue the run.";
   if (locked()) {
     return "Not while a batch of answers is in flight: the run this would queue "
       + "sits behind that one, and the page identifies a batch's run by when it "
@@ -2938,13 +3705,26 @@ function renderRunNow() {
     disabled: Boolean(blocked),
     title: blocked || "Dispatch update-benchmarks.yml with no answers",
   }, state.refreshing ? "Starting..." : "Run the refresh now");
-  if (!blocked) button.onclick = refreshNow;
+  if (!blocked) button.onclick = () => refreshNow(false);
+  /* The same run cut down to its questions: every board's names matched
+     against llm.json and the queue republished, no score read. For a model
+     added by hand, or a mapping fixed in a terminal, whose questions should
+     not wait for the next cron. */
+  const quick = state.quickOffered ? el("button", {
+    className: "btn ghost",
+    type: "button",
+    disabled: Boolean(blocked),
+    title: blocked || "Dispatch update-benchmarks.yml with quick: mapping queue only",
+    onclick: blocked ? null : () => refreshNow(true),
+  }, state.quicking ? "Starting..." : "Quick run") : null;
   return el("div", { className: "runs-bar" }, [
-    button,
-    el("p", {}, blocked || "Runs update-benchmarks.yml against main with no answers "
-      + "attached: the same refresh the schedule makes every three hours. It "
+    el("div", { className: "toolbar" }, [button, quick]),
+    el("p", {}, blocked || "Run the refresh: update-benchmarks.yml against main with no "
+      + "answers attached, the same run the schedule makes every three hours. It "
       + "re-reads every source, commits the scores that moved, and republishes "
-      + "the queue this page answers."),
+      + "the queue this page answers."
+      + (state.quickOffered ? " Quick run: only re-asks the mapping questions -- every "
+        + "board's names against llm.json, no scores -- in a couple of minutes." : "")),
   ]);
 }
 
@@ -3004,22 +3784,27 @@ function renderRuns() {
 /* Dispatches it. Nothing is locked afterwards: the run carries no answers, so
    there is no card whose state depends on how it ends, and the list below is
    the whole of what there is to watch. */
-async function refreshNow() {
-  state.refreshing = true;
+async function refreshNow(quick = false) {
+  if (quick) state.quicking = true;
+  else state.refreshing = true;
   state.error = state.warn = state.ok = "";
   render();
   try {
     const response = await fetch("api.php", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-AI-Bench-Admin": "1" },
-      body: JSON.stringify({ refresh: true }),
+      body: JSON.stringify(quick ? { quick: true } : { refresh: true }),
     });
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
-    state.ok = "Queued a refresh. It takes a few minutes and shows up in the list "
-      + "below in a moment. Nothing on this page is waiting on it -- reload once "
-      + "it has finished to see the scores it committed and the queue it "
-      + "republished.";
+    state.ok = quick
+      ? "Queued a quick run. It re-asks every board's mapping questions and shows "
+        + "up in the list below in a moment; tap the reload button up top once it "
+        + "has finished to read the queue it republished."
+      : "Queued a refresh. It takes a few minutes and shows up in the list "
+        + "below in a moment. Nothing on this page is waiting on it -- reload once "
+        + "it has finished to see the scores it committed and the queue it "
+        + "republished.";
     /* A dispatch answers 204 before the run exists, so the read below will not
        have it yet and there is nothing here to poll for: no card's state
        depends on this run. One delayed re-read is what puts it in the list. */
@@ -3027,9 +3812,28 @@ async function refreshNow() {
   } catch (error) {
     state.error = `Could not start a run: ${error.message}`;
   }
-  state.refreshing = false;
+  state.refreshing = state.quicking = false;
   await loadRuns();
   render();
+}
+
+/* The header's reload: everything the page reads, re-read in place. The draft
+   stays -- that is the difference from reloading the page. */
+async function reloadData() {
+  const button = document.getElementById("reload");
+  if (button.classList.contains("busy")) return;
+  button.classList.add("busy");
+  state.error = state.warn = state.ok = "";
+  try {
+    if (await loadRuns()) {
+      await loadData();
+      if (state.mapLog.asked) await ensureMapLog(true);
+    } else {
+      render();
+    }
+  } finally {
+    button.classList.remove("busy");
+  }
 }
 
 /* ---------------------------------------------------------------- sending */
@@ -3037,27 +3841,43 @@ async function refreshNow() {
 async function send() {
   const answers = [...state.answers.values()];
   const keys = [...state.answers.keys()];
+  const mode = state.mode === "quick" && !state.quickOffered ? "full" : state.mode;
   document.getElementById("send").disabled = true;
   state.error = state.warn = state.ok = "";
   try {
     const response = await fetch("api.php", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-AI-Bench-Admin": "1" },
-      body: JSON.stringify({ answers, skip_refresh: document.getElementById("skip").checked }),
+      body: JSON.stringify({
+        answers,
+        skip_refresh: mode === "record",
+        ...(mode === "quick" ? { quick: true } : {}),
+      }),
     });
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
     state.answers.clear();
+    /* The cards that were typed into this batch are done with; what is in
+       flight is listed from state.sent instead. */
+    state.newModels = state.newModels.filter((d) => !keys.includes(d.key));
+    if (keys.some((key) => key.startsWith("reference-add  "))) state.referenceDraft = "";
     /* Before the run list is refreshed, so nothing can settle the batch before
        it is even recorded. */
     /* `queued` is read off the queue as it stands now, because settling cannot:
        it happens inside the run list read, which on a fresh page runs before
        the queue has been read at all. */
-    writeSent({ at: Date.now(), keys, queued: queueKeys(keys) });
-    state.ok = `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
-      + "Watch it under Runs; the questions it answers are disabled until it "
-      + "finishes, and its own summary is what counts, not its colour, since a "
-      + "failed refresh reds a run whose answers landed perfectly well.";
+    writeSent({ at: Date.now(), keys, queued: queueKeys(keys), mode });
+    saveDraft();
+    state.ok = mode === "quick"
+      ? `Dispatched ${body.dispatched} answer(s) as a quick run: it applies them, then `
+        + "re-asks every board's mapping questions without refreshing a score. This "
+        + "page re-reads the queue by itself when it finishes, a couple of minutes "
+        + "from now -- a model added in this batch then has its mapping questions "
+        + "waiting on the Queue tab."
+      : `Dispatched ${body.dispatched} answer(s). The run applies and pushes them. `
+        + "Watch it under Runs; the questions it answers are disabled until it "
+        + "finishes, and its own summary is what counts, not its colour, since a "
+        + "failed refresh reds a run whose answers landed perfectly well.";
   } catch (error) {
     state.error = `Could not send: ${error.message}`;
   }
@@ -3070,9 +3890,28 @@ applyTheme(readTheme());
    locked rather than offering them again for one paint. */
 state.sent = readSent();
 state.applied = readApplied();
+readDraft();
+state.tab = (location.hash || "#queue").slice(1);
+if (!tabList().some(([tab]) => tab === state.tab)) state.tab = "queue";
+window.addEventListener("popstate", () => showTab((location.hash || "#queue").slice(1), { push: false }));
+/* The sticky day headings on the Updates tab sit under the sticky header,
+   whose height depends on how the tab strip wraps. */
+const measureHeader = () => document.documentElement.style.setProperty(
+  "--header-h", `${document.querySelector("header").offsetHeight}px`);
+window.addEventListener("resize", measureHeader);
+measureHeader();
+document.getElementById("reload").onclick = reloadData;
 document.getElementById("theme").onclick = cycleTheme;
 document.getElementById("send").onclick = send;
-document.getElementById("clear").onclick = () => { state.answers.clear(); render(); };
+document.getElementById("clear").onclick = () => {
+  /* Everything drafted goes, add-a-model cards included; asked first, because
+     on a phone this button sits a thumb's width from Send. */
+  if (state.answers.size > 3 && !confirm(`Clear all ${state.answers.size} drafted answers?`)) return;
+  state.answers.clear();
+  state.newModels = [];
+  state.referenceDraft = "";
+  render();
+};
 load();
 </script>
 </body>

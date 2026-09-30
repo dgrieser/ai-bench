@@ -126,13 +126,30 @@ def read_records(args: argparse.Namespace) -> list:
     return records if isinstance(records, list) else [records]
 
 
-def write_result(path: str, ok: bool, log: list[str], failures: list) -> None:
+def result_record(answer: _answers.Answer) -> dict:
+    """What mapping_log.py needs to know about one applied record.
+
+    Taken from the validated Answer, never from the input: the log credits a
+    mapping to the admin page only when this batch really asked for it.
+    """
+    return {
+        "kind": answer.kind,
+        "route": answer.route,
+        "subject": answer.subject,
+        "value": answer.value if answer.kind in (_answers.MAPPING, _answers.MODEL_RENAME) else None,
+    }
+
+
+def write_result(
+    path: str, ok: bool, log: list[str], failures: list, answers: list | None = None
+) -> None:
     Path(path).write_text(
         json.dumps(
             {
                 "ok": ok,
                 "applied": log,
                 "errors": [{"record": f.index, "message": f.message} for f in failures],
+                "records": [result_record(a) for a in answers or []],
             },
             indent=2,
             ensure_ascii=False,
@@ -196,7 +213,7 @@ def main(argv: list[str] | None = None) -> int:
     for line in log:
         print(f"  {line}")
     if args.result:
-        write_result(args.result, True, log, [])
+        write_result(args.result, True, log, [], answers)
     return 0
 
 

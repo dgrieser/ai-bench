@@ -1041,8 +1041,11 @@ class TestWorkflowWiring(unittest.TestCase):
 
         api = (_answers.HERE / "_admin" / "api.php").read_text(encoding="utf-8")
         # Every input api.php sends is one the workflow declares, refresh or not.
-        for name in ("answers", "skip_refresh"):
+        for name in ("answers", "skip_refresh", "quick"):
             self.assertIn(name, inputs, f"api.php sends an input {name} the workflow has no use for")
+            self.assertIn(f"'{name}'", api, f"the workflow declares {name} but api.php never sends it")
+        # The quick run is opt-in: a cron or a merge must still refresh scores.
+        self.assertIs(inputs["quick"]["default"], False)
         # A refresh never carries answers, and never skips the refresh.
         self.assertIn("!$refresh && !empty($request['skip_refresh'])", api)
 
