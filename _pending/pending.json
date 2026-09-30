@@ -1,3 +1,196 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.1 Sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6.1 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6.1 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'GPT-6.1 Sol' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GPT-6.1 Sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Benchmark avg' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Benchmark avg",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Footprint' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Footprint",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GSM8K, MATH-500, AIME25, AIME26' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GSM8K, MATH-500, AIME25, AIME26",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HumanEval+, MBPP+, LiveCodeBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "HumanEval+, MBPP+, LiveCodeBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'IFBench (prompt-loose)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFBench (prompt-loose)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'IFEval, IFBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "IFEval, IFBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Intelligence Density (1/GB)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Intelligence Density (1/GB)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMLU-Redux, MuSR' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MMLU-Redux, MuSR",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMU-Pro, OCR Bench v2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MMMU-Pro, OCR Bench v2",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OCR Bench v2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "OCR Bench v2",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Thinking avg' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Thinking avg",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'vs FP16' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "vs FP16",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "recorded",
+          "option": "bonsai-2-27b",
+          "reason": "offered by the prompt"
+        }
+      ],
+      "default": "bonsai-2-27b",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'prism-ml/Ternary-Bonsai-2-27B-gguf' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "universe": "models"
+    }
+  ]
 }
