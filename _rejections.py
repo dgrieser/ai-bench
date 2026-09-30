@@ -21,7 +21,9 @@ file. Every other route shares ``rejected-candidates.json``::
 
     {"update_vals_mapping.py": {"alibaba/qwen3.8-max": ["qwen3-8-27b"]}}
 
-keyed by route, then by the name the source publishes. The file is named
+keyed by route, then by the name the source publishes. A rejection belongs to
+that one name: the same candidate is still offered for every other name it
+matches. The file is named
 without "mapping" on purpose: it is not one of the source mapping files, and
 the checks that treat every ``*mapping*.json`` as one would misread it.
 """

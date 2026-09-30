@@ -170,8 +170,9 @@ tells you why.
   candidates and not unmappable either — `minimax-m3-1-flash-preview` offered
   `minimax-m3` and `minimax-m2-1`, and is neither. It rules the candidates shown
   out (a `candidates-skip` record) and writes no mapping, so the name stays
-  unanswered. The queue then stops offering those candidates, and a question
-  with none left drops out of it, until the matcher finds a candidate nobody has
+  unanswered. The queue then stops offering those candidates *for that name
+  only* -- `minimax-m3` stays a candidate for every other name it matches --
+  and a question with none left drops out of it, until the matcher finds a candidate nobody has
   ruled out; then it is asked again with only the new ones, and a *ruled out*
   chip says how many were rejected before. Rejections live in
   `rejected-candidates.json`, keyed by route and source name; the Artificial

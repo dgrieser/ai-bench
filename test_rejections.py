@@ -119,6 +119,25 @@ class TestQueue(unittest.TestCase):
     def test_a_question_with_nothing_left_leaves_the_queue(self) -> None:
         self.assertEqual(self.render({"minimax-m3", "minimax-m2-1"}, ["minimax-m3", "minimax-m2-1"]), [])
 
+    def test_a_rejection_belongs_to_one_name_only(self) -> None:
+        """Ruling minimax-m3 out for one name leaves it a candidate for every other."""
+        entries = [
+            {"command": TBENCH, "kind": "mapping", "subject": subject, "question": "?",
+             "candidates": [], "default": None, "note": None}
+            for subject in ("minimax-m3-1-flash-preview", "minimax-m3-thinking")
+        ]
+        universes = {propose.MODELS: ["minimax-m3"], propose.BENCHMARKS: [], propose.AA_SLUGS: []}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "rejected-candidates.json"
+            _rejections.add(TBENCH, "minimax-m3-1-flash-preview", ["minimax-m3"], path=path)
+            with mock.patch.object(_rejections, "REJECTIONS", path), \
+                    mock.patch.object(propose, "build_universes", return_value=universes), \
+                    mock.patch.object(pending_prompts, "_answers_current_value", return_value=None):
+                doc = json.loads(pending_prompts.render_json(entries, Path("llm.json"), skip_aa=True))
+        by_subject = {q["subject"]: [c["option"] for c in q["candidates"]] for q in doc["questions"]}
+        self.assertNotIn("minimax-m3-1-flash-preview", by_subject)
+        self.assertEqual(by_subject["minimax-m3-thinking"], ["minimax-m3"])
+
     def test_a_new_candidate_brings_it_back_with_only_the_new_one(self) -> None:
         (question,) = self.render({"minimax-m3", "minimax-m2-1"},
                                   ["minimax-m3", "minimax-m2-1", "minimax-m3-1-flash"])
