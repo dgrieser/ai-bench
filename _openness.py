@@ -211,8 +211,12 @@ def _load_cached() -> dict[str, bool] | None:
 def _save_cached(verdicts: dict[str, bool]) -> None:
     try:
         os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
-        with open(CACHE_PATH, "w", encoding="utf-8") as handle:
+        # Through a temporary and a rename, so a reader never sees half a
+        # file -- the quick run starts twenty updaters that all read it.
+        temporary = f"{CACHE_PATH}.{os.getpid()}.tmp"
+        with open(temporary, "w", encoding="utf-8") as handle:
             json.dump({"fetched": time.time(), "verdicts": verdicts}, handle)
+        os.replace(temporary, CACHE_PATH)
     except OSError:
         pass
 

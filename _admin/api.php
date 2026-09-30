@@ -9,8 +9,9 @@
  * one workflow and read its runs.
  *
  * Two shapes of dispatch: a batch of answers to apply, and a bare refresh that
- * carries none -- the same run the cron makes, asked for by hand. Neither can
- * name a workflow, a ref, or anything else the client chooses.
+ * carries none -- the same run the cron makes, asked for by hand. Either may be
+ * marked `quick`, which re-collects the mapping queue and skips the scores. None
+ * of them can name a workflow, a ref, or anything else the client chooses.
  *
  * The token is a fine-grained PAT scoped to the one repository with Actions:
  * read and write and nothing else. That matters more than it looks: a
@@ -31,7 +32,7 @@ declare(strict_types=1);
 // refuses to run below NEEDS_API; anything added since is announced in the GET
 // payload instead, so a newer page against an older endpoint loses the new
 // thing rather than the whole queue.
-const API_VERSION = 6;
+const API_VERSION = 7;
 
 const WORKFLOW = 'update-benchmarks.yml';
 // The workflow step that applies a dispatched batch, by name. The run's own
@@ -307,6 +308,11 @@ if ($method === 'GET') {
         // not read. Announced like the two above, so an older endpoint costs
         // the Runs tab its warnings and nothing else.
         'warnings' => true,
+        // Whether {"quick": true} is understood: the workflow's `quick` input,
+        // which re-collects the mapping queue without refreshing a score.
+        // Announced like the rest, so an older endpoint costs the page its
+        // Quick option rather than a batch that 400s.
+        'quick' => true,
         'runs' => recent_runs($config),
     ]);
 }
@@ -341,6 +347,12 @@ if (!is_array($request)) {
  * the floor is refused as "no answers to send" instead of quietly refreshing
  * and reporting success. The two are exclusive for the same reason. */
 $refresh = !empty($request['refresh']);
+/* The light run: the answers (if any), then only the mapping updaters. A bare
+ * {"quick": true} is a refresh of the queue alone, so it is a refresh here. */
+$quick = !empty($request['quick']);
+if ($quick && empty($request['answers'])) {
+    $refresh = true;
+}
 $answers = [];
 
 if ($refresh) {
@@ -384,11 +396,14 @@ $payload = $refresh
     'ref'    => REF,
     'inputs' => [
         'answers'      => $payload,
-        'skip_refresh' => (!$refresh && !empty($request['skip_refresh'])) ? 'true' : 'false',
+        // quick and skip_refresh are exclusive in the workflow; quick wins,
+        // since it is the one that still republishes the queue.
+        'skip_refresh' => (!$refresh && !empty($request['skip_refresh']) && !$quick) ? 'true' : 'false',
+        'quick'        => $quick ? 'true' : 'false',
     ],
 ]);
 if ($status >= 400) {
     fail($status, $body['message'] ?? 'GitHub rejected the dispatch.');
 }
 
-ok(['dispatched' => count($answers), 'refresh' => $refresh]);
+ok(['dispatched' => count($answers), 'refresh' => $refresh, 'quick' => $quick]);

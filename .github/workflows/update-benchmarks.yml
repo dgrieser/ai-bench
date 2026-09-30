@@ -60,6 +60,18 @@ on:
         description: "Apply the answers and stop, instead of also refreshing scores"
         type: boolean
         default: false
+      # The quick run: apply the answers, then re-collect the mapping questions
+      # and nothing else -- check_new.py and every mapping updater, side by
+      # side, and no update.py, so no scores and no index. It is what the admin
+      # page sends when a model has just been added: the new model is in
+      # llm.json a minute or two later and every board's names have been
+      # matched against it, so its mappings can be answered in the same sitting
+      # instead of after the ten-minute refresh. The scores those mappings
+      # unlock arrive with the next full run, as with skip_refresh.
+      quick:
+        description: "After the answers, only re-collect the mapping queue (no scores)"
+        type: boolean
+        default: false
       # The proposal PR is off unless asked for. The admin page answers the same
       # queue without one, and a PR nobody intends to merge is noise that also
       # blocks the next proposal, since the propose step skips while one is open.
@@ -222,6 +234,11 @@ jobs:
       # page it was read from. A hand entry is often the only value in its
       # column, so an unsourced one is a number nobody can check.
       #
+      # test_mapping_log.py guards the one record of *who* made a mapping: an
+      # explicit answer credited to the admin page, anything a batch wrote on
+      # its own to the pipeline, and every route's file watched -- so a source
+      # added to propose.ROUTES is logged the day it is added.
+      #
       # test_fetch_warnings.py guards the line between a warning and a failure.
       # Drawn too wide, a bug in this repository reads as a flaky source and
       # the run stays green over it; too narrow, and one dead scraper reds
@@ -248,6 +265,7 @@ jobs:
             ./test_refresh_cost.py
             ./test_fetch_warnings.py
             ./test_hand_sources.py
+            ./test_mapping_log.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below
@@ -259,6 +277,29 @@ jobs:
             ms=$(( ($(now_us) - started) / 1000 ))
             printf '%s: %d.%ds\n' "$suite" $((ms / 1000)) $(((ms % 1000) / 100))
           done
+
+      # A merged pull request changed mapping files by hand -- a proposal PR,
+      # or a fix in code review -- and the admin page's Updates tab lists every
+      # mapping change with who made it. Recorded from the merge commit against
+      # its first parent, so it is exactly what the merge brought onto main.
+      # The checkout is one commit deep, so the parent is fetched first.
+      # Logging is a courtesy, not a gate: a failure here must not cost the run.
+      - name: Log the merged mappings
+        if: ${{ github.event_name == 'pull_request' }}
+        continue-on-error: true
+        env:
+          SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          git fetch --no-tags --depth=2 origin "$SHA"
+          ./mapping_log.py commit "$SHA" -w
+
+      # A quick run skips the refresh already; asking for both would be a run
+      # that re-collects the queue from a batch that was told not to.
+      - name: Guard the quick input
+        if: ${{ inputs.quick && inputs.skip_refresh }}
+        run: |
+          echo "quick and skip_refresh are exclusive: quick is a lighter refresh, not none" >&2
+          exit 1
 
       # Two combinations that are silently destructive rather than merely wrong,
       # so they are refused rather than interpreted.
@@ -314,6 +355,8 @@ jobs:
       # refresh already have.
       - name: Commit and push the answers
         if: ${{ inputs.answers != '' }}
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "The answers changed nothing." >> "$GITHUB_STEP_SUMMARY"
@@ -322,6 +365,10 @@ jobs:
           # Counted from the applier's own result, never from the input: the
           # input must not reach a script even inside quotes.
           count=$(jq '.applied | length' "$RUNNER_TEMP/answers.json")
+          # Which mapping changes the batch asked for and which followed from it
+          # -- read off answer.py's validated result, never off the input.
+          ./mapping_log.py record --by auto --batch "$RUNNER_TEMP/answers.json" --run "$RUN_URL" -w \
+            || echo "::warning title=Mapping log::could not record this batch's mapping changes"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
@@ -368,9 +415,12 @@ jobs:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           AI_BENCH_FETCH_WARNINGS: ${{ runner.temp }}/fetch-warnings.jsonl
+          QUICK: ${{ inputs.quick }}
         run: |
           status=0
-          ./update-all --collect-prompts pending-prompts.jsonl || status=$?
+          quick=()
+          [ "$QUICK" = "true" ] && quick=(--mappings-only)
+          ./update-all --collect-prompts pending-prompts.jsonl "${quick[@]}" || status=$?
           if [ "$status" -eq 3 ]; then
             echo "Only fetchers failed; reported as warnings, not as a failed step." >&2
             exit 0
@@ -445,8 +495,18 @@ jobs:
           REASON: >-
             ${{ github.event_name == 'pull_request'
                 && format('Refreshed after merging #{0}.', github.event.pull_request.number)
+                || inputs.quick && 'Quick run from the admin UI: mapping queue only, no scores.'
                 || 'Scheduled refresh.' }}
+          SUBJECT: >-
+            ${{ inputs.quick && 'chore(data): mapping queue refresh'
+                || 'chore(data): benchmark refresh' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
+          # Anything this run wrote to a mapping file on its own. In collect
+          # mode that is normally nothing -- the writers are frozen -- so an
+          # entry here is worth seeing on the Updates tab.
+          ./mapping_log.py record --by auto --run "$RUN_URL" -w \
+            || echo "::warning title=Mapping log::could not record this run's mapping changes"
           if [ -z "$(git status --porcelain)" ]; then
             echo "No data changed." >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -458,7 +518,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "chore(data): benchmark refresh" \
+          git commit -m "${SUBJECT}" \
                      -m "${REASON} ${COUNT} prompt(s) queued for manual review."
           git pull --rebase --autostash origin main
           git push
