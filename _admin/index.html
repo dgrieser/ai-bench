@@ -1175,6 +1175,10 @@ const state = {
      read from the repository like everything else. null until it is read, and
      [] is a state the file cannot be in -- the list may never be emptied. */
   reference: { slugs: null, error: "" },
+  /* The commit of main the data was read at, when it could be resolved; see
+     dataBase(). null reads through the branch name instead. */
+  sha: null,
+  ref: null,            // the branch api.php reads from, per its answer
   referenceDraft: "",   // the slug being typed into "carry another model"
   error: "",
   ok: "",
@@ -1956,7 +1960,7 @@ async function ensureAaSlugs() {
   if (!state.raw || state.aa.asked) return;
   state.aa.asked = true;
   try {
-    const response = await fetch(bust(`${state.raw}/_aa/models.json`), { cache: "no-store" });
+    const response = await fetch(bust(`${dataBase()}/_aa/models.json`), { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.json();
     const models = (body.models || []).filter((m) => m && typeof m.slug === "string");
@@ -2019,13 +2023,49 @@ async function load() {
   await loadData();
 }
 
+/* Where to read the data: main as of its newest commit, by that commit's id.
+
+   raw.githubusercontent caches a branch URL for five minutes and ignores the
+   query string, so bust() never busted anything: a read made right after a run
+   pushed was served the file as it was before the push, for up to five
+   minutes. That is how a quick run's questions went missing -- the run had
+   published them, and the page re-read the queue seconds later and got the old
+   one. A URL naming a commit is a different URL for every push, so it is
+   never stale.
+
+   The commit id comes from GitHub's public API, which needs no token and sends
+   CORS headers. When it cannot be had -- rate limited at 60 an hour per
+   address, offline, a fork that is private -- the branch URL is still used, as
+   before. */
+async function resolveSha() {
+  if (!state.repo) return null;
+  const ref = state.ref || "main";
+  try {
+    const response = await fetch(`https://api.github.com/repos/${state.repo}/commits/${ref}`, {
+      cache: "no-store",
+      headers: { Accept: "application/vnd.github.sha" },
+    });
+    if (!response.ok) return null;
+    const sha = (await response.text()).trim();
+    return /^[0-9a-f]{40}$/.test(sha) ? sha : null;
+  } catch {
+    return null;
+  }
+}
+
+const dataBase = () => (state.sha && state.repo
+  ? `https://raw.githubusercontent.com/${state.repo}/${state.sha}`
+  : state.raw);
+
 async function loadData() {
+  state.sha = await resolveSha();
+  const base = dataBase();
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
   const [queue, llm, reference] = await Promise.allSettled([
-    json(`${state.raw}/_pending/pending.json`),
-    json(`${state.raw}/llm.json`),
-    json(`${state.raw}/reference-models.json`),
+    json(`${base}/_pending/pending.json`),
+    json(`${base}/llm.json`),
+    json(`${base}/reference-models.json`),
   ]);
 
   if (queue.status === "fulfilled") {
@@ -2072,7 +2112,7 @@ async function ensureMapLog(force = false) {
   if (!state.raw || (state.mapLog.asked && !force)) return;
   state.mapLog.asked = true;
   try {
-    const response = await fetch(bust(`${state.raw}/_log/mappings.json`), { cache: "no-store" });
+    const response = await fetch(bust(`${dataBase()}/_log/mappings.json`), { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.json();
     state.mapLog = {
@@ -2110,6 +2150,7 @@ async function loadRuns() {
     await settleSent();
     if (body.raw) state.raw = body.raw;
     if (body.repo) state.repo = body.repo;
+    if (body.ref) state.ref = body.ref;
     if (!state.raw || (body.api || 1) < NEEDS_API) {
       state.error = "api.php answered, but it is older than this page: it did not "
         + "say which repository to read. Upload _admin/api.php alongside "
@@ -2327,7 +2368,10 @@ function setRepoLink() {
 
 function render() {
   /* Named, so it is obvious which repository a batch is about to be sent to. */
-  document.getElementById("repo").textContent = state.repo || "";
+  /* With the commit the data was read at, so "is this the queue after the
+     run?" can be answered by comparing it with the run's commit on GitHub. */
+  document.getElementById("repo").textContent = state.repo
+    ? `${state.repo}${state.sha ? ` @${state.sha.slice(0, 7)}` : ""}` : "";
   setRepoLink();
   renderTabs();
 
