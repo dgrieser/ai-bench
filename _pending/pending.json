@@ -72,43 +72,6 @@
       "route_kind": "aa-mapping",
       "subject": "nex-n2-5-pro",
       "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gpt-6-1-sol",
-          "reason": "exact to gpt-6.1-sol, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-sol",
-          "reason": "exact to gpt-6.1-sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to gpt-6.1-sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'openai/gpt-6.1-sol' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "openai/gpt-6.1-sol",
-      "universe": "models"
     }
   ]
 }
