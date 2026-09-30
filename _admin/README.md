@@ -339,9 +339,9 @@ for the run to start, then send.
 that happens. The run pushes the re-rendered queue seconds before it reports
 completed, and `raw.githubusercontent` does not always serve that push straight
 away — so the read that follows a run can return the queue as it was *before*
-it, every question the run just answered listed again. And **record only**
-skips the refresh, so it does not republish the queue at all: those answers stay
-listed until the next scheduled refresh, hours later.
+it, every question the run just answered listed again. And a run
+dispatched by hand with `skip_refresh` does not republish the queue at all:
+those answers stay listed until the next scheduled refresh, hours later.
 
 The page therefore keeps the keys of an applied batch after its in-flight lock
 lifts (`ai-bench-admin-applied` in `localStorage`, survives a reload): those
@@ -402,7 +402,6 @@ actually managed to read, never on a failed one.
 | --- | --- | --- |
 | **Full** | the whole refresh, every score | 10 min |
 | **Quick** | `check_new.py` and every mapping updater, side by side (`update-all --mappings-only`); no `update.py`, so no scores | a couple of minutes |
-| **Record** | nothing; the answers only (`skip_refresh`) | 1 min |
 
 **Quick** is the one for adding a model. The model lands in `llm.json`, every
 board's names are matched against it and the queue is republished, so the
@@ -412,8 +411,8 @@ name into the Queue tab's filter: it matches candidates as well as subjects, so
 it gathers exactly those questions. Send the mappings with **Full** to get their
 scores now, or leave them for the next cron. The Runs tab has a **Quick run**
 button too, for a queue re-collect with no answers attached. An `api.php`
-older than the page does not announce `quick`, and the page then offers Full
-and Record only.
+older than the page does not announce `quick`, and the page then hides the
+choice and sends Full.
 
 **The draft survives a reload.** The batch being typed — answers, add-a-model
 cards, the run mode — is kept in `localStorage` (`ai-bench-admin-draft`), since
@@ -423,10 +422,10 @@ queue read, with a note, because the run would refuse the whole batch over it.
 The round **reload** button in the header re-reads everything without touching
 the draft; the tab is in the URL (`#updates`), so back steps through tabs.
 
-**"Record only, refresh later"** skips the score refresh, so the answer is
-recorded in about a minute instead of up to an hour. It is not an equivalent
-path: a mapping does nothing until `update.py` reads it, so the scores it
-unlocks arrive with the next scheduled run.
+**Record only** -- answers applied, nothing after them -- used to be a checkbox
+here and is no longer offered: Quick costs about a minute more and, unlike it,
+republishes the queue, so answered questions leave the page straight away. The
+workflow still takes `skip_refresh` for a dispatch by hand from GitHub.
 
 ## A hand-added model and AA
 

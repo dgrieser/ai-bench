@@ -891,6 +891,7 @@ input[type="date"], input[type="url"], select { font-size: 1rem; }
   border-radius: var(--r);
   background: var(--surface-2);
 }
+.seg[hidden] { display: none; }
 .seg button {
   min-height: 2.35rem;
   padding: 0 .6rem;
@@ -1160,7 +1161,9 @@ const state = {
      can take back its own record without touching its neighbours'. */
   newModels: [],
   /* What the run does after the batch: "full" refreshes every score, "quick"
-     only re-collects the mapping queue, "record" stops at the answers. */
+     only re-collects the mapping queue. The workflow's skip_refresh (answers
+     and nothing else) is not offered: Quick costs a minute more and, unlike
+     it, republishes the queue. It is still there for a dispatch by hand. */
   mode: "full",
   quickOffered: false,  // whether api.php understands {"quick": true}
   quicking: false,      // a bare quick run is being dispatched right now
@@ -1520,7 +1523,7 @@ function cycleTheme() {
    question nothing asked, and a batch is all or nothing. */
 const DRAFT_KEY = "ai-bench-admin-draft";
 const MODE_KEY = "ai-bench-admin-mode";
-const MODES = ["full", "quick", "record"];
+const MODES = ["full", "quick"];
 
 function saveDraft() {
   try {
@@ -1591,7 +1594,6 @@ function setMode(mode) {
 const MODE_HINTS = {
   full: "then refreshes every score (about 10 min)",
   quick: "then only re-asks the mapping questions, no scores (a couple of minutes)",
-  record: "records the answers and stops (about a minute)",
 };
 
 /* Whether the batch creates a model. A new model's mappings are the questions
@@ -1604,7 +1606,9 @@ function renderMode() {
   const box = document.getElementById("mode");
   const offered = MODES.filter((mode) => mode !== "quick" || state.quickOffered);
   if (!offered.includes(state.mode)) state.mode = "full";
-  const labels = { full: "Full", quick: "Quick", record: "Record" };
+  /* One choice is no choice: an api.php without `quick` gets no control. */
+  box.hidden = offered.length < 2;
+  const labels = { full: "Full", quick: "Quick" };
   box.replaceChildren(...offered.map((mode) => {
     const button = el("button", {
       type: "button",
@@ -1684,7 +1688,7 @@ const LOCK_MAX_MS = 7 * 24 * 60 * 60 * 1000;
 
    A scheduled run is the proof that the queue in hand is newer than the answer.
    It always refreshes -- skip_refresh is only ever set on a batch dispatched
-   from this page -- so it re-collects _pending/pending.json from the files as
+   by hand (this page no longer offers it) -- so it re-collects _pending/pending.json from the files as
    the answer left them. One of those has finished and the question is still
    listed: it is being asked again, and the lock is wrong.
 
@@ -3850,7 +3854,7 @@ async function send() {
       headers: { "Content-Type": "application/json", "X-AI-Bench-Admin": "1" },
       body: JSON.stringify({
         answers,
-        skip_refresh: mode === "record",
+        skip_refresh: false,
         ...(mode === "quick" ? { quick: true } : {}),
       }),
     });
