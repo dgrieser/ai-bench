@@ -25,6 +25,7 @@ from typing import Any
 
 import _matching
 import _prompts
+import _rejections
 import propose
 
 # Enough to choose from without the tail reshuffling every time a model is
@@ -119,13 +120,24 @@ def render_json(
         route = propose.route_for(entry)
         candidates: list[dict[str, str]] = []
         previous = None
+        ruled_out: set[str] = set()
         if route is not None:
             options = universes.get(route.universe) or entry.get("candidates") or []
+            # Candidates a person has said this name is not (_rejections.py) are
+            # dropped before the cut, so the next best take their places.
+            ruled_out = _rejections.rejected(route_name, subject)
+            graded = [
+                m for m in _matching.grade(propose.match_subject(entry, route), options)
+                if m.option not in ruled_out
+            ]
+            if ruled_out and not graded:
+                # Every match has been ruled out: nothing to ask until the
+                # matcher finds one that has not been. The name stays
+                # unanswered, so the next run that does asks again.
+                continue
             candidates = [
                 {"option": m.option, "confidence": m.confidence, "reason": m.reason}
-                for m in _matching.grade(propose.match_subject(entry, route), options)[
-                    :MAX_CANDIDATES
-                ]
+                for m in graded[:MAX_CANDIDATES]
             ]
             previous = _answers_current_value(route, subject)
         questions.append(
@@ -148,9 +160,15 @@ def render_json(
                 "candidates": candidates or [
                     {"option": c, "confidence": "recorded", "reason": "offered by the prompt"}
                     for c in (entry.get("candidates") or [])[:MAX_CANDIDATES]
+                    if c not in ruled_out
                 ],
             }
         )
+        if ruled_out:
+            # How many are ruled out already, so the page can say the ones it
+            # shows are what is left. Only when there are any: every other
+            # question's line in the committed file stays as it was.
+            questions[-1]["ruled_out"] = len(ruled_out)
     if carried:
         questions.extend(carry_over(carried, questions))
         questions.sort(key=lambda q: (q["route"], q["route_kind"], q["subject"]))
@@ -180,6 +198,13 @@ def carry_over(
         route = propose.route_for({"command": key[0], "kind": key[1]})
         if route is not None and _answers_current_value(route, key[2]) != question.get("if_previous"):
             continue
+        # Carried from before an answer ruled some of its candidates out.
+        ruled_out = _rejections.rejected(key[0], key[2])
+        if ruled_out:
+            left = [c for c in question.get("candidates") or [] if c.get("option") not in ruled_out]
+            if not left:
+                continue
+            question = {**question, "candidates": left, "ruled_out": len(ruled_out)}
         seen.add(key)
         kept.append(question)
     return kept

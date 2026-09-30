@@ -43,6 +43,7 @@ from typing import Any, Iterable, Sequence
 import _new_models
 import _prompts
 import _reference
+import _rejections
 import _rename
 import derive_indexes
 import edit
@@ -63,6 +64,12 @@ HUMAN_SENTINELS = frozenset({UNMAPPABLE})
 
 MAPPING = "mapping"
 AA_IGNORE = "aa-ignore"
+# "None of these": the candidates offered for a queued name are ruled out, and
+# nothing else is recorded -- the name stays unanswered, drops out of the queue
+# while nothing new matches it, and is asked again, with only the new
+# candidates, once something does. Any route; see _rejections.py. AA_IGNORE is
+# the older, Artificial-Analysis-only spelling of the same thing.
+CANDIDATES_SKIP = "candidates-skip"
 NEW_MODEL = "new-model"
 MODEL_ADD = "model-add"
 MODEL_CREATE = "model-create"
@@ -80,6 +87,7 @@ KINDS = frozenset(
     {
         MAPPING,
         AA_IGNORE,
+        CANDIDATES_SKIP,
         NEW_MODEL,
         MODEL_ADD,
         MODEL_CREATE,
@@ -142,6 +150,8 @@ class Answer:
     def describe(self) -> str:
         if self.kind == MAPPING:
             return f"{self.route}: {self.subject!r} -> {self.value!r}"
+        if self.kind == CANDIDATES_SKIP:
+            return f"{self.route}: {self.subject!r} is none of {', '.join(self.value)}"
         if self.kind == AA_IGNORE:
             return f"AA suggestions rejected for {self.subject!r}: {', '.join(self.value)}"
         if self.kind == NEW_MODEL:
@@ -313,7 +323,7 @@ def needs_aa_slugs(records: Sequence[dict[str, Any]]) -> bool:
             continue
         if record.get("kind") in (AA_IGNORE, REFERENCE_ADD):
             return True
-        if record.get("kind") == MAPPING and record.get("route") == AA_ROUTE:
+        if record.get("kind") in (MAPPING, CANDIDATES_SKIP) and record.get("route") == AA_ROUTE:
             return True
     return False
 
@@ -452,6 +462,8 @@ def _validate_one(
 
     if kind == MAPPING:
         return _validate_mapping(index, record, universes, queue, require_queue)
+    if kind == CANDIDATES_SKIP:
+        return _validate_candidates_skip(index, record, universes, queue, require_queue)
     if kind == AA_IGNORE:
         return _validate_aa_ignore(index, record, universes, model_names, queue, require_queue)
     if kind == NEW_MODEL:
@@ -558,6 +570,56 @@ def _validate_mapping(
         route=route_name,
         route_kind=route_kind,
         value=value,
+    )
+
+
+def _validate_candidates_skip(
+    index: int,
+    record: dict[str, Any],
+    universes: dict[str, list[str]],
+    queue: set[tuple[str, str, str]],
+    require_queue: bool,
+) -> Answer:
+    """Rule candidates out for a queued name, answering nothing else.
+
+    Held to the same rules as a mapping, minus the value: the route comes from
+    the table, the question has to be one the queue asked, and every candidate
+    named has to be in the route's own list -- a rejection of a name nothing
+    could ever propose is noise in a file somebody has to read.
+    """
+    route_name = record.get("route")
+    resolve_route(route_name, record.get("route_kind"))
+    subject = _subject_of(record)
+    route_kind = record.get("route_kind") or "*"
+    if require_queue and not in_queue(queue, route_name, route_kind, subject):
+        raise AnswerError(
+            f"{subject!r} is not a question {route_name} asked; "
+            "only queued questions can be answered"
+        )
+    options = record.get("answer")
+    if not isinstance(options, list) or not options or not all(
+        isinstance(o, str) and o for o in options
+    ):
+        raise AnswerError("'answer' must be a non-empty list of the candidates being ruled out")
+    if any(o in SENTINELS for o in options):
+        raise AnswerError("a sentinel is an answer, not a candidate; it cannot be ruled out")
+    route = resolve_route(route_name, route_kind)
+    known = universes.get(route.universe) or []
+    if not known:
+        raise AnswerError(
+            f"the {route.universe} list is empty (its source was unreachable), "
+            "so the candidates cannot be checked"
+        )
+    unknown = [o for o in options if o not in known]
+    if unknown:
+        raise AnswerError(f"not among the known {route.universe}: {', '.join(sorted(unknown))}")
+    return Answer(
+        index=index,
+        kind=CANDIDATES_SKIP,
+        subject=subject,
+        route=route_name,
+        route_kind=route_kind,
+        value=sorted(set(options)),
     )
 
 
@@ -898,6 +960,8 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
             paths.add(mapping_path(resolve_route(answer.route, answer.route_kind)))
         elif answer.kind == AA_IGNORE:
             paths.add(aa_module.AA_MODEL_IGNORES)
+        elif answer.kind == CANDIDATES_SKIP:
+            paths.add(_rejections.path_for(answer.route))
         elif answer.kind == MODEL_RENAME:
             # A rename walks every mapping file, so the snapshot has to as well:
             # a failure part way through is precisely the half-renamed model
@@ -949,6 +1013,10 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         route = resolve_route(answer.route, answer.route_kind)
         writer_for(route)(answer.subject, answer.value)
         return [f"{mapping_path(route).name}: {answer.subject!r} -> {answer.value}"]
+
+    if answer.kind == CANDIDATES_SKIP:
+        written = _rejections.add(answer.route, answer.subject, list(answer.value))
+        return [f"{written.name}: {answer.subject!r} is none of {', '.join(answer.value)}"]
 
     if answer.kind == AA_IGNORE:
         module = importlib.import_module(AA_MODULE)

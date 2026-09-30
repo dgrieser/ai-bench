@@ -31,6 +31,8 @@ on:
     branches: [main]
     paths:
       - "*mapping*.json"
+      # Candidates ruled out by hand ("none of these"; see _rejections.py).
+      - "rejected-candidates.json"
       - "llm.json"
       # A merged proposal PR may carry nothing but a flipped new-model decision;
       # that run is the one that has to act on it.
@@ -239,6 +241,10 @@ jobs:
       # its own to the pipeline, and every route's file watched -- so a source
       # added to propose.ROUTES is logged the day it is added.
       #
+      # test_rejections.py guards "none of these": the record gated like a
+      # mapping, the rejection file written and the mapping file never, and a
+      # question asked again the moment a candidate nobody ruled out appears.
+      #
       # test_fetch_warnings.py guards the line between a warning and a failure.
       # Drawn too wide, a bug in this repository reads as a flaky source and
       # the run stays green over it; too narrow, and one dead scraper reds
@@ -266,6 +272,7 @@ jobs:
             ./test_fetch_warnings.py
             ./test_hand_sources.py
             ./test_mapping_log.py
+            ./test_rejections.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below
