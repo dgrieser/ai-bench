@@ -166,6 +166,27 @@ tells you why.
   falls back to the full list — of models, of benchmark keys, or, for the
   "which AA slug is this model" question, of Artificial Analysis' own slugs,
   read from `_aa/models.json`.
+  **None of these** is the fourth answer, for a name that is none of the
+  candidates and not unmappable either — `minimax-m3-1-flash-preview` offered
+  `minimax-m3` and `minimax-m2-1`, and is neither. It rules the candidates shown
+  out (a `candidates-skip` record) and writes no mapping, so the name stays
+  unanswered. The queue then stops offering those candidates *for that name
+  only* -- `minimax-m3` stays a candidate for every other name it matches --
+  and a question with none left drops out of it, until the matcher finds a candidate nobody has
+  ruled out; then it is asked again with only the new ones, and a *ruled out*
+  chip says how many were rejected before. Rejections live in
+  `rejected-candidates.json`, keyed by route and source name; the Artificial
+  Analysis route keeps its own older file,
+  `model-name-mapping-llm-to-artificialanalysis-ignored.json`, which its updater
+  already honoured. Works with Full and Quick alike: after a Quick run the
+  question is gone from the page (or back with new candidates) in a couple of
+  minutes. From a terminal:
+
+  ```sh
+  echo '[{"kind": "candidates-skip", "route": "update_vals_mapping.py",
+          "route_kind": "mapping", "subject": "x/model", "answer": ["glm-5"]}]' \
+    | ./answer.py --stdin -w
+  ```
 - **Updates** — what changed, day by day: models added, scores that arrived or
   moved (from `llm.json`'s `date_added` and `scores_history`, the same data the
   site's Recently Added panel reads), and every mapping written, with **who**

@@ -1731,7 +1731,8 @@ function readSent() {
     const queued = Array.isArray(stored.queued)
       ? stored.queued.filter((k) => typeof k === "string" && keys.includes(k))
       : inferQueued(keys);
-    return { at: stored.at, keys, queued, mode: MODES.includes(stored.mode) ? stored.mode : "full" };
+    const skips = stored.skips && typeof stored.skips === "object" ? stored.skips : {};
+    return { at: stored.at, keys, queued, mode: MODES.includes(stored.mode) ? stored.mode : "full", skips };
   } catch { return null; }   // private mode, blocked storage, half-written value
 }
 
@@ -1765,14 +1766,26 @@ const isApplied = (key) => state.applied.some((entry) => entry.key === key);
    the key, whose first field is the route that asked. */
 const isRecurring = (key) => key.startsWith(`${NEW_MODEL_ROUTE} `);
 
-function rememberApplied(keys) {
+/* `skips` is key -> the candidates a "None of these" ruled out. Such a question
+   is meant to come back once something new matches it, under the same key, so
+   its lock needs its own way out -- see pruneApplied. */
+function rememberApplied(keys, skips = {}) {
   if (!keys.length) return;
   const at = Date.now();
   writeApplied([
     ...state.applied.filter((entry) => !keys.includes(entry.key)),
-    ...keys.map((key) => ({ key, at, recurring: isRecurring(key) })),
+    ...keys.map((key) => ({
+      key, at, recurring: isRecurring(key),
+      ...(Array.isArray(skips[key]) ? { skipped: skips[key] } : {}),
+    })),
   ]);
 }
+
+/* A skipped question listed again without any of the candidates it skipped is
+   the queue after the run, asking about a new candidate: answerable again. The
+   queue before the run still offers the skipped ones, and stays locked. */
+const askedAfresh = (entry, question) => Array.isArray(entry.skipped) && question
+  && !(question.candidates || []).some((c) => entry.skipped.includes(c.option));
 
 /* Whether a scheduled refresh has republished the queue since this answer
    settled. That run collects its questions from the files the answer wrote, so
@@ -1790,9 +1803,10 @@ const reopenedSince = (at) => state.runs.some((run) =>
    asking it again; those are the only proofs there are. A clock is not proof,
    so only the kind that is deliberately asked again expires by one. */
 function pruneApplied(questions) {
-  const asked = new Set(questions.map(KEY));
+  const asked = new Map(questions.map((q) => [KEY(q), q]));
   const now = Date.now();
   const kept = state.applied.filter((entry) => asked.has(entry.key)
+    && !askedAfresh(entry, asked.get(entry.key))
     && !reopenedSince(entry.at)
     && now - entry.at < (entry.recurring ? RECURRING_TTL_MS : LOCK_MAX_MS));
   if (kept.length !== state.applied.length) writeApplied(kept);
@@ -1854,7 +1868,7 @@ async function settleSent() {
   if (Date.now() - state.sent.at < GRACE_MS) return;
   const run = batchRun();
   const applied = await batchApplied(run);
-  if (applied !== "no") rememberApplied(state.sent.queued);
+  if (applied !== "no") rememberApplied(state.sent.queued, state.sent.skips || {});
   state.settled = { run, applied, count: state.sent.keys.length, mode: state.sent.mode };
   noteSettled(state.settled);
   writeSent(null);
@@ -2522,6 +2536,10 @@ function renderQuestion(question) {
   if (question.if_previous) {
     chips.append(chip("now", question.if_previous.join(", "), { className: "now" }));
   }
+  if (question.ruled_out) {
+    /* Back because something new matched: what is listed is what is left. */
+    chips.append(chip("ruled out", `${question.ruled_out} earlier`, { prose: true }));
+  }
   card.append(chips);
   if (question.note) card.append(el("div", { className: "note-text" }, question.note));
 
@@ -2537,6 +2555,30 @@ function renderQuestion(question) {
       onclick: () => setAnswer(question, pressed ? null : mappingRecord(question, candidate.option)),
     }));
   }
+  /* None of these: rule every candidate shown out, and answer nothing else.
+     The name stays unreviewed, so it is asked again -- with only the new
+     candidates -- once the matcher finds one that is not in this list. Only
+     the candidates the queue graded against a real list: a "recorded" one was
+     offered by the prompt alone, and the runner could not check it. */
+  const skippable = (question.candidates || [])
+    .filter((c) => c.confidence !== "recorded").map((c) => c.option);
+  if (skippable.length) {
+    const skipping = chosen?.kind === "candidates-skip";
+    options.append(option("None of these",
+      skipping
+        ? `rules out ${skippable.join(", ")}; asked again when a new candidate turns up`
+        : "not a match, but not unmappable either: ask again when a new candidate turns up", {
+        pressed: skipping,
+        className: "decline",
+        onclick: () => setAnswer(question, skipping ? null : {
+          kind: "candidates-skip",
+          route: question.route,
+          route_kind: question.route_kind,
+          subject: question.subject,
+          answer: skippable,
+        }),
+      }));
+  }
   const declined = chosen?.answer === "__unmappable__";
   options.append(option("__unmappable__", "reviewed, deliberately not mapped", {
     pressed: declined,
@@ -2550,6 +2592,7 @@ function renderQuestion(question) {
   const universe = universeFor(question);
   if (universe.length) {
     const freeform = chosen
+      && chosen.kind === "mapping"
       && chosen.answer !== "__unmappable__"
       && !(question.candidates || []).some((c) => c.option === chosen.answer);
     const noun = universeNoun(question, true);
@@ -3870,7 +3913,13 @@ async function send() {
     /* `queued` is read off the queue as it stands now, because settling cannot:
        it happens inside the run list read, which on a fresh page runs before
        the queue has been read at all. */
-    writeSent({ at: Date.now(), keys, queued: queueKeys(keys), mode });
+    /* What each "None of these" ruled out, for the lock to recognise the
+       question when it comes back with something new. */
+    const skips = Object.fromEntries(answers
+      .map((record, i) => [keys[i], record])
+      .filter(([, record]) => record.kind === "candidates-skip")
+      .map(([key, record]) => [key, record.answer]));
+    writeSent({ at: Date.now(), keys, queued: queueKeys(keys), mode, skips });
     saveDraft();
     state.ok = mode === "quick"
       ? `Dispatched ${body.dispatched} answer(s) as a quick run: it applies them, then `
