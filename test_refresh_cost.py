@@ -24,6 +24,7 @@ import os
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
@@ -185,6 +186,90 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         fetch_huggingface.extract_scores_and_channels = counting
         fetch_huggingface.crawl_all_models(self.doc)
         self.assertEqual(len(reads), 10)
+
+
+class TestTheQuickRun(unittest.TestCase):
+    """The quick run's shortcuts: fewer cards read, older caches accepted.
+
+    It re-collects the mapping queue a batch has just changed, so what it may
+    skip is exactly what the batch cannot have changed. A full refresh must
+    never take one of these paths.
+    """
+
+    WORKFLOW = Path(__file__).resolve().with_name(".github") / "workflows" / "update-benchmarks.yml"
+
+    def setUp(self) -> None:
+        self._dir = tempfile.TemporaryDirectory()
+        self._original = _cache.CACHE_DIR
+        _cache.CACHE_DIR = self._dir.name
+        self._reader = fetch_huggingface.extract_scores_and_channels
+        self.reads: list[str] = []
+
+        def reader(repo, slug=None, failures=None):
+            self.reads.append(repo)
+            return {f"label-{slug}": 1.0}, {}
+
+        fetch_huggingface.extract_scores_and_channels = reader
+        self.doc = {"models": [{"name": f"m{i}", "url": f"https://huggingface.co/org/m{i}"}
+                               for i in range(4)]}
+
+    def tearDown(self) -> None:
+        fetch_huggingface.extract_scores_and_channels = self._reader
+        _cache.CACHE_DIR = self._original
+        self._dir.cleanup()
+
+    def test_only_the_named_models_cards_are_read(self) -> None:
+        rows = fetch_huggingface.crawl_all_models(self.doc, {"m2"})
+        self.assertEqual(self.reads, ["org/m2"])
+        self.assertEqual([r["model"] for r in rows], ["m2"])
+
+    def test_a_narrow_crawl_never_answers_for_the_full_one(self) -> None:
+        fetch_huggingface.crawl_all_models(self.doc, {"m2"})
+        self.reads.clear()
+        rows = fetch_huggingface.crawl_all_models(self.doc)
+        self.assertEqual(len(rows), 4)
+        self.assertEqual(len(self.reads), 4)
+
+    def test_no_touched_model_reads_no_card(self) -> None:
+        import update_huggingface_mapping as uhm
+
+        called = []
+        out = io.StringIO()
+        with unittest.mock.patch.dict(os.environ, {uhm.QUICK_MODELS_VAR: ""}), \
+                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_names",
+                                           side_effect=lambda *a: called.append(a) or []), \
+                unittest.mock.patch.object(sys, "argv", ["update_huggingface_mapping.py"]), \
+                redirect_stdout(out):
+            self.assertEqual(uhm.main(), 0)
+        self.assertEqual(called, [])
+
+    def test_touched_models_are_passed_on(self) -> None:
+        import update_huggingface_mapping as uhm
+
+        called = []
+        with unittest.mock.patch.dict(os.environ, {uhm.QUICK_MODELS_VAR: "m1,m3"}), \
+                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_names",
+                                           side_effect=lambda *a: called.append(a) or []), \
+                unittest.mock.patch.object(sys, "argv", ["update_huggingface_mapping.py"]), \
+                redirect_stdout(io.StringIO()):
+            uhm.main()
+        self.assertEqual(called, [(["m1", "m3"],)])
+
+    def test_the_shortcuts_are_the_quick_run_s_alone(self) -> None:
+        """The tests, the narrowed crawl and the long TTLs: quick only."""
+        import yaml
+
+        steps = {step.get("name"): step
+                 for step in yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
+                 ["jobs"]["update"]["steps"]}
+        self.assertEqual(steps["Check collect mode, the matcher and the answer applier"]["if"],
+                         "${{ !inputs.quick }}")
+        refresh = steps["Refresh benchmarks"]["run"]
+        quick_block = refresh.split('if [ "$QUICK" = "true" ]; then', 1)[1].split("\n          fi", 1)[0]
+        for knob in ("AI_BENCH_QUICK_MODELS", "ARTIFICIAL_ANALYSIS_CACHE_TTL", "AI_BENCH_OPENNESS_TTL"):
+            self.assertIn(knob, quick_block)
+            self.assertNotIn(knob, refresh.replace(quick_block, ""), f"{knob} leaks out of quick")
+        self.assertIn("--carry-over update_huggingface_mapping.py", steps["Render the pending queue"]["run"])
 
 
 class TestReportOnlyMatchesTheRefit(unittest.TestCase):

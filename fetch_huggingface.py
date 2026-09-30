@@ -1477,6 +1477,13 @@ def parse_args() -> argparse.Namespace:
         help="Iterate every model in llm.json with a Hugging Face URL.",
     )
     parser.add_argument(
+        "--models",
+        metavar="NAME[,NAME...]",
+        help="With --all-models: read only these llm.json models' cards. The quick "
+        "run passes the models its batch touched, which is all it needs -- every "
+        "other card was read by the last full refresh.",
+    )
+    parser.add_argument(
         "--json-file",
         default=str(DEFAULT_LLM_JSON),
         help="Path to llm.json (used with --all-models).",
@@ -1490,7 +1497,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def crawl_all_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
+def crawl_all_models(doc: dict[str, Any], only: set[str] | None = None) -> list[dict[str, Any]]:
     """Read every Hugging Face model card llm.json points at, cached per crawl.
 
     One `update-all` walks this twice in two processes minutes apart -- the
@@ -1507,6 +1514,10 @@ def crawl_all_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
     re-reads.
     """
     pairs = iter_hf_models(doc)
+    if only is not None:
+        # A subset has its own key, so it never answers for, or overwrites,
+        # the full crawl a refresh reads.
+        pairs = [(slug, repo) for slug, repo in pairs if slug in only]
     ttl = _cache.ttl_seconds(CRAWL_CACHE_TTL_VAR)
     key = _cache.digest(sorted(pairs))
     cached = _cache.load("huggingface-cards", key, ttl, label="Hugging Face model cards")
@@ -1551,7 +1562,8 @@ def main() -> int:
 
     if args.all_models:
         doc = json.loads(Path(args.json_file).read_text(encoding="utf-8"))
-        results = crawl_all_models(doc)
+        only = {n.strip() for n in args.models.split(",") if n.strip()} if args.models else None
+        results = crawl_all_models(doc, only)
     else:
         if not args.repo_or_url:
             print("error: repo_or_url is required when --all-models is not set", file=sys.stderr)

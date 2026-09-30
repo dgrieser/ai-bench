@@ -154,11 +154,15 @@ HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapp
 UNMAPPABLE = "__unmappable__"
 
 
-def fetch_huggingface_benchmark_names() -> list[str]:
+def fetch_huggingface_benchmark_names(models: list[str] | None = None) -> list[str]:
+    """Every benchmark label on the cards llm.json points at, or on `models`' only."""
+    cmd = [sys.executable, str(HF_SCRIPT), "--all-models", "--format", "names"]
+    if models is not None:
+        cmd += ["--models", ",".join(models)]
     proc = timed(
         "fetch_huggingface.py --names",
         subprocess.run,
-        [sys.executable, str(HF_SCRIPT), "--all-models", "--format", "names"],
+        cmd,
         capture_output=True,
         text=True,
     )

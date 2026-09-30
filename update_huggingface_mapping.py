@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,8 @@ from _huggingface_mapping import (
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
+# Set by the quick run to the models its batch touched; see main().
+QUICK_MODELS_VAR = "AI_BENCH_QUICK_MODELS"
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -80,7 +83,21 @@ def main() -> int:
     doc = load_doc(llm_path)
     benchmark_keys = sorted(editable_benchmarks(doc).keys())
 
-    hf_labels = fetch_huggingface_benchmark_names()
+    # The quick run names the models its batch touched (see update-all
+    # --mappings-only). Only their cards can carry a label nobody has reviewed
+    # since the last full refresh, which read every other card -- and the full
+    # crawl is a minute of a two-minute run. The questions this skips are kept
+    # by the workflow, carried over from the queue already committed.
+    quick = os.environ.get(QUICK_MODELS_VAR)
+    if quick is not None:
+        only = [name for name in quick.replace("\n", ",").split(",") if name.strip()]
+        if not only:
+            print(f"{QUICK_MODELS_VAR} is empty: no model touched, no card to read")
+            return 0
+        print(f"quick run: reading the cards of {', '.join(only)} only")
+        hf_labels = fetch_huggingface_benchmark_names([n.strip() for n in only])
+    else:
+        hf_labels = fetch_huggingface_benchmark_names()
     reviewed_labels = load_reviewed_hf_labels()
     unmapped_labels = [name for name in hf_labels if name not in reviewed_labels]
 
