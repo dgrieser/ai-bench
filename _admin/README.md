@@ -424,6 +424,22 @@ actually managed to read, never on a failed one.
 | **Full** | the whole refresh, every score | 10 min |
 | **Quick** | `check_new.py` and every mapping updater, side by side (`update-all --mappings-only`); no `update.py`, so no scores | a couple of minutes |
 
+What makes Quick quick, besides skipping `update.py`:
+
+- **No test suites.** They run on every full run of the same code, every three
+  hours; `answer.py` still validates every record, since the tests check that
+  validator rather than being it.
+- **Only the batch's Hugging Face cards.** Crawling every card was a minute of
+  a two-minute run, and only a card of a model the batch added, edited or
+  renamed can carry a label nobody has reviewed. The other HF questions are
+  carried over from the committed queue. A Quick run with no answers (the Runs
+  tab button) still reads every card.
+- **Caches up to six hours old** for Artificial Analysis, llm-stats, Vals and
+  the HF crawl, and a week for the open-weights index. The full runs refresh
+  and save those every three hours, so a Quick run nearly always hits them. The
+  one read that has to be fresh -- AA's slug list, for the new model's AA
+  question -- was just made by the answer step anyway.
+
 **Quick** is the one for adding a model. The model lands in `llm.json`, every
 board's names are matched against it and the queue is republished, so the
 mapping questions the new model raises are on the Queue tab by the time the page

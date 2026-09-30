@@ -64,7 +64,13 @@ PENDING = "__pending__"
 SENTINELS = frozenset({UNMAPPABLE, CLOSED_WEIGHTS, PENDING})
 
 CACHE_PATH = os.path.expanduser("~/.cache/ai-bench/openness.json")
-CACHE_TTL_SECONDS = 12 * 3600
+# Overridable because the quick run accepts a much older index: whether a
+# model ships weights is a slow-moving fact, and rebuilding the index is three
+# sources and nine seconds of a run that exists to be fast.
+try:
+    CACHE_TTL_SECONDS = int(os.getenv("AI_BENCH_OPENNESS_TTL", str(12 * 3600)))
+except ValueError:
+    CACHE_TTL_SECONDS = 12 * 3600
 
 # Trailing reasoning-effort / thinking-mode modifiers, in any of the bracket
 # styles the leaderboards use ("-high", " [medium]", " (xhigh)", " thinking").

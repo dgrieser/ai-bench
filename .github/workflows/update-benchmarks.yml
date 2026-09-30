@@ -254,7 +254,15 @@ jobs:
       # `bash -e` still stops at the first red one: the loop body is not a
       # tested condition, so a non-zero exit ends the step exactly as it did
       # when these were separate lines.
+      #
+      # Not on a quick run. It exists to be back in a couple of minutes, and
+      # this step was a fifth of it -- every suite here has already passed on
+      # the full runs of the same code, every three hours. What a suite would
+      # catch still stops the next full run, which is where the scores are
+      # written. The answers themselves are validated by answer.py either way:
+      # the tests check that validator, they are not it.
       - name: Check collect mode, the matcher and the answer applier
+        if: ${{ !inputs.quick }}
         run: |
           suites=(
             ./test_prompts.py
@@ -341,6 +349,7 @@ jobs:
       # because an Artificial Analysis answer is checked against the live slug
       # list, and an empty list refuses rather than admits.
       - name: Apply the answers
+        id: apply
         if: ${{ inputs.answers != '' }}
         env:
           ANSWERS: ${{ inputs.answers }}
@@ -356,6 +365,15 @@ jobs:
             echo
             jq -r '.applied[] | "- \(.)"' "$RUNNER_TEMP/answers.json"
           } >> "$GITHUB_STEP_SUMMARY"
+          # The models this batch touched, for a quick run to read the Hugging
+          # Face cards of and nothing else. From the applier's validated result,
+          # so each is an llm.json slug; a rename counts under its new name.
+          models=$(jq -r '[.records[]?
+                           | select(.kind | IN("model-add", "model-create", "model-edit",
+                                                "model-rename", "reference-add"))
+                           | if .kind == "model-rename" then .value else .subject end]
+                          | unique | join(",")' "$RUNNER_TEMP/answers.json")
+          echo "models=${models}" >> "$GITHUB_OUTPUT"
 
       # Its own commit, so the history reads "these were the answers" then "this
       # is what they produced" -- the shape a merged mapping PR and its follow-up
@@ -423,10 +441,33 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           AI_BENCH_FETCH_WARNINGS: ${{ runner.temp }}/fetch-warnings.jsonl
           QUICK: ${{ inputs.quick }}
+          HAS_ANSWERS: ${{ steps.apply.conclusion == 'success' }}
+          TOUCHED: ${{ steps.apply.outputs.models }}
         run: |
           status=0
           quick=()
-          [ "$QUICK" = "true" ] && quick=(--mappings-only)
+          if [ "$QUICK" = "true" ]; then
+            quick=(--mappings-only)
+            # A quick run takes what the last full run cached, up to six hours
+            # old, instead of re-reading it: the full runs are three hours apart
+            # and save these caches, so this is a hit almost always. It is
+            # after the questions a new model raises, and those come from the
+            # boards' names, which a few hours do not change -- the one read
+            # that must be fresh, AA's slug list, was just made by the answer
+            # step and is inside even the normal TTL.
+            export ARTIFICIAL_ANALYSIS_CACHE_TTL=21600
+            export AI_BENCH_LLMSTATS_CACHE_TTL=21600
+            export AI_BENCH_VALS_CACHE_TTL=21600
+            export AI_BENCH_HF_CACHE_TTL=21600
+            # Whether a model ships weights changes rarely; a week is fine.
+            export AI_BENCH_OPENNESS_TTL=604800
+            # With a batch, only its models' Hugging Face cards can hold a label
+            # nobody has reviewed; the rest of the HF questions are carried over
+            # in the next step. A bare quick run still reads every card.
+            if [ "$HAS_ANSWERS" = "true" ]; then
+              export AI_BENCH_QUICK_MODELS="$TOUCHED"
+            fi
+          fi
           ./update-all --collect-prompts pending-prompts.jsonl "${quick[@]}" || status=$?
           if [ "$status" -eq 3 ]; then
             echo "Only fetchers failed; reported as warnings, not as a failed step." >&2
@@ -461,9 +502,14 @@ jobs:
         if: ${{ steps.refresh.outcome == 'success' }}
         env:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
+          NARROW_HF: ${{ inputs.quick && steps.apply.conclusion == 'success' }}
         run: |
           ./pending_prompts.py pending-prompts.jsonl --format markdown > "$RUNNER_TEMP/pending.md"
           carry=()
+          # A quick run with a batch read only that batch's Hugging Face cards,
+          # so the questions the other cards raise are kept from the queue
+          # already committed rather than dropped.
+          [ "$NARROW_HF" = "true" ] && carry+=(--carry-over update_huggingface_mapping.py)
           while read -r route; do
             carry+=(--carry-over "$route")
           done < <(./_fetch_warnings.py routes "$RUNNER_TEMP/fetch-warnings.jsonl")
