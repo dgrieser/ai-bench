@@ -1,7 +1,13 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 argon, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -49,7 +55,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Argon, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -200,9 +212,9 @@
     {
       "candidates": [
         {
-          "confidence": "recorded",
+          "confidence": "weak",
           "option": "bonsai-2-27b",
-          "reason": "offered by the prompt"
+          "reason": "the same name without its first 1 word(s): exact to bonsai-2-27b-gguf, most components match"
         }
       ],
       "default": "bonsai-2-27b",
@@ -226,7 +238,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini-4-argon, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
