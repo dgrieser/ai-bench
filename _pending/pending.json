@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'gemini 4 argon' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "gemini 4 argon",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "exact",
@@ -35,6 +46,17 @@
       "route": "update_epoch_mapping.py",
       "route_kind": "mapping",
       "subject": "GPT-6.1 Sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Gemini 4 Argon' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Gemini 4 Argon",
       "universe": "models"
     },
     {
@@ -190,6 +212,28 @@
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
       "subject": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/barium-bb' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/barium-bb",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-4-argon' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-4-argon",
       "universe": "models"
     }
   ]
