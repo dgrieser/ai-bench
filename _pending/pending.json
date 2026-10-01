@@ -73,76 +73,271 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "apodex-1-1-mini",
-          "reason": "the same name without the vendor prefix"
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "granite-4-1-3b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
         },
         {
           "confidence": "weak",
-          "option": "granite-4-1-8b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "granite-4-1-30b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'apodex/apodex-1.1-mini' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (ale-cli-pass-rate)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "ruled_out": 5,
-      "subject": "apodex/apodex-1.1-mini",
-      "universe": "models"
+      "subject": "agents-last-exam/agents-last-exam (ale-cli-pass-rate)",
+      "universe": "benchmarks"
     },
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "apodex-1-1-mini",
-          "reason": "exact to Apodex-1.1-mini, exact match"
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "jamba-1-7-mini",
-          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
         },
         {
           "confidence": "weak",
-          "option": "nanbeige4-1-3b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
         }
       ],
-      "default": "apodex-1-1-mini",
+      "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'apodex/Apodex-1.1-mini' to llm.json model",
-      "route": "update_spheron_mapping.py",
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (ale-cli-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "apodex/Apodex-1.1-mini",
-      "universe": "models"
+      "subject": "agents-last-exam/agents-last-exam (ale-cli-score)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (full-spectrum-pass-rate)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (full-spectrum-pass-rate)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (full-spectrum-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (full-spectrum-score)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (last-exam-pass-rate)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (last-exam-pass-rate)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "exact to agents-last-exam/agents-last-exam (last-exam-score), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (last-exam-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (last-exam-score)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (near-term-pass-rate)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (near-term-pass-rate)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (near-term-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (near-term-score)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (overall-pass-rate)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (overall-pass-rate)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to last-exam-agents-last-exam, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'agents-last-exam/agents-last-exam (overall-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "agents-last-exam/agents-last-exam (overall-score)",
+      "universe": "benchmarks"
     }
   ]
 }
