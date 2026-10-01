@@ -240,3 +240,146 @@ def propose(name: str, options: list[str]) -> tuple[Match | None, list[Match]]:
     if len(exact) == 1:
         return exact[0], [m for m in matches if m.option != exact[0].option]
     return None, matches
+
+
+# --- suggestions for a person -------------------------------------------------
+#
+# grade() is deliberately narrow: its EXACT tier is what propose.py may commit
+# unseen, and test_propose.py holds it to never contradicting a mapping file.
+# That narrowness costs the queue its suggestions, though. Measured against the
+# mapping files, grade() offered the answer a person eventually chose not at
+# all for 80 of 825 model mappings (a vendor prefix, "anthropic/claude-opus-
+# 5.5"; a packaging suffix, "Ternary-Bonsai-2-27B-gguf"; "qwen-3" for "qwen3")
+# and for 106 of 274 Hugging Face labels, whose answers are benchmark keys a
+# label rarely spells ("AIME25" for aime_2025, "HLE (no tools)" for hle).
+#
+# suggest() is for the candidates a person is shown, and nothing else: it keeps
+# every grade() result, in grade()'s order, and adds what those spellings find.
+# Nothing it adds is ever EXACT, so nothing it adds can be proposed unseen. The
+# order is
+#
+#   0  grade()'s exact matches
+#   1  the same name once a vendor prefix or a packaging suffix is dropped, or
+#      spelled without punctuation, or one of the option's own display names
+#   2  grade()'s other matches, as before
+#   3  the same, once a parenthetical or leading words are dropped -- "HLE (no
+#      tools)", "Agentic coding SWE-bench Pro" -- and component matches on any
+#      of the spellings above
+#
+# so what grade() already ranked first stays first unless a tier-1 spelling is
+# literally the same name, which is the case the extra tiers exist for.
+
+PACKAGING_TOKENS = {
+    "it", "gguf", "hf", "mlx", "awq", "gptq", "fp8", "fp16", "bf16", "int4", "int8",
+    "instruct", "chat",
+}
+# Words that name no benchmark or model on their own. A spelling cut down to
+# nothing but these ("Bench v2" out of "OCR Bench v2") matches every option
+# that says "bench", so it is not offered.
+GENERIC_TOKENS = {
+    "bench", "benchmark", "test", "eval", "evals", "score", "avg", "average", "mean",
+    "pass", "acc", "accuracy", "pro", "plus", "verified", "hard", "full", "text", "only",
+    "no", "with", "without", "wo", "tools", "tool", "the", "of", "and", "for", "gb", "vs",
+}
+_BRACKETS_RE = re.compile(r"[\(\[\{][^\)\]\}]*[\)\]\}]")
+
+
+def compact(value: str) -> str:
+    """A name with every separator gone: qwen-3-8 and qwen3.8 are one string."""
+    return re.sub(r"[^a-z0-9]+", "", value.lower().replace("'", ""))
+
+
+def _spellings(name: str, labels: bool = False) -> list[tuple[str, str, int]]:
+    """(spelling, why, tier) for the ways a source may have spelled `name`."""
+    out: list[tuple[str, str, int]] = []
+    seen: set[str] = set()
+
+    def add(text: str, why: str, tier: int) -> None:
+        text = text.strip(" *-_/")
+        if tier > 1 and all(p in GENERIC_TOKENS or re.fullmatch(r"v?\d+", p) for p in components(text)):
+            return
+        key = compact(text)
+        if key and key not in seen:
+            seen.add(key)
+            out.append((text, why, tier))
+
+    add(name, "the same name spelled without punctuation", 1)
+    tail = name.rsplit("/", 1)[-1]
+    if tail != name:
+        add(tail, "the same name without the vendor prefix", 1)
+    for base in list(dict.fromkeys([name, tail])):
+        parts = components(base)
+        trimmed = list(parts)
+        while trimmed and trimmed[-1] in PACKAGING_TOKENS:
+            trimmed.pop()
+        if trimmed != parts:
+            add("-".join(trimmed), "the same name without the packaging suffix", 1)
+        unbracketed = _BRACKETS_RE.sub(" ", base)
+        if unbracketed != base:
+            add(unbracketed, "the same name without the parenthetical", 3)
+        # Leading words: a vendor spelled as a word ("Ternary-Bonsai"), or a
+        # category the card puts before the benchmark ("Agentic coding ...").
+        words = components(unbracketed)
+        for drop in range(1, min(3, len(words) - 1) + 1):
+            add("-".join(words[drop:]), f"the same name without its first {drop} word(s)", 3)
+        if labels:
+            # A benchmark label trails words as often as it leads with them
+            # ("BrowseComp Web browsing", "HLE no tools"). Not for model names,
+            # where the words after the first are what tells two models apart.
+            for keep in range(1, min(3, len(words) - 1) + 1):
+                add("-".join(words[:keep]), f"the first {keep} word(s) of the label", 3)
+    return out
+
+
+# A version tail on a benchmark label: LiveCodeBenchV6, BrowseComp 6.
+_VERSION_TAIL_RE = re.compile(r"^v?\d+$")
+
+
+def suggest(
+    name: str, options: list[str], aliases: dict[str, list[str]] | None = None
+) -> list[Match]:
+    """Candidates worth showing a person for `name`, best first. See above."""
+    aliases = aliases or {}
+    best: dict[str, tuple[int, int, Match]] = {}
+    order = 0
+
+    def offer(option: str, tier: int, confidence: str, reason: str) -> None:
+        nonlocal order
+        order += 1
+        if option not in best or (tier, order) < best[option][:2]:
+            best[option] = (tier, order, Match(option=option, confidence=confidence, reason=reason))
+
+    for match in grade(name, options):
+        offer(match.option, 0 if match.confidence == EXACT else 2, match.confidence, match.reason)
+
+    # Every name an option answers to, compacted, for the equality tiers.
+    names: dict[str, list[tuple[str, str]]] = {}
+    for option in options:
+        for label in [option, *aliases.get(option, [])]:
+            names.setdefault(compact(label), []).append((option, label))
+
+    spellings = _spellings(name, labels=bool(aliases))
+    for spelling, why, tier in spellings:
+        for option, label in names.get(compact(spelling), []):
+            said = why if label == option else f"{why}, as {label!r}"
+            offer(option, tier, WEAK, said)
+        if aliases:
+            # Only where the options are labels too: for a model, a trailing
+            # number is a different model (qwen3 and qwen3-8).
+            key = compact(spelling)
+            for known, pairs in names.items():
+                if known and key.startswith(known) and _VERSION_TAIL_RE.match(key[len(known):]):
+                    for option, label in pairs:
+                        offer(option, 3, WEAK, f"{why}, plus a version, as {label!r}")
+        if spelling == name:
+            continue
+        for match in grade(spelling, options):
+            offer(match.option, 1 if match.confidence == EXACT and tier == 1 else 3, WEAK,
+                  f"{why}: {match.reason}")
+    if aliases:
+        labels = {label: option for option in options for label in aliases.get(option, [])}
+        for spelling, why, tier in spellings:
+            for match in grade(spelling, list(labels)):
+                offer(labels[match.option], 3, WEAK, f"{why}: {match.reason}, as {match.option!r}")
+
+    return [m for _t, _o, m in sorted(best.values(), key=lambda item: item[:2])]

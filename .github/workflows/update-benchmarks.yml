@@ -245,6 +245,11 @@ jobs:
       # mapping, the rejection file written and the mapping file never, and a
       # question asked again the moment a candidate nobody ruled out appears.
       #
+      # test_suggest.py replays every mapping file against the suggestions the
+      # queue shows: an answer already given must never rank lower than the
+      # strict matcher ranked it, and nothing suggested may claim the exact
+      # tier propose.py commits by.
+      #
       # test_fetch_warnings.py guards the line between a warning and a failure.
       # Drawn too wide, a bug in this repository reads as a flaky source and
       # the run stays green over it; too narrow, and one dead scraper reds
@@ -281,6 +286,7 @@ jobs:
             ./test_hand_sources.py
             ./test_mapping_log.py
             ./test_rejections.py
+            ./test_suggest.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below

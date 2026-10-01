@@ -48,6 +48,15 @@ The page holds no credential. `api.php` holds one, and it can do exactly two
 things: queue this one workflow, and read its runs -- including the
 `Fetcher failed: …` warnings each run annotates.
 
+**Reads are pinned to a commit.** `raw.githubusercontent.com` caches a branch
+URL for five minutes and ignores query strings, so a read right after a run
+pushed used to get the file from before the push -- which is how a quick run's
+new questions looked missing until the next run. The page now asks GitHub's
+public API for main's newest commit (no token; 60 requests an hour per address)
+and reads every file at that commit's URL, which is never stale. The header
+shows the commit it read (`dgrieser/ai-bench @1d2a6b3`). If the API cannot be
+reached, it falls back to the branch URL as before.
+
 ## There is no URL to configure
 
 The page has no domain in it. It asks `api.php` where to read, and `api.php`

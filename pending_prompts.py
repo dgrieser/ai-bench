@@ -110,6 +110,7 @@ def render_json(
     revalidates server-side, which is the check that counts.
     """
     universes = propose.build_universes(llm_path, skip_aa=skip_aa)
+    aliases = {propose.BENCHMARKS: benchmark_aliases(llm_path)}
     questions = []
     for entry in sorted(
         entries,
@@ -126,8 +127,12 @@ def render_json(
             # Candidates a person has said this name is not (_rejections.py) are
             # dropped before the cut, so the next best take their places.
             ruled_out = _rejections.rejected(route_name, subject)
+            # suggest(), not grade(): the widest net for a person to choose
+            # from. grade() stays what propose.py commits by; see _matching.
             graded = [
-                m for m in _matching.grade(propose.match_subject(entry, route), options)
+                m for m in _matching.suggest(
+                    propose.match_subject(entry, route), options, aliases.get(route.universe)
+                )
                 if m.option not in ruled_out
             ]
             if ruled_out and not graded:
@@ -175,6 +180,23 @@ def render_json(
     return (
         json.dumps({"questions": questions}, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
     )
+
+
+def benchmark_aliases(llm_path: Path) -> dict[str, list[str]]:
+    """Each benchmark key's display names: what a model card actually writes.
+
+    A label reads "AIME25" or "IFBench", never aime_2025; llm.json's name and
+    short_name are the spellings that bridge the two.
+    """
+    try:
+        doc = json.loads(Path(llm_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    out: dict[str, list[str]] = {}
+    for key, bench in (doc.get("benchmarks") or {}).items():
+        if isinstance(bench, dict):
+            out[key] = [v for v in (bench.get("name"), bench.get("short_name")) if isinstance(v, str) and v]
+    return out
 
 
 def carry_over(
