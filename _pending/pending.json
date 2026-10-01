@@ -3,43 +3,6 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to GPT-5.6 Sol, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-sol",
-          "reason": "exact to GPT-5.6 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "exact to GPT-5.6 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-luna",
-          "reason": "exact to GPT-5.6 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-terra",
-          "reason": "exact to GPT-5.6 Sol, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierSWE model 'GPT-5.6 Sol' to llm.json model",
-      "route": "update_frontierswe_mapping.py",
-      "route_kind": "mapping",
-      "subject": "GPT-5.6 Sol",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
           "option": "qwen3-8-27b",
           "reason": "drop suffix to a variant, most components match"
@@ -73,27 +36,27 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "jamba-1-7-mini",
-          "reason": "the same name without its first 2 word(s): exact to 1-1-mini, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nanbeige4-1-3b",
+          "option": "granite-4-1-3b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-1-sol",
+          "option": "granite-4-1-8b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         },
         {
           "confidence": "weak",
-          "option": "ornith-1-0-9b",
+          "option": "ornith-1-0-35b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         },
         {
           "confidence": "weak",
-          "option": "ornith-1-5-9b",
+          "option": "granite-4-1-30b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-large",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         }
       ],
@@ -103,108 +66,8 @@
       "question": "Map OpenRouter model 'apodex/apodex-1.1-mini' to llm.json model",
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
+      "ruled_out": 5,
       "subject": "apodex/apodex-1.1-mini",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "sarvam-105b",
-          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-5-122b-a10b",
-          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "the same name without its first 3 word(s): exact to preview, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "atria-dawn-preview",
-          "reason": "the same name without its first 3 word(s): exact to preview, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'unbiased/pareto-26.10-preview' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "unbiased/pareto-26.10-preview",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to Claude Sonnet 5.5, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "exact to Claude Sonnet 5.5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to Claude Sonnet 5.5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Marathon model 'Claude Sonnet 5.5' to llm.json model",
-      "route": "update_swe_marathon_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Claude Sonnet 5.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gpt-6-1-sol",
-          "reason": "exact to GPT-6.1 Sol, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-sol",
-          "reason": "exact to GPT-6.1 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to GPT-6.1 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Marathon model 'GPT-6.1 Sol' to llm.json model",
-      "route": "update_swe_marathon_mapping.py",
-      "route_kind": "mapping",
-      "subject": "GPT-6.1 Sol",
       "universe": "models"
     }
   ]
