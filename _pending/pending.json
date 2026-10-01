@@ -1,3 +1,41 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "sarvam-105b",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-122b-a10b",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "the same name without its first 3 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "atria-dawn-preview",
+          "reason": "the same name without its first 3 word(s): exact to preview, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'unbiased/pareto-26.10-preview' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "unbiased/pareto-26.10-preview",
+      "universe": "models"
+    }
+  ]
 }
