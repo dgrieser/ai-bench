@@ -4,6 +4,43 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "apodex-1-1",
+          "reason": "exact to apodex-1-1-mini, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-4-1-mini",
+          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-5-mini",
+          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-6-mini",
+          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-mini",
+          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'apodex-1-1-mini'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "apodex-1-1-mini",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "qwen3-8-27b",
           "reason": "drop suffix to a variant, most components match"
         },
@@ -36,6 +73,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "apodex-1-1-mini",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "granite-4-1-3b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         },
@@ -53,11 +95,6 @@
           "confidence": "weak",
           "option": "granite-4-1-30b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "jamba-1-7-large",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, all components match"
         }
       ],
       "default": null,
@@ -68,6 +105,43 @@
       "route_kind": "mapping",
       "ruled_out": 5,
       "subject": "apodex/apodex-1.1-mini",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "apodex-1-1-mini",
+          "reason": "exact to Apodex-1.1-mini, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jamba-1-7-mini",
+          "reason": "the same name without its first 1 word(s): exact to 1-1-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nanbeige4-1-3b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, all components match"
+        }
+      ],
+      "default": "apodex-1-1-mini",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'apodex/Apodex-1.1-mini' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "apodex/Apodex-1.1-mini",
       "universe": "models"
     }
   ]
