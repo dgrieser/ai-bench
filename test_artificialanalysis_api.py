@@ -790,5 +790,50 @@ class TestCreatorSlug(unittest.TestCase):
         self.assertEqual(aa._creator_slug({}), "")
 
 
+class TestPageCreator(unittest.TestCase):
+    """The creator off a model page, which no longer links the creator's site.
+
+    What it does link, with target=_blank, is AA's own "Data Platform Terms"
+    PDF -- which the nameless pattern used to take for the creator.
+    """
+
+    PAGE = (
+        '{"currentModel":{"slug":"gemini-4-argon","name":"Gemini 4 Argon (High)",'
+        '"creator":{"id":"x","slug":"google","name":"Google","logo":"/img/logos/google.svg"}},'
+        '"others":[{"slug":"glm-5","creator":{"slug":"zai","name":"Z AI"}}],'
+        '"footer":{"href":"https://artificialanalysiscdn.com/legal/ProDataPlatformTerms.pdf",'
+        '"target":"_blank","rel":"noopener","children":"Data Platform Terms"}}'
+    )
+
+    def tearDown(self) -> None:
+        aa._PAGE_METRICS_CACHE.pop("gemini-4-argon", None)
+
+    def test_without_a_name_the_page_record_names_the_creator(self) -> None:
+        self.assertEqual(aa._parse_creator(self.PAGE), {"name": "Google", "url": ""})
+
+    def test_the_api_name_is_kept(self) -> None:
+        self.assertEqual(aa._parse_creator(self.PAGE, "Google"), {"name": "Google", "url": ""})
+
+    def test_a_link_to_aa_itself_is_never_the_creators(self) -> None:
+        page = self.PAGE.replace('"children":"Data Platform Terms"', '"children":"Google"')
+        self.assertEqual(aa._parse_creator(page, "Google")["url"], "")
+
+    def test_a_link_labelled_with_the_creator_is_taken(self) -> None:
+        page = self.PAGE + (
+            '{"href":"https://deepmind.google/","target":"_blank","children":"Google"}'
+        )
+        self.assertEqual(aa._parse_creator(page, "Google")["url"], "https://deepmind.google/")
+
+    def test_a_cached_parse_for_another_name_does_not_override_the_api(self) -> None:
+        aa._PAGE_METRICS_CACHE["gemini-4-argon"] = {
+            "creator": {
+                "name": "Data Platform Terms",
+                "url": "https://artificialanalysiscdn.com/legal/ProDataPlatformTerms.pdf",
+            }
+        }
+        record = {"slug": "gemini-4-argon", "model_creator": {"name": "Google"}}
+        self.assertEqual(aa._extract_page_creator(record), {"name": "Google", "url": ""})
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
