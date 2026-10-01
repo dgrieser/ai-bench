@@ -9,6 +9,7 @@ import re
 import sys
 import time
 from datetime import datetime, date
+from urllib.parse import urlparse
 
 import argcomplete
 import requests
@@ -538,36 +539,59 @@ def _parse_hugging_face_url(text: str):
     return _canonical_hf_url(match.group(1))
 
 
+# Links that sit on every model page and are never a creator's: AA's own site
+# and the CDN its legal documents are served from. The nameless link pattern
+# below used to settle on the first of these -- "Data Platform Terms", a PDF --
+# once the creator's own link was dropped from the pages.
+_AA_OWN_HOSTS = ("artificialanalysis.ai", "artificialanalysiscdn.com")
+
+
+def _is_aa_own_url(url: str) -> bool:
+    host = urlparse(url).hostname or ""
+    return any(host == h or host.endswith("." + h) for h in _AA_OWN_HOSTS)
+
+
+def _parse_page_creator_name(normalized: str) -> str:
+    """The creator the page itself is about, off its "currentModel" record.
+
+    The page lists hundreds of models, each with a creator, so only the first
+    creator object after "currentModel" is this model's.
+    """
+    start = normalized.find('"currentModel":{')
+    if start < 0:
+        return ""
+    match = re.compile(r'"creator":\{([^{}]*)\}').search(normalized, start)
+    if not match:
+        return ""
+    name = re.search(r'"name":"([^"]+)"', match.group(1))
+    return name.group(1) if name else ""
+
+
 def _parse_creator(text: str, expected_name: str = ""):
+    """The model's creator: a name, and the creator's own page where one is linked.
+
+    The name is the API's when it sent one, else the page's own record of it.
+    A link is only taken when it is labelled with that name: an arbitrary
+    external link on the page is not the creator's, and with no name at all
+    there is nothing to tell the two apart.
+    """
     normalized = _normalize_page_text(text)
-    result = {"name": expected_name, "url": ""}
+    name = expected_name or _parse_page_creator_name(normalized)
+    result = {"name": name, "url": ""}
+    if not name:
+        return result
 
-    if expected_name:
-        name_pattern = re.escape(expected_name)
-        patterns = [
-            rf'"href":"(https?://[^"]+)","target":"_blank"[^{{}}]{{0,250}}"children":"{name_pattern}"',
-            rf'"name":"{name_pattern}"[^{{}}]{{0,500}}"creator_url":"([^"]*)"',
-        ]
-    else:
-        patterns = [
-            r'"href":"(https?://[^"]+)","target":"_blank"[^{}]{0,250}"children":"([^"]+)"',
-            r'"name":"([^"]+)"[^{}]{0,500}"creator_url":"([^"]*)"',
-        ]
-
+    name_pattern = re.escape(name)
+    patterns = [
+        rf'"href":"(https?://[^"]+)","target":"_blank"[^{{}}]{{0,250}}"children":"{name_pattern}"',
+        rf'"name":"{name_pattern}"[^{{}}]{{0,500}}"creator_url":"([^"]*)"',
+    ]
     for pattern in patterns:
-        match = re.search(pattern, normalized)
-        if not match:
-            continue
-        if expected_name:
-            result["url"] = match.group(1)
-        elif pattern.startswith('"href"'):
-            result["url"] = match.group(1)
-            result["name"] = match.group(2)
-        else:
-            result["name"] = match.group(1)
-            result["url"] = match.group(2)
-        if result["url"]:
-            break
+        for match in re.finditer(pattern, normalized):
+            url = match.group(1)
+            if url and not _is_aa_own_url(url):
+                result["url"] = url
+                return result
 
     return result
 
@@ -906,7 +930,13 @@ def _extract_page_creator(m: dict):
     creator_name = ""
     if isinstance(m.get("model_creator"), dict):
         creator_name = m["model_creator"].get("name", "")
-    return _fetch_page_metrics(m.get("slug", ""), creator_name).get("creator", {})
+    # The page metrics are cached per slug, and whichever extractor asked first
+    # decided the creator: often one passing no name. The API's name wins over
+    # whatever was parsed then, and the url only stands if it was found for it.
+    creator = dict(_fetch_page_metrics(m.get("slug", ""), creator_name).get("creator") or {})
+    if creator_name and creator.get("name") != creator_name:
+        creator = {"name": creator_name, "url": ""}
+    return creator
 
 
 def _extract_hugging_face_url(m: dict):
