@@ -1,3 +1,41 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without the vendor prefix: exact to ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "the same name without the vendor prefix: exact to ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-fin",
+          "reason": "the same name without the vendor prefix: exact to ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "the same name without its first 2 word(s): exact to 3-1-flash, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'inclusionai/ling-3.1-flash' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "inclusionai/ling-3.1-flash",
+      "universe": "models"
+    }
+  ]
 }
