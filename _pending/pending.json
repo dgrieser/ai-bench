@@ -1,3 +1,52 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'nvidia/switchyard' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nvidia/switchyard",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "exact to step-5-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'stepfun/step-5-preview' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "stepfun/step-5-preview",
+      "universe": "models"
+    }
+  ]
 }
