@@ -5,6 +5,48 @@
         {
           "confidence": "weak",
           "option": "ling-3-0-flash",
+          "reason": "exact to ling-3-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "exact to ling-3-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-fin",
+          "reason": "exact to ling-3-1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-3-1-flash-lite-preview",
+          "reason": "the same name without its first 1 word(s): exact to 3-1-flash, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'ling-3-1-flash'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "ling-3-1-flash",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
           "reason": "the same name without the vendor prefix: exact to ling-3.1-flash, most components match"
         },
         {
@@ -21,11 +63,6 @@
           "confidence": "weak",
           "option": "ling-3-0-tiny",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash-preview",
-          "reason": "the same name without its first 2 word(s): exact to 3-1-flash, substring match"
         }
       ],
       "default": null,
@@ -35,6 +72,43 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "subject": "inclusionai/ling-3.1-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "ling-3-1-flash",
+          "reason": "exact to Ling-3.1-flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "exact to Ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "exact to Ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-fin",
+          "reason": "exact to Ling-3.1-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "ling-3-1-flash",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'inclusionAI/Ling-3.1-flash' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "inclusionAI/Ling-3.1-flash",
       "universe": "models"
     }
   ]
