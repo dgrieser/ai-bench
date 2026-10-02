@@ -1,8 +1,4 @@
 {"entries": [
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3.5-35B-A3B", "route": "update_rebench_mapping.py", "subject": "qwen3-5-35b-a3b", "value": null},
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3.5-397B-A17B", "route": "update_rebench_mapping.py", "subject": "qwen3-5-397b-a17b", "value": null},
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Coder-30B-A3B-Instruct", "route": "update_rebench_mapping.py", "subject": "qwen3-coder-30b-a3b-instruct", "value": null},
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Coder-480B-A35B-Instruct", "route": "update_rebench_mapping.py", "subject": "qwen3-coder-480b-a35b-instruct", "value": null},
 {"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Coder-Next", "route": "update_rebench_mapping.py", "subject": "qwen3-coder-next", "value": null},
 {"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Next-80B-A3B-Instruct", "route": "update_rebench_mapping.py", "subject": "qwen3-next-80b-a3b-instruct", "value": null},
 {"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Step-3.5-Flash", "route": "update_rebench_mapping.py", "subject": "step-3-5-flash", "value": null},
@@ -3998,5 +3994,9 @@
 {"at": "2026-10-02T03:28:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/36960280707", "subject": "agents-last-exam/agents-last-exam (near-term-score)", "value": "__unmappable__"},
 {"at": "2026-10-02T03:28:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/36960280707", "subject": "agents-last-exam/agents-last-exam (overall-pass-rate)", "value": "agents_last_exam"},
 {"at": "2026-10-02T03:28:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/36960280707", "subject": "agents-last-exam/agents-last-exam (overall-score)", "value": "__unmappable__"},
-{"at": "2026-10-02T03:28:56Z", "by": "admin", "previous": null, "route": "update_frontierswe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/36960280707", "subject": "GLM-5.3 Flash", "value": "glm-5-3-flash"}
+{"at": "2026-10-02T03:28:56Z", "by": "admin", "previous": null, "route": "update_frontierswe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/36960280707", "subject": "GLM-5.3 Flash", "value": "glm-5-3-flash"},
+{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_aa_coding_agents_mapping.py", "subject": "qwen3.8 max", "value": "qwen3-8-2-4t-a95b"},
+{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_epoch_mapping.py", "subject": "Qwen 3.8 Max", "value": "qwen3-8-2-4t-a95b"},
+{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_evals_report_mapping.py", "subject": "Qwen3.8 Max", "value": "qwen3-8-2-4t-a95b"},
+{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": null, "route": "update_frontierswe_mapping.py", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"}
 ]}
