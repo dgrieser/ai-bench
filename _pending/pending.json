@@ -40,6 +40,43 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "glm-5-3-flash",
+          "reason": "exact to GLM-5.3 Flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "exact to GLM-5.3 Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'GLM-5.3 Flash' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "subject": "GLM-5.3 Flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "qwen3-8-27b",
           "reason": "drop suffix to a variant, most components match"
