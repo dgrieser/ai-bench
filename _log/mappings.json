@@ -1,6 +1,4 @@
 {"entries": [
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Coder-Next", "route": "update_rebench_mapping.py", "subject": "qwen3-coder-next", "value": null},
-{"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Qwen3-Next-80B-A3B-Instruct", "route": "update_rebench_mapping.py", "subject": "qwen3-next-80b-a3b-instruct", "value": null},
 {"at": "2026-04-24T10:47:27Z", "by": "hand", "commit": "c648cb5", "previous": "Step-3.5-Flash", "route": "update_rebench_mapping.py", "subject": "step-3-5-flash", "value": null},
 {"at": "2026-04-24T13:16:18Z", "by": "hand", "commit": "51d3283", "previous": "gpt-oss-120b", "route": "update_rebench_mapping.py", "subject": "gpt-oss-120b", "value": null},
 {"at": "2026-04-24T13:16:18Z", "by": "hand", "commit": "51d3283", "previous": null, "route": "update_rebench_mapping.py", "subject": "gpt-oss-120b-high", "value": "gpt-oss-120b"},
@@ -3998,5 +3996,7 @@
 {"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_aa_coding_agents_mapping.py", "subject": "qwen3.8 max", "value": "qwen3-8-2-4t-a95b"},
 {"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_epoch_mapping.py", "subject": "Qwen 3.8 Max", "value": "qwen3-8-2-4t-a95b"},
 {"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": "__closed_weights__", "route": "update_evals_report_mapping.py", "subject": "Qwen3.8 Max", "value": "qwen3-8-2-4t-a95b"},
-{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": null, "route": "update_frontierswe_mapping.py", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"}
+{"at": "2026-10-02T07:17:00Z", "by": "hand", "commit": "80dca6c", "previous": null, "route": "update_frontierswe_mapping.py", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"},
+{"at": "2026-10-02T18:38:44Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37048739391", "subject": "inclusionai/ling-3.1-flash", "value": "ling-3-1-flash"},
+{"at": "2026-10-02T18:38:44Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37048739391", "subject": "inclusionAI/Ling-3.1-flash", "value": "ling-3-1-flash"}
 ]}
