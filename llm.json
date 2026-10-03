@@ -145,7 +145,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.8), SWE-Marathon 1.1 (0.75), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), SWE-bench Verified (0.1).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.35), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.8), SWE-Marathon 1.1 (0.75), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), SWE-bench Verified (0.1).",
       "settings": [
         "derived",
         "index scale"
@@ -1572,8 +1572,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 33905,
-        "coding_index": 25388,
+        "openbench_index": 33897,
+        "coding_index": 25362,
         "tooling_index": 35900,
         "knowledge_index": 24354,
         "vision_index": null,
@@ -2002,7 +2002,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -2057,8 +2057,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29887,
-        "coding_index": 23087,
+        "openbench_index": 29876,
+        "coding_index": 23051,
         "tooling_index": 34667,
         "knowledge_index": 17570,
         "vision_index": 10655,
@@ -2499,7 +2499,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -3363,7 +3363,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 41319,
+        "coding_index": 41370,
         "tooling_index": null,
         "knowledge_index": 56571,
         "vision_index": null,
@@ -3794,7 +3794,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.356,
+          "share": 0.366,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -4230,8 +4230,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 30570,
-        "coding_index": 26935,
+        "openbench_index": 30564,
+        "coding_index": 26914,
         "tooling_index": 28900,
         "knowledge_index": 31289,
         "vision_index": null,
@@ -4658,7 +4658,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -4712,8 +4712,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 30334,
-        "coding_index": 22553,
+        "openbench_index": 30319,
+        "coding_index": 22502,
         "tooling_index": 21317,
         "knowledge_index": 36940,
         "vision_index": null,
@@ -5141,7 +5141,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.191,
+          "share": 0.197,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -5612,8 +5612,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 52636,
-        "coding_index": 43938,
+        "openbench_index": 52648,
+        "coding_index": 43977,
         "tooling_index": 50669,
         "knowledge_index": 68332,
         "vision_index": 63666,
@@ -6123,7 +6123,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.255,
+          "share": 0.262,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -6205,8 +6205,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 47726,
-        "coding_index": 33811,
+        "openbench_index": 47727,
+        "coding_index": 33816,
         "tooling_index": 48879,
         "knowledge_index": 61870,
         "vision_index": 49775,
@@ -6669,7 +6669,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.191,
+          "share": 0.197,
           "second_hand": [
             "livecodebench",
             "swe_bench_verified"
@@ -7704,8 +7704,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 43478,
-        "coding_index": 39637,
+        "openbench_index": 43488,
+        "coding_index": 39670,
         "tooling_index": 40210,
         "knowledge_index": 45863,
         "vision_index": 35403,
@@ -8160,7 +8160,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181,
+          "share": 0.186,
           "second_hand": [
             "livecodebench"
           ]
@@ -9581,8 +9581,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 41422,
-        "coding_index": 26911,
+        "openbench_index": 41414,
+        "coding_index": 26886,
         "tooling_index": 37711,
         "knowledge_index": 59495,
         "vision_index": null,
@@ -10031,7 +10031,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.197,
+          "share": 0.202,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -10477,8 +10477,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 31540,
-        "coding_index": 29189,
+        "openbench_index": 31534,
+        "coding_index": 29171,
         "tooling_index": 24823,
         "knowledge_index": 38989,
         "vision_index": null,
@@ -10896,7 +10896,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.191,
+          "share": 0.197,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -10951,8 +10951,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 37819,
-        "coding_index": 29513,
+        "openbench_index": 37816,
+        "coding_index": 29503,
         "tooling_index": 30888,
         "knowledge_index": 52510,
         "vision_index": null,
@@ -11395,7 +11395,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -11450,8 +11450,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 34956,
-        "coding_index": 23948,
+        "openbench_index": 34943,
+        "coding_index": 23904,
         "tooling_index": 27592,
         "knowledge_index": 47228,
         "vision_index": null,
@@ -11872,7 +11872,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.191,
+          "share": 0.197,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -11930,8 +11930,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 37005,
-        "coding_index": 25890,
+        "openbench_index": 37000,
+        "coding_index": 25872,
         "tooling_index": 27043,
         "knowledge_index": 49014,
         "vision_index": 25505,
@@ -12367,7 +12367,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.234
+          "share": 0.24
         },
         "tooling_index": {
           "measured": [
@@ -12427,8 +12427,8 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 54685,
-        "coding_index": 42220,
+        "openbench_index": 54695,
+        "coding_index": 42254,
         "tooling_index": 47809,
         "knowledge_index": 70857,
         "vision_index": null,
@@ -12920,7 +12920,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.404,
+          "share": 0.415,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -14175,8 +14175,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 47506,
-        "coding_index": 35513,
+        "openbench_index": 47510,
+        "coding_index": 35527,
         "tooling_index": 48223,
         "knowledge_index": 58917,
         "vision_index": 44342,
@@ -14629,7 +14629,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -15149,8 +15149,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 29427,
-        "coding_index": 17213,
+        "openbench_index": 29403,
+        "coding_index": 17133,
         "tooling_index": 19320,
         "knowledge_index": 38553,
         "vision_index": 17674,
@@ -15553,7 +15553,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181,
+          "share": 0.186,
           "second_hand": [
             "livecodebench"
           ]
@@ -16042,8 +16042,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 47297,
-        "coding_index": 33087,
+        "openbench_index": 47299,
+        "coding_index": 33095,
         "tooling_index": 44951,
         "knowledge_index": 61080,
         "vision_index": 51516,
@@ -16510,7 +16510,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.255,
+          "share": 0.262,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -16588,8 +16588,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 52773,
-        "coding_index": 40225,
+        "openbench_index": 52782,
+        "coding_index": 40255,
         "tooling_index": 52119,
         "knowledge_index": 65297,
         "vision_index": 50487,
@@ -17057,7 +17057,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.309,
+          "share": 0.317,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -17128,8 +17128,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 70415,
-        "coding_index": 70928,
+        "openbench_index": 70421,
+        "coding_index": 70949,
         "tooling_index": 78424,
         "knowledge_index": 80526,
         "vision_index": null,
@@ -17743,7 +17743,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.548
+          "share": 0.536
         },
         "tooling_index": {
           "measured": [
@@ -17811,8 +17811,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 61879,
-        "coding_index": 52125,
+        "openbench_index": 61899,
+        "coding_index": 52189,
         "tooling_index": 67835,
         "knowledge_index": 68933,
         "vision_index": null,
@@ -18258,7 +18258,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -19500,8 +19500,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 44201,
-        "coding_index": 30751,
+        "openbench_index": 44206,
+        "coding_index": 30766,
         "tooling_index": 47757,
         "knowledge_index": 43578,
         "vision_index": 31115,
@@ -19973,7 +19973,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.303
+          "share": 0.311
         },
         "tooling_index": {
           "measured": [
@@ -20034,8 +20034,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 22560,
-        "coding_index": 17268,
+        "openbench_index": 22536,
+        "coding_index": 17187,
         "tooling_index": 22197,
         "knowledge_index": 17016,
         "vision_index": 16126,
@@ -20448,7 +20448,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -22213,8 +22213,8 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 14359,
-        "coding_index": 11707,
+        "openbench_index": 14330,
+        "coding_index": 11610,
         "tooling_index": 10246,
         "knowledge_index": 10671,
         "vision_index": 3460,
@@ -22619,7 +22619,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -22678,8 +22678,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 43755,
-        "coding_index": 42661,
+        "openbench_index": 43766,
+        "coding_index": 42699,
         "tooling_index": 39128,
         "knowledge_index": 45264,
         "vision_index": null,
@@ -23114,7 +23114,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -23167,8 +23167,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 73677,
-        "coding_index": 67174,
+        "openbench_index": 73703,
+        "coding_index": 67259,
         "tooling_index": 75784,
         "knowledge_index": 89615,
         "vision_index": null,
@@ -23769,7 +23769,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.798,
+          "share": 0.792,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -23836,8 +23836,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 68940,
-        "coding_index": 61220,
+        "openbench_index": 68950,
+        "coding_index": 61251,
         "tooling_index": 69600,
         "knowledge_index": 82526,
         "vision_index": 72446,
@@ -24344,7 +24344,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.426,
+          "share": 0.437,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -25148,8 +25148,8 @@
       },
       "context": "10m",
       "scores": {
-        "openbench_index": 22605,
-        "coding_index": 15043,
+        "openbench_index": 22578,
+        "coding_index": 14955,
         "tooling_index": 11648,
         "knowledge_index": 20250,
         "vision_index": 18012,
@@ -25579,7 +25579,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -25642,8 +25642,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 27108,
-        "coding_index": 20596,
+        "openbench_index": 27089,
+        "coding_index": 20530,
         "tooling_index": 14810,
         "knowledge_index": 29479,
         "vision_index": 23234,
@@ -26085,7 +26085,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -32487,8 +32487,8 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 42685,
-        "coding_index": 32705,
+        "openbench_index": 42688,
+        "coding_index": 32713,
         "tooling_index": 46203,
         "knowledge_index": 53402,
         "vision_index": null,
@@ -32998,7 +32998,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.186,
+          "share": 0.191,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -37224,8 +37224,8 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 29695,
-        "coding_index": 22875,
+        "openbench_index": 29679,
+        "coding_index": 22821,
         "tooling_index": 21029,
         "knowledge_index": 37876,
         "vision_index": null,
@@ -37679,7 +37679,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -37729,8 +37729,8 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 26529,
-        "coding_index": 20950,
+        "openbench_index": 26510,
+        "coding_index": 20886,
         "tooling_index": 17256,
         "knowledge_index": 26656,
         "vision_index": null,
@@ -38204,7 +38204,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -38254,8 +38254,8 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 20062,
-        "coding_index": 17770,
+        "openbench_index": 20039,
+        "coding_index": 17692,
         "tooling_index": 14869,
         "knowledge_index": 14371,
         "vision_index": null,
@@ -38724,7 +38724,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -39554,8 +39554,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 38606,
-        "coding_index": 31257,
+        "openbench_index": 38602,
+        "coding_index": 31247,
         "tooling_index": 31774,
         "knowledge_index": 48568,
         "vision_index": null,
@@ -39957,7 +39957,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -42379,8 +42379,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 32005,
-        "coding_index": 23237,
+        "openbench_index": 31991,
+        "coding_index": 23190,
         "tooling_index": 27939,
         "knowledge_index": 30671,
         "vision_index": 23917,
@@ -42814,7 +42814,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.191
+          "share": 0.197
         },
         "tooling_index": {
           "measured": [
@@ -42871,8 +42871,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 19450,
-        "coding_index": 14961,
+        "openbench_index": 19423,
+        "coding_index": 14872,
         "tooling_index": 18177,
         "knowledge_index": 14329,
         "vision_index": 13018,
@@ -43286,7 +43286,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -43343,8 +43343,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 20709,
-        "coding_index": 11901,
+        "openbench_index": 20680,
+        "coding_index": 11804,
         "tooling_index": 16031,
         "knowledge_index": 15903,
         "vision_index": 6614,
@@ -43753,7 +43753,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -44177,8 +44177,8 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 17699,
-        "coding_index": 14970,
+        "openbench_index": 17673,
+        "coding_index": 14881,
         "tooling_index": 11060,
         "knowledge_index": 14344,
         "vision_index": 14575,
@@ -44584,7 +44584,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181
+          "share": 0.186
         },
         "tooling_index": {
           "measured": [
@@ -46846,7 +46846,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 28944,
+        "coding_index": 28966,
         "tooling_index": 31689,
         "knowledge_index": null,
         "vision_index": null,
@@ -47142,7 +47142,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.266,
+          "share": 0.273,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
@@ -47181,7 +47181,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 55489,
+        "coding_index": 55570,
         "tooling_index": 52931,
         "knowledge_index": null,
         "vision_index": null,
@@ -47477,7 +47477,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.266,
+          "share": 0.273,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
@@ -47516,7 +47516,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 69569,
+        "coding_index": 69702,
         "tooling_index": 65591,
         "knowledge_index": null,
         "vision_index": null,
@@ -47812,7 +47812,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.266,
+          "share": 0.273,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
@@ -47850,8 +47850,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 59876,
-        "coding_index": 49948,
+        "openbench_index": 59887,
+        "coding_index": 49986,
         "tooling_index": 52893,
         "knowledge_index": 77642,
         "vision_index": null,
@@ -48313,7 +48313,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.457,
+          "share": 0.47,
           "second_hand": [
             "swe_bench_multilingual"
           ]
@@ -49077,8 +49077,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 63200,
-        "coding_index": 51623,
+        "openbench_index": 63210,
+        "coding_index": 51658,
         "tooling_index": 63862,
         "knowledge_index": 81878,
         "vision_index": 45644,
@@ -49577,7 +49577,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.553,
+          "share": 0.568,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -49666,8 +49666,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 73248,
-        "coding_index": 76349,
+        "openbench_index": 73273,
+        "coding_index": 76433,
         "tooling_index": 80552,
         "knowledge_index": 88115,
         "vision_index": null,
@@ -50265,7 +50265,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.798,
+          "share": 0.792,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -50348,8 +50348,8 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 49604,
-        "coding_index": 37900,
+        "openbench_index": 49611,
+        "coding_index": 37925,
         "tooling_index": 44528,
         "knowledge_index": 68098,
         "vision_index": null,
@@ -50725,7 +50725,7 @@
             "swe_bench_multilingual"
           ],
           "of": 17,
-          "share": 0.218,
+          "share": 0.224,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -51189,8 +51189,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 56666,
-        "coding_index": 46878,
+        "openbench_index": 56681,
+        "coding_index": 46927,
         "tooling_index": 49742,
         "knowledge_index": 76990,
         "vision_index": 55732,
@@ -51718,7 +51718,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.383,
+          "share": 0.393,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -51808,8 +51808,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 67832,
-        "coding_index": 58750,
+        "openbench_index": 67839,
+        "coding_index": 58776,
         "tooling_index": 65257,
         "knowledge_index": 86932,
         "vision_index": 72264,
@@ -52381,7 +52381,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.463,
+          "share": 0.475,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -52468,8 +52468,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 66467,
-        "coding_index": 62695,
+        "openbench_index": 66584,
+        "coding_index": 63084,
         "tooling_index": 69267,
         "knowledge_index": 79279,
         "vision_index": null,
@@ -52914,7 +52914,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.489
+          "share": 0.475
         },
         "tooling_index": {
           "measured": [
@@ -52978,8 +52978,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 83576,
-        "coding_index": 86787,
+        "openbench_index": 83583,
+        "coding_index": 86810,
         "tooling_index": 87052,
         "knowledge_index": 93080,
         "vision_index": 86689,
@@ -53580,7 +53580,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.894
+          "share": 0.891
         },
         "tooling_index": {
           "measured": [
@@ -54023,8 +54023,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 55366,
-        "coding_index": 44701,
+        "openbench_index": 55378,
+        "coding_index": 44741,
         "tooling_index": 52843,
         "knowledge_index": 72412,
         "vision_index": 59901,
@@ -54455,7 +54455,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.277,
+          "share": 0.284,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -54527,8 +54527,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 60958,
-        "coding_index": 46537,
+        "openbench_index": 60971,
+        "coding_index": 46581,
         "tooling_index": 56681,
         "knowledge_index": 81382,
         "vision_index": 70402,
@@ -54981,7 +54981,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.277,
+          "share": 0.284,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -55052,8 +55052,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 65283,
-        "coding_index": 57926,
+        "openbench_index": 65295,
+        "coding_index": 57965,
         "tooling_index": 66159,
         "knowledge_index": 78800,
         "vision_index": 45884,
@@ -55524,7 +55524,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.372,
+          "share": 0.383,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -55964,8 +55964,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 79906,
-        "coding_index": 76122,
+        "openbench_index": 80054,
+        "coding_index": 76613,
         "tooling_index": 85435,
         "knowledge_index": 91714,
         "vision_index": 98285,
@@ -56473,7 +56473,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.59,
+          "share": 0.579,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -56557,8 +56557,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 51137,
-        "coding_index": 39420,
+        "openbench_index": 51145,
+        "coding_index": 39448,
         "tooling_index": 48722,
         "knowledge_index": 65402,
         "vision_index": null,
@@ -57004,7 +57004,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.309,
+          "share": 0.317,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -57884,8 +57884,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 58366,
-        "coding_index": 51954,
+        "openbench_index": 58389,
+        "coding_index": 52030,
         "tooling_index": 60295,
         "knowledge_index": 61997,
         "vision_index": 52829,
@@ -58311,7 +58311,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.197,
+          "share": 0.202,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -58388,8 +58388,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 43806,
-        "coding_index": 34171,
+        "openbench_index": 43814,
+        "coding_index": 34198,
         "tooling_index": 41195,
         "knowledge_index": 47722,
         "vision_index": null,
@@ -58817,7 +58817,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.346,
+          "share": 0.355,
           "second_hand": [
             "swe_bench_multilingual"
           ]
@@ -58889,8 +58889,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 84698,
-        "coding_index": 85726,
+        "openbench_index": 84805,
+        "coding_index": 86083,
         "tooling_index": 90547,
         "knowledge_index": 91847,
         "vision_index": null,
@@ -59475,7 +59475,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.894
+          "share": 0.891
         },
         "tooling_index": {
           "measured": [
@@ -59542,8 +59542,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 71112,
-        "coding_index": 66661,
+        "openbench_index": 71181,
+        "coding_index": 66891,
         "tooling_index": 78118,
         "knowledge_index": 77401,
         "vision_index": 72856,
@@ -60017,7 +60017,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.436,
+          "share": 0.421,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -60520,8 +60520,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 50933,
-        "coding_index": 34195,
+        "openbench_index": 50935,
+        "coding_index": 34201,
         "tooling_index": 44994,
         "knowledge_index": 77408,
         "vision_index": null,
@@ -60898,7 +60898,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181,
+          "share": 0.186,
           "second_hand": [
             "livecodebench"
           ]
@@ -62228,8 +62228,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 70096,
-        "coding_index": 67699,
+        "openbench_index": 70133,
+        "coding_index": 67822,
         "tooling_index": 82983,
         "knowledge_index": 76783,
         "vision_index": 53976,
@@ -62652,7 +62652,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.25
+          "share": 0.257
         },
         "tooling_index": {
           "measured": [
@@ -62719,8 +62719,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 81554,
-        "coding_index": 74944,
+        "openbench_index": 81497,
+        "coding_index": 74757,
         "tooling_index": 93388,
         "knowledge_index": 88498,
         "vision_index": 92769,
@@ -63224,7 +63224,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.697,
+          "share": 0.689,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -63303,8 +63303,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 77841,
-        "coding_index": 77878,
+        "openbench_index": 78020,
+        "coding_index": 78474,
         "tooling_index": 85740,
         "knowledge_index": 81746,
         "vision_index": 80469,
@@ -63751,7 +63751,7 @@
             "swe_bench_multilingual"
           ],
           "of": 17,
-          "share": 0.309,
+          "share": 0.29,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro",
@@ -63832,8 +63832,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 32339,
-        "coding_index": 21394,
+        "openbench_index": 32320,
+        "coding_index": 21333,
         "tooling_index": 22620,
         "knowledge_index": 39610,
         "vision_index": null,
@@ -64232,7 +64232,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181,
+          "share": 0.186,
           "second_hand": [
             "livecodebench"
           ]
@@ -64295,8 +64295,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 37410,
-        "coding_index": 22361,
+        "openbench_index": 37401,
+        "coding_index": 22333,
         "tooling_index": 33575,
         "knowledge_index": 48461,
         "vision_index": null,
@@ -64729,7 +64729,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.255,
+          "share": 0.262,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -65237,7 +65237,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 76779,
+        "coding_index": 76782,
         "tooling_index": 83602,
         "knowledge_index": 89632,
         "vision_index": null,
@@ -65623,7 +65623,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.33,
+          "share": 0.339,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -65689,8 +65689,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 69207,
-        "coding_index": 60680,
+        "openbench_index": 69229,
+        "coding_index": 60754,
         "tooling_index": 75533,
         "knowledge_index": 79044,
         "vision_index": null,
@@ -66091,7 +66091,7 @@
             "swe_atlas_qna"
           ],
           "of": 17,
-          "share": 0.245,
+          "share": 0.251,
           "second_hand": [
             "swe_bench_pro",
             "swe_atlas_qna"
@@ -66149,8 +66149,8 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 39762,
-        "coding_index": 19994,
+        "openbench_index": 39747,
+        "coding_index": 19946,
         "tooling_index": 40949,
         "knowledge_index": 49749,
         "vision_index": null,
@@ -66591,7 +66591,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.223,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -66664,8 +66664,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 77551,
-        "coding_index": 85772,
+        "openbench_index": 77246,
+        "coding_index": 84755,
         "tooling_index": 89505,
         "knowledge_index": 83436,
         "vision_index": 66664,
@@ -67156,7 +67156,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.399,
+          "share": 0.383,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -67650,8 +67650,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88277,
-        "coding_index": 94438,
+        "openbench_index": 88397,
+        "coding_index": 94839,
         "tooling_index": 94242,
         "knowledge_index": 97987,
         "vision_index": 99049,
@@ -68316,8 +68316,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 72542,
-        "coding_index": 76664,
+        "openbench_index": 72384,
+        "coding_index": 76136,
         "tooling_index": 78997,
         "knowledge_index": 83219,
         "vision_index": 75971,
@@ -68895,7 +68895,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.633,
+          "share": 0.623,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -68982,8 +68982,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78795,
-        "coding_index": 83269,
+        "openbench_index": 78586,
+        "coding_index": 82572,
         "tooling_index": 85544,
         "knowledge_index": 89680,
         "vision_index": 85785,
@@ -69517,7 +69517,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.601,
+          "share": 0.59,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -69607,8 +69607,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 81333,
-        "coding_index": 87082,
+        "openbench_index": 81258,
+        "coding_index": 86832,
         "tooling_index": 89114,
         "knowledge_index": 95846,
         "vision_index": 89705,
@@ -70259,7 +70259,7 @@
             "swe_bench_verified"
           ],
           "of": 17,
-          "share": 0.904,
+          "share": 0.902,
           "second_hand": [
             "frontierswe_2_0",
             "swe_bench_pro"
@@ -70354,8 +70354,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88907,
-        "coding_index": 96003,
+        "openbench_index": 89001,
+        "coding_index": 96316,
         "tooling_index": 93065,
         "knowledge_index": 99354,
         "vision_index": 96100,
@@ -70904,7 +70904,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.899
+          "share": 0.896
         },
         "tooling_index": {
           "measured": [
@@ -71680,8 +71680,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 19432,
-        "coding_index": 12538,
+        "openbench_index": 19403,
+        "coding_index": 12443,
         "tooling_index": 12956,
         "knowledge_index": 16310,
         "vision_index": null,
@@ -72060,7 +72060,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.181,
+          "share": 0.186,
           "second_hand": [
             "livecodebench"
           ]
@@ -73389,8 +73389,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 84253,
-        "coding_index": 84419,
+        "openbench_index": 84002,
+        "coding_index": 83584,
         "tooling_index": 90710,
         "knowledge_index": 93498,
         "vision_index": 74085,
@@ -73848,7 +73848,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.367,
+          "share": 0.35,
           "second_hand": [
             "deepswe_1_1"
           ]
@@ -73934,8 +73934,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 78880,
-        "coding_index": 84554,
+        "openbench_index": 78792,
+        "coding_index": 84260,
         "tooling_index": 87954,
         "knowledge_index": 76495,
         "vision_index": 53620,
@@ -74401,7 +74401,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.367,
+          "share": 0.35,
           "second_hand": [
             "deepswe_1_1"
           ]
@@ -74493,8 +74493,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89305,
-        "coding_index": 97157,
+        "openbench_index": 89404,
+        "coding_index": 97486,
         "tooling_index": 93172,
         "knowledge_index": 98591,
         "vision_index": 96435,
@@ -74986,7 +74986,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.718,
+          "share": 0.71,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -75068,8 +75068,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 75956,
-        "coding_index": 76832,
+        "openbench_index": 75877,
+        "coding_index": 76569,
         "tooling_index": 79765,
         "knowledge_index": 85820,
         "vision_index": 80891,
@@ -75522,7 +75522,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.59
+          "share": 0.579
         },
         "tooling_index": {
           "measured": [
@@ -75595,8 +75595,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86236,
-        "coding_index": 90680,
+        "openbench_index": 86233,
+        "coding_index": 90668,
         "tooling_index": 91645,
         "knowledge_index": 96011,
         "vision_index": 90202,
@@ -76063,7 +76063,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.59
+          "share": 0.579
         },
         "tooling_index": {
           "measured": [
@@ -77619,8 +77619,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90712,
-        "coding_index": 97337,
+        "openbench_index": 90753,
+        "coding_index": 97475,
         "tooling_index": 98514,
         "knowledge_index": 96715,
         "vision_index": null,
@@ -78051,7 +78051,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.718,
+          "share": 0.71,
           "second_hand": [
             "frontierswe_2_0",
             "swe_bench_pro"
@@ -78116,8 +78116,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 87350,
-        "coding_index": 91053,
+        "openbench_index": 87243,
+        "coding_index": 90697,
         "tooling_index": 93244,
         "knowledge_index": 98582,
         "vision_index": 92674,
@@ -78533,7 +78533,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.564
+          "share": 0.552
         },
         "tooling_index": {
           "measured": [
@@ -78921,8 +78921,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90974,
-        "coding_index": 92871,
+        "openbench_index": 90852,
+        "coding_index": 92463,
         "tooling_index": 96402,
         "knowledge_index": 97238,
         "vision_index": null,
@@ -79290,7 +79290,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.495
+          "share": 0.481
         },
         "tooling_index": {
           "measured": [
@@ -79581,8 +79581,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 81287,
-        "coding_index": 79995,
+        "openbench_index": 81537,
+        "coding_index": 80826,
         "tooling_index": 89774,
         "knowledge_index": 87704,
         "vision_index": null,
@@ -79944,7 +79944,7 @@
             "scicode"
           ],
           "of": 17,
-          "share": 0.25,
+          "share": 0.23,
           "second_hand": [
             "deepswe_1_1",
             "terminal_bench_2_1",
@@ -80006,8 +80006,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 85374,
-        "coding_index": 94783,
+        "openbench_index": 85599,
+        "coding_index": 95532,
         "tooling_index": 89549,
         "knowledge_index": 92853,
         "vision_index": 63430,
@@ -80381,7 +80381,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.495,
+          "share": 0.481,
           "second_hand": [
             "deepswe_1_1",
             "swe_marathon_1_1",

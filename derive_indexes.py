@@ -182,7 +182,14 @@ INDEXES: list[IndexDef] = [
             # of the group predicts well -- 0.85 Spearman with SWE-bench
             # Verified, 0.82 with FrontierCode 1.1, 0.81 with Terminal-Bench
             # 4.0 -- and 6 of its 18 values are not the maintainers' own runs.
-            ("deepswe_1_1", 0.6),
+            #
+            # 0.35 since 2026-10-03, from 0.6: at 29 scored models it agrees
+            # least with the rest of the group of any frontier member -- 0.73
+            # Spearman against the index, 0.35 against Terminal-Bench 2.1,
+            # 0.46 against FrontierSWE 2.0, 0.50 against SWE-Marathon -- on a
+            # 6.8-point head, and 11 of its values are not the maintainers'
+            # own runs.
+            ("deepswe_1_1", 0.35),
             ("frontierswe_2_0", 0.9),
             # FrontierCode enters through its Extended board, the full
             # 150-task set, and not through Main, the 100 hardest of those same
@@ -203,8 +210,10 @@ INDEXES: list[IndexDef] = [
             # Long-horizon execution adds useful coverage, but 20 distinct
             # tasks warrant less influence than the larger frontier boards.
             # 0.75 since 2026-10-03, up from 0.65: 16 scored models where it
-            # had 12, 15 of them first-party, and a 27.1-point head nothing
-            # else in the group but ProgramBench and Real-SWE matches.
+            # had 12, 15 of them first-party. The 27.1-point head that raise
+            # was argued on is one model-card claim (step-5-preview, 72.7,
+            # 21 points above the board's best run); the board's own top five
+            # span 8.2 points, on 20 tasks where one task is 5 points.
             ("swe_marathon_1_1", 0.75),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release; 2.1 stays in because it is not a superseded

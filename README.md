@@ -1971,8 +1971,8 @@ the coding index as it stood before the change.
 | FrontierSWE 2.0 | 12 (10) | 65.5 | 10.5 | 0.96 | 0.9 | **0.9** |
 | ProgramBench (Almost) | 31 (30) | 80.5 | 31.0 | 0.96 | 0.5 | **0.9** |
 | FrontierCode Extended 1.1 | 21 (21) | 65.3 | 4.6 | 0.96 | 0.9 | **0.8** |
-| SWE-Marathon 1.1 | 16 (15) | 72.7 | 27.1 | 0.84 | 0.65 | **0.75** |
-| DeepSWE 1.1 | 29 (18) | 78.8 | 6.8 | 0.73 | 0.6 | **0.6** |
+| SWE-Marathon 1.1 | 16 (15) | 72.7¹ | 27.1¹ | 0.84 | 0.65 | **0.75** |
+| DeepSWE 1.1 | 29 (18) | 78.8 | 6.8 | 0.73 | 0.6 | **0.35** |
 | SWE Atlas Refactoring | 12 (9) | 59.1 | 12.9 | 0.97 | 0.75 | **0.6** |
 | SWE Atlas Codebase Q&A | 27 (19) | 66.9 | 3.3 | 0.90 | 0.75 | **0.55** |
 | Vibe Code Bench 1.1 | 40 (40) | 92.4 | 2.8 | 0.96 | 0.75 | **0.5** |
@@ -1984,7 +1984,12 @@ the coding index as it stood before the change.
 | LiveCodeBench | 118 (84) | 92.4 | 3.0 | 0.82 | 0.4 | **0.25** |
 | SWE-bench Verified | 80 (29) | 96.4 | 3.0 | 0.90 | 0.15 | **0.1** |
 
-The total went 9.65 → 9.40. The reasoning, rung by rung:
+¹ Both figures rest on one model-card claim, `step-5-preview` at 72.7, 21
+points above the board's best run. On the board's own runs the top is 51.3 and
+the head **8.2**, on 20 tasks where one task is worth 5 points. The raise to
+0.75 was argued on the 27.1 before that was noticed.
+
+The total went 9.65 → 9.15. The reasoning, rung by rung:
 
 - **Terminal-Bench 4.0 stays at 0.85, a rung under Real-SWE.** Its reach has
   arrived — 85 models, 84 of them AA's own runs, with a live 10.6-point head
@@ -2001,16 +2006,22 @@ The total went 9.65 → 9.40. The reasoning, rung by rung:
   widened to 31 models and kept a 31.0-point head, the widest in the group. The
   pair still agrees at 0.92 over 30 models, so it still votes as one construct,
   but the discount now falls on the saturated member: 0.9 and 0.5, which is 1.4
-  of 9.40 (14.9%) against the Terminal-Bench pair's 1.10. Every ProgramBench
-  weight from 0.5 to 0.94 ranks the same 83 models; from 0.95 up, 16 more fall
-  under the evidence bar, which is why it stops at 0.9 rather than 1.0.
+  of 9.15 (15.3%) against the Terminal-Bench pair's 1.10. Every ProgramBench
+  weight up to 1.15 ranks the same 83 models; from 1.2 up, 16 more fall under
+  the evidence bar.
 - **SWE Atlas contributes all three tracks**, on correlations that changed. See
   [the note on that section](#why-swe-atlas-contributes-two-tracks).
 - **FrontierCode Extended steps down to 0.8.** Its head has closed to 4.6
   points, and it ranks the 9 models it shares with FrontierSWE 2.0 at 0.97, so
   at 0.9 each the two were close to one ranking of the frontier counted twice.
-  **SWE-Marathon steps up to 0.75** on 16 models, 15 of them first-party, with a
-  27.1-point head.
+  **SWE-Marathon steps up to 0.75** on 16 models, 15 of them first-party — on a
+  head that turned out to be one model-card claim (see the note under the
+  table).
+- **DeepSWE steps down to 0.35**, in a second pass the same day. At 29 scored
+  models it is the frontier member that agrees least with the rest of the
+  group: 0.73 against the index, 0.35 against Terminal-Bench 2.1, 0.46 against
+  FrontierSWE 2.0 and 0.50 against SWE-Marathon, on a 6.8-point head, with 11
+  of its 29 values not the maintainers' own runs.
 - **The public and second-hand columns step down.** LiveCodeBench (92.4 at the
   top, 0.1–0.3 against the frontier agentic boards) and SWE-bench Verified
   (96.4) are saturated. SWE-bench Pro has 55 models and not one first-party
@@ -2024,24 +2035,33 @@ Over the 83 models ranked both times, Spearman is **0.998**, with a mean move of
 [transfer ratio](#how-far-one-benchmark-speaks-for-the-others) **0.015 →
 0.014**.
 
+The DeepSWE step moved the order a further Spearman 0.9998, worst case 3
+places, and swapped the top two: `claude-opus-5-5` 1st and
+`claude-sonnet-5-5` 2nd, **11 points apart** out of 100,000. That is a tie in
+everything but print order. Sonnet's largest wins are on DeepSWE (72.0 to
+68.4) and SWE-Marathon (51.3 to 46.3, one task in 20), Opus's on ProgramBench
+(65.0 to 49.5), FrontierCode and FrontierSWE, so the order turns on how much
+those two noisier boards are trusted. Re-calibrating moved the transfer ratio
+**0.014 → 0.013**.
+
 Seven models drop below [the evidence bar](#why-the-evidence-bar-is-18), and
 none is ranked for the first time: **90 → 83**.
 
 - Four are measured only on columns that stepped down. The three `ornith-1-5`
   models carry Terminal-Bench 2.1, SWE-bench Pro, Multilingual, Verified and
-  SWE Atlas Q&A, now 16.0% of the weight. `granite-4-2-30b` carries the same
-  minus Q&A, plus LiveCodeBench and SciCode, now 16.5%.
+  SWE Atlas Q&A, now 16.4% of the weight. `granite-4-2-30b` carries the same
+  minus Q&A, plus LiveCodeBench and SciCode, now 16.9%.
 - The other three were borderline before: `k2-horizon-3-7b`, `k2-horizon-7b`
   and `trinity-large-thinking` each carry Terminal-Bench 4.0, Terminal-Bench
   2.1, SciCode and SWE-bench Verified. That was 1.75 of 9.65 (18.1%) and is
-  1.55 of 9.40 (16.5%) now, because 2.1 and Verified stepped down.
+  1.55 of 9.15 (16.9%) now, because 2.1 and Verified stepped down.
 
-No reasonable weight on the frontier members brings those three back: the
-total would have to fall below 8.61. Restoring Terminal-Bench 2.1 to 0.4
-would not do it either (17.8%). A model measured on one frontier board plus
-three saturated ones is the borderline case the bar is for, and this page has
-[declined before](#why-vibe-code-bench-enters-at-075) to choose weights
-around it.
+Restoring Terminal-Bench 2.1 to 0.4 would bring those three back (1.70 of
+9.30, 18.3%), along with one more model, at the cost of putting a saturated
+board back near the weight it was cut from. A model measured on one frontier
+board plus three saturated ones is the borderline case the bar is for, and
+this page has [declined before](#why-vibe-code-bench-enters-at-075) to choose
+weights around it.
 
 ### Why Real-SWE leads the coding group, and what it cost
 
