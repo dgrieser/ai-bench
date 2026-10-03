@@ -211,7 +211,7 @@ INDEXES: list[IndexDef] = [
             # revision in the sense above -- it is a separate series -- but
             # only as coverage. 4.0 stays at 0.85, a rung under Real-SWE: AA
             # now runs it across its field, 85 scored models where it had 32,
-            # 84 of them AA-run, with a live 10.6-point head, but it is the
+            # 84 of them AA-run, with a live 7.5-point head, but it is the
             # least software-engineering-shaped of the frontier members --
             # terminal agency rather than repository work -- and it carries
             # 1.0 in the tooling group, where that is the construct. 2.1 is
@@ -356,8 +356,7 @@ INDEXES: list[IndexDef] = [
             # scored.
             ("automation_bench_aa", 1.0),
             # Level with the anchor, as in the coding group: 85 scored models,
-            # 84 AA-run, and the widest live head in the group (10.6 points to
-            # the fifth). 2.1, saturated, is coverage at 0.2.
+            # 84 AA-run, with a live 7.5-point head on AA's own harness. 2.1, saturated, is coverage at 0.2.
             ("terminal_bench_4_0", 1.0),
             ("toolathlon", 0.8),
             ("gdpval_aa", 0.7),

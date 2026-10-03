@@ -251,7 +251,9 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # so each lands in the column its own board also publishes -- the 4.0 one
     # beside fetch_tbench.py's, which AA outranks (_precedence.RANK_AA), and the
     # two disagree by a few points because they are different harnesses over the
-    # same task set. The second spelling is the one the v2 API would use if it
+    # same task set. Since 2026-10-03 AA's own run outranks the Coding Agent
+    # Index (_precedence.RANK_AA), so the model-page value lands wherever both
+    # report. The second spelling is the one the v2 API would use if it
     # ever carries the field; the pages spell it the first way.
     "terminal_bench_4_0": (("terminalbench_4_0", "terminal_bench_4_0"), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),

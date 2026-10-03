@@ -747,8 +747,8 @@ already gives row collisions inside a single source.
 
 | Rank | Source | Why there |
 | --- | --- | --- |
-| 0 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design; ranking the index above them means its run lands wherever both report, whichever ingest ran last. |
-| 1 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
+| 0 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
+| 1 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design. Since 2026-10-03 the model pages rank above it, so AA's single-harness run lands wherever both report, whichever ingest ran last: a column that compares models should hold the harness fixed, and the vendor agents do not. The index fills what the pages leave empty — Terminal-Bench 4.0 for a model AA has not run itself, and its DeepSWE and SWE Atlas rows — and outranks every benchmark site there. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, HLE-Diamond's announcement post, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
@@ -779,9 +779,10 @@ nothing about any one page. AA-LCR and the tau benches were in the same place
 until the free tier dropped them; they are read off the model pages now, which
 do say something about each page. Nothing carries over between runs.
 
-The Coding Agent Index is not fill-only, and at rank 0 it outranks the model
-pages: where both AA surfaces report a column, the agent run lands whether or
-not the model-page ingest ran, and in either order. Missing results never erase
+The Coding Agent Index is not fill-only, and at rank 1 it sits just under the
+model pages: where both AA surfaces report a column, the model-page run lands
+whether or not the agent ingest ran, and in either order. Where the pages report
+nothing, the agent run fills the column. Missing results never erase
 stored scores.
 
 tbench.ai's 4.0, 2.1 and 2.0 boards each rank 2 for their own column.
@@ -1986,7 +1987,9 @@ the coding index as it stood before the change.
 The total went 9.65 → 9.40. The reasoning, rung by rung:
 
 - **Terminal-Bench 4.0 stays at 0.85, a rung under Real-SWE.** Its reach has
-  arrived — 85 models, 84 of them AA's own runs, with a live 10.6-point head —
+  arrived — 85 models, 84 of them AA's own runs, with a live 10.6-point head
+  (7.5 since AA's model pages took [precedence](#source-precedence) over its
+  Coding Agent Index for this column) —
   but it is the least software-engineering-shaped of the frontier members:
   terminal agency rather than repository work. It carries 1.0 in
   [Tooling](#tooling-index), where that is the construct. Terminal-Bench 2.1,
@@ -2675,7 +2678,7 @@ Contributing benchmarks and why they carry the weight they do:
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
 | AutomationBench-AA | 1.0 | The anchor since 2026-10-03, taking over from τ³-Bench Banking, which it replaced in AA's Intelligence Index v4.3 (2026-09-07). AA runs Zapier's AutomationBench on a held-out set: 657 end-to-end business workflows in a simulated company whose apps are reachable only through REST endpoints the agent has to find by search, under layered policy documents and planted distractions, scored with partial credit and zeroed by any guardrail violation. That is tool discovery, the property τ³ Banking was anchored for, on a broader task set. **85 scored models, every one AA-run**, with a 9.0-point head (77.5 at the top); it ranks the 75 models on both **0.88** with τ³ Banking. Against it: it agrees 0.95 with GDPval-AA, so part of what it adds is the same AA harness again. The column stores AA's partial-credit score, never Zapier's own pass rate, which labs quote under the bare name "AutomationBench" on a different scale (Opus 5.5's card: 40.0 or 42.5 there, against 69.5 here). |
-| Terminal-Bench 4.0 | 1.0 | Level with the anchor since the 2026-10-03 re-weighting, up from 0.8. Its standing was always provenance and a live head held back by reach; the reach has arrived — **85 scored models, 84 of them AA-run**, where it had 32 — and the head is still the widest live one in the group, 10.6 points between the best model and the fifth. It remains the least tool-shaped member (terminal/CLI agency rather than structured tool calling, overlapping the Coding index, where it carries 0.85), and that is the one argument against it; at 85 models it no longer has a coverage argument against it to add. |
+| Terminal-Bench 4.0 | 1.0 | Level with the anchor since the 2026-10-03 re-weighting, up from 0.8. Its standing was always provenance and a live head held back by reach; the reach has arrived — **85 scored models, 84 of them AA-run**, where it had 32 — and the head is still live: 7.5 points between the best model and the fifth on AA's own harness (63.6 at the top), which the column has carried since 2026-10-03, when AA's model pages took precedence over its Coding Agent Index for this column. It remains the least tool-shaped member (terminal/CLI agency rather than structured tool calling, overlapping the Coding index, where it carries 0.85), and that is the one argument against it; at 85 models it no longer has a coverage argument against it to add. |
 | Toolathlon-Verified | 0.8 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded. Down from 0.9: the field has grown to 40 but only 13 of those are the team's verified runs, and the head has closed to 2.5 points between the best model and the fifth. |
 | GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. The best provenance of the set (104 of 109 scores AA-run) and a wide head (175 Elo between the best model and the fifth). Below Terminal-Bench 4.0 because the two largely measure the same shell-agency axis — 0.95 with 2.1 and 0.83 with 4.0 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality. |
 | MCP-Atlas | 0.7 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, 0.82 with Toolathlon over 23 models. Down from 0.85: the top is approaching its ceiling (87.2, 3.5 points to the fifth) and only 11 of its 30 scores are Scale's own runs. |
