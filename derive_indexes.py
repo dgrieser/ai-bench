@@ -194,19 +194,29 @@ INDEXES: list[IndexDef] = [
             # in llm.json, scraped and rendered like any other -- it is simply
             # not voted on here, the way frontiercode_1_0 is not. See README,
             # "FrontierCode Extended in the coding group".
-            ("frontiercode_extended_1_1", 0.9),
+            #
+            # 0.8 since 2026-10-03, down from 0.9: its head has closed to 4.6
+            # points between the best model and the fifth, and it ranks the 9
+            # models it shares with FrontierSWE 2.0 at 0.97 -- the pair was
+            # spending 1.8 on what is close to one ranking of the frontier.
+            ("frontiercode_extended_1_1", 0.8),
             # Long-horizon execution adds useful coverage, but 20 distinct
             # tasks warrant less influence than the larger frontier boards.
-            ("swe_marathon_1_1", 0.65),
+            # 0.75 since 2026-10-03, up from 0.65: 16 scored models where it
+            # had 12, 15 of them first-party, and a 27.1-point head nothing
+            # else in the group but ProgramBench and Real-SWE matches.
+            ("swe_marathon_1_1", 0.75),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
-            # the current release and carries the weight 2.1 held; 2.1 stays in
-            # at 0.4 because it is not a superseded revision in the sense above
-            # -- it is a separate series, scored on 105 models against 4.0's
-            # 32, and dropping it would take the group's coverage backbone out
-            # with it. The lower weight is what keeps the pair from voting
-            # twice on one construct.
-            ("terminal_bench_4_0", 0.85),
-            ("terminal_bench_2_1", 0.4),
+            # the current release; 2.1 stays in because it is not a superseded
+            # revision in the sense above -- it is a separate series -- but
+            # only as coverage. Since 2026-10-03 4.0 is the anchor at 1.0 (up
+            # from 0.85) and 2.1 is down to 0.25 (from 0.4): AA now runs 4.0
+            # across its field, 85 scored models where it had 32, 84 of them
+            # AA-run, with a live 10.6-point head, while 2.1 has saturated
+            # (91.4 at the top, 3.8 points to the fifth). With 4.0 that wide,
+            # 2.1 is no longer the coverage backbone it was kept for.
+            ("terminal_bench_4_0", 1.0),
+            ("terminal_bench_2_1", 0.25),
             # The only member that measures building rather than maintaining:
             # every other board here sets its tasks inside a repository that
             # already works, and this one hands the model a specification for a
@@ -243,22 +253,36 @@ INDEXES: list[IndexDef] = [
             # -- Command A+, both Devstrals, GLM 4.7 and MiMo V2 Flash, none of
             # them scored here -- fall under the evidence bar the new weight
             # lifts. See README, "Why Vibe Code Bench enters at 0.75".
-            ("vibe_code_bench_1_1", 0.75),
-            ("swe_bench_pro", 0.4),
-            ("livecodebench", 0.4),
+            #
+            # 0.5 since 2026-10-03: the head has saturated -- 92.4 at the top
+            # and 2.8 points to the fifth, half the 5.6 that priced it at 0.75
+            # -- and it swaps rungs with ProgramBench, the other construction
+            # board, which now has the width and the head this one has lost.
+            ("vibe_code_bench_1_1", 0.5),
+            # 0.3 since 2026-10-03, from 0.4: 55 scored models and not one
+            # first-party value -- llm-stats, benchlm and model cards under
+            # whatever harness each lab chose, which do not agree with each
+            # other (a Qwen3.5 at 80.3 above most of the frontier).
+            ("swe_bench_pro", 0.3),
+            # 0.25 since 2026-10-03, from 0.4: saturated (92.4 at the top, 3.0
+            # points to the fifth) and the group's least related member -- 0.1
+            # to 0.3 Spearman against the frontier agentic boards.
+            ("livecodebench", 0.25),
             ("scicode", 0.35),
             ("swe_bench_multilingual", 0.3),
-            # SWE Atlas contributes two of its three tracks, at 0.75 each.
-            # Test Writing is the one left out, and the correlations pick it:
-            # it ranks the field 0.955 with Codebase Q&A over the 11 models on
-            # both, which is a second copy of a column already here, where
-            # Refactoring sits at 0.755 -- the loosest pair in the family -- and
-            # is the only track scoring a model Q&A does not (MiniMax M3). So
-            # the family votes 1.5 on two tracks that disagree rather than 0.51
-            # on three that do not, and Test Writing stays a column nothing
-            # aggregates. See README, "Why SWE Atlas contributes two tracks".
-            ("swe_atlas_qna", 0.75),
-            ("swe_atlas_rf", 0.75),
+            # SWE Atlas contributes all three of its tracks since 2026-10-03,
+            # 1.55 between them -- about the 1.5 the family carried on two.
+            # Test Writing was left out while it ranked the field 0.955 with
+            # Codebase Q&A, a second copy of a column already here; on the
+            # current file the three pairs sit at 0.86-0.87, so no track
+            # repeats another any more, and Test Writing has the widest head of
+            # the three (25.5 points to the fifth against Q&A's 3.3). Q&A, the
+            # widest field (27 models) with the narrowest head, takes 0.55;
+            # Refactoring, the track that edits code, 0.6; Test Writing, on 11
+            # models, 0.4. See README, "Why SWE Atlas contributes two tracks".
+            ("swe_atlas_qna", 0.55),
+            ("swe_atlas_rf", 0.6),
+            ("swe_atlas_tw", 0.4),
             # ProgramBench rebuilt from its binary: the agent gets a
             # reference executable and its documentation, nothing else, and has
             # to produce a codebase whose behaviour matches across 200 tasks
@@ -298,27 +322,42 @@ INDEXES: list[IndexDef] = [
             # next group until 0.572. So 0.5 is chosen on merit inside a band
             # where merit is the only thing left to choose on. See README,
             # "Why ProgramBench enters at 0.50".
-            ("programbench_almost", 0.5),
-            ("swe_bench_verified", 0.15),
+            #
+            # 0.9 since 2026-10-03, level with FrontierSWE 2.0: 31 scored
+            # models where it had 22, 30 of them first-party, and still the
+            # widest head in the group at 31.0 points. It now leads the
+            # construction pair, and Vibe Code Bench, saturated, takes the
+            # discount instead -- 1.4 for the pair, 14.7% of the group, a
+            # little above the Terminal-Bench pair's 1.25. Every weight from
+            # 0.9 to 1.0 ranks the same field.
+            ("programbench_almost", 0.9),
+            # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
+            ("swe_bench_verified", 0.1),
         ],
     ),
     IndexDef(
         key="tooling_index",
         fallback_source_url="https://github.com/dgrieser/ai-bench#tooling-index",
         contributing=[
+            # Weights re-measured 2026-10-03; README, "Tooling Index", has the
+            # table and the numbers behind every rung.
             ("tau3_bench_banking", 1.0),
-            ("toolathlon", 0.9),
-            ("mcp_atlas", 0.85),
-            # Same swap as in the coding group, one rung down: 4.0 takes the
-            # weight 2.1 held, 2.1 stays as coverage at 0.3.
-            ("terminal_bench_4_0", 0.8),
-            ("terminal_bench_2_1", 0.3),
+            # Level with the anchor, as in the coding group: 85 scored models,
+            # 84 AA-run, and the widest live head in the group (10.6 points to
+            # the fifth). 2.1, saturated, is coverage at 0.2.
+            ("terminal_bench_4_0", 1.0),
+            ("toolathlon", 0.8),
             ("gdpval_aa", 0.7),
+            ("mcp_atlas", 0.7),
             ("itbench_aa", 0.6),
-            ("bfcl_v4", 0.5),
-            ("tau2_bench_telecom", 0.3),
+            ("bfcl_v4", 0.45),
+            # Long-horizon computer work for professional clients, admitted
+            # now that 21 tracked models carry it (it was held out at 8).
+            ("agents_last_exam", 0.35),
             ("terminal_bench_hard", 0.3),
-            ("ifbench", 0.2),
+            ("terminal_bench_2_1", 0.2),
+            ("tau2_bench_telecom", 0.15),
+            ("ifbench", 0.15),
         ],
     ),
     IndexDef(

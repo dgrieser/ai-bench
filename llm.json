@@ -145,7 +145,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.9), SWE-Marathon 1.1 (0.65), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.4), Vibe Code Bench 1.1 (0.75), SWE-bench Pro (0.4), LiveCodeBench (0.4), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.75), SWE Atlas: Refactoring (0.75), ProgramBench: Almost Resolved (0.5), SWE-bench Verified (0.15).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE (1), DeepSWE 1.1 (0.6), FrontierSWE 2.0 (0.9), FrontierCode 1.1 Extended (0.8), SWE-Marathon 1.1 (0.75), Terminal-Bench 4.0 (1), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), SWE-bench Verified (0.1).",
       "settings": [
         "derived",
         "index scale"
@@ -165,7 +165,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: τ³-Bench Banking (1), Toolathlon-Verified (0.9), MCP-Atlas (0.85), Terminal-Bench 4.0 (0.8), Terminal-Bench 2.1 (0.3), GDPval-AA v2 (0.7), ITBench-AA (0.6), BFCL v4 (0.5), τ²-Bench Telecom (0.3), Terminal-Bench Hard (0.3), IFBench (0.2).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: τ³-Bench Banking (1), Terminal-Bench 4.0 (1), Toolathlon-Verified (0.8), GDPval-AA v2 (0.7), MCP-Atlas (0.7), ITBench-AA (0.6), BFCL v4 (0.45), Agents' Last Exam (0.35), Terminal-Bench Hard (0.3), Terminal-Bench 2.1 (0.2), τ²-Bench Telecom (0.15), IFBench (0.15).",
       "settings": [
         "derived",
         "index scale"
@@ -1553,9 +1553,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 33126,
-        "coding_index": 25037,
-        "tooling_index": 33655,
+        "openbench_index": 33340,
+        "coding_index": 25289,
+        "tooling_index": 34117,
         "knowledge_index": 24354,
         "vision_index": null,
         "trust_index": 47462,
@@ -1972,8 +1972,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.254,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -1983,14 +1983,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -2027,9 +2027,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 28896,
-        "coding_index": 22300,
-        "tooling_index": 32152,
+        "openbench_index": 29375,
+        "coding_index": 23146,
+        "tooling_index": 32903,
         "knowledge_index": 17570,
         "vision_index": 10655,
         "trust_index": 39700,
@@ -2458,8 +2458,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.254,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -2469,14 +2469,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -3316,7 +3316,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 42816,
+        "coding_index": 41262,
         "tooling_index": null,
         "knowledge_index": 56571,
         "vision_index": null,
@@ -3740,10 +3740,11 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.399,
+          "of": 17,
+          "share": 0.351,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -4176,9 +4177,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 30426,
-        "coding_index": 26817,
-        "tooling_index": 28539,
+        "openbench_index": 30035,
+        "coding_index": 26728,
+        "tooling_index": 27323,
         "knowledge_index": 31289,
         "vision_index": null,
         "trust_index": 36505,
@@ -4593,8 +4594,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -4604,14 +4605,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -4647,9 +4648,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 29717,
-        "coding_index": 21502,
-        "tooling_index": 20311,
+        "openbench_index": 30069,
+        "coding_index": 22676,
+        "tooling_index": 20310,
         "knowledge_index": 36940,
         "vision_index": null,
         "trust_index": 46530,
@@ -5065,8 +5066,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223,
+          "of": 17,
+          "share": 0.204,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -5075,14 +5076,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -5121,7 +5122,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 24456,
+        "tooling_index": 23487,
         "knowledge_index": 42101,
         "vision_index": null,
         "trust_index": 49257,
@@ -5489,14 +5490,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -5533,9 +5534,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 53351,
-        "coding_index": 46703,
-        "tooling_index": 50288,
+        "openbench_index": 51469,
+        "coding_index": 42567,
+        "tooling_index": 48149,
         "knowledge_index": 68332,
         "vision_index": 63666,
         "trust_index": 56017,
@@ -6033,8 +6034,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.295,
+          "of": 17,
+          "share": 0.267,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -6045,18 +6046,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
             "itbench_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.868,
+          "of": 12,
+          "share": 0.836,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -6115,9 +6116,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 48412,
-        "coding_index": 35373,
-        "tooling_index": 49606,
+        "openbench_index": 47096,
+        "coding_index": 33055,
+        "tooling_index": 47537,
         "knowledge_index": 61870,
         "vision_index": 49775,
         "trust_index": 54553,
@@ -6568,8 +6569,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223,
+          "of": 17,
+          "share": 0.204,
           "second_hand": [
             "livecodebench",
             "swe_bench_verified"
@@ -6579,15 +6580,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636,
+          "of": 12,
+          "share": 0.617,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -6648,7 +6649,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 57940,
+        "tooling_index": 57089,
         "knowledge_index": 60206,
         "vision_index": 53054,
         "trust_index": 57645,
@@ -7061,12 +7062,12 @@
           "measured": [
             "itbench_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.295,
+          "of": 12,
+          "share": 0.258,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -7127,7 +7128,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 44533,
+        "tooling_index": 42636,
         "knowledge_index": 55352,
         "vision_index": 40571,
         "trust_index": 54131,
@@ -7533,12 +7534,12 @@
           "measured": [
             "itbench_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.295,
+          "of": 12,
+          "share": 0.258,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -7597,9 +7598,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 43479,
-        "coding_index": 38342,
-        "tooling_index": 41508,
+        "openbench_index": 44320,
+        "coding_index": 40836,
+        "tooling_index": 41817,
         "knowledge_index": 45863,
         "vision_index": 35403,
         "trust_index": 50579,
@@ -8042,8 +8043,8 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207,
+          "of": 17,
+          "share": 0.194,
           "second_hand": [
             "livecodebench"
           ]
@@ -8052,15 +8053,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636,
+          "of": 12,
+          "share": 0.617,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -8121,7 +8122,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 32926,
+        "tooling_index": 31098,
         "knowledge_index": 32319,
         "vision_index": 31395,
         "trust_index": 45580,
@@ -8500,14 +8501,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.403,
+          "of": 12,
+          "share": 0.352,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -8568,7 +8569,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 13095,
+        "tooling_index": 11038,
         "knowledge_index": 13442,
         "vision_index": 12348,
         "trust_index": 41437,
@@ -8950,15 +8951,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.461,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -9017,7 +9018,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7653,
+        "tooling_index": 5435,
         "knowledge_index": 14168,
         "vision_index": 195,
         "trust_index": 40319,
@@ -9389,15 +9390,15 @@
       "index_coverage": {
         "tooling_index": {
           "measured": [
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.357,
+          "of": 12,
+          "share": 0.305,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -9454,9 +9455,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 41332,
-        "coding_index": 27504,
-        "tooling_index": 36819,
+        "openbench_index": 40654,
+        "coding_index": 26670,
+        "tooling_index": 35393,
         "knowledge_index": 59495,
         "vision_index": null,
         "trust_index": 52444,
@@ -9893,8 +9894,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.212,
+          "of": 17,
+          "share": 0.209,
           "second_hand": [
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -9904,15 +9905,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.651
+          "of": 12,
+          "share": 0.641
         },
         "knowledge_index": {
           "measured": [
@@ -10336,9 +10337,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 33235,
-        "coding_index": 29153,
-        "tooling_index": 30510,
+        "openbench_index": 32835,
+        "coding_index": 28824,
+        "tooling_index": 29507,
         "knowledge_index": 38989,
         "vision_index": null,
         "trust_index": 37951,
@@ -10744,8 +10745,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223,
+          "of": 17,
+          "share": 0.204,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -10754,14 +10755,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -10799,9 +10800,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 40682,
-        "coding_index": 31170,
-        "tooling_index": 38775,
+        "openbench_index": 39759,
+        "coding_index": 29126,
+        "tooling_index": 37740,
         "knowledge_index": 52510,
         "vision_index": null,
         "trust_index": 47290,
@@ -11232,8 +11233,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -11242,15 +11243,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.651
+          "of": 12,
+          "share": 0.641
         },
         "knowledge_index": {
           "measured": [
@@ -11287,9 +11288,9 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 34935,
-        "coding_index": 23846,
-        "tooling_index": 27622,
+        "openbench_index": 34795,
+        "coding_index": 23969,
+        "tooling_index": 27034,
         "knowledge_index": 47228,
         "vision_index": null,
         "trust_index": 49641,
@@ -11698,8 +11699,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223,
+          "of": 17,
+          "share": 0.204,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -11708,15 +11709,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636,
+          "of": 12,
+          "share": 0.617,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -11756,9 +11757,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 36274,
-        "coding_index": 24957,
-        "tooling_index": 25539,
+        "openbench_index": 36312,
+        "coding_index": 25740,
+        "tooling_index": 24882,
         "knowledge_index": 49014,
         "vision_index": 25505,
         "trust_index": 55092,
@@ -12182,21 +12183,21 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.285
+          "of": 17,
+          "share": 0.246
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -12242,9 +12243,9 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 55292,
-        "coding_index": 44110,
-        "tooling_index": 47943,
+        "openbench_index": 53812,
+        "coding_index": 41312,
+        "tooling_index": 45806,
         "knowledge_index": 70857,
         "vision_index": null,
         "trust_index": 68191,
@@ -12724,8 +12725,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.425,
+          "of": 17,
+          "share": 0.414,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -12734,17 +12735,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.791
+          "of": 12,
+          "share": 0.82
         },
         "knowledge_index": {
           "measured": [
@@ -13553,7 +13555,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 10723,
+        "tooling_index": 9661,
         "knowledge_index": 43222,
         "vision_index": null,
         "trust_index": 43072,
@@ -13923,15 +13925,15 @@
       "index_coverage": {
         "tooling_index": {
           "measured": [
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.357,
+          "of": 12,
+          "share": 0.305,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -13969,9 +13971,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 47870,
-        "coding_index": 36593,
-        "tooling_index": 48356,
+        "openbench_index": 46982,
+        "coding_index": 34658,
+        "tooling_index": 47331,
         "knowledge_index": 58917,
         "vision_index": 44342,
         "trust_index": 54190,
@@ -14412,8 +14414,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -14424,15 +14426,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.651
+          "of": 12,
+          "share": 0.641
         },
         "knowledge_index": {
           "measured": [
@@ -14480,7 +14482,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 39790,
+        "tooling_index": 39253,
         "knowledge_index": 43539,
         "vision_index": 36607,
         "trust_index": 51617,
@@ -14867,15 +14869,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.527
+          "of": 12,
+          "share": 0.484
         },
         "knowledge_index": {
           "measured": [
@@ -14921,9 +14923,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 28853,
-        "coding_index": 15858,
-        "tooling_index": 18760,
+        "openbench_index": 29563,
+        "coding_index": 17766,
+        "tooling_index": 19218,
         "knowledge_index": 38553,
         "vision_index": 17674,
         "trust_index": 50738,
@@ -15314,8 +15316,8 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207,
+          "of": 17,
+          "share": 0.194,
           "second_hand": [
             "livecodebench"
           ]
@@ -15324,14 +15326,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -15379,7 +15381,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 10880,
+        "tooling_index": 10224,
         "knowledge_index": 31723,
         "vision_index": 10655,
         "trust_index": 47076,
@@ -15747,14 +15749,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -15800,9 +15802,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 47271,
-        "coding_index": 34773,
-        "tooling_index": 43178,
+        "openbench_index": 45977,
+        "coding_index": 32443,
+        "tooling_index": 41194,
         "knowledge_index": 61080,
         "vision_index": 51516,
         "trust_index": 58894,
@@ -16257,8 +16259,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.295,
+          "of": 17,
+          "share": 0.267,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -16269,17 +16271,17 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.829,
+          "of": 12,
+          "share": 0.781,
           "second_hand": [
             "toolathlon",
             "mcp_atlas"
@@ -16335,9 +16337,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 53325,
-        "coding_index": 42161,
-        "tooling_index": 52024,
+        "openbench_index": 51767,
+        "coding_index": 39229,
+        "tooling_index": 49762,
         "knowledge_index": 65297,
         "vision_index": 50487,
         "trust_index": 61101,
@@ -16793,8 +16795,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.373,
+          "of": 17,
+          "share": 0.319,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -16805,14 +16807,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -16864,9 +16866,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 70324,
-        "coding_index": 71942,
-        "tooling_index": 77105,
+        "openbench_index": 70027,
+        "coding_index": 70751,
+        "tooling_index": 77309,
         "knowledge_index": 80526,
         "vision_index": null,
         "trust_index": 54122,
@@ -17463,23 +17465,25 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.585
+          "of": 17,
+          "share": 0.555
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
+            "agents_last_exam",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.736,
+          "of": 12,
+          "share": 0.766,
           "second_hand": [
             "mcp_atlas",
+            "agents_last_exam",
             "ifbench"
           ]
         },
@@ -17529,9 +17533,9 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 61707,
-        "coding_index": 51572,
-        "tooling_index": 67814,
+        "openbench_index": 61688,
+        "coding_index": 52274,
+        "tooling_index": 67049,
         "knowledge_index": 68933,
         "vision_index": null,
         "trust_index": 62206,
@@ -17965,8 +17969,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -17976,16 +17980,16 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
-            "terminal_bench_hard"
+            "mcp_atlas",
+            "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom"
           ],
-          "of": 11,
-          "share": 0.798,
+          "of": 12,
+          "share": 0.758,
           "second_hand": [
             "mcp_atlas"
           ]
@@ -18028,7 +18032,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 9666,
+        "tooling_index": 7803,
         "knowledge_index": 13717,
         "vision_index": null,
         "trust_index": 37655,
@@ -18363,13 +18367,13 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
+            "terminal_bench_hard",
             "terminal_bench_2_1",
             "tau2_bench_telecom",
-            "terminal_bench_hard",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.326
+          "of": 12,
+          "share": 0.281
         },
         "knowledge_index": {
           "measured": [
@@ -18410,7 +18414,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7961,
+        "tooling_index": 7104,
         "knowledge_index": 8280,
         "vision_index": null,
         "trust_index": 24746,
@@ -18757,14 +18761,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -18805,7 +18809,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 15800,
+        "tooling_index": 14087,
         "knowledge_index": 14227,
         "vision_index": null,
         "trust_index": 32385,
@@ -19152,14 +19156,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -19198,9 +19202,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 44446,
-        "coding_index": 31483,
-        "tooling_index": 47840,
+        "openbench_index": 43426,
+        "coding_index": 30261,
+        "tooling_index": 45664,
         "knowledge_index": 43578,
         "vision_index": 31115,
         "trust_index": 56448,
@@ -19660,21 +19664,21 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.352
+          "of": 17,
+          "share": 0.314
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -19721,9 +19725,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 22543,
-        "coding_index": 16125,
-        "tooling_index": 23284,
+        "openbench_index": 23160,
+        "coding_index": 17784,
+        "tooling_index": 23682,
         "knowledge_index": 17016,
         "vision_index": 16126,
         "trust_index": 32672,
@@ -20124,21 +20128,21 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -20184,7 +20188,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 25424,
+        "tooling_index": 24209,
         "knowledge_index": 25468,
         "vision_index": 18204,
         "trust_index": 45603,
@@ -20544,14 +20548,14 @@
       "index_coverage": {
         "tooling_index": {
           "measured": [
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.279
+          "of": 12,
+          "share": 0.234
         },
         "knowledge_index": {
           "measured": [
@@ -20602,7 +20606,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11371,
+        "tooling_index": 8741,
         "knowledge_index": 12865,
         "vision_index": 5013,
         "trust_index": 19349,
@@ -20949,14 +20953,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -21000,7 +21004,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 40107,
+        "tooling_index": 40588,
         "knowledge_index": 61570,
         "vision_index": 29516,
         "trust_index": 58129,
@@ -21389,14 +21393,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -21444,7 +21448,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 49994,
+        "tooling_index": 48609,
         "knowledge_index": 59418,
         "vision_index": 59467,
         "trust_index": 56274,
@@ -21819,15 +21823,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.527
+          "of": 12,
+          "share": 0.484
         },
         "knowledge_index": {
           "measured": [
@@ -21869,9 +21873,9 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 13352,
-        "coding_index": 9539,
-        "tooling_index": 9057,
+        "openbench_index": 14426,
+        "coding_index": 12615,
+        "tooling_index": 9560,
         "knowledge_index": 10671,
         "vision_index": 3460,
         "trust_index": 24691,
@@ -22264,22 +22268,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -22323,9 +22327,9 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 42723,
-        "coding_index": 41209,
-        "tooling_index": 37141,
+        "openbench_index": 43796,
+        "coding_index": 43467,
+        "tooling_index": 38459,
         "knowledge_index": 45264,
         "vision_index": null,
         "trust_index": 49715,
@@ -22748,8 +22752,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -22759,14 +22763,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -22801,9 +22805,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 73742,
-        "coding_index": 66642,
-        "tooling_index": 76533,
+        "openbench_index": 73632,
+        "coding_index": 67092,
+        "tooling_index": 75716,
         "knowledge_index": 89615,
         "vision_index": null,
         "trust_index": 69390,
@@ -23388,11 +23392,12 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.803,
+          "of": 17,
+          "share": 0.801,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -23401,18 +23406,19 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
             "itbench_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.922
+          "of": 12,
+          "share": 0.93
         },
         "knowledge_index": {
           "measured": [
@@ -23457,9 +23463,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 68246,
-        "coding_index": 62094,
-        "tooling_index": 66413,
+        "openbench_index": 68165,
+        "coding_index": 61451,
+        "tooling_index": 66783,
         "knowledge_index": 82526,
         "vision_index": 72446,
         "trust_index": 69262,
@@ -23954,8 +23960,8 @@
             "swe_atlas_rf",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.513,
+          "of": 17,
+          "share": 0.435,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -23963,16 +23969,16 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.69,
+          "of": 12,
+          "share": 0.656,
           "second_hand": [
             "mcp_atlas"
           ]
@@ -24752,9 +24758,9 @@
       },
       "context": "10m",
       "scores": {
-        "openbench_index": 21987,
-        "coding_index": 13407,
-        "tooling_index": 11224,
+        "openbench_index": 22776,
+        "coding_index": 15719,
+        "tooling_index": 11541,
         "knowledge_index": 20250,
         "vision_index": 18012,
         "trust_index": 46240,
@@ -25172,22 +25178,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -25235,9 +25241,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 26680,
-        "coding_index": 18972,
-        "tooling_index": 15005,
+        "openbench_index": 27273,
+        "coding_index": 20869,
+        "tooling_index": 15086,
         "knowledge_index": 29479,
         "vision_index": 23234,
         "trust_index": 48259,
@@ -25667,22 +25673,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636,
+          "of": 12,
+          "share": 0.617,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -25735,7 +25741,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7286,
+        "tooling_index": null,
         "knowledge_index": 18244,
         "vision_index": null,
         "trust_index": 39572,
@@ -25805,7 +25811,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-03",
+        "tooling_index": null,
         "knowledge_index": "2026-10-03",
         "vision_index": null,
         "trust_index": "2026-10-03",
@@ -25874,7 +25880,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
@@ -26070,16 +26076,6 @@
         "name": "Phi-4"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "bfcl_v4",
-            "tau2_bench_telecom",
-            "terminal_bench_hard",
-            "ifbench"
-          ],
-          "of": 11,
-          "share": 0.202
-        },
         "knowledge_index": {
           "measured": [
             "aa_omniscience",
@@ -28286,9 +28282,9 @@
       },
       "context": "512k",
       "scores": {
-        "openbench_index": 44600,
-        "coding_index": 43481,
-        "tooling_index": 37104,
+        "openbench_index": null,
+        "coding_index": null,
+        "tooling_index": 37407,
         "knowledge_index": 54070,
         "vision_index": null,
         "trust_index": 49254,
@@ -28356,8 +28352,8 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-03",
-        "coding_index": "2026-10-03",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -28425,8 +28421,8 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -28688,31 +28684,18 @@
         "name": "Trinity Large Thinking"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "scicode",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.181,
-          "second_hand": [
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -30446,7 +30429,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 32417,
+        "tooling_index": 34072,
         "knowledge_index": 44275,
         "vision_index": null,
         "trust_index": 43578,
@@ -30847,12 +30830,12 @@
           "measured": [
             "toolathlon",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.341,
+          "of": 12,
+          "share": 0.289,
           "second_hand": [
             "toolathlon",
             "bfcl_v4"
@@ -32036,9 +32019,9 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 42849,
-        "coding_index": 33091,
-        "tooling_index": 46363,
+        "openbench_index": 42688,
+        "coding_index": 32632,
+        "tooling_index": 46286,
         "knowledge_index": 53402,
         "vision_index": null,
         "trust_index": 44010,
@@ -32543,8 +32526,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.254,
+          "of": 17,
+          "share": 0.183,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -32554,15 +32537,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.461,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -32603,7 +32586,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 50186,
+        "tooling_index": 49227,
         "knowledge_index": 66155,
         "vision_index": null,
         "trust_index": 49030,
@@ -33012,15 +32995,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "mcp_atlas",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.566
+          "of": 12,
+          "share": 0.5
         },
         "knowledge_index": {
           "measured": [
@@ -36737,9 +36720,9 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 28682,
-        "coding_index": 21455,
-        "tooling_index": 19073,
+        "openbench_index": 29113,
+        "coding_index": 22979,
+        "tooling_index": 18987,
         "knowledge_index": 37876,
         "vision_index": null,
         "trust_index": 43369,
@@ -37181,22 +37164,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -37231,9 +37214,9 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 26809,
-        "coding_index": 19672,
-        "tooling_index": 19465,
+        "openbench_index": 27199,
+        "coding_index": 21198,
+        "tooling_index": 19240,
         "knowledge_index": 26656,
         "vision_index": null,
         "trust_index": 44277,
@@ -37695,22 +37678,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -37745,9 +37728,9 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 19708,
-        "coding_index": 15918,
-        "tooling_index": 15541,
+        "openbench_index": 20420,
+        "coding_index": 18250,
+        "tooling_index": 15582,
         "knowledge_index": 14371,
         "vision_index": null,
         "trust_index": 32459,
@@ -38204,22 +38187,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -38634,7 +38617,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 24408,
+        "tooling_index": 24721,
         "knowledge_index": 42099,
         "vision_index": null,
         "trust_index": 50846,
@@ -38980,12 +38963,12 @@
           "measured": [
             "mcp_atlas",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.333,
+          "of": 12,
+          "share": 0.273,
           "second_hand": [
             "mcp_atlas",
             "bfcl_v4"
@@ -39028,9 +39011,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 38186,
-        "coding_index": 31191,
-        "tooling_index": 30442,
+        "openbench_index": 37834,
+        "coding_index": 30725,
+        "tooling_index": 29736,
         "knowledge_index": 48568,
         "vision_index": null,
         "trust_index": 49644,
@@ -39420,21 +39403,21 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -41824,9 +41807,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 30663,
-        "coding_index": 21710,
-        "tooling_index": 24994,
+        "openbench_index": 31285,
+        "coding_index": 23307,
+        "tooling_index": 25469,
         "knowledge_index": 30671,
         "vision_index": 23917,
         "trust_index": 48205,
@@ -42248,21 +42231,21 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223
+          "of": 17,
+          "share": 0.204
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -42305,9 +42288,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 18448,
-        "coding_index": 13447,
-        "tooling_index": 16353,
+        "openbench_index": 19192,
+        "coding_index": 15642,
+        "tooling_index": 16638,
         "knowledge_index": 14329,
         "vision_index": 13018,
         "trust_index": 29436,
@@ -42709,21 +42692,21 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -42766,9 +42749,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 19384,
-        "coding_index": 9911,
-        "tooling_index": 13605,
+        "openbench_index": 20397,
+        "coding_index": 12795,
+        "tooling_index": 14097,
         "knowledge_index": 15903,
         "vision_index": 6614,
         "trust_index": 39775,
@@ -43165,21 +43148,21 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.558
+          "of": 12,
+          "share": 0.547
         },
         "knowledge_index": {
           "measured": [
@@ -43586,9 +43569,9 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 16793,
-        "coding_index": 13099,
-        "tooling_index": 9909,
+        "openbench_index": 17709,
+        "coding_index": 15651,
+        "tooling_index": 10412,
         "knowledge_index": 14344,
         "vision_index": 14575,
         "trust_index": 30955,
@@ -43982,22 +43965,22 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207
+          "of": 17,
+          "share": 0.194
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.636
+          "of": 12,
+          "share": 0.617
         },
         "knowledge_index": {
           "measured": [
@@ -44042,7 +44025,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 2800,
+        "tooling_index": 2370,
         "knowledge_index": 10766,
         "vision_index": 1973,
         "trust_index": 18995,
@@ -44401,14 +44384,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "bfcl_v4",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.403
+          "of": 12,
+          "share": 0.352
         },
         "knowledge_index": {
           "measured": [
@@ -44453,7 +44436,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 2175,
+        "tooling_index": null,
         "knowledge_index": 11314,
         "vision_index": null,
         "trust_index": 34015,
@@ -44523,7 +44506,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-03",
+        "tooling_index": null,
         "knowledge_index": "2026-10-03",
         "vision_index": null,
         "trust_index": "2026-10-03",
@@ -44592,7 +44575,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
@@ -44788,16 +44771,6 @@
         "name": "Gemma 3 1B Instruct"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "bfcl_v4",
-            "tau2_bench_telecom",
-            "terminal_bench_hard",
-            "ifbench"
-          ],
-          "of": 11,
-          "share": 0.202
-        },
         "knowledge_index": {
           "measured": [
             "aa_omniscience",
@@ -45814,7 +45787,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 34577,
+        "tooling_index": 34293,
         "knowledge_index": 38249,
         "vision_index": 38936,
         "trust_index": 52193,
@@ -46182,14 +46155,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.391
         },
         "knowledge_index": {
           "measured": [
@@ -46236,8 +46209,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 32126,
-        "tooling_index": 33061,
+        "coding_index": 28811,
+        "tooling_index": 31118,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -46525,16 +46498,18 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.285,
+          "of": 17,
+          "share": 0.262,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ]
         },
@@ -46544,8 +46519,8 @@
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -46566,8 +46541,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 54646,
-        "tooling_index": 53545,
+        "coding_index": 55450,
+        "tooling_index": 52351,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -46855,16 +46830,18 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.285,
+          "of": 17,
+          "share": 0.262,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ]
         },
@@ -46874,8 +46851,8 @@
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -46896,8 +46873,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 70113,
-        "tooling_index": 66199,
+        "coding_index": 69428,
+        "tooling_index": 65040,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47185,16 +47162,18 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.285,
+          "of": 17,
+          "share": 0.262,
           "second_hand": [
             "terminal_bench_2_1",
             "swe_bench_pro",
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ]
         },
@@ -47204,8 +47183,8 @@
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -47225,9 +47204,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 60071,
-        "coding_index": 49672,
-        "tooling_index": 53821,
+        "openbench_index": 60303,
+        "coding_index": 50173,
+        "tooling_index": 54091,
         "knowledge_index": 77642,
         "vision_index": null,
         "trust_index": 69509,
@@ -47677,8 +47656,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.477,
+          "of": 17,
+          "share": 0.466,
           "second_hand": [
             "swe_bench_multilingual"
           ]
@@ -47686,17 +47665,17 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.829
+          "of": 12,
+          "share": 0.781
         },
         "knowledge_index": {
           "measured": [
@@ -47744,7 +47723,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 28967,
+        "tooling_index": 28098,
         "knowledge_index": 36233,
         "vision_index": 34271,
         "trust_index": 40816,
@@ -48088,12 +48067,12 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.341
+          "of": 12,
+          "share": 0.32
         },
         "knowledge_index": {
           "measured": [
@@ -48435,9 +48414,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 64561,
-        "coding_index": 53392,
-        "tooling_index": 66632,
+        "openbench_index": 64199,
+        "coding_index": 52140,
+        "tooling_index": 66675,
         "knowledge_index": 81878,
         "vision_index": 45644,
         "trust_index": 65090,
@@ -48924,8 +48903,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.58,
+          "of": 17,
+          "share": 0.56,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -48934,15 +48913,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.736,
+          "of": 12,
+          "share": 0.711,
           "second_hand": [
             "ifbench"
           ]
@@ -49013,9 +48992,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 73727,
-        "coding_index": 78194,
-        "tooling_index": 80302,
+        "openbench_index": 72448,
+        "coding_index": 75671,
+        "tooling_index": 78563,
         "knowledge_index": 88115,
         "vision_index": null,
         "trust_index": 51842,
@@ -49592,11 +49571,12 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.803,
+          "of": 17,
+          "share": 0.801,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -49605,17 +49585,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.829,
+          "of": 12,
+          "share": 0.836,
           "second_hand": [
             "mcp_atlas",
             "ifbench"
@@ -49677,9 +49658,9 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 50289,
-        "coding_index": 39733,
-        "tooling_index": 44979,
+        "openbench_index": 48875,
+        "coding_index": 36836,
+        "tooling_index": 43163,
         "knowledge_index": 68098,
         "vision_index": null,
         "trust_index": 58642,
@@ -50043,8 +50024,8 @@
             "scicode",
             "swe_bench_multilingual"
           ],
-          "of": 16,
-          "share": 0.238,
+          "of": 17,
+          "share": 0.23,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -50054,11 +50035,11 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -50504,9 +50485,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 57026,
-        "coding_index": 47282,
-        "tooling_index": 50538,
+        "openbench_index": 56562,
+        "coding_index": 46847,
+        "tooling_index": 49424,
         "knowledge_index": 76990,
         "vision_index": 55732,
         "trust_index": 64527,
@@ -51026,10 +51007,11 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.44,
+          "of": 17,
+          "share": 0.377,
           "second_hand": [
             "swe_bench_pro",
             "scicode",
@@ -51040,15 +51022,15 @@
           "measured": [
             "tau3_bench_banking",
             "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.705
+          "of": 12,
+          "share": 0.625
         },
         "knowledge_index": {
           "measured": [
@@ -51119,9 +51101,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 68588,
-        "coding_index": 60179,
-        "tooling_index": 66349,
+        "openbench_index": 67781,
+        "coding_index": 58599,
+        "tooling_index": 65238,
         "knowledge_index": 86932,
         "vision_index": 72264,
         "trust_index": 70359,
@@ -51681,8 +51663,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.503,
+          "of": 17,
+          "share": 0.471,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -51691,17 +51673,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.791
+          "of": 12,
+          "share": 0.82
         },
         "knowledge_index": {
           "measured": [
@@ -51767,9 +51750,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 66389,
-        "coding_index": 64423,
-        "tooling_index": 67278,
+        "openbench_index": 65873,
+        "coding_index": 62745,
+        "tooling_index": 67237,
         "knowledge_index": 79279,
         "vision_index": null,
         "trust_index": 59947,
@@ -52202,23 +52185,23 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.508
+          "of": 17,
+          "share": 0.497
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.829,
+          "of": 12,
+          "share": 0.781,
           "second_hand": [
             "mcp_atlas"
           ]
@@ -52266,9 +52249,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 84182,
-        "coding_index": 87327,
-        "tooling_index": 88533,
+        "openbench_index": 83868,
+        "coding_index": 86833,
+        "tooling_index": 87980,
         "knowledge_index": 93080,
         "vision_index": 86689,
         "trust_index": 69850,
@@ -52852,21 +52835,22 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.927
+          "of": 17,
+          "share": 0.895
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "itbench_aa"
+            "mcp_atlas",
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.798,
+          "of": 12,
+          "share": 0.836,
           "second_hand": [
             "toolathlon"
           ]
@@ -52944,7 +52928,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 31159,
+        "tooling_index": 30938,
         "knowledge_index": 40078,
         "vision_index": null,
         "trust_index": 54689,
@@ -53243,11 +53227,11 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.31
+          "of": 12,
+          "share": 0.297
         },
         "knowledge_index": {
           "measured": [
@@ -53291,9 +53275,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 55018,
-        "coding_index": 48086,
-        "tooling_index": 48298,
+        "openbench_index": 52976,
+        "coding_index": 43439,
+        "tooling_index": 46140,
         "knowledge_index": 72412,
         "vision_index": 59901,
         "trust_index": 60964,
@@ -53712,8 +53696,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.342,
+          "of": 17,
+          "share": 0.288,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -53721,16 +53705,17 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.698
+          "of": 12,
+          "share": 0.727
         },
         "knowledge_index": {
           "measured": [
@@ -53783,9 +53768,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 61156,
-        "coding_index": 49587,
-        "tooling_index": 54290,
+        "openbench_index": 59111,
+        "coding_index": 45174,
+        "tooling_index": 51886,
         "knowledge_index": 81382,
         "vision_index": 70402,
         "trust_index": 71142,
@@ -54226,8 +54211,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.342,
+          "of": 17,
+          "share": 0.288,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -54236,15 +54221,15 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.651
+          "of": 12,
+          "share": 0.641
         },
         "knowledge_index": {
           "measured": [
@@ -54297,9 +54282,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 66215,
-        "coding_index": 58637,
-        "tooling_index": 68555,
+        "openbench_index": 65921,
+        "coding_index": 58153,
+        "tooling_index": 68060,
         "knowledge_index": 78800,
         "vision_index": 45884,
         "trust_index": 64950,
@@ -54758,8 +54743,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.394,
+          "of": 17,
+          "share": 0.382,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -54767,15 +54752,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.736,
+          "of": 12,
+          "share": 0.711,
           "second_hand": [
             "ifbench"
           ]
@@ -54848,7 +54833,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 61596,
+        "tooling_index": 62210,
         "knowledge_index": 67423,
         "vision_index": null,
         "trust_index": 60956,
@@ -55152,11 +55137,11 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.31
+          "of": 12,
+          "share": 0.297
         },
         "knowledge_index": {
           "measured": [
@@ -55195,9 +55180,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 81887,
-        "coding_index": 78429,
-        "tooling_index": 89731,
+        "openbench_index": 80803,
+        "coding_index": 76871,
+        "tooling_index": 87673,
         "knowledge_index": 91714,
         "vision_index": 98285,
         "trust_index": 70729,
@@ -55688,8 +55673,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.627,
+          "of": 17,
+          "share": 0.597,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -55697,15 +55682,16 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
+            "agents_last_exam",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.736,
+          "of": 12,
+          "share": 0.766,
           "second_hand": [
             "toolathlon",
             "ifbench"
@@ -55771,9 +55757,9 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 53400,
-        "coding_index": 40880,
-        "tooling_index": 54808,
+        "openbench_index": 52045,
+        "coding_index": 38504,
+        "tooling_index": 52665,
         "knowledge_index": 65402,
         "vision_index": null,
         "trust_index": 59535,
@@ -56207,8 +56193,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.373,
+          "of": 17,
+          "share": 0.319,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -56217,13 +56203,13 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.566,
+          "of": 12,
+          "share": 0.562,
           "second_hand": [
             "mcp_atlas"
           ]
@@ -56268,7 +56254,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 45507,
+        "tooling_index": 44266,
         "knowledge_index": 44381,
         "vision_index": null,
         "trust_index": 53838,
@@ -56617,11 +56603,11 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -56662,7 +56648,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 27275,
+        "tooling_index": 26697,
         "knowledge_index": 40812,
         "vision_index": null,
         "trust_index": 50825,
@@ -57016,13 +57002,13 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.419,
+          "of": 12,
+          "share": 0.391,
           "second_hand": [
             "bfcl_v4",
             "ifbench"
@@ -57073,9 +57059,9 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 58968,
-        "coding_index": 52336,
-        "tooling_index": 61920,
+        "openbench_index": 58757,
+        "coding_index": 52130,
+        "tooling_index": 61422,
         "knowledge_index": 61997,
         "vision_index": 52829,
         "trust_index": 61567,
@@ -57489,8 +57475,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.223,
+          "of": 17,
+          "share": 0.209,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_verified"
@@ -57499,14 +57485,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.597,
+          "of": 12,
+          "share": 0.586,
           "second_hand": [
             "mcp_atlas",
             "ifbench"
@@ -57566,9 +57552,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 44596,
-        "coding_index": 32667,
-        "tooling_index": 45334,
+        "openbench_index": 45643,
+        "coding_index": 35329,
+        "tooling_index": 46162,
         "knowledge_index": 47722,
         "vision_index": null,
         "trust_index": 56151,
@@ -57984,8 +57970,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.342,
+          "of": 17,
+          "share": 0.356,
           "second_hand": [
             "swe_bench_multilingual"
           ]
@@ -57994,12 +57980,12 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.465,
+          "of": 12,
+          "share": 0.477,
           "second_hand": [
             "ifbench"
           ]
@@ -58056,9 +58042,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 84805,
-        "coding_index": 85903,
-        "tooling_index": 90728,
+        "openbench_index": 84771,
+        "coding_index": 85791,
+        "tooling_index": 90725,
         "knowledge_index": 91847,
         "vision_index": null,
         "trust_index": 72156,
@@ -58626,21 +58612,21 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.927
+          "of": 17,
+          "share": 0.895
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "itbench_aa"
+            "mcp_atlas",
+            "itbench_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.798,
+          "of": 12,
+          "share": 0.781,
           "second_hand": [
             "toolathlon"
           ]
@@ -58693,9 +58679,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 72894,
-        "coding_index": 68784,
-        "tooling_index": 81934,
+        "openbench_index": 71571,
+        "coding_index": 66760,
+        "tooling_index": 79547,
         "knowledge_index": 77401,
         "vision_index": 72856,
         "trust_index": 64274,
@@ -59157,8 +59143,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.456,
+          "of": 17,
+          "share": 0.445,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -59168,12 +59154,13 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.465,
+          "of": 12,
+          "share": 0.531,
           "second_hand": [
             "ifbench"
           ]
@@ -59244,7 +59231,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 57616,
+        "tooling_index": 57897,
         "knowledge_index": 78537,
         "vision_index": null,
         "trust_index": 66253,
@@ -59597,14 +59584,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "mcp_atlas",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "mcp_atlas",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.519,
+          "of": 12,
+          "share": 0.477,
           "second_hand": [
             "mcp_atlas",
             "terminal_bench_hard",
@@ -59656,9 +59643,9 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 52812,
-        "coding_index": 35519,
-        "tooling_index": 49932,
+        "openbench_index": 51532,
+        "coding_index": 33386,
+        "tooling_index": 47797,
         "knowledge_index": 77408,
         "vision_index": null,
         "trust_index": 62262,
@@ -60023,8 +60010,8 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207,
+          "of": 17,
+          "share": 0.194,
           "second_hand": [
             "livecodebench"
           ]
@@ -60033,13 +60020,13 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
+            "terminal_bench_2_1",
             "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.5,
           "second_hand": [
             "tau2_bench_telecom",
             "ifbench"
@@ -60355,8 +60342,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 80503,
-        "tooling_index": 82433,
+        "coding_index": null,
+        "tooling_index": 81198,
         "knowledge_index": 91516,
         "vision_index": null,
         "trust_index": null,
@@ -60425,7 +60412,7 @@
       },
       "scores_updated": {
         "openbench_index": null,
-        "coding_index": "2026-10-03",
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -60494,7 +60481,7 @@
       },
       "scores_source": {
         "openbench_index": null,
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -60639,32 +60626,14 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-397B/"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.207,
-          "second_hand": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "toolathlon",
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -60702,8 +60671,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 61434,
-        "tooling_index": 61908,
+        "coding_index": null,
+        "tooling_index": 61067,
         "knowledge_index": 72210,
         "vision_index": null,
         "trust_index": null,
@@ -60772,7 +60741,7 @@
       },
       "scores_updated": {
         "openbench_index": null,
-        "coding_index": "2026-10-03",
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -60841,7 +60810,7 @@
       },
       "scores_source": {
         "openbench_index": null,
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -60986,32 +60955,14 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-35B-A3B/"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.207,
-          "second_hand": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "toolathlon",
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -61049,8 +61000,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 40290,
-        "tooling_index": 42100,
+        "coding_index": null,
+        "tooling_index": 40797,
         "knowledge_index": 62678,
         "vision_index": null,
         "trust_index": null,
@@ -61119,7 +61070,7 @@
       },
       "scores_updated": {
         "openbench_index": null,
-        "coding_index": "2026-10-03",
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -61188,7 +61139,7 @@
       },
       "scores_source": {
         "openbench_index": null,
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -61333,32 +61284,14 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-9B/"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.207,
-          "second_hand": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "swe_bench_multilingual",
-            "swe_atlas_qna",
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "toolathlon",
             "mcp_atlas",
             "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.318,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
             "mcp_atlas",
@@ -61395,9 +61328,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 71062,
-        "coding_index": 68519,
-        "tooling_index": 85383,
+        "openbench_index": 70644,
+        "coding_index": 68045,
+        "tooling_index": 84463,
         "knowledge_index": 76783,
         "vision_index": 53976,
         "trust_index": 53496,
@@ -61808,21 +61741,23 @@
             "terminal_bench_2_1",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.259
+          "of": 17,
+          "share": 0.262
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.574,
+          "of": 12,
+          "share": 0.633,
           "second_hand": [
-            "toolathlon"
+            "toolathlon",
+            "agents_last_exam"
           ]
         },
         "knowledge_index": {
@@ -61873,9 +61808,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 82117,
-        "coding_index": 75469,
-        "tooling_index": 94742,
+        "openbench_index": 81887,
+        "coding_index": 75128,
+        "tooling_index": 94317,
         "knowledge_index": 88498,
         "vision_index": 92769,
         "trust_index": 71117,
@@ -62367,8 +62302,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.71,
+          "of": 17,
+          "share": 0.702,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -62377,14 +62312,14 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.667,
+          "of": 12,
+          "share": 0.672,
           "second_hand": [
             "toolathlon"
           ]
@@ -62446,9 +62381,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 79392,
-        "coding_index": 79546,
-        "tooling_index": 89241,
+        "openbench_index": 78307,
+        "coding_index": 78091,
+        "tooling_index": 87078,
         "knowledge_index": 81746,
         "vision_index": 80469,
         "trust_index": 65976,
@@ -62883,8 +62818,8 @@
             "scicode",
             "swe_bench_multilingual"
           ],
-          "of": 16,
-          "share": 0.342,
+          "of": 17,
+          "share": 0.319,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro",
@@ -62895,16 +62830,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.605,
+          "of": 12,
+          "share": 0.656,
           "second_hand": [
             "toolathlon",
+            "agents_last_exam",
             "ifbench"
           ]
         },
@@ -62962,9 +62899,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 32979,
-        "coding_index": 21559,
-        "tooling_index": 24589,
+        "openbench_index": 32819,
+        "coding_index": 21620,
+        "tooling_index": 23994,
         "knowledge_index": 39610,
         "vision_index": null,
         "trust_index": 52772,
@@ -63351,8 +63288,8 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207,
+          "of": 17,
+          "share": 0.194,
           "second_hand": [
             "livecodebench"
           ]
@@ -63361,12 +63298,12 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.523,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -63414,9 +63351,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 37058,
-        "coding_index": 22581,
-        "tooling_index": 32183,
+        "openbench_index": 36814,
+        "coding_index": 22449,
+        "tooling_index": 31500,
         "knowledge_index": 48461,
         "vision_index": null,
         "trust_index": 53439,
@@ -63837,8 +63774,8 @@
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.295,
+          "of": 17,
+          "share": 0.267,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -63850,12 +63787,12 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.523,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -63903,9 +63840,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 44219,
-        "coding_index": 29180,
-        "tooling_index": 45414,
+        "openbench_index": null,
+        "coding_index": null,
+        "tooling_index": 45319,
         "knowledge_index": 53291,
         "vision_index": null,
         "trust_index": 55389,
@@ -63973,8 +63910,8 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-03",
-        "coding_index": "2026-10-03",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -64042,8 +63979,8 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -64277,33 +64214,15 @@
         "name": "Granite 4.2 30B"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_2_1",
-            "swe_bench_pro",
-            "livecodebench",
-            "scicode",
-            "swe_bench_multilingual",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.207,
-          "second_hand": [
-            "swe_bench_pro",
-            "livecodebench",
-            "swe_bench_multilingual",
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.388,
+          "of": 12,
+          "share": 0.367,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -64352,8 +64271,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 76209,
-        "tooling_index": 84447,
+        "coding_index": 76552,
+        "tooling_index": 83718,
         "knowledge_index": 89632,
         "vision_index": null,
         "trust_index": null,
@@ -64734,8 +64653,8 @@
             "swe_bench_multilingual",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.332,
+          "of": 17,
+          "share": 0.34,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -64743,18 +64662,18 @@
         },
         "tooling_index": {
           "measured": [
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.55,
+          "of": 12,
+          "share": 0.531,
           "second_hand": [
             "toolathlon",
-            "mcp_atlas",
-            "gdpval_aa"
+            "gdpval_aa",
+            "mcp_atlas"
           ]
         },
         "knowledge_index": {
@@ -64801,9 +64720,9 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 69547,
-        "coding_index": 61819,
-        "tooling_index": 75528,
+        "openbench_index": 69163,
+        "coding_index": 61087,
+        "tooling_index": 74979,
         "knowledge_index": 79044,
         "vision_index": null,
         "trust_index": 65947,
@@ -65192,8 +65111,8 @@
             "scicode",
             "swe_atlas_qna"
           ],
-          "of": 16,
-          "share": 0.285,
+          "of": 17,
+          "share": 0.257,
           "second_hand": [
             "swe_bench_pro",
             "swe_atlas_qna"
@@ -65202,13 +65121,13 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.574,
+          "of": 12,
+          "share": 0.578,
           "second_hand": [
             "toolathlon"
           ]
@@ -65250,9 +65169,9 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 41344,
-        "coding_index": 19673,
-        "tooling_index": 46543,
+        "openbench_index": 41157,
+        "coding_index": 20286,
+        "tooling_index": 45308,
         "knowledge_index": 49749,
         "vision_index": null,
         "trust_index": 56066,
@@ -65681,8 +65600,8 @@
             "scicode",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.264,
+          "of": 17,
+          "share": 0.236,
           "second_hand": [
             "swe_bench_pro",
             "livecodebench",
@@ -65693,14 +65612,14 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
             "bfcl_v4",
+            "terminal_bench_2_1",
             "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.589,
+          "of": 12,
+          "share": 0.57,
           "second_hand": [
             "bfcl_v4",
             "tau2_bench_telecom",
@@ -65754,9 +65673,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 76206,
-        "coding_index": 85861,
-        "tooling_index": 84931,
+        "openbench_index": 76723,
+        "coding_index": 85696,
+        "tooling_index": 86821,
         "knowledge_index": 83436,
         "vision_index": 66664,
         "trust_index": 49810,
@@ -66235,8 +66154,8 @@
             "scicode",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.399,
+          "of": 17,
+          "share": 0.408,
           "second_hand": [
             "deepswe_1_1",
             "swe_bench_pro"
@@ -66245,12 +66164,16 @@
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.372
+          "of": 12,
+          "share": 0.445,
+          "second_hand": [
+            "agents_last_exam"
+          ]
         },
         "knowledge_index": {
           "measured": [
@@ -66317,7 +66240,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 60675,
+        "tooling_index": 58088,
         "knowledge_index": 71554,
         "vision_index": 76619,
         "trust_index": 62115,
@@ -66663,11 +66586,11 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -66714,9 +66637,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89099,
-        "coding_index": 94713,
-        "tooling_index": 96706,
+        "openbench_index": 89004,
+        "coding_index": 94594,
+        "tooling_index": 96508,
         "knowledge_index": 97987,
         "vision_index": 99049,
         "trust_index": 67900,
@@ -67280,10 +67203,11 @@
             "swe_bench_multilingual",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.984,
+          "of": 17,
+          "share": 0.99,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual"
@@ -67292,15 +67216,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "itbench_aa"
+            "mcp_atlas",
+            "itbench_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.798,
+          "of": 12,
+          "share": 0.781,
           "second_hand": [
             "toolathlon"
           ]
@@ -67363,9 +67287,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 72118,
-        "coding_index": 78039,
-        "tooling_index": 76210,
+        "openbench_index": 72472,
+        "coding_index": 76852,
+        "tooling_index": 78576,
         "knowledge_index": 83219,
         "vision_index": 75971,
         "trust_index": 53443,
@@ -67926,8 +67850,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.653,
+          "of": 17,
+          "share": 0.639,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -67935,14 +67859,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.667,
+          "of": 12,
+          "share": 0.727,
           "second_hand": [
             "toolathlon"
           ]
@@ -68012,9 +67937,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78264,
-        "coding_index": 83814,
-        "tooling_index": 83227,
+        "openbench_index": 78578,
+        "coding_index": 83338,
+        "tooling_index": 84752,
         "knowledge_index": 89680,
         "vision_index": 85785,
         "trust_index": 58797,
@@ -68536,8 +68461,8 @@
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.617,
+          "of": 17,
+          "share": 0.607,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -68545,17 +68470,18 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
             "itbench_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.791,
+          "of": 12,
+          "share": 0.82,
           "second_hand": [
             "toolathlon"
           ]
@@ -68625,9 +68551,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 81118,
-        "coding_index": 87549,
-        "tooling_index": 87928,
+        "openbench_index": 81385,
+        "coding_index": 87122,
+        "tooling_index": 89248,
         "knowledge_index": 95846,
         "vision_index": 89705,
         "trust_index": 56390,
@@ -69257,11 +69183,12 @@
             "livecodebench",
             "scicode",
             "swe_atlas_qna",
+            "swe_atlas_tw",
             "programbench_almost",
             "swe_bench_verified"
           ],
-          "of": 16,
-          "share": 0.891,
+          "of": 17,
+          "share": 0.906,
           "second_hand": [
             "frontierswe_2_0",
             "swe_bench_pro"
@@ -69270,18 +69197,19 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
+            "toolathlon",
             "gdpval_aa",
+            "mcp_atlas",
             "itbench_aa",
-            "tau2_bench_telecom",
+            "agents_last_exam",
             "terminal_bench_hard",
+            "terminal_bench_2_1",
+            "tau2_bench_telecom",
             "ifbench"
           ],
-          "of": 11,
-          "share": 0.922,
+          "of": 12,
+          "share": 0.93,
           "second_hand": [
             "toolathlon"
           ]
@@ -69354,9 +69282,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88054,
-        "coding_index": 96261,
-        "tooling_index": 89963,
+        "openbench_index": 88389,
+        "coding_index": 95929,
+        "tooling_index": 91412,
         "knowledge_index": 99354,
         "vision_index": 96100,
         "trust_index": 69135,
@@ -69885,21 +69813,23 @@
             "scicode",
             "swe_atlas_qna",
             "swe_atlas_rf",
+            "swe_atlas_tw",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.87
+          "of": 17,
+          "share": 0.901
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.527
+          "of": 12,
+          "share": 0.602
         },
         "knowledge_index": {
           "measured": [
@@ -69966,7 +69896,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 81505,
+        "tooling_index": 80751,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -70226,15 +70156,15 @@
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.279,
+          "of": 12,
+          "share": 0.258,
           "second_hand": [
             "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ]
         }
       }
@@ -70257,7 +70187,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 60354,
+        "tooling_index": 57862,
         "knowledge_index": 64642,
         "vision_index": null,
         "trust_index": 59962,
@@ -70618,11 +70548,11 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -70664,9 +70594,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 19326,
-        "coding_index": 11206,
-        "tooling_index": 13935,
+        "openbench_index": 20130,
+        "coding_index": 13447,
+        "tooling_index": 14373,
         "knowledge_index": 16310,
         "vision_index": null,
         "trust_index": 37349,
@@ -71033,8 +70963,8 @@
             "livecodebench",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.207,
+          "of": 17,
+          "share": 0.194,
           "second_hand": [
             "livecodebench"
           ]
@@ -71043,12 +70973,12 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.523,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -71094,9 +71024,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 40605,
-        "coding_index": 22678,
-        "tooling_index": 45594,
+        "openbench_index": null,
+        "coding_index": null,
+        "tooling_index": 44626,
         "knowledge_index": 46410,
         "vision_index": null,
         "trust_index": 52646,
@@ -71164,8 +71094,8 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-03",
-        "coding_index": "2026-10-03",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -71234,8 +71164,8 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -71462,29 +71392,16 @@
         "name": "K2 Horizon 3.7B"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "scicode",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.181,
-          "second_hand": [
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "bfcl_v4"
+            "bfcl_v4",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.512,
+          "of": 12,
+          "share": 0.523,
           "second_hand": [
             "bfcl_v4"
           ]
@@ -71526,9 +71443,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 56136,
-        "coding_index": 45844,
-        "tooling_index": 65565,
+        "openbench_index": null,
+        "coding_index": null,
+        "tooling_index": 66158,
         "knowledge_index": 58928,
         "vision_index": null,
         "trust_index": 55496,
@@ -71596,8 +71513,8 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-03",
-        "coding_index": "2026-10-03",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "2026-10-03",
         "knowledge_index": "2026-10-03",
         "vision_index": null,
@@ -71666,8 +71583,8 @@
         "charxiv_reasoning": null
       },
       "scores_source": {
-        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
+        "openbench_index": null,
+        "coding_index": null,
         "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
@@ -71884,28 +71801,15 @@
         "name": "K2 Horizon 7B"
       },
       "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "scicode",
-            "swe_bench_verified"
-          ],
-          "of": 16,
-          "share": 0.181,
-          "second_hand": [
-            "swe_bench_verified"
-          ]
-        },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -71946,7 +71850,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 59732,
+        "tooling_index": 57314,
         "knowledge_index": 69060,
         "vision_index": null,
         "trust_index": 58727,
@@ -72312,11 +72216,11 @@
           "measured": [
             "tau3_bench_banking",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.434
+          "of": 12,
+          "share": 0.453
         },
         "knowledge_index": {
           "measured": [
@@ -72355,9 +72259,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 85265,
-        "coding_index": 86405,
-        "tooling_index": 92100,
+        "openbench_index": 84713,
+        "coding_index": 84501,
+        "tooling_index": 92163,
         "knowledge_index": 93498,
         "vision_index": 74085,
         "trust_index": 70757,
@@ -72803,23 +72707,25 @@
             "scicode",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.358,
+          "of": 17,
+          "share": 0.377,
           "second_hand": [
             "deepswe_1_1"
           ]
         },
         "tooling_index": {
           "measured": [
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.419,
+          "of": 12,
+          "share": 0.477,
           "second_hand": [
-            "toolathlon"
+            "toolathlon",
+            "agents_last_exam"
           ]
         },
         "knowledge_index": {
@@ -72887,9 +72793,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 78091,
-        "coding_index": 83805,
-        "tooling_index": 86071,
+        "openbench_index": 78168,
+        "coding_index": 84443,
+        "tooling_index": 85692,
         "knowledge_index": 76495,
         "vision_index": 53620,
         "trust_index": 62615,
@@ -73343,23 +73249,25 @@
             "scicode",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.358,
+          "of": 17,
+          "share": 0.377,
           "second_hand": [
             "deepswe_1_1"
           ]
         },
         "tooling_index": {
           "measured": [
-            "toolathlon",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.419,
+          "of": 12,
+          "share": 0.477,
           "second_hand": [
-            "toolathlon"
+            "toolathlon",
+            "agents_last_exam"
           ]
         },
         "knowledge_index": {
@@ -73433,9 +73341,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88111,
-        "coding_index": 97354,
-        "tooling_index": 88996,
+        "openbench_index": 88834,
+        "coding_index": 97179,
+        "tooling_index": 91581,
         "knowledge_index": 98591,
         "vision_index": 96435,
         "trust_index": 69671,
@@ -73910,8 +73818,8 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.731,
+          "of": 17,
+          "share": 0.723,
           "second_hand": [
             "swe_bench_pro"
           ]
@@ -73919,12 +73827,13 @@
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.372
+          "of": 12,
+          "share": 0.445
         },
         "knowledge_index": {
           "measured": [
@@ -73991,9 +73900,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 76083,
-        "coding_index": 78374,
-        "tooling_index": 78646,
+        "openbench_index": 75648,
+        "coding_index": 76763,
+        "tooling_index": 78805,
         "knowledge_index": 85820,
         "vision_index": 80891,
         "trust_index": 64417,
@@ -74429,17 +74338,18 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.596
+          "of": 17,
+          "share": 0.597
         },
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.279
+          "of": 12,
+          "share": 0.352
         },
         "knowledge_index": {
           "measured": [
@@ -74501,9 +74411,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 85796,
-        "coding_index": 90951,
-        "tooling_index": 89906,
+        "openbench_index": 86147,
+        "coding_index": 90702,
+        "tooling_index": 91325,
         "knowledge_index": 96011,
         "vision_index": 90202,
         "trust_index": 68549,
@@ -74953,18 +74863,19 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.596
+          "of": 17,
+          "share": 0.597
         },
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
             "gdpval_aa",
-            "itbench_aa"
+            "itbench_aa",
+            "agents_last_exam",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.372
+          "of": 12,
+          "share": 0.445
         },
         "knowledge_index": {
           "measured": [
@@ -75028,7 +74939,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 71073,
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": 76383,
         "trust_index": null,
@@ -75098,7 +75009,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-03",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": "2026-10-03",
         "trust_index": null,
@@ -75168,7 +75079,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": null,
@@ -75287,20 +75198,6 @@
         ]
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "terminal_bench_2_1",
-            "ifbench"
-          ],
-          "of": 11,
-          "share": 0.217,
-          "second_hand": [
-            "toolathlon",
-            "terminal_bench_2_1",
-            "ifbench"
-          ]
-        },
         "vision_index": {
           "measured": [
             "mmmu_pro"
@@ -75565,7 +75462,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 83015,
+        "tooling_index": 82403,
         "knowledge_index": null,
         "vision_index": 80099,
         "trust_index": null,
@@ -75844,15 +75741,15 @@
         "tooling_index": {
           "measured": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.295,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ]
         },
         "vision_index": {
@@ -75892,7 +75789,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 71468,
+        "tooling_index": 71080,
         "knowledge_index": null,
         "vision_index": 62712,
         "trust_index": null,
@@ -76171,15 +76068,15 @@
         "tooling_index": {
           "measured": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.295,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ]
         },
         "vision_index": {
@@ -76219,7 +76116,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 92989,
+        "tooling_index": 92277,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -76477,15 +76374,15 @@
         "tooling_index": {
           "measured": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.295,
+          "of": 12,
+          "share": 0.266,
           "second_hand": [
             "toolathlon",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ]
         }
       }
@@ -76507,9 +76404,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90449,
-        "coding_index": 97716,
-        "tooling_index": 97258,
+        "openbench_index": 90561,
+        "coding_index": 97367,
+        "tooling_index": 97979,
         "knowledge_index": 96715,
         "vision_index": null,
         "trust_index": 69798,
@@ -76923,8 +76820,8 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.731,
+          "of": 17,
+          "share": 0.723,
           "second_hand": [
             "frontierswe_2_0",
             "swe_bench_pro"
@@ -76933,11 +76830,11 @@
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.279
+          "of": 12,
+          "share": 0.297
         },
         "knowledge_index": {
           "measured": [
@@ -76988,9 +76885,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86368,
-        "coding_index": 91245,
-        "tooling_index": 89777,
+        "openbench_index": 86487,
+        "coding_index": 90957,
+        "tooling_index": 90462,
         "knowledge_index": 98582,
         "vision_index": 92674,
         "trust_index": 69095,
@@ -77389,16 +77286,16 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.554
+          "of": 17,
+          "share": 0.571
         },
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
             "gdpval_aa"
           ],
-          "of": 11,
-          "share": 0.233
+          "of": 12,
+          "share": 0.266
         },
         "knowledge_index": {
           "measured": [
@@ -77774,9 +77671,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90145,
-        "coding_index": 93216,
-        "tooling_index": 93292,
+        "openbench_index": 90234,
+        "coding_index": 92991,
+        "tooling_index": 93813,
         "knowledge_index": 97238,
         "vision_index": null,
         "trust_index": 78427,
@@ -78132,16 +78029,16 @@
             "swe_atlas_qna",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.487
+          "of": 17,
+          "share": 0.503
         },
         "tooling_index": {
           "measured": [
             "terminal_bench_4_0",
             "gdpval_aa"
           ],
-          "of": 11,
-          "share": 0.233
+          "of": 12,
+          "share": 0.266
         },
         "knowledge_index": {
           "measured": [
@@ -78420,9 +78317,9 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 81330,
-        "coding_index": 81060,
-        "tooling_index": 88851,
+        "openbench_index": 81064,
+        "coding_index": 80367,
+        "tooling_index": 88657,
         "knowledge_index": 87704,
         "vision_index": null,
         "trust_index": 68804,
@@ -78772,8 +78669,8 @@
             "swe_bench_pro",
             "scicode"
           ],
-          "of": 16,
-          "share": 0.269,
+          "of": 17,
+          "share": 0.262,
           "second_hand": [
             "deepswe_1_1",
             "terminal_bench_2_1",
@@ -78782,13 +78679,13 @@
         },
         "tooling_index": {
           "measured": [
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.411,
+          "of": 12,
+          "share": 0.406,
           "second_hand": [
             "mcp_atlas",
             "terminal_bench_2_1"
@@ -78834,9 +78731,9 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 85590,
-        "coding_index": 94234,
-        "tooling_index": 90818,
+        "openbench_index": 85475,
+        "coding_index": 94664,
+        "tooling_index": 90006,
         "knowledge_index": 92853,
         "vision_index": 63430,
         "trust_index": 64586,
@@ -79202,10 +79099,11 @@
             "terminal_bench_2_1",
             "scicode",
             "swe_atlas_qna",
+            "swe_atlas_tw",
             "programbench_almost"
           ],
-          "of": 16,
-          "share": 0.425,
+          "of": 17,
+          "share": 0.503,
           "second_hand": [
             "deepswe_1_1",
             "swe_marathon_1_1",
@@ -79213,27 +79111,28 @@
             "terminal_bench_2_1",
             "scicode",
             "swe_atlas_qna",
+            "swe_atlas_tw",
             "programbench_almost"
           ]
         },
         "tooling_index": {
           "measured": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1"
           ],
-          "of": 11,
-          "share": 0.705,
+          "of": 12,
+          "share": 0.688,
           "second_hand": [
             "tau3_bench_banking",
-            "toolathlon",
-            "mcp_atlas",
             "terminal_bench_4_0",
-            "terminal_bench_2_1",
-            "gdpval_aa"
+            "toolathlon",
+            "gdpval_aa",
+            "mcp_atlas",
+            "terminal_bench_2_1"
           ]
         },
         "knowledge_index": {

@@ -1765,8 +1765,8 @@ How a value is produced:
    — so what the discount changes is how much the fit leans on those comparisons,
    and a model measured mostly second-hand is pulled harder toward the middle by
    the prior.
-2. **Weight by reliability.** A benchmark's weight from `INDEXES` (1.0 for Real-SWE,
-   the highest, down to 0.15 for SWE-bench Verified, the lowest) is what its
+2. **Weight by reliability.** A benchmark's weight from `INDEXES` (1.0 for Real-SWE and
+   Terminal-Bench 4.0, the highest, down to 0.10 for SWE-bench Verified, the lowest) is what its
    comparisons *add up to*, not what each one is worth: the weight is divided by the
    group total and again by the opponents available, so a model collects exactly that
    benchmark's share of the index from it however wide the board. Weighting each pair
@@ -1885,9 +1885,9 @@ Two consequences worth knowing (they hold for every derived index):
   task's resource budget — but scored on one model of 144, so any weight for it
   would have been an assertion from release notes rather than a measurement. AA
   then ran 4.0 across its own field and publishes it on the model pages, and the
-  refresh landed 32 of those models here, from 16 creators. It now carries
+  refresh landed 32 of those models here, from 16 creators. It entered at
   **0.85 in the coding group and 0.8 in tooling** — in both cases the weight
-  Terminal-Bench 2.1 used to hold — and **2.1 drops to 0.4 and 0.3**, kept for
+  Terminal-Bench 2.1 used to hold — and **2.1 dropped to 0.4 and 0.3**, kept for
   its reach (105 scored models) rather than for what it measures: the two
   correlate **0.91** on the 32 models carrying both, so a pair at full weight
   would vote twice on one construct. What the swap buys is head resolution, the
@@ -1906,15 +1906,18 @@ Two consequences worth knowing (they hold for every derived index):
   designed — a model measured on the older half of one family plus two public
   columns is the case it exists to report as unknown — but it is a real
   cost, and re-checking it as 4.0's coverage grows is the point of writing it
-  down.
-- **Agents' Last Exam is still out of `INDEXES`**, on the coverage argument 4.0
-  has now answered. It is scored on eight, and that was enough: admitted
+  down. That re-check came on 2026-10-03, at 85 scored models: 4.0 now carries
+  **1.0 in both groups** and 2.1 is down to 0.25 and 0.2 — see [the October
+  re-weighting](#the-october-2026-re-weighting).
+- **Agents' Last Exam was held out of `INDEXES` until its coverage grew**, and
+  is in the Tooling group at 0.35 since 2026-10-03, on 21 scored models (see
+  [Tooling](#tooling-index)); it is still not a coding member, where it agrees
+  with nothing but Terminal-Bench 4.0. At eight scored models it was not: admitted
   to both groups it moved *every* ranked value, all 92 Coding and 93 Tooling. Eight
   overlapping models is too thin a base to re-rank the whole table on, and the
   weight it could carry was being chosen around the bar rather than around what it
-  measures — 0.30 dropped twelve models to `null`, so only 0.25 fit. It stays a
-  column, scraped and rendered like any other, and is worth admitting once its
-  coverage grows. SWE-bench Multimodal, above, is in the same position.
+  measures — 0.30 dropped twelve models to `null`, so only 0.25 fit.
+  SWE-bench Multimodal, above, is still in that position, at five scored models.
 - The column has to be recomputed after every change to `scores` **or** to the set of
   models, and every writer that can cause one does it for you, in the same write, via
   `derive_indexes.refresh_and_report()`:
@@ -1949,6 +1952,90 @@ same record beside its top-N tables.
 The percentile-and-median-fill composite this column replaced (the `sortGroups`
 machinery in `llm.html` and `llm-cli`) is gone: it had no group configured, so it
 could not run, and it implemented exactly the imputation step 4 rules out.
+
+### The October 2026 re-weighting
+
+On 2026-10-03 every coding weight was re-checked against the file as it then
+stood, because the coverage and saturation the weights were set on had moved
+underneath them. Terminal-Bench 4.0 had gone from 32 scored models to 85,
+ProgramBench from 22 to 31, SWE-Marathon from 12 to 16, and several heads had
+closed. "Head" is the distance between the best model and the fifth, the
+measure of whether a board still separates the frontier; ρ is Spearman against
+the coding index as it stood before the change.
+
+| Benchmark | Scored (first-party) | Top | Head | ρ | Was | **Now** |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Real-SWE | 5 (5) | 46.3 | 26.3 | 0.70 | 1.0 | **1.0** |
+| Terminal-Bench 4.0 | 85 (84) | 66.2 | 10.6 | 0.92 | 0.85 | **1.0** |
+| FrontierSWE 2.0 | 12 (10) | 65.5 | 10.5 | 0.96 | 0.9 | **0.9** |
+| ProgramBench (Almost) | 31 (30) | 80.5 | 31.0 | 0.96 | 0.5 | **0.9** |
+| FrontierCode Extended 1.1 | 21 (21) | 65.3 | 4.6 | 0.96 | 0.9 | **0.8** |
+| SWE-Marathon 1.1 | 16 (15) | 72.7 | 27.1 | 0.84 | 0.65 | **0.75** |
+| DeepSWE 1.1 | 29 (18) | 78.8 | 6.8 | 0.73 | 0.6 | **0.6** |
+| SWE Atlas Refactoring | 12 (9) | 59.1 | 12.9 | 0.97 | 0.75 | **0.6** |
+| SWE Atlas Codebase Q&A | 27 (19) | 66.9 | 3.3 | 0.90 | 0.75 | **0.55** |
+| Vibe Code Bench 1.1 | 40 (40) | 92.4 | 2.8 | 0.96 | 0.75 | **0.5** |
+| SWE Atlas Test Writing | 11 (7) | 67.0 | 25.5 | 0.91 | — | **0.4** |
+| SciCode | 150 (138) | 66.9 | 6.0 | 0.95 | 0.35 | **0.35** |
+| SWE-bench Pro | 55 (0) | 89.9 | 22.2 | 0.82 | 0.4 | **0.3** |
+| SWE-bench Multilingual | 33 (0) | 89.1 | 10.2 | 0.83 | 0.3 | **0.3** |
+| Terminal-Bench 2.1 | 119 (105) | 91.4 | 3.8 | 0.96 | 0.4 | **0.25** |
+| LiveCodeBench | 118 (84) | 92.4 | 3.0 | 0.82 | 0.4 | **0.25** |
+| SWE-bench Verified | 80 (29) | 96.4 | 3.0 | 0.90 | 0.15 | **0.1** |
+
+The total went 9.65 → 9.55. The reasoning, rung by rung:
+
+- **Terminal-Bench 4.0 joins Real-SWE at the top.** It was held at 0.85 for
+  reach alone. With 85 models, 84 of them AA's own runs, and a live 10.6-point
+  head, it is now the group's broadest first-party frontier board.
+  Terminal-Bench 2.1, its saturated older sibling, drops to 0.25. With 4.0 this
+  wide, 2.1 is no longer the coverage backbone it was kept for, and the two
+  now agree at only 0.81 over 83 models.
+- **ProgramBench and Vibe Code Bench swap the lead of the construction pair.**
+  Vibe Code's head halved to 2.8 points, with 92.4 at the top. ProgramBench
+  widened to 31 models and kept a 31.0-point head, the widest in the group. The
+  pair still agrees at 0.92 over 30 models, so it still votes as one construct,
+  but the discount now falls on the saturated member: 0.9 and 0.5, which is 1.4
+  of 9.55 (14.7%) against the Terminal-Bench pair's 1.25. Every ProgramBench
+  weight from 0.9 to 1.0 ranks the same field.
+- **SWE Atlas contributes all three tracks**, on correlations that changed. See
+  [the note on that section](#why-swe-atlas-contributes-two-tracks).
+- **FrontierCode Extended steps down to 0.8.** Its head has closed to 4.6
+  points, and it ranks the 9 models it shares with FrontierSWE 2.0 at 0.97, so
+  at 0.9 each the two were close to one ranking of the frontier counted twice.
+  **SWE-Marathon steps up to 0.75** on 16 models, 15 of them first-party, with a
+  27.1-point head.
+- **The public and second-hand columns step down.** LiveCodeBench (92.4 at the
+  top, 0.1–0.3 against the frontier agentic boards) and SWE-bench Verified
+  (96.4) are saturated. SWE-bench Pro has 55 models and not one first-party
+  value, from llm-stats, benchlm and model cards that do not agree with each
+  other.
+
+**What it changed, measured on the same file before and after.** The top ten
+are the same ten. `step-5-preview` and `claude-fable-5-1` swapped 4th and 5th.
+Over the 83 models ranked both times, Spearman is **0.998**, with a mean move of
+1.0 places and a worst case of 5. Re-running `--calibrate` moved the
+[transfer ratio](#how-far-one-benchmark-speaks-for-the-others) **0.015 →
+0.014**.
+
+Seven models drop below [the evidence bar](#why-the-evidence-bar-is-18), and
+none is ranked for the first time: **90 → 83**.
+
+- Four are measured only on columns that stepped down. The three `ornith-1-5`
+  models carry Terminal-Bench 2.1, SWE-bench Pro, Multilingual, Verified and
+  SWE Atlas Q&A, now 15.7% of the weight. `granite-4-2-30b` carries the same
+  minus Q&A, plus LiveCodeBench and SciCode, now 16.2%.
+- The other three are borderline: `k2-horizon-3-7b`, `k2-horizon-7b` and
+  `trinity-large-thinking` each carry Terminal-Bench 4.0, Terminal-Bench 2.1,
+  SciCode and SWE-bench Verified. That was 1.75 of 9.65 (18.1%) before and is
+  1.70 of 9.55 (17.8%) now. The 4.0 they gained does not cover what 2.1 and
+  Verified lost.
+
+Moving ProgramBench back under 0.75 would rank those three again. This page has
+[declined that trade before](#why-vibe-code-bench-enters-at-075): a weight is
+chosen for what the board measures, not to land under the bar. A model
+measured on one frontier board plus three saturated ones is the borderline
+case the bar is for.
 
 ### Why Real-SWE leads the coding group, and what it cost
 
@@ -2141,6 +2228,18 @@ describes the benchmark, not the roster.
 
 ### Why SWE Atlas contributes two tracks
 
+> **Superseded 2026-10-03: all three tracks are aggregated now**, Codebase Q&A
+> at 0.55, Refactoring at 0.6 and Test Writing at 0.4 — 1.55 for the family,
+> about the 1.5 it carried on two. The case below for leaving Test Writing out
+> was its 0.955 agreement with Q&A; on the current file every pair in the family
+> sits at **0.86–0.87** (Test Writing ↔ Q&A over 11 models, ↔ Refactoring over 9,
+> Refactoring ↔ Q&A over 11), so no track repeats another any more, and Test
+> Writing has the widest head of the three — 25.5 points between the best model
+> and the fifth against Q&A's 3.3. Q&A carries the least of the two original
+> tracks for that narrow head. See [the October
+> re-weighting](#the-october-2026-re-weighting). The record of the two-track
+> decision follows unchanged.
+
 Scale AI's SWE Atlas ships three tracks. The index carried all three at 0.17 each
 (the family voting 0.51), then Codebase Q&A alone at 0.25 once the three looked like
 one measurement repeated. It now carries **Codebase Q&A and Refactoring at 0.75
@@ -2189,6 +2288,12 @@ places, worst case 7 — `ornith-1-0-35b` 34 → 27, `kimi-k3` 6 → 9), which i
 of net new weight on a pair of rubric-graded tracks should do.
 
 ### Why Vibe Code Bench enters at 0.75
+
+> **Re-weighted to 0.50 on 2026-10-03.** The head this section prices it on has
+> closed: 92.4 at the top and **2.8** points to the fifth, half the 5.6 below.
+> It trades rungs with [ProgramBench](#why-programbench-enters-at-050), which
+> takes the lead of the construction pair. See [the October
+> re-weighting](#the-october-2026-re-weighting).
 
 **`vibe_code_bench_1_1` is aggregated at 0.75**, level with the SWE Atlas pair
 and a rung under Terminal-Bench 4.0 (0.85). It is the only member that measures
@@ -2273,6 +2378,13 @@ held-out parts, so a fully measured model keeps 98.7% of its distance from the
 middle instead of 98.5%.
 
 ### Why ProgramBench enters at 0.50
+
+> **Re-weighted to 0.90 on 2026-10-03**, level with FrontierSWE 2.0. It is now
+> scored on **31** models, 30 of them first-party, and its head is still the
+> widest in the group at 31.0 points, while Vibe Code Bench has saturated. So the
+> construction pair keeps its discount but the other member takes it: 0.90 here
+> and 0.50 on Vibe Code, 1.40 for the pair. The two still agree at 0.92 over 30
+> models. See [the October re-weighting](#the-october-2026-re-weighting).
 
 **`programbench_almost` is aggregated at 0.50.** ProgramBench hands an agent a
 reference executable and its documentation and asks for a codebase whose
@@ -2559,17 +2671,40 @@ Contributing benchmarks and why they carry the weight they do:
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| τ³-Bench Banking | 1.0 | The most reliable measurement of the set: every score run independently by Artificial Analysis, execution-graded against backend state, far from saturation, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. |
-| Toolathlon-Verified | 0.9 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded and unsaturated. Below 1.0 because the leaderboard is run by the benchmark's own team with a mix of verified and self-reported entries, and it is young — two incompatible score series in under a year. |
-| MCP-Atlas | 0.85 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, and it correlates 0.80 with Toolathlon — close enough to be the same capability, far enough to still add information. Above both Terminal-Bench columns because it is far more tool-shaped; below Toolathlon because only 9 of its 25 stored scores are Scale's own runs and the rest are lab-reported, where the Toolathlon ingest drops self-reported rows outright. |
-| Terminal-Bench 4.0 | 0.8 | The weight Terminal-Bench 2.1 used to hold, moved to the current release. Same standing as before — broad, widely trusted, mostly AA-run in this file, and the least tool-shaped of the set (terminal/CLI agency rather than structured tool calling, overlapping the Coding index) — minus the ceiling that capped 2.1: 4.0 removed the saturated tasks and the ones with public solutions, and its head is live, 19.2 points between the best model and the fifth against 2.1's 3.4. Scored on 32 models from 16 creators, which is a third of 2.1's reach and the only reason it is not higher. |
-| Terminal-Bench 2.1 | 0.3 | Demoted to a coverage backbone by the row above. It correlates **0.91** with 4.0 on the 32 models carrying both, so at its old 0.8 the pair would have cast one construct's vote twice, and it is the older half of that pair: nearing its ceiling, fully public tasks, documented harness variance. What keeps it in at all is reach — 105 scored models against 4.0's 32, level with τ²-Telecom and behind only IFBench — so it fills gaps and breaks mid-field ties without leading anything. |
-| GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. AA tags the evaluation `agentic` and `tool-use`, the same pair the Terminal-Bench columns, τ³ Banking and ITBench-AA carry. It has the best provenance of the set (94 of 95 scores AA-run) and the sharpest discrimination (120 Elo between the best model and the fifth against a ~15-Elo median gap between neighbours), over 220 tasks spanning 44 occupations, which is why it outranks the narrower ITBench-AA. Below Terminal-Bench 4.0 because the two largely measure the same shell-agency axis — it correlates 0.94 with 2.1 and 0.92 with 4.0 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality, so a polished artifact can be rewarded over a clean trajectory. |
-| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, unsaturated) but the smallest task set of the eleven and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. |
-| BFCL v4 | 0.5 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but it correlates 0.85 with τ³ Banking and 0.93 with Terminal-Bench Hard, so it buys coverage and stability rather than information. Its Overall Accuracy is an unweighted average dominated by AST-checked single-call categories, and the board refreshes slowly, so most frontier open-weight scores arrive as card self-reports. |
-| τ²-Bench Telecom | 0.3 | Effectively saturated — the leaders sit within noise of each other — so it can no longer separate frontier models. Kept as a coverage backbone — 101 scored models, behind only IFBench and level with Terminal-Bench 2.1 — so it fills gaps and breaks mid-field ties without leading anything. |
-| Terminal-Bench Hard | 0.3 | Correlates ~0.95 with Terminal-Bench 2.1 and 0.77 with 4.0, so it adds coverage and stability rather than information: it is AA-run, unsaturated and broadly scored, which keeps thinly measured models from being ranked on a corner of the construct. |
-| IFBench | 0.2 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.74 with the Terminal-Bench 2.1 and Hard columns and 0.32 with ITBench-AA, but only 0.28 with Toolathlon, the weakest link to the purest tool-use member of any contributor. It is also the second most saturated column after τ²-Telecom, 3.0 points between the best model and the fifth. What it brings is reach: 118 scored models, the widest of the eleven and mostly AA-run (99 of them), which keeps thinly measured models from being ranked on a corner of the construct. |
+| τ³-Bench Banking | 1.0 | The most reliable measurement of the set: 94 of its 96 scores run independently by Artificial Analysis, execution-graded against backend state, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. The head has tightened to 3.1 points between the best model and the fifth, but at 50.3 the board is nowhere near its ceiling. |
+| Terminal-Bench 4.0 | 1.0 | Level with the anchor since the 2026-10-03 re-weighting, up from 0.8. Its standing was always provenance and a live head held back by reach; the reach has arrived — **85 scored models, 84 of them AA-run**, where it had 32 — and the head is still the widest live one in the group, 10.6 points between the best model and the fifth. It remains the least tool-shaped member (terminal/CLI agency rather than structured tool calling, overlapping the Coding index, where it carries 1.0 as well), and that is the one argument against it; at 85 models it no longer has a coverage argument against it to add. |
+| Toolathlon-Verified | 0.8 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded. Down from 0.9: the field has grown to 40 but only 13 of those are the team's verified runs, and the head has closed to 2.5 points between the best model and the fifth. |
+| GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. The best provenance of the set (104 of 109 scores AA-run) and a wide head (175 Elo between the best model and the fifth). Below Terminal-Bench 4.0 because the two largely measure the same shell-agency axis — 0.95 with 2.1 and 0.83 with 4.0 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality. |
+| MCP-Atlas | 0.7 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, 0.82 with Toolathlon over 23 models. Down from 0.85: the top is approaching its ceiling (87.2, 3.5 points to the fifth) and only 11 of its 30 scores are Scale's own runs. |
+| ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, 56.2 at the top) but a small task set and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. 23 scored models. |
+| BFCL v4 | 0.45 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but only 9 of its 31 values are the board's own, the rest card self-reports, and it correlates 0.87 with τ³ Banking and 0.83 with Terminal-Bench Hard, so it buys coverage and stability rather than information. |
+| Agents' Last Exam | 0.35 | Admitted 2026-10-03. Long-horizon, economically valuable computer work across 55 professional sub-industries, each task graded deterministically against a hidden reference. It was held out at eight scored models; it now has **21**, 15 of them from the board itself, with a 6.6-point head on a board topped at 38.2. It agrees 0.91 with Terminal-Bench 4.0 and only loosely with the structured-tool members (0.41 Toolathlon, 0.51 τ³ Banking), which is the case for a modest weight: a different slice of agency, on a field still too narrow to lead. |
+| Terminal-Bench Hard | 0.3 | AA-run and broadly scored (107 models) with a 21.2-point head, but it correlates 0.96 with Terminal-Bench 2.1, so it adds coverage and stability rather than information. |
+| Terminal-Bench 2.1 | 0.2 | Coverage only. It has saturated — 91.4 at the top, 3.8 points to the fifth — and with 4.0 now on 85 models it is no longer the reach that kept it at 0.3. |
+| τ²-Bench Telecom | 0.15 | Saturated: 99.1 at the top and 2.0 points to the fifth, so it cannot separate anything above the mid-field. Kept at the floor for its 111 scored models. |
+| IFBench | 0.15 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.81 with Terminal-Bench 2.1 but only 0.35 with Toolathlon and 0.33 with ITBench-AA, and it is the tightest head in the group, 1.6 points between the best model and the fifth. What it brings is reach: 122 scored models, the widest of the twelve. |
+
+**Re-weighted 2026-10-03.** Coverage and saturation had moved enough under the
+old rungs to reorder them: Terminal-Bench 4.0 rose from 32 scored models to 85,
+Agents' Last Exam from 8 to 21, and τ²-Telecom, IFBench and Terminal-Bench 2.1
+saturated further. Terminal-Bench 4.0 went 0.8 → **1.0**, Agents' Last Exam
+was admitted at **0.35**, and Toolathlon (0.9 → 0.8), MCP-Atlas (0.85 → 0.7),
+BFCL (0.5 → 0.45), Terminal-Bench 2.1 (0.3 → 0.2), τ²-Telecom (0.3 → 0.15) and
+IFBench (0.2 → 0.15) came down. The total went 6.45 → 6.40. Measured against the old weights on the same file, the
+order barely moved: Spearman **0.9986** over the models ranked both times, the
+same top six, and the largest move was `claude-opus-5-5`, 14 → 7, on the 4.0
+weight. Three models dropped below [the evidence bar](#why-the-evidence-bar-is-18),
+and none joined: **126 → 123**. `phi-4` and `gemma-3-1b` are measured only on
+BFCL, τ²-Telecom, Terminal-Bench Hard and IFBench. `dots3-note-prev` is the
+borderline one: it carries Toolathlon, Terminal-Bench 2.1 and IFBench, 21.7% of
+the weight before and 17.97% now, because all three stepped down. Re-running
+`--calibrate` moved the [transfer
+ratio](#how-far-one-benchmark-speaks-for-the-others) **0.023 → 0.024**.
+
+**AA-Briefcase stays out.** It is AA-run on 84 models with a 255-Elo head, but
+it ranks the field **0.98** with GDPval-AA over the 84 models on both: the same
+harness, the same judging and the same kind of deliverable, so it would be a
+second vote for a column that already carries 0.7.
 
 ## Knowledge Index
 
@@ -2641,8 +2776,8 @@ differ:
   not a second opinion either: Spearman **−0.72** against the column it duplicates,
   and of the 20 best hallucination rates in the file, **none** sits below the
   Omniscience median — the two rank the field alike. It is the same duplicate-column
-  argument that keeps [SWE Atlas Test Writing](#why-swe-atlas-contributes-two-tracks)
-  out of the coding group, and it is not free:
+  argument that kept [SWE Atlas Test Writing](#why-swe-atlas-contributes-two-tracks)
+  out of the coding group while it ranked the field 0.955 with Q&A, and it is not free:
   at 0.3 it moves the ranked field a mean of 3.6 places and reorders five of the top
   six, on the strength of one re-counted run.
 - **AIME 2026** — the same exam one year on, and the fresher contamination profile is
