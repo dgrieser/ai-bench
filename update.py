@@ -258,6 +258,11 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # AA reports the τ³ Banking domain under the version-less key "tau_banking".
     "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
+    # AutomationBench-AA, which replaced τ³ Banking in AA's Intelligence Index
+    # v4.3 (2026-09-07): Zapier's business-workflow benchmark on AA's held-out
+    # set, scored with partial credit. Not Zapier's own pass rate, which labs
+    # quote under the bare name "AutomationBench" on a different scale.
+    "automation_bench_aa": (("automation_bench_partial_score",), to_percent),
     # AA's independent ITBench implementation; the page reports the SRE track.
     "itbench_aa": (("it_bench_sre",), to_percent),
     "gdpval_aa": (("gdpval",), to_index),

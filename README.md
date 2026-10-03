@@ -2674,18 +2674,19 @@ Contributing benchmarks and why they carry the weight they do:
 
 | Benchmark | Weight | Rationale |
 | --- | --- | --- |
-| τ³-Bench Banking | 1.0 | The most reliable measurement of the set: 94 of its 96 scores run independently by Artificial Analysis, execution-graded against backend state, and it tests tool *discovery* (tools hidden in KB documents, unlocked via meta-tools) — a signal the other benchmarks don't carry. The head has tightened to 3.1 points between the best model and the fifth, but at 50.3 the board is nowhere near its ceiling. |
+| AutomationBench-AA | 1.0 | The anchor since 2026-10-03, taking over from τ³-Bench Banking, which it replaced in AA's Intelligence Index v4.3 (2026-09-07). AA runs Zapier's AutomationBench on a held-out set: 657 end-to-end business workflows in a simulated company whose apps are reachable only through REST endpoints the agent has to find by search, under layered policy documents and planted distractions, scored with partial credit and zeroed by any guardrail violation. That is tool discovery, the property τ³ Banking was anchored for, on a broader task set. **85 scored models, every one AA-run**, with a 9.0-point head (77.5 at the top); it ranks the 75 models on both **0.88** with τ³ Banking. Against it: it agrees 0.95 with GDPval-AA, so part of what it adds is the same AA harness again. The column stores AA's partial-credit score, never Zapier's own pass rate, which labs quote under the bare name "AutomationBench" on a different scale (Opus 5.5's card: 40.0 or 42.5 there, against 69.5 here). |
 | Terminal-Bench 4.0 | 1.0 | Level with the anchor since the 2026-10-03 re-weighting, up from 0.8. Its standing was always provenance and a live head held back by reach; the reach has arrived — **85 scored models, 84 of them AA-run**, where it had 32 — and the head is still the widest live one in the group, 10.6 points between the best model and the fifth. It remains the least tool-shaped member (terminal/CLI agency rather than structured tool calling, overlapping the Coding index, where it carries 0.85), and that is the one argument against it; at 85 models it no longer has a coverage argument against it to add. |
 | Toolathlon-Verified | 0.8 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded. Down from 0.9: the field has grown to 40 but only 13 of those are the team's verified runs, and the head has closed to 2.5 points between the best model and the fifth. |
 | GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. The best provenance of the set (104 of 109 scores AA-run) and a wide head (175 Elo between the best model and the fifth). Below Terminal-Bench 4.0 because the two largely measure the same shell-agency axis — 0.95 with 2.1 and 0.83 with 4.0 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality. |
 | MCP-Atlas | 0.7 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, 0.82 with Toolathlon over 23 models. Down from 0.85: the top is approaching its ceiling (87.2, 3.5 points to the fifth) and only 11 of its 30 scores are Scale's own runs. |
 | ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, 56.2 at the top) but a small task set and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. 23 scored models. |
+| τ³-Bench Banking | 0.5 | The anchor until 2026-10-03, and still the best-provenanced τ³ run there is: 94 of its 96 scores AA-run, execution-graded against backend state, with tool *discovery* built in (tools hidden in KB documents, unlocked via meta-tools). Down to 0.5 because it is frozen. AA retired it from its Intelligence Index on 2026-09-07 and lists it as a legacy evaluation, and no model added here since 2026-09-22 carries it, so every new frontier model is unranked on the index's anchor. It stays as coverage for the 96 models it did score. |
 | BFCL v4 | 0.45 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but only 9 of its 31 values are the board's own, the rest card self-reports, and it correlates 0.87 with τ³ Banking and 0.83 with Terminal-Bench Hard, so it buys coverage and stability rather than information. |
 | Agents' Last Exam | 0.35 | Admitted 2026-10-03. Long-horizon, economically valuable computer work across 55 professional sub-industries, each task graded deterministically against a hidden reference. It was held out at eight scored models; it now has **21**, 15 of them from the board itself, with a 6.6-point head on a board topped at 38.2. It agrees 0.91 with Terminal-Bench 4.0 and only loosely with the structured-tool members (0.41 Toolathlon, 0.51 τ³ Banking), which is the case for a modest weight: a different slice of agency, on a field still too narrow to lead. |
 | Terminal-Bench Hard | 0.3 | AA-run and broadly scored (107 models) with a 21.2-point head, but it correlates 0.96 with Terminal-Bench 2.1, so it adds coverage and stability rather than information. |
 | Terminal-Bench 2.1 | 0.2 | Coverage only. It has saturated — 91.4 at the top, 3.8 points to the fifth — and with 4.0 now on 85 models it is no longer the reach that kept it at 0.3. |
 | τ²-Bench Telecom | 0.15 | Saturated: 99.1 at the top and 2.0 points to the fifth, so it cannot separate anything above the mid-field. Kept at the floor for its 111 scored models. |
-| IFBench | 0.15 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.81 with Terminal-Bench 2.1 but only 0.35 with Toolathlon and 0.33 with ITBench-AA, and it is the tightest head in the group, 1.6 points between the best model and the fifth. What it brings is reach: 122 scored models, the widest of the twelve. |
+| IFBench | 0.15 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.81 with Terminal-Bench 2.1 but only 0.35 with Toolathlon and 0.33 with ITBench-AA, and it is the tightest head in the group, 1.6 points between the best model and the fifth. What it brings is reach: 122 scored models, the widest of the thirteen. |
 
 **Re-weighted 2026-10-03.** Coverage and saturation had moved enough under the
 old rungs to reorder them: Terminal-Bench 4.0 rose from 32 scored models to 85,
@@ -2703,6 +2704,18 @@ borderline one: it carries Toolathlon, Terminal-Bench 2.1 and IFBench, 21.7% of
 the weight before and 17.97% now, because all three stepped down. Re-running
 `--calibrate` moved the [transfer
 ratio](#how-far-one-benchmark-speaks-for-the-others) **0.023 → 0.024**.
+
+**AutomationBench-AA replaced τ³ Banking as the anchor**, later the same day,
+once it was clear AA had stopped running τ³ for new models: AutomationBench-AA
+in at 1.0, τ³ Banking down to 0.5, the total 6.40 → 6.90. Against the order
+just above, Spearman is **0.9952**, mean 2.3 places. The largest moves are
+models AutomationBench scores near zero where τ³ had them in the mid-field —
+`ling-3-0-tiny` (0.3 here, 20.8 on τ³) 69 → 86, `gpt-oss-120b` (0.2 against
+12.8) 78 → 89 — and `mimo-v2-5-0424` going the other way, 63 → 52. At the top,
+`gemini-4-argon` (77.5, the best score on the board) rises to 2nd and
+`claude-opus-5-5` to 5th. One model, `atria-dawn-preview`, falls under the
+bar: its τ³ Banking, BFCL and Terminal-Bench 2.1 scores are 16.7% of the new
+total. Recalibration moved the transfer ratio **0.024 → 0.019**.
 
 **AA-Briefcase stays out.** It is AA-run on 84 models with a 255-Elo head, but
 it ranks the field **0.98** with GDPval-AA over the 84 models on both: the same

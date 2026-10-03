@@ -345,7 +345,16 @@ INDEXES: list[IndexDef] = [
         contributing=[
             # Weights re-measured 2026-10-03; README, "Tooling Index", has the
             # table and the numbers behind every rung.
-            ("tau3_bench_banking", 1.0),
+            #
+            # AutomationBench-AA is the anchor since 2026-10-03: AA replaced
+            # tau3 Banking with it in Intelligence Index v4.3 (2026-09-07), so
+            # it is the AA-run tool-use board every new model gets -- 85 scored,
+            # all AA-run, a 9.0-point head on a held-out set -- and it ranks
+            # the 75 models on both 0.88 with tau3 Banking. tau3 Banking is no
+            # longer run for new models (none added since 2026-09-22 has it),
+            # so it stays, at 0.5 below, as frozen coverage for the 96 it
+            # scored.
+            ("automation_bench_aa", 1.0),
             # Level with the anchor, as in the coding group: 85 scored models,
             # 84 AA-run, and the widest live head in the group (10.6 points to
             # the fifth). 2.1, saturated, is coverage at 0.2.
@@ -354,6 +363,7 @@ INDEXES: list[IndexDef] = [
             ("gdpval_aa", 0.7),
             ("mcp_atlas", 0.7),
             ("itbench_aa", 0.6),
+            ("tau3_bench_banking", 0.5),
             ("bfcl_v4", 0.45),
             # Long-horizon computer work for professional clients, admitted
             # now that 21 tracked models carry it (it was held out at 8).
