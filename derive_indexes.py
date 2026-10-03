@@ -213,8 +213,11 @@ INDEXES: list[IndexDef] = [
             # had 12, 15 of them first-party. The 27.1-point head that raise
             # was argued on is one model-card claim (step-5-preview, 72.7,
             # 21 points above the board's best run); the board's own top five
-            # span 8.2 points, on 20 tasks where one task is 5 points.
-            ("swe_marathon_1_1", 0.75),
+            # span 8.2 points, on 20 tasks where one task is 5 points. So 0.5
+            # since the second pass the same day: level with Vibe Code Bench,
+            # under the large frontier boards, which is what 20 tasks with a
+            # one-task gap between neighbours warrant.
+            ("swe_marathon_1_1", 0.5),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release; 2.1 stays in because it is not a superseded
             # revision in the sense above -- it is a separate series -- but
