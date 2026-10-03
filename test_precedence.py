@@ -80,7 +80,7 @@ class TestRungs(unittest.TestCase):
         self.assertEqual(source_rank(AA_CODING_AGENTS_SOURCE_URL), RANK_AA_CODING_AGENTS)
         self.assertEqual(source_rank(AA_PAGE), RANK_AA)
         ranks = sorted({rank for _, rank in RANKED_PREFIXES})
-        self.assertEqual(ranks[:2], [RANK_AA_CODING_AGENTS, RANK_AA])
+        self.assertEqual(ranks[:2], [RANK_AA, RANK_AA_CODING_AGENTS])
 
     def test_benchmarks_own_leaderboards(self) -> None:
         for url in (
@@ -172,18 +172,19 @@ class TestRungs(unittest.TestCase):
 
 
 class TestSameHostFamilies(unittest.TestCase):
-    """AA's surfaces outrank everyone else, and the Coding Agent Index the rest of AA."""
+    """AA's surfaces outrank everyone else, and the model pages the Coding Agent Index."""
 
-    def test_coding_agent_index_outranks_the_model_pages(self) -> None:
+    def test_model_pages_outrank_the_coding_agent_index(self) -> None:
         # Issue #227: both write terminal_bench_4_0 under different harnesses,
-        # and on one rung each refresh flipped the value back and forth.
+        # and on one rung each refresh flipped the value back and forth. Since
+        # 2026-10-03 AA's single harness is the one that lands.
         self.assertEqual(source_rank(AA_CODING_AGENTS_SOURCE_URL), RANK_AA_CODING_AGENTS)
         self.assertEqual(source_rank(AA_PAGE), RANK_AA)
-        self.assertLess(RANK_AA_CODING_AGENTS, RANK_AA)
-        self.assertTrue(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, AA_PAGE))
-        self.assertFalse(may_overwrite(AA_PAGE, AA_CODING_AGENTS_SOURCE_URL))
+        self.assertLess(RANK_AA, RANK_AA_CODING_AGENTS)
+        self.assertTrue(may_overwrite(AA_PAGE, AA_CODING_AGENTS_SOURCE_URL))
+        self.assertFalse(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, AA_PAGE))
 
-    def test_agent_run_lands_whichever_aa_ingest_runs_last(self) -> None:
+    def test_model_page_run_lands_whichever_aa_ingest_runs_last(self) -> None:
         for order in ((AA_PAGE, AA_CODING_AGENTS_SOURCE_URL),
                       (AA_CODING_AGENTS_SOURCE_URL, AA_PAGE)):
             with self.subTest(order=order):
@@ -191,21 +192,27 @@ class TestSameHostFamilies(unittest.TestCase):
                 values = {AA_PAGE: 49.0, AA_CODING_AGENTS_SOURCE_URL: 54.5}
                 for url in order:
                     update.apply_score(DOC, model, "m", "terminal_bench_4_0", values[url], url, [])
-                self.assertEqual(model["scores"]["terminal_bench_4_0"], 54.5)
-                self.assertEqual(
-                    model["scores_source"]["terminal_bench_4_0"], AA_CODING_AGENTS_SOURCE_URL
-                )
+                self.assertEqual(model["scores"]["terminal_bench_4_0"], 49.0)
+                self.assertEqual(model["scores_source"]["terminal_bench_4_0"], AA_PAGE)
 
-    def test_equal_agent_run_takes_credit_from_a_model_page(self) -> None:
-        model = model_with(54.5, AA_PAGE, "terminal_bench_4_0")
-        n = update.apply_score(
+    def test_equal_model_page_run_takes_credit_from_the_agent_index(self) -> None:
+        model = model_with(54.5, AA_CODING_AGENTS_SOURCE_URL, "terminal_bench_4_0")
+        n = update.apply_score(DOC, model, "m", "terminal_bench_4_0", 54.5, AA_PAGE, [])
+        self.assertEqual(n, 1)
+        self.assertEqual(model["scores_source"]["terminal_bench_4_0"], AA_PAGE)
+        self.assertEqual(
+            update.apply_score(
+                DOC, model, "m", "terminal_bench_4_0", 49.0, AA_CODING_AGENTS_SOURCE_URL, []
+            ),
+            0,
+        )
+
+    def test_agent_index_fills_a_column_the_pages_leave_empty(self) -> None:
+        model = model_with(None, None, "terminal_bench_4_0")
+        update.apply_score(
             DOC, model, "m", "terminal_bench_4_0", 54.5, AA_CODING_AGENTS_SOURCE_URL, []
         )
-        self.assertEqual(n, 1)
-        self.assertEqual(model["scores_source"]["terminal_bench_4_0"], AA_CODING_AGENTS_SOURCE_URL)
-        self.assertEqual(
-            update.apply_score(DOC, model, "m", "terminal_bench_4_0", 49.0, AA_PAGE, []), 0
-        )
+        self.assertEqual(model["scores"]["terminal_bench_4_0"], 54.5)
 
     def test_coding_agent_index_outranks_the_aggregates(self) -> None:
         self.assertTrue(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, HF_CARD))
@@ -249,8 +256,16 @@ class TestApplyScoreHonoursRank(unittest.TestCase):
         self.assertEqual(update.apply_score(DOC, model, "m", "ifbench", 38, EVALS_IFBENCH, []), 0)
         self.assertEqual(update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, []), 0)
 
+    def test_aa_agent_ingest_leaves_a_model_page_value_alone(self) -> None:
+        model = model_with(55.6, AA_PAGE, "terminal_bench_4_0")
+        doc = {"benchmarks": {}, "models": [model]}
+        _, count, _ = update.update_aa_coding_agents_scores(doc, {"m": {"terminal_bench_4_0": 51.34}})
+        self.assertEqual(count, 0)
+        self.assertEqual(model["scores"]["terminal_bench_4_0"], 55.6)
+        self.assertEqual(model["scores_source"]["terminal_bench_4_0"], AA_PAGE)
+
     def test_aa_agent_ingest_overwrites_other_sources_and_itself(self) -> None:
-        for source in (AA_PAGE, AA_CODING_AGENTS_SOURCE_URL, HF_CARD,
+        for source in (AA_CODING_AGENTS_SOURCE_URL, HF_CARD,
                        SWE_ATLAS_KEY_URLS["swe_atlas_qna"], HAND_ENTERED):
             with self.subTest(source=source):
                 model = model_with(55.6, source, "swe_atlas_qna")
@@ -821,8 +836,8 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
     def test_rungs_are_distinct_and_ordered(self) -> None:
         self.assertEqual(
             [
-                RANK_AA_CODING_AGENTS,
                 RANK_AA,
+                RANK_AA_CODING_AGENTS,
                 RANK_BENCHMARK_SITE,
                 RANK_THIRD_PARTY_RUN,
                 RANK_CURATED,
@@ -836,7 +851,7 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
         )
         self.assertEqual(
             sorted({rank for _, rank in RANKED_PREFIXES}),
-            [RANK_AA_CODING_AGENTS, RANK_AA, RANK_BENCHMARK_SITE,
+            [RANK_AA, RANK_AA_CODING_AGENTS, RANK_BENCHMARK_SITE,
              RANK_THIRD_PARTY_RUN, RANK_CURATED, RANK_AGGREGATE,
              RANK_ENDPOINT_RUN, RANK_BENCHMARKING_HUB, RANK_MODEL_CARD],
         )

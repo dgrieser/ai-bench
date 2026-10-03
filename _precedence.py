@@ -23,15 +23,19 @@ single source.
 
 The rungs, strongest first:
 
-  0. ``RANK_AA_CODING_AGENTS`` -- Artificial Analysis' Coding Agent Index. It
-     shares Terminal-Bench 4.0 (and could share DeepSWE) with AA's other
-     surfaces, but runs each model under its vendor's own coding agent rather
-     than AA's single harness, so the two AA readings of one column differ by
-     design. Both used to sit on rung 1, where each refresh let the model pages
-     overwrite the index and the index overwrite them back; the index is ranked
-     above them instead, so its run is the one that lands wherever both report.
-  1. ``RANK_AA`` -- Artificial Analysis' other evaluations: the API, model
-     pages and official social posts. Nothing but AA overwrites them.
+  0. ``RANK_AA`` -- Artificial Analysis' evaluations: the API, model pages
+     and official social posts. Nothing overwrites them but AA itself.
+  1. ``RANK_AA_CODING_AGENTS`` -- Artificial Analysis' Coding Agent Index. It
+     shares Terminal-Bench 4.0 (and could share DeepSWE) with the model pages,
+     but runs each model under its vendor's own coding agent rather than AA's
+     single harness, so the two AA readings of one column differ by design.
+     The two used to share a rung, where each refresh let one overwrite the
+     other; then the index sat above the pages. Since 2026-10-03 the pages sit
+     above it: the column is meant to compare models, and AA's one harness
+     holds the harness fixed where the vendor agents do not. The index still
+     fills what the pages do not carry -- Terminal-Bench 4.0 for a model AA
+     has not run itself, its DeepSWE and SWE Atlas rows -- and outranks every
+     benchmark site there.
   2. ``RANK_BENCHMARK_SITE`` -- the leaderboard run by the team that owns the
      benchmark. First-party for the one column it publishes, and no two members
      of this rung publish the same column, so their relative order is
@@ -141,8 +145,8 @@ import fetch_zerobench
 from _revisions import revision_key
 from fill_source_urls import canonical
 
-RANK_AA_CODING_AGENTS = 0
-RANK_AA = 1
+RANK_AA = 0
+RANK_AA_CODING_AGENTS = 1
 RANK_BENCHMARK_SITE = 2
 RANK_THIRD_PARTY_RUN = 3
 RANK_CURATED = 4
@@ -264,8 +268,8 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
     """(page prefix, rank) pairs, longest prefix first.
 
     Longest-first allows specific pages to override a host-wide rule: the
-    Coding Agent Index lives under the artificialanalysis.ai host and outranks
-    it.
+    Coding Agent Index lives under the artificialanalysis.ai host and ranks
+    below it.
     """
     pairs: list[tuple[str, int]] = [
         ("https://artificialanalysis.ai", RANK_AA),
