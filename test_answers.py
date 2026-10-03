@@ -850,6 +850,56 @@ class TestBatches(AnswersTestCase):
         self.assertFalse(fresh.exists(), "a file the batch created must not survive a rollback")
 
 
+class TestCreateAndMap(AnswersTestCase):
+    """A board lists a release Artificial Analysis does not, and the Queue card
+    adds it and maps the board's name onto it in one sitting -- so a mapping
+    may name a model the same batch creates, and nothing else new."""
+
+    def batch(self, records):
+        return _answers.validate(records, llm_path=self.llm, universes=UNIVERSES, queue=self.queue)
+
+    def test_a_mapping_may_name_a_model_the_batch_creates(self) -> None:
+        answers, failures = self.batch([
+            self.mapping(answer="step-5-preview"),
+            {"kind": MODEL_CREATE, "name": "step-5-preview"},
+        ])
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual([a.kind for a in answers], [MAPPING, MODEL_CREATE])
+
+    def test_without_the_create_the_name_is_still_unknown(self) -> None:
+        self.refused(self.mapping(answer="step-5-preview"), "not one of the known models")
+
+    def test_a_created_name_is_no_answer_for_a_benchmark_route(self) -> None:
+        _answers_out, failures = self.batch([
+            self.mapping(route=LLMSTATS, route_kind="llmstats-benchmark",
+                         subject="hle", answer="step-5-preview"),
+            {"kind": MODEL_CREATE, "name": "step-5-preview"},
+        ])
+        self.assertEqual(len(failures), 1)
+        self.assertIn("not one of the known benchmarks", failures[0].message)
+
+    def test_a_create_that_fails_fails_the_batch(self) -> None:
+        """The mapping is only as good as the create it leans on."""
+        _answers_out, failures = self.batch([
+            self.mapping(answer="devstral-2-new"),
+            {"kind": MODEL_CREATE, "name": "devstral-2-new", "fields": {"url": "nope"}},
+        ])
+        self.assertEqual([f.index for f in failures], [1])
+
+    def test_creates_are_applied_before_mappings(self) -> None:
+        order = []
+        answers = [
+            Answer(0, MAPPING, "Some Model", route=TBENCH, route_kind="*", value="fresh-model-1"),
+            Answer(1, MODEL_EDIT, "glm-5-3"),
+            Answer(2, MODEL_CREATE, "fresh-model-1"),
+        ]
+        with mock.patch.object(_answers, "touchable_paths", return_value=[]), \
+             mock.patch.object(_answers, "_apply_one",
+                               side_effect=lambda a, _p: order.append(a.index) or []):
+            _answers.apply(answers, llm_path=self.llm)
+        self.assertEqual(order, [2, 0, 1])
+
+
 class TestCollectMode(AnswersTestCase):
     def test_applying_under_collect_mode_is_refused(self) -> None:
         """Every mapping writer is a no-op while collect mode is on.
