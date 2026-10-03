@@ -353,6 +353,12 @@ main { padding-block: 1rem; }
 /* Answered and gone to a run: still readable -- it is the record of what is
    being applied -- but plainly not something to answer again. */
 .card.sent { border-style: dashed; background: var(--surface-2); }
+/* "New model" opened inside a Queue card: a card in a card, so flatter. */
+.card.add-model.nested {
+  margin-top: .75rem;
+  background: var(--surface-2);
+  box-shadow: none;
+}
 .card.sent .opt, .card.sent input, .card.sent select { opacity: .55; cursor: not-allowed; }
 .sent-mark {
   display: flex;
@@ -1157,8 +1163,10 @@ const state = {
   aa: { slugs: null, models: null, error: "", asked: false },
   modelSearch: "",      // kept here so a re-render does not empty the tab
   /* The hand-added models being typed, one card each: [{ id, name, fields,
-     key }], where `key` is the record the card last put in the batch, so a card
-     can take back its own record without touching its neighbours'. */
+     key, question }], where `key` is the record the card last put in the batch,
+     so a card can take back its own record without touching its neighbours'.
+     `question` is set on the ones opened from a Queue card's "New model": the
+     KEY of that question, whose mapping the card also writes. */
   newModels: [],
   /* What the run does after the batch: "full" refreshes every score, "quick"
      only re-collects the mapping queue. The workflow's skip_refresh (answers
@@ -1357,6 +1365,8 @@ const COMBO_MIN = 3;
 const COMBO_MAX = 50;
 function comboBox(input, values, {
   detail = () => "", min = COMBO_MIN, max = COMBO_MAX, onPick = null,
+  match = (value, needle) => value.toLowerCase().includes(needle),
+  toValue = (value) => value,
 } = {}) {
   const listId = `c-${Math.random().toString(36).slice(2)}`;
   const list = el("ul", { id: listId, className: "combo-list", hidden: true });
@@ -1380,7 +1390,7 @@ function comboBox(input, values, {
     if (rows[index]) rows[index].scrollIntoView({ block: "nearest" });
   };
   const pick = (value) => {
-    input.value = value;
+    input.value = toValue(value);
     close();
     if (input.oninput) input.oninput();
     /* After oninput, so a caller that acts on a pick sees the field's own
@@ -1400,13 +1410,13 @@ function comboBox(input, values, {
     const hits = [];
     let total = 0;
     for (const value of values()) {
-      if (!value.toLowerCase().includes(needle)) continue;
+      if (!match(value, needle)) continue;
       total += 1;
       if (hits.length < max) hits.push(value);
     }
     // Nothing to offer, or only what is already typed: the list would only
     // sit over the status line below.
-    if (!hits.length || (hits.length === 1 && hits[0] === input.value.trim())) {
+    if (!hits.length || (hits.length === 1 && toValue(hits[0]) === input.value.trim())) {
       close();
       return;
     }
@@ -1452,8 +1462,100 @@ function comboBox(input, values, {
       close();
     }
   });
-  return el("div", { className: "combo" }, [input, list]);
+  const box = el("div", { className: "combo" }, [input, list]);
+  /* For a list that arrives later than the keystroke: redrawn only while the
+     field still has focus, so an answer landing after a tap elsewhere does not
+     pop a list open over the next field. */
+  box.redraw = () => { if (document.activeElement === input) draw(); };
+  return box;
 }
+
+/* --------------------------------------------------- Hugging Face lookup */
+
+/* The url field searches the Hub when what is typed is a name rather than a
+   URL: "glm 5.3" lists repos, picking one writes https://huggingface.co/<repo>.
+   A URL typed or pasted is left alone, and a bare "org/repo" becomes its URL
+   when the field is left.
+
+   Straight from the browser: the Hub's API answers any origin with CORS
+   headers and needs no token for public repos, so nothing goes through
+   api.php. Ranked here rather than by the API, because every release is
+   buried under its own quants and fine-tunes: the original repos come first,
+   by likes, and anything that reads like a derivative after them. */
+const HF_API = "https://huggingface.co/api/models";
+const HF_BASE = "https://huggingface.co/";
+const HF_DERIVATIVE = /gguf|awq|gptq|fp8|fp4|int[48]\b|w[48]a\d+|\dbits?\b|bnb|exl\d|mlx|onnx|abliterat|uncensor|heretic|lora|quant/i;
+const HF_REPO_RE = /^[A-Za-z0-9][\w.-]*\/[\w.-]+$/;
+const hfCache = new Map();   // query -> [repo id, ...], ranked
+const hfMeta = new Map();    // repo id -> { likes, downloads, pipeline_tag }
+
+const looksLikeUrl = (value) => /^(https?:|\w+:\/\/|(www\.)?(huggingface|hf)\.co\b)/i.test(value);
+const hfTokens = (needle) => needle.toLowerCase().split(/\s+/).filter(Boolean);
+const hfMatch = (id, needle) => hfTokens(needle).every((token) => id.toLowerCase().includes(token));
+const compact = (n) => (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}k` : String(n));
+const hfDetail = (id) => {
+  const meta = hfMeta.get(id);
+  if (!meta) return "";
+  return " " + [meta.pipeline_tag, `♥ ${compact(meta.likes || 0)}`, `↓ ${compact(meta.downloads || 0)}`]
+    .filter(Boolean).join(" · ");
+};
+
+async function hfSearch(query, signal) {
+  const key = query.toLowerCase();
+  if (hfCache.has(key)) return hfCache.get(key);
+  const url = `${HF_API}?search=${encodeURIComponent(query)}&sort=likes&direction=-1&limit=50`;
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const found = (await response.json()).filter((m) => m && typeof m.id === "string");
+  for (const m of found) {
+    hfMeta.set(m.id, { likes: m.likes, downloads: m.downloads, pipeline_tag: m.pipeline_tag });
+  }
+  const original = (m) => !HF_DERIVATIVE.test(m.id);
+  const ranked = [...found.filter(original), ...found.filter((m) => !original(m))].map((m) => m.id);
+  hfCache.set(key, ranked);
+  return ranked;
+}
+
+/* Wraps a url input. `shown` is the last answer for what is typed; the
+   combo filters it as typing narrows, and redraws when a fresh one lands. */
+function hfUrlBox(input) {
+  input.placeholder = "https://huggingface.co/... or a name to search";
+  let shown = [];
+  let timer = 0;
+  let controller = null;
+  const box = comboBox(input, () => shown, {
+    min: 2, max: 12, match: hfMatch, detail: hfDetail, toValue: (id) => HF_BASE + id,
+  });
+  input.addEventListener("input", () => {
+    const query = input.value.trim();
+    clearTimeout(timer);
+    controller?.abort();
+    if (query.length < 2 || looksLikeUrl(query)) { shown = []; return; }
+    timer = setTimeout(async () => {
+      controller = new AbortController();
+      try {
+        const ranked = await hfSearch(query, controller.signal);
+        if (input.value.trim() !== query) return;
+        shown = ranked;
+        box.redraw();
+      } catch { /* offline, rate-limited, aborted: the field still takes a URL */ }
+    }, 250);
+  });
+  /* "zai-org/GLM-5.3", typed or pasted and left: that is a repo, not a search. */
+  input.addEventListener("change", () => {
+    const value = input.value.trim();
+    if (HF_REPO_RE.test(value)) {
+      input.value = HF_BASE + value;
+      input.oninput?.();
+    }
+  });
+  return box;
+}
+
+/* The control for one metadata field: the input, plus what helps fill it. */
+const fieldControl = (field, input) => (field === "url"
+  ? [hfUrlBox(input)]
+  : [input, suggestList(field, input)]);
 
 /* A field that holds a slug or a URL. A phone keyboard capitalises the first
    letter and "corrects" the rest by default, which turns gpt-6-sol into
@@ -1538,7 +1640,7 @@ function saveDraft() {
     }
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       answers: [...state.answers.entries()],
-      newModels: drafts.map(({ id, name, fields, key }) => ({ id, name, fields, key })),
+      newModels: drafts.map(({ id, name, fields, key, question }) => ({ id, name, fields, key, question })),
       referenceDraft: state.referenceDraft,
     }));
   } catch { /* private mode, a full quota: the draft is only a convenience */ }
@@ -1558,7 +1660,10 @@ function readDraft() {
     if (Array.isArray(stored.newModels)) {
       state.newModels = stored.newModels
         .filter((d) => d && typeof d.name === "string" && d.fields && typeof d.fields === "object")
-        .map((d) => ({ id: d.id || draftId(), name: d.name, fields: d.fields, key: d.key || "" }));
+        .map((d) => ({
+          id: d.id || draftId(), name: d.name, fields: d.fields, key: d.key || "",
+          question: typeof d.question === "string" ? d.question : "",
+        }));
     }
     if (typeof stored.referenceDraft === "string") state.referenceDraft = stored.referenceDraft;
   } catch { /* a half-written value: start clean */ }
@@ -1580,6 +1685,13 @@ function pruneDraft() {
       state.answers.delete(key);
       dropped += 1;
     }
+  }
+  /* A model opened from a question's card goes with the question: it was only
+     ever being added to answer it, and the card it lived on is gone. */
+  for (const draft of state.newModels.filter((d) => d.question && !asked.has(d.question))) {
+    if (draft.key) state.answers.delete(draft.key);
+    state.newModels = state.newModels.filter((d) => d !== draft);
+    dropped += 1;
   }
   if (dropped) saveDraft();
   return dropped;
@@ -2197,7 +2309,17 @@ function loadRunWarnings() {
    list alone is hundreds of names and the AA list thousands, so committing them
    would rewrite pending.json on runs where no question changed. answer.py
    revalidates everything regardless, which is the check that counts. */
-const models = () => (state.llm?.models || []).map((m) => m.name).filter(Boolean).sort();
+const models = () => [...new Set([
+  ...(state.llm?.models || []).map((m) => m.name).filter(Boolean),
+  ...batchCreated(),
+])].sort();
+
+/* The models this batch adds, by name. A mapping may answer with one of them --
+   answer.py runs the creates first -- so they are searchable on every Queue
+   card, and a second board listing the same release maps onto it too. */
+const batchCreated = () => [...state.answers.values()]
+  .filter((record) => record.kind === "model-create" || record.kind === "model-add")
+  .map((record) => record.name);
 
 /* What llm.json records of one score's past, newest first, each entry saying
    what that write did. The kind is derived from the list rather than stored --
@@ -2568,9 +2690,68 @@ function renderQueue() {
   return box;
 }
 
+/* "New model" on a Queue card: a release a board lists before Artificial
+   Analysis does, added and mapped in one sitting. The card opens the same form
+   as the New models tab's "Add a model", pre-filled from the source's name, and
+   while it is open it owns the question's answer -- its create record and the
+   mapping onto it come and go together. answer.py runs creates first. */
+const createDraftFor = (key) => state.newModels.find((d) => d.question === key);
+
+function dropCreate(question) {
+  const draft = createDraftFor(KEY(question));
+  if (!draft) return false;
+  if (draft.key) state.answers.delete(draft.key);
+  state.answers.delete(KEY(question));
+  state.newModels = state.newModels.filter((d) => d !== draft);
+  return true;
+}
+
+/* The slug a source's name most likely wants: its last path segment, in the
+   shape every llm.json name has. A guess to edit, not an answer -- a board's
+   "stepfun/step-5-preview" is usually right, its "Step 5 (Preview)" less so. */
+const guessName = (subject) => normSlug(String(subject).split("/").pop());
+
+/* The creator, when the source names its org ("stepfun/...") and exactly one
+   creator llm.json knows reads the same. Short names must match outright:
+   "ai2" is a prefix of "ai21labs" and names somebody else. */
+function guessCreator(subject) {
+  const parts = String(subject).split("/");
+  if (parts.length < 2) return null;
+  const squash = (value) => normSlug(value).replace(/-/g, "");
+  const head = squash(parts[0]);
+  if (!head) return null;
+  const hits = fieldSuggestions("creator").filter((name) => {
+    const known = squash(name);
+    if (known === head) return true;
+    return Math.min(known.length, head.length) >= 4
+      && (known.startsWith(head) || head.startsWith(known));
+  });
+  return hits.length === 1 ? hits[0] : null;
+}
+
+function openCreate(question) {
+  state.answers.delete(KEY(question));
+  const fields = {};
+  const creator = guessCreator(question.subject);
+  if (creator) {
+    fields.creator = creator;
+    const url = creatorUrl(creator);
+    if (url) fields.creator_url = url;
+  }
+  state.newModels.push({
+    id: draftId(), name: guessName(question.subject), fields, key: "", question: KEY(question),
+  });
+}
+
 function renderQuestion(question) {
   const chosen = answerOf(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
+  const creating = question.universe === "models" ? createDraftFor(KEY(question)) : null;
+  /* Every other answer closes the form: one question, one answer. */
+  const choose = (record) => {
+    dropCreate(question);
+    setAnswer(question, record);
+  };
   card.append(el("div", { className: "subject" }, question.subject));
 
   const chips = el("div", { className: "chips" }, [
@@ -2596,7 +2777,25 @@ function renderQuestion(question) {
       className: exact ? "exact" : "",
       tag: exact ? "best match" : "",
       note: question.universe === "benchmarks" ? benchNote(candidate.option) : null,
-      onclick: () => setAnswer(question, pressed ? null : mappingRecord(question, candidate.option)),
+      onclick: () => choose(pressed ? null : mappingRecord(question, candidate.option)),
+    }));
+  }
+  if (question.universe === "models") {
+    options.append(option("New model…", creating
+      ? `adds ${creating.name.trim() || "it"} and maps this name to it, in one batch`
+      : "not tracked yet: add it here and map this name to it in one go", {
+      pressed: Boolean(creating),
+      className: "decline",
+      onclick: () => {
+        if (!dropCreate(question)) openCreate(question);
+        render();
+        /* Into view, not focused: the name is already filled in, and focus
+           would open the keyboard over the rest of the form on a phone. */
+        if (!creating) {
+          document.querySelector(`#view [data-create="${CSS.escape(KEY(question))}"]`)
+            ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      },
     }));
   }
   /* None of these: rule every candidate shown out, and answer nothing else.
@@ -2614,7 +2813,7 @@ function renderQuestion(question) {
         : "not a match, but not unmappable either: ask again when a new candidate turns up", {
         pressed: skipping,
         className: "decline",
-        onclick: () => setAnswer(question, skipping ? null : {
+        onclick: () => choose(skipping ? null : {
           kind: "candidates-skip",
           route: question.route,
           route_kind: question.route_kind,
@@ -2627,15 +2826,25 @@ function renderQuestion(question) {
   options.append(option("__unmappable__", "reviewed, deliberately not mapped", {
     pressed: declined,
     className: "decline",
-    onclick: () => setAnswer(question, declined ? null : mappingRecord(question, "__unmappable__")),
+    onclick: () => choose(declined ? null : mappingRecord(question, "__unmappable__")),
   }));
   card.append(options);
+
+  if (creating) {
+    const form = renderAddModel(creating, 0, flyingCreates(), {
+      question,
+      onCommit: (ok) => card.classList.toggle("answered", ok),
+    });
+    form.dataset.create = KEY(question);
+    card.append(form);
+  }
 
   /* Anything the candidates missed. Filtered client-side purely so the control
      is usable; the value is checked again on the runner. */
   const universe = universeFor(question);
   if (universe.length) {
     const freeform = chosen
+      && !creating
       && chosen.kind === "mapping"
       && chosen.answer !== "__unmappable__"
       && !(question.candidates || []).some((c) => c.option === chosen.answer);
@@ -2677,6 +2886,12 @@ function renderQuestion(question) {
     input.oninput = () => {
       const value = input.value.trim();
       const known = universe.includes(value);
+      /* Typing here is choosing another answer, so an open "New model" form
+         goes -- taken out of the card by hand, since a render would replace
+         the box being typed into. */
+      if (value && dropCreate(question)) {
+        card.querySelector(".add-model")?.remove();
+      }
       setAnswer(question, known ? mappingRecord(question, value) : null, false);
       card.classList.toggle("answered", Boolean(answerOf(question)));
       if (value) {
@@ -2746,16 +2961,20 @@ function renderNewBulk(questions) {
    another's. */
 const MODEL_CREATE_KEY = (name) => `model-create  ${name}`;
 
+/* What is already on its way, from the batch that was sent rather than from
+   the cards: a card is gone once sent, so a reload shows the same thing. */
+const flyingCreates = () => (locked()
+  ? state.sent.keys.filter((key) => key.startsWith("model-create  "))
+    .map((key) => key.slice("model-create  ".length))
+  : []);
+
 function renderAddModels() {
-  if (!state.newModels.length) state.newModels.push({ id: draftId(), name: "", fields: {}, key: "" });
+  /* The cards opened from a Queue question live on that question's card. */
+  const standalone = () => state.newModels.filter((d) => !d.question);
+  if (!standalone().length) state.newModels.push({ id: draftId(), name: "", fields: {}, key: "", question: "" });
   const box = el("div", { className: "stack" });
 
-  /* What is already on its way, from the batch that was sent rather than from
-     the cards: a card is gone once sent, so a reload shows the same thing. */
-  const flying = locked()
-    ? state.sent.keys.filter((key) => key.startsWith("model-create  "))
-      .map((key) => key.slice("model-create  ".length))
-    : [];
+  const flying = flyingCreates();
   if (flying.length) {
     const card = el("div", { className: "card" }, [
       el("div", { className: "subject" }, flying.length === 1 ? "Being added" : `Being added (${flying.length})`),
@@ -2765,11 +2984,11 @@ function renderAddModels() {
     box.append(lockCard(card));
   }
 
-  state.newModels.forEach((draft, index) => box.append(renderAddModel(draft, index, flying)));
+  standalone().forEach((draft, index) => box.append(renderAddModel(draft, index, flying)));
 
   const another = el("button", { className: "btn ghost", type: "button" }, "+ Add another model");
   another.onclick = () => {
-    state.newModels.push({ id: draftId(), name: "", fields: {}, key: "" });
+    state.newModels.push({ id: draftId(), name: "", fields: {}, key: "", question: "" });
     render();
     /* The new card is the last; put its name box under the thumb. */
     const inputs = document.querySelectorAll("#view .add-model input");
@@ -2779,20 +2998,29 @@ function renderAddModels() {
   return box;
 }
 
-function renderAddModel(draft, index, flying) {
-  const card = el("div", { className: "card add-model" });
+/* `question` is set when the form is opened from a Queue card: it then also
+   writes that question's mapping onto the model it adds, and `onCommit` tells
+   the card whether the pair is in the batch. */
+function renderAddModel(draft, index, flying, { question = null, onCommit = null } = {}) {
+  const card = el("div", { className: `card add-model${question ? " nested" : ""}` });
   const known = new Set((state.llm?.models || []).map((m) => m.name));
 
-  const discard = el("button", { className: "btn ghost tiny", type: "button" }, "Discard");
+  const discard = el("button", { className: "btn ghost tiny", type: "button" },
+    question ? "Cancel" : "Discard");
   discard.onclick = () => {
-    if (draft.key) state.answers.delete(draft.key);
-    state.newModels = state.newModels.filter((d) => d !== draft);
+    if (question) {
+      dropCreate(question);
+    } else {
+      if (draft.key) state.answers.delete(draft.key);
+      state.newModels = state.newModels.filter((d) => d !== draft);
+    }
     render();
   };
   const hasContent = draft.name.trim() || Object.keys(draft.fields).length;
   card.append(el("div", { className: "card-head" }, [
-    el("div", { className: "subject" }, index === 0 ? "Add a model" : "Add another model"),
-    state.newModels.length > 1 || hasContent ? discard : null,
+    el("div", { className: "subject" },
+      question ? "Add it as a new model" : index === 0 ? "Add a model" : "Add another model"),
+    question || state.newModels.filter((d) => !d.question).length > 1 || hasContent ? discard : null,
   ]));
 
   const status = el("div", { className: "chips" });
@@ -2807,8 +3035,10 @@ function renderAddModel(draft, index, flying) {
     /* Typed back in after being sent: the run is creating it, and a second
        record would have add.py refuse the whole batch for a duplicate name. */
     const inFlight = flying.includes(name);
-    /* The same name on two cards is one entry twice, which answer.py refuses. */
-    const twice = state.newModels.some((d) => d !== draft && d.name.trim() === name);
+    /* The same name on two cards is one entry twice, which answer.py refuses --
+       and so is one the New models tab is already adding from AA's offer. */
+    const twice = state.newModels.some((d) => d !== draft && d.name.trim() === name)
+      || batchCreated().includes(name);
 
     status.replaceChildren(...(!name ? [] : [
       !shaped
@@ -2819,7 +3049,9 @@ function renderAddModel(draft, index, flying) {
           : inFlight
             ? chip("", "already sent -- the run is creating it", { prose: true, className: "now" })
             : twice
-              ? chip("", "named on another card too -- one entry per name", { prose: true, className: "now" })
+              ? chip("", question
+                ? "already being added in this batch -- close this and pick it in the search box below"
+                : "named on another card too -- one entry per name", { prose: true, className: "now" })
               : state.aa.slugs === null
                 ? chip("", "adding it as a new entry", { prose: true })
                 : state.aa.slugs.includes(name)
@@ -2837,10 +3069,23 @@ function renderAddModel(draft, index, flying) {
       draft.key = MODEL_CREATE_KEY(name);
       state.answers.set(draft.key, { kind: "model-create", name, fields });
     }
-    card.classList.toggle("answered", ok);
-    tip.hidden = !ok || state.mode === "quick" || !state.quickOffered;
-    tip.textContent = "Tip: send with Quick and the run asks every board about this "
-      + "model in a couple of minutes, so its mappings can be answered in this sitting.";
+    if (question) {
+      /* The pair goes in together or not at all: a mapping onto a name that is
+         not being created would be refused, and take the batch with it. */
+      if (ok) state.answers.set(KEY(question), mappingRecord(question, name));
+      else state.answers.delete(KEY(question));
+      onCommit?.(ok);
+    }
+    card.classList.toggle("answered", ok && !question);
+    if (question) {
+      tip.hidden = !ok;
+      tip.textContent = `Two records: adds ${name}, then maps ${question.subject} to it. `
+        + "Full scores it in this run; Quick asks every other board about it first.";
+    } else {
+      tip.hidden = !ok || state.mode === "quick" || !state.quickOffered;
+      tip.textContent = "Tip: send with Quick and the run asks every board about this "
+        + "model in a couple of minutes, so its mappings can be answered in this sitting.";
+    }
     refreshFooter();
   };
 
@@ -2890,7 +3135,7 @@ function renderAddModel(draft, index, flying) {
       commit();
     };
     more.append(el("div", { className: "field" },
-      [el("label", {}, field.replace(/_/g, " ")), input, suggestList(field, input)]));
+      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input)]));
   }
   more.append(el("p", { className: "note-text" },
     "Anything left blank is filled from Artificial Analysis when it knows the "
@@ -3302,7 +3547,7 @@ function renderModelCard(model) {
       commit();
     };
     fields.append(el("div", { className: "field" },
-      [el("label", {}, field.replace(/_/g, " ")), input, suggestList(field, input)]));
+      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input)]));
   }
   card.append(fields);
 
@@ -3929,7 +4174,28 @@ async function reloadData() {
 
 /* ---------------------------------------------------------------- sending */
 
+/* A mapping onto a model this batch was going to create, whose card has since
+   been discarded or renamed: answer.py would refuse it, and the whole batch
+   with it, after the run has already started. */
+function danglingMappings() {
+  const known = new Set(models());
+  const byKey = new Map(state.questions.map((q) => [KEY(q), q]));
+  return [...state.answers.entries()].filter(([key, record]) => record.kind === "mapping"
+    && byKey.get(key)?.universe === "models"
+    && record.answer !== "__unmappable__"
+    && !known.has(record.answer))
+    .map(([, record]) => record);
+}
+
 async function send() {
+  const dangling = danglingMappings();
+  if (dangling.length) {
+    state.error = "Not sent: " + dangling.map((r) => `${r.subject} -> ${r.answer}`).join(", ")
+      + " names a model that is neither in llm.json nor added in this batch. "
+      + "Add it again, or answer that question another way.";
+    render();
+    return;
+  }
   const answers = [...state.answers.values()];
   const keys = [...state.answers.keys()];
   const mode = state.mode === "quick" && !state.quickOffered ? "full" : state.mode;

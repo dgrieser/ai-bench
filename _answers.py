@@ -350,6 +350,7 @@ def validate(
     model_names = {m.get("name") for m in doc.get("models", []) if isinstance(m, dict)}
     benchmarks = editable_benchmarks(doc)
     queue = queue if queue is not None else set()
+    created = batch_created_models(records, model_names)
 
     answers: list[Answer] = []
     failures: list[Failure] = []
@@ -364,6 +365,7 @@ def validate(
                     benchmarks=benchmarks,
                     queue=queue,
                     require_queue=require_queue,
+                    created=created,
                 )
             )
         except AnswerError as exc:
@@ -404,6 +406,27 @@ def validate(
     failures.extend(_reference_floor_failures(answers, reported))
 
     return answers, failures
+
+
+def batch_created_models(records: Sequence[Any], model_names: set[str]) -> frozenset[str]:
+    """The models this batch adds to llm.json, by name.
+
+    A mapping may answer with one of them: a release a board lists before
+    Artificial Analysis does is added and mapped in one sitting, rather than
+    added in one run and mapped in the next once the queue offers it. Only the
+    shape is read here -- the create record is validated on its own, and if it
+    fails, the batch fails with it, so a mapping can never be left pointing at a
+    model that was not made. apply() runs the creates first, so the order the
+    records arrive in does not matter.
+    """
+    names = set()
+    for record in records:
+        if not isinstance(record, dict) or record.get("kind") not in (MODEL_CREATE, MODEL_ADD):
+            continue
+        name = record.get("name")
+        if isinstance(name, str) and _rename.SLUG_RE.fullmatch(name) and name not in model_names:
+            names.add(name)
+    return frozenset(names)
 
 
 def _reference_floor_failures(
@@ -447,6 +470,7 @@ def _validate_one(
     benchmarks: dict[str, Any],
     queue: set[tuple[str, str, str]],
     require_queue: bool,
+    created: frozenset[str] = frozenset(),
 ) -> Answer:
     if not isinstance(record, dict):
         raise AnswerError("expected an object")
@@ -461,7 +485,7 @@ def _validate_one(
             )
 
     if kind == MAPPING:
-        return _validate_mapping(index, record, universes, queue, require_queue)
+        return _validate_mapping(index, record, universes, queue, require_queue, created)
     if kind == CANDIDATES_SKIP:
         return _validate_candidates_skip(index, record, universes, queue, require_queue)
     if kind == AA_IGNORE:
@@ -516,6 +540,7 @@ def _validate_mapping(
     universes: dict[str, list[str]],
     queue: set[tuple[str, str, str]],
     require_queue: bool,
+    created: frozenset[str] = frozenset(),
 ) -> Answer:
     route_name = record.get("route")
     route = resolve_route(route_name, record.get("route_kind"))
@@ -542,7 +567,9 @@ def _validate_mapping(
             "__closed_weights__ is recorded from the source's own claim, not by "
             "hand; use __unmappable__ to decline a name"
         )
-    if value not in HUMAN_SENTINELS:
+    # A model this batch creates is as good as one llm.json already has: see
+    # batch_created_models(). Only for a route whose answers are model names.
+    if value not in HUMAN_SENTINELS and not (route.universe == propose.MODELS and value in created):
         options = universes.get(route.universe) or []
         if not options:
             # Never fall back to the queue's own candidate list the way
@@ -999,8 +1026,12 @@ def apply(answers: Sequence[Answer], *, llm_path: Path = DEFAULT_LLM_JSON) -> li
 
     snapshot = _snapshot(touchable_paths(answers, llm_path))
     log: list[str] = []
+    # Models first, so a mapping onto a model the same batch creates finds it
+    # there (see batch_created_models). Stable, so everything else keeps the
+    # order it was sent in.
+    ordered = sorted(answers, key=lambda answer: answer.kind not in (MODEL_CREATE, MODEL_ADD))
     try:
-        for answer in answers:
+        for answer in ordered:
             log.extend(_apply_one(answer, llm_path))
     except Exception:
         _restore(snapshot)

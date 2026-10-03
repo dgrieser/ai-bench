@@ -196,6 +196,19 @@ tells you why.
           "route_kind": "mapping", "subject": "x/model", "answer": ["glm-5"]}]' \
     | ./answer.py --stdin -w
   ```
+
+  **New model…** is the answer for a release a board lists before Artificial
+  Analysis does -- Vals listing `stepfun/step-5-preview` with nothing in
+  `llm.json` to map it to. It opens the *Add a model* form inside the card,
+  with the name guessed from the source's (`step-5-preview`) and the creator
+  filled in when the source's org names exactly one creator the site knows.
+  Edit anything, and the card sends two records: a `model-create` and the
+  mapping onto it. `answer.py` accepts a mapping onto a model the same batch
+  creates (and nothing else new), and applies creates first, so the order
+  does not matter; if the create is refused, the batch is. Picking any other
+  answer, or typing in the search box, closes the form. Once a model is being
+  added, every other Queue card's search box offers it too, so a second board
+  listing the same release maps onto it rather than creating it twice.
 - **Updates** — what changed, day by day: models added, scores that arrived or
   moved (from `llm.json`'s `date_added` and `scores_history`, the same data the
   site's Recently Added panel reads), and every mapping written, with **who**
@@ -232,6 +245,15 @@ tells you why.
   arrive by themselves (see *A hand-added model and AA* below). **+ Add another
   model** adds a second card, and a third: a family released together is one
   batch and one run. Only the name is required; the other fields fold away.
+
+  The **url** field searches Hugging Face as well as taking a URL: type part of
+  a name (`step 3.5`, `glm-5`) and it lists matching repos, original releases
+  first by likes and quants and fine-tunes after them; picking one writes
+  `https://huggingface.co/<repo>`. A URL typed or pasted is left alone, and a
+  bare `org/repo` becomes its URL when the field is left. The search goes from
+  the browser straight to the Hub's public API (it answers any origin, no
+  token), so `api.php` is not involved. The Models tab's url field does the
+  same.
 - **Models** — edit every field `add.py` asks for — `params`, `context`, `url`,
   `creator`, `creator url`, `date added` — and any non-derived score. The two
   sets are the same on purpose: nothing is enterable once and then frozen.
