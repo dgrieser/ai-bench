@@ -209,13 +209,16 @@ INDEXES: list[IndexDef] = [
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release; 2.1 stays in because it is not a superseded
             # revision in the sense above -- it is a separate series -- but
-            # only as coverage. Since 2026-10-03 4.0 is the anchor at 1.0 (up
-            # from 0.85) and 2.1 is down to 0.25 (from 0.4): AA now runs 4.0
-            # across its field, 85 scored models where it had 32, 84 of them
-            # AA-run, with a live 10.6-point head, while 2.1 has saturated
-            # (91.4 at the top, 3.8 points to the fifth). With 4.0 that wide,
-            # 2.1 is no longer the coverage backbone it was kept for.
-            ("terminal_bench_4_0", 1.0),
+            # only as coverage. 4.0 stays at 0.85, a rung under Real-SWE: AA
+            # now runs it across its field, 85 scored models where it had 32,
+            # 84 of them AA-run, with a live 10.6-point head, but it is the
+            # least software-engineering-shaped of the frontier members --
+            # terminal agency rather than repository work -- and it carries
+            # 1.0 in the tooling group, where that is the construct. 2.1 is
+            # down to 0.25 (from 0.4) since 2026-10-03: it has saturated (91.4
+            # at the top, 3.8 points to the fifth), and with 4.0 that wide it
+            # is no longer the coverage backbone it was kept for.
+            ("terminal_bench_4_0", 0.85),
             ("terminal_bench_2_1", 0.25),
             # The only member that measures building rather than maintaining:
             # every other board here sets its tasks inside a repository that
@@ -327,9 +330,10 @@ INDEXES: list[IndexDef] = [
             # models where it had 22, 30 of them first-party, and still the
             # widest head in the group at 31.0 points. It now leads the
             # construction pair, and Vibe Code Bench, saturated, takes the
-            # discount instead -- 1.4 for the pair, 14.7% of the group, a
-            # little above the Terminal-Bench pair's 1.25. Every weight from
-            # 0.9 to 1.0 ranks the same field.
+            # discount instead -- 1.4 for the pair, 14.9% of the group, a
+            # little above the Terminal-Bench pair's 1.10. Every weight from
+            # 0.5 to 0.94 ranks the same field; from 0.95 up, 16 more models
+            # fall under the evidence bar.
             ("programbench_almost", 0.9),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),
