@@ -2070,32 +2070,48 @@ The newest member, and the one that took the top of the ladder: **Real-SWE at 1.
 the weight DeepSWE 1.1 held. Measured on the current file (5 scored models, 8 on the
 board):
 
+> **The board was rescored on 2026-09-23, unannounced.** Every row rose — by 1.2
+> points (Kimi K3, 18.8 → 20.0) to 12.5 (GPT-6 Astra, 33.8 → 46.3) — and the top
+> two swapped: GPT-6 Astra now leads at 46.25, Fable 5.1 is second at 45.00. The
+> model set, harnesses, the ten published tasks and the 640 rollouts are the same;
+> neither the board nor Specific's write-up names a revision, and launch coverage
+> still quotes the old numbers. `fetch_real_swe.py` re-reads the page, so the
+> stored values followed (`scores_history` keeps both). There is no separate
+> revision to split into its own column: nothing on the page distinguishes the
+> two states except the numbers. The figures below are the rescored board's,
+> refreshed 2026-10-03; the admission arithmetic further down is as measured at
+> admission.
+
 | Axis | Measurement | Pull |
 | --- | --- | --- |
 | Contamination | The decisive axis, and the one nothing else in the group can match. Every task is lifted from a *private* production codebase licensed from a real company, so the code, the ticket and the reference solution are nowhere on the public internet — there is no fix to have read. DeepSWE buys the same property by writing tasks from scratch against public repositories; Real-SWE buys it by keeping the repository itself out of reach, which is the stronger form of the guarantee and does not decay as a board ages. | **up** |
 | What it tests | Production engineering rather than issue-shaped puzzles: billing that has to price tax per business rule, a customer-identity migration, an entitlement overage line — work that was assigned to a salaried engineer. The reference solution touches a median of **11 files** against 6 for DeepSWE and FrontierCode on Cognition's published comparison, from an instruction of median 1,742 characters, so the discovery is the task. Grading is execution-based: verifiers built from each repository's own test suite, injected at grading time. | **up** |
 | Run quality | **Eight independent rollouts per task**, reported as pass@1 averaged over them, with a 95% confidence interval per model — the only column in this group that publishes per-model uncertainty at all (FrontierSWE 2.0's whiskers are a worst-to-best range over five trials, not an interval). Every number is the maintainers' own run, and uniquely in this group there is no self-report to drop, because nobody else can run the benchmark. | **up** |
-| Saturation | Max **38.8**, median 26.3 across the published board, and **6 of its 10 tasks resolve below 15%** for the whole field, one of them at 0.0% for all eight models. Not merely unsaturated — the only coding column whose *floor* is still the live question. | **up** |
-| Head resolution | Top model minus fifth is **15.0 points** across the published board of eight — behind only FrontierSWE 2.0 (40.5) and SWE-bench Pro (15.5), and an order above DeepSWE 1.1 (4.6) or Terminal-Bench 2.1 (3.4), those three measured over this file's much larger populations. It separates the leaders, which is what the group's top weight is for. | **up** |
+| Saturation | Max **46.25**, median 36.9 across the published board, and **4 of its 10 tasks resolve below 15%** for the whole field (10.9, 10.9, 3.1 and 0.0), one of them — the analytics stream reducer — at 0.0% for all eight models. Before the rescore it was 38.8, 26.3 and 6 of 10. Still not merely unsaturated — the only coding column whose *floor* is still the live question. | **up** |
+| Head resolution | Top model minus fifth is **10.0 points** across the published board of eight (46.25 to 36.25; 15.0 before the rescore) — wider than DeepSWE 1.1 (6.8) or Terminal-Bench 4.0 (7.5) over this file's much larger populations, narrower than ProgramBench (31.0). It separates the leaders, which is what the group's top weight is for. | **up** |
 | Reproducibility | Nobody outside Specific Labs can re-run it, and the tasks are shown but not released (sample access is by request). Trust here is trust in the maintainer rather than in a harness anyone can check — the opposite trade from BFCL, and the direct cost of the contamination property above. | down |
 | What a row is | A model **and its native harness** — Fable 5.1 under Claude Code, GLM 5.3 under Claude Code, Kimi K3 under Kimi Code — so harness quality sits inside the score, and two models are never compared under one scaffold. | down |
-| Coverage | **5 of 160 models**, the thinnest column in the group (DeepSWE 1.1 18, SWE-Marathon 1.1 12, FrontierSWE 2.0 7). Three of the five are closed [reference rows](#closed-reference-models), leaving exactly two open-weight models — `glm-5-3` and `kimi-k3` — carrying a Real-SWE score of their own. | down, hard |
+| Coverage | **5 of 175 models**, the thinnest column in the group (DeepSWE 1.1 29, SWE-Marathon 1.1 16, FrontierSWE 2.0 12). Unchanged since launch: no lab cites Real-SWE in its own reporting and no aggregator carries it, so the board is the only source, and Specific evaluates further models on request. Three of the five are closed [reference rows](#closed-reference-models), leaving exactly two open-weight models — `glm-5-3` and `kimi-k3` — carrying a Real-SWE score of their own. | down, hard |
 | Redundancy | **Not measurable yet.** Every overlap is five models or fewer, where a Spearman is noise: −0.3 against DeepSWE 1.1 and 0.8 against SWE Atlas Q&A over the same five rows, which is the spread you get from reshuffling five numbers. Reported here to say it carries no information, not as evidence either way. | — |
 
 **On the task count**, which the site does not state outright: the published board is
 scored over the **ten** tasks its analysis section names, and that is checkable rather
-than assumed — each model's per-task passes sum exactly to its headline rate (Fable
-5.1: 7+8+8+3+3+1+0+0+1+0 = 31 of 80 = 38.75%, printed 38.8%), and the page's own
-rollout split, 98 short plus 542 long, is 640 = 8 models x 10 tasks x 8 runs. The full
+than assumed — at admission each model's per-task passes summed exactly to its
+headline rate (Fable 5.1: 7+8+8+3+3+1+0+0+1+0 = 31 of 80 = 38.75%, printed 38.8%),
+and the page's own rollout split, 98 short plus 542 long, is 640 = 8 models x 10
+tasks x 8 runs. Every rescored rate is still a multiple of 1/80 (Fable 5.1 36 of
+80 = 45.00%, GPT-6 Astra 37 of 80 = 46.25%), so it is the same 80 rollouts per
+model, re-graded. The full
 task set is larger and unpublished; the numbers in this file come from those ten.
 
 **The case, and the case against.** For 1.0: this is the only column in the group
 whose contamination guarantee is structural rather than temporal, it is graded by
-execution, it is unsaturated at both ends, it resolves the head far better than the
-column it displaces (15.0 points against DeepSWE 1.1's 4.6), and every value is a
-first-party eight-rollout mean with an interval attached. Against: five scored models is thinner than **Agents' Last Exam**, which
-this file [declines to aggregate at all](#coding-index) on eight — so the same
-coverage argument that keeps that column out would keep this one out, and the weight
+execution, it is unsaturated at both ends, it resolves the head better than the column it
+displaced (10.0 points after the rescore, 15.0 before, against DeepSWE 1.1's 4.6
+then), and every value is a first-party eight-rollout mean with an interval
+attached. Against: five scored models is thinner than **Agents' Last Exam**, which
+this file [declined to aggregate at all](#coding-index) on eight — so the same
+coverage argument that kept that column out would keep this one out, and the weight
 is a judgement about what the benchmark measures rather than something the current
 overlap can corroborate. The honest summary is that 1.0 prices the design and takes
 the coverage on credit. It is worth re-checking against the redundancy row above once
@@ -2132,7 +2148,7 @@ report as unknown, and the alternative is shading the weight to protect four row
 rather than to describe the benchmark — the mistake the ladder exists to prevent,
 [in the other direction](#why-swe-bench-multilingual-sits-at-030).
 
-**Why DeepSWE 1.1 sits at 0.6.** Real-SWE's admission moved it off the top of the
+**Why DeepSWE 1.1 sat at 0.6** (0.35 since [the October re-weighting](#the-october-2026-re-weighting)). Real-SWE's admission moved it off the top of the
 ladder to 0.9, on the argument that it was giving up the top of the ladder and not
 its tier: 18 scored models against Real-SWE's 5, hand-written contamination-free
 tasks over 91 repositories in 5 languages, a judge that disagrees with an audit on
@@ -2143,7 +2159,7 @@ weigh:
 
 | Axis | Measurement | Pull |
 | --- | --- | --- |
-| Head resolution | **4.6 points** between the best model and the fifth (max 74.2, median 65.3) — the narrowest head of any column in the group, against Real-SWE's 15.0, SWE-bench Pro's 15.5 and FrontierSWE 2.0's 40.5. A column that cannot separate the leaders cannot be a leading weight, whatever its tasks are worth. | **down** |
+| Head resolution | **4.6 points** between the best model and the fifth (max 74.2, median 65.3) — the narrowest head of any column in the group, against Real-SWE's 15.0 (10.0 since its 2026-09-23 rescore), SWE-bench Pro's 15.5 and FrontierSWE 2.0's 40.5. A column that cannot separate the leaders cannot be a leading weight, whatever its tasks are worth. | **down** |
 | Redundancy | The rest of the group predicts it: Spearman **0.85** with SWE-bench Verified (14 models), **0.82** with FrontierCode 1.1 (14), **0.81** with Terminal-Bench 4.0 (18), 0.74 with SWE-Marathon 1.1 (12). Its one low overlap is with Real-SWE (−0.3 on 5 models), which is noise rather than independence. | **down** |
 | Trust | 12 of its 18 values are the maintainers' own artifact; the other 6 arrive through Hugging Face cards, llm-stats, OpenAI's own page and the benchlm.ai mirror. Better provenance than SWE-bench Verified's, worse than it reads at first. | down |
 | What it tests | Unchanged and still the reason it is not lower: tasks written from scratch against public repositories, so the contamination guarantee holds, over a wider language and repository spread than anything else here. | up |
