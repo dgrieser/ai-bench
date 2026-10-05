@@ -9,14 +9,16 @@ the columns below already have a first-party publisher, and what Vals adds is a
 second, uniform run of the same field.
 
 Each leaderboard lives at https://www.vals.ai/benchmarks/<slug> as an Astro
-page. The table is client-rendered, but the whole payload is already in the
-document: Astro serializes an island's props into a `props` attribute on its
-`<astro-island>` element, and the BenchmarkView island carries the complete
-score matrix. So one GET per benchmark is enough, with no HTML table parsing --
-`deserialize()` below undoes Astro's `[type, value]` encoding and the rest is
-plain JSON.
+page. The table is client-rendered, but the payload is reachable without a
+browser: Astro serializes an island's props into a `props` attribute on its
+`<astro-island>` element, and the BenchmarkView island's props either carry
+the complete score matrix (`benchmarkView`, the original build) or, since
+2026-10, point at it (`benchmarkViewUrl`, a content-hashed JSON file under
+/_astro/). So one or two GETs per benchmark are enough, with no HTML table
+parsing -- `deserialize()` below undoes Astro's `[type, value]` encoding and
+the rest is plain JSON.
 
-Under `benchmarkView.default` sit:
+In the payload (under `default` when inline) sit:
 
   metadata   the benchmark's identity: `slug`, `benchmark` (display name),
              `version`, `updated` (the day the board last moved) and `tasks`
@@ -67,6 +69,7 @@ import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
@@ -311,6 +314,30 @@ def check_metadata(metadata: Any, slug: str) -> None:
         )
 
 
+def board_payload(props: dict[str, Any], slug: str) -> dict[str, Any]:
+    """The {metadata, tasks} payload an island's props carry or point to.
+
+    Vals used to inline the whole board as `benchmarkView` (Astro-encoded, the
+    payload under its `default` key). Since 2026-10 the island carries only
+    `benchmarkViewUrl`, a content-hashed JSON asset under /_astro/ that the
+    browser loads on hydration, and the board is that file -- plain JSON, with
+    or without the `default` wrapper. Both shapes are read, so a page still on
+    the old build parses the same way.
+    """
+    view = props.get("benchmarkView")
+    if view is None and isinstance(props.get("benchmarkViewUrl"), str):
+        url = urllib.parse.urljoin(benchmark_url(slug), props["benchmarkViewUrl"])
+        try:
+            view = json.loads(fetch_html(url))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{slug}: {url} is not JSON ({exc})") from None
+    if isinstance(view, dict) and isinstance(view.get("default"), dict):
+        view = view["default"]
+    if not isinstance(view, dict) or "tasks" not in view:
+        raise ValueError(f"unexpected benchmarkView shape for {slug}")
+    return view
+
+
 def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, Any]]:
     """(metadata, {model key -> cell}) for one benchmark page.
 
@@ -320,11 +347,7 @@ def parse_board(page_html: str, slug: str) -> tuple[dict[str, Any], dict[str, An
     props = island_props(page_html, BENCHMARK_VIEW_COMPONENT)
     if not props:
         raise ValueError(f"no {BENCHMARK_VIEW_COMPONENT} island on the {slug} page")
-    view = props.get("benchmarkView")
-    if not isinstance(view, dict) or not isinstance(view.get("default"), dict):
-        raise ValueError(f"unexpected benchmarkView shape for {slug}")
-
-    payload = view["default"]
+    payload = board_payload(props, slug)
     metadata = payload.get("metadata")
     check_metadata(metadata, slug)
 

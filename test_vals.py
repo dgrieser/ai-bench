@@ -99,6 +99,37 @@ def page(slug: str, tasks: dict, updated: str = "2026-09-01", **metadata) -> str
     )
 
 
+def board_json(slug: str, tasks: dict, **metadata) -> str:
+    """The plain-JSON board file a URL-only island points at."""
+    return json.dumps(
+        {
+            "metadata": {
+                "benchmark": slug,
+                "slug": slug,
+                "version": "1",
+                "updated": "2026-09-01",
+                "tasks": {name: name for name in tasks},
+                **metadata,
+            },
+            "tasks": tasks,
+        }
+    )
+
+
+def url_page(slug: str, view_url: str = "/_astro/benchmark_view_x.Ae8ni7h0.json") -> str:
+    """A Vals page on the 2026-10 build: the island only names the board's file."""
+    props = {
+        "benchmarkViewUrl": [0, view_url],
+        "benchmarkName": [0, slug],
+        "showTitleBar": [0, True],
+    }
+    attr = html.escape(json.dumps(props), quote=True)
+    return (
+        f'<astro-island component-url="/_astro/BenchmarkView.Bv3BoWAp.js"'
+        f' props="{attr}" client="load"></astro-island>'
+    )
+
+
 @contextmanager
 def stub_page(body: str):
     """Serve `body` as every board's page, with the response cache off.
@@ -182,6 +213,45 @@ class TestParseBoard(unittest.TestCase):
         body = page("gpqa", {"overall": {"zai/glm-5.3": cell(80.0)}}, version="2")
         metadata, _ = fv.parse_board(body, "gpqa")
         self.assertEqual(metadata["version"], "2")
+
+
+class TestBoardFile(unittest.TestCase):
+    """Since 2026-10 the island points at the board instead of carrying it."""
+
+    def test_the_board_is_read_from_the_file_the_island_names(self) -> None:
+        board = board_json("swebench", {"overall": {"zai/glm-5.3": cell(72.0)}})
+        with mock.patch.object(fv, "fetch_html", return_value=board) as fetch:
+            metadata, cells = fv.parse_board(url_page("swebench"), "swebench")
+        fetch.assert_called_once_with(
+            "https://www.vals.ai/_astro/benchmark_view_x.Ae8ni7h0.json"
+        )
+        self.assertEqual(metadata["slug"], "swebench")
+        self.assertEqual(cells["zai/glm-5.3"]["accuracy"], 72.0)
+
+    def test_a_wrapped_file_is_read_too(self) -> None:
+        inner = json.loads(board_json("gpqa", {"overall": {"zai/glm-5.3": cell(80.0)}}))
+        with mock.patch.object(fv, "fetch_html", return_value=json.dumps({"default": inner})):
+            _, cells = fv.parse_board(url_page("gpqa"), "gpqa")
+        self.assertEqual(cells["zai/glm-5.3"]["accuracy"], 80.0)
+
+    def test_the_file_is_held_to_the_same_checks(self) -> None:
+        board = board_json("vibe-code", {"overall": {"zai/glm-5.3": cell(80.0)}}, version="1.2")
+        with mock.patch.object(fv, "fetch_html", return_value=board):
+            with self.assertRaises(ValueError) as caught:
+                fv.parse_board(url_page("vibe-code"), "vibe-code")
+        self.assertIn("vibe_code_bench_1_1", str(caught.exception))
+
+    def test_a_file_that_is_not_json_is_refused(self) -> None:
+        with mock.patch.object(fv, "fetch_html", return_value="<html>gateway</html>"):
+            with self.assertRaises(ValueError) as caught:
+                fv.parse_board(url_page("gpqa"), "gpqa")
+        self.assertIn("not JSON", str(caught.exception))
+
+    def test_a_file_without_tasks_is_refused(self) -> None:
+        with mock.patch.object(fv, "fetch_html", return_value='{"metadata": {}}'):
+            with self.assertRaises(ValueError) as caught:
+                fv.parse_board(url_page("gpqa"), "gpqa")
+        self.assertIn("unexpected benchmarkView shape", str(caught.exception))
 
 
 class TestGetScores(unittest.TestCase):
