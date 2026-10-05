@@ -1,3 +1,112 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Argon, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Gemini 4 Argon' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Gemini 4 Argon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to MiMo-V2.6 Flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "exact to MiMo-V2.6 Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to MiMo-V2.6 Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'MiMo-V2.6 Flash' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MiMo-V2.6 Flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to MiMo-V2.6 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "exact to MiMo-V2.6 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to MiMo-V2.6 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'MiMo-V2.6 Pro' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "MiMo-V2.6 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-glimmer",
+          "reason": "exact to Muse Glimmer, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Muse Glimmer' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Glimmer",
+      "universe": "models"
+    }
+  ]
 }
