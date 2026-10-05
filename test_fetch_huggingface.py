@@ -121,6 +121,26 @@ class TestHtmlHeaderBands(unittest.TestCase):
         scores = fh.extract_scores_from_tables(fh.parse_html_tables(html), REPO)
         self.assertEqual(scores, {"SWE-bench Verified": 70.6})
 
+    def test_stacked_caption_bands_are_read_past(self):
+        # Aleph Alpha's Kolibri shape: three bands ("Type", "Active
+        # parameters", "Ours / Baseline") over the row that names the models.
+        html = self.html(
+            '<tr><th>Type</th><th colspan="5">MoE</th><th colspan="2">Dense</th></tr>',
+            '<tr><th>Active parameters</th><th colspan="3">3B</th><th colspan="2">12B</th>'
+            '<th colspan="2">27-70B</th></tr>',
+            '<tr><th></th><th colspan="2">Ours</th><th colspan="3">Baseline</th>'
+            "<th></th><th></th></tr>",
+            "<tr><th>Eval</th><th>Example-30B</th><th>Example-Origin</th><th>Rival-A</th>"
+            "<th>Rival-B</th><th>Rival-C</th><th>Rival-27B</th><th>Rival-70B</th></tr>",
+            '<tr><td>Agentic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>',
+            "<tr><td>Tau2-Bench (Telecom)</td><td>94.7</td><td>67.5</td><td>95.9</td>"
+            "<td>45.9</td><td>97.7</td><td>82.5</td><td>10.8</td></tr>",
+            "<tr><td>SWE-Bench Verified</td><td>66.4</td><td>–</td><td>51.0</td>"
+            "<td>38.6</td><td>71.6</td><td>72.6</td><td>–</td></tr>",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_html_tables(html), REPO)
+        self.assertEqual(scores, {"Tau2-Bench (Telecom)": 94.7, "SWE-Bench Verified": 66.4})
+
     def test_a_full_width_first_row_still_leads_its_table(self):
         # Nothing to promote past: this really is the header, and reading the
         # row under it as one would turn a score into a benchmark name.

@@ -962,6 +962,10 @@ def select_row(table: Table, repo: str) -> int | None:
     return scored[1] if scored else None
 
 
+# How many caption rows may sit above the row that names the models.
+_MAX_HEADER_BANDS = 3
+
+
 def _promote_header_band(table: Table, model: ModelNames) -> Table:
     """Re-read a table whose header row is a caption band over the real header.
 
@@ -983,21 +987,29 @@ def _promote_header_band(table: Table, model: ModelNames) -> Table:
     """
     if _select_column_scored(table, model) is not None or _select_row_scored(table, model) is not None:
         return table
-    if len(table.rows) < 2:
-        return table
-    # A caption band labels groups of columns, so it names fewer than half of
-    # them; a header row that fills its own width is a header, however little
-    # it matched. Without this an artifact table ("Model card | Hugging Face
-    # <link> | Available") promotes too, because the link cell carries the repo
-    # name and the row above it never mentions the model either.
-    captions = [cell for cell in table.headers if cell.strip()]
-    if len(captions) * 2 > len(table.rows[0]):
-        return table
-    candidate = Table(headers=table.rows[0], rows=table.rows[1:])
-    scored = _select_column_scored(candidate, model)
-    if scored is None or scored[1] == _find_label_column(candidate):
-        return table
-    return candidate
+    # Bands can stack: Aleph Alpha's Kolibri cards put three of them ("Type:
+    # MoE / Dense", "Active parameters: 3B / 12B / ...", "Ours / Baseline
+    # models") over the row that names the models, so the real header is
+    # looked for up to _MAX_HEADER_BANDS rows down.
+    bands = [table.headers]
+    for depth in range(min(_MAX_HEADER_BANDS, len(table.rows) - 1)):
+        header = table.rows[depth]
+        # A caption band labels groups of columns, so it names fewer than half
+        # of them; a header row that fills its own width is a header, however
+        # little it matched. Without this an artifact table ("Model card |
+        # Hugging Face <link> | Available") promotes too, because the link
+        # cell carries the repo name and the row above it never mentions the
+        # model either. Every band above the header has to pass; a row that
+        # fails is not the header, but may still be a band over a lower one.
+        if all(
+            len([cell for cell in band if cell.strip()]) * 2 <= len(header) for band in bands
+        ):
+            candidate = Table(headers=header, rows=table.rows[depth + 1:])
+            scored = _select_column_scored(candidate, model)
+            if scored is not None and scored[1] != _find_label_column(candidate):
+                return candidate
+        bands.append(header)
+    return table
 
 
 # A column of values that are all at most 1 is a column of fractions, whatever
