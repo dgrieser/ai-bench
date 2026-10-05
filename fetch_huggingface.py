@@ -14,6 +14,7 @@ Two sources per repo, merged with structured data taking precedence:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import os
@@ -38,6 +39,10 @@ CRAWL_CACHE_TTL_VAR = "AI_BENCH_HF_CACHE_TTL"
 
 # How much of the crawl has to have come back before it is worth storing.
 _MIN_CACHEABLE_SHARE = 0.9
+
+# This file's own contents, folded into the crawl cache key: a parser change
+# has to miss the cache the same way a changed model list does.
+_PARSER_DIGEST = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:16]
 
 
 @dataclass
@@ -1531,7 +1536,11 @@ def crawl_all_models(doc: dict[str, Any], only: set[str] | None = None) -> list[
         # the full crawl a refresh reads.
         pairs = [(slug, repo) for slug, repo in pairs if slug in only]
     ttl = _cache.ttl_seconds(CRAWL_CACHE_TTL_VAR)
-    key = _cache.digest(sorted(pairs))
+    # What is stored is the *parsed* scores, so the parser is part of what was
+    # asked for: without it a run dispatched right after a parser fix is served
+    # the old parser's reading for the rest of the TTL (six hours on a quick
+    # run), which is how Kolibri-1's newly readable tables stayed invisible.
+    key = _cache.digest([sorted(pairs), _PARSER_DIGEST])
     cached = _cache.load("huggingface-cards", key, ttl, label="Hugging Face model cards")
     if isinstance(cached, list):
         return cached

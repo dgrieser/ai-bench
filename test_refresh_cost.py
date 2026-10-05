@@ -155,6 +155,28 @@ class TestTheHuggingFaceCrawlCache(unittest.TestCase):
         again = self._crawl()
         self.assertIn("new", {entry["model"] for entry in again})
 
+    def test_a_changed_parser_is_not_answered_from_the_old_crawl(self) -> None:
+        # The cache holds parsed scores. A run dispatched right after a parser
+        # fix was served the old parser's reading, which is how Kolibri-1's
+        # newly readable tables stayed invisible for the rest of the TTL.
+        self._crawl()
+        reads: list[str] = []
+
+        def counting(
+            repo: str, slug: str | None = None, failures: list[str] | None = None
+        ) -> tuple[dict[str, float], dict[str, str]]:
+            reads.append(repo)
+            return {}, {}
+
+        fetch_huggingface.extract_scores_and_channels = counting
+        original = fetch_huggingface._PARSER_DIGEST
+        fetch_huggingface._PARSER_DIGEST = "a-different-parser"
+        try:
+            fetch_huggingface.crawl_all_models(self.doc)
+        finally:
+            fetch_huggingface._PARSER_DIGEST = original
+        self.assertEqual(len(reads), 10)
+
     def test_one_gated_repo_does_not_stop_the_crawl_being_cached(self) -> None:
         # The normal case: a repo that answers 401 on every run would make a
         # "complete crawl only" rule into a cache that is never written.
