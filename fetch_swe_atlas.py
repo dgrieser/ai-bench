@@ -54,6 +54,9 @@ HEADERS = {
     )
 }
 
+# Seconds before a track that failed is read once more. See get_scores().
+SECOND_PASS_DELAY = 60.0
+
 # Reasoning-effort modifiers that trail a model name (case-insensitive). Only
 # a word standing on its own is one: Scale writes the effort after a space
 # ("Opus 5 (Claude Code) xHigh", "Gpt 5.4 xHigh (Mini-SWE-Agent)"), while a
@@ -138,8 +141,27 @@ def get_scores(tracks: list[str]) -> list[dict]:
     with ThreadPoolExecutor(max_workers=len(tracks) or 1) as pool:
         pages = list(pool.map(try_track, tracks))
 
-    # A track whose page is unreachable or momentarily empty (sweatlas-tw has
-    # 404'd for hours at a time while the other two served) costs that track
+    # Scale's board pages fail for minutes at a time and then serve again: a
+    # 404 for a board its own index still lists, or the page with no rows
+    # (42 runs to 2026-10-05: 8 such failures, every one of them across all
+    # three tracks and none lasting to the next run). fetch_html gives up on a
+    # 404 at once and fetch_board_rows re-reads an empty page for half a
+    # minute, so a failed track gets one more pass a minute later. Only the
+    # failures that would be skipped are retried; a page that is another
+    # board still fails the source on the first read.
+    retry = [i for i, page in enumerate(pages) if isinstance(page, Exception)]
+    if retry:
+        names = ", ".join(tracks[i] for i in retry)
+        print(
+            f"  SWE Atlas track(s) {names} failed; one more pass in {SECOND_PASS_DELAY:.0f}s ...",
+            file=sys.stderr,
+        )
+        time.sleep(SECOND_PASS_DELAY)
+        for i in retry:
+            pages[i] = try_track(tracks[i])
+
+    # A track whose page is still unreachable or empty after that (sweatlas-tw
+    # has 404'd for hours at a time while the other two served) costs that track
     # only: its columns stay where the last good run left them, since scores
     # are applied, never cleared. It is still a warning on the run. A page that
     # is another board, or reads wrong, still fails the whole source, and so

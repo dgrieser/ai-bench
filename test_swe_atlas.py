@@ -97,6 +97,7 @@ class OneTrackDown(unittest.TestCase):
             return [_row(f"Opus 5 ({track})", 50.0)]
 
         with mock.patch.object(atlas, "fetch_board_rows", fetch_board_rows), \
+                mock.patch.object(atlas.time, "sleep"), \
                 contextlib.redirect_stderr(io.StringIO()):
             return atlas.get_scores(list(atlas.TRACKS))
 
@@ -121,6 +122,50 @@ class OneTrackDown(unittest.TestCase):
     def test_another_board_is_still_refused(self):
         with self.assertRaises(ValueError):
             self.scores({"tw": ValueError("the page does not identify itself as board")})
+
+
+class SecondPass(unittest.TestCase):
+    """The 404s and empty pages pass in minutes (2026-10-01/02, 10-05), so a
+    failed track is read once more before it is skipped."""
+
+    def run_with(self, outcomes: dict[str, list]) -> tuple[list[dict], mock.Mock]:
+        def fetch_board_rows(_fetch, url, slug):
+            track = slug.removeprefix("sweatlas-")
+            queue = outcomes.get(track)
+            result = queue.pop(0) if queue else None
+            if isinstance(result, Exception):
+                raise result
+            return [_row(f"Opus 5 ({track})", 50.0)]
+
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.dict(os.environ, {_fetch_warnings.ENV_VAR: str(Path(tmp) / "w.jsonl")}), \
+                mock.patch.object(atlas, "fetch_board_rows", fetch_board_rows), \
+                mock.patch.object(atlas.time, "sleep") as slept, \
+                contextlib.redirect_stderr(io.StringIO()):
+            return atlas.get_scores(list(atlas.TRACKS)), slept
+
+    def test_a_track_back_on_the_second_pass_lands(self):
+        gone = urllib.error.HTTPError("u", 404, "Not Found", None, None)
+        rows, slept = self.run_with({"tw": [gone]})
+        self.assertEqual(sorted({r["track"] for r in rows}), ["qna", "refactoring", "tw"])
+        slept.assert_called_once_with(atlas.SECOND_PASS_DELAY)
+
+    def test_an_empty_page_gets_the_second_pass_too(self):
+        rows, _ = self.run_with({"refactoring": [atlas.NoRowsError("no rows")]})
+        self.assertEqual(len(rows), 3)
+
+    def test_no_failure_no_wait(self):
+        _, slept = self.run_with({})
+        slept.assert_not_called()
+
+    def test_still_down_is_skipped(self):
+        gone = urllib.error.HTTPError("u", 404, "Not Found", None, None)
+        rows, _ = self.run_with({"tw": [gone, gone]})
+        self.assertEqual(sorted({r["track"] for r in rows}), ["qna", "refactoring"])
+
+    def test_another_board_is_not_given_a_second_pass(self):
+        with self.assertRaises(ValueError):
+            self.run_with({"tw": [ValueError("the page does not identify itself as board")]})
 
 
 class Retries(unittest.TestCase):
