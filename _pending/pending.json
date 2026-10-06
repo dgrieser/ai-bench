@@ -1,3 +1,15 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map cybergym.io model 'Feyospace-v1.1' to llm.json model",
+      "route": "update_cybergym_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Feyospace-v1.1",
+      "universe": "models"
+    }
+  ]
 }
