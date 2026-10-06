@@ -1,7 +1,23 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-nano-banana-2.1' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-nano-banana-2.1",
+      "universe": "models"
+    },
+    {
       "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-4",
+          "reason": "the same name without the vendor prefix: exact to mistral-large-4-0, most components match"
+        },
         {
           "confidence": "weak",
           "option": "mistral-large-3",
@@ -25,23 +41,28 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "mistral-large-4",
+          "reason": "exact to Mistral-Large-4, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "mistral-large-3",
-          "reason": "exact to mistral-large-4, most components match"
+          "reason": "exact to Mistral-Large-4, most components match"
         },
         {
           "confidence": "weak",
           "option": "mistral-small-4",
-          "reason": "exact to mistral-large-4, most components match"
+          "reason": "exact to Mistral-Large-4, most components match"
         }
       ],
-      "default": null,
+      "default": "mistral-large-4",
       "if_previous": null,
       "note": null,
-      "question": "Map Vals AI path 'mistralai/mistral-large-4' to llm.json model",
-      "route": "update_vals_mapping.py",
+      "question": "Map Spheron path 'mistralai/Mistral-Large-4' to llm.json model",
+      "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "subject": "mistralai/mistral-large-4",
+      "subject": "mistralai/Mistral-Large-4",
       "universe": "models"
     }
   ]
