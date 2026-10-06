@@ -80970,9 +80970,9 @@
       "params": "27B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 61,
+        "int8": 30,
+        "int4": 15
       },
       "creator": {
         "name": "Feyospace",
@@ -81202,6 +81202,11 @@
             "source": "https://www.cybergym.io/cybergym"
           }
         ]
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/feyospace/feyospace-v1.1-small/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/feyospace/feyospace-v1.1-small/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/feyospace/feyospace-v1.1-small/"
       }
     }
   ],
