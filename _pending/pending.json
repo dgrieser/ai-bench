@@ -1,3 +1,48 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'mistralai/mistral-large-4-0' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-large-4-0",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "exact to mistral-large-4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to mistral-large-4, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-large-4' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "mistralai/mistral-large-4",
+      "universe": "models"
+    }
+  ]
 }
