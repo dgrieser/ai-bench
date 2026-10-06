@@ -355,7 +355,10 @@ Output: llm.json (unified dataset)
 ### Page Addresses
 
 Every view of `llm.html` is a link. A model's page is `#model/<slug>`, a
-comparison `#compare/<slug>,<slug>` with its radar axes in `?axes=`, and the
+comparison `#compare/<slug>,<slug>` with its radar axes in `?axes=` (a preset id
+such as `coding`, or the keys spelled out; `axes=common` is the comparison-only
+"Common benchmarks" preset — every benchmark all compared models have a score
+on, re-worked out for whichever models the link names), and the
 table carries its filters and sort in the same kind of query on a bare hash,
 written as they change (with `replaceState`, so the back button is not flooded):
 
