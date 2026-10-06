@@ -8027,19 +8027,20 @@
       // keys are dropped the way a stale stored selection is, and anything
       // left short of the minimum is treated as no request at all rather than
       // charting a remnant the reader never picked.
-      function parseAxesParam(raw) {
+      // `models` are the ones the route charts: the common preset is resolved
+      // against them, since state.route does not point at them yet.
+      function parseAxesParam(raw, models) {
         if (!raw) {
           return null;
         }
-        const preset = radarPreset(raw.trim());
+        const preset = radarPreset(raw.trim(), models);
         const keys = preset
-          ? presetAxes(preset)
+          ? presetAxes(preset, models)
           : (() => {
               const seen = new Set();
               return raw.split(AXES_SEP)
                 .map((part) => part.trim())
-                .filter((key) => key && state.benchmarkKeys.includes(key) && !seen.has(key) && seen.add(key))
-                .slice(0, RADAR_MAX_AXES);
+                .filter((key) => key && state.benchmarkKeys.includes(key) && !seen.has(key) && seen.add(key));
             })();
         return keys.length >= RADAR_MIN_AXES ? keys : null;
       }
@@ -8068,17 +8069,20 @@
       // detail listeners read it.
       function parseRoute() {
         const { path, query } = parseHash();
-        const axes = parseAxesParam(query.get("axes"));
+        const raw = query.get("axes");
         const compare = path.match(/^#compare\/(.+)$/);
         if (compare) {
-          return { view: "compare", slug: "", slugs: parseCompareSlugs(compare[1]), axes };
+          const slugs = parseCompareSlugs(compare[1]);
+          const axes = parseAxesParam(raw, resolveCompareModels(slugs).models);
+          return { view: "compare", slug: "", slugs, axes };
         }
         const match = path.match(/^#model\/(.+)$/);
         if (match) {
           const slug = decodeSlug(match[1]);
-          return { view: "model", slug, slugs: [slug], axes };
+          const model = state.modelsBySlug.get(slug);
+          return { view: "model", slug, slugs: [slug], axes: parseAxesParam(raw, model ? [model] : []) };
         }
-        return { view: "table", slug: "", slugs: [], axes, query };
+        return { view: "table", slug: "", slugs: [], axes: parseAxesParam(raw, []), query };
       }
 
       function renderRoute() {
@@ -8221,7 +8225,7 @@
           if (!event.target.classList.contains("axis-preset")) {
             return;
           }
-          const preset = radarPreset(event.target.value);
+          const preset = radarPreset(event.target.value, currentRadarModels());
           if (!preset) {
             return;
           }
@@ -8434,10 +8438,13 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      // Seventeen because that is what the widest preset needs (the Coding index
-      // aggregates seventeen benchmarks) and a preset has to fit inside the same
-      // bounds a hand-picked set does -- otherwise the chips would show a set
-      // the picker refuses to reproduce.
+      // How many axes "+ Add axis" builds up to. Seventeen because that is what
+      // the widest fixed preset needs (the Coding index aggregates seventeen
+      // benchmarks), so the picker can reproduce every one of them. The
+      // common-benchmarks preset is the exception: it is "all of them" by
+      // definition and often runs past this, so the cap only stops the picker
+      // adding more -- a longer set from that preset, the address or storage
+      // is charted as it is.
       const RADAR_MAX_AXES = 17;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index", "security_index"];
@@ -8494,6 +8501,27 @@
         }
       ];
 
+      // Offered on a comparison only: every benchmark all of the compared
+      // models have a score on, in the index's own order. It has no fixed list
+      // -- it is worked out from whichever models are on the chart, so it
+      // travels in an address as its id and follows the comparison when a
+      // model is added or dropped. The composite indexes are left out: they
+      // are the Default axes, not benchmarks.
+      const RADAR_COMMON_PRESET = { id: "common", label: "Common benchmarks" };
+
+      function commonBenchmarkAxes(models) {
+        return state.benchmarkKeys.filter((key) =>
+          !state.data.benchmarks[key]?.derived &&
+          state.data.benchmarks[key]?.category !== "Composite Index" &&
+          models.every((model) => Number.isFinite(toNumber(model.scores?.[key])))
+        );
+      }
+
+      // The presets a chart of `models` can offer.
+      function radarPresets(models) {
+        return models.length > 1 ? [...RADAR_PRESETS, RADAR_COMMON_PRESET] : RADAR_PRESETS;
+      }
+
       // One map per benchmark, over every model in the index — the closed
       // reference rows included. They are hidden from the table by default and
       // not from the arithmetic: a rank answers "among the models this index
@@ -8520,12 +8548,15 @@
       // index no longer carries is dropped (same cleanup loadRadarAxes does to
       // a stored selection), and the result is capped, so a preset can never
       // hand the picker a set it would refuse.
-      function presetAxes(preset) {
+      function presetAxes(preset, models = currentRadarModels()) {
+        if (preset === RADAR_COMMON_PRESET) {
+          return commonBenchmarkAxes(models);
+        }
         return preset.axes.filter((key) => state.benchmarkKeys.includes(key)).slice(0, RADAR_MAX_AXES);
       }
 
-      function radarPreset(id) {
-        return RADAR_PRESETS.find((preset) => preset.id === id) || null;
+      function radarPreset(id, models = currentRadarModels()) {
+        return radarPresets(models).find((preset) => preset.id === id) || null;
       }
 
       function defaultRadarAxes() {
@@ -8537,9 +8568,9 @@
       // deriving is the only way the dropdown cannot disagree with the chips
       // it sits beside. Order counts — the axes are laid out clockwise in it,
       // so the same benchmarks in another order is a different chart.
-      function radarPresetId(axes) {
-        const match = RADAR_PRESETS.find((preset) => {
-          const keys = presetAxes(preset);
+      function radarPresetId(axes, models = currentRadarModels()) {
+        const match = radarPresets(models).find((preset) => {
+          const keys = presetAxes(preset, models);
           return keys.length === axes.length && keys.every((key, i) => key === axes[i]);
         });
         return match ? match.id : "";
@@ -8555,7 +8586,7 @@
           stored = JSON.parse(localStorage.getItem(RADAR_AXES_STORAGE_KEY));
         } catch (err) { /* disabled or corrupted storage: use the defaults */ }
         const known = Array.isArray(stored)
-          ? [...new Set(stored)].filter((key) => state.benchmarkKeys.includes(key)).slice(0, RADAR_MAX_AXES)
+          ? [...new Set(stored)].filter((key) => state.benchmarkKeys.includes(key))
           : [];
         return known.length >= RADAR_MIN_AXES ? known : defaultRadarAxes();
       }
@@ -8630,7 +8661,7 @@
               score keeps its place and stays empty. ${single ? "" : `Each legend entry carries the
               mean of that model's ranks over the charted axes, so one number says which shape is
               bigger. `}Hover an axis for what it measures. Pick a preset above
-              &mdash; the six indexes, or the benchmarks one index is built from &mdash; or edit
+              &mdash; the six indexes, the benchmarks one index is built from${single ? "" : ", or every benchmark all compared models have a score on"} &mdash; or edit
               the axes chip by chip. The selection rides in this page's address, so a copied
               link reopens on it, and it is remembered on this device.</p>
           </section>
@@ -8663,7 +8694,7 @@
         const atMax = axes.length >= RADAR_MAX_AXES;
         const addBtn = `<button type="button" class="axis-add-btn" data-action="toggle-picker" aria-expanded="${String(Boolean(state.radar.pickerOpen))}" aria-haspopup="true">+ Add axis</button>`;
         const menu = state.radar.pickerOpen ? renderAxisMenu(models, axes, atMax) : "";
-        return `<div class="radar-controls">${renderAxisPresetSelect(axes)}<span class="axis-preset-sep" aria-hidden="true"></span>${chips}${addBtn}${renderTrimAxesBtn(models, axes)}${menu}</div>`;
+        return `<div class="radar-controls">${renderAxisPresetSelect(models, axes)}<span class="axis-preset-sep" aria-hidden="true"></span>${chips}${addBtn}${renderTrimAxesBtn(models, axes)}${menu}</div>`;
       }
 
       // The charted axes every model on the chart has a score on, in chart
@@ -8696,17 +8727,17 @@
       // The preset dropdown. "Custom" is offered only while the axes match no
       // preset, and it is never selectable back into — there is nothing to go
       // back to, since the custom set is the one already on screen.
-      function renderAxisPresetSelect(axes) {
-        const current = radarPresetId(axes);
-        const options = RADAR_PRESETS
+      function renderAxisPresetSelect(models, axes) {
+        const current = radarPresetId(axes, models);
+        const options = radarPresets(models)
           // A preset the data cannot fill enough of is no preset at all.
-          .filter((preset) => presetAxes(preset).length >= RADAR_MIN_AXES)
+          .filter((preset) => presetAxes(preset, models).length >= RADAR_MIN_AXES)
           .map((preset) => `<option value="${escapeAttr(preset.id)}"${preset.id === current ? " selected" : ""}>${escapeHtml(preset.label)}</option>`)
           .join("");
         const custom = current ? "" : `<option value="" selected disabled>Custom</option>`;
         const tip = tipAttrs({
           eyebrow: "Axis preset",
-          body: "Default axes charts the six composite indexes. Every other preset opens one index up and charts the benchmarks it aggregates instead, so the shape shows where the composite comes from. Editing the chips leaves the preset behind as a custom set."
+          body: `Default axes charts the six composite indexes. The index presets open one index up and chart the benchmarks it aggregates instead, so the shape shows where the composite comes from.${models.length > 1 ? " Common benchmarks charts every benchmark all compared models have a score on." : ""} Editing the chips leaves the preset behind as a custom set.`
         });
         return `<select class="axis-preset" aria-label="Axis preset"${tip}>${custom}${options}</select>`;
       }
@@ -8736,7 +8767,7 @@
         }).join("");
 
         const note = atMax
-          ? `<div class="axis-menu-note">${RADAR_MAX_AXES} of ${RADAR_MAX_AXES} axes &mdash; remove one to add another.</div>`
+          ? `<div class="axis-menu-note">${axes.length} axes &mdash; the picker adds up to ${RADAR_MAX_AXES}; remove one to add another.</div>`
           : "";
         return `<div class="axis-menu">${note}${groups}</div>`;
       }
