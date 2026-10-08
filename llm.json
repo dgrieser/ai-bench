@@ -807,7 +807,7 @@
     },
     "automation_bench_aa": {
       "name": "AutomationBench-AA",
-      "short_name": "AutoB",
+      "short_name": "AuBench",
       "category": "Agentic Tool Use",
       "description": "Artificial Analysis' run of Zapier's AutomationBench on a held-out set: 657 end-to-end business workflows across finance, HR, marketing, operations, sales and support, in a simulated company whose apps (CRM, Slack, Google Workspace and dozens more) are reachable only through REST endpoints the agent must discover by search. The agent must chain interdependent API calls, follow layered business-policy documents and ignore planted distractions. Scored with partial credit per completed objective; any guardrail violation zeroes the task. It replaced τ³-Bench Banking in AA's Intelligence Index v4.3 (2026-09-07).",
       "settings": [
