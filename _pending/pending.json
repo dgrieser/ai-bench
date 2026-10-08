@@ -3,38 +3,38 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
+          "confidence": "weak",
           "option": "step-5-preview",
-          "reason": "exact to step 5 preview, exact match"
+          "reason": "the same name without the vendor prefix"
         },
         {
           "confidence": "weak",
           "option": "step-3-5-flash",
-          "reason": "exact to step 5 preview, most components match"
+          "reason": "the same name without the vendor prefix: exact to step-5-preview, most components match"
         },
         {
           "confidence": "weak",
           "option": "glm-4.5",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+          "reason": "the same name without its first 2 word(s): drop descriptor suffix to a variant, substring match"
         },
         {
           "confidence": "weak",
           "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+          "reason": "the same name without its first 2 word(s): drop descriptor suffix to a variant, substring match"
         },
         {
           "confidence": "weak",
           "option": "glm-5-3",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+          "reason": "the same name without its first 2 word(s): drop descriptor suffix to a variant, substring match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Coding Agent Index model 'step 5 preview' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
+      "question": "Map OpenRouter model 'stepfun/step-5-preview' to llm.json model",
+      "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
-      "subject": "step 5 preview",
+      "subject": "stepfun/step-5-preview",
       "universe": "models"
     }
   ]
