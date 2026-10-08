@@ -1,10 +1,4 @@
 {"entries": [
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CC-OCR", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CEval(acc)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CFEval", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CLUEWSC (EM)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CMMLU (EM)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CMMLU(acc)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CMath (EM)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CharXiv RQ", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CharXiv(RQ)", "value": "__unmappable__"},
@@ -3998,5 +3992,11 @@
 {"at": "2026-10-07T05:34:44Z", "by": "admin", "previous": null, "route": "update_tbench_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37576927666", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"},
 {"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "gemini-4-argon", "value": "gemini-4-argon"},
 {"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "ling-3.1-flash", "value": "ling-3-1-flash"},
-{"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "mistral-large-4", "value": "mistral-large-4"}
+{"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "mistral-large-4", "value": "mistral-large-4"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_aa_coding_agents_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "haiku 5.5", "value": "claude-haiku-5-5"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_frontiercode_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "Claude Haiku 5.5", "value": "claude-haiku-5-5"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_frontierswe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "Claude Haiku 5.5", "value": "claude-haiku-5-5"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "claude-haiku-5-5", "value": "claude-haiku-5-5"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "anthropic/claude-haiku-5.5", "value": "claude-haiku-5-5"},
+{"at": "2026-10-08T05:36:40Z", "by": "admin", "previous": null, "route": "update_vals_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37733155100", "subject": "anthropic/claude-haiku-5-5", "value": "claude-haiku-5-5"}
 ]}
