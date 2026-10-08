@@ -1,7 +1,4 @@
 {"entries": [
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Browsecomp-zh", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "C-Eval", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "C-Eval (EM)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CC-OCR", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CEval(acc)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "CFEval", "value": "__unmappable__"},
@@ -3998,5 +3995,8 @@
 {"at": "2026-10-06T20:23:35Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37525959293", "subject": "mistralai/mistral-large-4-0", "value": "mistral-large-4"},
 {"at": "2026-10-06T20:23:35Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37525959293", "subject": "mistralai/Mistral-Large-4", "value": "mistral-large-4"},
 {"at": "2026-10-07T05:34:44Z", "by": "admin", "previous": null, "route": "update_tbench_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37576927666", "subject": "GLM-5.3-Flash", "value": "glm-5-3-flash"},
-{"at": "2026-10-07T05:34:44Z", "by": "admin", "previous": null, "route": "update_tbench_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37576927666", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"}
+{"at": "2026-10-07T05:34:44Z", "by": "admin", "previous": null, "route": "update_tbench_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37576927666", "subject": "Qwen3.8-Max-0902", "value": "__unmappable__"},
+{"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "gemini-4-argon", "value": "gemini-4-argon"},
+{"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "ling-3.1-flash", "value": "ling-3-1-flash"},
+{"at": "2026-10-08T04:23:43Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/37727193672", "subject": "mistral-large-4", "value": "mistral-large-4"}
 ]}
