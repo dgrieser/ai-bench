@@ -3621,6 +3621,20 @@ keys, so the metrics record is read only up to the next record's
 `microevalsEnabled`: a field the current model lacks is never read off its
 neighbour.
 
+**Where that record starts is anchored, not guessed.** Two page layouts are
+live. The older wraps the model in a `"currentModel"` payload. The newer one,
+rolled out in October 2026, has no wrapper: the slug first appears in a
+`"currentRelease"` summary and a release picker, neither of which carries
+metrics, and the model's own record is the one object that opens
+`{"id":"<uuid>","slug":"<slug>"`. The parser used to start from the first bare
+mention of the slug, which on the new layout ran on into the next record in the
+list, on most pages a pinned Step 5 Preview. One refresh on 2026-10-08 wrote that
+model's numbers onto eleven others, 154 cells across SciCode, HLE, AA-LCR,
+CritPt, GDPval-AA and the rest, before the cells were restored by hand. A page
+where neither anchor is found now reads as no record (`page_read: false`, which
+`update.py` treats as a failed page rather than as AA withdrawing anything),
+never as a neighbour's.
+
 ## Model Size and Context Fields
 
 `params` and `context` come from Artificial Analysis, read by

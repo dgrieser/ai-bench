@@ -536,6 +536,61 @@ class TestFieldsTheFreeTierDropped(unittest.TestCase):
         self.assertNotIn("tau_banking", metrics)
 
 
+# The October 2026 page layout: no "currentModel" wrapper. The slug first
+# appears in a "currentRelease" summary that carries no metrics, and the
+# model's own record -- the one object opening {"id":...,"slug":...} -- sits
+# somewhere down a list of comparison models. Trimmed from the live page for
+# claude-fable-5-1, where a pinned Step 5 Preview record came first.
+RELEASE_LAYOUT_PAGE = (
+    '["$","$L1b",null,{"currentRelease":{"slug":"claude-fable-5-1",'
+    '"name":"Claude Fable 5.1","intelligenceIndex":53.3549259623252,'
+    '"creator":{"slug":"anthropic","name":"Anthropic"}}}],'
+    '{"slug":"claude-fable-5-1","name":"Claude Fable 5.1","releaseDate":"2026-09-01"},'
+    '{"id":"a3e3","slug":"step-5","name":"Step 5 Preview",'
+    '"release":{"slug":"step-5-preview"},"parameters":600,'
+    '"inferenceParametersActiveBillions":27,"contextWindowTokens":1000000,'
+    '"microevalsEnabled":false,"intelligenceIndex":43.7343049141614,'
+    '"scicode":0.58912037037037,"hle":0.464782205746061,'
+    '"creator":{"id":"c1","slug":"stepfun","name":"StepFun"}},'
+    '{"id":"3e87","slug":"claude-fable-5-1",'
+    '"name":"Claude Fable 5.1 (Max, Default Fallback)",'
+    '"effort":{"slug":"max","label":"max","level":60},'
+    '"release":{"slug":"claude-fable-5-1","name":"Claude Fable 5.1"},'
+    '"parameters":null,"inferenceParametersActiveBillions":null,'
+    '"contextWindowTokens":1000000,"microevalsEnabled":false,'
+    '"intelligenceIndex":53.3549259623252,"scicode":0.630787037037037,'
+    '"hle":0.591288229842447,'
+    '"creator":{"id":"c2","slug":"anthropic","name":"Anthropic"}}'
+)
+
+
+class TestReleaseLayoutPages(unittest.TestCase):
+    """The model's own record on a page with no "currentModel" wrapper.
+
+    Reading on from the first mention of the slug there reaches the next
+    record in the list, so every model on this layout reported the same
+    pinned comparison model's numbers -- twelve of them in one refresh.
+    """
+
+    def test_the_metrics_are_the_models_own(self) -> None:
+        metrics = aa._parse_metrics_block(RELEASE_LAYOUT_PAGE, "claude-fable-5-1")
+        self.assertAlmostEqual(metrics["intelligence_index"], 53.3549259623252)
+        self.assertAlmostEqual(metrics["scicode"], 0.630787037037037)
+        self.assertAlmostEqual(metrics["hle"], 0.591288229842447)
+
+    def test_size_and_creator_come_off_the_same_record(self) -> None:
+        self.assertEqual(aa._parse_context_window(RELEASE_LAYOUT_PAGE, "claude-fable-5-1"), "1m")
+        self.assertEqual(aa._parse_params(RELEASE_LAYOUT_PAGE, "claude-fable-5-1"), "")
+        self.assertEqual(aa._parse_page_creator_name(RELEASE_LAYOUT_PAGE, "claude-fable-5-1"), "Anthropic")
+
+    def test_a_page_without_the_models_record_reads_as_nothing(self) -> None:
+        # Only the release summary names the slug: there is no record to read,
+        # and the neighbour's must not stand in for it.
+        page = RELEASE_LAYOUT_PAGE.replace('"id":"3e87","slug":"claude-fable-5-1"', '"id":"3e87","slug":"other"')
+        self.assertEqual(aa._parse_metrics_block(page, "claude-fable-5-1"), {})
+        self.assertEqual(aa._parse_params(page, "claude-fable-5-1"), "")
+
+
 class TestPageFieldsThatWentStale(unittest.TestCase):
     """The three names AA retired or renamed out from under the parser.
 
@@ -585,7 +640,7 @@ class TestPageFieldAudit(unittest.TestCase):
         keys = [f'"{key}":1' for key, _ in aa._PAGE_FLOAT_FIELDS]
         keys += [f'"{key}":true' for key, _ in aa._PAGE_BOOL_FIELDS if key != "microevalsEnabled"]
         keys += [f'"{name}":{{}}' for name in aa._PAGE_OBJECT_FIELDS]
-        page = '{"slug":"claude-opus-5","microevalsEnabled":true,' + ",".join(keys) + "}"
+        page = '{"id":"b8fc61f7","slug":"claude-opus-5","microevalsEnabled":true,' + ",".join(keys) + "}"
         status, out = self.audit(page)
         self.assertEqual(status, 0)
         self.assertIn("no stale field names", out)
@@ -668,7 +723,7 @@ class TestPageFetchRetry(unittest.TestCase):
         # On the free tier the pages carry most of the columns, so writing one
         # off on the first blip silently drops every score on that model.
         calls = []
-        body = '"slug":"a","microevalsEnabled":true,"critpt":0.5'
+        body = '{"id":"1","slug":"a","microevalsEnabled":true,"critpt":0.5}'
 
         def _get(url, headers=None, timeout=None):
             calls.append(url)
