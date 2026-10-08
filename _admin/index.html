@@ -583,6 +583,30 @@ input:disabled, select:disabled {
 }
 input.unknown { border-color: var(--bad); background: var(--bad-soft); }
 
+/* The Benchmarks tab: descriptions and lists are paragraphs, not one line. */
+textarea {
+  width: 100%;
+  min-height: calc(var(--tap) * 1.6);
+  padding: .5rem .7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 1rem/1.45 var(--font-ui);
+  resize: vertical;
+}
+textarea:disabled { background: var(--surface-2); color: var(--faint); cursor: not-allowed; }
+textarea.unknown { border-color: var(--bad); background: var(--bad-soft); }
+.field-hint { margin-top: 0; font-size: .8125rem; }
+.note-text.bad-text { color: var(--bad); }
+.range-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+label.check { display: flex; align-items: center; gap: .5rem; margin-top: .6rem; font-size: .875rem; }
+label.check input { width: 1.1rem; height: 1.1rem; }
+details.card > summary { cursor: pointer; }
+details.card > summary .chips { margin-top: .3rem; }
+details.card > details { margin-top: .6rem; }
+.card-foot { display: flex; justify-content: flex-end; margin-top: .7rem; }
+
 /* The add card's name field: a list drawn by hand rather than a datalist,
    because a datalist cannot be told to wait for three letters, to match
    anywhere in a slug, or to stop at fifty. */
@@ -1188,6 +1212,12 @@ const state = {
   sha: null,
   ref: null,            // the branch api.php reads from, per its answer
   referenceDraft: "",   // the slug being typed into "carry another model"
+  /* The Benchmarks tab: the search, which cards are unfolded (by key; "" is
+     the add card), and the column being added -- { key, after, text, record },
+     where `record` is the batch key it last wrote. */
+  benchSearch: "",
+  benchOpen: new Set(),
+  benchDraft: null,
   error: "",
   ok: "",
 };
@@ -1634,7 +1664,11 @@ const MODES = ["full", "quick"];
 function saveDraft() {
   try {
     const drafts = state.newModels.filter((d) => d.name.trim() || Object.keys(d.fields).length);
-    if (!state.answers.size && !drafts.length && !state.referenceDraft) {
+    const bench = state.benchDraft;
+    const benchDraft = bench && (bench.key.trim() || bench.record
+      || Object.values(bench.text).some((value) => value !== "" && value !== false))
+      ? { key: bench.key, after: bench.after, text: bench.text, record: bench.record } : null;
+    if (!state.answers.size && !drafts.length && !state.referenceDraft && !benchDraft) {
       localStorage.removeItem(DRAFT_KEY);
       return;
     }
@@ -1642,6 +1676,7 @@ function saveDraft() {
       answers: [...state.answers.entries()],
       newModels: drafts.map(({ id, name, fields, key, question }) => ({ id, name, fields, key, question })),
       referenceDraft: state.referenceDraft,
+      benchDraft,
     }));
   } catch { /* private mode, a full quota: the draft is only a convenience */ }
 }
@@ -1666,6 +1701,15 @@ function readDraft() {
         }));
     }
     if (typeof stored.referenceDraft === "string") state.referenceDraft = stored.referenceDraft;
+    const bench = stored.benchDraft;
+    if (bench && typeof bench.key === "string" && bench.text && typeof bench.text === "object") {
+      state.benchDraft = {
+        key: bench.key,
+        after: typeof bench.after === "string" ? bench.after : "",
+        text: { ...benchText(), ...bench.text },
+        record: typeof bench.record === "string" ? bench.record : "",
+      };
+    }
   } catch { /* a half-written value: start clean */ }
   try {
     const mode = localStorage.getItem(MODE_KEY);
@@ -1675,7 +1719,8 @@ function readDraft() {
 
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
-const isQueueKey = (key) => !/^(model-(create|edit|rename)|reference-(add|remove)) /.test(key);
+const isQueueKey = (key) =>
+  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -1837,7 +1882,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key));
 
 function readSent() {
   try {
@@ -2345,11 +2390,12 @@ function recordedHistory(model, key) {
   });
   return events.reverse();
 }
-const benchmarks = () =>
-  Object.entries(state.llm?.benchmarks || {})
+const benchmarks = () => [...new Set([
+  ...Object.entries(state.llm?.benchmarks || {})
     .filter(([, b]) => b?.derived !== true)
-    .map(([key]) => key)
-    .sort();
+    .map(([key]) => key),
+  ...batchCreatedBenchmarks(),
+])].sort();
 
 /* What a benchmark column actually holds -- which metric, which subset,
    whether tools were allowed, which harness -- and what must not be filed in
@@ -2510,6 +2556,7 @@ function render() {
       : state.tab === "updates" ? renderUpdates()
       : state.tab === "new" ? renderNew()
         : state.tab === "models" ? renderModels()
+          : state.tab === "benchmarks" ? renderBenchmarks()
           : state.tab === "reference" ? renderReference()
             : renderRuns()
   );
@@ -2540,7 +2587,7 @@ function inFlightNote() {
 function lockCard(card, applied = false) {
   card.classList.add("sent");
   card.classList.remove("answered");
-  card.querySelectorAll("button, input, select").forEach((node) => { node.disabled = true; });
+  card.querySelectorAll("button, input, select, textarea").forEach((node) => { node.disabled = true; });
   card.prepend(el("div", { className: "sent-mark" }, applied ? [
     el("span", { className: "pill success" }, [el("span", { className: "dot" }), "answered"]),
     "answered in an earlier batch -- the queue has not caught up yet",
@@ -2581,6 +2628,7 @@ const tabList = (mappingCount = null, newCount = null) => [
   ["new", "New models", newCount],
   ["updates", "Updates", null],
   ["models", "Models", null],
+  ["benchmarks", "Benchmarks", null],
   ["reference", "Reference", state.reference.slugs?.length ?? null],
   ["runs", "Runs", null],
 ];
@@ -3738,6 +3786,384 @@ function setRename(model, renameKey, slug) {
   render();
 }
 
+/* ── Benchmarks ──
+   The columns themselves: llm.json's `benchmarks` object, which names each
+   column, says which run of its benchmark it holds and what must not be filed
+   in it, and links where to read about it. Those words are what a reader of the
+   index sees in the column's dialog and what the Queue tab shows beside every
+   mapping question, so a wrong one costs more than a typo.
+
+   Two records: benchmark-edit changes what differs on one column, and
+   benchmark-create adds one. answer.py holds both to the rules
+   test_benchmark_settings.py holds the file to; the checks here only stop a
+   half-typed form from taking the rest of a sitting down with it. A new column
+   is filled by hand on the Models tab -- or by a mapping onto it -- until a
+   scraper is written for it, and both may be in the same batch as the create. */
+
+const BENCH_CREATE_KEY = (key) => `benchmark-create  ${key}`;
+const BENCH_EDIT_KEY = (key) => `benchmark-edit  ${key}`;
+
+/* _answers.BENCHMARK_KEY_RE: an identifier, since it becomes edit.py's --flag. */
+const BENCH_KEY_RE = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/;
+const BENCH_KEY_MAX = 48;
+/* edit.py's own options, which a column's flag would collide with. */
+const BENCH_RESERVED = new Set(["json_file", "model", "missing", "benchmark", "field", "after",
+  "help", "score_date", "score_url", ...META_FIELDS.map(([field]) => field)]);
+
+/* [field, longest, placeholder] -- _answers.BENCHMARK_TEXT_FIELDS. */
+const BENCH_TEXT = [
+  ["name", 80, "SWE-bench Verified"],
+  ["short_name", 24, "SWE-V"],
+  ["category", 40, "Software Engineering"],
+];
+const BENCH_DESCRIPTION_MAX = 2000;
+const BENCH_LISTS = [
+  ["settings", "Resolved %\nagentic", "One tag per line: the metric, the subset, the tool mode, the harness. "
+    + "At most 30 characters each; shown as chips."],
+  ["excludes", "runs named for another harness", "Optional. One phrase per line: the runs that must not be filed here."],
+  ["urls", "https://...", "One page per line: the leaderboard first, then the paper or the repository."],
+];
+const SETTING_MAX = 30;
+
+const benchCategories = () => [...new Set(Object.values(state.llm?.benchmarks || {})
+  .map((bench) => bench?.category).filter(Boolean))];
+
+/* The batch's new columns, by key. Scores and mappings may name them: answer.py
+   applies the creates first. */
+const batchCreatedBenchmarks = () => [...state.answers.values()]
+  .filter((record) => record.kind === "benchmark-create")
+  .map((record) => record.key);
+
+const flyingBenchmarks = () => (locked()
+  ? state.sent.keys.filter((key) => key.startsWith("benchmark-create  "))
+    .map((key) => key.slice("benchmark-create  ".length))
+  : []);
+
+/* One line per item, whitespace folded the way answer.py folds it. */
+const textLines = (text) => String(text ?? "").split("\n")
+  .map((line) => line.split(/\s+/).filter(Boolean).join(" "))
+  .filter(Boolean);
+
+/* What the inputs hold for a column: everything as text, so a half-typed
+   number survives a redraw. */
+const benchText = (bench = {}) => ({
+  name: bench.name ?? "",
+  short_name: bench.short_name ?? "",
+  category: bench.category ?? "",
+  description: bench.description ?? "",
+  settings: (bench.settings || []).join("\n"),
+  excludes: (bench.excludes || []).join("\n"),
+  urls: (bench.urls || []).join("\n"),
+  decimals: bench.decimals ?? "",
+  range_low: bench.range?.[0] ?? "",
+  range_high: bench.range?.[1] ?? "",
+  round_to: bench.round_to ?? "",
+  lower_is_better: bench.lower_is_better === true,
+});
+
+/* The record's fields from that text -- null where a field is cleared -- and
+   what is wrong, by input. */
+function benchParse(text, { derived = false } = {}) {
+  const fields = {};
+  const bad = {};
+  for (const [field, max] of [...BENCH_TEXT, ["description", BENCH_DESCRIPTION_MAX]]) {
+    const value = String(text[field] ?? "").trim();
+    if (!value) bad[field] = "required";
+    else if (value.length > max) bad[field] = `at most ${max} characters`;
+    else if (field !== "description" && /[\r\n\t]/.test(value)) bad[field] = "one line";
+    fields[field] = value;
+  }
+  for (const [field] of BENCH_LISTS) {
+    const items = textLines(text[field]);
+    if (new Set(items).size !== items.length) bad[field] = "an item is listed twice";
+    if (items.length > 12) bad[field] = "at most 12";
+    for (const item of items) {
+      if (field === "urls") {
+        if (!/^https?:\/\/\S+$/i.test(item)) bad[field] = `not a URL: ${item}`;
+      } else if (item.endsWith(".")) {
+        bad[field] = `a phrase, not a sentence: drop the full stop in "${item}"`;
+      } else if (field === "settings" && item.length > SETTING_MAX) {
+        bad[field] = `"${item}" is longer than ${SETTING_MAX} characters`;
+      }
+    }
+    if (!items.length && field !== "excludes") bad[field] = "at least one";
+    fields[field] = items.length ? items : null;
+  }
+  if (!derived) {
+    const number = (raw) => (String(raw).trim() === "" ? null : Number(raw));
+    const decimals = number(text.decimals);
+    if (decimals !== null && !(Number.isInteger(decimals) && decimals >= 0 && decimals <= 4)) {
+      bad.decimals = "a whole number from 0 to 4";
+    }
+    fields.decimals = decimals;
+    const [low, high] = [number(text.range_low), number(text.range_high)];
+    if ((low === null) !== (high === null)) bad.range_low = bad.range_high = "both, or neither";
+    else if (low !== null && !(Number.isFinite(low) && Number.isFinite(high) && low < high)) {
+      bad.range_low = bad.range_high = "low below high";
+    }
+    fields.range = low === null || high === null ? null : [low, high];
+    const roundTo = number(text.round_to);
+    if (roundTo !== null && !(Number.isFinite(roundTo) && roundTo > 0)) bad.round_to = "a positive number";
+    fields.round_to = roundTo;
+    fields.lower_is_better = text.lower_is_better ? true : null;
+  }
+  return { fields, bad };
+}
+
+/* The scores already stored in a column, for the range they must fit in. */
+const storedScores = (key) => (state.llm?.models || [])
+  .map((model) => model.scores?.[key])
+  .filter((value) => typeof value === "number");
+
+/* The form, shared by the edit and the add card. `onInput` runs on every
+   keystroke without a redraw, so the caret stays where it is; `mark` flags the
+   inputs a parse found wrong. */
+function benchForm(text, { derived = false, disabled = false, onInput }) {
+  const box = el("div", {});
+  const inputs = {};
+  const hints = {};
+  const field = (name, control, hint = "") => {
+    hints[name] = el("p", { className: "note-text field-hint" }, hint);
+    hints[name].dataset.hint = hint;
+    box.append(el("div", { className: "field" }, [el("label", {}, name.replace(/_/g, " ")), control, hints[name]]));
+  };
+  const wire = (name, input, read = () => input.value) => {
+    inputs[name] = input;
+    input.disabled = disabled;
+    input.oninput = () => { text[name] = read(); onInput(); };
+    return input;
+  };
+
+  for (const [name, max, placeholder] of BENCH_TEXT) {
+    const input = wire(name, el("input", { type: "text", maxLength: max, placeholder, value: text[name] }));
+    let list = null;
+    if (name === "category") {
+      const listId = `c-${Math.random().toString(36).slice(2)}`;
+      input.setAttribute("list", listId);
+      list = el("datalist", { id: listId }, benchCategories().map((value) => el("option", { value })));
+    }
+    field(name, list ? el("div", {}, [input, list]) : input);
+  }
+  field("description", wire("description", el("textarea", {
+    rows: 4, maxLength: BENCH_DESCRIPTION_MAX, value: text.description,
+    placeholder: "What it measures and how it is graded, and which run this column holds.",
+  })));
+  for (const [name, placeholder, hint] of BENCH_LISTS) {
+    const area = wire(name, el("textarea", { rows: 3, placeholder, value: text[name] }));
+    if (name === "urls") noAuto(area);
+    field(name, area, hint);
+  }
+
+  if (!derived) {
+    const scale = el("details", {
+      open: Boolean(String(text.decimals) + String(text.range_low) + String(text.round_to))
+        || text.lower_is_better,
+    });
+    scale.append(el("summary", { className: "note-text", style: "cursor:pointer" },
+      "Scale (optional): decimals, range, rounding, direction"));
+    const numberInput = (name, placeholder, step = "any") =>
+      wire(name, el("input", { type: "number", step, inputMode: "decimal", placeholder, value: text[name] }));
+    const row = (name, controls, hint) => {
+      hints[name] = el("p", { className: "note-text field-hint" }, hint);
+      hints[name].dataset.hint = hint;
+      scale.append(el("div", { className: "field" }, [el("label", {}, name), controls, hints[name]]));
+    };
+    row("decimals", numberInput("decimals", "1", "1"), "Digits the site prints. Blank is 1.");
+    row("range_low", el("div", { className: "range-pair" }, [
+      numberInput("range_low", "0"), numberInput("range_high", "100"),
+    ]), "Lowest and highest score this column can hold. Blank is 0 to 100, a percentage.");
+    hints.range_high = hints.range_low;
+    row("round_to", numberInput("round_to", "e.g. 5"),
+      "Store scores on multiples of this instead, for a number that moves on its own (an Elo).");
+    const lower = wire("lower_is_better", el("input", {
+      type: "checkbox", checked: Boolean(text.lower_is_better),
+    }), () => inputs.lower_is_better.checked);
+    lower.onchange = lower.oninput;
+    scale.append(el("label", { className: "check" }, [lower, " lower is better (a rate of failures, a cost)"]));
+    box.append(scale);
+  }
+
+  const mark = (bad) => {
+    for (const [name, input] of Object.entries(inputs)) {
+      input.classList.toggle("unknown", Boolean(bad[name]));
+    }
+    for (const [name, hint] of Object.entries(hints)) {
+      const problem = bad[name];
+      hint.textContent = problem || hint.dataset.hint;
+      hint.classList.toggle("bad-text", Boolean(problem));
+    }
+  };
+  return { box, mark };
+}
+
+const sameValue = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+
+function renderBenchmarks() {
+  const box = el("div", { className: "stack" });
+  box.append(el("p", { className: "note-text" },
+    "What each column of the index is called, which run of its benchmark it "
+    + "holds, what must not be filed in it and where to read about it. The Queue "
+    + "tab shows the same words beside every mapping question. A new column "
+    + "starts empty: give it scores on the Models tab, in this batch if you like, "
+    + "or map a source's label onto it from the Queue."));
+  box.append(renderBenchmarkAdd());
+
+  const search = el("input", {
+    type: "search",
+    placeholder: "Find a benchmark by name, key or category...",
+    value: state.benchSearch,
+  });
+  const results = el("div", { className: "stack" });
+  const draw = () => {
+    const needle = state.benchSearch.trim().toLowerCase();
+    const all = Object.entries(state.llm?.benchmarks || {});
+    const found = all.filter(([key, bench]) => !needle
+      || [key, bench?.name, bench?.short_name, bench?.category]
+        .some((value) => String(value ?? "").toLowerCase().includes(needle)));
+    results.replaceChildren(...(found.length
+      ? found.map(([key, bench]) => renderBenchmarkCard(key, bench))
+      : [el("p", { className: "empty" }, all.length
+        ? `No benchmark matches "${state.benchSearch.trim()}".`
+        : "llm.json has not been read yet.")]));
+  };
+  search.oninput = () => { state.benchSearch = search.value; draw(); };
+  box.append(el("div", { className: "search" }, search), results);
+  draw();
+  return box;
+}
+
+function renderBenchmarkCard(key, bench) {
+  const recordKey = BENCH_EDIT_KEY(key);
+  const existing = state.answers.get(recordKey);
+  const derived = bench?.derived === true;
+  const card = el("details", { className: `card bench-card${existing ? " answered" : ""}` });
+  card.open = state.benchOpen.has(key) || Boolean(existing);
+  card.ontoggle = () => {
+    if (card.open) state.benchOpen.add(key);
+    else state.benchOpen.delete(key);
+  };
+  card.append(el("summary", {}, [
+    el("span", { className: "subject" }, bench?.name || key),
+    el("div", { className: "chips" }, [
+      chip("", key),
+      chip("", bench?.category || "no category", { prose: true }),
+      derived ? chip("", "derived index", { prose: true }) : null,
+    ]),
+  ]));
+
+  const text = benchText({ ...bench, ...Object.fromEntries(
+    Object.entries(existing?.fields || {}).map(([f, v]) => [f, v === null ? undefined : v])) });
+  const scores = storedScores(key);
+  let form;
+  const commit = () => {
+    const { fields, bad } = benchParse(text, { derived });
+    if (fields.range && scores.some((v) => v < fields.range[0] || v > fields.range[1])) {
+      bad.range_low = bad.range_high = "a stored score falls outside it";
+    }
+    form.mark(bad);
+    const changed = Object.fromEntries(Object.entries(fields)
+      .filter(([field, value]) => !sameValue(value, bench?.[field])));
+    const ok = !Object.keys(bad).length && Object.keys(changed).length > 0;
+    if (ok) state.answers.set(recordKey, { kind: "benchmark-edit", key, fields: changed });
+    else state.answers.delete(recordKey);
+    card.classList.toggle("answered", ok);
+    refreshFooter();
+  };
+  form = benchForm(text, { derived, onInput: commit });
+  card.append(form.box);
+  if (derived) {
+    card.append(el("p", { className: "note-text" },
+      "A derived index: its scale is derive_indexes.py's, so only the words are editable here."));
+  }
+  const reset = el("button", { type: "button", className: "btn ghost tiny" }, "Undo changes");
+  reset.onclick = () => { state.answers.delete(recordKey); render(); };
+  card.append(el("div", { className: "card-foot" }, reset));
+  commit();
+  return guard(card, recordKey);
+}
+
+function renderBenchmarkAdd() {
+  if (!state.benchDraft) state.benchDraft = { key: "", after: "", text: benchText(), record: "" };
+  const draft = state.benchDraft;
+  const box = el("div", { className: "stack" });
+
+  const flying = flyingBenchmarks();
+  if (flying.length) {
+    box.append(lockCard(el("div", { className: "card" }, [
+      el("div", { className: "subject" }, flying.length === 1 ? "Being added" : `Being added (${flying.length})`),
+      el("div", { className: "queued" }, flying.map((key) =>
+        el("div", { className: "queued-row sent" }, el("span", {}, key)))),
+    ])));
+  }
+
+  const card = el("details", { className: "card add-bench" });
+  card.open = state.benchOpen.has("") || Boolean(draft.key || draft.record);
+  card.ontoggle = () => {
+    if (card.open) state.benchOpen.add("");
+    else state.benchOpen.delete("");
+  };
+  card.append(el("summary", {}, el("span", { className: "subject" }, "Add a benchmark")));
+
+  const known = state.llm?.benchmarks || {};
+  const status = el("div", { className: "chips" });
+  let form;
+  const commit = () => {
+    if (draft.record) state.answers.delete(draft.record);
+    draft.record = "";
+    const key = draft.key.trim();
+    const { fields, bad } = benchParse(draft.text);
+    form.mark(bad);
+    const problem = !key ? ""
+      : !BENCH_KEY_RE.test(key) || key.length > BENCH_KEY_MAX
+        ? "not a key: lowercase words joined by single underscores, like swe_bench_pro"
+        : key in known ? "already a column -- edit it below"
+          : BENCH_RESERVED.has(key) ? "one of edit.py's own options -- pick another key"
+            : flying.includes(key) ? "already sent -- the run is creating it" : "";
+    keyInput.classList.toggle("unknown", Boolean(problem));
+    status.replaceChildren(...(problem ? [chip("", problem, { prose: true, className: "now" })] : []));
+    const ok = key && !problem && !Object.keys(bad).length;
+    if (ok) {
+      const record = {
+        kind: "benchmark-create",
+        key,
+        fields: Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== null)),
+      };
+      if (draft.after) record.after = draft.after;
+      draft.record = BENCH_CREATE_KEY(key);
+      state.answers.set(draft.record, record);
+    }
+    card.classList.toggle("answered", Boolean(ok));
+    refreshFooter();
+  };
+
+  const keyInput = slugInput({ placeholder: "new_bench_1_0", value: draft.key, maxLength: BENCH_KEY_MAX });
+  keyInput.oninput = () => { draft.key = keyInput.value; commit(); };
+  card.append(el("div", { className: "field" }, [el("label", {}, "key"), keyInput]), status,
+    el("p", { className: "note-text field-hint" },
+      "The column's identifier: in llm.json, in every mapping file that names it, and "
+      + "as edit.py's --flag. It cannot be changed from here afterwards."));
+
+  form = benchForm(draft.text, { onInput: commit });
+  card.append(form.box);
+
+  const after = el("select", {}, [el("option", { value: "" }, "At the end of its category")]
+    .concat(Object.entries(known).map(([key, bench]) =>
+      el("option", { value: key, selected: draft.after === key }, `after ${bench?.name || key}`))));
+  after.onchange = () => { draft.after = after.value; commit(); };
+  card.append(el("div", { className: "field" }, [el("label", {}, "place"), after]));
+
+  const discard = el("button", { type: "button", className: "btn ghost tiny" }, "Discard");
+  discard.onclick = () => {
+    if (draft.record) state.answers.delete(draft.record);
+    state.benchDraft = null;
+    render();
+  };
+  card.append(el("div", { className: "card-foot" }, discard));
+  commit();
+  box.append(card);
+  return box;
+}
+
 /* ── Updates ──
    What changed, day by day: models added, scores that arrived or moved, and
    mappings written -- the public page's Recently Added panel, plus the one
@@ -4178,21 +4604,36 @@ async function reloadData() {
    been discarded or renamed: answer.py would refuse it, and the whole batch
    with it, after the run has already started. */
 function danglingMappings() {
-  const known = new Set(models());
+  const known = { models: new Set(models()), benchmarks: new Set(benchmarks()) };
   const byKey = new Map(state.questions.map((q) => [KEY(q), q]));
   return [...state.answers.entries()].filter(([key, record]) => record.kind === "mapping"
-    && byKey.get(key)?.universe === "models"
+    && known[byKey.get(key)?.universe]
     && record.answer !== "__unmappable__"
-    && !known.has(record.answer))
+    && !known[byKey.get(key).universe].has(record.answer))
     .map(([, record]) => record);
+}
+
+/* The same for a score typed into a column this batch was going to add. */
+function danglingScores() {
+  const known = new Set(benchmarks());
+  return [...state.answers.values()].filter((record) => record.kind === "model-edit")
+    .flatMap((record) => Object.keys(record.scores || {})
+      .filter((bench) => !known.has(bench)).map((bench) => `${record.name}: ${bench}`));
 }
 
 async function send() {
   const dangling = danglingMappings();
   if (dangling.length) {
     state.error = "Not sent: " + dangling.map((r) => `${r.subject} -> ${r.answer}`).join(", ")
-      + " names a model that is neither in llm.json nor added in this batch. "
+      + " names a model or benchmark that is neither in llm.json nor added in this batch. "
       + "Add it again, or answer that question another way.";
+    render();
+    return;
+  }
+  const strays = danglingScores();
+  if (strays.length) {
+    state.error = `Not sent: a score for ${strays.join(", ")} goes to a benchmark that is `
+      + "neither in llm.json nor added in this batch. Add the benchmark again, or remove the score.";
     render();
     return;
   }
@@ -4218,6 +4659,7 @@ async function send() {
        flight is listed from state.sent instead. */
     state.newModels = state.newModels.filter((d) => !keys.includes(d.key));
     if (keys.some((key) => key.startsWith("reference-add  "))) state.referenceDraft = "";
+    if (state.benchDraft?.record && keys.includes(state.benchDraft.record)) state.benchDraft = null;
     /* Before the run list is refreshed, so nothing can settle the batch before
        it is even recorded. */
     /* `queued` is read off the queue as it stands now, because settling cannot:
@@ -4273,6 +4715,7 @@ document.getElementById("clear").onclick = () => {
   state.answers.clear();
   state.newModels = [];
   state.referenceDraft = "";
+  state.benchDraft = null;
   render();
 };
 load();

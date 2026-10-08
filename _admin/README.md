@@ -294,6 +294,35 @@ tells you why.
   like it. Picking one is a *rename*, not a mapping — see below. A rename is
   sent on its own: one record per model per run, so the fields above grey out
   while one is drafted.
+- **Benchmarks** — the columns themselves: `llm.json`'s `benchmarks` object.
+  Every column unfolds into a form for what a reader is shown about it — `name`,
+  `short name`, `category` (the ones in use are offered), `description`,
+  `settings` (one tag per line, the chips), `excludes` (one phrase per line) and
+  `urls` (one per line) — plus, folded away, its scale: `decimals`, `range`,
+  `round_to` and *lower is better*. Only the fields that differ are sent, as a
+  `benchmark-edit` record. A derived index keeps its scale (it is
+  `derive_indexes.py`'s), so only its words are editable; `derived` and
+  `icon_svg` are not editable at all.
+
+  **Add a benchmark** sends a `benchmark-create`: a key (`lowercase_words`, which
+  becomes the column's id in every mapping file and its `edit.py` flag, so it
+  cannot spell one of that script's own options and cannot be changed from here
+  later) and every field a column must carry. It lands after the last column of
+  its category unless *place* names another, and every model gets a `null`
+  score for it beside its neighbours. A new column starts empty: no fetcher
+  knows it. Scores for it can go in the same batch from the Models tab — the
+  column is offered there as soon as the form is complete — and so can a
+  mapping onto it from the Queue; `answer.py` applies the columns first.
+
+  `answer.py` holds both records to the rules `test_benchmark_settings.py`
+  holds the file to (a tag is at most 30 characters and no sentence, an empty
+  `excludes` is removed rather than stored), and refuses a `range` that a score
+  already stored falls outside of. From a terminal:
+
+  ```sh
+  echo '[{"kind": "benchmark-edit", "key": "hle", "fields": {"short_name": "HLE"}}]' \
+    | ./answer.py --stdin --no-queue-check -w
+  ```
 - **Reference** — the closed frontier models the index carries as a yardstick for
   the open field, which is `reference-models.json` and nothing else: a list of
   Artificial Analysis slugs. *Carry another model* takes a slug AA publishes —

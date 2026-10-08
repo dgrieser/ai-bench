@@ -33,6 +33,7 @@ import fnmatch
 import importlib
 import json
 import math
+import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -83,6 +84,12 @@ MODEL_RENAME = "model-rename"
 # carries the name through every mapping file and the list with it.
 REFERENCE_ADD = "reference-add"
 REFERENCE_REMOVE = "reference-remove"
+# The columns themselves: llm.json's `benchmarks` object, which says what each
+# column is called, what run of its benchmark it holds and where to read about
+# it. Neither kind names a fetcher -- a new column is filled by hand on the
+# Models tab, or by a mapping onto it, until a scraper is written for it.
+BENCHMARK_CREATE = "benchmark-create"
+BENCHMARK_EDIT = "benchmark-edit"
 KINDS = frozenset(
     {
         MAPPING,
@@ -95,8 +102,12 @@ KINDS = frozenset(
         MODEL_RENAME,
         REFERENCE_ADD,
         REFERENCE_REMOVE,
+        BENCHMARK_CREATE,
+        BENCHMARK_EDIT,
     }
 )
+
+BENCHMARK_KINDS = frozenset({BENCHMARK_CREATE, BENCHMARK_EDIT})
 
 # The kinds that act on one entry in llm.json. A batch may touch each entry
 # once: the records are applied in order and rolled back together, so an edit
@@ -123,6 +134,35 @@ MAX_RECORDS = 25
 # Read off edit.py rather than restated: it is the script that has a flag per
 # field, so a list here could drift into asking for one that does not exist.
 METADATA_FIELDS = tuple(sorted(edit.METADATA_FIELDS))
+
+# A benchmark key: lowercase words joined by single underscores, like every key
+# already in llm.json. It becomes edit.py's --flag (underscores to dashes) and a
+# mapping file's value, so it is an identifier, not a label.
+BENCHMARK_KEY_RE = re.compile(r"[a-z][a-z0-9]*(?:_[a-z0-9]+)*")
+MAX_BENCHMARK_KEY = 48
+
+# What a benchmark record may set, and how long each text may be. The four
+# text fields and the three lists are what the site shows a reader; the four
+# numeric ones say how a score is read and stored (see _scores.py). Nothing
+# else is accepted: `derived` is derive_indexes.py's to declare, and icon_svg
+# names a file in icons/ that a record cannot upload.
+BENCHMARK_TEXT_FIELDS = {
+    "name": 80,
+    "short_name": 24,
+    "category": 40,
+    "description": 2000,
+}
+BENCHMARK_LIST_FIELDS = ("settings", "excludes", "urls")
+BENCHMARK_NUMBER_FIELDS = ("decimals", "range", "round_to", "lower_is_better")
+BENCHMARK_FIELDS = (*BENCHMARK_TEXT_FIELDS, *BENCHMARK_LIST_FIELDS, *BENCHMARK_NUMBER_FIELDS)
+# Every column says these: test_benchmark_settings.py holds the file to it, and
+# the admin queue shows them as the whole of what a mapping is decided on.
+BENCHMARK_REQUIRED = ("name", "short_name", "category", "description", "settings", "urls")
+# Long enough for "best of native / prompted", short enough to stay a chip --
+# test_benchmark_settings.MAX_TAG.
+MAX_SETTING_TAG = 30
+MAX_LIST_ITEMS = 12
+MAX_DECIMALS = 4
 
 
 class AnswerError(Exception):
@@ -167,6 +207,11 @@ class Answer:
             return f"carry {self.subject!r} as a reference model"
         if self.kind == REFERENCE_REMOVE:
             return f"stop carrying {self.subject!r} as a reference model"
+        if self.kind == BENCHMARK_CREATE:
+            placed = f" after {self.value!r}" if self.value else ""
+            return f"create benchmark {self.subject!r}{placed}"
+        if self.kind == BENCHMARK_EDIT:
+            return f"edit benchmark {self.subject!r}: {', '.join(sorted(self.fields))}"
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -351,6 +396,18 @@ def validate(
     benchmarks = editable_benchmarks(doc)
     queue = queue if queue is not None else set()
     created = batch_created_models(records, model_names)
+    created_benchmarks = batch_created_benchmarks(records, doc)
+    # A score may go to a column the same batch creates: apply() makes the
+    # columns first, so a new benchmark and the numbers it was added for are
+    # one sitting rather than two runs.
+    scoreable = {**benchmarks, **{key: {} for key in created_benchmarks}}
+    if created_benchmarks:
+        universes = {
+            **universes,
+            propose.BENCHMARKS: sorted(
+                {*(universes.get(propose.BENCHMARKS) or []), *created_benchmarks}
+            ),
+        }
 
     answers: list[Answer] = []
     failures: list[Failure] = []
@@ -362,10 +419,11 @@ def validate(
                     record,
                     universes=universes,
                     model_names=model_names,
-                    benchmarks=benchmarks,
+                    benchmarks=scoreable,
                     queue=queue,
                     require_queue=require_queue,
                     created=created,
+                    doc=doc,
                 )
             )
         except AnswerError as exc:
@@ -403,9 +461,45 @@ def validate(
                 reported.add(answer.index)
             touched.setdefault(name, answer.kind)
 
+    # One column, one record, for the same reason as one model, one record: an
+    # edit applied after a create of the same key would be a second, partial
+    # description of a column the first record already described in full.
+    columns: set[str] = set()
+    for answer in answers:
+        if answer.kind not in BENCHMARK_KINDS:
+            continue
+        if answer.subject in columns and answer.index not in reported:
+            failures.append(
+                Failure(
+                    answer.index,
+                    f"benchmark {answer.subject!r} is touched twice in one batch; "
+                    "send the second one after this run",
+                )
+            )
+            reported.add(answer.index)
+        columns.add(answer.subject)
+
     failures.extend(_reference_floor_failures(answers, reported))
 
     return answers, failures
+
+
+def batch_created_benchmarks(records: Sequence[Any], doc: dict[str, Any]) -> frozenset[str]:
+    """The benchmark keys this batch adds to llm.json.
+
+    Read for shape only, like batch_created_models(): the create record is
+    validated on its own, and the batch fails with it if it is refused, so a
+    score or a mapping can never be left pointing at a column that was not made.
+    """
+    existing = doc.get("benchmarks") or {}
+    keys = set()
+    for record in records:
+        if not isinstance(record, dict) or record.get("kind") != BENCHMARK_CREATE:
+            continue
+        key = record.get("key")
+        if isinstance(key, str) and BENCHMARK_KEY_RE.fullmatch(key) and key not in existing:
+            keys.add(key)
+    return frozenset(keys)
 
 
 def batch_created_models(records: Sequence[Any], model_names: set[str]) -> frozenset[str]:
@@ -471,6 +565,7 @@ def _validate_one(
     queue: set[tuple[str, str, str]],
     require_queue: bool,
     created: frozenset[str] = frozenset(),
+    doc: dict[str, Any] | None = None,
 ) -> Answer:
     if not isinstance(record, dict):
         raise AnswerError("expected an object")
@@ -500,6 +595,10 @@ def _validate_one(
         return _validate_model_rename(index, record, model_names)
     if kind in (REFERENCE_ADD, REFERENCE_REMOVE):
         return _validate_reference(index, record, kind, universes)
+    if kind == BENCHMARK_CREATE:
+        return _validate_benchmark_create(index, record, doc or {})
+    if kind == BENCHMARK_EDIT:
+        return _validate_benchmark_edit(index, record, doc or {})
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -922,6 +1021,207 @@ def _validate_reference(
     return Answer(index=index, kind=REFERENCE_ADD, subject=slug)
 
 
+def _benchmark_key(record: dict[str, Any]) -> str:
+    key = record.get("key")
+    if not isinstance(key, str) or not key:
+        raise AnswerError("'key' must be a non-empty string naming the benchmark column")
+    if len(key) > MAX_BENCHMARK_KEY or not BENCHMARK_KEY_RE.fullmatch(key):
+        raise AnswerError(
+            f"{key!r} is not a benchmark key: lowercase letters and digits, words "
+            f"joined by single underscores, at most {MAX_BENCHMARK_KEY} characters"
+        )
+    return key
+
+
+def _clean_text(name: str, value: Any, limit: int) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise AnswerError(f"{name!r} must be a non-empty string")
+    text = value.strip()
+    if len(text) > limit:
+        raise AnswerError(f"{name!r} is {len(text)} characters; at most {limit}")
+    if any(ch in text for ch in "\r\n\t") and name != "description":
+        raise AnswerError(f"{name!r} must be one line")
+    return text
+
+
+def _clean_list(name: str, value: Any) -> list[str]:
+    """One of a benchmark's three lists, held to test_benchmark_settings.py.
+
+    Settings are drawn as chips and excludes are joined by a separator, so each
+    item has to stand on its own: one line, no trailing full stop, no repeats.
+    """
+    if not isinstance(value, list):
+        raise AnswerError(f"{name!r} must be a list of strings")
+    if len(value) > MAX_LIST_ITEMS:
+        raise AnswerError(f"{name!r} has {len(value)} items; at most {MAX_LIST_ITEMS}")
+    items: list[str] = []
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            raise AnswerError(f"every item of {name!r} must be a non-empty string")
+        text = " ".join(item.split())
+        if name == "urls":
+            if not text.startswith(("http://", "https://")) or " " in text:
+                raise AnswerError(f"{item!r} is not a URL starting with http:// or https://")
+        else:
+            if text.endswith("."):
+                raise AnswerError(f"{text!r} in {name!r} is a phrase, not a sentence: drop the full stop")
+            if name == "settings" and len(text) > MAX_SETTING_TAG:
+                raise AnswerError(
+                    f"{text!r} is not a tag: at most {MAX_SETTING_TAG} characters per setting"
+                )
+            if len(text) > 200:
+                raise AnswerError(f"{text!r} in {name!r} is too long for one phrase")
+        if text in items:
+            raise AnswerError(f"{text!r} is listed twice in {name!r}")
+        items.append(text)
+    return items
+
+
+def _benchmark_fields(
+    record: dict[str, Any], *, derived: bool, scores: Sequence[float] = ()
+) -> dict[str, Any]:
+    """The benchmark fields a record sets, each checked and normalised.
+
+    A null clears a field that may be absent -- excludes, and the four numeric
+    ones, whose absence is _scores.py's default -- and is refused for the ones
+    every column must carry. `scores` are the values already stored in this
+    column: a range they fall outside of would make every later write of the
+    same number fail check_score_range, so it is refused here instead.
+    """
+    fields = record.get("fields")
+    if not isinstance(fields, dict):
+        raise AnswerError("'fields' must be an object")
+    checked: dict[str, Any] = {}
+    for key, value in fields.items():
+        if key not in BENCHMARK_FIELDS:
+            raise AnswerError(
+                f"{key!r} is not a benchmark field a record may set; expected one of: "
+                f"{', '.join(BENCHMARK_FIELDS)}"
+            )
+        if derived and key in BENCHMARK_NUMBER_FIELDS:
+            raise AnswerError(
+                f"{key!r} is fixed for a derived index: derive_indexes.py computes "
+                "it on its own scale"
+            )
+        if value is None:
+            if key in BENCHMARK_REQUIRED:
+                raise AnswerError(f"{key!r} cannot be cleared: every benchmark carries one")
+            checked[key] = None
+            continue
+        if key in BENCHMARK_TEXT_FIELDS:
+            checked[key] = _clean_text(key, value, BENCHMARK_TEXT_FIELDS[key])
+        elif key in BENCHMARK_LIST_FIELDS:
+            items = _clean_list(key, value)
+            if not items and key in BENCHMARK_REQUIRED:
+                raise AnswerError(f"{key!r} needs at least one item")
+            # An empty excludes is not a statement; the key is left out instead.
+            checked[key] = items or None
+        elif key == "decimals":
+            if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= MAX_DECIMALS:
+                raise AnswerError(f"'decimals' must be a whole number from 0 to {MAX_DECIMALS}")
+            checked[key] = value
+        elif key == "round_to":
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+                or value <= 0
+            ):
+                raise AnswerError("'round_to' must be a positive number")
+            checked[key] = value
+        elif key == "range":
+            if (
+                not isinstance(value, list)
+                or len(value) != 2
+                or any(
+                    isinstance(b, bool) or not isinstance(b, (int, float)) or not math.isfinite(b)
+                    for b in value
+                )
+                or not value[0] < value[1]
+            ):
+                raise AnswerError("'range' must be [low, high] with low below high")
+            outside = [v for v in scores if not value[0] <= v <= value[1]]
+            if outside:
+                raise AnswerError(
+                    f"{len(outside)} stored score(s) fall outside {value}, e.g. "
+                    f"{outside[0]}; correct those first"
+                )
+            checked[key] = list(value)
+        else:  # lower_is_better
+            if not isinstance(value, bool):
+                raise AnswerError("'lower_is_better' must be true or false")
+            # False is the default; stored as its absence, like every column
+            # that never declared it.
+            checked[key] = True if value else None
+    return checked
+
+
+def _check_flag_free(key: str) -> None:
+    """Refuse a key edit.py could not take as a --flag of its own.
+
+    edit.py adds one option per benchmark, so a key that spells one of its own
+    options -- --model, --after, --score-url -- would break every model edit,
+    the admin page's included, until somebody renamed the column by hand.
+    """
+    reserved = {
+        "json_file", "model", "missing", "benchmark", "field", "after", "help",
+        "score_date", "score_url", *METADATA_FIELDS,
+    }
+    if key in reserved:
+        raise AnswerError(f"{key!r} is one of edit.py's own options; pick another key")
+
+
+def _validate_benchmark_create(index: int, record: dict[str, Any], doc: dict[str, Any]) -> Answer:
+    """A new column: its key, everything a reader is shown about it, and where.
+
+    Every required field has to be sent -- test_benchmark_settings.py holds the
+    file to them, and a column without its settings is mapped from its key
+    alone. `after` places it: the column it follows, by default the last one
+    of its own category, so the table's groups stay together.
+    """
+    key = _benchmark_key(record)
+    existing = doc.get("benchmarks") or {}
+    if key in existing:
+        raise AnswerError(f"benchmark {key!r} already exists; edit it instead")
+    _check_flag_free(key)
+    fields = _benchmark_fields(record, derived=False)
+    missing = [f for f in BENCHMARK_REQUIRED if fields.get(f) is None]
+    if missing:
+        raise AnswerError(f"a new benchmark needs {', '.join(missing)}")
+    after = record.get("after")
+    if after is not None:
+        if not isinstance(after, str) or after not in existing:
+            raise AnswerError(f"'after' must name an existing benchmark, not {after!r}")
+    return Answer(
+        index=index,
+        kind=BENCHMARK_CREATE,
+        subject=key,
+        value=after,
+        fields={k: v for k, v in fields.items() if v is not None},
+    )
+
+
+def _validate_benchmark_edit(index: int, record: dict[str, Any], doc: dict[str, Any]) -> Answer:
+    key = _benchmark_key(record)
+    bench = (doc.get("benchmarks") or {}).get(key)
+    if not isinstance(bench, dict):
+        raise AnswerError(f"{key!r} is not a benchmark in llm.json")
+    stored = [
+        value
+        for model in doc.get("models") or []
+        if isinstance(model, dict)
+        for value in [(model.get("scores") or {}).get(key)]
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    ]
+    fields = _benchmark_fields(record, derived=bench.get("derived") is True, scores=stored)
+    # Only what differs: an unchanged field is no edit, and leaving it out keeps
+    # the description of the change honest.
+    changed = {k: v for k, v in fields.items() if bench.get(k) != v}
+    if not changed:
+        raise AnswerError(f"nothing to change: send at least one field of {key!r} that differs")
+    return Answer(index=index, kind=BENCHMARK_EDIT, subject=key, fields=changed)
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -1029,7 +1329,15 @@ def apply(answers: Sequence[Answer], *, llm_path: Path = DEFAULT_LLM_JSON) -> li
     # Models first, so a mapping onto a model the same batch creates finds it
     # there (see batch_created_models). Stable, so everything else keeps the
     # order it was sent in.
-    ordered = sorted(answers, key=lambda answer: answer.kind not in (MODEL_CREATE, MODEL_ADD))
+    # Columns before that, so a score or a mapping onto a column the batch adds
+    # finds it too, and a range the batch widens covers the scores it writes.
+    ordered = sorted(
+        answers,
+        key=lambda answer: (
+            answer.kind not in BENCHMARK_KINDS,
+            answer.kind not in (MODEL_CREATE, MODEL_ADD),
+        ),
+    )
     try:
         for answer in ordered:
             log.extend(_apply_one(answer, llm_path))
@@ -1085,7 +1393,109 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
     if answer.kind == REFERENCE_REMOVE:
         return _remove_reference(answer, llm_path)
 
+    if answer.kind == BENCHMARK_CREATE:
+        return _create_benchmark(answer, llm_path)
+
+    if answer.kind == BENCHMARK_EDIT:
+        return _edit_benchmark(answer, llm_path)
+
     return _apply_edit(answer, llm_path)
+
+
+# The order a benchmark's keys are written in, so a column added from the page
+# reads like one written by hand.
+BENCHMARK_KEY_ORDER = (
+    "name", "short_name", "category", "derived", "decimals", "round_to", "range",
+    "lower_is_better", "description", "settings", "excludes", "icon_svg", "urls",
+)
+
+
+def _ordered_benchmark(bench: dict[str, Any]) -> dict[str, Any]:
+    known = [k for k in BENCHMARK_KEY_ORDER if k in bench]
+    return {k: bench[k] for k in known + [k for k in bench if k not in known]}
+
+
+def _insert_after(mapping: dict[str, Any], anchor: str | None, key: str, value: Any) -> dict[str, Any]:
+    """`mapping` with key inserted right after anchor, or at the end."""
+    if anchor is None or anchor not in mapping:
+        return {**{k: v for k, v in mapping.items() if k != key}, key: value}
+    out: dict[str, Any] = {}
+    for k, v in mapping.items():
+        if k == key:
+            continue
+        out[k] = v
+        if k == anchor:
+            out[key] = value
+    return out
+
+
+def _write_llm(doc: dict[str, Any], llm_path: Path) -> None:
+    llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def _create_benchmark(answer: Answer, llm_path: Path) -> list[str]:
+    """Add the column, and a null score for it on every model.
+
+    The null is the file's own convention for "no score yet" (add.py writes one
+    per column for a new model), and it lands next to the column's neighbours
+    so a model's scores keep the order the benchmarks are declared in.
+    """
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    benchmarks = doc.get("benchmarks")
+    if not isinstance(benchmarks, dict):
+        raise AnswerError("llm.json has no benchmarks object")
+    if answer.subject in benchmarks:
+        raise AnswerError(f"benchmark {answer.subject!r} already exists")
+    anchor = answer.value
+    if anchor is None:
+        same = [k for k, b in benchmarks.items() if isinstance(b, dict)
+                and b.get("category") == answer.fields.get("category")]
+        anchor = same[-1] if same else None
+    doc["benchmarks"] = _insert_after(
+        benchmarks, anchor, answer.subject, _ordered_benchmark(dict(answer.fields))
+    )
+    keys = list(doc["benchmarks"])
+    earlier = keys[: keys.index(answer.subject)]
+    previous = earlier[-1] if earlier else None
+    for model in doc.get("models") or []:
+        scores = model.get("scores") if isinstance(model, dict) else None
+        if not isinstance(scores, dict) or answer.subject in scores:
+            continue
+        # After the nearest earlier column this model has a score entry for:
+        # not every model carries every column (one added since it was), and
+        # appending would put the new one out of order for exactly those.
+        anchor = next((k for k in reversed(earlier) if k in scores), None)
+        if anchor is None:
+            model["scores"] = {answer.subject: None, **scores}
+        else:
+            model["scores"] = _insert_after(scores, anchor, answer.subject, None)
+    _write_llm(doc, llm_path)
+    placed = f"after {previous!r}" if previous else "first"
+    return [f"{llm_path.name}: created benchmark {answer.subject!r} ({placed})"]
+
+
+def _edit_benchmark(answer: Answer, llm_path: Path) -> list[str]:
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    bench = (doc.get("benchmarks") or {}).get(answer.subject)
+    if not isinstance(bench, dict):
+        raise AnswerError(f"{answer.subject!r} is not a benchmark in llm.json")
+    for key, value in answer.fields.items():
+        if value is None:
+            bench.pop(key, None)
+        elif key in bench:
+            bench[key] = value
+        else:
+            # A field the column never had goes where a hand would put it,
+            # without reordering the ones already there: the diff stays the
+            # change and nothing else.
+            rank = BENCHMARK_KEY_ORDER.index(key)
+            before = [k for k in bench if k in BENCHMARK_KEY_ORDER[:rank]]
+            bench = _insert_after(bench, before[-1] if before else None, key, value)
+            if not before:
+                bench = {key: value, **{k: v for k, v in bench.items() if k != key}}
+    doc["benchmarks"][answer.subject] = bench
+    _write_llm(doc, llm_path)
+    return [f"{llm_path.name}: edited benchmark {answer.subject!r} ({', '.join(sorted(answer.fields))})"]
 
 
 def _add_reference(answer: Answer, llm_path: Path) -> list[str]:
