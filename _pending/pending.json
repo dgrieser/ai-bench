@@ -1,7 +1,13 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to haiku 5.5, substring match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -9,6 +15,166 @@
       "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
       "subject": "haiku 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to Claude Haiku 5.5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Claude Haiku 5.5' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Claude Haiku 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to Claude Haiku 5.5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Haiku 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Claude Haiku 5.5' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Claude Haiku 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to claude-haiku-5-5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        }
+      ],
+      "default": "claude-haiku-5-5",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'claude-haiku-5-5'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "claude-haiku-5-5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "the same name without the vendor prefix: exact to claude-haiku-5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "the same name without the vendor prefix: exact to claude-haiku-5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "the same name without the vendor prefix: exact to claude-haiku-5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'anthropic/claude-haiku-5.5' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-haiku-5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to claude-haiku-5-5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-haiku-5-5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'anthropic/claude-haiku-5-5' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "anthropic/claude-haiku-5-5",
       "universe": "models"
     }
   ]
