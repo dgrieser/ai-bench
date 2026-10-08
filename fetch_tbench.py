@@ -68,6 +68,26 @@ BOARDS: dict[str, dict[str, str]] = {
     },
 }
 
+# Columns that hold one harness, by the agent label the board gives it. The
+# terminal_bench_2_1 column is the Terminus-2 run ("runs named for another
+# harness" are excluded), while the 2.1 board ranks every agent together --
+# Codex, Claude Code, Cursor CLI, Gemini CLI -- so its best row per model is
+# usually some vendor's own agent. update.py keeps only the named agent's rows
+# for these columns before choosing a model's best run.
+REQUIRED_AGENT: dict[str, str] = {
+    "terminal_bench_2_1": "Terminus 2",
+}
+
+
+def agent_allowed(key: str, agent: object) -> bool:
+    """Whether a row run by ``agent`` may feed column ``key``."""
+    required = REQUIRED_AGENT.get(key)
+    if required is None:
+        return True
+    norm = lambda v: " ".join(str(v or "").lower().replace("-", " ").split())
+    return norm(agent) == norm(required)
+
+
 # The current board's page, which fill_source_urls.py lists as what URL covers.
 LEADERBOARD_URL = PAGE_URL.format(version=BOARDS["terminal_bench_4_0"]["version"])
 

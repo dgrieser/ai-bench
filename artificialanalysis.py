@@ -704,11 +704,18 @@ _PAGE_OBJECT_FIELDS = {
 # characters; a match beyond this belongs to a later record.
 _RECORD_HEADER_MAX = 4000
 
+# How far past "microevalsEnabled" a record's metrics may run. The record has
+# grown past the 5000 characters this used to be: briefcaseBreakdown, which
+# feeds aa_briefcase, now sits about 4,600 in, and the speed and TTFT spreads
+# after it had already fallen off the end. The next record's own
+# "microevalsEnabled" still ends the window first wherever it comes sooner.
+_METRICS_WINDOW = 12000
+
 
 def _metrics_chunk(text: str, slug: str) -> str:
     """The page's own metrics record, from its "microevalsEnabled" onward.
 
-    Capped at 5000 characters, and at the next record's "microevalsEnabled":
+    Capped at _METRICS_WINDOW characters, and at the next record's "microevalsEnabled":
     the page lists comparison models right after the current one with the same
     keys, so on a short record the window would otherwise run into the next
     model's, and a field the current record lacks would be read off its
@@ -723,7 +730,7 @@ def _metrics_chunk(text: str, slug: str) -> str:
     me_pos = text.find('"microevalsEnabled"', start, start + _RECORD_HEADER_MAX)
     if me_pos == -1:
         return ""
-    end = me_pos + 5000
+    end = me_pos + _METRICS_WINDOW
     next_record = text.find('"microevalsEnabled"', me_pos + 1, end)
     if next_record != -1:
         end = next_record

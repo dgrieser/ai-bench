@@ -129,7 +129,54 @@ BOARD_FIELDS = {
     "exploitgym": "exploitgym",
     "exploitbench": "exploitbench",
     "sec_bench_pro": "sec-bench-pro",
+    # Toolathlon is read off its board rather than the flat field, because the
+    # flat field folds two score series together: the Toolathlon-Verified
+    # series the column holds, and the original pre-Verified one (GPT-5.6 Sol
+    # 58.0 there against 74.9 on Verified). Only the board carries the note
+    # that tells them apart -- see BOARD_METHOD_FILTERS. llm-stats also keeps a
+    # separate Verified board, read under a label of its own that maps onto the
+    # same column.
+    "toolathlon": "toolathlon",
+    "toolathlon_verified": "toolathlon-verified",
+    # Lab self-reports for columns no first-party board reaches for the
+    # current field: Anthropic's system cards are the main contributors
+    # (Opus/Sonnet/Haiku 5.5 on both SWE-bench sets), and a launch table or
+    # two on SWE Atlas Q&A, where Scale's own board and AA's coding agents
+    # outrank them. OSWorld 2.1 is the third release of OSWorld 2.0 and lands
+    # in the vendor column beside osworld_2_0.
+    "swe_bench_multilingual": "swe-bench-multilingual",
+    "swe_bench_multimodal": "swe-bench-multimodal",
+    "swe_atlas_qna": "swe-atlas-codebase-qna",
+    "osworld_2_1_partial": "osworld-2.1-partial",
 }
+
+# Board rows whose note says they are not what the column holds: label ->
+# pattern a row's analysis_method must match (keep) or must not match (drop).
+# A row with no note passes a "drop" rule and fails a "keep" rule, so the keep
+# rules are kept for boards where the unwanted series is the common one.
+BOARD_METHOD_FILTERS: dict[str, tuple[str, re.Pattern[str]]] = {
+    # Pre-Verified Toolathlon numbers are labelled "Toolathlon" or not at all;
+    # Verified ones say so, as the series' own leaderboard does.
+    "toolathlon": ("keep", re.compile(r"verified", re.IGNORECASE)),
+    # CyberGym-E2E is Artificial Analysis' reproduce-and-patch variant in its
+    # Cyber Index, a different task from CyberGym's Level 1 reproduction
+    # (Mistral Large 4: 82 there, under no CyberGym run of its own).
+    "cybergym": ("drop", re.compile(r"\bE2E\b", re.IGNORECASE)),
+    # The SWE-bench sets exclude runs named for a harness the column leaves
+    # out, and Multimodal's public dev split is not the 517-task test set.
+    "swe_bench_multilingual": ("drop", re.compile(r"\bOpenHands\b", re.IGNORECASE)),
+    "swe_bench_multimodal": ("drop", re.compile(r"\bdev split\b|\bOpenHands\b", re.IGNORECASE)),
+}
+
+
+def board_row_kept(label: str, method: str | None) -> bool:
+    """Whether a board row's note allows it into the label's column."""
+    rule = BOARD_METHOD_FILTERS.get(label)
+    if rule is None:
+        return True
+    mode, pattern = rule
+    matched = isinstance(method, str) and bool(pattern.search(method))
+    return matched if mode == "keep" else not matched
 
 
 def non_default_scaffold(method: str | None) -> bool:
@@ -372,8 +419,11 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
         print(f"  other gated columns: dropped {rejected} run with tools or a non-default scaffold", file=sys.stderr)
 
 
-def board_scores(benchmark_id: str, timeout: int = 60) -> dict[str, float]:
+def board_scores(benchmark_id: str, timeout: int = 60, label: str | None = None) -> dict[str, float]:
     """model_id -> 0-1 score on one llm-stats board, from its details endpoint.
+
+    With ``label``, rows whose note fails that label's BOARD_METHOD_FILTERS
+    rule are left out.
 
     A failed request or a changed layout yields nothing, with a warning: the
     board's column simply gets no llm-stats scores this refresh, which is what
@@ -398,6 +448,8 @@ def board_scores(benchmark_id: str, timeout: int = 60) -> dict[str, float]:
         if not isinstance(model_id, str) or not model_id:
             continue
         if not isinstance(score, (int, float)) or isinstance(score, bool):
+            continue
+        if label is not None and not board_row_kept(label, entry.get("analysis_method")):
             continue
         out.setdefault(model_id, float(score))
     return out
@@ -435,8 +487,15 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
         results.append(record)
         by_id[model_id] = record
 
+    # A label read off a board is the board's alone: a flat field of the same
+    # name carries no note to filter it by, so it gives way even where the
+    # board drops the model's row.
+    for record in results:
+        for label in BOARD_FIELDS:
+            record["scores"].pop(label, None)
+
     for label, benchmark_id in BOARD_FIELDS.items():
-        for model_id, score in board_scores(benchmark_id).items():
+        for model_id, score in board_scores(benchmark_id, label=label).items():
             record = by_id.get(model_id)
             if record is None:
                 # On the board but not on the leaderboard: no licence to read,

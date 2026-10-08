@@ -61,6 +61,11 @@ BENCHMARK = "gpqa_diamond"
 # OpenRouter's own router: a run through whichever endpoint it picked, so a
 # repeat of one of the endpoint rows rather than a deployment of its own.
 ROUTER_PROVIDER = "auto-routing"
+# GPQA Diamond is four-option multiple choice, so 25% is what guessing scores.
+# A run at or under it is an endpoint that is broken, not a model that is weak:
+# DeepInfra's Ling-3.0-flash-Fin at 15.9% beside Novita's 63.2% halved the
+# median of a two-run model. Dropped like a failed run.
+CHANCE_SCORE = 0.25
 
 HEADERS = {
     "User-Agent": (
@@ -147,7 +152,7 @@ def benchmark_query(page_html: str) -> dict | None:
 
 
 def endpoint_runs(query: dict, benchmark: str = BENCHMARK) -> list[float]:
-    """One 0-1 score per endpoint run of benchmark, router row and failed runs dropped."""
+    """One 0-1 score per endpoint run of benchmark, router row and failed or at-chance runs dropped."""
     data = (query.get("state") or {}).get("data") or {}
     rows = data.get("scores") if isinstance(data, dict) else None
     if not isinstance(rows, list):
@@ -162,7 +167,7 @@ def endpoint_runs(query: dict, benchmark: str = BENCHMARK) -> list[float]:
         score = row.get("score")
         if not isinstance(endpoint, str) or not endpoint:
             continue
-        if not isinstance(score, (int, float)) or isinstance(score, bool) or score == 0:
+        if not isinstance(score, (int, float)) or isinstance(score, bool) or score <= CHANCE_SCORE:
             continue
         runs[endpoint] = float(score)
     return list(runs.values())

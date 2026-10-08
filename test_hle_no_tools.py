@@ -550,7 +550,7 @@ class TestLlmStatsResolution(unittest.TestCase):
         # And every board read beside the flat endpoint scores someone, so its
         # label is in the resolved set too.
         boards = {
-            benchmark_id: [{"model_id": "a", "score": 0.2}]
+            benchmark_id: [{"model_id": "a", "score": 0.2, "analysis_method": "Verified"}]
             for benchmark_id in fetch_llmstats.BOARD_FIELDS.values()
         }
         resolved = self._run(payload, lambda _mid: detail, boards)

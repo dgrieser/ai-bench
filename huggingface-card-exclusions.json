@@ -1,0 +1,33 @@
+{
+  "#": "Hugging Face repo -> card labels whose number is not what the column they map to holds, for that card only.",
+  "# why": "huggingface-benchmark-name-mapping.json decides a label once for every card, but some cards qualify a plain label in a footnote, a prose note or a tech report: the same 'BrowseComp' that is the default scaffold on one card is a context-managed run on another. A wrong variant under the right name is worse than no number, and the HF ingest is fill-only, so a cell nulled by hand comes straight back unless the card's label is ruled out here.",
+  "# format": "\"owner/name\": {\"card label\": \"why, with where it says so\"}. Repo match is case-insensitive. Keys starting with # are notes.",
+  "nex-agi/Nex-N2.5-Pro": {
+    "BrowseComp 6": "footnote 6: 'We apply the Summary context-compaction strategy when the token usage exceeds 60% of the model's context window' -- DeepSeek-V3.2's Summary context-management strategy, a bolted-on context manager",
+    "Terminal-Bench 2.1": "footnote 3: 'Coding tasks are evaluated using the NexAU harness'; the Hub evalResults row says 'NexAU harness.' -- not Terminus-2",
+    "harborframework/terminal-bench-2.1": "the same NexAU run, as the card's structured evalResults ('NexAU harness.')"
+  },
+  "nex-agi/Nex-N2.5-mini": {
+    "BrowseComp 6": "same card as Nex-N2.5-Pro: Summary context compaction",
+    "Terminal-Bench 2.1": "same card as Nex-N2.5-Pro: NexAU harness"
+  },
+  "nex-agi/Nex-N2.5-Max": {
+    "BrowseComp 6": "same card as Nex-N2.5-Pro: Summary context compaction",
+    "Terminal-Bench 2.1": "same card as Nex-N2.5-Pro: NexAU harness"
+  },
+  "IFM/K2-Horizon-7B": {
+    "BrowseComp Web browsing": "card: 'BrowseComp: our model uses the Discard-all@95k context-length protocol proposed in the DeepSeek-V3.2 technical report' -- context management"
+  },
+  "SHSLab/Step-5-Preview-BF16": {
+    "SWE-Marathon v1.1": "off the board's scale: the card's own comparison rows put Claude Opus 5 at 85.6 and GLM-5.3 at 67.4, where swe-marathon.org's 1.1 pass@1 has them at 50.0 and 42.5",
+    "ProgramBench": "neither of the board's metrics: the card gives Claude Opus 5 82.3, where programbench.com has it at 4.5 Resolved / 37.0 Almost"
+  },
+  "deepseek-ai/DeepSeek-V4.1-Flash": {
+    "Agent's Last Exam (Pass@1)": "tech report section 5.3.1: 'Agents' Last Exam (ALE-CLI)' -- the CLI tier, which the column excludes",
+    "Terminal-Bench 2.1 (Pass@1)": "tech report scaffold table: run in DeepSeek Harness (minimal mode), not Terminus-2",
+    "harborframework/terminal-bench-2.1": "the same DeepSeek Harness run, as the card's structured evalResults"
+  },
+  "internlm/Atria-Dawn-Preview": {
+    "Terminal-Bench 2.1": "tech report (arXiv 2609.15818, Appendix B): 'Unless otherwise specified, the evaluation harness is Claude Code' -- not Terminus-2"
+  }
+}

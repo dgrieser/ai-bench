@@ -124,8 +124,8 @@ class TestRowFetchers(unittest.TestCase):
         # Terminal-Bench revision, so the fold is per column like the above.
         mapping = write_json({"Model": "m", "Model [high]": "m"})
         rows = [
-            {"benchmark": "terminal_bench_2_1", "model": "Model", "score": 30.0},
-            {"benchmark": "terminal_bench_2_1", "model": "Model [high]", "score": 45.0},
+            {"benchmark": "terminal_bench_2_1", "model": "Model", "score": 30.0, "agent": "Terminus 2"},
+            {"benchmark": "terminal_bench_2_1", "model": "Model [high]", "score": 45.0, "agent": "Terminus 2"},
             {"benchmark": "terminal_bench_4_0", "model": "Model", "score": 20.0},
         ]
         for order in (rows, list(reversed(rows))):
@@ -514,6 +514,34 @@ class TestHuggingfaceMerge(unittest.TestCase):
         with stub_run(rows):
             by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
         self.assertEqual(by_slug["m"]["gpqa_diamond"][0], 70.8)
+
+    def test_a_card_exclusion_rules_out_that_cards_label_only(self) -> None:
+        # Nex qualifies its BrowseComp in a footnote; another card's plain
+        # BrowseComp is the column's own number and still lands.
+        mapping = write_json({"BrowseComp": "browsecomp"})
+        exclusions = write_json({"#": "note", "Org/Nex": {"BrowseComp": "context compaction"}})
+        rows = [
+            {"model": "nex", "repo": "org/nex", "scores": {"BrowseComp": 89.7}},
+            {"model": "other", "repo": "org/other", "scores": {"BrowseComp": 60.0}},
+        ]
+        loaded = update.load_hf_card_exclusions
+        with stub_run(rows), mock.patch.object(
+            update, "load_hf_card_exclusions", lambda: loaded(exclusions)
+        ):
+            by_slug = update.fetch_huggingface_data(SCRIPT, mapping)
+        self.assertNotIn("nex", by_slug)
+        self.assertEqual(by_slug["other"]["browsecomp"][0], 60.0)
+
+    def test_the_card_exclusions_name_cards_the_index_reads(self) -> None:
+        # A repo spelled wrong here rules nothing out, silently.
+        doc = json.loads(Path(update.__file__).with_name("llm.json").read_text(encoding="utf-8"))
+        cards = {
+            (m.get("url") or "").removeprefix("https://huggingface.co/").casefold()
+            for m in doc["models"]
+        }
+        for repo in update.load_hf_card_exclusions():
+            with self.subTest(repo=repo):
+                self.assertIn(repo, cards)
 
     def test_a_plain_table_label_still_beats_a_qualified_structured_one(self) -> None:
         # Channel is the tiebreak under the qualifier rule, not over it.

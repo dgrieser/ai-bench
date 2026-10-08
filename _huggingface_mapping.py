@@ -16,6 +16,7 @@ from _timing import timed
 
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapping.json")
+HF_CARD_EXCLUSIONS = Path(__file__).resolve().with_name("huggingface-card-exclusions.json")
 
 # Sentinel value stored for HF labels reviewed but deliberately not mapped.
 # Kept in the mapping file so they are not prompted again, but never used as a
@@ -185,6 +186,24 @@ def _load_raw_mapping(path: Path = HF_MAPPING) -> dict[str, str]:
 def load_hf_to_key_mapping(path: Path = HF_MAPPING) -> dict[str, str]:
     """Real HF label -> llm.json key mappings (excludes unmappable entries)."""
     return {k: v for k, v in _load_raw_mapping(path).items() if v not in (UNMAPPABLE, PENDING)}
+
+
+def load_hf_card_exclusions(path: Path = HF_CARD_EXCLUSIONS) -> dict[str, set[str]]:
+    """Casefolded repo -> the card labels ruled out for that card alone.
+
+    See huggingface-card-exclusions.json: a label the name mapping takes for
+    every card, but that one card qualifies somewhere the table does not show.
+    A missing file rules nothing out.
+    """
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    out: dict[str, set[str]] = {}
+    for repo, labels in raw.items():
+        if repo.startswith("#") or not isinstance(labels, dict):
+            continue
+        out[repo.casefold()] = {label for label in labels if not label.startswith("#")}
+    return out
 
 
 def load_reviewed_hf_labels(path: Path = HF_MAPPING) -> set[str]:

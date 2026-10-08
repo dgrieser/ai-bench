@@ -756,7 +756,7 @@ already gives row collisions inside a single source.
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
-| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs (a 0) left out. A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
+| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs left out -- a 0, or anything at or under the 25% a four-option guess scores, which is a broken endpoint rather than a weak model (one such run halved Ling-3.0-flash-Fin's two-run median to 39.6). A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
 | 7 | **Epoch AI's Benchmarking Hub** (`fetch_epoch.py`) | Epoch's own GPQA Diamond and SWE-bench Verified runs, and its copies of nine other boards. A second source for every column it feeds: it fills a cell nobody better reports and yields to every rank above, llm-stats' fill-only ingest included (the `yields_to_fill_only` exception OpenRouter has). That is what makes it safe to read files whose rows are not all what the column holds — see [what it contributes](#what-epoch-ai-contributes). Not fill-only, so it replaces a model card's number and a hand entry. |
 | 8 | **Model cards** — Hugging Face | A lab's own report under its own prompts and settings. Fill-only like llm-stats, on the same terms but without the OpenRouter and Epoch exception, so it never replaces their values. It shared a rank with llm-stats until OpenRouter was read; neither ever replaces the other's value, so the split changed nothing between the two, and where they overlap llm-stats runs first and so claims the gap. |
 | 9 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
@@ -788,7 +788,11 @@ whether or not the agent ingest ran, and in either order. Where the pages report
 nothing, the agent run fills the column. Missing results never erase
 stored scores.
 
-tbench.ai's 4.0, 2.1 and 2.0 boards each rank 2 for their own column.
+tbench.ai's 4.0, 2.1 and 2.0 boards each rank 2 for their own column. The 2.1
+board ranks every agent together (Codex, Claude Code, Cursor CLI, Gemini CLI,
+Terminus 2), while the `terminal_bench_2_1` column is the Terminus-2 run, so
+only Terminus 2 rows feed it (`fetch_tbench.REQUIRED_AGENT`); a model the board
+lists under a vendor's agent alone gets nothing from it.
 `fetch_tbench.py` reads them from the Harbor Hub function the site's version
 picker calls, since the server-rendered page only ever carries the current
 board. On 2.0, which takes outside submissions, only verified single-model rows
@@ -823,7 +827,7 @@ solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
 first-party boards. The line is drawn per board, not per source.
 
-Eleven of its boards name a column `llm.json` tracks — the table lives in
+Twelve of its boards name a column `llm.json` tracks — the table lives in
 `fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
 more:
 
@@ -835,10 +839,16 @@ more:
 | `lcb` | `livecodebench` | Vals' own implementation |
 | `gpqa` | `gpqa_diamond` | |
 | `mmlu_pro` | `mmlu_pro` | |
-| `mmmu` | `mmmu_pro` | Titled "MMMU Pro"; the metadata slug is the bare `mmmu` |
 | `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
 | `vibe-code` | `vibe_code_bench_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; version-pinned, see below |
 | `programbench` | `programbench_almost` | Read at the `almost` *task*, not the board's "overall" — see [below](#why-programbench-enters-at-050) |
+
+One board is deliberately **not** read. Vals' "MMMU Pro" (slug `mmmu`) says of
+itself "We based this benchmark on the standard 4-option multiple-choice
+format", and the `mmmu_pro` column is the 10-option set, which reads several
+points lower for the same model. It fed three cells before that was noticed
+(Claude Fable 5.1, GLM-5.3 Flash, Qwen3.8 Max); they were cleared on
+2026-10-08, and the board is archived upstream besides.
 
 The AIME board is the one that needs a task override. Vals runs the 2024 and
 2025 exams as two tasks of one board and its "overall" is the pair pooled, while
@@ -988,6 +998,14 @@ hoping the labels agree:
   v4-labelled aliases (`BFCL v4`, `BFCL-V4`, `BFCLv4`) onto `bfcl_v4` and leaves
   `BFCL v3`, `BFCL(avg v1&v2)` and a bare `BFCL` unmapped — the same rule
   Toolathlon-Verified gets.
+- **Toolathlon is two score series under one name.** The column is the
+  Toolathlon-Verified series (108 tasks); the original series reads far lower
+  for the same model (GPT-5.6 Sol 58.0 there, 74.9 on Verified), and llm-stats'
+  flat `toolathlon` field mixes the two. `fetch_llmstats.py` therefore reads
+  Toolathlon off llm-stats' boards instead, keeping only rows whose note says
+  "Verified" (`BOARD_METHOD_FILTERS`), plus the separate `toolathlon-verified`
+  board. The three GPT-5.6 values the flat field had supplied were pre-Verified
+  numbers and were cleared on 2026-10-08.
 - **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
@@ -1034,7 +1052,7 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
-| **OSWorld 2.0** | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08`, `osworld_2_0_vendor` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release on the official board gets a dated column: `osworld_2_0_2026_06_24` ("OSW 2.0J") carries seven models, including every open-weight run, and `osworld_2_0_2026_08_08` ("OSW 2.0A") two, both closed; 2.1 scores one model and has no column yet. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. What labs report for themselves goes to `osworld_2_0_vendor` ("OSW 2.0V") instead, following llm-stats, whose OSWorld 2.0 board is read beside the model cards: those headlines mix binary accuracy with the partial checkpoint score (two to three times higher), and all three releases, full and offline sets, often without saying which, so no dated column could take them. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
+| **OSWorld 2.0** | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08`, `osworld_2_0_vendor` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release on the official board gets a dated column: `osworld_2_0_2026_06_24` ("OSW 2.0J") carries seven models, including every open-weight run, and `osworld_2_0_2026_08_08` ("OSW 2.0A") two, both closed; 2.1 scores one model and has no column yet. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. What labs report for themselves goes to `osworld_2_0_vendor` ("OSW 2.0V") instead, following llm-stats, whose OSWorld 2.0 and OSWorld 2.1 (partial) boards are read beside the model cards: those headlines mix binary accuracy with the partial checkpoint score (two to three times higher), and all three releases, full and offline sets, often without saying which, so no dated column could take them. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the
@@ -1339,7 +1357,7 @@ these choices is
 
 | Column | What the agent does | Leading source (rank) | Gap fillers | What the column refuses |
 | --- | --- | --- | --- | --- |
-| `cybergym` | Writes a PoC that crashes one of 1,507 real OSS-Fuzz vulnerabilities, given its description (Level 1) | cybergym.io (2) | llm-stats board, model cards | `focus: agent` rows (a security vendor's pipeline around the model, 0.87-0.99 where the model alone reaches 0.77-0.85); multi-model systems; pass@10 (`score_x1` differing from `score_10`) and 30-trial rows |
+| `cybergym` | Writes a PoC that crashes one of 1,507 real OSS-Fuzz vulnerabilities, given its description (Level 1) | cybergym.io (2) | llm-stats board, model cards | `focus: agent` rows (a security vendor's pipeline around the model, 0.87-0.99 where the model alone reaches 0.77-0.85); multi-model systems; pass@10 (`score_x1` differing from `score_10`) and 30-trial rows; Artificial Analysis' CyberGym-E2E reproduce-and-patch score, which the llm-stats board files under CyberGym and its note names (`fetch_llmstats.BOARD_METHOD_FILTERS`) |
 | `exploitgym` | Turns a crashing input into a flag-capturing exploit; 869 tasks across userspace, V8 and the kernel; counted only when a judge confirms the intended bug was used | cybergym.io (2) | llm-stats board, model cards | Any budget but 6 hours (the maintainers run 2; vendors quote 6); subset runs; the retired 898-task v0 set; agent rows |
 | `exploitbench` | Climbs a five-tier ladder toward a V8 exploit on 41 N-day bugs; the score is mean ladder coverage | llm-stats board (5) | Epoch's copy of the board (7), model cards | AutoNudge runs, where the harness keeps prompting the agent |
 | `cyberbench_1_1` | Writes a PoC that triggers an OSS-Fuzz vulnerability, then a patch that fixes it, on Vals' private set | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; the column is the board's pooled headline. Version-pinned to 1.1 in `fetch_vals.VERSIONS`, since the slug names no revision |
@@ -1668,6 +1686,20 @@ that stands on its own in the cell:
   uses (Mistral's Ministral cards report MMLU at 0.794), while a single
   near-zero value beside siblings in the eighties is left alone -- ZeroBench's
   whole published field is 0.0 to 12.0.
+
+**A label is decided once for every card, so a card that qualifies it
+elsewhere is ruled out card by card.** `huggingface-benchmark-name-mapping.json`
+says what a label means everywhere it appears, but the variant that disqualifies
+a number is sometimes stated only in a footnote the table marks with a bare
+superscript (`BrowseComp 6` on the Nex-N2.5 card, footnote 6: "Summary
+context-compaction"), in prose under the table (K2-Horizon-7B's
+"Discard-all@95k" BrowseComp), or in a tech report (DeepSeek-V4.1-Flash's
+"Agents' Last Exam" is the ALE-CLI tier). Those are listed per repo in
+`huggingface-card-exclusions.json`, each with the sentence that rules it out,
+and `update.fetch_huggingface_data` skips them for that card alone. The ingest
+is fill-only, so a wrong cell cleared by hand would otherwise come straight
+back on the next refresh. `test_source_collisions.py` checks that every repo
+named there is one the index reads, since a misspelled repo rules nothing out.
 
 ### Update Process
 
