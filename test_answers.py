@@ -30,6 +30,8 @@ import propose
 import _rename
 from _answers import (
     AA_IGNORE,
+    BENCHMARK_CREATE,
+    BENCHMARK_EDIT,
     MAPPING,
     MODEL_ADD,
     MODEL_CREATE,
@@ -1140,6 +1142,232 @@ class TestWorkflowWiring(unittest.TestCase):
         # comment says where its twin lives -- and that is not a link to it.
         targets = re.findall(r'(?:href|src|action)="([^"]*)"', page)
         self.assertEqual([t for t in targets if "admin" in t.lower()], [], "linked from the index")
+
+
+class TestBenchmarks(AnswersTestCase):
+    """The columns themselves, edited and added from the Benchmarks tab.
+
+    A benchmark's text is what a reader -- and the person answering the mapping
+    queue -- decides on, so every column has to keep saying what it holds; and
+    its key becomes one of edit.py's flags, so a key that spells one of that
+    script's own options would break every model edit after it.
+    """
+
+    def create(self, **overrides) -> dict:
+        record = {
+            "kind": BENCHMARK_CREATE,
+            "key": "new_bench_1_0",
+            "fields": {
+                "name": "New Bench 1.0",
+                "short_name": "New 1.0",
+                "category": "Software Engineering",
+                "description": "A benchmark nobody scrapes yet.",
+                "settings": ["Resolved %", "agentic"],
+                "urls": ["https://example.org/new-bench"],
+            },
+        }
+        record.update(overrides)
+        return record
+
+    def edit(self, key="hle", **fields) -> dict:
+        return {"kind": BENCHMARK_EDIT, "key": key, "fields": fields}
+
+    def write_doc(self, doc) -> None:
+        self.llm.write_text(json.dumps(doc), encoding="utf-8")
+
+    def test_a_complete_create_is_accepted(self) -> None:
+        answer = self.accepted(self.create())
+        self.assertEqual((answer.kind, answer.subject, answer.value), (BENCHMARK_CREATE, "new_bench_1_0", None))
+        self.assertEqual(answer.fields["settings"], ["Resolved %", "agentic"])
+
+    def test_a_create_needs_everything_a_column_says(self) -> None:
+        for missing in _answers.BENCHMARK_REQUIRED:
+            record = self.create()
+            del record["fields"][missing]
+            with self.subTest(missing=missing):
+                self.refused(record, missing)
+        record = self.create()
+        record["fields"]["settings"] = []
+        self.refused(record, "at least one item")
+
+    def test_an_existing_key_is_edited_not_created(self) -> None:
+        self.refused(self.create(key="hle"), "already exists")
+
+    def test_a_key_is_an_identifier(self) -> None:
+        for bad in ("New Bench", "new-bench", "_new", "new__bench", "1bench", "", None, "x" * 60):
+            with self.subTest(key=bad):
+                answers, failures = self.check(self.create(key=bad))
+                self.assertEqual(answers, [])
+                self.assertEqual(len(failures), 1)
+
+    def test_a_key_may_not_spell_one_of_edit_pys_options(self) -> None:
+        for key in ("model", "after", "score_url", "creator_url", "json_file"):
+            with self.subTest(key=key):
+                self.refused(self.create(key=key), "edit.py's own options")
+
+    def test_fields_outside_the_whitelist_are_refused(self) -> None:
+        for field in ("derived", "icon_svg", "scores"):
+            record = self.create()
+            record["fields"][field] = True
+            with self.subTest(field=field):
+                self.refused(record, "not a benchmark field")
+
+    def test_settings_are_tags(self) -> None:
+        for bad in ("x" * 31, "a whole sentence."):
+            record = self.create()
+            record["fields"]["settings"] = [bad]
+            with self.subTest(tag=bad):
+                answers, failures = self.check(record)
+                self.assertEqual(answers, [])
+        record = self.create()
+        record["fields"]["settings"] = ["agentic", " agentic "]
+        self.refused(record, "twice")
+        record = self.create()
+        record["fields"]["settings"] = ["  Resolved   % "]
+        self.assertEqual(self.accepted(record).fields["settings"], ["Resolved %"])
+
+    def test_urls_are_urls(self) -> None:
+        record = self.create()
+        record["fields"]["urls"] = ["javascript:alert(1)"]
+        self.refused(record, "not a URL")
+
+    def test_after_names_an_existing_column(self) -> None:
+        self.assertEqual(self.accepted(self.create(after="hle")).value, "hle")
+        self.refused(self.create(after="nope"), "existing benchmark")
+
+    def test_numeric_fields_are_checked(self) -> None:
+        for field, value, needle in (
+            ("decimals", 9, "0 to"),
+            ("decimals", 1.5, "whole number"),
+            ("round_to", 0, "positive"),
+            ("range", [100, 0], "low below high"),
+            ("range", [0], "low below high"),
+            ("lower_is_better", "yes", "true or false"),
+        ):
+            record = self.create()
+            record["fields"][field] = value
+            with self.subTest(field=field, value=value):
+                self.refused(record, needle)
+
+    def test_an_edit_records_only_what_changes(self) -> None:
+        answer = self.accepted(self.edit(name="HLE", short_name="HLE"))
+        self.assertEqual(answer.fields, {"short_name": "HLE"})
+        self.refused(self.edit(name="HLE"), "nothing to change")
+
+    def test_an_edit_needs_a_known_column(self) -> None:
+        self.refused(self.edit(key="ghost", name="Ghost"), "not a benchmark")
+
+    def test_a_required_field_cannot_be_cleared(self) -> None:
+        self.refused(self.edit(name=None), "cannot be cleared")
+        self.refused(self.edit(urls=[]), "at least one item")
+
+    def test_an_empty_excludes_clears_it(self) -> None:
+        doc = json.loads(json.dumps(LLM_DOC))
+        doc["benchmarks"]["hle"]["excludes"] = ["HLE w/ tools"]
+        self.write_doc(doc)
+        self.assertEqual(self.accepted(self.edit(excludes=[])).fields, {"excludes": None})
+
+    def test_a_derived_index_keeps_its_scale(self) -> None:
+        self.refused(self.edit(key="coding_index", decimals=2), "derived index")
+        self.assertEqual(
+            self.accepted(self.edit(key="coding_index", short_name="Code")).fields,
+            {"short_name": "Code"},
+        )
+
+    def test_a_range_must_cover_the_scores_already_stored(self) -> None:
+        doc = json.loads(json.dumps(LLM_DOC))
+        doc["models"][0]["scores"]["hle"] = 140
+        self.write_doc(doc)
+        self.refused(self.edit(range=[0, 100]), "outside")
+        self.accepted(self.edit(range=[0, 200]))
+
+    def test_a_score_may_go_to_a_column_the_batch_creates(self) -> None:
+        score = {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"new_bench_1_0": 12.5},
+                 "score_url": "https://example.org/new-bench"}
+        answers, failures = _answers.validate(
+            [score, self.create()], llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual(len(answers), 2)
+        self.refused(score, "not a benchmark a score can be written to")
+
+    def test_a_mapping_may_name_a_column_the_batch_creates(self) -> None:
+        mapping = self.mapping(route=LLMSTATS, route_kind="llmstats-benchmark",
+                               subject="hle", answer="new_bench_1_0")
+        answers, failures = _answers.validate(
+            [mapping, self.create()], llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertEqual([str(f) for f in failures], [])
+
+    def test_one_column_one_record(self) -> None:
+        answers, failures = _answers.validate(
+            [self.edit(short_name="H"), self.edit(name="Humanity's Last Exam")],
+            llm_path=self.llm, universes=UNIVERSES, queue=self.queue,
+        )
+        self.assertEqual([f.index for f in failures], [1])
+
+    def test_columns_are_applied_first(self) -> None:
+        order = []
+        answers = [
+            Answer(0, MODEL_EDIT, "glm-5-3"),
+            Answer(1, MODEL_CREATE, "fresh-model-1"),
+            Answer(2, BENCHMARK_CREATE, "new_bench_1_0"),
+        ]
+        with mock.patch.object(_answers, "touchable_paths", return_value=[]), \
+             mock.patch.object(_answers, "_apply_one",
+                               side_effect=lambda a, _p: order.append(a.index) or []):
+            _answers.apply(answers, llm_path=self.llm)
+        self.assertEqual(order, [2, 1, 0])
+
+    def test_a_create_lands_after_its_category_with_a_null_score_everywhere(self) -> None:
+        doc = json.loads(json.dumps(LLM_DOC))
+        doc["benchmarks"]["swe_bench_verified"]["category"] = "Software Engineering"
+        doc["models"][0]["scores"] = {"swe_bench_verified": 70, "hle": 10}
+        self.write_doc(doc)
+        answers, failures = self.check(self.create())
+        self.assertEqual(failures, [])
+        _answers.apply(answers, llm_path=self.llm)
+        written = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual(
+            list(written["benchmarks"]),
+            ["swe_bench_verified", "new_bench_1_0", "hle", "coding_index"],
+        )
+        self.assertEqual(
+            list(written["models"][0]["scores"].items()),
+            [("swe_bench_verified", 70), ("new_bench_1_0", None), ("hle", 10)],
+        )
+        self.assertEqual(written["models"][1]["scores"], {"new_bench_1_0": None})
+        self.assertEqual(written["benchmarks"]["new_bench_1_0"]["name"], "New Bench 1.0")
+
+    def test_an_edit_keeps_the_columns_own_key_order(self) -> None:
+        doc = json.loads(json.dumps(LLM_DOC))
+        doc["benchmarks"]["hle"] = {
+            "name": "HLE", "short_name": "HLE", "category": "Reasoning & Knowledge",
+            "description": "d", "settings": ["no tools"], "excludes": ["HLE w/ tools"],
+            "urls": ["https://lastexam.ai"],
+        }
+        self.write_doc(doc)
+        answers, failures = self.check(self.edit(description="Expert questions.", excludes=[], decimals=2))
+        self.assertEqual(failures, [])
+        _answers.apply(answers, llm_path=self.llm)
+        bench = json.loads(self.llm.read_text(encoding="utf-8"))["benchmarks"]["hle"]
+        self.assertEqual(
+            list(bench),
+            ["name", "short_name", "category", "decimals", "description", "settings", "urls"],
+        )
+        self.assertEqual(bench["description"], "Expert questions.")
+
+    def test_a_new_column_takes_a_score_in_the_same_batch(self) -> None:
+        """End to end through edit.py, which builds its flags from llm.json."""
+        score = {"kind": MODEL_EDIT, "name": "devstral-2", "scores": {"new_bench_1_0": 12.5},
+                 "score_url": "https://example.org/new-bench"}
+        answers, failures = _answers.validate(
+            [score, self.create()], llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertEqual(failures, [])
+        _answers.apply(answers, llm_path=self.llm)
+        written = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual(written["models"][0]["scores"]["new_bench_1_0"], 12.5)
 
 
 class TestShapes(AnswersTestCase):
