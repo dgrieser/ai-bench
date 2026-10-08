@@ -1005,7 +1005,10 @@ hoping the labels agree:
   Toolathlon off llm-stats' boards instead, keeping only rows whose note says
   "Verified" (`BOARD_METHOD_FILTERS`), plus the separate `toolathlon-verified`
   board. The three GPT-5.6 values the flat field had supplied were pre-Verified
-  numbers and were cleared on 2026-10-08.
+  numbers and were cleared on 2026-10-08. Where a variant is stated only
+  outside llm-stats' note (a system card, a tech report), the single score is
+  ruled out in `fetch_llmstats.SCORE_EXCLUSIONS`, with the sentence that says
+  so: GPT-6 Astra's three cyber numbers and Atria's context-managed BrowseComp.
 - **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
@@ -3666,6 +3669,15 @@ CritPt, GDPval-AA and the rest, before the cells were restored by hand. A page
 where neither anchor is found now reads as no record (`page_read: false`, which
 `update.py` treats as a failed page rather than as AA withdrawing anything),
 never as a neighbour's.
+
+That "failed page" half was not true until the same day. The API record still
+credits its own numbers to the model page, which counted the page as read
+whether or not it had loaded, so a connection dropped on one page made every
+column only the page carries look withdrawn, and `replace_dropped_scores()`
+handed those cells to the cards and aggregators below AA (four models, ten
+cells, in one validation run). A record with `page_read: false` now marks its
+pages failed, like a Hugging Face card read in part, and `test_precedence.py`
+pins it.
 
 ## Model Size and Context Fields
 

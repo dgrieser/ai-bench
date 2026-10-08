@@ -510,6 +510,28 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertEqual(got["c"], {"osworld_2_0": 0.5})
         self.assertNotIn("d", got)
 
+    def test_board_notes_and_exclusions_filter_rows(self) -> None:
+        # Toolathlon keeps only rows whose note says Verified; CyberGym drops
+        # AA's E2E variant; a listed (label, model) pair goes whatever its note.
+        payload = [{"model_id": "a", "license": "mit", "toolathlon_score": 0.58}]
+        boards = {
+            "toolathlon": [
+                {"model_id": "a", "score": 0.58, "analysis_method": "Max reasoning effort."},
+                {"model_id": "b", "score": 0.73, "analysis_method": "Toolathlon-Verified"},
+            ],
+            "cybergym": [
+                {"model_id": "c", "score": 0.82, "analysis_method": "chart CyberGym-E2E (AA) 82"},
+                {"model_id": "d", "score": 0.88, "analysis_method": "Pass@1"},
+            ],
+            "exploitgym": [{"model_id": "gpt-6-astra", "score": 0.424, "analysis_method": "launch table"}],
+        }
+        got = self._run(payload, lambda _mid: {"benchmarks": []}, boards)
+        self.assertNotIn("a", got)
+        self.assertEqual(got["b"], {"toolathlon": 0.73})
+        self.assertNotIn("c", got)
+        self.assertEqual(got["d"], {"cybergym": 0.88})
+        self.assertNotIn("gpt-6-astra", got)
+
     def test_a_failed_board_read_costs_only_that_board(self) -> None:
         payload = [{"model_id": "a", "license": "mit", "gpqa_score": 0.9}]
 

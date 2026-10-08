@@ -169,6 +169,30 @@ BOARD_METHOD_FILTERS: dict[str, tuple[str, re.Pattern[str]]] = {
 }
 
 
+# Single scores whose variant is stated somewhere llm-stats' note does not
+# reach -- a system card, a tech report -- so no pattern above can see it.
+# (label, llm-stats model_id) -> why. Dropped from the published record
+# whichever endpoint carried them.
+SCORE_EXCLUSIONS: dict[tuple[str, str], str] = {
+    ("exploitbench", "gpt-6-astra"): (
+        "GPT-6 Astra system card, Fig 46: the 'slightly updated scoring metric' "
+        "(full credit if any of 5 seeds reaches ACE), not the plain 300-turn arm"
+    ),
+    ("exploitgym", "gpt-6-astra"): (
+        "GPT-6 Astra system card, Fig 49: run 'without a cap on the wall-clock "
+        "time' on the v1 implementation, not the 6-hour budget"
+    ),
+    ("sec_bench_pro", "gpt-6-astra"): (
+        "GPT-6 Astra system card, Fig 48: graded by OpenAI's own root-cause "
+        "agent in place of the public grader"
+    ),
+    ("browsecomp", "atria-dawn-preview"): (
+        "Atria tech report (arXiv 2609.15818, Appendix B): 'BrowseComp "
+        "additionally uses the discard-all context-management strategy'"
+    ),
+}
+
+
 def board_row_kept(label: str, method: str | None) -> bool:
     """Whether a board row's note allows it into the label's column."""
     rule = BOARD_METHOD_FILTERS.get(label)
@@ -517,6 +541,10 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
         for record in results:
             for field in (HLE_LABEL, *NO_TOOL_FIELDS, BROWSECOMP_FIELD):
                 record["scores"].pop(field, None)
+    for record in results:
+        for label in list(record["scores"]):
+            if (label, record["model"]) in SCORE_EXCLUSIONS:
+                del record["scores"][label]
     results = [r for r in results if r["scores"]]
 
     results.sort(key=lambda r: r["model"])

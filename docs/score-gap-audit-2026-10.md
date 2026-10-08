@@ -38,6 +38,7 @@ drifted to about 4,600 characters from the start.
 | k2-horizon-3-7b | aime_2025 / aime_2026 / livecodebench / bfcl_v4 | 89.2 / 90.8 / 64.5 / 64.6 | model card's "after" column (the released checkpoint), now read |
 | k2-horizon-7b | aime_2025 / aime_2026 / livecodebench / bfcl_v4 / swe_bench_verified | 90.3 / 90.2 / 72.7 / 67.0 / 72.4 | same |
 | dots3-note-prev | livecodebench / charxiv_reasoning | 91.5 / 83.1 | hand, from the card's table images (no fetcher reads images) |
+| deepseek-v4-1-flash | aime_2026 | 100 | hand, tech report Figure 12 and Appendix B.3 ("AIME 2026 reaches a full 100%", max effort, no tools) |
 | gemini-4-argon | agents_last_exam | 39.5 | hand, Google's evaluation methodology (binary pass rate, ALE-Claw harness) |
 
 Models with nothing new to find:
@@ -72,6 +73,11 @@ Models with nothing new to find:
 | Step 5 Preview on Epoch | `__closed_weights__`, set before the model was tracked | mapped |
 | gpt-6-astra on Datacurve | All five effort rows `__unmappable__` | mapped |
 
+| gpt-6-astra exploitbench 100 / exploitgym 42.4 / sec_bench_pro 85.4 | OpenAI's system card (Figs 46, 48, 49): updated ExploitBench metric, no 6-hour ExploitGym cap, OpenAI's own SEC-bench grader | `fetch_llmstats.SCORE_EXCLUSIONS`; cells cleared |
+| atria-dawn-preview browsecomp 92.5 | Tech report: "BrowseComp additionally uses the discard-all context-management strategy" | `fetch_llmstats.SCORE_EXCLUSIONS` and a card exclusion; cleared |
+| step-5-preview, no AA scores | AA's `step-5` ("Step 5 Preview", release `step-5-preview`, 600B-A27B) was on the AA ignore list | mapped to `step-5` |
+| (any model) page-only AA cells | A model page that failed to load still counted as read, so its page-only cells looked withdrawn and went to lower-ranked sources | an unread page is marked failed (`update.update_scores`) |
+
 The Terminal-Bench 2.1 ingest now keeps only Terminus 2 rows
 (`fetch_tbench.REQUIRED_AGENT`). No cell changes today, but the board's best
 row per model was a Codex or Claude Code run.
@@ -80,12 +86,6 @@ row per model was a Codex or Claude Code run.
 
 These need a decision rather than a fix:
 
-- **Step 5 Preview has no AA mapping.** AA's slug `step-5`, a record named
-  "Step 5 Preview" with release `step-5-preview` and 600B-A27B, is on
-  `model-name-mapping-llm-to-artificialanalysis-ignored.json` for
-  step-5-preview. If that was not deliberate,
-  `./answer.py update_artificialanalysis_mapping.py step-5-preview step-5 -w`
-  brings in AA's own runs.
 - **Four `swe_atlas_rf` values Scale no longer lists:** deepseek-v4-pro 53.8,
   glm-5-3 51.4, kimi-k3 46.2 and minimax-m3 28.1. They are credited to the
   refactoring board, which has none of them today. They stay because a dropped
@@ -97,15 +97,10 @@ These need a decision rather than a fix:
   59.7** (hand entries citing threatfrontier.com): the first is Ant Group's
   run of DeepSeek, from Ling's launch table. The second's revision was
   inferred.
-- **atria-dawn-preview browsecomp 92.5** (llm-stats): the tech report says
-  "BrowseComp additionally uses the discard-all context-management strategy".
-  llm-stats' note does not say so, so the scaffold filter cannot see it.
-- **gpt-6-astra exploitbench 100 / exploitgym 42.4 / sec_bench_pro 85.4**
-  (llm-stats, from OpenAI's launch table): OpenAI's system card describes an
-  updated ExploitBench metric, no 6-hour cap on ExploitGym and its own
-  SEC-bench grader. GPT-6 Sol, GPT-6 Luna and GPT-6.1 Sol publish the same
-  variants (e.g. Sol 81.7 / 22.1 / 66.3) and were **not** added for that
-  reason.
+- **GPT-6 Sol, GPT-6 Luna and GPT-6.1 Sol cyber numbers** (e.g. Sol 81.7 /
+  22.1 / 66.3) use the same off-variant setups as Astra's (updated
+  ExploitBench metric, no 6-hour ExploitGym cap, OpenAI's own SEC-bench
+  grader) and were not added.
 - **evals.report and Vals "DeepSeek V3.2"** rows map to deepseek-v3-2-0925
   (V3.2-Exp) and may be the final V3.2. The cells involved are
   swe_bench_multilingual 59 and bfcl_v4 56.7 (evals.report), and
@@ -139,3 +134,38 @@ These need a decision rather than a fix:
 The first-party boards for LiveCodeBench, MMMU-Pro, CharXiv and MathVista are
 machine-readable but frozen (last data 2025-04 to 2026-07) and list none of the
 new models.
+
+## Image-only sources
+
+A second pass read every benchmark image the 36 models publish: card PNGs,
+launch-post charts (OpenAI's are Vega-Lite data), X launch images,
+system-card figures, and the result tables that tech reports and Google's
+evaluation PDF render as images. It found two scores not already published as
+text: dots3's LiveCodeBench and CharXiv, and DeepSeek-V4.1-Flash's AIME 2026.
+The Anthropic ExploitGym bar labels confirmed the values above. It also turned
+up three variants that must not be used:
+
+- Ling-3.0-flash-VL's CharXiv 81.30: the table marks no-Python runs by
+  underlining, and Ling's own cell is not underlined.
+- dots3's headline BrowseComp 83.3: the appendix labels it "w/ CM", meaning
+  context management.
+- Ling-3.1-flash's FrontierSWE 75.16: it names no revision, and its comparison
+  rows match neither board.
+
+Gemini 4 Argon's results table and every OpenAI chart cover only benchmarks
+already stored or not tracked.
+
+## Validation with the AA key
+
+With the API key, a full refresh of every source, AA included, changed only
+what was expected:
+
+- Step 5 Preview now reads AA's `step-5` run.
+- Rounding steps moved two GDPval and one Briefcase value.
+- Claude Haiku 5.5 got its context window.
+
+An AA-only dry run before it agreed with every one of the 154 restored cells.
+No two models share an identical ten-column AA profile, which was the
+corruption's signature. The first full run had surfaced the failed-page bug
+above: ten page-only cells on four models were about to be handed to
+lower-ranked sources. A repeat dry run after the write changes nothing.

@@ -1276,6 +1276,15 @@ def update_scores(
             if isinstance(aa_slug, str) and aa_slug
         }
         all_read_pages |= read_pages
+        if not complete:
+            # The API record still credits its numbers to these pages, which
+            # would count them as read; what the page itself carries (most
+            # columns on the free tier, HLE, GPQA, SciCode, the tau benches...)
+            # was never seen, so its absence must not read as AA withdrawing
+            # it. A dropped connection to one model page used to hand that
+            # model's page-only cells to the cards and aggregators below AA.
+            for page in read_pages:
+                RUN_REPORTS.failed(page)
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
             aa_value = None
             aa_key_used = None
