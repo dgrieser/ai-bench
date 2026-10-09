@@ -1,37 +1,3 @@
 {
-  "questions": [
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hle",
-          "reason": "the same name without the parenthetical"
-        },
-        {
-          "confidence": "weak",
-          "option": "hle_diamond",
-          "reason": "the same name without the parenthetical: exact to HLE, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'HLE (text)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "HLE (text)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'IFEval (loose)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "subject": "IFEval (loose)",
-      "universe": "benchmarks"
-    }
-  ]
+  "questions": []
 }
