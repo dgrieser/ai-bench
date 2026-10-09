@@ -257,12 +257,12 @@ class TestBoardFile(unittest.TestCase):
 class TestGetScores(unittest.TestCase):
     def test_rows_carry_the_column_the_board_feeds(self) -> None:
         body = page(
-            "mmmu",
+            "gpqa",
             {"overall": {"zai/glm-5.3-flash": cell(86.01), "openai/gpt-5.5": cell(88.27)}},
         )
         with stub_page(body):
-            rows = fv.get_scores(["mmmu"])
-        self.assertEqual({r["key"] for r in rows}, {"mmmu_pro"})
+            rows = fv.get_scores(["gpqa"])
+        self.assertEqual({r["key"] for r in rows}, {"gpqa_diamond"})
         by_model = {r["model"]: r for r in rows}
         self.assertEqual(by_model["zai/glm-5.3-flash"]["score"], 86.01)
         self.assertEqual(by_model["zai/glm-5.3-flash"]["label"], "glm-5.3-flash")
@@ -288,7 +288,7 @@ class TestGetScores(unittest.TestCase):
 
     def test_a_cell_without_a_number_is_dropped(self) -> None:
         body = page(
-            "mmmu",
+            "gpqa",
             {
                 "overall": {
                     "zai/glm-5.3": cell(86.0),
@@ -298,7 +298,7 @@ class TestGetScores(unittest.TestCase):
             },
         )
         with stub_page(body):
-            rows = fv.get_scores(["mmmu"])
+            rows = fv.get_scores(["gpqa"])
         self.assertEqual([r["model"] for r in rows], ["zai/glm-5.3"])
 
 
@@ -354,10 +354,10 @@ class TestBoardCache(unittest.TestCase):
                 yield fetch_html
 
     def test_the_second_read_of_a_board_does_not_fetch_it(self) -> None:
-        body = page("mmmu", {"overall": {"zai/glm-5.3": cell(86.0)}})
+        body = page("gpqa", {"overall": {"zai/glm-5.3": cell(86.0)}})
         with self._serving(body) as fetch_html:
-            first = fv.get_scores(["mmmu"])
-            second = fv.get_scores(["mmmu"])
+            first = fv.get_scores(["gpqa"])
+            second = fv.get_scores(["gpqa"])
         self.assertEqual(fetch_html.call_count, 1)
         self.assertEqual(first, second)
 
@@ -365,27 +365,27 @@ class TestBoardCache(unittest.TestCase):
         # The task is part of the cache key, so pinning a board to another task
         # misses rather than re-reading the task the stored crawl carried.
         body = page(
-            "mmmu",
+            "gpqa",
             {
                 "overall": {"zai/glm-5.3": cell(86.0)},
                 "vision": {"zai/glm-5.3": cell(70.0)},
             },
         )
         with self._serving(body) as fetch_html:
-            self.assertEqual(fv.get_scores(["mmmu"])[0]["score"], 86.0)
-            with mock.patch.dict(fv.TASKS, {"mmmu": "vision"}):
-                self.assertEqual(fv.get_scores(["mmmu"])[0]["score"], 70.0)
+            self.assertEqual(fv.get_scores(["gpqa"])[0]["score"], 86.0)
+            with mock.patch.dict(fv.TASKS, {"gpqa": "vision"}):
+                self.assertEqual(fv.get_scores(["gpqa"])[0]["score"], 70.0)
         self.assertEqual(fetch_html.call_count, 2)
 
     def test_a_tightened_version_pin_refuses_a_stored_board(self) -> None:
         # The pin is the guard against a board revised in place; a board that
         # passed it yesterday must not be waved through from the cache today.
-        body = page("mmmu", {"overall": {"zai/glm-5.3": cell(86.0)}}, version="1")
+        body = page("gpqa", {"overall": {"zai/glm-5.3": cell(86.0)}}, version="1")
         with self._serving(body) as fetch_html:
-            fv.get_scores(["mmmu"])
-            with mock.patch.dict(fv.VERSIONS, {"mmmu": "2"}):
+            fv.get_scores(["gpqa"])
+            with mock.patch.dict(fv.VERSIONS, {"gpqa": "2"}):
                 with self.assertRaises(ValueError) as caught:
-                    fv.get_scores(["mmmu"])
+                    fv.get_scores(["gpqa"])
         self.assertIn("revised in place", str(caught.exception))
         self.assertEqual(fetch_html.call_count, 1)
 

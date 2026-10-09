@@ -80,7 +80,12 @@ BOARD_4_0 = board(
     "terminal_bench_4_0",
     [row("Alpha", 57.88), row("Alpha", 44.55, effort="high"), row("Beta", 41.82, agent="Codex")],
 )
-BOARD_2_1 = board("terminal_bench_2_1", [row("Alpha", 62.5), row("Gamma", 30.0)])
+BOARD_2_1 = board(
+    "terminal_bench_2_1",
+    # The 2.1 column is the Terminus 2 run; the board ranks every agent together.
+    [row("Alpha", 62.5, agent="Terminus 2"), row("Alpha", 88.0, agent="Codex"),
+     row("Delta", 75.0, agent="Codex"), row("Gamma", 30.0, agent="Terminus 2")],
+)
 BOARD_2_0 = board(
     "terminal_bench_2_0",
     [
@@ -244,7 +249,7 @@ class TestTwoZeroBoard(unittest.TestCase):
         self.assertNotIn("Multiple", {e["model"] for e in on("terminal_bench_2_0", scores())})
 
     def test_boards_without_the_flag_keep_every_row(self):
-        self.assertEqual(len(on("terminal_bench_2_1", scores())), 2)
+        self.assertEqual(len(on("terminal_bench_2_1", scores())), 4)
 
 
 class TestIngest(unittest.TestCase):
@@ -257,6 +262,8 @@ class TestIngest(unittest.TestCase):
             by_key = update.fetch_tbench_data(update.TBENCH_SCRIPT, Path("unused"))
         self.assertEqual(by_key["terminal_bench_4_0"]["alpha"]["score"], 57.88)
         self.assertEqual(by_key["terminal_bench_2_1"]["alpha"]["score"], 62.5)
+        # A model with no Terminus 2 run gets nothing from that board.
+        self.assertNotIn("delta", by_key["terminal_bench_2_1"])
         self.assertEqual(by_key["terminal_bench_2_0"]["alpha"]["score"], 70.0)
         self.assertNotIn("gamma", by_key["terminal_bench_2_1"])
 

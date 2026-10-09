@@ -103,7 +103,7 @@ from _hle_diamond_mapping import load_hle_diamond_to_slug_mapping
 from _openrouter_mapping import load_openrouter_to_slug_mapping
 from _epoch_mapping import load_epoch_to_slug_mapping
 from _osworld_mapping import load_osworld_to_slug_mapping
-from _huggingface_mapping import load_hf_to_key_mapping
+from _huggingface_mapping import load_hf_card_exclusions, load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _toolathlon_mapping import load_toolathlon_to_slug_mapping
 from _programbench_mapping import load_programbench_to_slug_mapping
@@ -1276,6 +1276,15 @@ def update_scores(
             if isinstance(aa_slug, str) and aa_slug
         }
         all_read_pages |= read_pages
+        if not complete:
+            # The API record still credits its numbers to these pages, which
+            # would count them as read; what the page itself carries (most
+            # columns on the free tier, HLE, GPQA, SciCode, the tau benches...)
+            # was never seen, so its absence must not read as AA withdrawing
+            # it. A dropped connection to one model page used to hand that
+            # model's page-only cells to the cards and aggregators below AA.
+            for page in read_pages:
+                RUN_REPORTS.failed(page)
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
             aa_value = None
             aa_key_used = None
@@ -1483,6 +1492,7 @@ def fetch_huggingface_data(
         raise RuntimeError("Unexpected huggingface JSON format: expected a list")
 
     hf_to_key = load_hf_to_key_mapping(mapping_path)
+    excluded = load_hf_card_exclusions()
     # slug -> {benchmark_key -> (best score, model-card URL it came from)}
     by_slug: dict[str, dict[str, tuple[Any, str]]] = {}
     for row in payload:
@@ -1502,9 +1512,10 @@ def fetch_huggingface_data(
             # A channel of the card failed to load; what it lacks is unknown.
             RUN_REPORTS.failed(url)
         mapped: dict[str, tuple[int, int, Any, str]] = {}
+        ruled_out = excluded.get(repo.casefold(), set())
         for label, value in scores.items():
             key = hf_to_key.get(label)
-            if not key or value is None:
+            if not key or value is None or label in ruled_out:
                 continue
             # Several card labels can alias one llm.json benchmark, and they do
             # not all name the same run. Three things decide between them, in
@@ -2278,6 +2289,8 @@ def fetch_tbench_data(
         slug = tbench_to_slug.get(tbench_name)
         if not slug:
             continue
+        if not fetch_tbench.agent_allowed(key, row.get("agent")):
+            continue
         # One row per (agent, model, reasoning effort); the leaderboard's own
         # ranking takes the best run, so the collision rule matches it.
         keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
@@ -2760,6 +2773,7 @@ def fetch_spheron_data(
     if not isinstance(payload, list):
         raise RuntimeError("Unexpected spheron JSON format: expected a list")
 
+    spheron_folded = {path.casefold(): slug for path, slug in spheron_to_slug.items()}
     # slug -> {quant -> vram GB, source -> {quant -> per-model page}}
     by_slug: dict[str, dict[str, Any]] = {}
     for row in payload:
@@ -2768,7 +2782,10 @@ def fetch_spheron_data(
         name = row.get("model")
         if not isinstance(name, str):
             continue
-        slug = spheron_to_slug.get(name)
+        # Spheron answers with its own capitalisation of the repo id
+        # (nex-agi/Nex-N2.5-Max for a request for Nex-N2.5-max), and Hugging
+        # Face ids are case-insensitive, so the lookup is too.
+        slug = spheron_to_slug.get(name) or spheron_folded.get(name.casefold())
         if not slug:
             continue
         vram = by_slug.setdefault(

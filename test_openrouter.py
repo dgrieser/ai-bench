@@ -97,6 +97,16 @@ class TestParse(unittest.TestCase):
         self.assertEqual(row["runs"], 2)
         self.assertEqual(row["score"], 85.0)
 
+    def test_a_run_at_chance_is_a_broken_endpoint(self) -> None:
+        # Ling-3.0-flash-Fin: one endpoint under the 25% a four-option guess
+        # scores, beside one that works. The median of the two was 39.6.
+        row = fo.parse_model(
+            page([score_row("DeepInfra", 0.159, "e1"), score_row("Novita", 0.632, "e2")]),
+            "x/model",
+        )
+        self.assertEqual(row["runs"], 1)
+        self.assertEqual(row["score"], 63.2)
+
     def test_other_benchmarks_are_not_read(self) -> None:
         row = fo.parse_model(
             page(

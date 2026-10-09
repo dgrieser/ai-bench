@@ -587,6 +587,25 @@ class TestDroppedScores(unittest.TestCase):
         self.assertEqual(model["scores"]["mmlu_pro"], 80.9)
         self.assertEqual(model["scores_source"]["mmlu_pro"], HF_CARD)
 
+    def test_a_model_page_that_failed_to_load_drops_nothing(self) -> None:
+        """2026-10-08: a dropped connection to one model page left the API
+        record crediting its numbers to that page, which counted the page as
+        read, and the cells only the page carries went to cards and Epoch."""
+        doc = self.aa_doc()
+        by_slug = {
+            m["name"]: update.merge_aa_models([{
+                "slug": m["name"], "name": m["name"],
+                "evaluations": {"ifbench": 0.4, **({"mmlu_pro": 0.81} if m["name"] == "other" else {})},
+                "page_read": m["name"] != "m",
+            }])
+            for m in doc["models"]
+        }
+        update.update_scores(doc, by_slug)
+        model = doc["models"][0]
+        update.apply_score(doc, model, "m", "mmlu_pro", 80.9, HF_CARD, [], fill_only=True)
+        update.replace_dropped_scores(doc, [])
+        self.assertEqual(model["scores"]["mmlu_pro"], 80.5)
+
     def test_the_url_backfill_records_nothing(self) -> None:
         model = model_with(score=39.6, source=None)
         update.apply_score(DOC, model, "m", "ifbench", 39.6, AA_PAGE, [], fill_urls_only=True)

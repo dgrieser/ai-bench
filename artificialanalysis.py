@@ -460,13 +460,30 @@ def _normalize_page_text(text: str):
     return normalized
 
 
-def _current_model_chunk(text: str, slug: str):
-    # The page's own record lives in the "currentModel" payload; the rest of the
-    # page carries comparison models with the same keys, so anchor on that
-    # payload and confirm the slug before reading anything out of it.
+def _current_model_start(text: str, slug: str) -> int:
+    """Where the page's own model record starts, or -1 if it cannot be told apart.
+
+    The page carries hundreds of comparison models with the same keys, so the
+    first ``"slug":"<slug>"`` is not necessarily this model's record. Two
+    layouts are live. The older one wraps the record in a "currentModel"
+    payload. The newer one (October 2026) has no such wrapper: the slug first
+    appears in a "currentRelease" summary and a release picker, neither of
+    which carries metrics, and the record itself is the one object that opens
+    ``{"id":"<uuid>","slug":"<slug>"``. Reading on from the first bare slug
+    there landed on the next record in the list -- on most pages a pinned
+    comparison model -- and wrote its numbers onto every model with that
+    layout. A page where neither anchor is found reads as no record rather than
+    as somebody else's.
+    """
     anchor = text.find('"currentModel":')
-    if anchor == -1 or f'"slug":"{slug}"' not in text[anchor : anchor + 2000]:
-        anchor = text.find(f'"slug":"{slug}"')
+    if anchor != -1 and f'"slug":"{slug}"' in text[anchor : anchor + 2000]:
+        return anchor
+    match = re.search(r'\{"id":"[^"]*","slug":"' + re.escape(slug) + '"', text)
+    return match.start() if match else -1
+
+
+def _current_model_chunk(text: str, slug: str):
+    anchor = _current_model_start(text, slug)
     if anchor == -1:
         return ""
     return text[anchor : anchor + 2000]
@@ -551,13 +568,15 @@ def _is_aa_own_url(url: str) -> bool:
     return any(host == h or host.endswith("." + h) for h in _AA_OWN_HOSTS)
 
 
-def _parse_page_creator_name(normalized: str) -> str:
-    """The creator the page itself is about, off its "currentModel" record.
+def _parse_page_creator_name(normalized: str, slug: str = "") -> str:
+    """The creator the page itself is about, off its own model record.
 
     The page lists hundreds of models, each with a creator, so only the first
-    creator object after "currentModel" is this model's.
+    creator object in this model's record is this model's.
     """
     start = normalized.find('"currentModel":{')
+    if start < 0 and slug:
+        start = _current_model_start(normalized, slug)
     if start < 0:
         return ""
     match = re.compile(r'"creator":\{([^{}]*)\}').search(normalized, start)
@@ -567,7 +586,7 @@ def _parse_page_creator_name(normalized: str) -> str:
     return name.group(1) if name else ""
 
 
-def _parse_creator(text: str, expected_name: str = ""):
+def _parse_creator(text: str, expected_name: str = "", slug: str = ""):
     """The model's creator: a name, and the creator's own page where one is linked.
 
     The name is the API's when it sent one, else the page's own record of it.
@@ -576,7 +595,7 @@ def _parse_creator(text: str, expected_name: str = ""):
     there is nothing to tell the two apart.
     """
     normalized = _normalize_page_text(text)
-    name = expected_name or _parse_page_creator_name(normalized)
+    name = expected_name or _parse_page_creator_name(normalized, slug)
     result = {"name": name, "url": ""}
     if not name:
         return result
@@ -680,22 +699,38 @@ _PAGE_OBJECT_FIELDS = {
 }
 
 
+# How far into a model record its "microevalsEnabled" may sit. The header
+# before it (names, effort, release, licence, sizes) runs to about a thousand
+# characters; a match beyond this belongs to a later record.
+_RECORD_HEADER_MAX = 4000
+
+# How far past "microevalsEnabled" a record's metrics may run. The record has
+# grown past the 5000 characters this used to be: briefcaseBreakdown, which
+# feeds aa_briefcase, now sits about 4,600 in, and the speed and TTFT spreads
+# after it had already fallen off the end. The next record's own
+# "microevalsEnabled" still ends the window first wherever it comes sooner.
+_METRICS_WINDOW = 12000
+
+
 def _metrics_chunk(text: str, slug: str) -> str:
     """The page's own metrics record, from its "microevalsEnabled" onward.
 
-    Capped at 5000 characters, and at the next record's "microevalsEnabled":
+    Capped at _METRICS_WINDOW characters, and at the next record's "microevalsEnabled":
     the page lists comparison models right after the current one with the same
     keys, so on a short record the window would otherwise run into the next
     model's, and a field the current record lacks would be read off its
-    neighbour.
+    neighbour. It starts from the record ``_current_model_start`` finds, never
+    from the first mention of the slug, and the "microevalsEnabled" it reads
+    from has to sit in that record's own header: one further on is another
+    model's.
     """
-    slug_pos = text.find(f'"slug":"{slug}"')
-    if slug_pos == -1:
+    start = _current_model_start(text, slug)
+    if start == -1:
         return ""
-    me_pos = text.find('"microevalsEnabled"', slug_pos)
+    me_pos = text.find('"microevalsEnabled"', start, start + _RECORD_HEADER_MAX)
     if me_pos == -1:
         return ""
-    end = me_pos + 5000
+    end = me_pos + _METRICS_WINDOW
     next_record = text.find('"microevalsEnabled"', me_pos + 1, end)
     if next_record != -1:
         end = next_record
@@ -788,7 +823,7 @@ def _fetch_page_metrics(slug: str, creator_name: str = ""):
     result["context_window"] = _parse_context_window(text, slug)
     result["params"] = _parse_params(text, slug)
     result["hugging_face_url"] = _parse_hugging_face_url(text)
-    result["creator"] = _parse_creator(text, creator_name)
+    result["creator"] = _parse_creator(text, creator_name, slug)
     metrics = _parse_metrics_block(text, slug)
     result.update(metrics)
     result["page_read"] = bool(metrics)

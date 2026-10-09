@@ -108,8 +108,11 @@ BENCHMARKS: dict[str, str] = {
     "lcb": "livecodebench",
     "gpqa": "gpqa_diamond",
     "mmlu_pro": "mmlu_pro",
-    # Titled "MMMU Pro" on the site; the metadata slug is the bare "mmmu".
-    "mmmu": "mmmu_pro",
+    # Not read: Vals' "MMMU Pro" board (slug "mmmu") is the 4-option
+    # multiple-choice set -- "We based this benchmark on the standard 4-option
+    # multiple-choice format" -- where the mmmu_pro column is the 10-option
+    # one, which reads several points lower for the same model. The board is
+    # archived besides (last updated 2026-09-01).
     # Read through TASKS: see below.
     "aime": "aime_2025",
     # Vals' own benchmark rather than a re-run of someone else's, which is what
