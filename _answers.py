@@ -76,6 +76,10 @@ MODEL_ADD = "model-add"
 MODEL_CREATE = "model-create"
 MODEL_EDIT = "model-edit"
 MODEL_RENAME = "model-rename"
+# Take an entry out of llm.json, scores and history with it, and dismiss its
+# slug so check_new.py does not offer it again. A reference model is not one:
+# it goes with REFERENCE_REMOVE, which keeps the list and the file in step.
+MODEL_DELETE = "model-delete"
 # The reference list (see _reference.py). Both kinds move reference-models.json
 # *and* llm.json together, because the two are one decision: a slug on the list
 # with no entry behind it is inert, and an entry left behind after its slug
@@ -100,6 +104,7 @@ KINDS = frozenset(
         MODEL_CREATE,
         MODEL_EDIT,
         MODEL_RENAME,
+        MODEL_DELETE,
         REFERENCE_ADD,
         REFERENCE_REMOVE,
         BENCHMARK_CREATE,
@@ -114,7 +119,15 @@ BENCHMARK_KINDS = frozenset({BENCHMARK_CREATE, BENCHMARK_EDIT})
 # that follows a rename of the same model looks for a name that is no longer
 # there and takes every other answer down with it.
 MODEL_KINDS = frozenset(
-    {MODEL_ADD, MODEL_CREATE, MODEL_EDIT, MODEL_RENAME, REFERENCE_ADD, REFERENCE_REMOVE}
+    {
+        MODEL_ADD,
+        MODEL_CREATE,
+        MODEL_EDIT,
+        MODEL_RENAME,
+        MODEL_DELETE,
+        REFERENCE_ADD,
+        REFERENCE_REMOVE,
+    }
 )
 
 # The route whose mapping file runs the other way round: its keys are llm.json
@@ -203,6 +216,8 @@ class Answer:
             return f"create model {self.subject!r}" + (f" ({named})" if named else "")
         if self.kind == MODEL_RENAME:
             return f"rename model {self.subject!r} -> {self.value!r}"
+        if self.kind == MODEL_DELETE:
+            return f"delete model {self.subject!r} and its scores"
         if self.kind == REFERENCE_ADD:
             return f"carry {self.subject!r} as a reference model"
         if self.kind == REFERENCE_REMOVE:
@@ -593,6 +608,8 @@ def _validate_one(
         return _validate_model_create(index, record, model_names)
     if kind == MODEL_RENAME:
         return _validate_model_rename(index, record, model_names)
+    if kind == MODEL_DELETE:
+        return _validate_model_delete(index, record, model_names)
     if kind in (REFERENCE_ADD, REFERENCE_REMOVE):
         return _validate_reference(index, record, kind, universes)
     if kind == BENCHMARK_CREATE:
@@ -982,6 +999,28 @@ def _validate_model_rename(
     if new in model_names:
         raise AnswerError(f"{new!r} is already a model in llm.json; merge them by hand")
     return Answer(index=index, kind=MODEL_RENAME, subject=old, value=new)
+
+
+def _validate_model_delete(
+    index: int,
+    record: dict[str, Any],
+    model_names: set[str],
+) -> Answer:
+    """Drop an entry for good -- one that should never have been tracked.
+
+    Only an existing entry, and never a reference model: that one is on
+    reference-models.json too, and taking it out of llm.json alone would leave
+    a slug on the list that update.py re-adds on the next refresh.
+    """
+    name = _subject_of(record, "name")
+    if name not in model_names:
+        raise AnswerError(f"{name!r} is not a model in llm.json")
+    if name in _reference.load_reference_slugs():
+        raise AnswerError(
+            f"{name!r} is a reference model; stop carrying it from the Reference "
+            f"tab (a {REFERENCE_REMOVE!r} record) instead"
+        )
+    return Answer(index=index, kind=MODEL_DELETE, subject=name)
 
 
 def _validate_reference(
@@ -1387,6 +1426,9 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
     if answer.kind == MODEL_RENAME:
         return _rename.rename(answer.subject, answer.value, llm_path)
 
+    if answer.kind == MODEL_DELETE:
+        return _delete_model(answer, llm_path)
+
     if answer.kind == REFERENCE_ADD:
         return _add_reference(answer, llm_path)
 
@@ -1540,6 +1582,36 @@ def _remove_reference(answer: Answer, llm_path: Path) -> list[str]:
         llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         log.append(f"{llm_path.name}: dropped {answer.subject!r}")
     return log + _sync_reference_flags(llm_path)
+
+
+def _delete_model(answer: Answer, llm_path: Path) -> list[str]:
+    """Drop the entry, and make sure nothing brings it back by itself.
+
+    The scores and their history live inside the entry, so they go with it.
+    What would re-add it is check_new.py, which offers every open-weights model
+    AA publishes that llm.json lacks: the slug is dismissed, exactly as an
+    "ignore it" answer to that question would, and a pending decision about
+    it is cleared. Mapping files are left alone -- a source name mapped onto
+    the slug simply matches nothing, and picks up again if the model is ever
+    added back under the same name.
+    """
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    scored = _new_models._score_count(doc, answer.subject)
+    if not _new_models.remove_model(doc, answer.subject):
+        raise AnswerError(f"{answer.subject!r} is not a model in {llm_path.name}")
+    # An index ranks every model against the rest, so one leaving re-ranks the
+    # survivors; same as prune.py.
+    derive_indexes.refresh_and_report(doc)
+    llm_path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    log = [f"{llm_path.name}: deleted {answer.subject!r} ({scored} score(s) dropped)"]
+
+    if _new_models.dismiss(answer.subject):
+        log.append(f"{_new_models.DISMISSED_FILE.name}: {answer.subject!r} is not offered again")
+    decisions = _new_models.load_decisions()
+    if decisions.pop(answer.subject, None) is not None:
+        _new_models.write_decisions(decisions)
+        log.append(f"{_new_models.DECISIONS_FILE.name}: cleared the pending decision on {answer.subject!r}")
+    return log
 
 
 def _sync_reference_flags(llm_path: Path) -> list[str]:

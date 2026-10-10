@@ -3586,14 +3586,22 @@ function renderModels() {
 /* One card per model, folded to its name until opened. The form inside is
    only built on the first unfold: 179 models times every column would be ten
    thousand inputs on a phone, almost none of which a sitting ever looks at. */
+const MODEL_DELETE_KEY = (name) => `model-delete  ${name}`;
+
 function renderModelCard(model) {
   const key = `model-edit  ${model.name}`;
   const renameKey = `model-rename  ${model.name}`;
+  const deleteKey = MODEL_DELETE_KEY(model.name);
   const rename = state.answers.get(renameKey);
   const existing = state.answers.get(key);
-  const lockKey = isSent(renameKey) ? renameKey : key;
+  const deleting = state.answers.has(deleteKey);
+  /* Whichever of the three is in flight: a reload drops the drafted record but
+     not the lock. */
+  const lockKey = [deleteKey, renameKey].find((k) => isSent(k) || isApplied(k)) || key;
   const locked = isSent(lockKey) || isApplied(lockKey);
-  const card = el("details", { className: `card model-card${existing || rename ? " answered" : ""}` });
+  const card = el("details", {
+    className: `card model-card${existing || rename || deleting ? " answered" : ""}`,
+  });
   const columns = benchmarks();
   const count = scoredCount(model);
   card.append(el("summary", {}, [
@@ -3603,6 +3611,7 @@ function renderModelCard(model) {
       chip("added", model.date_added || "?"),
       chip("scored", `${count} / ${columns.length}`,
         { className: count < columns.length / 4 ? "now" : "" }),
+      deleting ? chip("", "deleted on the next run", { prose: true, className: "now" }) : null,
     ]),
   ]));
 
@@ -3610,9 +3619,23 @@ function renderModelCard(model) {
   const build = () => {
     if (built) return;
     built = true;
+    if (deleting) {
+      card.append(
+        el("div", { className: "options" }, option("Keep it", "cancel the delete", {
+          pressed: false,
+          onclick: () => { state.answers.delete(deleteKey); render(); },
+        })),
+        el("p", { className: "note-text" },
+          `${model.name} leaves llm.json on the next run, with its ${count} score${count === 1 ? "" : "s"} `
+          + "and their history, and its slug is dismissed so the new-model check does "
+          + "not offer it again. Mapping files are left as they are."),
+      );
+      return;
+    }
     fillModelCard(card, model, { key, renameKey, rename, existing, columns });
+    card.append(deleteBlock(model, { key, renameKey, deleteKey }));
   };
-  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename);
+  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting);
   card.ontoggle = () => {
     if (card.open) { state.modelOpen.add(model.name); build(); }
     else state.modelOpen.delete(model.name);
@@ -3621,6 +3644,35 @@ function renderModelCard(model) {
      to be there by then. */
   if (card.open || locked) build();
   return guard(card, lockKey);
+}
+
+/* Delete, for an entry that should never have been tracked. One record per
+   model per run, so drafting it drops this card's edit and rename. A reference
+   model is not deleted here: it is on reference-models.json too, and the
+   Reference tab's Stop carrying takes both. */
+function deleteBlock(model, { key, renameKey, deleteKey }) {
+  const reference = model.reference === true || (state.reference.slugs || []).includes(model.name);
+  const block = el("div", { className: "provenance" });
+  block.append(el("div", { className: "field" }, el("label", {}, "delete")));
+  if (reference) {
+    block.append(el("p", { className: "note-text" },
+      "A reference model: stop carrying it from the Reference tab, which removes "
+      + "the slug and this entry together."));
+    return block;
+  }
+  block.append(el("div", { className: "options" }, option("Delete this model",
+    "drops the entry from llm.json, scores and history included", {
+      pressed: false,
+      className: "decline",
+      onclick: () => {
+        if (!confirm(`Delete ${model.name} and all of its scores?`)) return;
+        state.answers.delete(key);
+        state.answers.delete(renameKey);
+        state.answers.set(deleteKey, { kind: "model-delete", name: model.name });
+        render();
+      },
+    })));
+  return block;
 }
 
 function fillModelCard(card, model, { key, renameKey, rename, existing, columns }) {

@@ -35,6 +35,7 @@ from _answers import (
     MAPPING,
     MODEL_ADD,
     MODEL_CREATE,
+    MODEL_DELETE,
     MODEL_EDIT,
     MODEL_RENAME,
     NEW_MODEL,
@@ -610,6 +611,57 @@ class TestModelRename(AnswersTestCase):
             log = _answers._apply_one(answer, self.llm)
         renamed.assert_called_once_with("devstral-2", "devstral-2-0512", self.llm)
         self.assertEqual(log, ["did it"])
+
+
+class TestModelDelete(AnswersTestCase):
+    """Dropping an entry for good, from the Models tab's Delete button."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.list_path = self.tmp / "reference-models.json"
+        self.list_path.write_text(json.dumps(["aa-one"]), encoding="utf-8")
+        self.decisions = self.tmp / "check_new-decisions.json"
+        self.dismissed = self.tmp / "check_new-dismissed.json"
+        for patcher in (
+            mock.patch.object(_reference, "REFERENCE_MODELS", self.list_path),
+            mock.patch.object(_new_models, "DECISIONS_FILE", self.decisions),
+            mock.patch.object(_new_models, "DISMISSED_FILE", self.dismissed),
+        ):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def test_only_an_existing_open_model_can_be_deleted(self) -> None:
+        answer = self.accepted({"kind": MODEL_DELETE, "name": "devstral-2"})
+        self.assertEqual((answer.kind, answer.subject), (MODEL_DELETE, "devstral-2"))
+        self.refused({"kind": MODEL_DELETE, "name": "ghost"}, "not a model")
+
+    def test_a_reference_model_goes_from_the_reference_tab(self) -> None:
+        """Off llm.json alone, its slug would still be listed and re-added."""
+        self.list_path.write_text(json.dumps(["devstral-2"]), encoding="utf-8")
+        self.refused({"kind": MODEL_DELETE, "name": "devstral-2"}, "reference model")
+
+    def test_a_delete_and_an_edit_cannot_share_a_model(self) -> None:
+        records = [
+            {"kind": MODEL_DELETE, "name": "devstral-2"},
+            {"kind": MODEL_EDIT, "name": "devstral-2", "fields": {"params": "1B"}},
+        ]
+        _, failures = _answers.validate(
+            records, llm_path=self.llm, universes=UNIVERSES, queue=self.queue
+        )
+        self.assertTrue(any("touched twice" in f.message for f in failures), failures)
+
+    def test_deleting_drops_the_entry_and_dismisses_the_slug(self) -> None:
+        """Without the dismissal check_new.py offers an AA model straight back."""
+        self.decisions.write_text(json.dumps({"devstral-2": "__added__"}), encoding="utf-8")
+        answer = Answer(index=0, kind=MODEL_DELETE, subject="devstral-2")
+        with mock.patch.object(_answers.derive_indexes, "refresh_and_report") as refreshed:
+            log = _answers._apply_one(answer, self.llm)
+        refreshed.assert_called_once()
+        doc = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual([m["name"] for m in doc["models"]], ["glm-5-3"])
+        self.assertIn("devstral-2", _new_models.load_dismissed())
+        self.assertEqual(_new_models.load_decisions(), {})
+        self.assertIn("deleted 'devstral-2'", log[0])
 
 
 class TestReferenceModels(AnswersTestCase):
