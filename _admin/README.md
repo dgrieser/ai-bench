@@ -305,6 +305,17 @@ tells you why.
   like it. Picking one is a *rename*, not a mapping — see below. A rename is
   sent on its own: one record per model per run, so the fields above grey out
   while one is drafted.
+
+  Below that, **Delete this model** (after a confirm) sends a `model-delete`:
+  the entry leaves `llm.json` with its scores and their history, the derived
+  indexes are re-ranked without it, and its slug goes into
+  `check_new-dismissed.json` so `check_new.py` does not offer it again (a
+  pending line about it in `check_new-decisions.json` is cleared). Mapping files
+  are left alone: a source name mapped onto the slug matches nothing until the
+  model is added back. It replaces any edit or rename drafted on the card, and
+  *Keep it* takes it back. A reference model has no Delete; *Stop carrying it*
+  on the Reference tab removes the slug and the entry together, and
+  `answer.py` refuses a `model-delete` for one.
 - **Benchmarks** — the columns themselves: `llm.json`'s `benchmarks` object.
   Every column unfolds into a form for what a reader is shown about it — `name`,
   `short name`, `category` (the ones in use are offered), `description`,
