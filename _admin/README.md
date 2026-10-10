@@ -257,7 +257,9 @@ tells you why.
 - **Models** — every model in `llm.json`, each folded to its name, creator, date
   added and how many of the non-derived columns it has a score for. Sort by
   *least scored first* (the default; ties go to the newest) or *last added
-  first*; the box filters by model or creator name. A card's form is only built
+  first*. One box filters by model or provider: its suggestions list every
+  provider (with its model count) ahead of the model names, and a provider's
+  exact name shows that provider's models only. A card's form is only built
   when it is unfolded. Unfolded, it lists **every** non-derived column, the
   missing ones included (dashed, with `missing` in the box): type into an empty
   one to add a score, change a filled one to correct it, clear it to remove it.

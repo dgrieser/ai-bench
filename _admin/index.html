@@ -3527,10 +3527,28 @@ function renderModels() {
   const box = el("div", { className: "stack" });
   const search = noAuto(el("input", {
     type: "search",
-    placeholder: "Filter by model or creator...",
+    placeholder: "Filter by model or provider...",
     value: state.modelSearch,
     enterKeyHint: "search",
   }));
+  /* One box for both: the suggestions offer every provider, with how many
+     models it has, ahead of the model names. A provider's exact name filters
+     to that provider alone, not also every model that happens to carry the
+     name; anything else is a substring of either. */
+  const providers = new Map();
+  for (const m of state.llm?.models || []) {
+    const name = m.creator?.name;
+    if (name) providers.set(name, (providers.get(name) || 0) + 1);
+  }
+  const offered = [...[...providers.keys()].sort((a, b) => a.localeCompare(b)),
+    ...(state.llm?.models || []).map((m) => m.name).filter((n) => !providers.has(n)).sort()];
+  const creatorOf = new Map((state.llm?.models || []).map((m) => [m.name, m.creator?.name || ""]));
+  const combo = comboBox(search, () => offered, {
+    min: 1,
+    detail: (value) => (providers.has(value)
+      ? `provider · ${providers.get(value)} model${providers.get(value) === 1 ? "" : "s"}`
+      : creatorOf.get(value) || ""),
+  });
   const sort = el("select", {
     onchange: () => { state.modelSort = sort.value; draw(); },
   }, MODEL_SORTS.map(([value, label]) =>
@@ -3540,8 +3558,10 @@ function renderModels() {
   const draw = () => {
     const all = state.llm?.models || [];
     const needle = state.modelSearch.trim().toLowerCase();
+    const provider = [...providers.keys()].find((name) => name.toLowerCase() === needle);
     const found = sortedModels(all.filter((m) => !needle
-      || [m.name, m.creator?.name].some((v) => String(v ?? "").toLowerCase().includes(needle))),
+      || (provider ? m.creator?.name === provider
+        : [m.name, m.creator?.name].some((v) => String(v ?? "").toLowerCase().includes(needle)))),
     state.modelSort);
     shown.textContent = needle ? `${found.length} of ${all.length}` : `${all.length} models`;
     results.replaceChildren(...(found.length
@@ -3556,7 +3576,7 @@ function renderModels() {
   search.oninput = () => { state.modelSearch = search.value; draw(); };
   box.append(
     el("div", { className: "toolbar search" }, [
-      el("div", { className: "grow" }, search), el("div", {}, sort), shown]),
+      el("div", { className: "grow" }, combo), el("div", {}, sort), shown]),
     results,
   );
   draw();
