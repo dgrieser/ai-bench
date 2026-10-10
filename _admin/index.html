@@ -710,6 +710,12 @@ select {
 }
 .score-past > .more { opacity: .7; }
 
+/* The Models tab lists every column: an empty one is dashed so the gaps read
+   at a glance, and one about to be written is marked like an answered card. */
+.model-scores .score-row.missing input { border-style: dashed; }
+.model-scores .score-row.changed > label { color: var(--good); }
+.model-scores .score-row .btn[disabled] { visibility: hidden; }
+
 /* --------------------------------------------------------------- buttons */
 
 .btn {
@@ -1186,6 +1192,8 @@ const state = {
      once, and only when the Models tab is opened. */
   aa: { slugs: null, models: null, error: "", asked: false },
   modelSearch: "",      // kept here so a re-render does not empty the tab
+  modelSort: "least",   // see MODEL_SORTS
+  modelOpen: new Set(), // the unfolded model cards, by name
   /* The hand-added models being typed, one card each: [{ id, name, fields,
      key, question }], where `key` is the record the card last put in the batch,
      so a card can take back its own record without touching its neighbours'.
@@ -3493,59 +3501,120 @@ function referenceRenameBlock(slug, renameKey) {
   return block;
 }
 
+/* How the Models tab orders its list. "least" puts the emptiest rows first --
+   the ones a sitting is most likely to be filling in -- and "newest" the
+   models added last, which are usually the same thing a week later. */
+const MODEL_SORTS = [
+  ["least", "Least scored first"],
+  ["newest", "Last added first"],
+];
+
+/* The scores a model carries, out of the columns a hand edit can write: a
+   derived index is computed, so counting it would only flatter every row. */
+const scoredCount = (model) =>
+  benchmarks().filter((bench) => model.scores?.[bench] != null).length;
+
+function sortedModels(models, sort) {
+  const added = (m) => m.date_added || "";
+  const byNewest = (a, b) => added(b).localeCompare(added(a)) || a.name.localeCompare(b.name);
+  if (sort === "newest") return [...models].sort(byNewest);
+  const counts = new Map(models.map((m) => [m, scoredCount(m)]));
+  return [...models].sort((a, b) => counts.get(a) - counts.get(b) || byNewest(a, b));
+}
+
 function renderModels() {
   ensureAaSlugs();
   const box = el("div", { className: "stack" });
-  const search = el("input", {
+  const search = noAuto(el("input", {
     type: "search",
-    placeholder: "Find a model by name...",
+    placeholder: "Filter by model or creator...",
     value: state.modelSearch,
-  });
+    enterKeyHint: "search",
+  }));
+  const sort = el("select", {
+    onchange: () => { state.modelSort = sort.value; draw(); },
+  }, MODEL_SORTS.map(([value, label]) =>
+    el("option", { value, selected: state.modelSort === value }, label)));
+  const shown = el("span", { className: "count" });
   const results = el("div", { className: "stack" });
   const draw = () => {
+    const all = state.llm?.models || [];
     const needle = state.modelSearch.trim().toLowerCase();
-    const found = needle
-      ? (state.llm?.models || []).filter((m) => m.name.toLowerCase().includes(needle))
-      : [];
-    results.replaceChildren(
-      ...(needle
-        ? (found.length
-          ? found.slice(0, 20).map(renderModelCard)
-          : [el("p", { className: "empty" }, `No model matches "${state.modelSearch.trim()}".`)])
-        : [el("p", { className: "empty" },
-          `Type to find one of ${(state.llm?.models || []).length} models to edit.`)])
-    );
+    const found = sortedModels(all.filter((m) => !needle
+      || [m.name, m.creator?.name].some((v) => String(v ?? "").toLowerCase().includes(needle))),
+    state.modelSort);
+    shown.textContent = needle ? `${found.length} of ${all.length}` : `${all.length} models`;
+    results.replaceChildren(...(found.length
+      ? found.map(renderModelCard)
+      : [el("p", { className: "empty" }, all.length
+        ? `No model matches "${state.modelSearch.trim()}".`
+        : "llm.json has not been read yet.")]));
   };
   /* Held in state, not in the input: a rename is drafted with a click, which
      re-renders the whole view, and a needle that lived only in the DOM would
      take the card being worked on with it. */
   search.oninput = () => { state.modelSearch = search.value; draw(); };
-  box.append(el("div", { className: "search" }, search), results);
+  box.append(
+    el("div", { className: "toolbar search" }, [
+      el("div", { className: "grow" }, search), el("div", {}, sort), shown]),
+    results,
+  );
   draw();
   return box;
 }
 
+/* One card per model, folded to its name until opened. The form inside is
+   only built on the first unfold: 179 models times every column would be ten
+   thousand inputs on a phone, almost none of which a sitting ever looks at. */
 function renderModelCard(model) {
   const key = `model-edit  ${model.name}`;
   const renameKey = `model-rename  ${model.name}`;
   const rename = state.answers.get(renameKey);
   const existing = state.answers.get(key);
-  const card = el("div", { className: `card${existing || rename ? " answered" : ""}` });
-  card.append(el("div", { className: "subject" }, model.name));
-  card.append(el("div", { className: "chips" }, [
-    chip("", model.creator?.name || "unknown", { prose: true }),
-    chip("added", model.date_added || "?"),
+  const lockKey = isSent(renameKey) ? renameKey : key;
+  const locked = isSent(lockKey) || isApplied(lockKey);
+  const card = el("details", { className: `card model-card${existing || rename ? " answered" : ""}` });
+  const columns = benchmarks();
+  const count = scoredCount(model);
+  card.append(el("summary", {}, [
+    el("span", { className: "subject" }, model.name),
+    el("div", { className: "chips" }, [
+      chip("", model.creator?.name || "unknown", { prose: true }),
+      chip("added", model.date_added || "?"),
+      chip("scored", `${count} / ${columns.length}`,
+        { className: count < columns.length / 4 ? "now" : "" }),
+    ]),
   ]));
 
+  let built = false;
+  const build = () => {
+    if (built) return;
+    built = true;
+    fillModelCard(card, model, { key, renameKey, rename, existing, columns });
+  };
+  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename);
+  card.ontoggle = () => {
+    if (card.open) { state.modelOpen.add(model.name); build(); }
+    else state.modelOpen.delete(model.name);
+  };
+  /* A locked card disables whatever it holds when it is locked, so the form has
+     to be there by then. */
+  if (card.open || locked) build();
+  return guard(card, lockKey);
+}
+
+function fillModelCard(card, model, { key, renameKey, rename, existing, columns }) {
   const draft = {
     fields: { ...(existing?.fields || {}) },
     scores: { ...(existing?.scores || {}) },
     score_date: existing?.score_date ?? today(),
     score_url: existing?.score_url ?? "",
   };
+  let provenance;
   const commit = () => {
     const scored = Object.keys(draft.scores).length > 0;
     const writes = Object.values(draft.scores).some((value) => value !== null);
+    provenance.hidden = !scored;
     /* A batch is all or nothing on the runner, so a half-typed page must not
        reach it: it would refuse this record and take every other answer in the
        sitting down with it. The card simply stops counting as answered until
@@ -3618,73 +3687,79 @@ function renderModelCard(model) {
     urlInput.classList.toggle("unknown", badScoreUrl(draft.score_url, false));
     commit();
   };
-  const provenance = el("div", { className: "provenance" }, [
+  provenance = el("div", { className: "provenance" }, [
     el("div", { className: "fields" }, [
       el("div", { className: "field" }, [el("label", {}, "score date"), dateInput]),
       el("div", { className: "field" }, [el("label", {}, "score url"), urlInput]),
     ]),
     el("p", { className: "note-text" },
-      "Stamped on every score changed above, and required with one. A page moves "
+      "Stamped on every score changed below, and required with one. A page moves "
       + "the value onto that page's rung of the source precedence, where only that "
       + "page or a better one may overwrite it."),
   ]);
 
-  const scores = el("div", {});
-  const drawScores = () => {
-    provenance.hidden = !Object.keys(draft.scores).length;
-    scores.replaceChildren(...Object.keys(draft.scores).sort().map((bench) => {
-      const input = el("input", {
-        type: "number", step: "0.1", inputMode: "decimal",
-        value: draft.scores[bench] ?? "",
-        disabled: Boolean(rename),
-      });
-      input.oninput = () => {
-        draft.scores[bench] = input.value === "" ? null : Number(input.value);
-        commit();
-      };
-      const drop = el("button", {
-        type: "button",
-        className: "btn ghost tiny",
-        disabled: Boolean(rename),
-        onclick: () => { delete draft.scores[bench]; drawScores(); commit(); },
-      }, "Remove");
-      /* What is already on record for this score, under the box about to
-         overwrite it: the number typed here becomes the next entry in that
-         list, and whoever types it should be able to see what it replaces
-         without opening the site in another tab. Read-only -- the history is
-         written by the runner, from the scores, and is not an answer to send.
-         Three entries is the whole past of almost every score; the rest is
-         counted rather than listed, since this is a hint beside a form and not
-         the model's page. */
-      const past = recordedHistory(model, bench);
-      const shown = past.slice(0, 3).map((event) =>
-        el("span", {}, `${event.date} · ${event.value === null ? "\u2014" : event.value} · ${event.kind}`));
-      if (past.length > shown.length) {
-        shown.push(el("span", { className: "more" }, `+${past.length - shown.length} earlier`));
-      }
-      return el("div", { className: "score-row" }, [
-        el("label", {}, bench),
-        input,
-        drop,
-        past.length ? el("div", { className: "score-past" }, shown) : null,
-      ]);
-    }));
-  };
-
-  const picker = el("select", { disabled: Boolean(rename) },
-    [el("option", { value: "" }, "Add a score...")]
-      .concat(benchmarks().map((b) => el("option", { value: b }, b))));
-  picker.onchange = () => {
-    if (!picker.value) return;
-    draft.scores[picker.value] = model.scores?.[picker.value] ?? null;
-    picker.value = "";
-    drawScores();
-    commit();
-  };
-  card.append(scores, provenance, el("div", { className: "field" }, picker));
-  drawScores();
+  /* Every column a hand edit can write, the empty ones included -- an empty
+     box is how a missing score gets typed in. A box is only part of the answer
+     once it differs from what llm.json holds; clearing a stored score sends a
+     null, which edit.py reads as "remove it". */
+  const scores = el("div", { className: "model-scores" });
+  for (const bench of columns) {
+    const stored = model.scores?.[bench] ?? null;
+    const input = el("input", {
+      type: "number", step: "0.1", inputMode: "decimal",
+      placeholder: stored === null ? "missing" : "",
+      value: bench in draft.scores ? (draft.scores[bench] ?? "") : (stored ?? ""),
+      disabled: Boolean(rename),
+    });
+    const row = el("div", { className: `score-row${stored === null ? " missing" : ""}` });
+    const undo = el("button", { type: "button", className: "btn ghost tiny" }, "Undo");
+    const mark = () => {
+      const changed = bench in draft.scores;
+      row.classList.toggle("changed", changed);
+      undo.disabled = !changed || Boolean(rename);
+    };
+    input.oninput = () => {
+      const value = input.value === "" ? null : Number(input.value);
+      if (value === stored) delete draft.scores[bench];
+      else draft.scores[bench] = value;
+      mark();
+      commit();
+    };
+    undo.onclick = () => {
+      delete draft.scores[bench];
+      input.value = stored ?? "";
+      mark();
+      commit();
+    };
+    /* What is already on record for this score, under the box about to
+       overwrite it: the number typed here becomes the next entry in that
+       list, and whoever types it should be able to see what it replaces
+       without opening the site in another tab. Read-only -- the history is
+       written by the runner, from the scores, and is not an answer to send.
+       Three entries is the whole past of almost every score; the rest is
+       counted rather than listed, since this is a hint beside a form and not
+       the model's page. */
+    const past = recordedHistory(model, bench);
+    const shown = past.slice(0, 3).map((event) =>
+      el("span", {}, `${event.date} · ${event.value === null ? "—" : event.value} · ${event.kind}`));
+    if (past.length > shown.length) {
+      shown.push(el("span", { className: "more" }, `+${past.length - shown.length} earlier`));
+    }
+    const name = state.llm?.benchmarks?.[bench]?.short_name || state.llm?.benchmarks?.[bench]?.name;
+    row.append(el("label", { title: name || bench }, bench), input, undo);
+    if (past.length) row.append(el("div", { className: "score-past" }, shown));
+    mark();
+    scores.append(row);
+  }
+  const missing = columns.filter((bench) => model.scores?.[bench] == null).length;
+  card.append(
+    el("div", { className: "field" }, el("label", {},
+      `scores -- ${columns.length - missing} of ${columns.length}, ${missing} missing`)),
+    scores,
+    provenance,
+  );
+  commit();
   card.append(renameBlock(model, renameKey, rename));
-  return guard(card, isSent(renameKey) ? renameKey : key);
 }
 
 /* Which Artificial Analysis slug this entry answers to -- and, when the answer
@@ -4294,7 +4369,7 @@ function modelLink(name) {
     type: "button",
     className: "upd-name",
     title: "Edit on the Models tab",
-    onclick: () => { state.modelSearch = name; showTab("models"); },
+    onclick: () => { state.modelSearch = name; state.modelOpen.add(name); showTab("models"); },
   }, name);
 }
 
