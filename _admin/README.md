@@ -254,7 +254,18 @@ tells you why.
   the browser straight to the Hub's public API (it answers any origin, no
   token), so `api.php` is not involved. The Models tab's url field does the
   same.
-- **Models** — edit every field `add.py` asks for — `params`, `context`, `url`,
+- **Models** — every model in `llm.json`, each folded to its name, creator, date
+  added and how many of the non-derived columns it has a score for. Sort by
+  *least scored first* (the default; ties go to the newest) or *last added
+  first*. One box filters by model or provider: its suggestions list every
+  provider (with its model count) ahead of the model names, and a provider's
+  exact name shows that provider's models only. A card's form is only built
+  when it is unfolded. Unfolded, it lists **every** non-derived column, the
+  missing ones included (dashed, with `missing` in the box): type into an empty
+  one to add a score, change a filled one to correct it, clear it to remove it.
+  Only boxes that differ from `llm.json` are sent, and *Undo* puts one back.
+
+  Edit every field `add.py` asks for — `params`, `context`, `url`,
   `creator`, `creator url`, `date added` — and any non-derived score. The two
   sets are the same on purpose: nothing is enterable once and then frozen.
   (`vram` is not among them; Spheron writes it, and a hand-typed figure would be
