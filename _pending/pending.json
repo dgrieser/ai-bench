@@ -1,7 +1,13 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to muse wonder, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -12,7 +18,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse wonder full, most components match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -23,7 +35,47 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder, exact match"
+        }
+      ],
+      "default": "muse-wonder",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'muse-wonder'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "muse-wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder-full, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'muse-wonder-full'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "muse-wonder-full",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "the same name without the vendor prefix"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -34,7 +86,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -45,7 +103,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder Full, most components match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -56,7 +120,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -67,7 +137,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder-full, most components match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
