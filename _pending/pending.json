@@ -3,23 +3,6 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "muse-wonder",
-          "reason": "exact to muse wonder, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'muse wonder' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "subject": "muse wonder",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
           "option": "muse-wonder",
           "reason": "exact to muse wonder full, most components match"
@@ -32,23 +15,6 @@
       "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
       "subject": "muse wonder full",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-wonder",
-          "reason": "exact to muse-wonder, exact match"
-        }
-      ],
-      "default": "muse-wonder",
-      "if_previous": null,
-      "note": null,
-      "question": "Which llm.json model is llm-stats id 'muse-wonder'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "subject": "muse-wonder",
       "universe": "models"
     },
     {
@@ -73,40 +39,6 @@
         {
           "confidence": "weak",
           "option": "muse-wonder",
-          "reason": "the same name without the vendor prefix"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'meta/muse-wonder' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "meta/muse-wonder",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-wonder",
-          "reason": "exact to Muse Wonder, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Marathon model 'Muse Wonder' to llm.json model",
-      "route": "update_swe_marathon_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Muse Wonder",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-wonder",
           "reason": "exact to Muse Wonder Full, most components match"
         }
       ],
@@ -117,23 +49,6 @@
       "route": "update_swe_marathon_mapping.py",
       "route_kind": "mapping",
       "subject": "Muse Wonder Full",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-wonder",
-          "reason": "exact to muse-wonder, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'meta/muse-wonder' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "meta/muse-wonder",
       "universe": "models"
     },
     {
