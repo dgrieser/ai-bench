@@ -1,3 +1,81 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'muse wonder' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "muse wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'muse wonder full' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "muse wonder full",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'meta/muse-wonder' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Muse Wonder' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Muse Wonder Full' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Wonder Full",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'meta/muse-wonder' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'meta/muse-wonder-full' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-wonder-full",
+      "universe": "models"
+    }
+  ]
 }
