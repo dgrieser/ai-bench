@@ -36,6 +36,99 @@
       "route_kind": "mapping",
       "subject": "Basin",
       "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Argon, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Gemini 4 Argon' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Gemini 4 Argon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "the same name without the vendor prefix"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-4-argon' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "google/gemini-4-argon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-2-6b",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'liquid/lfm-2.5-24b-a2b' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "liquid/lfm-2.5-24b-a2b",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'scaledown/extract' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "scaledown/extract",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'scaledown/summarize' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "scaledown/summarize",
+      "universe": "models"
     }
   ]
 }
