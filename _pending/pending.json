@@ -3,23 +3,6 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "muse-wonder",
-          "reason": "exact to muse wonder full, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'muse wonder full' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "subject": "muse wonder full",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "recorded",
           "option": "solar-open-100b-reasoning",
           "reason": "offered by the prompt"
@@ -52,57 +35,6 @@
       "route": "update_cybergym_mapping.py",
       "route_kind": "mapping",
       "subject": "Basin",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-wonder",
-          "reason": "exact to muse-wonder-full, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which llm.json model is llm-stats id 'muse-wonder-full'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "subject": "muse-wonder-full",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-wonder",
-          "reason": "exact to Muse Wonder Full, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Marathon model 'Muse Wonder Full' to llm.json model",
-      "route": "update_swe_marathon_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Muse Wonder Full",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-wonder",
-          "reason": "exact to muse-wonder-full, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'meta/muse-wonder-full' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "subject": "meta/muse-wonder-full",
       "universe": "models"
     }
   ]
