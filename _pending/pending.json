@@ -1,6 +1,369 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-07 - Anthropic",
+      "question": "Carry newly released closed model 'claude-haiku-5-5-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-haiku-5-5-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-07 - Anthropic",
+      "question": "Carry newly released closed model 'claude-haiku-5-5-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-haiku-5-5-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-07 - Anthropic",
+      "question": "Carry newly released closed model 'claude-haiku-5-5-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-haiku-5-5-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-07 - Anthropic",
+      "question": "Carry newly released closed model 'claude-haiku-5-5-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-haiku-5-5-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - Anthropic",
+      "question": "Carry newly released closed model 'claude-opus-5-5-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-opus-5-5-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - Anthropic",
+      "question": "Carry newly released closed model 'claude-opus-5-5-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-opus-5-5-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - Anthropic",
+      "question": "Carry newly released closed model 'claude-opus-5-5-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-opus-5-5-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - Anthropic",
+      "question": "Carry newly released closed model 'claude-opus-5-5-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-opus-5-5-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-28 - Anthropic",
+      "question": "Carry newly released closed model 'claude-sonnet-5-5-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-sonnet-5-5-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-28 - Anthropic",
+      "question": "Carry newly released closed model 'claude-sonnet-5-5-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-sonnet-5-5-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-28 - Anthropic",
+      "question": "Carry newly released closed model 'claude-sonnet-5-5-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-sonnet-5-5-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-28 - Anthropic",
+      "question": "Carry newly released closed model 'claude-sonnet-5-5-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "claude-sonnet-5-5-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-29 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-sol-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-sol-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-29 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-sol-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-sol-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-29 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-sol-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-sol-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-29 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-sol-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-sol-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-luna-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-luna-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-luna-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-luna-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-luna-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-luna-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-luna-non-reasoning' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-luna-non-reasoning",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-luna-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-luna-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-daybreak-blue' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-daybreak-blue",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-non-reasoning' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-non-reasoning",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-sol-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-sol-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-21 - SpaceXAI",
+      "question": "Carry newly released closed model 'grok-4-7' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "grok-4-7",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-21 - SpaceXAI",
+      "question": "Carry newly released closed model 'grok-4-7-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "grok-4-7-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-21 - SpaceXAI",
+      "question": "Carry newly released closed model 'grok-4-7-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "grok-4-7-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-09-22 - Upstage",
+      "question": "Carry newly released closed model 'solar-mini4' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "solar-mini4",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder-full",
+          "reason": "exact to muse wonder full, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse wonder full, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'muse wonder full' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "muse wonder full",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "recorded",
@@ -41,6 +404,33 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "mistral-large-4",
+          "reason": "exact to Mistral Large 4, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "exact to Mistral Large 4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to Mistral Large 4, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Mistral Large 4' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Mistral Large 4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "gemini-4-argon",
           "reason": "exact to Gemini 4 Argon, exact match"
         }
@@ -52,6 +442,50 @@
       "route": "update_frontiercode_mapping.py",
       "route_kind": "mapping",
       "subject": "Gemini 4 Argon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder-full",
+          "reason": "exact to Muse Wonder, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'Muse Wonder' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder-full",
+          "reason": "exact to muse-wonder-full, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder-full, most components match"
+        }
+      ],
+      "default": "muse-wonder-full",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'muse-wonder-full'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "muse-wonder-full",
       "universe": "models"
     },
     {
@@ -128,6 +562,50 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "subject": "scaledown/summarize",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder-full",
+          "reason": "exact to Muse Wonder Full, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder Full, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Muse Wonder Full' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Wonder Full",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder-full",
+          "reason": "exact to muse-wonder-full, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "exact to muse-wonder-full, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'meta/muse-wonder-full' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-wonder-full",
       "universe": "models"
     }
   ]
