@@ -285,7 +285,9 @@ def plan_mappings(
     unroutable: list[dict[str, Any]] = []
 
     for entry in entries:
-        if entry.get("kind") == "new-model":
+        # A new release is not a mapping. A closed one is not added below
+        # either: it is only ever carried as a reference model, by a person.
+        if entry.get("kind") in ("new-model", "new-closed-model"):
             continue
         route = route_for(entry)
         if route is None:

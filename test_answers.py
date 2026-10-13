@@ -322,6 +322,31 @@ class TestNewModels(AnswersTestCase):
         self.assertIn("already in llm.json", failures[0].message)
 
 
+    def test_a_closed_release_is_not_added_as_an_open_model(self) -> None:
+        """check_new.py queues closed releases as new-closed-model; their yes is
+        a reference-add, and a model-add would make them an open-weight row."""
+        queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
+        answers, failures = _answers.validate(
+            [{"kind": MODEL_ADD, "name": "closed-slug"}],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=queue,
+        )
+        self.assertEqual(answers, [])
+        self.assertIn("reference", failures[0].message)
+
+    def test_a_closed_release_can_be_ignored(self) -> None:
+        queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
+        answers, failures = _answers.validate(
+            [{"kind": NEW_MODEL, "subject": "closed-slug", "answer": "__ignored__"}],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=queue,
+        )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual(answers[0].value, _new_models.IGNORED)
+
+
 class TestModelEdits(AnswersTestCase):
     def test_only_edit_pys_own_metadata_fields_are_offered(self) -> None:
         """edit.py has a flag per field; anything else exits 2 from argparse."""
