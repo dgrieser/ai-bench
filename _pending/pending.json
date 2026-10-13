@@ -20,6 +20,43 @@
     {
       "candidates": [
         {
+          "confidence": "recorded",
+          "option": "solar-open-100b-reasoning",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-30b-a3b-2507-reasoning",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-next-80b-a3b-reasoning",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-235b-a22b-instruct-2507-reasoning",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+          "reason": "offered by the prompt"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map cybergym.io model 'Basin' to llm.json model",
+      "route": "update_cybergym_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Basin",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "muse-wonder",
           "reason": "exact to muse-wonder-full, most components match"
