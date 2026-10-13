@@ -1,72 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-22 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-sol-non-reasoning' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-sol-non-reasoning",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-22 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-sol-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-sol-xhigh",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-21 - SpaceXAI",
-      "question": "Carry newly released closed model 'grok-4-7' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "grok-4-7",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-21 - SpaceXAI",
-      "question": "Carry newly released closed model 'grok-4-7-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "grok-4-7-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-21 - SpaceXAI",
-      "question": "Carry newly released closed model 'grok-4-7-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "grok-4-7-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-09-22 - Upstage",
-      "question": "Carry newly released closed model 'solar-mini4' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "solar-mini4",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "exact",
@@ -156,6 +90,23 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "grok-4-7",
+          "reason": "exact to Grok 4.7, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map evals.report model 'Grok 4.7' to llm.json model",
+      "route": "update_evals_report_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4.7",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "gemini-4-argon",
           "reason": "exact to Gemini 4 Argon, exact match"
         }
@@ -189,6 +140,23 @@
       "route": "update_hle_diamond_mapping.py",
       "route_kind": "mapping",
       "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "grok-4-7",
+          "reason": "exact to grok-4.7, exact match"
+        }
+      ],
+      "default": "grok-4-7",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'grok-4.7'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "subject": "grok-4.7",
       "universe": "models"
     },
     {
@@ -314,6 +282,23 @@
     {
       "candidates": [
         {
+          "confidence": "weak",
+          "option": "grok-4-7",
+          "reason": "exact to Grok 4, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Grok 4' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Grok 4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "exact",
           "option": "muse-wonder-full",
           "reason": "exact to muse-wonder-full, exact match"
@@ -331,6 +316,23 @@
       "route": "update_vals_mapping.py",
       "route_kind": "mapping",
       "subject": "meta/muse-wonder-full",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "grok-4-7",
+          "reason": "exact to grok 4, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ZeroBench model 'grok 4' to llm.json model",
+      "route": "update_zerobench_mapping.py",
+      "route_kind": "mapping",
+      "subject": "grok 4",
       "universe": "models"
     }
   ]
