@@ -1238,6 +1238,10 @@ const NEEDS_API = 2;
 
 const KEY = (q) => `${q.route} ${q.route_kind} ${q.subject}`;
 const NEW_MODEL_ROUTE = "check_new.py";
+/* check_new.py's kind for a closed-weights release: offered as a reference
+   model, never as an open-weight entry. */
+const NEW_CLOSED_KIND = "new-closed-model";
+const isClosedNew = (question) => question.route_kind === NEW_CLOSED_KIND;
 
 /* What one dispatch may carry: _answers.MAX_RECORDS, which api.php restates and
    answer.py enforces. The reason is the workflow's concurrency group -- one run
@@ -1769,7 +1773,7 @@ const MODE_HINTS = {
    a Quick run exists to ask, so the page says so where it is added. */
 const batchAddsModels = () => [...state.answers.keys()]
   .some((key) => /^(model-create|reference-add) /.test(key)
-    || state.answers.get(key)?.kind === "model-add");
+    || ["model-add", "reference-add"].includes(state.answers.get(key)?.kind));
 
 function renderMode() {
   const box = document.getElementById("mode");
@@ -2964,16 +2968,86 @@ function renderQuestion(question) {
 
 function renderNew() {
   ensureAaSlugs();
-  const questions = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
+  const offered = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
+  const questions = offered.filter((q) => !isClosedNew(q));
+  const closed = offered.filter(isClosedNew);
   const box = el("div", { className: "stack" }, renderAddModels());
-  if (!questions.length) {
+  if (!offered.length) {
     box.append(el("p", { className: "empty" },
       "No new models waiting. Artificial Analysis has offered nothing this site "
       + "does not already track."));
     return box;
   }
-  box.append(renderNewBulk(questions), ...questions.map(renderNewQuestion));
+  if (questions.length) box.append(renderNewBulk(questions), ...questions.map(renderNewQuestion));
+  if (closed.length) box.append(renderNewClosedBulk(closed), ...closed.map(renderNewClosedQuestion));
   return box;
+}
+
+/* The record that carries a closed release, keyed by its question like every
+   other answer here so it is locked, sent and pruned with the question. One
+   the Reference tab already queued for the same slug is dropped: a batch may
+   touch a model once. */
+const referenceRecord = (question) => {
+  state.answers.delete(REFERENCE_ADD_KEY(question.subject));
+  return { kind: "reference-add", name: question.subject };
+};
+
+/* The bulk bar for closed releases: same as the open one, but "add" means
+   carrying them as reference models. */
+function renderNewClosedBulk(questions) {
+  const open = questions.filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)));
+  const all = (record) => {
+    for (const question of open) setAnswer(question, record(question), false);
+    render();
+  };
+  return el("div", { className: "toolbar" }, [
+    el("span", { className: "count grow" },
+      `${questions.length} closed, offered as reference models`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      onclick: () => all(referenceRecord),
+    }, `Carry all ${open.length}`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      onclick: () => all((q) => ({ kind: "new-model", subject: q.subject, answer: "__ignored__" })),
+    }, "Ignore all"),
+    el("button", {
+      type: "button", className: "btn ghost tiny",
+      disabled: !open.some((q) => answerOf(q)),
+      onclick: () => all(() => null),
+    }, "Reset"),
+  ]);
+}
+
+/* A closed release. llm.json carries closed models only as reference models,
+   so "Add it" is not offered: the yes is a reference-add, which puts the slug
+   on reference-models.json and creates the entry behind it -- what the
+   Reference tab's "Carry more models" sends. "Ignore it" dismisses the slug
+   exactly as it does for an open model. */
+function renderNewClosedQuestion(question) {
+  const chosen = answerOf(question);
+  const card = el("div", { className: `card${chosen ? " answered" : ""}` });
+  card.append(el("div", { className: "subject" }, question.subject));
+  const chips = el("div", { className: "chips" }, chip("weights", "closed"));
+  if (question.note) chips.append(chip("", question.note, { prose: true }));
+  card.append(chips);
+
+  const carrying = chosen?.kind === "reference-add";
+  const ignoring = chosen?.kind === "new-model";
+  card.append(el("div", { className: "options" }, [
+    option("Add as reference", "carries it beside the open models; scores land on the next refresh", {
+      pressed: carrying,
+      className: "exact",
+      onclick: () => setAnswer(question, carrying ? null : referenceRecord(question)),
+    }),
+    option("Ignore it", "never offer this slug again", {
+      pressed: ignoring,
+      className: "decline",
+      onclick: () => setAnswer(question, ignoring ? null
+        : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
+    }),
+  ]));
+  return guard(card, KEY(question));
 }
 
 /* Every offered model answered the same way in one tap -- a release week can
@@ -3302,12 +3376,18 @@ function renderReferenceAdd() {
       .map((key) => key.slice("reference-add  ".length))
     : [];
   const carried = new Set(state.reference.slugs || []);
+  /* Closed releases answered "Add as reference" on the New models tab: keyed by
+     their question, so not in `queued`, but the same record all the same. */
+  const fromNew = [...state.answers.entries()]
+    .filter(([key, record]) => !key.startsWith("reference-add  ") && record.kind === "reference-add")
+    .map(([, record]) => record.name);
 
   /* Why a slug cannot be added, or "" when it can. */
   const refusal = (slug) => {
     if (!SLUG_RE.test(slug)) return "not a slug: lowercase words joined by single dots or dashes";
     if (carried.has(slug)) return "already carried -- it is one of the cards below";
     if (queued.includes(slug)) return "already in this batch";
+    if (fromNew.includes(slug)) return "already in this batch, from the New models tab";
     if (flying.includes(slug)) return "already sent -- the run is adding it";
     if (state.aa.slugs !== null && !state.aa.slugs.includes(slug)) {
       return "Artificial Analysis does not publish this slug, so nothing would find the model";

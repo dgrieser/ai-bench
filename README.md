@@ -607,6 +607,11 @@ every other mapping write.
 add it, or never offer it again. The scheduled GitHub Actions run cannot answer
 either, so it queues the question.
 
+A closed-weights release is asked about too, under its own kind
+(`new-closed-model`): carry it as a reference model (see `_reference.py`), or
+never offer it again. `propose.py` never adds one, and `--open-only` leaves them
+out of the run.
+
 > **The proposal PR is opt-in.** Answers now go through the admin page or
 > `answer.py` (below), and the queue is published to `_pending/pending.json` on
 > every successful refresh, so the questions survive without a PR carrying them.

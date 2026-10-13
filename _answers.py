@@ -138,6 +138,10 @@ AA_MODULE = "_artificialanalysis_mapping"
 # check_new.py records its own command, so that is the route a new-model
 # question appears under in the queue.
 NEW_MODEL_ROUTE = "check_new.py"
+# The queued kind check_new.py gives a closed release. Not a record kind: its
+# answers are a reference-add or a new-model __ignored__, and model-add is
+# refused for it -- that would make a closed model an open-weight row.
+NEW_CLOSED_MODEL = "new-closed-model"
 
 # Enough to answer a sitting so far, small enough that a batch cannot evict its
 # own successor from the workflow's concurrency group (one run may be running
@@ -850,6 +854,11 @@ def _validate_model_add(
     # one from whatever name it is handed, prefilling what Artificial Analysis
     # knows and leaving the rest blank, so a junk slug lands as a junk model.
     _require_queued(queue, require_queue, NEW_MODEL_ROUTE, NEW_MODEL, subject, NEW_MODEL_ROUTE)
+    if (NEW_MODEL_ROUTE, NEW_CLOSED_MODEL, subject) in queue:
+        raise AnswerError(
+            f"{subject!r} is a closed-weights release; carry it as a reference model "
+            f"(a {REFERENCE_ADD!r} record) or ignore it"
+        )
     return Answer(index=index, kind=MODEL_ADD, subject=subject)
 
 

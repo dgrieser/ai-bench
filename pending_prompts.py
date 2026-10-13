@@ -34,6 +34,7 @@ MAX_CANDIDATES = 5
 
 KIND_LABELS = {
     "new-model": "new model",
+    "new-closed-model": "new closed model (reference)",
     "mapping": "mapping",
     "aa-mapping": "Artificial Analysis mapping",
     "llmstats-model": "llm-stats model",

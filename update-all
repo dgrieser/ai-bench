@@ -301,9 +301,9 @@ fi
 # and non-interactive either way.
 run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
 
-# Offer newly released open-weights models for addition first, so the update
-# pass below fills in their scores. Interactive when run from a terminal;
-# report-only otherwise.
+# Offer newly released models first -- open ones for addition, closed ones as
+# reference models -- so the update pass below fills in their scores.
+# Interactive when run from a terminal; report-only otherwise.
 run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
 
 for s in "${UPDATERS[@]}"; do

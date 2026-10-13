@@ -236,6 +236,12 @@ tells you why.
 
   *Add all* / *Ignore all* answer every open card in one tap.
 
+  Closed-weights releases are listed below the open ones, under their own
+  bar. `llm.json` carries a closed model only as a reference model, so their
+  yes is *Add as reference* — the same `reference-add` record the Reference
+  tab's "Carry more models" sends — and *Ignore it* dismisses the slug as for
+  an open model. `answer.py` refuses a `model-add` for one of them.
+
   Above those cards is **Add a model**, for the other direction: a release
   Artificial Analysis does not track, so nothing offered it and there is no
   question to answer. Name it and fill in as much as you know; `add.py` fills
