@@ -83901,9 +83901,9 @@
       "params": "24B-A2B",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 52,
+        "int8": 26,
+        "int4": 13
       },
       "creator": {
         "name": "Liquid AI",
@@ -84198,6 +84198,11 @@
             "gpqa_diamond"
           ]
         }
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-24B-A2B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-24B-A2B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-24B-A2B/"
       }
     }
   ],
