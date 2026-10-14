@@ -4,6 +4,107 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "lfm2-5-2-6b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-2",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mercury-2-5",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen-2-5-max",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'lfm-2-5-24b-a2b'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "lfm-2-5-24b-a2b",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'LiveClaw' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "LiveClaw",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "exact to SWE-Bench Verified (OpenCode), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multilingual",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "real_swe",
+          "reason": "the first 1 word(s) of the label: exact to swe, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-Bench Verified (OpenCode)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "SWE-Bench Verified (OpenCode)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'WebArena Verified' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "WebArena Verified",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "lfm-2-5-24b-a2b",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "qwen3-5-27b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
@@ -21,11 +122,6 @@
           "confidence": "weak",
           "option": "qwen3-5-0-8b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         }
       ],
       "default": null,
@@ -36,6 +132,43 @@
       "route_kind": "mapping",
       "ruled_out": 20,
       "subject": "liquid/lfm-2.5-24b-a2b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "lfm-2-5-24b-a2b",
+          "reason": "the same name spelled without punctuation"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-2-6b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-8b-a1b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-1-2b-thinking",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": "lfm-2-5-24b-a2b",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'LiquidAI/LFM2.5-24B-A2B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "LiquidAI/LFM2.5-24B-A2B",
       "universe": "models"
     }
   ]
