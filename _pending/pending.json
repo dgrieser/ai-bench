@@ -118,40 +118,6 @@
       "ruled_out": 10,
       "subject": "liquid/lfm-2.5-24b-a2b",
       "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "grok-4-7",
-          "reason": "exact to Grok 4, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Terminal-Bench model 'Grok 4' to llm.json model",
-      "route": "update_tbench_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Grok 4",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "grok-4-7",
-          "reason": "exact to grok 4, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map ZeroBench model 'grok 4' to llm.json model",
-      "route": "update_zerobench_mapping.py",
-      "route_kind": "mapping",
-      "subject": "grok 4",
-      "universe": "models"
     }
   ]
 }
