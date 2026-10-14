@@ -291,6 +291,23 @@
       "route_kind": "mapping",
       "subject": "LiquidAI/LFM2.5-8B-A1B",
       "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Argon, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Gemini 4 Argon' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Gemini 4 Argon",
+      "universe": "models"
     }
   ]
 }
