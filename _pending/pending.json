@@ -4,27 +4,27 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "qwen3-5-4b",
+          "option": "qwen3-5-27b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "qwen3-5-9b",
+          "option": "sarvam-105b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4-5-air",
+          "option": "gpt-5-6-luna",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-5-6-sol",
+          "option": "qwen3-5-0-8b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "minicpm5-2b",
+          "option": "glm-5-3-flash",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         }
       ],
@@ -34,7 +34,7 @@
       "question": "Map OpenRouter model 'liquid/lfm-2.5-24b-a2b' to llm.json model",
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
-      "ruled_out": 15,
+      "ruled_out": 20,
       "subject": "liquid/lfm-2.5-24b-a2b",
       "universe": "models"
     }
