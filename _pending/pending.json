@@ -37,6 +37,260 @@
       "ruled_out": 5,
       "subject": "lfm-2-5-24b-a2b",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy",
+          "reason": "exact to AA-Omni. Accuracy, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omni. Accuracy' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omni. Accuracy",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_intelligence_index",
+          "reason": "exact to AA-Omni. Index, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omni. Index' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omni. Index",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omni. Non-Halluc.' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omni. Non-Halluc.",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "aa_omniscience_accuracy",
+          "reason": "exact to AA-Omniscience Accuracy, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "exact to AA-Omniscience Accuracy, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "exact to AA-Omniscience Accuracy, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omniscience Accuracy' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omniscience Accuracy",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "exact to AA-Omniscience Index, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_intelligence_index",
+          "reason": "exact to AA-Omniscience Index, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy",
+          "reason": "exact to AA-Omniscience Index, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "exact to AA-Omniscience Index, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omniscience Index' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omniscience Index",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omniscience Non-Hallucination Rate' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "subject": "AA-Omniscience Non-Hallucination Rate",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "lfm2-5-8b-a1b",
+          "reason": "exact to LFM2.5-8B-A1B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-2-6b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm2-5-1-2b-thinking",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-0-8b",
+          "reason": "the same name without its first 1 word(s): exact to 5-8b-a1b, most components match"
+        }
+      ],
+      "default": "lfm2-5-8b-a1b",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'LiquidAI/LFM2.5-8B-A1B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "LiquidAI/LFM2.5-8B-A1B",
+      "universe": "models"
     }
   ]
 }
