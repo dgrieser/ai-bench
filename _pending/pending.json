@@ -4,6 +4,28 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder-full",
+          "reason": "exact to Muse Wonder, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Muse Wonder' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "deepseek-v4-1-flash",
           "reason": "exact to DeepSeek V4.1 Flash, exact match"
         },
