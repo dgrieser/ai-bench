@@ -3,131 +3,28 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "muse-wonder",
-          "reason": "exact to Muse Wonder, exact match"
-        },
-        {
           "confidence": "weak",
-          "option": "muse-wonder-full",
-          "reason": "exact to Muse Wonder, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Epoch AI model 'Muse Wonder' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Muse Wonder",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to DeepSeek V4.1 Flash, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "exact to DeepSeek V4.1 Flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to DeepSeek V4.1 Flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minicpm-v4-6-1-3b",
-          "reason": "the same name without its first 1 word(s): exact to v4-1-flash, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierCode model 'DeepSeek V4.1 Flash' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "subject": "DeepSeek V4.1 Flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mistral-large-4",
-          "reason": "exact to Mistral Large 4 (Preview), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mistral-large-3",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mistral-small-4",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierCode model 'Mistral Large 4 (Preview)' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Mistral Large 4 (Preview)",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gemini-4-argon",
-          "reason": "exact to Gemini 4 Argon, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HLE-Diamond model 'Gemini 4 Argon' to llm.json model",
-      "route": "update_hle_diamond_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Gemini 4 Argon",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "lfm2-5-1-2b-thinking",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-4.5",
+          "option": "qwen3-5-4b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-3",
+          "option": "qwen3-5-9b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "g9v3-39a5b",
+          "option": "glm-4-5-air",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "qwen3-5-2b",
+          "option": "gpt-5-6-sol",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minicpm5-2b",
           "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         }
       ],
@@ -137,7 +34,7 @@
       "question": "Map OpenRouter model 'liquid/lfm-2.5-24b-a2b' to llm.json model",
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
-      "ruled_out": 10,
+      "ruled_out": 15,
       "subject": "liquid/lfm-2.5-24b-a2b",
       "universe": "models"
     }
