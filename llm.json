@@ -3371,7 +3371,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 40472,
+        "coding_index": 40473,
         "tooling_index": null,
         "knowledge_index": 54696,
         "vision_index": null,
@@ -23369,8 +23369,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 72161,
-        "coding_index": 65634,
+        "openbench_index": 72162,
+        "coding_index": 65636,
         "tooling_index": 72970,
         "knowledge_index": 87939,
         "vision_index": null,
@@ -24044,7 +24044,7 @@
       },
       "scores": {
         "openbench_index": 67404,
-        "coding_index": 59337,
+        "coding_index": 59338,
         "tooling_index": 66691,
         "knowledge_index": 80666,
         "vision_index": 75060,
@@ -25006,6 +25006,16 @@
           "of": 4,
           "share": 1.0
         }
+      },
+      "vram": {
+        "fp16": 18,
+        "int8": 9.2,
+        "int4": 4.6
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-8B-A1B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-8B-A1B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM2.5-8B-A1B/"
       }
     },
     {
@@ -37490,8 +37500,8 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 28572,
-        "coding_index": 22085,
+        "openbench_index": 28571,
+        "coding_index": 22084,
         "tooling_index": 19832,
         "knowledge_index": 36516,
         "vision_index": null,
@@ -38526,7 +38536,7 @@
       "context": "128k",
       "scores": {
         "openbench_index": 19109,
-        "coding_index": 16964,
+        "coding_index": 16963,
         "tooling_index": 14080,
         "knowledge_index": 13746,
         "vision_index": null,
@@ -44475,8 +44485,8 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 16862,
-        "coding_index": 14316,
+        "openbench_index": 16861,
+        "coding_index": 14315,
         "tooling_index": 10535,
         "knowledge_index": 13688,
         "vision_index": 14823,
@@ -47154,7 +47164,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 28310,
+        "coding_index": 28312,
         "tooling_index": 31350,
         "knowledge_index": null,
         "vision_index": null,
@@ -47489,7 +47499,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 54188,
+        "coding_index": 54191,
         "tooling_index": 50420,
         "knowledge_index": null,
         "vision_index": null,
@@ -47824,7 +47834,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 68077,
+        "coding_index": 68086,
         "tooling_index": 62648,
         "knowledge_index": null,
         "vision_index": null,
@@ -48158,8 +48168,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 58565,
-        "coding_index": 48967,
+        "openbench_index": 58564,
+        "coding_index": 48966,
         "tooling_index": 50591,
         "knowledge_index": 75781,
         "vision_index": null,
@@ -49101,8 +49111,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 61605,
-        "coding_index": 50385,
+        "openbench_index": 61604,
+        "coding_index": 50383,
         "tooling_index": 61094,
         "knowledge_index": 79904,
         "vision_index": 46358,
@@ -49695,8 +49705,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 71859,
-        "coding_index": 75509,
+        "openbench_index": 71875,
+        "coding_index": 75564,
         "tooling_index": 77801,
         "knowledge_index": 86402,
         "vision_index": null,
@@ -51233,8 +51243,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 55279,
-        "coding_index": 46006,
+        "openbench_index": 55280,
+        "coding_index": 46008,
         "tooling_index": 47592,
         "knowledge_index": 74929,
         "vision_index": 56753,
@@ -53037,8 +53047,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 82161,
-        "coding_index": 84180,
+        "openbench_index": 82188,
+        "coding_index": 84271,
         "tooling_index": 84859,
         "knowledge_index": 92664,
         "vision_index": 89277,
@@ -56059,7 +56069,7 @@
       },
       "scores": {
         "openbench_index": 78546,
-        "coding_index": 75122,
+        "coding_index": 75121,
         "tooling_index": 82909,
         "knowledge_index": 89896,
         "vision_index": 92672,
@@ -59029,8 +59039,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 83281,
-        "coding_index": 84117,
+        "openbench_index": 83275,
+        "coding_index": 84096,
         "tooling_index": 88869,
         "knowledge_index": 89410,
         "vision_index": null,
@@ -59692,8 +59702,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 69566,
-        "coding_index": 64830,
+        "openbench_index": 69565,
+        "coding_index": 64829,
         "tooling_index": 75734,
         "knowledge_index": 75414,
         "vision_index": 74805,
@@ -60675,8 +60685,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 49839,
-        "coding_index": 33623,
+        "openbench_index": 49838,
+        "coding_index": 33622,
         "tooling_index": 43099,
         "knowledge_index": 75372,
         "vision_index": null,
@@ -62395,8 +62405,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 68243,
-        "coding_index": 65648,
+        "openbench_index": 68241,
+        "coding_index": 65642,
         "tooling_index": 80107,
         "knowledge_index": 75056,
         "vision_index": 54738,
@@ -62891,8 +62901,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 79977,
-        "coding_index": 72101,
+        "openbench_index": 79960,
+        "coding_index": 72042,
         "tooling_index": 91917,
         "knowledge_index": 86547,
         "vision_index": null,
@@ -63470,7 +63480,7 @@
       },
       "scores": {
         "openbench_index": 76051,
-        "coding_index": 75988,
+        "coding_index": 75989,
         "tooling_index": 83126,
         "knowledge_index": 79984,
         "vision_index": 83997,
@@ -65930,7 +65940,7 @@
       },
       "scores": {
         "openbench_index": 67524,
-        "coding_index": 59024,
+        "coding_index": 59025,
         "tooling_index": 72271,
         "knowledge_index": 77187,
         "vision_index": null,
@@ -66919,8 +66929,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 76159,
-        "coding_index": 83766,
+        "openbench_index": 76158,
+        "coding_index": 83761,
         "tooling_index": 87780,
         "knowledge_index": 81708,
         "vision_index": 69881,
@@ -67933,8 +67943,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87834,
-        "coding_index": 94418,
+        "openbench_index": 87851,
+        "coding_index": 94475,
         "tooling_index": 92750,
         "knowledge_index": 97652,
         "vision_index": null,
@@ -68603,8 +68613,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 71496,
-        "coding_index": 74857,
+        "openbench_index": 71502,
+        "coding_index": 74876,
         "tooling_index": 78207,
         "knowledge_index": 81623,
         "vision_index": 78734,
@@ -69280,8 +69290,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78298,
-        "coding_index": 81402,
+        "openbench_index": 78299,
+        "coding_index": 81407,
         "tooling_index": 86524,
         "knowledge_index": 88174,
         "vision_index": 89049,
@@ -69911,8 +69921,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 80878,
-        "coding_index": 85318,
+        "openbench_index": 80872,
+        "coding_index": 85296,
         "tooling_index": 89552,
         "knowledge_index": 95243,
         "vision_index": 93475,
@@ -70659,8 +70669,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88697,
-        "coding_index": 96167,
+        "openbench_index": 88677,
+        "coding_index": 96102,
         "tooling_index": 92275,
         "knowledge_index": 99265,
         "vision_index": 98687,
@@ -73864,8 +73874,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 83104,
-        "coding_index": 83071,
+        "openbench_index": 83102,
+        "coding_index": 83067,
         "tooling_index": 88991,
         "knowledge_index": 91921,
         "vision_index": 76431,
@@ -74435,7 +74445,7 @@
       },
       "scores": {
         "openbench_index": 77188,
-        "coding_index": 82809,
+        "coding_index": 82806,
         "tooling_index": 85340,
         "knowledge_index": 74958,
         "vision_index": 54388,
@@ -75013,8 +75023,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89239,
-        "coding_index": 97017,
+        "openbench_index": 89257,
+        "coding_index": 97078,
         "tooling_index": 92917,
         "knowledge_index": 98623,
         "vision_index": 99198,
@@ -75631,7 +75641,7 @@
       },
       "scores": {
         "openbench_index": 74571,
-        "coding_index": 75006,
+        "coding_index": 75005,
         "tooling_index": 77652,
         "knowledge_index": 84332,
         "vision_index": 83679,
@@ -76167,8 +76177,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 85488,
-        "coding_index": 89932,
+        "openbench_index": 85461,
+        "coding_index": 89841,
         "tooling_index": 90062,
         "knowledge_index": 95397,
         "vision_index": 93904,
@@ -78236,8 +78246,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90469,
-        "coding_index": 96870,
+        "openbench_index": 90480,
+        "coding_index": 96905,
         "tooling_index": 98168,
         "knowledge_index": 96493,
         "vision_index": null,
@@ -78783,8 +78793,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86722,
-        "coding_index": 90475,
+        "openbench_index": 86706,
+        "coding_index": 90420,
         "tooling_index": 91612,
         "knowledge_index": 98458,
         "vision_index": 95910,
@@ -79618,8 +79628,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 91306,
-        "coding_index": 92719,
+        "openbench_index": 91231,
+        "coding_index": 92471,
         "tooling_index": 96603,
         "knowledge_index": 97691,
         "vision_index": null,
@@ -79641,7 +79651,7 @@
         "frontiercode_1_1": 47.6,
         "frontiercode_extended_1_1": 60.6,
         "frontiercode_1_0": null,
-        "swe_marathon_1_1": null,
+        "swe_marathon_1_1": 43.8,
         "swe_marathon_1_0": null,
         "vibe_code_bench_1_1": 91.9,
         "programbench_almost": 41,
@@ -79713,7 +79723,7 @@
         "frontiercode_1_1": "2026-10-13",
         "frontiercode_extended_1_1": "2026-10-14",
         "frontiercode_1_0": null,
-        "swe_marathon_1_1": null,
+        "swe_marathon_1_1": "2026-10-14",
         "swe_marathon_1_0": null,
         "vibe_code_bench_1_1": "2026-10-01",
         "programbench_almost": "2026-10-01",
@@ -79785,7 +79795,7 @@
         "frontiercode_1_1": "https://cognition.com/frontiercode",
         "frontiercode_extended_1_1": "https://cognition.com/frontiercode",
         "frontiercode_1_0": null,
-        "swe_marathon_1_1": null,
+        "swe_marathon_1_1": "https://www.swe-marathon.org",
         "swe_marathon_1_0": null,
         "vibe_code_bench_1_1": "https://www.vals.ai/benchmarks/vibe-code",
         "programbench_almost": "https://www.vals.ai/benchmarks/programbench",
@@ -79879,6 +79889,13 @@
             "date": "2026-10-14",
             "score": 60.6,
             "source": "https://cognition.com/frontiercode"
+          }
+        ],
+        "swe_marathon_1_1": [
+          {
+            "date": "2026-10-14",
+            "score": 43.8,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -80043,6 +80060,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
+            "swe_marathon_1_1",
             "terminal_bench_4_0",
             "vibe_code_bench_1_1",
             "scicode",
@@ -80050,7 +80068,7 @@
             "programbench_almost"
           ],
           "of": 17,
-          "share": 0.584
+          "share": 0.64
         },
         "tooling_index": {
           "measured": [
@@ -81761,7 +81779,7 @@
       },
       "scores": {
         "openbench_index": 76858,
-        "coding_index": 78536,
+        "coding_index": 78534,
         "tooling_index": 82861,
         "knowledge_index": 79124,
         "vision_index": 66316,
@@ -82203,8 +82221,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 81723,
-        "coding_index": 87655,
+        "openbench_index": 81752,
+        "coding_index": 87752,
         "tooling_index": 81832,
         "knowledge_index": 89510,
         "vision_index": null,
@@ -82713,8 +82731,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 89775,
-        "coding_index": 95144,
+        "openbench_index": 89798,
+        "coding_index": 95219,
         "tooling_index": 94797,
         "knowledge_index": 94088,
         "vision_index": null,
@@ -83134,8 +83152,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 90936,
-        "coding_index": 90659,
+        "openbench_index": 90959,
+        "coding_index": 90735,
         "tooling_index": 97571,
         "knowledge_index": 96951,
         "vision_index": null,
