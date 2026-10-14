@@ -39,6 +39,28 @@
       "universe": "models"
     },
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'unbiased/pareto-26.9' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "unbiased/pareto-26.9",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model '~unbiased/pareto-latest' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "~unbiased/pareto-latest",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
