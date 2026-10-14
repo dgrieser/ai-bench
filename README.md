@@ -1572,16 +1572,22 @@ Where a label names a *different* run -- a harness, a subset, a tool mode, a
 maximum over configurations -- it is parked on `__unmappable__` instead, and
 `test_hle_no_tools.py` checks the whole file against that rule rather than
 trusting each entry to have been thought about. Parked for it are, among
-others, `SWE-Bench (Codex)`/`(OpenCode)`/`(OpenHands)` and
-`SWE Bench Verified (SWE-Agent Harness)` (a harness other than the column's
-leading source's), a bare `SWE-Bench (Pass@1)` (Verified, Full and Lite are
-three question sets), `Terminal Bench 2.1 (best harness)`, `SWE-bench Pro
+others, `SWE-Bench (Codex)`/`(OpenCode)`/`(OpenHands)` and a bare
+`SWE-Bench (Pass@1)` (Verified, Full and Lite are three question sets, and
+these name none of them), `Terminal Bench 2.1 (best harness)`, `SWE-bench Pro
 (Public Dataset)` and `(strict)`, `MCP Atlas (Public)`, `MMMU/MMMU_Pro
 (mmmu_pro_vision)`, `Charxiv RQ (original / with python)`, `HLE-Full` and
 `HLE w/ CoT`. `AA-Omni-Public Non-hallu` is parked for a sharper reason: it is
 the *inverse* of `aa_omniscience_hallucination`, which is a hallucination rate
 where lower is better, so mapping it wrote a model's best number into the
 column as its worst.
+
+SWE-bench Verified is the exception to the harness rule. Its column already
+says "harness varies" -- labs run it in whatever agent they ship with, and the
+leaderboards it is read from do too -- so `SWE-Bench Verified (OpenCode)`,
+`(OpenHands)` and `SWE Bench Verified (SWE-Agent Harness)` all map to
+`swe_bench_verified`. What stays parked there is a different *measurement*:
+`SWE-Bench Verified (AgentLess 4*10)` and other estimators.
 
 Under the file there is a net, because a label nobody has reviewed yet still
 arrives with a value attached. Three things decide between the labels that
