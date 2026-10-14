@@ -1,12 +1,4 @@
 {"entries": [
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MATH-Vision", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MATH500(acc)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MAXIFE", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MBPP", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MCP-Atlas", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MCP-Mark", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MCPMark", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MGSM (EM)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MILU", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MLVU", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MLVU (M-Avg)", "value": "__unmappable__"},
@@ -3998,5 +3990,13 @@
 {"at": "2026-10-14T17:41:21Z", "by": "hand", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "SWE Bench Verified (SWE-Agent Harness)", "value": "swe_bench_verified"},
 {"at": "2026-10-14T17:41:21Z", "by": "hand", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "SWE-Bench Verified (OpenHands)", "value": "swe_bench_verified"},
 {"at": "2026-10-14T18:14:06Z", "by": "hand", "commit": "3f316de", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "SWE Bench Verified (SWE-Agent Harness)", "value": "swe_bench_verified"},
-{"at": "2026-10-14T18:14:06Z", "by": "hand", "commit": "3f316de", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "SWE-Bench Verified (OpenHands)", "value": "swe_bench_verified"}
+{"at": "2026-10-14T18:14:06Z", "by": "hand", "commit": "3f316de", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "SWE-Bench Verified (OpenHands)", "value": "swe_bench_verified"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omni. Accuracy", "value": "aa_omniscience_accuracy"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omni. Index", "value": "aa_omniscience"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omni. Non-Halluc.", "value": "aa_omniscience_hallucination"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omniscience Accuracy", "value": "aa_omniscience_accuracy"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omniscience Index", "value": "aa_omniscience"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "AA-Omniscience Non-Hallucination Rate", "value": "aa_omniscience_hallucination"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "LiquidAI/LFM2.5-8B-A1B", "value": "lfm2-5-8b-a1b"},
+{"at": "2026-10-14T20:32:56Z", "by": "admin", "previous": null, "route": "update_swe_marathon_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38632843739", "subject": "Gemini 4 Argon", "value": "gemini-4-argon"}
 ]}
