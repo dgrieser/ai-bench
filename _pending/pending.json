@@ -1,17 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-15 - Meta - https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
-      "question": "Add newly released model 'muse-spark-open' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "muse-spark-open",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
@@ -51,6 +40,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-spark-open",
+          "reason": "the same name without the vendor prefix"
+        },
         {
           "confidence": "weak",
           "option": "solar-open2-250b",
@@ -106,6 +100,33 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "subject": "nvidia/nemotron-3.5-super-vl",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-spark-open",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": "muse-spark-open",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'meta-models/Muse-Spark-Open-816B-A42B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta-models/Muse-Spark-Open-816B-A42B",
       "universe": "models"
     },
     {
