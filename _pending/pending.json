@@ -4,49 +4,38 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
-      "note": "released 2026-10-15 - NVIDIA",
-      "question": "Carry newly released closed model 'nemotron-3-5-bolt-74b-a9b' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "nemotron-3-5-bolt-74b-a9b",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-15 - NVIDIA - https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
-      "question": "Add newly released model 'nemotron-3-5-super-vl' to llm.json?",
+      "note": "released 2026-10-15 - Meta - https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
+      "question": "Add newly released model 'muse-spark-open' to llm.json?",
       "route": "check_new.py",
       "route_kind": "new-model",
-      "subject": "nemotron-3-5-super-vl",
+      "subject": "muse-spark-open",
       "universe": null
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "gpt-5-2-codex",
+          "option": "gemini-2-5-flash-lite",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-pro",
+          "option": "glm-5-2-non-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-5-2-medium",
+          "option": "gpt-5-2-non-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash",
+          "option": "gemini-2-5-flash-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "agnes-2-5-pro-beta",
+          "option": "gemini-2-5-pro-03-25",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         }
       ],
@@ -56,9 +45,68 @@
       "question": "Which Artificial Analysis slug is llm.json model 'lfm-2-5-24b-a2b'?",
       "route": "update_artificialanalysis_mapping.py",
       "route_kind": "aa-mapping",
-      "ruled_out": 5,
+      "ruled_out": 10,
       "subject": "lfm-2-5-24b-a2b",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 3 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 3 word(s): exact to open, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'meta/muse-spark-open' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-spark-open",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-super-vl",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'nvidia/nemotron-3.5-super-vl' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "nvidia/nemotron-3.5-super-vl",
+      "universe": "models"
     },
     {
       "candidates": [
@@ -79,22 +127,22 @@
         },
         {
           "confidence": "weak",
-          "option": "nemotron-3-5-lightning",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "nemotron-3-5-super-vl",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "nemotron-3-nano-omni-30b-a3b",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "nemotron-3-5-lightning",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         }
       ],
-      "default": null,
+      "default": "nemotron-3-5-super-vl",
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'nvidia/nemotron-3.5-super-vl' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map Spheron path 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16' to llm.json model",
+      "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "subject": "nvidia/nemotron-3.5-super-vl",
+      "subject": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
       "universe": "models"
     }
   ]
