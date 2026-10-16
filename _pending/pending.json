@@ -1,6 +1,28 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-16 - Reflection - https://huggingface.co/reflection/Beam-1.0-501B-A23B",
+      "question": "Add newly released model 'reflection-beam' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "subject": "reflection-beam",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'beam 1.0' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "beam 1.0",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "exact",
@@ -213,6 +235,43 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "subject": "nvidia/nemotron-3.5-super-vl",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "sarvam-30b",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'reflection/beam-1.0-501b-a23b' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "reflection/beam-1.0-501b-a23b",
       "universe": "models"
     },
     {
