@@ -4,17 +4,6 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
-      "note": "released 2026-10-16 - Reflection - https://huggingface.co/reflection/Beam-1.0-501B-A23B",
-      "question": "Add newly released model 'reflection-beam' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "subject": "reflection-beam",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
       "note": null,
       "question": "Map Coding Agent Index model 'beam 1.0' to llm.json model",
       "route": "update_aa_coding_agents_mapping.py",
@@ -241,6 +230,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "reflection-beam",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "ornith-1-0-9b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
         },
@@ -258,11 +252,6 @@
           "confidence": "weak",
           "option": "exaone-4-0-1-2b",
           "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "sarvam-30b",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
         }
       ],
       "default": null,
@@ -336,6 +325,43 @@
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
       "subject": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "sarvam-30b",
+          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": "reflection-beam",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'reflection/Beam-1.0-501B-A23B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "subject": "reflection/Beam-1.0-501B-A23B",
       "universe": "models"
     }
   ]
