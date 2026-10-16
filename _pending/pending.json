@@ -4,28 +4,28 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "gemini-2-5-pro-05-06",
+          "option": "gemini-2-5-flash-reasoning-04-2025",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-04-2025",
+          "option": "gemini-2-5-flash-lite-preview-09-2025",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-lite-reasoning",
+          "option": "gemini-2-5-flash-preview-09-2025-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "mi-dm-k-2-5-pro-dec28",
+          "option": "gemini-2-5-flash-lite-preview-09-2025-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-preview-09-2025",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+          "option": "kimi-k2-5",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
         }
       ],
       "default": null,
@@ -34,7 +34,7 @@
       "question": "Which Artificial Analysis slug is llm.json model 'lfm-2-5-24b-a2b'?",
       "route": "update_artificialanalysis_mapping.py",
       "route_kind": "aa-mapping",
-      "ruled_out": 15,
+      "ruled_out": 20,
       "subject": "lfm-2-5-24b-a2b",
       "universe": "aa-slugs"
     }
