@@ -1,68 +1,30 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'beam 1.0' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "subject": "beam 1.0",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-spark-open",
-          "reason": "exact to muse spark open, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'muse spark open' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "subject": "muse spark open",
-      "universe": "models"
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-lite",
+          "option": "gemini-2-5-pro-05-06",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-2-non-reasoning",
+          "option": "gemini-2-5-flash-04-2025",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-5-2-non-reasoning",
+          "option": "gemini-2-5-flash-lite-reasoning",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-reasoning",
+          "option": "mi-dm-k-2-5-pro-dec28",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-2-5-pro-03-25",
+          "option": "gemini-2-5-flash-preview-09-2025",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         }
       ],
@@ -72,297 +34,9 @@
       "question": "Which Artificial Analysis slug is llm.json model 'lfm-2-5-24b-a2b'?",
       "route": "update_artificialanalysis_mapping.py",
       "route_kind": "aa-mapping",
-      "ruled_out": 10,
+      "ruled_out": 15,
       "subject": "lfm-2-5-24b-a2b",
       "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-spark-open",
-          "reason": "exact to Muse Spark Open, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Epoch AI model 'Muse Spark Open' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "subject": "Muse Spark Open",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-spark-open",
-          "reason": "the same name without the vendor prefix"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 3 word(s): exact to open, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 3 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'meta/muse-spark-open' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "meta/muse-spark-open",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "step-5-preview",
-          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "atria-dawn-preview",
-          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash-preview",
-          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'moondream/moondream3-preview' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "moondream/moondream3-preview",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 2 word(s): exact to 1-9b-a2b, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-5-9b",
-          "reason": "the same name without its first 2 word(s): exact to 1-9b-a2b, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "lfm-2-5-24b-a2b",
-          "reason": "the same name without its first 3 word(s): exact to a2b, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'moondream/moondream3.1-9b-a2b' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "moondream/moondream3.1-9b-a2b",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "nemotron-3-5-super-vl",
-          "reason": "the same name without the vendor prefix"
-        },
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-super-120b-a12b",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-ultra-550b-a55b",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nemotron-3-5-lightning",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'nvidia/nemotron-3.5-super-vl' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "nvidia/nemotron-3.5-super-vl",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "reflection-beam",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-397b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "exaone-4-0-1-2b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'reflection/beam-1.0-501b-a23b' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "subject": "reflection/beam-1.0-501b-a23b",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-spark-open",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        }
-      ],
-      "default": "muse-spark-open",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'meta-models/Muse-Spark-Open-816B-A42B' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "subject": "meta-models/Muse-Spark-Open-816B-A42B",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-super-120b-a12b",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-ultra-550b-a55b",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nemotron-3-5-super-vl",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nemotron-3-5-lightning",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        }
-      ],
-      "default": "nemotron-3-5-super-vl",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "subject": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-397b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "exaone-4-0-1-2b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "sarvam-30b",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        }
-      ],
-      "default": "reflection-beam",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'reflection/Beam-1.0-501B-A23B' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "subject": "reflection/Beam-1.0-501B-A23B",
-      "universe": "models"
     }
   ]
 }
