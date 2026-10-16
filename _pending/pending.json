@@ -37,6 +37,70 @@
       "ruled_out": 20,
       "subject": "lfm-2-5-24b-a2b",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "sarvam-30b",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-oss-20b",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "longcat-2-0",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "sarvam-105b",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-270m",
+          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'xingchen-agi/xing4.0-29b-a4b' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "xingchen-agi/xing4.0-29b-a4b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-spark-open",
+          "reason": "exact to muse-spark-open, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'meta/muse-spark-open' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "subject": "meta/muse-spark-open",
+      "universe": "models"
     }
   ]
 }
