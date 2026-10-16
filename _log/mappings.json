@@ -1,15 +1,4 @@
 {"entries": [
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMLU", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMLU (EM)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMStar", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMVU", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MRCR v2 8 needle 128k (average)", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MVBench", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Math", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Math Reasoning", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Math500", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MathVision", "value": "__unmappable__"},
-{"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MathVista mini", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Mathvista(mini)", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MedXPertQA MM", "value": "__unmappable__"},
 {"at": "2026-06-08T07:10:57Z", "by": "hand", "commit": "ec13d88", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MedXpertQA-MM", "value": "__unmappable__"},
@@ -3998,5 +3987,16 @@
 {"at": "2026-10-15T03:58:01Z", "by": "admin", "previous": null, "route": "update_real_swe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38678891659", "subject": "Nemotron 3 Ultra", "value": "nvidia-nemotron-3-ultra-550b-a55b"},
 {"at": "2026-10-15T03:58:01Z", "by": "admin", "previous": null, "route": "update_real_swe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38678891659", "subject": "Opus 5.5 Claude Opus 5.5", "value": "claude-opus-5-5"},
 {"at": "2026-10-15T03:58:01Z", "by": "admin", "previous": null, "route": "update_real_swe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38678891659", "subject": "Qwen3.8-Max prime", "value": "__unmappable__"},
-{"at": "2026-10-15T03:58:01Z", "by": "admin", "previous": null, "route": "update_real_swe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38678891659", "subject": "Sonnet 5.5 Claude Sonnet 5.5", "value": "claude-sonnet-5-5"}
+{"at": "2026-10-15T03:58:01Z", "by": "admin", "previous": null, "route": "update_real_swe_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38678891659", "subject": "Sonnet 5.5 Claude Sonnet 5.5", "value": "claude-sonnet-5-5"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_aa_coding_agents_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "beam 1.0", "value": "reflection-beam"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_aa_coding_agents_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "muse spark open", "value": "muse-spark-open"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "Muse Spark Open", "value": "muse-spark-open"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "meta/muse-spark-open", "value": "muse-spark-open"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "moondream/moondream3-preview", "value": "__unmappable__"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "moondream/moondream3.1-9b-a2b", "value": "__unmappable__"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "nvidia/nemotron-3.5-super-vl", "value": "nemotron-3-5-super-vl"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "reflection/beam-1.0-501b-a23b", "value": "reflection-beam"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "meta-models/Muse-Spark-Open-816B-A42B", "value": "muse-spark-open"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16", "value": "nemotron-3-5-super-vl"},
+{"at": "2026-10-16T17:39:05Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/38941184804", "subject": "reflection/Beam-1.0-501B-A23B", "value": "reflection-beam"}
 ]}
