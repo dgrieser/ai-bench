@@ -3,6 +3,33 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "muse-spark-open",
+          "reason": "exact to muse spark open, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'muse spark open' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "subject": "muse spark open",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "gemini-2-5-flash-lite",
           "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
@@ -41,6 +68,33 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "muse-spark-open",
+          "reason": "exact to Muse Spark Open, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Muse Spark Open' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "subject": "Muse Spark Open",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "muse-spark-open",
           "reason": "the same name without the vendor prefix"
@@ -63,6 +117,65 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "subject": "meta/muse-spark-open",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-5-preview",
+          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "atria-dawn-preview",
+          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "the same name without its first 2 word(s): exact to preview, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'moondream/moondream3-preview' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "moondream/moondream3-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 2 word(s): exact to 1-9b-a2b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-5-9b",
+          "reason": "the same name without its first 2 word(s): exact to 1-9b-a2b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm-2-5-24b-a2b",
+          "reason": "the same name without its first 3 word(s): exact to a2b, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'moondream/moondream3.1-9b-a2b' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "moondream/moondream3.1-9b-a2b",
       "universe": "models"
     },
     {
