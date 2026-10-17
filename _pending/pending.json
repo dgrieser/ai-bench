@@ -39,6 +39,43 @@
       "universe": "aa-slugs"
     },
     {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek/deepseek-v4.1-flash-1017, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-r1",
+          "reason": "drop suffix to a variant, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'deepseek/deepseek-v4.1-flash-1017' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "deepseek/deepseek-v4.1-flash-1017",
+      "universe": "models"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
