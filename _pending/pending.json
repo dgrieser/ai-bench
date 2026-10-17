@@ -39,6 +39,17 @@
       "universe": "aa-slugs"
     },
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'elorian/glimpse' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "subject": "elorian/glimpse",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
