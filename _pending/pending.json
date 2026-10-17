@@ -4,46 +4,13 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "gemini-2-5-flash-reasoning-04-2025",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-2-5-flash-lite-preview-09-2025",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-2-5-flash-preview-09-2025-reasoning",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-2-5-flash-lite-preview-09-2025-reasoning",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "kimi-k2-5",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'lfm-2-5-24b-a2b'?",
-      "route": "update_artificialanalysis_mapping.py",
-      "route_kind": "aa-mapping",
-      "ruled_out": 20,
-      "subject": "lfm-2-5-24b-a2b",
-      "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
           "option": "deepseek-v4-1-flash",
-          "reason": "exact to deepseek/deepseek-v4.1-flash-1017, most components match"
+          "reason": "exact to deepseek-v4-1-flash-1017, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-non-reasoning",
+          "reason": "exact to deepseek-v4-1-flash-1017, most components match"
         },
         {
           "confidence": "weak",
@@ -52,75 +19,152 @@
         },
         {
           "confidence": "weak",
+          "option": "deepseek-v4-flash-0420",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "deepseek-v4-flash-vision",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-r1",
-          "reason": "drop suffix to a variant, all components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'deepseek/deepseek-v4.1-flash-1017' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Which Artificial Analysis slug is llm.json model 'deepseek-v4-1-flash-1017'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "deepseek-v4-1-flash-1017",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "aa_lcr",
+          "reason": "exact to AA.LCR, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "itbench_aa",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_briefcase",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "the first 1 word(s) of the label: exact to aa, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA.LCR' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "deepseek/deepseek-v4.1-flash-1017",
-      "universe": "models"
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+      "subject": "AA.LCR",
+      "universe": "benchmarks"
     },
     {
       "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'elorian/glimpse' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'Claw-Eval' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "elorian/glimpse",
-      "universe": "models"
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+      "subject": "Claw-Eval",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepresearchBII' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+      "subject": "DeepresearchBII",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Dense FFN Intermediate Size' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+      "subject": "Dense FFN Intermediate Size",
+      "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "sarvam-30b",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-oss-20b",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "longcat-2-0",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "sarvam-105b",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemma-3-270m",
-          "reason": "the same name without its first 3 word(s): drop size to a variant, substring match"
+          "option": "tau3_bench_banking",
+          "reason": "exact to Tau3-Bench, substring match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'xingchen-agi/xing4.0-29b-a4b' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'Tau3-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "subject": "xingchen-agi/xing4.0-29b-a4b",
+      "source_url": "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+      "subject": "Tau3-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "xing-4-0-29b-a4b",
+          "reason": "the same name spelled without punctuation"
+        },
+        {
+          "confidence": "weak",
+          "option": "sarvam-30b",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-oss-20b",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "longcat-2-0",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "sarvam-105b",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": "xing-4-0-29b-a4b",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'XingChen-AGI/Xing4.0-29B-A4B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/XingChen-AGI/Xing4.0-29B-A4B/",
+      "subject": "XingChen-AGI/Xing4.0-29B-A4B",
       "universe": "models"
     }
   ]
