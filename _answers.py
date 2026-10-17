@@ -71,6 +71,12 @@ AA_IGNORE = "aa-ignore"
 # candidates, once something does. Any route; see _rejections.py. AA_IGNORE is
 # the older, Artificial-Analysis-only spelling of the same thing.
 CANDIDATES_SKIP = "candidates-skip"
+# The answer a candidates-skip may carry instead of a list: every option the
+# route's list holds right now, expanded here rather than on the page. "None of
+# the current ones" -- the name is asked again only once something added later
+# matches it -- and a list of every model or AA slug would not fit through a
+# workflow_dispatch input anyway.
+ALL_KNOWN = "__all_known__"
 NEW_MODEL = "new-model"
 MODEL_ADD = "model-add"
 MODEL_CREATE = "model-create"
@@ -208,7 +214,7 @@ class Answer:
         if self.kind == MAPPING:
             return f"{self.route}: {self.subject!r} -> {self.value!r}"
         if self.kind == CANDIDATES_SKIP:
-            return f"{self.route}: {self.subject!r} is none of {', '.join(self.value)}"
+            return f"{self.route}: {self.subject!r} is none of {_listed(self.value)}"
         if self.kind == AA_IGNORE:
             return f"AA suggestions rejected for {self.subject!r}: {', '.join(self.value)}"
         if self.kind == NEW_MODEL:
@@ -720,6 +726,13 @@ def _validate_mapping(
     )
 
 
+def _listed(options: list[str], limit: int = 8) -> str:
+    """A list for a log line: an __all_known__ skip names hundreds."""
+    if len(options) <= limit:
+        return ", ".join(options)
+    return f"{', '.join(options[:limit])} and {len(options) - limit} more"
+
+
 def _validate_candidates_skip(
     index: int,
     record: dict[str, Any],
@@ -744,14 +757,24 @@ def _validate_candidates_skip(
             "only queued questions can be answered"
         )
     options = record.get("answer")
+    route = resolve_route(route_name, route_kind)
+    known = universes.get(route.universe) or []
+    if options == ALL_KNOWN:
+        if not known:
+            raise AnswerError(
+                f"the {route.universe} list is empty (its source was unreachable), "
+                f"so {ALL_KNOWN} would rule out nothing"
+            )
+        options = [o for o in known if o not in SENTINELS]
     if not isinstance(options, list) or not options or not all(
         isinstance(o, str) and o for o in options
     ):
-        raise AnswerError("'answer' must be a non-empty list of the candidates being ruled out")
+        raise AnswerError(
+            "'answer' must be a non-empty list of the candidates being ruled out, "
+            f"or {ALL_KNOWN!r}"
+        )
     if any(o in SENTINELS for o in options):
         raise AnswerError("a sentinel is an answer, not a candidate; it cannot be ruled out")
-    route = resolve_route(route_name, route_kind)
-    known = universes.get(route.universe) or []
     if not known:
         raise AnswerError(
             f"the {route.universe} list is empty (its source was unreachable), "
@@ -1403,7 +1426,7 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
 
     if answer.kind == CANDIDATES_SKIP:
         written = _rejections.add(answer.route, answer.subject, list(answer.value))
-        return [f"{written.name}: {answer.subject!r} is none of {', '.join(answer.value)}"]
+        return [f"{written.name}: {answer.subject!r} is none of {_listed(answer.value)}"]
 
     if answer.kind == AA_IGNORE:
         module = importlib.import_module(AA_MODULE)

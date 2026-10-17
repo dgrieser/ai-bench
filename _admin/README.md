@@ -197,6 +197,19 @@ tells you why.
     | ./answer.py --stdin -w
   ```
 
+  **None of the current ones** is the same answer over the whole list rather
+  than the five shown: every model (or AA slug) known today is ruled out, so
+  the name comes back only once something added later matches it. The record
+  says `"answer": "__all_known__"` and the runner expands it against its own
+  list, so the batch stays small and the page's copy of the list does not have
+  to be current.
+
+  **Source ↗** on every Queue and New models card opens where the name was read,
+  in a new tab: the model's own page on sources that have one (OpenRouter,
+  Spheron, llm-stats models, an AA slug), the leaderboard otherwise. The queue
+  carries no URL, so the page keeps one entry per source in `SOURCE_PAGES`;
+  `test_answers.py` fails when a route in `propose.ROUTES` has none.
+
   **New model…** is the answer for a release a board lists before Artificial
   Analysis does -- Vals listing `stepfun/step-5-preview` with nothing in
   `llm.json` to map it to. It opens the *Add a model* form inside the card,
