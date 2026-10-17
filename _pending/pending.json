@@ -1,3 +1,16 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'unbiased/pareto-26.10' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/unbiased/pareto-26.10",
+      "subject": "unbiased/pareto-26.10",
+      "universe": "models"
+    }
+  ]
 }
