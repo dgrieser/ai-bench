@@ -3814,6 +3814,13 @@ OS — **Reserve** is where that share comes off.
    `write_*_to_slug_mapping()` (a no-op under `freeze_decisions()`),
    `add_*_mapping()`, `add_*_unmappable()` and, if the source publishes weight
    availability, `add_*_closed_weights()`. Copy `_frontierswe_mapping.py`.
+   It also exposes `fetch_*_model_pages()`: each name with the page it was read
+   from, which `update_<benchmark>_mapping.py` passes to `prompt_select_or_new(...,
+   source_url=...)` so the admin page's card links it. One board is
+   `_source_pages.same_page(names, URL)`; several boards need the fetcher's
+   `--format pages`, which `_source_pages.emit()` prints from the same rows as
+   `--format names` (see `_source_pages.py`). `test_prompts.py` fails on a
+   question queued without one.
 
 5. Register in `update.py`:
    - Add fetch command builder

@@ -76,6 +76,7 @@ from typing import Any
 
 import _cache
 from _fetch_checks import check_percentages, require_rows
+import _source_pages
 
 
 BASE_URL = "https://www.vals.ai/benchmarks/{slug}"
@@ -459,7 +460,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -473,6 +474,9 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        # Which board each name was read from, for the admin page's link.
+        _source_pages.emit(scores, lambda e: benchmark_url(e["benchmark"]))
     elif args.format == "names":
         for name in sorted({entry["model"] for entry in scores}):
             print(name)

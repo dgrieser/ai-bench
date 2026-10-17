@@ -54,6 +54,7 @@ from pathlib import Path
 from typing import Any
 
 from _fetch_checks import check_percentages, require_columns, require_rows
+import _source_pages
 
 VERIFIED_KEY = "osworld_verified"
 
@@ -381,7 +382,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -414,6 +415,9 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        # Which board each name was read from, for the admin page's link.
+        _source_pages.emit(scores, lambda e: source_url(e.get("benchmark") or VERIFIED_KEY))
     elif args.format == "names":
         # One name per line even where a model is on several boards or runs:
         # the mapping is by label, not by row.

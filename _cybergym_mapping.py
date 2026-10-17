@@ -17,6 +17,7 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
 
 CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
 CYBERGYM_MAPPING = Path(__file__).resolve().with_name(
@@ -35,6 +36,14 @@ def fetch_cybergym_model_names() -> list[str]:
             f"fetch_cybergym.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_cybergym_model_pages() -> dict[str, str | None]:
+    """Name -> the CyberGym or ExploitGym board it was read from, for the admin page's link.
+
+    The same names fetch_cybergym_model_names() lists.
+    """
+    return _source_pages.run(CYBERGYM_SCRIPT)
 
 
 def _load_raw_mapping(path: Path = CYBERGYM_MAPPING) -> dict[str, str]:

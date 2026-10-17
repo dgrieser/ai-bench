@@ -2699,11 +2699,13 @@ function option(text, why, { pressed, className = "", tag = "", note = null, onc
 
 const sourceOf = (question) => question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
 
-/* Where a queued name was read, for the "Source" link on its card. The queue
-   does not carry a URL, so this is one page per source: the name's own page
-   where the site has one per model, its leaderboard otherwise. Each mirrors the
-   fetcher's own constant (fetch_<source>.py); test_answers.py checks every
-   route in propose.ROUTES has an entry. */
+/* Where a queued name was read, for the "Source" link on its card. The asking
+   script says so itself -- pending.json's `source_url`: the board a name was
+   listed on, or its own page where the site has one (see _source_pages.py).
+   This table is the fallback for a question queued before that, or carried
+   over from such a queue: one page per source, the model's where the URL can
+   be built from the name. test_answers.py checks every route in propose.ROUTES
+   has an entry. */
 const enc = (subject) => String(subject).split("/").map(encodeURIComponent).join("/");
 const SOURCE_PAGES = {
   rebench: () => "https://swe-rebench.com/",
@@ -2734,14 +2736,17 @@ const SOURCE_PAGES = {
   huggingface: (q) => `https://huggingface.co/search/full-text?q=${encodeURIComponent(q.subject)}`,
   llmstats: (q) => (q.route_kind === "llmstats-model"
     ? `https://llm-stats.com/models/${enc(q.subject)}`
-    : "https://llm-stats.com/benchmarks"),
+    : /^[a-z0-9_]+$/.test(q.subject)
+      ? `https://llm-stats.com/benchmarks/${q.subject.replace(/_/g, "-")}`
+      : "https://llm-stats.com/leaderboards/open-llm-leaderboard"),
   /* The subject is an llm.json name; what is asked is which AA slug it is. */
   artificialanalysis: () => "https://artificialanalysis.ai/models",
 };
 
-/* A New models question names an AA slug, and its note ends with the model's
-   AA page when the API gave one. */
+/* A New models question names an AA slug, and an older one carries the model's
+   AA page only at the end of its note. */
 function sourceUrl(question) {
+  if (/^https?:\/\//.test(question.source_url || "")) return question.source_url;
   if (question.route === NEW_MODEL_ROUTE) {
     const found = String(question.note || "").match(/https?:\/\/\S+/);
     return found ? found[0] : `https://artificialanalysis.ai/models/${enc(question.subject)}`;

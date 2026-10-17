@@ -47,6 +47,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from _fetch_checks import check_fractions, check_percentages, require_rows
 from _revisions import revision_label, revision_rank
+import _source_pages
 
 
 URL = "https://www.frontierswe.com/"
@@ -293,7 +294,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch FrontierSWE leaderboard scores.")
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -317,6 +318,9 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        # Which board each name was read from, for the admin page's link.
+        _source_pages.emit(scores, lambda e: BOARD_URLS.get(e.get("revision") or ""))
     elif args.format == "names":
         for entry in scores:
             print(entry["model"])

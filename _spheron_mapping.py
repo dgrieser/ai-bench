@@ -17,6 +17,7 @@ from typing import Any
 
 from _openness import PENDING
 from _prompts import freeze_decisions
+import fetch_spheron
 
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 SPHERON_MAPPING = Path(__file__).resolve().with_name(
@@ -31,6 +32,11 @@ UNMAPPABLE = "__unmappable__"
 # HuggingFace path segments that are not an "org" (so not a model path).
 _HF_RESERVED = {"datasets", "spaces", "models", "organizations", "settings", "docs"}
 _HF_PATH_RE = re.compile(r"(?:huggingface\.co|hf\.co)/([^/\s?#]+)/([^/\s?#]+)")
+
+
+def spheron_page(path: str) -> str:
+    """The Spheron page a path is read from, for the admin page's link."""
+    return fetch_spheron.BASE_URL.format(model=path)
 
 
 def hf_path_from_url(url: Any) -> str | None:

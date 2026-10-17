@@ -17,6 +17,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
+import fetch_zerobench
 
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
 ZEROBENCH_MAPPING = Path(__file__).resolve().with_name(
@@ -35,6 +37,11 @@ def fetch_zerobench_model_names() -> list[str]:
             f"fetch_zerobench.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_zerobench_model_pages() -> dict[str, str | None]:
+    """Name -> the page it was read from: one board, so one page for every name."""
+    return _source_pages.same_page(fetch_zerobench_model_names(), fetch_zerobench.URL)
 
 
 def _load_raw_mapping(path: Path = ZEROBENCH_MAPPING) -> dict[str, str]:

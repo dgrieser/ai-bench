@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 import _cache
+import _source_pages
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 HF_BASE = "https://huggingface.co"
@@ -1507,7 +1508,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["json", "table", "names"],
+        choices=["json", "table", "names", "pages"],
         default="json",
         help="Output format (default: json).",
     )
@@ -1602,6 +1603,17 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(results, ensure_ascii=False, indent=2))
+    elif args.format == "pages":
+        # A label is asked about once however many cards carry it; its link is
+        # the first card (by llm.json order) that does.
+        rows = [
+            {"model": label, "repo": entry["repo"]}
+            for entry in results
+            for label in entry["scores"]
+        ]
+        _source_pages.emit(
+            sorted(rows, key=lambda r: r["model"]), lambda r: f"{HF_BASE}/{r['repo']}"
+        )
     elif args.format == "names":
         labels: set[str] = set()
         for entry in results:

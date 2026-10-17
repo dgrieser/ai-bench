@@ -36,6 +36,7 @@ from concurrent.futures import ThreadPoolExecutor
 import _fetch_warnings
 from _fetch_checks import check_percentages
 from _scale_labs import NoRowsError, extract_board_rows, fetch_board_rows
+import _source_pages
 
 
 BASE_URL = "https://labs.scale.com/leaderboard/sweatlas-{track}"
@@ -216,7 +217,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -230,6 +231,9 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        # Which board each name was read from, for the admin page's link.
+        _source_pages.emit(scores, lambda e: BASE_URL.format(track=e["track"]))
     elif args.format == "names":
         for name in sorted({entry["model"] for entry in scores}):
             print(name)

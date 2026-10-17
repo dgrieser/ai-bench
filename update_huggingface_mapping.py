@@ -17,7 +17,7 @@ from _huggingface_mapping import (
     HF_MAPPING,
     add_hf_mapping,
     add_hf_unmappable,
-    fetch_huggingface_benchmark_names,
+    fetch_huggingface_benchmark_pages,
     load_reviewed_hf_labels,
 )
 
@@ -64,11 +64,15 @@ def load_doc(path: Path) -> dict[str, Any]:
     return doc
 
 
-def prompt_key_for_label(label: str, keys: list[str]) -> str | None:
+def prompt_key_for_label(
+    label: str, keys: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {k.lower(): k for k in keys}
     while True:
         prompt_label = f"Map HF label '{label}' to llm.json benchmark"
-        raw = prompt_select_or_new(prompt_label, keys, subject=label)
+        raw = prompt_select_or_new(
+            prompt_label, keys, subject=label, source_url=source_url
+        )
         if raw is None:
             return None
         canonical = options_lower.get(raw.lower())
@@ -95,9 +99,10 @@ def main() -> int:
             print(f"{QUICK_MODELS_VAR} is empty: no model touched, no card to read")
             return 0
         print(f"quick run: reading the cards of {', '.join(only)} only")
-        hf_labels = fetch_huggingface_benchmark_names([n.strip() for n in only])
+        hf_pages = fetch_huggingface_benchmark_pages([n.strip() for n in only])
     else:
-        hf_labels = fetch_huggingface_benchmark_names()
+        hf_pages = fetch_huggingface_benchmark_pages()
+    hf_labels = list(hf_pages)
     reviewed_labels = load_reviewed_hf_labels()
     unmapped_labels = [name for name in hf_labels if name not in reviewed_labels]
 
@@ -127,7 +132,7 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        key = prompt_key_for_label(label, benchmark_keys)
+        key = prompt_key_for_label(label, benchmark_keys, source_url=hf_pages.get(label))
         if not key:
             skipped += 1
             if _prompts.collecting():

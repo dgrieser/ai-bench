@@ -23,7 +23,7 @@ from _frontiercode_mapping import (
     add_frontiercode_closed_weights,
     add_frontiercode_mapping,
     add_frontiercode_unmappable,
-    fetch_frontiercode_model_names,
+    fetch_frontiercode_model_pages,
     load_reviewed_frontiercode_names,
 )
 
@@ -91,12 +91,14 @@ def unique_names(models: list[dict[str, Any]]) -> list[str]:
     return ordered
 
 
-def prompt_slug_for_frontiercode_name(frontiercode_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_frontiercode_name(
+    frontiercode_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map FrontierCode model '{frontiercode_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=frontiercode_name)
+        raw = prompt_select_or_new(label, slugs, subject=frontiercode_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -113,7 +115,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    frontiercode_names = fetch_frontiercode_model_names()
+    frontiercode_pages = fetch_frontiercode_model_pages()
+    frontiercode_names = list(frontiercode_pages)
     reviewed_names = load_reviewed_frontiercode_names(
         include_closed=not args.recheck_closed
     )
@@ -156,7 +159,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_frontiercode_name(frontiercode_name, llm_names)
+        slug = prompt_slug_for_frontiercode_name(
+            frontiercode_name, llm_names, source_url=frontiercode_pages.get(frontiercode_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

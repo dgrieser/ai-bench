@@ -22,7 +22,7 @@ from _swe_rebench_mapping import (
     add_rebench_closed_weights,
     add_rebench_mapping,
     add_rebench_unmappable,
-    fetch_swe_rebench_model_names,
+    fetch_swe_rebench_model_pages,
     load_reviewed_rebench_names,
 )
 
@@ -122,12 +122,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_rebench_name(rebench_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_rebench_name(
+    rebench_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map SWE-Rebench model '{rebench_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=rebench_name)
+        raw = prompt_select_or_new(label, slugs, subject=rebench_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -144,7 +146,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    rebench_names = fetch_swe_rebench_model_names()
+    rebench_pages = fetch_swe_rebench_model_pages()
+    rebench_names = list(rebench_pages)
     reviewed_names = load_reviewed_rebench_names(
         include_closed=not args.recheck_closed
     )
@@ -187,7 +190,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_rebench_name(rebench_name, llm_names)
+        slug = prompt_slug_for_rebench_name(
+            rebench_name, llm_names, source_url=rebench_pages.get(rebench_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

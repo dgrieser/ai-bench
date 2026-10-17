@@ -155,6 +155,7 @@ def prompt_choice(model: dict) -> str:
             ),
             note=note,
             command="./check_new.py",
+            source_url=model.get("url") or None,
         )
         return "defer"
 

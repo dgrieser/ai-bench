@@ -205,10 +205,15 @@ tells you why.
   to be current.
 
   **Source ↗** on every Queue and New models card opens where the name was read,
-  in a new tab: the model's own page on sources that have one (OpenRouter,
-  Spheron, llm-stats models, an AA slug), the leaderboard otherwise. The queue
-  carries no URL, so the page keeps one entry per source in `SOURCE_PAGES`;
-  `test_answers.py` fails when a route in `propose.ROUTES` has none.
+  in a new tab. The asking script records it with the question (`source_url` in
+  `_pending/pending.json`, see `_source_pages.py`): the model's own page where
+  the source has one (OpenRouter, Spheron, llm-stats, an AA model, an llm.json
+  entry's card for the AA question, the Hugging Face card a benchmark label was
+  read off), otherwise the exact board it was listed on -- the Terminal-Bench
+  version, the Vals or evals.report benchmark, the SWE Atlas track. A question
+  queued before that has no `source_url`; for it the page falls back to one
+  entry per source in `SOURCE_PAGES`, and `test_answers.py` fails when a route
+  in `propose.ROUTES` has none.
 
   **New model…** is the answer for a release a board lists before Artificial
   Analysis does -- Vals listing `stepfun/step-5-preview` with nothing in

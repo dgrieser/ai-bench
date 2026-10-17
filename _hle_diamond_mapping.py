@@ -15,6 +15,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
+import fetch_hle_diamond
 
 HLE_DIAMOND_SCRIPT = Path(__file__).resolve().with_name("fetch_hle_diamond.py")
 HLE_DIAMOND_MAPPING = Path(__file__).resolve().with_name(
@@ -33,6 +35,11 @@ def fetch_hle_diamond_model_names() -> list[str]:
             f"fetch_hle_diamond.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_hle_diamond_model_pages() -> dict[str, str | None]:
+    """Name -> the page it was read from: one board, so one page for every name."""
+    return _source_pages.same_page(fetch_hle_diamond_model_names(), fetch_hle_diamond.URL)
 
 
 def _load_raw_mapping(path: Path = HLE_DIAMOND_MAPPING) -> dict[str, str]:

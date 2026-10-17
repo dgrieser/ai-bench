@@ -22,7 +22,7 @@ from _aa_coding_agents_mapping import (
     add_aa_coding_agents_closed_weights,
     add_aa_coding_agents_mapping,
     add_aa_coding_agents_unmappable,
-    fetch_aa_coding_agents_model_names,
+    fetch_aa_coding_agents_model_pages,
     load_reviewed_aa_coding_agents_names,
 )
 from update_swe_atlas_mapping import find_matches, load_doc, unique_names
@@ -72,12 +72,14 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def prompt_slug_for_aa_coding_agents_name(name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_aa_coding_agents_name(
+    name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map Coding Agent Index model '{name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=name)
+        raw = prompt_select_or_new(label, slugs, subject=name, source_url=source_url)
         if raw is None:
             return None
 
@@ -94,7 +96,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    source_names = fetch_aa_coding_agents_model_names()
+    source_pages = fetch_aa_coding_agents_model_pages()
+    source_names = list(source_pages)
     reviewed_names = load_reviewed_aa_coding_agents_names(
         include_closed=not args.recheck_closed
     )
@@ -135,7 +138,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_aa_coding_agents_name(name, llm_names)
+        slug = prompt_slug_for_aa_coding_agents_name(
+            name, llm_names, source_url=source_pages.get(name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

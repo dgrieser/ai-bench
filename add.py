@@ -810,6 +810,7 @@ def prompt_select_or_new(
     default: str | None = None,
     sources: dict[str, str] | None = None,
     subject: str | None = None,
+    source_url: str | None = None,
 ) -> str | None:
     # Collect mode: queue the question and answer "no answer". Callers treat None
     # as "not a match", and their persist calls are frozen, so it is asked again.
@@ -824,6 +825,7 @@ def prompt_select_or_new(
             question=label,
             candidates=list(dict.fromkeys(candidates)),
             default=default,
+            source_url=source_url,
         )
         return None
 

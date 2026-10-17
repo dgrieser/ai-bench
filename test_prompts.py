@@ -293,6 +293,70 @@ class TestPromptHooks(CollectModeBase):
                 self.assertEqual([e["subject"] for e in entries], [name])
 
 
+class TestSourceUrls(CollectModeBase):
+    """The page each queued name was read from, for the admin page's link."""
+
+    def test_record_carries_a_source_url_only_when_given(self) -> None:
+        self.collect()
+        _prompts.record(kind="mapping", subject="A", question="q?", command="./a -w",
+                        source_url="https://example.org/a")
+        _prompts.record(kind="mapping", subject="B", question="q?", command="./a -w")
+        a, b = _prompts.load(self.report)
+        self.assertEqual(a["source_url"], "https://example.org/a")
+        self.assertNotIn("source_url", b)
+
+    def test_every_mapping_prompt_passes_its_source_url_on(self) -> None:
+        import glob
+
+        url = "https://example.org/board"
+        scripts = sorted(Path(p).stem for p in glob.glob(str(HERE / "update_*_mapping.py")))
+        # Asked through _prompts.record directly, not one prompt function; the
+        # static check below covers them.
+        own_record = {"update_llmstats_mapping", "update_artificialanalysis_mapping"}
+        for module_name in scripts:
+            if module_name in own_record:
+                continue
+            module = importlib.import_module(module_name)
+            prompts = [f for n, f in inspect.getmembers(module, inspect.isfunction)
+                       if n.startswith(("prompt_slug_for_", "prompt_key_for_label"))
+                       and f.__module__ == module_name]
+            with self.subTest(module_name):
+                self.assertEqual(len(prompts), 1)
+                self.collect()
+                if module_name == "update_spheron_mapping":
+                    # Built from the path itself, not handed in.
+                    import _spheron_mapping
+
+                    self.assertIsNone(prompts[0]("Org/Model", [], None))
+                    expected = _spheron_mapping.spheron_page("Org/Model")
+                else:
+                    self.assertIsNone(prompts[0]("Some Model", [], source_url=url))
+                    expected = url
+                self.assertEqual([e.get("source_url") for e in _prompts.load(self.report)],
+                                 [expected])
+
+    def test_every_mapping_script_hands_a_source_url_to_its_question(self) -> None:
+        """Static, so a new source copied from an old script cannot drop it."""
+        import ast
+        import glob
+
+        for path in sorted(glob.glob(str(HERE / "update_*_mapping.py"))):
+            tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+            calls = [
+                node for node in ast.walk(tree)
+                if isinstance(node, ast.Call) and (
+                    (isinstance(node.func, ast.Name) and node.func.id == "prompt_select_or_new")
+                    or (isinstance(node.func, ast.Attribute) and node.func.attr == "record"
+                        and getattr(node.func.value, "id", None) == "_prompts")
+                )
+            ]
+            with self.subTest(Path(path).name):
+                self.assertTrue(calls, "asks nothing?")
+                for call in calls:
+                    self.assertIn("source_url", [k.arg for k in call.keywords],
+                                  f"line {call.lineno} queues a question without its page")
+
+
 class TestRendering(CollectModeBase):
     def entries(self) -> list[dict]:
         return [

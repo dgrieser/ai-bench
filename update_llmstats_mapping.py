@@ -42,6 +42,8 @@ from _llmstats_mapping import (
     fetch_llmstats_benchmark_names,
     fetch_llmstats_model_names,
     fetch_llmstats_model_openness,
+    llmstats_benchmark_page,
+    llmstats_model_page,
     load_reviewed_llmstats_benchmarks,
     load_reviewed_llmstats_names,
 )
@@ -137,12 +139,14 @@ def review_models(
                 question=f"Which llm.json model is llm-stats id '{model_id}'?",
                 candidates=[default] if default else find_matches(model_id, slugs, limit=5),
                 default=default,
+                source_url=llmstats_model_page(model_id),
             )
             continue
 
         if interactive:
             slug = prompt_select_or_new(
-                f"llm.json slug for '{model_id}'", slugs, default=default, subject=model_id
+                f"llm.json slug for '{model_id}'", slugs, default=default, subject=model_id,
+                source_url=llmstats_model_page(model_id),
             )
         else:
             slug = default
@@ -175,6 +179,7 @@ def review_benchmarks(doc: dict[str, Any], labels: list[str], interactive: bool)
                 question=f"Which llm.json benchmark is llm-stats label '{label}'?",
                 candidates=[default] if default else find_matches(label, keys, limit=5),
                 default=default,
+                source_url=llmstats_benchmark_page(label),
             )
             continue
 

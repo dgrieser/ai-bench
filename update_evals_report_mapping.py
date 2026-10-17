@@ -22,7 +22,7 @@ from _evals_report_mapping import (
     add_evals_report_closed_weights,
     add_evals_report_mapping,
     add_evals_report_unmappable,
-    fetch_evals_report_model_names,
+    fetch_evals_report_model_pages,
     fetch_evals_report_model_openness,
     load_reviewed_evals_report_names,
 )
@@ -123,12 +123,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_evals_report_name(evals_report_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_evals_report_name(
+    evals_report_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map evals.report model '{evals_report_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=evals_report_name)
+        raw = prompt_select_or_new(label, slugs, subject=evals_report_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -145,7 +147,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    evals_report_names = fetch_evals_report_model_names()
+    evals_report_pages = fetch_evals_report_model_pages()
+    evals_report_names = list(evals_report_pages)
     source_openness = fetch_evals_report_model_openness()
     reviewed_names = load_reviewed_evals_report_names(
         include_closed=not args.recheck_closed
@@ -193,7 +196,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_evals_report_name(evals_report_name, llm_names)
+        slug = prompt_slug_for_evals_report_name(
+            evals_report_name, llm_names, source_url=evals_report_pages.get(evals_report_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

@@ -18,6 +18,7 @@ from typing import Any
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
 from fetch_vals import model_label as vals_model_label
+import _source_pages
 
 VALS_SCRIPT = Path(__file__).resolve().with_name("fetch_vals.py")
 VALS_MAPPING = Path(__file__).resolve().with_name(
@@ -49,6 +50,14 @@ def fetch_vals_model_names() -> list[str]:
             f"fetch_vals.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_vals_model_pages() -> dict[str, str | None]:
+    """Name -> the Vals benchmark it was read from, for the admin page's link.
+
+    The same names fetch_vals_model_names() lists.
+    """
+    return _source_pages.run(VALS_SCRIPT)
 
 
 def _load_raw_mapping(path: Path = VALS_MAPPING) -> dict[str, str]:
