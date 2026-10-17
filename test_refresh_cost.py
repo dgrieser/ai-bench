@@ -258,8 +258,8 @@ class TestTheQuickRun(unittest.TestCase):
         called = []
         out = io.StringIO()
         with unittest.mock.patch.dict(os.environ, {uhm.QUICK_MODELS_VAR: ""}), \
-                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_names",
-                                           side_effect=lambda *a: called.append(a) or []), \
+                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_pages",
+                                           side_effect=lambda *a: called.append(a) or {}), \
                 unittest.mock.patch.object(sys, "argv", ["update_huggingface_mapping.py"]), \
                 redirect_stdout(out):
             self.assertEqual(uhm.main(), 0)
@@ -270,8 +270,8 @@ class TestTheQuickRun(unittest.TestCase):
 
         called = []
         with unittest.mock.patch.dict(os.environ, {uhm.QUICK_MODELS_VAR: "m1,m3"}), \
-                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_names",
-                                           side_effect=lambda *a: called.append(a) or []), \
+                unittest.mock.patch.object(uhm, "fetch_huggingface_benchmark_pages",
+                                           side_effect=lambda *a: called.append(a) or {}), \
                 unittest.mock.patch.object(sys, "argv", ["update_huggingface_mapping.py"]), \
                 redirect_stdout(io.StringIO()):
             uhm.main()

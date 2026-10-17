@@ -16,6 +16,7 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
 
 SWE_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_atlas.py")
 SWE_ATLAS_MAPPING = Path(__file__).resolve().with_name(
@@ -34,6 +35,14 @@ def fetch_swe_atlas_model_names() -> list[str]:
             f"fetch_swe_atlas.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_swe_atlas_model_pages() -> dict[str, str | None]:
+    """Name -> the SWE Atlas track it was read from, for the admin page's link.
+
+    The same names fetch_swe_atlas_model_names() lists.
+    """
+    return _source_pages.run(SWE_ATLAS_SCRIPT)
 
 
 def _load_raw_mapping(path: Path = SWE_ATLAS_MAPPING) -> dict[str, str]:

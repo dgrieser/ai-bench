@@ -26,7 +26,7 @@ from _openrouter_mapping import (
     add_openrouter_closed_weights,
     add_openrouter_mapping,
     add_openrouter_unmappable,
-    fetch_openrouter_model_names,
+    fetch_openrouter_model_pages,
     load_reviewed_openrouter_names,
 )
 
@@ -126,12 +126,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_openrouter_name(openrouter_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_openrouter_name(
+    openrouter_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map OpenRouter model '{openrouter_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=openrouter_name)
+        raw = prompt_select_or_new(label, slugs, subject=openrouter_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -148,7 +150,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    openrouter_names = fetch_openrouter_model_names()
+    openrouter_pages = fetch_openrouter_model_pages()
+    openrouter_names = list(openrouter_pages)
     reviewed_names = load_reviewed_openrouter_names(
         include_closed=not args.recheck_closed
     )
@@ -192,7 +195,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_openrouter_name(openrouter_name, llm_names)
+        slug = prompt_slug_for_openrouter_name(
+            openrouter_name, llm_names, source_url=openrouter_pages.get(openrouter_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

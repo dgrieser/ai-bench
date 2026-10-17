@@ -26,6 +26,7 @@ benchmark with a tool mode that field is a blend rather than a measurement.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -39,6 +40,7 @@ from _prompts import freeze_decisions
 # fourth by update.py's own fetcher. Naming each one is what makes that
 # legible in a log rather than only in this comment.
 from _timing import timed
+import fetch_llmstats
 
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 LLMSTATS_MODEL_MAPPING = Path(__file__).resolve().with_name(
@@ -78,6 +80,24 @@ def _add_mapping(key: str, value: str, path: Path) -> None:
 
 
 # --- Model-name side (llm-stats model_id -> llm.json slug) ---------------------
+
+
+# The site's public pages, for the admin page's link. The ids the API serves
+# are the paths: a model's verbatim, a benchmark's with hyphens for underscores
+# (aime_2025 is /benchmarks/aime-2025). Not every benchmark: a few the site
+# files under another slug (osworld_2_0 is a 404), and a label this repo builds
+# itself ("hle (no tools)") is no id at all and gets the leaderboard.
+SITE_URL = "https://llm-stats.com"
+
+
+def llmstats_model_page(model_id: str) -> str:
+    return f"{SITE_URL}/models/{model_id}"
+
+
+def llmstats_benchmark_page(benchmark_id: str) -> str:
+    if not re.fullmatch(r"[a-z0-9_]+", benchmark_id):
+        return fetch_llmstats.LEADERBOARD_URL
+    return f"{SITE_URL}/benchmarks/{benchmark_id.replace('_', '-')}"
 
 
 def fetch_llmstats_model_names() -> list[str]:

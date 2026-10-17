@@ -52,6 +52,15 @@ class TestValidation(AnswersTestCase):
 
     def test_an_empty_universe_refuses_rather_than_trusting_the_record(self) -> None:
         self.refused(skip(), "list is empty", universes={**UNIVERSES, propose.MODELS: []})
+        self.refused(skip(answer=_answers.ALL_KNOWN), "list is empty",
+                     universes={**UNIVERSES, propose.MODELS: []})
+
+    def test_all_known_rules_out_the_whole_list_as_it_stands(self) -> None:
+        answer = self.accepted(skip(answer=_answers.ALL_KNOWN))
+        known = [o for o in UNIVERSES[propose.MODELS] if o not in _answers.SENTINELS]
+        self.assertEqual(answer.value, sorted(set(known)))
+        self.assertNotIn("__unmappable__", answer.value)
+        self.refused(skip(subject="Never Asked", answer=_answers.ALL_KNOWN), "not a question")
 
 
 class TestApply(unittest.TestCase):

@@ -1205,6 +1205,23 @@ class TestWorkflowWiring(unittest.TestCase):
                 self.assertIn('localStorage.getItem("theme")', page)
                 self.assertIn('localStorage.setItem("theme"', page)
 
+    def test_every_route_has_a_source_page_on_the_admin_page(self) -> None:
+        """A queue card's "Source" link comes from a table on the page.
+
+        Keyed the way the page's sourceOf() reads a route, so a new source added
+        to propose.ROUTES without a page fails here rather than showing a card
+        with no link.
+        """
+        page = (_answers.HERE / "_admin" / "index.html").read_text(encoding="utf-8")
+        table = re.search(r"const SOURCE_PAGES = \{(.*?)\n\};", page, re.S)
+        self.assertIsNotNone(table, "no SOURCE_PAGES on the admin page")
+        listed = set(re.findall(r"^  ([a-z_]+): ", table.group(1), re.M))
+        for route in propose.ROUTES:
+            source = re.sub(r"_mapping\.py$", "", re.sub(r"^update_", "", route))
+            with self.subTest(route):
+                self.assertIn(source, listed)
+        self.assertIn('ALL_KNOWN = "%s"' % _answers.ALL_KNOWN, page)
+
     def test_the_admin_page_is_not_linked_from_the_published_one(self) -> None:
         """It is behind HTTP auth on another host, and unlisted is the point.
 

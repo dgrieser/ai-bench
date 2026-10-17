@@ -18,6 +18,7 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import fetch_openrouter
 
 OPENROUTER_SCRIPT = Path(__file__).resolve().with_name("fetch_openrouter.py")
 OPENROUTER_MAPPING = Path(__file__).resolve().with_name(
@@ -36,6 +37,14 @@ def fetch_openrouter_model_names() -> list[str]:
             f"fetch_openrouter.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_openrouter_model_pages() -> dict[str, str | None]:
+    """Name -> the model's own OpenRouter page, for the admin page's link."""
+    return {
+        name: fetch_openrouter.MODEL_PAGE_URL.format(model=name)
+        for name in fetch_openrouter_model_names()
+    }
 
 
 def _load_raw_mapping(path: Path = OPENROUTER_MAPPING) -> dict[str, str]:

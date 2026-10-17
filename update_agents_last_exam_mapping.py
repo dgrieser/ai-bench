@@ -22,7 +22,7 @@ from _agents_last_exam_mapping import (
     add_agents_last_exam_closed_weights,
     add_agents_last_exam_mapping,
     add_agents_last_exam_unmappable,
-    fetch_agents_last_exam_model_names,
+    fetch_agents_last_exam_model_pages,
     load_reviewed_agents_last_exam_names,
 )
 
@@ -124,13 +124,15 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
 
 
 def prompt_slug_for_agents_last_exam_name(
-    agents_last_exam_name: str, slugs: list[str]
+    agents_last_exam_name: str, slugs: list[str], source_url: str | None = None
 ) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map Agents' Last Exam model '{agents_last_exam_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=agents_last_exam_name)
+        raw = prompt_select_or_new(
+            label, slugs, subject=agents_last_exam_name, source_url=source_url
+        )
         if raw is None:
             return None
 
@@ -147,7 +149,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    agents_last_exam_names = fetch_agents_last_exam_model_names()
+    agents_last_exam_pages = fetch_agents_last_exam_model_pages()
+    agents_last_exam_names = list(agents_last_exam_pages)
     reviewed_names = load_reviewed_agents_last_exam_names(
         include_closed=not args.recheck_closed
     )
@@ -192,7 +195,11 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_agents_last_exam_name(agents_last_exam_name, llm_names)
+        slug = prompt_slug_for_agents_last_exam_name(
+            agents_last_exam_name,
+            llm_names,
+            source_url=agents_last_exam_pages.get(agents_last_exam_name),
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

@@ -89,8 +89,14 @@ def record(
     default: str | None = None,
     note: str | None = None,
     command: str | None = None,
+    source_url: str | None = None,
 ) -> None:
-    """Queue one unanswered question. No-op outside collect mode."""
+    """Queue one unanswered question. No-op outside collect mode.
+
+    `source_url` is the page the subject was read from -- the model's own page
+    where the source has one, the board it was listed on otherwise -- for the
+    admin page's link. Left out of the entry when unknown.
+    """
     report = collecting()
     if report is None:
         return
@@ -104,6 +110,8 @@ def record(
         "default": default,
         "note": note,
     }
+    if source_url:
+        entry["source_url"] = source_url
     key = (entry["command"], kind, subject)
     if key in _seen:
         return

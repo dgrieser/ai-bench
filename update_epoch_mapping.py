@@ -26,7 +26,7 @@ from _epoch_mapping import (
     add_epoch_closed_weights,
     add_epoch_mapping,
     add_epoch_unmappable,
-    fetch_epoch_model_names,
+    fetch_epoch_model_pages,
     fetch_epoch_model_openness,
     load_reviewed_epoch_names,
 )
@@ -127,12 +127,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_epoch_name(epoch_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_epoch_name(
+    epoch_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map Epoch AI model '{epoch_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=epoch_name)
+        raw = prompt_select_or_new(label, slugs, subject=epoch_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -149,7 +151,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    epoch_names = fetch_epoch_model_names()
+    epoch_pages = fetch_epoch_model_pages()
+    epoch_names = list(epoch_pages)
     source_openness = fetch_epoch_model_openness()
     reviewed_names = load_reviewed_epoch_names(
         include_closed=not args.recheck_closed
@@ -197,7 +200,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_epoch_name(epoch_name, llm_names)
+        slug = prompt_slug_for_epoch_name(
+            epoch_name, llm_names, source_url=epoch_pages.get(epoch_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

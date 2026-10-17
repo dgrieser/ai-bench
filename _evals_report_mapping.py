@@ -10,6 +10,7 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
 
 EVALS_REPORT_SCRIPT = Path(__file__).resolve().with_name("fetch_evals_report.py")
 EVALS_REPORT_MAPPING = Path(__file__).resolve().with_name(
@@ -28,6 +29,14 @@ def fetch_evals_report_model_names() -> list[str]:
             f"fetch_evals_report.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_evals_report_model_pages() -> dict[str, str | None]:
+    """Name -> the evals.report benchmark it was read from, for the admin page's link.
+
+    The same names fetch_evals_report_model_names() lists.
+    """
+    return _source_pages.run(EVALS_REPORT_SCRIPT)
 
 
 def fetch_evals_report_model_openness() -> dict[str, bool | None]:

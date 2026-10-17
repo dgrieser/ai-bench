@@ -13,6 +13,7 @@ from _prompts import freeze_decisions
 # The scrape below is a second full read of the Hugging Face model cards, on
 # top of the one update.py's fetcher makes; timing it says so in the log.
 from _timing import timed
+import _source_pages
 
 HF_SCRIPT = Path(__file__).resolve().with_name("fetch_huggingface.py")
 HF_MAPPING = Path(__file__).resolve().with_name("huggingface-benchmark-name-mapping.json")
@@ -172,6 +173,18 @@ def fetch_huggingface_benchmark_names(models: list[str] | None = None) -> list[s
             f"fetch_huggingface.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_huggingface_benchmark_pages(models: list[str] | None = None) -> dict[str, str | None]:
+    """fetch_huggingface_benchmark_names(), each label with a model card carrying it.
+
+    The first card in llm.json order: a label is asked about once however many
+    cards use it, and any one of them shows the table it came from.
+    """
+    cmd = ["--all-models"]
+    if models is not None:
+        cmd += ["--models", ",".join(models)]
+    return timed("fetch_huggingface.py --pages", _source_pages.run, HF_SCRIPT, *cmd)
 
 
 def _load_raw_mapping(path: Path = HF_MAPPING) -> dict[str, str]:

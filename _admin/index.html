@@ -975,6 +975,9 @@ input[type="date"], input[type="url"], select { font-size: 1rem; }
 .queued-row .detail { display: block; font: 400 .72rem/1.35 var(--font-ui); color: var(--muted); }
 .queued-row.sent { border-style: dashed; border-color: var(--line-strong); background: var(--surface-2); color: var(--muted); }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.card-head.top { align-items: flex-start; }
+.card-head.top > .subject { flex: 1; min-width: 0; }
+a.btn.source { flex: none; text-decoration: none; }
 .tip-text { margin-top: .5rem; font-size: .8125rem; color: var(--accent); }
 
 /* ------------------------------------------------------------------ updates */
@@ -1238,6 +1241,8 @@ const NEEDS_API = 2;
 
 const KEY = (q) => `${q.route} ${q.route_kind} ${q.subject}`;
 const NEW_MODEL_ROUTE = "check_new.py";
+/* _answers.ALL_KNOWN: a candidates-skip over the route's whole list. */
+const ALL_KNOWN = "__all_known__";
 /* check_new.py's kind for a closed-weights release: offered as a reference
    model, never as an open-weight entry. */
 const NEW_CLOSED_KIND = "new-closed-model";
@@ -2694,6 +2699,78 @@ function option(text, why, { pressed, className = "", tag = "", note = null, onc
 
 const sourceOf = (question) => question.route.replace(/^update_/, "").replace(/_mapping\.py$/, "");
 
+/* Where a queued name was read, for the "Source" link on its card. The asking
+   script says so itself -- pending.json's `source_url`: the board a name was
+   listed on, or its own page where the site has one (see _source_pages.py).
+   This table is the fallback for a question queued before that, or carried
+   over from such a queue: one page per source, the model's where the URL can
+   be built from the name. test_answers.py checks every route in propose.ROUTES
+   has an entry. */
+const enc = (subject) => String(subject).split("/").map(encodeURIComponent).join("/");
+const SOURCE_PAGES = {
+  rebench: () => "https://swe-rebench.com/",
+  osworld: () => "https://os-world.github.io/",
+  deepswe: () => "https://deepswe.datacurve.ai/",
+  frontierswe: () => "https://www.frontierswe.com/",
+  frontiercode: () => "https://cognition.com/frontiercode",
+  swe_atlas: () => "https://labs.scale.com/leaderboard/sweatlas-qna",
+  tbench: () => "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+  agents_last_exam: () => "https://agents-last-exam.org/leaderboard",
+  aa_coding_agents: () => "https://artificialanalysis.ai/agents/coding-agents",
+  evals_report: () => "https://evals.report/benchmarks",
+  vals: () => "https://www.vals.ai/benchmarks",
+  swe_marathon: () => "https://www.swe-marathon.org/",
+  toolathlon: () => "https://toolathlon.xyz/docs/leaderboard",
+  programbench: () => "https://programbench.com/extended/",
+  real_swe: () => "https://realswe.withspecific.com/",
+  zerobench: () => "https://zerobench.github.io",
+  cybergym: () => "https://www.cybergym.io",
+  sec_bench: () => "https://sec-bench.github.io",
+  hle_diamond: () => "https://lastexam.ai/blog/hle-diamond",
+  openrouter: (q) => `https://openrouter.ai/${enc(q.subject)}`,
+  epoch: () => "https://epoch.ai/benchmarks",
+  mcp_atlas: () => "https://labs.scale.com/leaderboard/mcp_atlas",
+  bfcl: () => "https://gorilla.cs.berkeley.edu/leaderboard.html",
+  spheron: (q) => `https://www.spheron.network/tools/gpu-recommender/${enc(q.subject)}/`,
+  /* A label read off model cards; which card is not in the queue. */
+  huggingface: (q) => `https://huggingface.co/search/full-text?q=${encodeURIComponent(q.subject)}`,
+  llmstats: (q) => (q.route_kind === "llmstats-model"
+    ? `https://llm-stats.com/models/${enc(q.subject)}`
+    : /^[a-z0-9_]+$/.test(q.subject)
+      ? `https://llm-stats.com/benchmarks/${q.subject.replace(/_/g, "-")}`
+      : "https://llm-stats.com/leaderboards/open-llm-leaderboard"),
+  /* The subject is an llm.json name; what is asked is which AA slug it is. */
+  artificialanalysis: () => "https://artificialanalysis.ai/models",
+};
+
+/* A New models question names an AA slug, and an older one carries the model's
+   AA page only at the end of its note. */
+function sourceUrl(question) {
+  if (/^https?:\/\//.test(question.source_url || "")) return question.source_url;
+  if (question.route === NEW_MODEL_ROUTE) {
+    const found = String(question.note || "").match(/https?:\/\/\S+/);
+    return found ? found[0] : `https://artificialanalysis.ai/models/${enc(question.subject)}`;
+  }
+  const page = SOURCE_PAGES[sourceOf(question)];
+  return page ? page(question) : null;
+}
+
+/* The card's name, with a link to where it was read beside it. A new tab: the
+   answers drafted on this page live in it. */
+function cardHead(question) {
+  const url = sourceUrl(question);
+  return el("div", { className: "card-head top" }, [
+    el("div", { className: "subject" }, question.subject),
+    url ? el("a", {
+      className: "btn ghost tiny source",
+      href: url,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      title: url,
+    }, "Source ↗") : null,
+  ]);
+}
+
 /* Whether a question is about `needle`: its subject, or any name offered as its
    answer. The second half is the one that matters after a quick run -- a model
    just added is a *candidate* on every board that lists it, not a subject, so
@@ -2812,7 +2889,7 @@ function renderQuestion(question) {
     dropCreate(question);
     setAnswer(question, record);
   };
-  card.append(el("div", { className: "subject" }, question.subject));
+  card.append(cardHead(question));
 
   const chips = el("div", { className: "chips" }, [
     chip("source", sourceOf(question)),
@@ -2866,7 +2943,7 @@ function renderQuestion(question) {
   const skippable = (question.candidates || [])
     .filter((c) => c.confidence !== "recorded").map((c) => c.option);
   if (skippable.length) {
-    const skipping = chosen?.kind === "candidates-skip";
+    const skipping = chosen?.kind === "candidates-skip" && chosen.answer !== ALL_KNOWN;
     options.append(option("None of these",
       skipping
         ? `rules out ${skippable.join(", ")}; asked again when a new candidate turns up`
@@ -2879,6 +2956,26 @@ function renderQuestion(question) {
           route_kind: question.route_kind,
           subject: question.subject,
           answer: skippable,
+        }),
+      }));
+  }
+  /* None of the current ones: the same answer, over the whole list instead of
+     the five shown -- every model or slug known today is ruled out, so the name
+     is asked again only once one added later matches it. The runner expands
+     the sentinel against its own list; the page's copy is only the count. */
+  const knownCount = universeFor(question).length;
+  if (knownCount) {
+    const all = chosen?.kind === "candidates-skip" && chosen.answer === ALL_KNOWN;
+    options.append(option("None of the current ones",
+      `rules out all ${knownCount} ${universeNoun(question, true)} known today: asked again only when a new one matches`, {
+        pressed: all,
+        className: "decline",
+        onclick: () => choose(all ? null : {
+          kind: "candidates-skip",
+          route: question.route,
+          route_kind: question.route_kind,
+          subject: question.subject,
+          answer: ALL_KNOWN,
         }),
       }));
   }
@@ -3027,7 +3124,7 @@ function renderNewClosedBulk(questions) {
 function renderNewClosedQuestion(question) {
   const chosen = answerOf(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
-  card.append(el("div", { className: "subject" }, question.subject));
+  card.append(cardHead(question));
   const chips = el("div", { className: "chips" }, chip("weights", "closed"));
   if (question.note) chips.append(chip("", question.note, { prose: true }));
   card.append(chips);
@@ -3280,7 +3377,7 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
 function renderNewQuestion(question) {
   const chosen = answerOf(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
-  card.append(el("div", { className: "subject" }, question.subject));
+  card.append(cardHead(question));
   if (question.note) {
     card.append(el("div", { className: "chips" }, chip("", question.note, { prose: true })));
   }
@@ -3712,8 +3809,13 @@ function renderModelCard(model) {
       );
       return;
     }
+    /* The two whole-model actions first: they are what a card is usually opened
+       for, and below the score list they sat a long scroll down on a phone. */
+    card.append(
+      renameBlock(model, renameKey, rename),
+      deleteBlock(model, { key, renameKey, deleteKey }),
+    );
     fillModelCard(card, model, { key, renameKey, rename, existing, columns });
-    card.append(deleteBlock(model, { key, renameKey, deleteKey }));
   };
   card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting);
   card.ontoggle = () => {
@@ -3755,7 +3857,7 @@ function deleteBlock(model, { key, renameKey, deleteKey }) {
   return block;
 }
 
-function fillModelCard(card, model, { key, renameKey, rename, existing, columns }) {
+function fillModelCard(card, model, { key, rename, existing, columns }) {
   const draft = {
     fields: { ...(existing?.fields || {}) },
     scores: { ...(existing?.scores || {}) },
@@ -3911,7 +4013,6 @@ function fillModelCard(card, model, { key, renameKey, rename, existing, columns 
     provenance,
   );
   commit();
-  card.append(renameBlock(model, renameKey, rename));
 }
 
 /* Which Artificial Analysis slug this entry answers to -- and, when the answer
@@ -4894,10 +4995,13 @@ async function send() {
        the queue has been read at all. */
     /* What each "None of these" ruled out, for the lock to recognise the
        question when it comes back with something new. */
+    const asked = new Map(state.questions.map((q) => [KEY(q), q]));
     const skips = Object.fromEntries(answers
       .map((record, i) => [keys[i], record])
       .filter(([, record]) => record.kind === "candidates-skip")
-      .map(([key, record]) => [key, record.answer]));
+      .map(([key, record]) => [key, record.answer === ALL_KNOWN
+        ? (asked.has(key) ? universeFor(asked.get(key)) : [])
+        : record.answer]));
     writeSent({ at: Date.now(), keys, queued: queueKeys(keys), mode, skips });
     saveDraft();
     state.ok = mode === "quick"

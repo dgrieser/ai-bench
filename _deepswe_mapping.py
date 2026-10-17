@@ -16,6 +16,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import fetch_datacurve
+import fetch_deepswe
 
 DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
@@ -58,6 +60,31 @@ def fetch_datacurve_model_names() -> list[str]:
             f"fetch_datacurve.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_all_deepswe_pages() -> dict[str, str | None]:
+    """fetch_all_deepswe_names(), each with the board that listed it first.
+
+    benchlm.ai's labels link its DeepSWE page, the benchmark's own labels its
+    site, in the same order and with the same tolerance for one dead scraper.
+    """
+    found: dict[str, str | None] = {}
+    failures: list[str] = []
+    for fetch, url in (
+        (fetch_deepswe_model_names, fetch_deepswe.URL),
+        (fetch_datacurve_model_names, fetch_datacurve.SITE_URL),
+    ):
+        try:
+            names = fetch()
+        except RuntimeError as exc:
+            failures.append(str(exc))
+            print(f"  warning: {exc}", file=sys.stderr)
+            continue
+        for name in names:
+            found.setdefault(name, url)
+    if not found and failures:
+        raise RuntimeError("; ".join(failures))
+    return found
 
 
 def fetch_all_deepswe_names() -> list[str]:

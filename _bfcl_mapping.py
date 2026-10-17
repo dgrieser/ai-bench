@@ -16,6 +16,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
+import fetch_bfcl
 
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 BFCL_MAPPING = Path(__file__).resolve().with_name(
@@ -32,6 +34,11 @@ def fetch_bfcl_model_names() -> list[str]:
     if proc.returncode != 0:
         raise RuntimeError(f"fetch_bfcl.py failed ({proc.returncode}): {proc.stderr.strip()}")
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_bfcl_model_pages() -> dict[str, str | None]:
+    """Name -> the page it was read from: one board, so one page for every name."""
+    return _source_pages.same_page(fetch_bfcl_model_names(), fetch_bfcl.LEADERBOARD_URL)
 
 
 def fetch_bfcl_model_openness() -> dict[str, bool | None]:

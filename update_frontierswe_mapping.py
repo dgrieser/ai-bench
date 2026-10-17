@@ -22,7 +22,7 @@ from _frontierswe_mapping import (
     add_frontierswe_closed_weights,
     add_frontierswe_mapping,
     add_frontierswe_unmappable,
-    fetch_frontierswe_model_names,
+    fetch_frontierswe_model_pages,
     load_reviewed_frontierswe_names,
 )
 
@@ -122,12 +122,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_frontierswe_name(frontierswe_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_frontierswe_name(
+    frontierswe_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map FrontierSWE model '{frontierswe_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=frontierswe_name)
+        raw = prompt_select_or_new(label, slugs, subject=frontierswe_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -144,7 +146,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    frontierswe_names = fetch_frontierswe_model_names()
+    frontierswe_pages = fetch_frontierswe_model_pages()
+    frontierswe_names = list(frontierswe_pages)
     reviewed_names = load_reviewed_frontierswe_names(
         include_closed=not args.recheck_closed
     )
@@ -187,7 +190,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_frontierswe_name(frontierswe_name, llm_names)
+        slug = prompt_slug_for_frontierswe_name(
+            frontierswe_name, llm_names, source_url=frontierswe_pages.get(frontierswe_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

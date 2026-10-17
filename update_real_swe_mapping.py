@@ -22,7 +22,7 @@ from _real_swe_mapping import (
     add_real_swe_closed_weights,
     add_real_swe_mapping,
     add_real_swe_unmappable,
-    fetch_real_swe_model_names,
+    fetch_real_swe_model_pages,
     load_reviewed_real_swe_names,
 )
 
@@ -122,12 +122,14 @@ def find_matches(query: str, options: list[str], limit: int = 10) -> list[str]:
     return [option for _, option in scored[:limit]]
 
 
-def prompt_slug_for_real_swe_name(real_swe_name: str, slugs: list[str]) -> str | None:
+def prompt_slug_for_real_swe_name(
+    real_swe_name: str, slugs: list[str], source_url: str | None = None
+) -> str | None:
     options_lower = {slug.lower(): slug for slug in slugs}
 
     while True:
         label = f"Map Real-SWE model '{real_swe_name}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, subject=real_swe_name)
+        raw = prompt_select_or_new(label, slugs, subject=real_swe_name, source_url=source_url)
         if raw is None:
             return None
 
@@ -144,7 +146,8 @@ def main() -> int:
     doc = load_doc(llm_path)
     llm_names = unique_names(doc["models"])
 
-    real_swe_names = fetch_real_swe_model_names()
+    real_swe_pages = fetch_real_swe_model_pages()
+    real_swe_names = list(real_swe_pages)
     reviewed_names = load_reviewed_real_swe_names(
         include_closed=not args.recheck_closed
     )
@@ -187,7 +190,9 @@ def main() -> int:
         if not ((interactive or _prompts.collecting()) and args.write):
             continue
 
-        slug = prompt_slug_for_real_swe_name(real_swe_name, llm_names)
+        slug = prompt_slug_for_real_swe_name(
+            real_swe_name, llm_names, source_url=real_swe_pages.get(real_swe_name)
+        )
         if not slug:
             skipped += 1
             if _prompts.collecting():

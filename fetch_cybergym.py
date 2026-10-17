@@ -58,6 +58,7 @@ import urllib.request
 from typing import Any
 
 from _fetch_checks import check_percentages, require_rows
+import _source_pages
 
 
 SITE_URL = "https://www.cybergym.io"
@@ -247,7 +248,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -259,6 +260,9 @@ def main() -> int:
     scores = get_scores()
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        # Which board each name was read from, for the admin page's link.
+        _source_pages.emit(scores, lambda e: PAGE_URLS.get(e["benchmark"]))
     elif args.format == "names":
         for name in sorted({entry["model"] for entry in scores}):
             print(name)

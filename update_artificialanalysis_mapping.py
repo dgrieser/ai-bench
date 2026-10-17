@@ -155,7 +155,12 @@ def exact_aa_slug(model: dict[str, Any], aa_by_norm: dict[str, str]) -> str | No
     return aa_by_norm.get(normalize_slug(name))
 
 
-def prompt_candidate(model_name: str, candidates: list[Candidate], aa_slugs: list[str]) -> str | None:
+def prompt_candidate(
+    model_name: str,
+    candidates: list[Candidate],
+    aa_slugs: list[str],
+    source_url: str | None = None,
+) -> str | None:
     # Collect mode: queue the question and answer "none". The caller's
     # add_ignored_aa_suggestions() is skipped, so it is asked again next time.
     if _prompts.collecting():
@@ -164,6 +169,9 @@ def prompt_candidate(model_name: str, candidates: list[Candidate], aa_slugs: lis
             subject=model_name,
             question=f"Which Artificial Analysis slug is llm.json model '{model_name}'?",
             candidates=[candidate.slug for candidate in candidates],
+            # The entry's own page: what the model is, which is what picking
+            # its AA slug comes down to.
+            source_url=source_url,
         )
         return None
 
@@ -280,7 +288,10 @@ def main() -> int:
         if not (args.write and (interactive or _prompts.collecting()) and candidates):
             continue
 
-        selected = prompt_candidate(model_name, candidates, aa_slugs)
+        url = model.get("url")
+        selected = prompt_candidate(
+            model_name, candidates, aa_slugs, source_url=url if isinstance(url, str) else None
+        )
         if selected:
             add_aa_mapping(model_name, selected)
             written += 1

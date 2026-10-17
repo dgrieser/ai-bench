@@ -113,6 +113,15 @@ class TestContent(PendingJsonTestCase):
         self.assertEqual(tbench["route_kind"], "mapping")
         self.assertIn("if_previous", tbench)
 
+    def test_the_page_a_name_was_read_from_is_carried_when_known(self) -> None:
+        entries = [dict(ENTRIES[0], source_url="https://www.tbench.ai/leaderboard/terminal-bench/4.0"),
+                   *ENTRIES[1:]]
+        by_subject = {q["subject"]: q for q in self.questions(entries)}
+        self.assertEqual(by_subject["GLM-5.3"]["source_url"],
+                         "https://www.tbench.ai/leaderboard/terminal-bench/4.0")
+        # Unknown stays absent rather than null: an older report renders as it did.
+        self.assertNotIn("source_url", by_subject["fresh-slug"])
+
     def test_the_two_llmstats_files_stay_distinguishable(self) -> None:
         """One script owns two files; the kind is what tells them apart."""
         question = next(q for q in self.questions(ENTRIES) if q["subject"] == "swe_bench_verified")

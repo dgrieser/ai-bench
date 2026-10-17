@@ -10,6 +10,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
+import fetch_frontiercode
 
 FRONTIERCODE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontiercode.py")
 FRONTIERCODE_MAPPING = Path(__file__).resolve().with_name(
@@ -28,6 +30,11 @@ def fetch_frontiercode_model_names() -> list[str]:
             f"fetch_frontiercode.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_frontiercode_model_pages() -> dict[str, str | None]:
+    """Name -> the page it was read from: one board, so one page for every name."""
+    return _source_pages.same_page(fetch_frontiercode_model_names(), fetch_frontiercode.LEADERBOARD_URL)
 
 
 def _load_raw_mapping(path: Path = FRONTIERCODE_MAPPING) -> dict[str, str]:

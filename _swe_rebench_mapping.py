@@ -11,6 +11,8 @@ from typing import Any
 
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _prompts import freeze_decisions
+import _source_pages
+import fetch_swe_rebench
 
 SWE_REBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_rebench.py")
 SWE_REBENCH_MAPPING = Path(__file__).resolve().with_name(
@@ -29,6 +31,11 @@ def fetch_swe_rebench_model_names() -> list[str]:
             f"fetch_swe_rebench.py failed ({proc.returncode}): {proc.stderr.strip()}"
         )
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def fetch_swe_rebench_model_pages() -> dict[str, str | None]:
+    """Name -> the page it was read from: one board, so one page for every name."""
+    return _source_pages.same_page(fetch_swe_rebench_model_names(), fetch_swe_rebench.URL)
 
 
 def _load_raw_mapping(mapping_path: Path = SWE_REBENCH_MAPPING) -> dict[str, str]:

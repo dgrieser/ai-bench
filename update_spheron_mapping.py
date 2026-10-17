@@ -24,6 +24,7 @@ from _spheron_mapping import (
     add_spheron_unmappable,
     hf_path_from_url,
     load_reviewed_spheron_names,
+    spheron_page,
 )
 
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
@@ -130,7 +131,10 @@ def prompt_slug_for_spheron_path(
 
     while True:
         label = f"Map Spheron path '{spheron_path}' to llm.json model"
-        raw = prompt_select_or_new(label, slugs, default=default, subject=spheron_path)
+        raw = prompt_select_or_new(
+            label, slugs, default=default, subject=spheron_path,
+            source_url=spheron_page(spheron_path),
+        )
         if raw is None:
             return None
 

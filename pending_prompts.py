@@ -170,6 +170,11 @@ def render_json(
                 ],
             }
         )
+        if entry.get("source_url"):
+            # Where the subject was read, for the admin page's link. Only when
+            # the asking script knew: an older report has none, and the page
+            # falls back to the source's leaderboard.
+            questions[-1]["source_url"] = entry["source_url"]
         if ruled_out:
             # How many are ruled out already, so the page can say the ones it
             # shows are what is left. Only when there are any: every other
