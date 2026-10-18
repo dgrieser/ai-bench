@@ -1,6 +1,60 @@
 {
   "questions": [
     {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "zerobench",
+          "reason": "the first 1 word(s) of the label: exact to zero, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'zero-trust-physics/zero-trust-physics-environments (correct)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b",
+      "subject": "zero-trust-physics/zero-trust-physics-environments (correct)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "zerobench",
+          "reason": "the first 1 word(s) of the label: exact to zero, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'zero-trust-physics/zero-trust-physics-environments (kept_to_the_tool)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b",
+      "subject": "zero-trust-physics/zero-trust-physics-environments (kept_to_the_tool)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "zerobench",
+          "reason": "the first 1 word(s) of the label: exact to zero, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'zero-trust-physics/zero-trust-physics-environments (reward)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b",
+      "subject": "zero-trust-physics/zero-trust-physics-environments (reward)",
+      "universe": "benchmarks"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
