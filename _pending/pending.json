@@ -3,39 +3,196 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash-preview",
-          "reason": "exact to minimax-m3.1-flash, substring match"
+          "confidence": "exact",
+          "option": "muse-spark-open",
+          "reason": "exact to muse-spark-open, exact match"
         },
         {
           "confidence": "weak",
-          "option": "minimax-m3",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        }
+      ],
+      "default": "muse-spark-open",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'muse-spark-open'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/muse-spark-open",
+      "subject": "muse-spark-open",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
           "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash-1017",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+          "option": "muse-wonder-full",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'minimax-m3.1-flash'?",
+      "question": "Which llm.json model is llm-stats id 'muse-wonder-1.0'?",
       "route": "update_llmstats_mapping.py",
       "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/minimax-m3.1-flash",
-      "subject": "minimax-m3.1-flash",
+      "source_url": "https://llm-stats.com/models/muse-wonder-1.0",
+      "subject": "muse-wonder-1.0",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-wonder-full",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'muse-wonder-full-1.0'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/muse-wonder-full-1.0",
+      "subject": "muse-wonder-full-1.0",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-super-vl",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-nano-omni-30b-a3b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'nemotron-3.5-bolt-74b-a9b-24gb'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/nemotron-3.5-bolt-74b-a9b-24gb",
+      "subject": "nemotron-3.5-bolt-74b-a9b-24gb",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-super-vl",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-nano-omni-30b-a3b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'nemotron-3.5-super-vl-120b-a12b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/nemotron-3.5-super-vl-120b-a12b",
+      "subject": "nemotron-3.5-super-vl-120b-a12b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-4b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-4b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-4b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-4b, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'nemotron-labs-dory-1.0-4b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/nemotron-labs-dory-1.0-4b",
+      "subject": "nemotron-labs-dory-1.0-4b",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'inception/mercury-3' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/inception/mercury-3",
+      "subject": "inception/mercury-3",
       "universe": "models"
     }
   ]
