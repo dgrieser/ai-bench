@@ -1024,6 +1024,15 @@ a.btn.source { flex: none; text-decoration: none; }
 .upd-note { color: var(--muted); font-size: .8125rem; }
 .upd-new { background: var(--bad-soft); color: var(--bad); }
 
+/* The Artificial Analysis mark beside a model mapped to it. */
+.aa-mark { display: inline-flex; align-items: center; flex: none; line-height: 0; }
+.aa-mark svg { width: 1.05em; height: .9em; }
+details.card > summary .aa-mark { margin-right: .4rem; vertical-align: -.05em; }
+/* A mapping onto an AA slug: from that run on, the model's AA scores arrive. */
+.map-row.aa-map { border-color: var(--accent); background: var(--accent-soft); }
+.map-row .aa-tag { display: inline-flex; align-items: center; gap: .3rem; margin-right: .4rem; vertical-align: -.1em; }
+.map-row .aa-tag .pill { margin-top: 0; background: var(--accent); color: var(--surface); font-family: var(--font-ui); }
+
 .score-chips { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .45rem; }
 .score-chip {
   display: inline-flex;
@@ -2182,6 +2191,56 @@ function aaSuggestions(name, limit = 6) {
   }
   ranked.sort((a, b) => a[0] - b[0] || a[2].length - b[2].length || a[2].localeCompare(b[2]));
   return ranked.slice(0, limit).map(([, why, slug]) => ({ slug, why }));
+}
+
+/* AA's own mark, inline: this directory serves nothing but this page and
+   api.php, so icons/artificial-analysis.svg is not reachable from here. */
+const AA_MARK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="14.79 19.17 220.42 191.04" aria-hidden="true">'
+  + '<path fill="#1c369e" fill-rule="evenodd" d="M192.75,210.02h42.32l-55.89-97.25-21.29,36.87c11.62,20.13,23.24,40.25,34.86,60.38"/>'
+  + '<polygon fill="#7870f2" fill-rule="evenodd" points="103.82 55.97 124.98 19.33 176.61 108.76 167.29 124.68 155.3 145.14 143.32 124.4 103.82 55.97"/>'
+  + '<path fill="#1c369e" fill-rule="evenodd" d="M122.41,97.08l-21.13-36.71L14.93,209.94h42.32c78.9-136.66,14.79-25.62,65.16-112.86"/>'
+  + '<polygon fill="#4378df" fill-rule="evenodd" points="176.52 190.68 155.36 154.03 123.04 210.02 165.35 210.02 176.52 190.68"/>'
+  + "</svg>";
+const AA_MODEL_PAGE = "https://artificialanalysis.ai/models/";
+
+/* The mark for a model llm.json reads from Artificial Analysis -- the row
+   carries aa_variant once update.py has matched it to an AA model -- linked to
+   that model's AA page. Null for a model AA does not list. */
+function aaMark(model) {
+  const slug = model?.aa_variant?.slug;
+  if (!slug) return null;
+  const since = aaListedSince(model);
+  const name = model.aa_variant.name;
+  const title = `On Artificial Analysis as ${name ? `${name} (${slug})` : slug}`
+    + (since ? `\nlisted ${since.seeded ? "by" : "since"} ${since.date}` : "");
+  const link = el("a", {
+    className: "aa-mark", href: AA_MODEL_PAGE + encodeURIComponent(slug),
+    target: "_blank", rel: "noreferrer", title,
+  });
+  link.setAttribute("aria-label", title.replace("\n", ", "));
+  link.innerHTML = AA_MARK_SVG;
+  /* Inside a card's summary a click would also fold the card. */
+  link.addEventListener("click", (event) => event.stopPropagation());
+  return link;
+}
+
+/* The day a model's first score from an AA model page was written: when AA
+   started listing it, as far as this index saw. `seeded` when that is older
+   than history_since -- the index kept no history then, so the date is only
+   the last write, and AA listed it on or before it. Null when no AA page has
+   ever been recorded for it. */
+function aaListedSince(model) {
+  let first = "";
+  for (const log of Object.values(model?.scores_history || {})) {
+    if (!Array.isArray(log)) continue;
+    for (const entry of log) {
+      if (entry?.date && String(entry.source || "").startsWith(AA_MODEL_PAGE)
+        && (!first || entry.date < first)) first = entry.date;
+    }
+  }
+  if (!first) return null;
+  const since = state.llm?.history_since || "";
+  return { date: first, seeded: Boolean(since && first < since) };
 }
 
 /* ---------------------------------------------------------------- loading */
@@ -3782,6 +3841,7 @@ function renderModelCard(model) {
   const columns = benchmarks();
   const count = scoredCount(model);
   card.append(el("summary", {}, [
+    aaMark(model),
     el("span", { className: "subject" }, model.name),
     el("div", { className: "chips" }, [
       chip("", model.creator?.name || "unknown", { prose: true }),
@@ -4634,6 +4694,7 @@ function renderModelUpdate({ model, scores }, arrived) {
       .filter(Boolean).join(", ");
   return el("div", { className: "upd" }, [
     el("div", { className: "upd-head" }, [
+      aaMark(model),
       arrived ? el("span", { className: "pill upd-new" }, "new model") : null,
       modelLink(model.name),
       model.creator?.name ? el("span", { className: "upd-note" }, model.creator.name) : null,
@@ -4654,12 +4715,22 @@ function renderMappingUpdate(entry) {
   const link = entry.run || (entry.commit && state.repo
     ? `https://github.com/${state.repo}/commit/${entry.commit}` : "");
   const removed = entry.value === null || entry.value === undefined;
-  return el("div", { className: "upd map-row" }, [
+  /* A model mapped onto an AA slug -- not parked as pending or unmappable --
+     reads its scores from that AA page from this run on. */
+  const aaSlugs = entry.route === "update_artificialanalysis_mapping.py" && !removed
+    ? [].concat(entry.value).filter((v) => typeof v === "string" && !v.startsWith("__")) : [];
+  const aaTag = aaSlugs.length ? el("span", { className: "aa-tag" }, [
+    aaMark({ aa_variant: { slug: aaSlugs[0], name: "" } }),
+    el("span", { className: "pill", title: "From here on this model's scores come from Artificial Analysis" },
+      "AA scores from here"),
+  ]) : null;
+  return el("div", { className: `upd map-row${aaTag ? " aa-map" : ""}` }, [
     el("span", {
       className: `pill by-${entry.by}`,
       title: meaning + (entry.inferred ? " -- credited from the commit it came in" : ""),
     }, label),
     el("div", { className: "what" }, [
+      aaTag,
       el("span", { className: "src" }, `${source} · `),
       entry.subject,
       el("span", { className: "arrow" }, " \u2192 "),
