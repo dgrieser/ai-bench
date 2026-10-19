@@ -1,3 +1,168 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-19 - MiniMax",
+      "question": "Carry newly released closed model 'minimax-m3-1-flash' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "minimax-m3-1-flash",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "exact to minimax-m3-1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'minimax-m3-1-flash' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://agents-last-exam.org/leaderboard",
+      "subject": "minimax-m3-1-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash",
+          "reason": "exact to minimax-m3-1-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-3-1-flash-lite-preview",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash-preview, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-1-5-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash-preview, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'minimax-m3-1-flash-preview'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "ruled_out": 2,
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash-Preview",
+      "subject": "minimax-m3-1-flash-preview",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "exact to minimax/minimax-m3.1-flash, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "drop suffix to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "drop suffix to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "drop suffix to a variant, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'minimax/minimax-m3.1-flash' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/minimax/minimax-m3.1-flash",
+      "subject": "minimax/minimax-m3.1-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to deepseek-v4.1-flash-1017, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-v4.1-flash-1017, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'deepseek/deepseek-v4.1-flash-1017' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "deepseek/deepseek-v4.1-flash-1017",
+      "universe": "models"
+    }
+  ]
 }
