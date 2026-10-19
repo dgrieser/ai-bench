@@ -1027,7 +1027,7 @@ a.btn.source { flex: none; text-decoration: none; }
 /* The Artificial Analysis mark beside a model mapped to it. */
 .aa-mark { display: inline-flex; align-items: center; flex: none; line-height: 0; }
 .aa-mark svg { width: 1.05em; height: .9em; }
-details.card > summary .aa-mark { margin-left: .4rem; vertical-align: -.05em; }
+details.card > summary .aa-mark { margin-right: .4rem; vertical-align: -.05em; }
 /* A mapping onto an AA slug: from that run on, the model's AA scores arrive. */
 .map-row.aa-map { border-color: var(--accent); background: var(--accent-soft); }
 .map-row .aa-tag { display: inline-flex; align-items: center; gap: .3rem; margin-right: .4rem; vertical-align: -.1em; }
@@ -3840,14 +3840,12 @@ function renderModelCard(model) {
   });
   const columns = benchmarks();
   const count = scoredCount(model);
-  const aaSince = model.aa_variant?.slug ? aaListedSince(model) : null;
   card.append(el("summary", {}, [
-    el("span", { className: "subject" }, model.name),
     aaMark(model),
+    el("span", { className: "subject" }, model.name),
     el("div", { className: "chips" }, [
       chip("", model.creator?.name || "unknown", { prose: true }),
       chip("added", model.date_added || "?"),
-      aaSince ? chip(aaSince.seeded ? "on AA by" : "on AA since", aaSince.date) : null,
       chip("scored", `${count} / ${columns.length}`,
         { className: count < columns.length / 4 ? "now" : "" }),
       deleting ? chip("", "deleted on the next run", { prose: true, className: "now" }) : null,
