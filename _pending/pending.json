@@ -1,3 +1,42 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash-preview",
+          "reason": "exact to MiniMax-M3.1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'minimax/MiniMax-M3.1-flash' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "minimax/MiniMax-M3.1-flash",
+      "universe": "models"
+    }
+  ]
 }
