@@ -279,6 +279,18 @@ INDEXES: list[IndexDef] = [
             # whatever harness each lab chose, which do not agree with each
             # other (a Qwen3.5 at 80.3 above most of the frontier).
             ("swe_bench_pro", 0.3),
+            # 0.35 since 2026-10-22: SWE-Bench Pro V2's 51-task Hard subset,
+            # Scale's own runs under a network-locked protocol. The Full set it
+            # is cut from is left out: saturated (99.4, 99.2, 99.1 at the top,
+            # 2.5 points to the fifth) and scored from the same runs, so it
+            # would count them twice. Hard keeps a 7.8-point head on the board
+            # (about four of its tasks) and ranks the field at 0.71 against
+            # this index, 0.89 against ProgramBench its nearest neighbour.
+            # Priced with Test Writing and SciCode for its reach -- 7 models
+            # here, 16 on the board -- and held under 0.55, the step that
+            # drops 17 models through the evidence bar at once. See README,
+            # "Why SWE-Bench Pro V2 Hard enters at 0.35".
+            ("swe_bench_pro_hard_2_0", 0.35),
             # 0.25 since 2026-10-03, from 0.4: saturated (92.4 at the top, 3.0
             # points to the fifth) and the group's least related member -- 0.1
             # to 0.3 Spearman against the frontier agentic boards.

@@ -1064,7 +1064,7 @@ cannot disagree about which column a row belongs in.
 | **FrontierCode** | `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | Cognition's payload carries a block per revision; the current one covers only the models it re-ran. GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
-| **SWE-Bench Pro** | `swe_bench_pro_2_0`, `swe_bench_pro_hard_2_0`, and the unversioned `swe_bench_pro` | Scale's V2 (2026-09-22, co-developed with Reflection) is a refreshed public split, not a re-run: 642 of v1's 731 public tasks, the other 89 dropped as invalid, every instruction, verifier and image rebuilt, and a network-locked protocol in which the sandbox reaches the model endpoint and nothing else. The scales do not meet: V2's board runs 87-99 for current models where Scale's v1 public board tops out at 61.5, so a V2 number filed under `swe_bench_pro` would lead that column by ten points (Flint's 89.7 briefly did). `fetch_swe_bench_pro_v2.py` reads Scale's V2 board, whose page carries the Full set and a 51-task Hard subset as two variant tables; each gets a column, Hard spelled with a subset base as FrontierCode's Extended is. `swe_bench_pro` stays what it was: lab self-reports of the original benchmark with the split not recorded, and its `excludes` now names V2. Only a label that says V2 reaches the new columns (`SWE-bench Pro v2`, `SWE-Bench Pro V2 Hard`, …), the rule BFCL v4 and Toolathlon-Verified already follow. Neither V2 column is in an index yet. |
+| **SWE-Bench Pro** | `swe_bench_pro_2_0`, `swe_bench_pro_hard_2_0`, and the unversioned `swe_bench_pro` | Scale's V2 (2026-09-22, co-developed with Reflection) is a refreshed public split, not a re-run: 642 of v1's 731 public tasks, the other 89 dropped as invalid, every instruction, verifier and image rebuilt, and a network-locked protocol in which the sandbox reaches the model endpoint and nothing else. The scales do not meet: V2's board runs 87-99 for current models where Scale's v1 public board tops out at 61.5, so a V2 number filed under `swe_bench_pro` would lead that column by ten points (Flint's 89.7 briefly did). `fetch_swe_bench_pro_v2.py` reads Scale's V2 board, whose page carries the Full set and a 51-task Hard subset as two variant tables; each gets a column, Hard spelled with a subset base as FrontierCode's Extended is. `swe_bench_pro` stays what it was: lab self-reports of the original benchmark with the split not recorded, and its `excludes` now names V2. Only a label that says V2 reaches the new columns (`SWE-bench Pro v2`, `SWE-Bench Pro V2 Hard`, …), the rule BFCL v4 and Toolathlon-Verified already follow. Hard is in the coding index at 0.35 and Full is not — see [why](#why-swe-bench-pro-v2-hard-enters-at-035). |
 | **OSWorld 2.0** | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08`, `osworld_2_0_vendor` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release on the official board gets a dated column: `osworld_2_0_2026_06_24` ("OSW 2.0J") carries seven models, including every open-weight run, and `osworld_2_0_2026_08_08` ("OSW 2.0A") two, both closed; 2.1 scores one model and has no column yet. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. What labs report for themselves goes to `osworld_2_0_vendor` ("OSW 2.0V") instead, following llm-stats, whose OSWorld 2.0 and OSWorld 2.1 (partial) boards are read beside the model cards: those headlines mix binary accuracy with the partial checkpoint score (two to three times higher), and all three releases, full and offline sets, often without saying which, so no dated column could take them. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 
 A benchmark that keeps only its current revision as a column still spells that
@@ -2313,7 +2313,7 @@ back by the two follow-ups that removed the problem rather than papering over it
 [collapsing the SWE Atlas trio](#why-swe-atlas-contributes-two-tracks) gave 0.26 back
 to the denominator, and [the threshold](#why-the-evidence-bar-is-18) moved to 18%,
 which took the bar to 1.152 against their 1.30. They have since lost it again, to the
-denominator the admissions after that one added — the bar is **1.584** today — which
+denominator the admissions after that one added — the bar is **1.665** today — which
 is the point restated rather than contradicted: a model clearing the bar on four cheap
 columns is one column away from not clearing it, whichever column arrives.
 
@@ -2383,6 +2383,42 @@ nothing from SWE Atlas, so the bar moved past it; no score was lost. The other 5
 ranked and the order moves more than a swap would (Spearman **0.9969**, mean 0.59
 places, worst case 7 — `ornith-1-0-35b` 34 → 27, `kimi-k3` 6 → 9), which is what 1.25
 of net new weight on a pair of rubric-graded tracks should do.
+
+### Why SWE-Bench Pro V2 Hard enters at 0.35
+
+Scale's [SWE-Bench Pro V2](#benchmarks-that-publish-more-than-one-revision)
+publishes two tables from one set of runs: the Full 642 tasks and a Hard subset
+of the 51 that proved most challenging. Only Hard is admitted, on 2026-10-22,
+measured on the file as it then stood:
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| What it tests | Real repository issues from SWE-bench Pro's 11 repositories, rebuilt for V2: invalid tasks dropped, every instruction, verifier and image redone, and a network-locked sandbox that reaches the model endpoint and nothing else. Hard is the 51 tasks that held up against the strongest models. | **up** |
+| Saturation | Hard tops out at 92.2 here (98.0 on the board). Full is saturated: 99.4, 99.2 and 99.1 at the top of the board, 2.5 points to the fifth. | Hard **up**, Full out |
+| Head resolution | Hard keeps **7.9 points** between the best model and the fifth (7.8 on the board), but on 51 tasks that is about four tasks. | — |
+| Redundancy | Spearman **0.71** with the coding index on the 7 models it shares, **0.89** with ProgramBench (its nearest neighbour), 0.75 with FrontierCode Extended, 0.77 with Real-SWE. Full and Hard are the same runs scored twice (0.86 with each other), so admitting both would count those runs twice. | — |
+| Trust | Every value is Scale's own run at the benchmark-site rung; harnesses vary by row (Claude Code, Codex, mini-swe-agent) and the best one per model is kept. | **up** |
+| Coverage | **7** scored models, all first-party; the board lists 16, and the ten names still in the review queue would bring it to about a dozen. Mostly closed frontier models, plus Kimi K3, GLM 5.3 and Inkling. | **down** |
+
+0.35 prices it with the other narrow first-party columns — SWE Atlas Test
+Writing (0.4, 11 models) and SciCode (0.35) — rather than with the frontier
+boards at 0.8–1.0, which it would join on construct but not on reach. Together
+with `swe_bench_pro` at 0.3 the SWE-bench Pro family carries 0.65 of 9.25,
+against SWE Atlas's 1.55.
+
+**What it cost, measured: nothing.** Nine models move, none by more than three
+places (Kimi K3 14 → 12, GPT-5.6 Terra 20 → 17, GLM 5.3 17 → 18), and all 96
+stay ranked. The weight was chosen under a cliff: seventeen models, most of them
+measured only on Artificial Analysis' four columns, sit at exactly **1.70** of
+scored weight, and the bar is 18% of the total. At 0.35 the total is 9.25 and the
+bar 1.665; any admission of **0.55 or more** takes the total past 9.44 and drops
+all seventeen to `null` at once (96 → 79 ranked). Admitting Full at 0.2 beside
+Hard at 0.35 is one such admission. The coding `transfer_ratio` was recalibrated
+for the new member (0.013 → 0.012).
+
+Revisit it when the review queue lands the rest of the board's names, or when a
+lab's model card starts reporting V2 Hard: either can widen it enough to move
+the weight, and either moves the bar with it.
 
 ### Why Vibe Code Bench enters at 0.75
 
