@@ -1571,9 +1571,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 31504,
+        "openbench_index": 31502,
         "coding_index": 22889,
-        "tooling_index": 32835,
+        "tooling_index": 32828,
         "knowledge_index": 22439,
         "vision_index": null,
         "trust_index": 45683,
@@ -1642,9 +1642,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -2060,9 +2060,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 27831,
+        "openbench_index": 27829,
         "coding_index": 21491,
-        "tooling_index": 31636,
+        "tooling_index": 31629,
         "knowledge_index": 16140,
         "vision_index": 10357,
         "trust_index": 37887,
@@ -2131,9 +2131,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -4238,9 +4238,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 28505,
+        "openbench_index": 28502,
         "coding_index": 25027,
-        "tooling_index": 26540,
+        "tooling_index": 26532,
         "knowledge_index": 29195,
         "vision_index": null,
         "trust_index": 34621,
@@ -4309,9 +4309,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -4725,9 +4725,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 28437,
+        "openbench_index": 28435,
         "coding_index": 20735,
-        "tooling_index": 19489,
+        "tooling_index": 19483,
         "knowledge_index": 34445,
         "vision_index": null,
         "trust_index": 44813,
@@ -4766,7 +4766,7 @@
         "bfcl_v4": null,
         "ifbench": 50.7,
         "itbench_aa": null,
-        "gdpval_aa": 70,
+        "gdpval_aa": 65,
         "agents_last_exam": null,
         "aa_briefcase": 5,
         "browsecomp": 22.9,
@@ -4796,9 +4796,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -4836,7 +4836,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-15",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-02",
         "browsecomp": "2026-02-13",
@@ -5038,6 +5038,11 @@
             "date": "2026-10-15",
             "score": 70,
             "source": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 65,
+            "source": "https://artificialanalysis.ai/models/qwen3-30b-a3b-2507-reasoning"
           }
         ],
         "aa_briefcase": [
@@ -5220,7 +5225,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 21366,
+        "tooling_index": 21363,
         "knowledge_index": 39496,
         "vision_index": null,
         "trust_index": 47632,
@@ -5291,7 +5296,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -5635,10 +5640,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 50040,
+        "openbench_index": 50038,
         "coding_index": 41582,
-        "tooling_index": 47102,
-        "knowledge_index": 64929,
+        "tooling_index": 47095,
+        "knowledge_index": 64928,
         "vision_index": 62881,
         "trust_index": 54782,
         "security_index": null,
@@ -5676,7 +5681,7 @@
         "bfcl_v4": 72.9,
         "ifbench": 78.8,
         "itbench_aa": 34.1,
-        "gdpval_aa": 795,
+        "gdpval_aa": 790,
         "agents_last_exam": null,
         "aa_briefcase": 560,
         "browsecomp": 69,
@@ -5706,10 +5711,10 @@
         "charxiv_reasoning": 80.8
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -5746,7 +5751,7 @@
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
         "itbench_aa": "2026-08-19",
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-25",
         "browsecomp": "2026-09-15",
@@ -5984,6 +5989,11 @@
           {
             "date": "2026-10-02",
             "score": 795,
+            "source": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 790,
             "source": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b"
           }
         ],
@@ -6228,9 +6238,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 45304,
+        "openbench_index": 45282,
         "coding_index": 31850,
-        "tooling_index": 45509,
+        "tooling_index": 45437,
         "knowledge_index": 58590,
         "vision_index": 48289,
         "trust_index": 53230,
@@ -6269,7 +6279,7 @@
         "bfcl_v4": 72.2,
         "ifbench": 75.7,
         "itbench_aa": null,
-        "gdpval_aa": 815,
+        "gdpval_aa": 810,
         "agents_last_exam": null,
         "aa_briefcase": 495,
         "browsecomp": 63.8,
@@ -6299,9 +6309,9 @@
         "charxiv_reasoning": 77.2
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -6339,7 +6349,7 @@
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-25",
         "browsecomp": "2026-02-25",
@@ -6549,6 +6559,11 @@
           {
             "date": "2026-10-02",
             "score": 815,
+            "source": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 810,
             "source": "https://artificialanalysis.ai/models/qwen3-5-122b-a10b"
           }
         ],
@@ -6772,7 +6787,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 55510,
+        "tooling_index": 55507,
         "knowledge_index": 56842,
         "vision_index": 51431,
         "trust_index": 56193,
@@ -6843,7 +6858,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -7254,7 +7269,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41543,
+        "tooling_index": 41537,
         "knowledge_index": 52172,
         "vision_index": 39275,
         "trust_index": 52655,
@@ -7325,7 +7340,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -7727,9 +7742,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 40920,
+        "openbench_index": 40918,
         "coding_index": 36647,
-        "tooling_index": 37317,
+        "tooling_index": 37312,
         "knowledge_index": 43132,
         "vision_index": 34250,
         "trust_index": 49042,
@@ -7798,9 +7813,9 @@
         "charxiv_reasoning": 73
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -8272,7 +8287,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 29577,
+        "tooling_index": 29573,
         "knowledge_index": 30131,
         "vision_index": 30352,
         "trust_index": 43912,
@@ -8343,7 +8358,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -8722,7 +8737,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11340,
+        "tooling_index": 11339,
         "knowledge_index": 12249,
         "vision_index": 11990,
         "trust_index": 39540,
@@ -8793,7 +8808,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -9619,9 +9634,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 39118,
+        "openbench_index": 39116,
         "coding_index": 25223,
-        "tooling_index": 34762,
+        "tooling_index": 34755,
         "knowledge_index": 55939,
         "vision_index": null,
         "trust_index": 50926,
@@ -9660,7 +9675,7 @@
         "bfcl_v4": null,
         "ifbench": 71.5,
         "itbench_aa": 1.1,
-        "gdpval_aa": 490,
+        "gdpval_aa": 485,
         "agents_last_exam": null,
         "aa_briefcase": 0,
         "browsecomp": 31.3,
@@ -9690,9 +9705,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -9730,7 +9745,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": "2026-08-19",
-        "gdpval_aa": "2026-10-09",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-23",
         "browsecomp": "2026-03-11",
@@ -9962,6 +9977,11 @@
           {
             "date": "2026-10-09",
             "score": 490,
+            "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 485,
             "source": "https://artificialanalysis.ai/models/nvidia-nemotron-3-super-120b-a12b"
           }
         ],
@@ -10520,9 +10540,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 29583,
+        "openbench_index": 29581,
         "coding_index": 27145,
-        "tooling_index": 23048,
+        "tooling_index": 23041,
         "knowledge_index": 36392,
         "vision_index": null,
         "trust_index": 36266,
@@ -10561,7 +10581,7 @@
         "bfcl_v4": null,
         "ifbench": 65.1,
         "itbench_aa": null,
-        "gdpval_aa": 340,
+        "gdpval_aa": 335,
         "agents_last_exam": null,
         "aa_briefcase": 0,
         "browsecomp": 28.3,
@@ -10591,9 +10611,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -10631,7 +10651,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-08",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-23",
         "browsecomp": "2026-02-13",
@@ -10840,6 +10860,11 @@
             "date": "2026-10-08",
             "score": 340,
             "source": "https://artificialanalysis.ai/models/gpt-oss-20b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 335,
+            "source": "https://artificialanalysis.ai/models/gpt-oss-20b"
           }
         ],
         "aa_briefcase": [
@@ -10999,9 +11024,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 35738,
+        "openbench_index": 35735,
         "coding_index": 27506,
-        "tooling_index": 28842,
+        "tooling_index": 28834,
         "knowledge_index": 49391,
         "vision_index": null,
         "trust_index": 45699,
@@ -11040,7 +11065,7 @@
         "bfcl_v4": null,
         "ifbench": 69,
         "itbench_aa": 5.6,
-        "gdpval_aa": 610,
+        "gdpval_aa": 605,
         "agents_last_exam": null,
         "aa_briefcase": 0,
         "browsecomp": 28.7,
@@ -11070,9 +11095,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -11110,7 +11135,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": "2026-08-19",
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-23",
         "browsecomp": "2026-02-13",
@@ -11333,6 +11358,11 @@
             "date": "2026-10-02",
             "score": 610,
             "source": "https://artificialanalysis.ai/models/gpt-oss-120b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 605,
+            "source": "https://artificialanalysis.ai/models/gpt-oss-120b"
           }
         ],
         "aa_briefcase": [
@@ -11498,9 +11528,9 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 32830,
+        "openbench_index": 32848,
         "coding_index": 22128,
-        "tooling_index": 25093,
+        "tooling_index": 25151,
         "knowledge_index": 44322,
         "vision_index": null,
         "trust_index": 48062,
@@ -11569,9 +11599,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -11993,9 +12023,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 34906,
+        "openbench_index": 34904,
         "coding_index": 24164,
-        "tooling_index": 24802,
+        "tooling_index": 24795,
         "knowledge_index": 45870,
         "vision_index": 24792,
         "trust_index": 53344,
@@ -12034,7 +12064,7 @@
         "bfcl_v4": null,
         "ifbench": 48.2,
         "itbench_aa": null,
-        "gdpval_aa": 365,
+        "gdpval_aa": 360,
         "agents_last_exam": null,
         "aa_briefcase": 240,
         "browsecomp": null,
@@ -12064,9 +12094,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -12104,7 +12134,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-15",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-03",
         "browsecomp": null,
@@ -12318,6 +12348,11 @@
             "date": "2026-10-15",
             "score": 365,
             "source": "https://artificialanalysis.ai/models/mistral-small-4"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 360,
+            "source": "https://artificialanalysis.ai/models/mistral-small-4"
           }
         ],
         "aa_briefcase": [
@@ -12500,9 +12535,9 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 52251,
+        "openbench_index": 52232,
         "coding_index": 39597,
-        "tooling_index": 44540,
+        "tooling_index": 44475,
         "knowledge_index": 67248,
         "vision_index": null,
         "trust_index": 67691,
@@ -12541,7 +12576,7 @@
         "bfcl_v4": null,
         "ifbench": 75.7,
         "itbench_aa": 26.5,
-        "gdpval_aa": 1010,
+        "gdpval_aa": 1005,
         "agents_last_exam": 5.9,
         "aa_briefcase": 720,
         "browsecomp": null,
@@ -12571,9 +12606,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -12611,7 +12646,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": "2026-08-19",
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": "2026-09-04",
         "aa_briefcase": "2026-10-10",
         "browsecomp": null,
@@ -12882,6 +12917,11 @@
           {
             "date": "2026-10-10",
             "score": 1010,
+            "source": "https://artificialanalysis.ai/models/minimax-m2-7"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1005,
             "source": "https://artificialanalysis.ai/models/minimax-m2-7"
           }
         ],
@@ -13839,7 +13879,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 8476,
+        "tooling_index": 8475,
         "knowledge_index": 40445,
         "vision_index": null,
         "trust_index": 41393,
@@ -13910,7 +13950,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-19",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -14263,10 +14303,10 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 44899,
+        "openbench_index": 44898,
         "coding_index": 33248,
-        "tooling_index": 44635,
-        "knowledge_index": 55609,
+        "tooling_index": 44632,
+        "knowledge_index": 55608,
         "vision_index": 43191,
         "trust_index": 52770,
         "security_index": null,
@@ -14334,10 +14374,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -14795,7 +14835,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 35069,
+        "tooling_index": 35064,
         "knowledge_index": 40881,
         "vision_index": 35590,
         "trust_index": 50052,
@@ -14866,7 +14906,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -15257,9 +15297,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 27898,
+        "openbench_index": 27897,
         "coding_index": 15719,
-        "tooling_index": 17733,
+        "tooling_index": 17727,
         "knowledge_index": 35831,
         "vision_index": 17188,
         "trust_index": 49953,
@@ -15328,9 +15368,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-19",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -15726,7 +15766,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 9433,
+        "tooling_index": 9432,
         "knowledge_index": 29311,
         "vision_index": 10357,
         "trust_index": 46315,
@@ -15797,7 +15837,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -16155,9 +16195,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44774,
+        "openbench_index": 44770,
         "coding_index": 30994,
-        "tooling_index": 41587,
+        "tooling_index": 41573,
         "knowledge_index": 57722,
         "vision_index": 50016,
         "trust_index": 57367,
@@ -16226,9 +16266,9 @@
         "charxiv_reasoning": 78
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -16718,7 +16758,7 @@
       "scores": {
         "openbench_index": 50017,
         "coding_index": 37779,
-        "tooling_index": 48446,
+        "tooling_index": 48445,
         "knowledge_index": 61750,
         "vision_index": 49042,
         "trust_index": 59549,
@@ -16789,7 +16829,7 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -17261,9 +17301,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 67821,
+        "openbench_index": 67801,
         "coding_index": 67832,
-        "tooling_index": 74923,
+        "tooling_index": 74856,
         "knowledge_index": 77710,
         "vision_index": null,
         "trust_index": 53352,
@@ -17333,9 +17373,9 @@
         "cyberbench_1_0": 77.5
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -17949,10 +17989,10 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 58943,
+        "openbench_index": 58915,
         "coding_index": 49684,
-        "tooling_index": 63400,
-        "knowledge_index": 65524,
+        "tooling_index": 63314,
+        "knowledge_index": 65510,
         "vision_index": null,
         "trust_index": 60756,
         "security_index": null,
@@ -18020,10 +18060,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -18468,7 +18508,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 8047,
+        "tooling_index": 8046,
         "knowledge_index": 12515,
         "vision_index": null,
         "trust_index": 35956,
@@ -18539,7 +18579,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -18853,7 +18893,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7347,
+        "tooling_index": 7346,
         "knowledge_index": 7540,
         "vision_index": null,
         "trust_index": 23036,
@@ -18924,7 +18964,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -19256,7 +19296,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 14082,
+        "tooling_index": 14080,
         "knowledge_index": 13031,
         "vision_index": null,
         "trust_index": 30688,
@@ -19327,7 +19367,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -19652,10 +19692,10 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 41754,
+        "openbench_index": 41753,
         "coding_index": 29122,
-        "tooling_index": 44106,
-        "knowledge_index": 40504,
+        "tooling_index": 44103,
+        "knowledge_index": 40503,
         "vision_index": 30240,
         "trust_index": 54842,
         "security_index": null,
@@ -19723,10 +19763,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -20196,9 +20236,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 20942,
+        "openbench_index": 20920,
         "coding_index": 15803,
-        "tooling_index": 20373,
+        "tooling_index": 20298,
         "knowledge_index": 15648,
         "vision_index": 15682,
         "trust_index": 30970,
@@ -20237,7 +20277,7 @@
         "bfcl_v4": null,
         "ifbench": 32,
         "itbench_aa": null,
-        "gdpval_aa": 250,
+        "gdpval_aa": 245,
         "agents_last_exam": null,
         "aa_briefcase": 130,
         "browsecomp": null,
@@ -20267,9 +20307,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -20307,7 +20347,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-15",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-03",
         "browsecomp": null,
@@ -20502,6 +20542,11 @@
             "date": "2026-10-15",
             "score": 250,
             "source": "https://artificialanalysis.ai/models/ministral-3-14b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 245,
+            "source": "https://artificialanalysis.ai/models/ministral-3-14b"
           }
         ],
         "aa_briefcase": [
@@ -20685,7 +20730,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 22415,
+        "tooling_index": 22412,
         "knowledge_index": 23649,
         "vision_index": 17606,
         "trust_index": 43931,
@@ -20756,7 +20801,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -21111,7 +21156,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7943,
+        "tooling_index": 7942,
         "knowledge_index": 11854,
         "vision_index": 4874,
         "trust_index": 17725,
@@ -21182,7 +21227,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -21517,8 +21562,8 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 38869,
-        "knowledge_index": 58468,
+        "tooling_index": 38864,
+        "knowledge_index": 58467,
         "vision_index": 28685,
         "trust_index": 57936,
         "security_index": null,
@@ -21556,7 +21601,7 @@
         "bfcl_v4": null,
         "ifbench": 73.9,
         "itbench_aa": null,
-        "gdpval_aa": 515,
+        "gdpval_aa": 510,
         "agents_last_exam": null,
         "aa_briefcase": 355,
         "browsecomp": null,
@@ -21588,8 +21633,8 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -21626,7 +21671,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-06",
         "browsecomp": null,
@@ -21814,6 +21859,11 @@
             "date": "2026-10-10",
             "score": 515,
             "source": "https://artificialanalysis.ai/models/command-a-plus"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 510,
+            "source": "https://artificialanalysis.ai/models/command-a-plus"
           }
         ],
         "aa_briefcase": [
@@ -21982,7 +22032,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 46732,
+        "tooling_index": 46731,
         "knowledge_index": 55885,
         "vision_index": 57698,
         "trust_index": 54764,
@@ -22053,7 +22103,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -22417,7 +22467,7 @@
       "scores": {
         "openbench_index": 13207,
         "coding_index": 10587,
-        "tooling_index": 9296,
+        "tooling_index": 9294,
         "knowledge_index": 9768,
         "vision_index": 3368,
         "trust_index": 23109,
@@ -22488,7 +22538,7 @@
       "scores_updated": {
         "openbench_index": "2026-10-20",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -22885,9 +22935,9 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 41005,
+        "openbench_index": 41003,
         "coding_index": 39420,
-        "tooling_index": 36040,
+        "tooling_index": 36034,
         "knowledge_index": 42425,
         "vision_index": null,
         "trust_index": 48012,
@@ -22956,9 +23006,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -23384,10 +23434,10 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 70812,
+        "openbench_index": 70786,
         "coding_index": 63407,
-        "tooling_index": 71728,
-        "knowledge_index": 86856,
+        "tooling_index": 71647,
+        "knowledge_index": 86843,
         "vision_index": null,
         "trust_index": 68974,
         "security_index": 39661,
@@ -23456,10 +23506,10 @@
         "cyberbench_1_0": 77.4
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -24058,9 +24108,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 65894,
+        "openbench_index": 65882,
         "coding_index": 56555,
-        "tooling_index": 65458,
+        "tooling_index": 65418,
         "knowledge_index": 79227,
         "vision_index": 72010,
         "trust_index": 69624,
@@ -24130,9 +24180,9 @@
         "cyberbench_1_0": 76.3
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -25409,7 +25459,7 @@
       "scores": {
         "openbench_index": 21204,
         "coding_index": 13683,
-        "tooling_index": 10670,
+        "tooling_index": 10667,
         "knowledge_index": 18587,
         "vision_index": 17418,
         "trust_index": 44442,
@@ -25480,7 +25530,7 @@
       "scores_updated": {
         "openbench_index": "2026-10-20",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -25911,9 +25961,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 25467,
+        "openbench_index": 25466,
         "coding_index": 18825,
-        "tooling_index": 13642,
+        "tooling_index": 13638,
         "knowledge_index": 27191,
         "vision_index": 22414,
         "trust_index": 46594,
@@ -25952,7 +26002,7 @@
         "bfcl_v4": 37.3,
         "ifbench": 43,
         "itbench_aa": null,
-        "gdpval_aa": -275,
+        "gdpval_aa": -280,
         "agents_last_exam": null,
         "aa_briefcase": 0,
         "browsecomp": null,
@@ -25982,9 +26032,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -26022,7 +26072,7 @@
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-23",
         "browsecomp": null,
@@ -26235,6 +26285,11 @@
           {
             "date": "2026-10-10",
             "score": -275,
+            "source": "https://artificialanalysis.ai/models/llama-4-maverick"
+          },
+          {
+            "date": "2026-10-22",
+            "score": -280,
             "source": "https://artificialanalysis.ai/models/llama-4-maverick"
           }
         ],
@@ -26806,7 +26861,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": 26008,
+        "knowledge_index": 26007,
         "vision_index": null,
         "trust_index": 39204,
         "security_index": null,
@@ -26877,7 +26932,7 @@
         "openbench_index": null,
         "coding_index": null,
         "tooling_index": null,
-        "knowledge_index": "2026-10-20",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -28996,7 +29051,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 35179,
+        "tooling_index": 35172,
         "knowledge_index": 50899,
         "vision_index": null,
         "trust_index": 47547,
@@ -29067,7 +29122,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -33358,7 +33413,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 47361,
+        "tooling_index": 47522,
         "knowledge_index": 62563,
         "vision_index": null,
         "trust_index": 47630,
@@ -33429,7 +33484,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -37525,9 +37580,9 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 27717,
+        "openbench_index": 27734,
         "coding_index": 21051,
-        "tooling_index": 18991,
+        "tooling_index": 19047,
         "knowledge_index": 35244,
         "vision_index": null,
         "trust_index": 41673,
@@ -37596,9 +37651,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -38035,9 +38090,9 @@
       },
       "context": "32k",
       "scores": {
-        "openbench_index": 24834,
+        "openbench_index": 24832,
         "coding_index": 19174,
-        "tooling_index": 15852,
+        "tooling_index": 15848,
         "knowledge_index": 24610,
         "vision_index": null,
         "trust_index": 42537,
@@ -38106,9 +38161,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -38570,9 +38625,9 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 18594,
+        "openbench_index": 18592,
         "coding_index": 16170,
-        "tooling_index": 13545,
+        "tooling_index": 13541,
         "knowledge_index": 13184,
         "vision_index": null,
         "trust_index": 30806,
@@ -38641,9 +38696,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -39483,7 +39538,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 22555,
+        "tooling_index": 22583,
         "knowledge_index": 39384,
         "vision_index": null,
         "trust_index": 49082,
@@ -39554,7 +39609,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -39880,9 +39935,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 36378,
+        "openbench_index": 36355,
         "coding_index": 29157,
-        "tooling_index": 29101,
+        "tooling_index": 29024,
         "knowledge_index": 45793,
         "vision_index": null,
         "trust_index": 48128,
@@ -39921,7 +39976,7 @@
         "bfcl_v4": null,
         "ifbench": 51.2,
         "itbench_aa": null,
-        "gdpval_aa": 315,
+        "gdpval_aa": 310,
         "agents_last_exam": null,
         "aa_briefcase": 170,
         "browsecomp": null,
@@ -39951,9 +40006,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -39991,7 +40046,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-10",
         "browsecomp": null,
@@ -40175,6 +40230,11 @@
           {
             "date": "2026-10-02",
             "score": 315,
+            "source": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 310,
             "source": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507-reasoning"
           }
         ],
@@ -42717,9 +42777,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 29920,
+        "openbench_index": 29897,
         "coding_index": 21338,
-        "tooling_index": 25435,
+        "tooling_index": 25359,
         "knowledge_index": 28472,
         "vision_index": 23251,
         "trust_index": 46469,
@@ -42758,7 +42818,7 @@
         "bfcl_v4": null,
         "ifbench": 36.2,
         "itbench_aa": null,
-        "gdpval_aa": 420,
+        "gdpval_aa": 415,
         "agents_last_exam": null,
         "aa_briefcase": 230,
         "browsecomp": null,
@@ -42788,9 +42848,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -42828,7 +42888,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-10",
         "browsecomp": null,
@@ -43037,6 +43097,11 @@
             "date": "2026-10-10",
             "score": 420,
             "source": "https://artificialanalysis.ai/models/mistral-large-3"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 415,
+            "source": "https://artificialanalysis.ai/models/mistral-large-3"
           }
         ],
         "aa_briefcase": [
@@ -43219,9 +43284,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 17912,
+        "openbench_index": 17910,
         "coding_index": 13621,
-        "tooling_index": 16542,
+        "tooling_index": 16536,
         "knowledge_index": 13136,
         "vision_index": 12658,
         "trust_index": 27571,
@@ -43260,7 +43325,7 @@
         "bfcl_v4": null,
         "ifbench": 29.1,
         "itbench_aa": null,
-        "gdpval_aa": 215,
+        "gdpval_aa": 210,
         "agents_last_exam": null,
         "aa_briefcase": 75,
         "browsecomp": null,
@@ -43290,9 +43355,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -43330,7 +43395,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-02",
         "browsecomp": null,
@@ -43515,6 +43580,11 @@
             "date": "2026-10-02",
             "score": 215,
             "source": "https://artificialanalysis.ai/models/ministral-3-8b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 210,
+            "source": "https://artificialanalysis.ai/models/ministral-3-8b"
           }
         ],
         "aa_briefcase": [
@@ -43691,9 +43761,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 19180,
+        "openbench_index": 19158,
         "coding_index": 10731,
-        "tooling_index": 14400,
+        "tooling_index": 14328,
         "knowledge_index": 14493,
         "vision_index": 6429,
         "trust_index": 37867,
@@ -43732,7 +43802,7 @@
         "bfcl_v4": null,
         "ifbench": 26.8,
         "itbench_aa": null,
-        "gdpval_aa": 30,
+        "gdpval_aa": 25,
         "agents_last_exam": null,
         "aa_briefcase": 0,
         "browsecomp": null,
@@ -43762,9 +43832,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -43802,7 +43872,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-03",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-09-23",
         "browsecomp": null,
@@ -43991,6 +44061,11 @@
           {
             "date": "2026-10-03",
             "score": 30,
+            "source": "https://artificialanalysis.ai/models/ministral-3-3b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 25,
             "source": "https://artificialanalysis.ai/models/ministral-3-3b"
           }
         ],
@@ -44525,9 +44600,9 @@
       },
       "context": "128k",
       "scores": {
-        "openbench_index": 16430,
+        "openbench_index": 16429,
         "coding_index": 13649,
-        "tooling_index": 10129,
+        "tooling_index": 10127,
         "knowledge_index": 13139,
         "vision_index": 14174,
         "trust_index": 29303,
@@ -44596,9 +44671,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -46774,7 +46849,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 31691,
+        "tooling_index": 31815,
         "knowledge_index": 35650,
         "vision_index": 37869,
         "trust_index": 50555,
@@ -46845,7 +46920,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -47205,7 +47280,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 26362,
-        "tooling_index": 30113,
+        "tooling_index": 30204,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47276,7 +47351,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47540,7 +47615,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 51792,
-        "tooling_index": 49711,
+        "tooling_index": 49637,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47611,7 +47686,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47875,7 +47950,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 66004,
-        "tooling_index": 61382,
+        "tooling_index": 61109,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -47946,7 +48021,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -48208,9 +48283,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 56900,
+        "openbench_index": 56899,
         "coding_index": 45926,
-        "tooling_index": 49444,
+        "tooling_index": 49442,
         "knowledge_index": 74020,
         "vision_index": null,
         "trust_index": 68743,
@@ -48279,9 +48354,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -48753,7 +48828,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 25770,
+        "tooling_index": 25934,
         "knowledge_index": 33780,
         "vision_index": 33311,
         "trust_index": 39216,
@@ -48824,7 +48899,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -49166,9 +49241,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 60140,
+        "openbench_index": 60122,
         "coding_index": 48705,
-        "tooling_index": 59361,
+        "tooling_index": 59299,
         "knowledge_index": 78502,
         "vision_index": 44359,
         "trust_index": 63780,
@@ -49238,9 +49313,9 @@
         "cyberbench_1_0": 64.1
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -49775,10 +49850,10 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 71068,
+        "openbench_index": 71041,
         "coding_index": 74039,
-        "tooling_index": 77326,
-        "knowledge_index": 85266,
+        "tooling_index": 77239,
+        "knowledge_index": 85265,
         "vision_index": null,
         "trust_index": 51473,
         "security_index": 56861,
@@ -49846,10 +49921,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -50467,9 +50542,9 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 46892,
+        "openbench_index": 46891,
         "coding_index": 35362,
-        "tooling_index": 41121,
+        "tooling_index": 41116,
         "knowledge_index": 64638,
         "vision_index": null,
         "trust_index": 57006,
@@ -50538,9 +50613,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -51313,10 +51388,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 53744,
+        "openbench_index": 53731,
         "coding_index": 43726,
-        "tooling_index": 46356,
-        "knowledge_index": 73066,
+        "tooling_index": 46314,
+        "knowledge_index": 73065,
         "vision_index": 54134,
         "trust_index": 63036,
         "security_index": 20850,
@@ -51384,10 +51459,10 @@
         "charxiv_reasoning": 77.5
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -51937,10 +52012,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 64703,
+        "openbench_index": 64702,
         "coding_index": 54850,
-        "tooling_index": 60869,
-        "knowledge_index": 83938,
+        "tooling_index": 60864,
+        "knowledge_index": 83939,
         "vision_index": 72170,
         "trust_index": 69587,
         "security_index": 40717,
@@ -51978,7 +52053,7 @@
         "bfcl_v4": null,
         "ifbench": 76,
         "itbench_aa": 31.2,
-        "gdpval_aa": 1040,
+        "gdpval_aa": 1035,
         "agents_last_exam": 9.2,
         "aa_briefcase": 820,
         "browsecomp": 83.2,
@@ -52009,10 +52084,10 @@
         "cyberbench_1_0": 74.4
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -52049,7 +52124,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": "2026-08-19",
-        "gdpval_aa": "2026-10-15",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": "2026-09-04",
         "aa_briefcase": "2026-09-25",
         "browsecomp": "2026-09-15",
@@ -52352,6 +52427,11 @@
             "date": "2026-10-15",
             "score": 1040,
             "source": "https://artificialanalysis.ai/models/kimi-k2-6"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1035,
+            "source": "https://artificialanalysis.ai/models/kimi-k2-6"
           }
         ],
         "agents_last_exam": [
@@ -52607,10 +52687,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 62984,
+        "openbench_index": 62963,
         "coding_index": 58373,
-        "tooling_index": 64652,
-        "knowledge_index": 75899,
+        "tooling_index": 64592,
+        "knowledge_index": 75884,
         "vision_index": null,
         "trust_index": 58765,
         "security_index": null,
@@ -52648,7 +52728,7 @@
         "bfcl_v4": null,
         "ifbench": 63.1,
         "itbench_aa": null,
-        "gdpval_aa": 1040,
+        "gdpval_aa": 1035,
         "agents_last_exam": null,
         "aa_briefcase": 860,
         "browsecomp": null,
@@ -52678,10 +52758,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -52718,7 +52798,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-15",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-02",
         "browsecomp": null,
@@ -52981,6 +53061,11 @@
             "date": "2026-10-15",
             "score": 1040,
             "source": "https://artificialanalysis.ai/models/kimi-k2-7-code"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1035,
+            "source": "https://artificialanalysis.ai/models/kimi-k2-7-code"
           }
         ],
         "aa_briefcase": [
@@ -53127,10 +53212,10 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 81650,
+        "openbench_index": 81655,
         "coding_index": 83877,
-        "tooling_index": 84191,
-        "knowledge_index": 92418,
+        "tooling_index": 84210,
+        "knowledge_index": 92415,
         "vision_index": 87461,
         "trust_index": 69468,
         "security_index": 66746,
@@ -53199,10 +53284,10 @@
         "cyberbench_1_0": 79
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -53837,7 +53922,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 30952,
+        "tooling_index": 31137,
         "knowledge_index": 37740,
         "vision_index": null,
         "trust_index": 54672,
@@ -53908,7 +53993,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -54187,9 +54272,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52641,
+        "openbench_index": 52639,
         "coding_index": 41475,
-        "tooling_index": 49515,
+        "tooling_index": 49508,
         "knowledge_index": 68592,
         "vision_index": 58097,
         "trust_index": 60222,
@@ -54258,9 +54343,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -54708,8 +54793,8 @@
       "scores": {
         "openbench_index": 58210,
         "coding_index": 43504,
-        "tooling_index": 52612,
-        "knowledge_index": 78076,
+        "tooling_index": 52613,
+        "knowledge_index": 78075,
         "vision_index": 70240,
         "trust_index": 70655,
         "security_index": null,
@@ -54779,8 +54864,8 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -55241,10 +55326,10 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 61744,
+        "openbench_index": 61711,
         "coding_index": 54113,
-        "tooling_index": 61333,
-        "knowledge_index": 75162,
+        "tooling_index": 61232,
+        "knowledge_index": 75147,
         "vision_index": 44618,
         "trust_index": 63343,
         "security_index": 26520,
@@ -55313,10 +55398,10 @@
         "cyberbench_1_0": 68.8
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -55803,7 +55888,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 57480,
+        "tooling_index": 57482,
         "knowledge_index": 64317,
         "vision_index": null,
         "trust_index": 60852,
@@ -55874,7 +55959,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -56158,9 +56243,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 77473,
+        "openbench_index": 77440,
         "coding_index": 73420,
-        "tooling_index": 82126,
+        "tooling_index": 82014,
         "knowledge_index": 88844,
         "vision_index": 92699,
         "trust_index": 69932,
@@ -56199,7 +56284,7 @@
         "bfcl_v4": null,
         "ifbench": 82.8,
         "itbench_aa": null,
-        "gdpval_aa": 1610,
+        "gdpval_aa": 1605,
         "agents_last_exam": 27,
         "aa_briefcase": 1435,
         "browsecomp": null,
@@ -56229,9 +56314,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -56269,7 +56354,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-10-02",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": "2026-09-04",
         "aa_briefcase": "2026-10-02",
         "browsecomp": null,
@@ -56528,6 +56613,11 @@
             "date": "2026-10-10",
             "score": 1610,
             "source": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1605,
+            "source": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b"
           }
         ],
         "agents_last_exam": [
@@ -56762,9 +56852,9 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 48586,
+        "openbench_index": 48573,
         "coding_index": 37107,
-        "tooling_index": 45355,
+        "tooling_index": 45314,
         "knowledge_index": 61858,
         "vision_index": null,
         "trust_index": 58273,
@@ -56833,9 +56923,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -57280,7 +57370,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 29887,
+        "tooling_index": 29879,
         "knowledge_index": 41584,
         "vision_index": null,
         "trust_index": 53190,
@@ -57351,7 +57441,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-19",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -58109,9 +58199,9 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 55193,
+        "openbench_index": 55176,
         "coding_index": 48378,
-        "tooling_index": 55941,
+        "tooling_index": 55883,
         "knowledge_index": 58411,
         "vision_index": 51360,
         "trust_index": 60543,
@@ -58150,7 +58240,7 @@
         "bfcl_v4": null,
         "ifbench": 77,
         "itbench_aa": null,
-        "gdpval_aa": 785,
+        "gdpval_aa": 780,
         "agents_last_exam": null,
         "aa_briefcase": 475,
         "browsecomp": null,
@@ -58180,9 +58270,9 @@
         "charxiv_reasoning": 78.8
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -58220,7 +58310,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-10",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-06",
         "browsecomp": null,
@@ -58414,6 +58504,11 @@
           {
             "date": "2026-10-10",
             "score": 785,
+            "source": "https://artificialanalysis.ai/models/muse-glimmer"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 780,
             "source": "https://artificialanalysis.ai/models/muse-glimmer"
           }
         ],
@@ -58623,9 +58718,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 41577,
+        "openbench_index": 41576,
         "coding_index": 31916,
-        "tooling_index": 38139,
+        "tooling_index": 38133,
         "knowledge_index": 45001,
         "vision_index": null,
         "trust_index": 55243,
@@ -58664,7 +58759,7 @@
         "bfcl_v4": null,
         "ifbench": 71.9,
         "itbench_aa": null,
-        "gdpval_aa": 640,
+        "gdpval_aa": 635,
         "agents_last_exam": null,
         "aa_briefcase": 505,
         "browsecomp": 37,
@@ -58694,9 +58789,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -58734,7 +58829,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-09-15",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-06",
         "browsecomp": "2026-08-13",
@@ -58936,6 +59031,11 @@
             "date": "2026-10-02",
             "score": 640,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 635,
+            "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
           }
         ],
         "aa_briefcase": [
@@ -59129,10 +59229,10 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 81904,
+        "openbench_index": 81906,
         "coding_index": 80870,
-        "tooling_index": 88384,
-        "knowledge_index": 88588,
+        "tooling_index": 88393,
+        "knowledge_index": 88586,
         "vision_index": null,
         "trust_index": 71357,
         "security_index": 55939,
@@ -59200,10 +59300,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -59802,10 +59902,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 68235,
+        "openbench_index": 68237,
         "coding_index": 62458,
-        "tooling_index": 74753,
-        "knowledge_index": 73822,
+        "tooling_index": 74765,
+        "knowledge_index": 73808,
         "vision_index": 71780,
         "trust_index": 63994,
         "security_index": 43904,
@@ -59873,10 +59973,10 @@
         "charxiv_reasoning": 83.7
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -60375,7 +60475,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 50406,
+        "tooling_index": 50452,
         "knowledge_index": 74966,
         "vision_index": null,
         "trust_index": 65847,
@@ -60446,7 +60546,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -60795,10 +60895,10 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 48662,
+        "openbench_index": 48661,
         "coding_index": 32183,
-        "tooling_index": 41841,
-        "knowledge_index": 73488,
+        "tooling_index": 41837,
+        "knowledge_index": 73489,
         "vision_index": null,
         "trust_index": 61725,
         "security_index": null,
@@ -60866,10 +60966,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -61521,8 +61621,8 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 75746,
-        "knowledge_index": 90406,
+        "tooling_index": 75227,
+        "knowledge_index": 90403,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -61592,8 +61692,8 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -61853,8 +61953,8 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 57895,
-        "knowledge_index": 69541,
+        "tooling_index": 57774,
+        "knowledge_index": 69542,
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -61924,8 +62024,8 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": null,
         "security_index": null,
@@ -62185,7 +62285,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 39346,
+        "tooling_index": 39403,
         "knowledge_index": 59396,
         "vision_index": null,
         "trust_index": null,
@@ -62256,7 +62356,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": null,
@@ -62517,7 +62617,7 @@
       "scores": {
         "openbench_index": 67192,
         "coding_index": 63819,
-        "tooling_index": 79328,
+        "tooling_index": 79326,
         "knowledge_index": 73689,
         "vision_index": 52451,
         "trust_index": 52779,
@@ -62588,7 +62688,7 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -63014,7 +63114,7 @@
         "openbench_index": 79040,
         "coding_index": 70319,
         "tooling_index": 91445,
-        "knowledge_index": 85759,
+        "knowledge_index": 85760,
         "vision_index": null,
         "trust_index": 70587,
         "security_index": 36126,
@@ -63086,7 +63186,7 @@
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
         "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -63594,10 +63694,10 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 75052,
+        "openbench_index": 75051,
         "coding_index": 74300,
-        "tooling_index": 82669,
-        "knowledge_index": 78604,
+        "tooling_index": 82667,
+        "knowledge_index": 78605,
         "vision_index": 81576,
         "trust_index": 64682,
         "security_index": null,
@@ -63635,7 +63735,7 @@
         "bfcl_v4": null,
         "ifbench": 81.3,
         "itbench_aa": null,
-        "gdpval_aa": 1630,
+        "gdpval_aa": 1625,
         "agents_last_exam": 24.3,
         "aa_briefcase": 1580,
         "browsecomp": null,
@@ -63665,10 +63765,10 @@
         "charxiv_reasoning": 84.6
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -63705,7 +63805,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-08-26",
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-07",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": "2026-09-24",
         "aa_briefcase": "2026-10-10",
         "browsecomp": null,
@@ -63913,6 +64013,11 @@
           {
             "date": "2026-10-07",
             "score": 1630,
+            "source": "https://artificialanalysis.ai/models/qwen3-8-flash-next"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1625,
             "source": "https://artificialanalysis.ai/models/qwen3-8-flash-next"
           }
         ],
@@ -64133,9 +64238,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 30828,
+        "openbench_index": 30826,
         "coding_index": 19871,
-        "tooling_index": 20723,
+        "tooling_index": 20717,
         "knowledge_index": 36867,
         "vision_index": null,
         "trust_index": 52480,
@@ -64204,9 +64309,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -64606,9 +64711,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 35425,
+        "openbench_index": 35423,
         "coding_index": 20864,
-        "tooling_index": 30503,
+        "tooling_index": 30496,
         "knowledge_index": 45354,
         "vision_index": null,
         "trust_index": 52847,
@@ -64677,9 +64782,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -65116,9 +65221,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 39091,
+        "openbench_index": 39089,
         "coding_index": 25019,
-        "tooling_index": 34398,
+        "tooling_index": 34392,
         "knowledge_index": 50034,
         "vision_index": null,
         "trust_index": 55043,
@@ -65187,9 +65292,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -65603,8 +65708,8 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 78422,
-        "tooling_index": 79661,
-        "knowledge_index": 87383,
+        "tooling_index": 79684,
+        "knowledge_index": 87382,
         "vision_index": null,
         "trust_index": null,
         "security_index": 23149,
@@ -65675,8 +65780,8 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": null,
         "security_index": "2026-10-20",
@@ -66067,7 +66172,7 @@
         "openbench_index": 65992,
         "coding_index": 56414,
         "tooling_index": 70853,
-        "knowledge_index": 75670,
+        "knowledge_index": 75671,
         "vision_index": null,
         "trust_index": 65844,
         "security_index": null,
@@ -66138,7 +66243,7 @@
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
         "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -66534,9 +66639,9 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 37878,
+        "openbench_index": 37877,
         "coding_index": 18372,
-        "tooling_index": 38054,
+        "tooling_index": 38049,
         "knowledge_index": 46545,
         "vision_index": null,
         "trust_index": 55874,
@@ -66605,9 +66710,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -67059,10 +67164,10 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 76087,
+        "openbench_index": 76126,
         "coding_index": 84517,
-        "tooling_index": 87486,
-        "knowledge_index": 80361,
+        "tooling_index": 87613,
+        "knowledge_index": 80362,
         "vision_index": 66790,
         "trust_index": 49729,
         "security_index": 67625,
@@ -67131,10 +67236,10 @@
         "cyberbench_1_0": 78.8
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -67670,7 +67775,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 54941,
+        "tooling_index": 54945,
         "knowledge_index": 67928,
         "vision_index": 76905,
         "trust_index": 62312,
@@ -67741,7 +67846,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -68083,10 +68188,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87589,
+        "openbench_index": 87586,
         "coding_index": 94560,
-        "tooling_index": 92329,
-        "knowledge_index": 97719,
+        "tooling_index": 92320,
+        "knowledge_index": 97717,
         "vision_index": null,
         "trust_index": 67456,
         "security_index": 47326,
@@ -68154,10 +68259,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -68763,9 +68868,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 70817,
+        "openbench_index": 70820,
         "coding_index": 73531,
-        "tooling_index": 77977,
+        "tooling_index": 77986,
         "knowledge_index": 80402,
         "vision_index": 75217,
         "trust_index": 53219,
@@ -68835,9 +68940,9 @@
         "cyberbench_1_0": 83.9
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -69440,9 +69545,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 77668,
+        "openbench_index": 77669,
         "coding_index": 80444,
-        "tooling_index": 86119,
+        "tooling_index": 86122,
         "knowledge_index": 87196,
         "vision_index": 87258,
         "trust_index": 58479,
@@ -69511,9 +69616,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
@@ -70071,10 +70176,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 80385,
+        "openbench_index": 80372,
         "coding_index": 84028,
-        "tooling_index": 89286,
-        "knowledge_index": 95241,
+        "tooling_index": 89244,
+        "knowledge_index": 95238,
         "vision_index": 93585,
         "trust_index": 56417,
         "security_index": 86698,
@@ -70112,7 +70217,7 @@
         "bfcl_v4": null,
         "ifbench": 72.7,
         "itbench_aa": 56.2,
-        "gdpval_aa": 1610,
+        "gdpval_aa": 1605,
         "agents_last_exam": 30.6,
         "aa_briefcase": 1480,
         "browsecomp": 90.4,
@@ -70143,10 +70248,10 @@
         "cyberbench_1_0": 88.1
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -70183,7 +70288,7 @@
         "bfcl_v4": null,
         "ifbench": "2026-09-11",
         "itbench_aa": "2026-09-11",
-        "gdpval_aa": "2026-10-02",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": "2026-09-11",
         "aa_briefcase": "2026-10-02",
         "browsecomp": "2026-09-11",
@@ -70522,6 +70627,11 @@
             "date": "2026-10-02",
             "score": 1610,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1605,
+            "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
           }
         ],
         "agents_last_exam": [
@@ -70819,10 +70929,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88463,
+        "openbench_index": 88462,
         "coding_index": 96101,
         "tooling_index": 92048,
-        "knowledge_index": 99308,
+        "knowledge_index": 99307,
         "vision_index": 98745,
         "trust_index": 68487,
         "security_index": 17489,
@@ -70890,10 +71000,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
         "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-20",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -71776,7 +71886,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 52283,
+        "tooling_index": 52285,
         "knowledge_index": 62290,
         "vision_index": null,
         "trust_index": 59346,
@@ -71847,7 +71957,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -72209,9 +72319,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 18212,
+        "openbench_index": 18211,
         "coding_index": 11408,
-        "tooling_index": 11996,
+        "tooling_index": 11993,
         "knowledge_index": 15065,
         "vision_index": null,
         "trust_index": 35724,
@@ -72280,9 +72390,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -72657,7 +72767,7 @@
       "scores": {
         "openbench_index": 39423,
         "coding_index": 20435,
-        "tooling_index": 46093,
+        "tooling_index": 46091,
         "knowledge_index": 44252,
         "vision_index": null,
         "trust_index": 51309,
@@ -72728,7 +72838,7 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -73135,9 +73245,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 53392,
+        "openbench_index": 53394,
         "coding_index": 41668,
-        "tooling_index": 62511,
+        "tooling_index": 62519,
         "knowledge_index": 55838,
         "vision_index": null,
         "trust_index": 55050,
@@ -73206,9 +73316,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -73614,7 +73724,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 56679,
+        "tooling_index": 56683,
         "knowledge_index": 65358,
         "vision_index": null,
         "trust_index": 58248,
@@ -73685,7 +73795,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-19",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -74039,10 +74149,10 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 82704,
+        "openbench_index": 82698,
         "coding_index": 82445,
-        "tooling_index": 88784,
-        "knowledge_index": 91888,
+        "tooling_index": 88783,
+        "knowledge_index": 91853,
         "vision_index": 73719,
         "trust_index": 70207,
         "security_index": 69052,
@@ -74110,10 +74220,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -75213,10 +75323,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89310,
+        "openbench_index": 89308,
         "coding_index": 97882,
-        "tooling_index": 92762,
-        "knowledge_index": 98652,
+        "tooling_index": 92761,
+        "knowledge_index": 98639,
         "vision_index": 99194,
         "trust_index": 69275,
         "security_index": 52688,
@@ -75284,10 +75394,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -75853,10 +75963,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 73416,
+        "openbench_index": 73420,
         "coding_index": 72651,
-        "tooling_index": 77241,
-        "knowledge_index": 83106,
+        "tooling_index": 77256,
+        "knowledge_index": 83107,
         "vision_index": 81170,
         "trust_index": 63929,
         "security_index": 79467,
@@ -75924,10 +76034,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -76400,8 +76510,8 @@
       "scores": {
         "openbench_index": 85182,
         "coding_index": 89579,
-        "tooling_index": 89875,
-        "knowledge_index": 95487,
+        "tooling_index": 89878,
+        "knowledge_index": 95484,
         "vision_index": 94059,
         "trust_index": 68091,
         "security_index": 89685,
@@ -76471,8 +76581,8 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -77253,10 +77363,10 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 75024,
+        "openbench_index": 75025,
         "coding_index": 72533,
-        "tooling_index": 87830,
-        "knowledge_index": 92156,
+        "tooling_index": 87834,
+        "knowledge_index": 92155,
         "vision_index": 78926,
         "trust_index": 52368,
         "security_index": null,
@@ -77325,10 +77435,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -77667,7 +77777,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 76712,
+        "tooling_index": 76672,
         "knowledge_index": null,
         "vision_index": 79078,
         "trust_index": null,
@@ -77739,7 +77849,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": "2026-10-19",
         "trust_index": null,
@@ -78005,7 +78115,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 66324,
+        "tooling_index": 66291,
         "knowledge_index": null,
         "vision_index": 61393,
         "trust_index": null,
@@ -78077,7 +78187,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": "2026-10-19",
         "trust_index": null,
@@ -78343,7 +78453,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 88060,
+        "tooling_index": 88041,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -78415,7 +78525,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -78647,10 +78757,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90346,
+        "openbench_index": 90345,
         "coding_index": 97072,
         "tooling_index": 97947,
-        "knowledge_index": 96597,
+        "knowledge_index": 96595,
         "vision_index": null,
         "trust_index": 69402,
         "security_index": 49404,
@@ -78719,10 +78829,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
         "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -79212,10 +79322,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86923,
+        "openbench_index": 86924,
         "coding_index": 91906,
-        "tooling_index": 91265,
-        "knowledge_index": 98532,
+        "tooling_index": 91270,
+        "knowledge_index": 98531,
         "vision_index": 96041,
         "trust_index": 68768,
         "security_index": 11788,
@@ -79284,10 +79394,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -80070,10 +80180,10 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 91044,
+        "openbench_index": 91068,
         "coding_index": 91981,
-        "tooling_index": 96734,
-        "knowledge_index": 97774,
+        "tooling_index": 96814,
+        "knowledge_index": 97773,
         "vision_index": null,
         "trust_index": 79054,
         "security_index": 89685,
@@ -80142,10 +80252,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -80586,9 +80696,9 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 80001,
+        "openbench_index": 79989,
         "coding_index": 79596,
-        "tooling_index": 87753,
+        "tooling_index": 87716,
         "knowledge_index": 84559,
         "vision_index": null,
         "trust_index": 68448,
@@ -80627,7 +80737,7 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": 1620,
+        "gdpval_aa": 1615,
         "agents_last_exam": null,
         "aa_briefcase": 1400,
         "browsecomp": 91.7,
@@ -80658,9 +80768,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -80699,7 +80809,7 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": "2026-10-03",
+        "gdpval_aa": "2026-10-22",
         "agents_last_exam": null,
         "aa_briefcase": "2026-10-03",
         "browsecomp": "2026-09-30",
@@ -80887,6 +80997,11 @@
             "date": "2026-10-03",
             "score": 1620,
             "source": "https://artificialanalysis.ai/models/ling-3-1-flash"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 1615,
+            "source": "https://artificialanalysis.ai/models/ling-3-1-flash"
           }
         ],
         "aa_briefcase": [
@@ -81050,10 +81165,10 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 81800,
+        "openbench_index": 81799,
         "coding_index": 80003,
-        "tooling_index": 87634,
-        "knowledge_index": 91946,
+        "tooling_index": 87633,
+        "knowledge_index": 91945,
         "vision_index": 63412,
         "trust_index": 70867,
         "security_index": null,
@@ -81122,10 +81237,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -81597,7 +81712,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 50855,
+        "tooling_index": 50853,
         "knowledge_index": 55041,
         "vision_index": null,
         "trust_index": 52120,
@@ -81669,7 +81784,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -82247,10 +82362,10 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 76159,
+        "openbench_index": 76164,
         "coding_index": 77686,
-        "tooling_index": 82579,
-        "knowledge_index": 77558,
+        "tooling_index": 82594,
+        "knowledge_index": 77559,
         "vision_index": 63412,
         "trust_index": 65785,
         "security_index": null,
@@ -82319,10 +82434,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -82695,9 +82810,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 81098,
+        "openbench_index": 81158,
         "coding_index": 87283,
-        "tooling_index": 80894,
+        "tooling_index": 81095,
         "knowledge_index": 88884,
         "vision_index": null,
         "trust_index": 69248,
@@ -82767,9 +82882,9 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-21",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -83217,8 +83332,8 @@
       "scores": {
         "openbench_index": 89322,
         "coding_index": 94050,
-        "tooling_index": 94756,
-        "knowledge_index": 94205,
+        "tooling_index": 94758,
+        "knowledge_index": 94201,
         "vision_index": null,
         "trust_index": 74197,
         "security_index": 96775,
@@ -83289,8 +83404,8 @@
       "scores_updated": {
         "openbench_index": "2026-10-21",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -83644,10 +83759,10 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 90774,
+        "openbench_index": 90775,
         "coding_index": 90417,
-        "tooling_index": 97361,
-        "knowledge_index": 97071,
+        "tooling_index": 97363,
+        "knowledge_index": 97070,
         "vision_index": null,
         "trust_index": 79521,
         "security_index": 61999,
@@ -83716,10 +83831,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-20",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-20",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-20",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": "2026-10-20",
@@ -84065,10 +84180,10 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81801,
+        "openbench_index": 81804,
         "coding_index": 80508,
-        "tooling_index": 86398,
-        "knowledge_index": 91055,
+        "tooling_index": 86408,
+        "knowledge_index": 91054,
         "vision_index": null,
         "trust_index": 72285,
         "security_index": null,
@@ -84137,10 +84252,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -84775,10 +84890,10 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 52246,
+        "openbench_index": 52244,
         "coding_index": 34455,
-        "tooling_index": 49947,
-        "knowledge_index": 76560,
+        "tooling_index": 49948,
+        "knowledge_index": 76544,
         "vision_index": null,
         "trust_index": 61766,
         "security_index": null,
@@ -84847,10 +84962,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -85191,10 +85306,10 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 77290,
+        "openbench_index": 77288,
         "coding_index": 74054,
-        "tooling_index": 77676,
-        "knowledge_index": 88965,
+        "tooling_index": 77670,
+        "knowledge_index": 88964,
         "vision_index": 90511,
         "trust_index": 73705,
         "security_index": null,
@@ -85263,10 +85378,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -85630,10 +85745,10 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 68896,
+        "openbench_index": 69263,
         "coding_index": 63600,
-        "tooling_index": 71981,
-        "knowledge_index": 81010,
+        "tooling_index": 73105,
+        "knowledge_index": 81206,
         "vision_index": null,
         "trust_index": 64282,
         "security_index": null,
@@ -85667,7 +85782,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 48.5,
         "tau2_bench_telecom": null,
-        "mcp_atlas": null,
+        "mcp_atlas": 80.8,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -85688,7 +85803,7 @@
         "critpt": 13.1,
         "aime_2025": null,
         "aime_2026": 97.7,
-        "gpqa_diamond": 89.6,
+        "gpqa_diamond": 90.6,
         "hle": 34.7,
         "hle_diamond": null,
         "mmlu_pro": null,
@@ -85702,10 +85817,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-19",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": null,
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -85739,7 +85854,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-10-16",
         "tau2_bench_telecom": null,
-        "mcp_atlas": null,
+        "mcp_atlas": "2026-10-22",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -85760,7 +85875,7 @@
         "critpt": "2026-10-16",
         "aime_2025": null,
         "aime_2026": "2026-10-16",
-        "gpqa_diamond": "2026-10-19",
+        "gpqa_diamond": "2026-10-22",
         "hle": "2026-10-16",
         "hle_diamond": null,
         "mmlu_pro": null,
@@ -85811,7 +85926,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/reflection-beam",
         "tau2_bench_telecom": null,
-        "mcp_atlas": null,
+        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -85832,7 +85947,7 @@
         "critpt": "https://artificialanalysis.ai/models/reflection-beam",
         "aime_2025": null,
         "aime_2026": "https://huggingface.co/reflection/Beam-1.0-501B-A23B",
-        "gpqa_diamond": "https://openrouter.ai/reflection/beam-1.0-501b-a23b",
+        "gpqa_diamond": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "hle": "https://artificialanalysis.ai/models/reflection-beam",
         "hle_diamond": null,
         "mmlu_pro": null,
@@ -85923,6 +86038,13 @@
             "source": "https://artificialanalysis.ai/models/reflection-beam"
           }
         ],
+        "mcp_atlas": [
+          {
+            "date": "2026-10-22",
+            "score": 80.8,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
         "gdpval_aa": [
           {
             "date": "2026-10-16",
@@ -85989,6 +86111,11 @@
             "date": "2026-10-19",
             "score": 89.6,
             "source": "https://openrouter.ai/reflection/beam-1.0-501b-a23b"
+          },
+          {
+            "date": "2026-10-22",
+            "score": 90.6,
+            "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
         "hle": [
@@ -86035,11 +86162,13 @@
             "automation_bench_aa",
             "terminal_bench_4_0",
             "gdpval_aa",
+            "mcp_atlas",
             "terminal_bench_2_1"
           ],
           "of": 13,
-          "share": 0.42,
+          "share": 0.522,
           "second_hand": [
+            "mcp_atlas",
             "terminal_bench_2_1"
           ]
         },
@@ -86083,10 +86212,10 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 84306,
+        "openbench_index": 84302,
         "coding_index": 89432,
-        "tooling_index": 92620,
-        "knowledge_index": 89431,
+        "tooling_index": 92623,
+        "knowledge_index": 89397,
         "vision_index": 87156,
         "trust_index": 65102,
         "security_index": null,
@@ -86141,7 +86270,7 @@
         "critpt": 24,
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": 90.5,
+        "gpqa_diamond": 90.4,
         "hle": 43.3,
         "hle_diamond": null,
         "mmlu_pro": null,
@@ -86155,10 +86284,10 @@
         "charxiv_reasoning": null
       },
       "scores_updated": {
-        "openbench_index": "2026-10-21",
+        "openbench_index": "2026-10-22",
         "coding_index": "2026-10-21",
-        "tooling_index": "2026-10-21",
-        "knowledge_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
+        "knowledge_index": "2026-10-22",
         "vision_index": "2026-10-19",
         "trust_index": "2026-10-20",
         "security_index": null,
@@ -86437,7 +86566,7 @@
           },
           {
             "date": "2026-10-22",
-            "score": 90.5,
+            "score": 90.4,
             "source": "https://openrouter.ai/deepseek/deepseek-v4.1-flash-1017"
           }
         ],
@@ -86850,7 +86979,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41255,
+        "tooling_index": 41256,
         "knowledge_index": 42025,
         "vision_index": null,
         "trust_index": 46331,
@@ -86922,7 +87051,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
@@ -87203,7 +87332,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 45193,
+        "tooling_index": 45236,
         "knowledge_index": 66174,
         "vision_index": null,
         "trust_index": 56772,
@@ -87275,7 +87404,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-10-21",
+        "tooling_index": "2026-10-22",
         "knowledge_index": "2026-10-20",
         "vision_index": null,
         "trust_index": "2026-10-20",
