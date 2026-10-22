@@ -8438,14 +8438,14 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      // How many axes "+ Add axis" builds up to. Seventeen because that is what
-      // the widest fixed preset needs (the Coding index aggregates seventeen
+      // How many axes "+ Add axis" builds up to. Eighteen because that is what
+      // the widest fixed preset needs (the Coding index aggregates eighteen
       // benchmarks), so the picker can reproduce every one of them. The
       // common-benchmarks preset is the exception: it is "all of them" by
       // definition and often runs past this, so the cap only stops the picker
       // adding more -- a longer set from that preset, the address or storage
       // is charted as it is.
-      const RADAR_MAX_AXES = 17;
+      const RADAR_MAX_AXES = 18;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index", "security_index"];
 
@@ -8467,7 +8467,7 @@
           label: "Coding",
           axes: ["real_swe", "deepswe_1_1", "frontierswe_2_0", "frontiercode_extended_1_1",
             "swe_marathon_1_1", "terminal_bench_4_0", "terminal_bench_2_1",
-            "vibe_code_bench_1_1", "swe_bench_pro", "livecodebench", "scicode",
+            "vibe_code_bench_1_1", "swe_bench_pro", "swe_bench_pro_hard_2_0", "livecodebench", "scicode",
             "swe_bench_multilingual", "swe_atlas_qna", "swe_atlas_rf", "swe_atlas_tw",
             "programbench_almost", "swe_bench_verified"]
         },

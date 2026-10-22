@@ -49,6 +49,7 @@ import fetch_real_swe
 import fetch_sec_bench
 import fetch_spheron
 import fetch_swe_atlas
+import fetch_swe_bench_pro_v2
 import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
@@ -186,6 +187,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
+        # Full and Hard are two tables of one page, so the page covers both.
+        (fetch_swe_bench_pro_v2.URL, tuple(fetch_swe_bench_pro_v2.VARIANTS.values())),
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
         # One page per Terminal-Bench revision, each covering its own column.
         *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
