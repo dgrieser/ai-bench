@@ -1215,7 +1215,7 @@ class TestWorkflowWiring(unittest.TestCase):
         page = (_answers.HERE / "_admin" / "index.html").read_text(encoding="utf-8")
         table = re.search(r"const SOURCE_PAGES = \{(.*?)\n\};", page, re.S)
         self.assertIsNotNone(table, "no SOURCE_PAGES on the admin page")
-        listed = set(re.findall(r"^  ([a-z_]+): ", table.group(1), re.M))
+        listed = set(re.findall(r"^  ([a-z0-9_]+): ", table.group(1), re.M))
         for route in propose.ROUTES:
             source = re.sub(r"_mapping\.py$", "", re.sub(r"^update_", "", route))
             with self.subTest(route):

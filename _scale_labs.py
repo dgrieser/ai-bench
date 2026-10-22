@@ -16,6 +16,13 @@ This reader is stricter in two ways:
     has to be the same table -- the flight payload may repeat one, but two
     different ones cannot be told apart and are refused rather than merged.
 
+A board can also publish several tables on one page and say which is which:
+SWE-Bench Pro V2 carries its Full set and its Hard subset side by side, as
+`"variants":[{"key":"full","label":...,"entries":[...]}, {"key":"hard",...}]`.
+Asked for a `variant`, the reader takes the entries of the variant with that
+key and nothing else; a page that names no such variant, or names it twice with
+different rows, is refused rather than read from another table.
+
 A page that is the right board but carries no row table at all is also what
 the site serves for a moment while it redeploys or regenerates a board (seen
 on sweatlas-refactoring: one run got it, the runs an hour either side read
@@ -34,6 +41,7 @@ from typing import Any, Callable
 
 _PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
 _ENTRIES_RE = re.compile(r'"entries":\s*\[')
+_VARIANTS_RE = re.compile(r'"variants":\s*\[')
 _DECODER = json.JSONDecoder()
 
 
@@ -66,11 +74,41 @@ def board_slugs(decoded: str) -> set[str]:
     return set(re.findall(r'"query":\{"slug":"([^"]*)"\}', decoded))
 
 
-def extract_board_rows(html: str, slug: str, source: str) -> list[dict]:
+def _is_table(value: Any) -> bool:
+    return isinstance(value, list) and bool(value) and all(_is_row(v) for v in value)
+
+
+def _variant_tables(decoded: str, variant: str) -> tuple[list[list[dict]], set[str]]:
+    """The distinct row tables published under variant key `variant`, and every
+    variant key the page names."""
+    tables: list[list[dict]] = []
+    keys: set[str] = set()
+    for match in _VARIANTS_RE.finditer(decoded):
+        try:
+            value, _ = _DECODER.raw_decode(decoded, match.end() - 1)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(value, list):
+            continue
+        for item in value:
+            if not isinstance(item, dict) or not isinstance(item.get("key"), str):
+                continue
+            keys.add(item["key"])
+            entries = item.get("entries")
+            if item["key"] == variant and _is_table(entries) and entries not in tables:
+                tables.append(entries)
+    return tables, keys
+
+
+def extract_board_rows(
+    html: str, slug: str, source: str, variant: str | None = None
+) -> list[dict]:
     """The rows of board `slug`, de-duplicated, in page order.
 
-    Raises ValueError when the page is another board, carries no row table,
-    or carries more than one distinct one.
+    With `variant`, the rows of that one variant of the board (see the module
+    docstring). Raises ValueError when the page is another board, carries no
+    row table, or carries more than one distinct one -- for a variant, more
+    than one under that key, or none because the page names no such variant.
     """
     decoded = decode_flight(html)
     slugs = board_slugs(decoded)
@@ -81,26 +119,38 @@ def extract_board_rows(html: str, slug: str, source: str) -> list[dict]:
         )
 
     tables: list[list[dict]] = []
-    for match in _ENTRIES_RE.finditer(decoded):
-        try:
-            value, _ = _DECODER.raw_decode(decoded, match.end() - 1)
-        except json.JSONDecodeError:
-            continue
-        if not isinstance(value, list) or not value or not all(_is_row(v) for v in value):
-            continue
-        if value not in tables:
-            tables.append(value)
+    if variant is not None:
+        tables, keys = _variant_tables(decoded, variant)
+        if not keys:
+            raise NoRowsError(
+                f"{source}: no variant tables in the flight payload -- the page layout "
+                "changed; refusing to report an empty leaderboard."
+            )
+        if variant not in keys:
+            raise ValueError(
+                f"{source}: board {slug!r} names no variant {variant!r} "
+                f"(found {sorted(keys)}) -- refusing to read another table's rows."
+            )
+    else:
+        for match in _ENTRIES_RE.finditer(decoded):
+            try:
+                value, _ = _DECODER.raw_decode(decoded, match.end() - 1)
+            except json.JSONDecodeError:
+                continue
+            if _is_table(value) and value not in tables:
+                tables.append(value)
 
+    what = f"board {slug!r}" + (f" variant {variant!r}" if variant is not None else "")
     if not tables:
         raise NoRowsError(
-            f"{source}: no leaderboard rows in the flight payload -- the page layout "
-            "changed; refusing to report an empty leaderboard."
+            f"{source}: no leaderboard rows for {what} in the flight payload -- the page "
+            "layout changed; refusing to report an empty leaderboard."
         )
     if len(tables) > 1:
         sizes = ", ".join(str(len(t)) for t in tables)
         raise ValueError(
             f"{source}: the flight payload carries {len(tables)} different row tables "
-            f"({sizes} rows) -- refusing to guess which one is board {slug!r}."
+            f"({sizes} rows) -- refusing to guess which one is {what}."
         )
 
     rows: list[dict] = []
@@ -121,6 +171,7 @@ def fetch_board_rows(
     attempts: int = 3,
     delay: float = 10.0,
     sleep: Callable[[float], None] = time.sleep,
+    variant: str | None = None,
 ) -> list[dict]:
     """extract_board_rows over fetch(url), re-fetching a page that has no rows.
 
@@ -129,7 +180,7 @@ def fetch_board_rows(
     """
     for attempt in range(1, attempts + 1):
         try:
-            return extract_board_rows(fetch(url), slug, url)
+            return extract_board_rows(fetch(url), slug, url, variant)
         except NoRowsError as exc:
             if attempt == attempts:
                 raise

@@ -153,6 +153,14 @@ ROUTES: dict[str, dict[str, Route]] = {
     "update_mcp_atlas_mapping.py": {
         "*": Route("_mcp_atlas_mapping", "MCP_ATLAS_MAPPING", "add_mcp_atlas_mapping", MODELS)
     },
+    "update_swe_bench_pro_v2_mapping.py": {
+        "*": Route(
+            "_swe_bench_pro_v2_mapping",
+            "SWE_BENCH_PRO_V2_MAPPING",
+            "add_swe_bench_pro_v2_mapping",
+            MODELS,
+        )
+    },
     "update_bfcl_mapping.py": {
         "*": Route("_bfcl_mapping", "BFCL_MAPPING", "add_bfcl_mapping", MODELS)
     },

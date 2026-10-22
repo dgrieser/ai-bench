@@ -233,6 +233,63 @@ class TestScaleLabsBoard(unittest.TestCase):
             self.fetch_pages(self.payload("sweatlas-qna", self.ROWS), self.payload("mcp_atlas", self.ROWS))
 
 
+class TestScaleLabsVariants(unittest.TestCase):
+    """A board that publishes several tables as named variants (SWE-Bench Pro V2's
+    Full and Hard): a variant is read by its key, never by table position."""
+
+    FULL = [{"model": "A", "score": 99.0}, {"model": "B", "score": 95.0}]
+    HARD = [{"model": "A", "score": 90.0}, {"model": "C", "score": 50.0}]
+    SLUG = "swe_bench_pro_public_v2"
+
+    def payload(self, *variants: tuple[str, list]) -> str:
+        items = [{"key": key, "label": key.upper(), "entries": rows} for key, rows in variants]
+        return flight(
+            f'0:{{"query":{{"slug":"{self.SLUG}"}}}}\n',
+            f'1c:["$","div",null,{{"variants":{json.dumps(items)}}}]\n',
+        )
+
+    def read(self, html: str, variant: str) -> list[str]:
+        rows = _scale_labs.extract_board_rows(html, self.SLUG, "src", variant)
+        return [r["model"] for r in rows]
+
+    def test_each_variant_reads_its_own_table(self) -> None:
+        html = self.payload(("full", self.FULL), ("hard", self.HARD))
+        self.assertEqual(self.read(html, "full"), ["A", "B"])
+        self.assertEqual(self.read(html, "hard"), ["A", "C"])
+
+    def test_the_order_of_the_variants_does_not_matter(self) -> None:
+        html = self.payload(("hard", self.HARD), ("full", self.FULL))
+        self.assertEqual(self.read(html, "full"), ["A", "B"])
+
+    def test_without_a_variant_two_tables_are_still_refused(self) -> None:
+        html = self.payload(("full", self.FULL), ("hard", self.HARD))
+        with self.assertRaisesRegex(ValueError, "2 different row tables"):
+            _scale_labs.extract_board_rows(html, self.SLUG, "src")
+
+    def test_a_variant_the_page_does_not_name_is_refused(self) -> None:
+        html = self.payload(("full", self.FULL))
+        with self.assertRaisesRegex(ValueError, "names no variant 'hard'"):
+            self.read(html, "hard")
+
+    def test_a_variant_named_twice_with_different_rows_is_refused(self) -> None:
+        html = self.payload(("full", self.FULL), ("full", self.HARD))
+        with self.assertRaisesRegex(ValueError, "2 different row tables"):
+            self.read(html, "full")
+
+    def test_another_board_is_refused(self) -> None:
+        html = self.payload(("full", self.FULL)).replace(self.SLUG, "swe_bench_pro")
+        with self.assertRaisesRegex(ValueError, "does not identify"):
+            self.read(html, "full")
+
+    def test_a_page_without_variants_is_fetched_again(self) -> None:
+        queue, waits = [self.payload(), self.payload(("full", self.FULL))], []
+        rows = _scale_labs.fetch_board_rows(
+            lambda url: queue.pop(0), "src", self.SLUG, sleep=waits.append, variant="full"
+        )
+        self.assertEqual([r["model"] for r in rows], ["A", "B"])
+        self.assertEqual(len(waits), 1)
+
+
 class TestFrontierSweEntries(unittest.TestCase):
     BOARD = {"abs": {"mean": [{"model": "M {x}", "harness": "h}", "overall": 40.0}]}}
 

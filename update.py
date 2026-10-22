@@ -61,6 +61,7 @@ from _precedence import (
     FRONTIERSWE_SOURCE_URL,
     LLMSTATS_SOURCE_URL,
     MCP_ATLAS_SOURCE_URL,
+    SWE_BENCH_PRO_V2_SOURCE_URL,
     OSWORLD_KEY_URLS,
     OSWORLD_SOURCE_URL,
     PROGRAMBENCH_SOURCE_URL,
@@ -96,6 +97,7 @@ from fill_source_urls import canonical
 from _aa_coding_agents_mapping import load_aa_coding_agents_to_slug_mapping
 from _bfcl_mapping import load_bfcl_to_slug_mapping
 from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
+from _swe_bench_pro_v2_mapping import load_swe_bench_pro_v2_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
 from _cybergym_mapping import load_cybergym_to_slug_mapping
 from _sec_bench_mapping import load_sec_bench_to_slug_mapping
@@ -132,6 +134,7 @@ DEEPSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_deepswe.py")
 DATACURVE_SCRIPT = Path(__file__).resolve().with_name("fetch_datacurve.py")
 TOOLATHLON_SCRIPT = Path(__file__).resolve().with_name("fetch_toolathlon.py")
 MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
+SWE_BENCH_PRO_V2_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_bench_pro_v2.py")
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
 CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
 SEC_BENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_sec_bench.py")
@@ -359,6 +362,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-mcp-atlas",
         action="store_true",
         help="Skip fetching scores from the Scale Labs MCP-Atlas leaderboard.",
+    )
+    parser.add_argument(
+        "--skip-swe-bench-pro-v2",
+        action="store_true",
+        help="Skip fetching scores from the Scale Labs SWE-Bench Pro V2 leaderboard.",
     )
     parser.add_argument(
         "--skip-zerobench",
@@ -1853,6 +1861,76 @@ def update_mcp_atlas_scores(
     return matched, updated, changes
 
 
+def build_fetch_swe_bench_pro_v2_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--variant", "all", "--format", "json"]
+
+
+def fetch_swe_bench_pro_v2_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_swe_bench_pro_v2_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_swe_bench_pro_v2.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected swe_bench_pro_v2 JSON format: expected a list")
+
+    swe_bench_pro_v2_to_slug = load_swe_bench_pro_v2_to_slug_mapping(mapping_path)
+    # slug -> {benchmark_key -> best score across harness/effort variants}
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("model")
+        key = row.get("key")
+        score = row.get("score")
+        if not isinstance(name, str) or not isinstance(key, str):
+            continue
+        if not isinstance(score, (int, float)) or isinstance(score, bool):
+            continue
+        slug = swe_bench_pro_v2_to_slug.get(name)
+        if not slug:
+            continue
+        scores = by_slug.setdefault(slug, {})
+        # A model may appear under several harnesses per table; keep the best.
+        if key not in scores or score > scores[key]:
+            scores[key] = score
+    return by_slug
+
+
+def update_swe_bench_pro_v2_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        swe_bench_pro_v2_scores = by_slug.get(slug)
+        if not swe_bench_pro_v2_scores:
+            continue
+
+        matched += 1
+        for benchmark_key, new_value in swe_bench_pro_v2_scores.items():
+            updated += apply_score(
+                doc, model, slug, benchmark_key, new_value,
+                SWE_BENCH_PRO_V2_SOURCE_URL, changes,
+                fill_urls_only=fill_urls_only,
+            )
+
+    return matched, updated, changes
+
+
 def build_fetch_zerobench_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -3196,6 +3274,7 @@ def main() -> int:
     datacurve_path = DATACURVE_SCRIPT
     toolathlon_path = TOOLATHLON_SCRIPT
     mcp_atlas_path = MCP_ATLAS_SCRIPT
+    swe_bench_pro_v2_path = SWE_BENCH_PRO_V2_SCRIPT
     zerobench_path = ZEROBENCH_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
@@ -3238,6 +3317,9 @@ def main() -> int:
     )
     mcp_atlas_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-mcp-atlas-to-artificialanalysis.json"
+    )
+    swe_bench_pro_v2_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-swe-bench-pro-v2-to-artificialanalysis.json"
     )
     zerobench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-zerobench-to-artificialanalysis.json"
@@ -3373,6 +3455,8 @@ def main() -> int:
         listed.append(build_fetch_swe_marathon_cmd(swe_marathon_path))
     if not args.skip_mcp_atlas:
         listed.append(build_fetch_mcp_atlas_cmd(mcp_atlas_path))
+    if not args.skip_swe_bench_pro_v2:
+        listed.append(build_fetch_swe_bench_pro_v2_cmd(swe_bench_pro_v2_path))
     if not args.skip_zerobench:
         listed.append(build_fetch_zerobench_cmd(zerobench_path))
     if not args.skip_cybergym:
@@ -3778,6 +3862,25 @@ def main() -> int:
         )
         changes.extend(mcp_atlas_changes)
 
+    # And for SWE-Bench Pro V2: Scale's own runs of its refreshed split, Full
+    # and Hard from one page, each into its own column. Nothing else feeds
+    # those columns but model cards that name V2, which this takes over.
+    swe_bench_pro_v2_by_slug: dict[str, dict[str, Any]] = {}
+    swe_bench_pro_v2_matched = 0
+    swe_bench_pro_v2_updated = 0
+    if not args.skip_swe_bench_pro_v2:
+        swe_bench_pro_v2_by_slug = source_data(
+            fetch_failures, fetch_swe_bench_pro_v2_data,
+            swe_bench_pro_v2_path, swe_bench_pro_v2_mapping_path,
+        )
+        swe_bench_pro_v2_matched, swe_bench_pro_v2_updated, swe_bench_pro_v2_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_swe_bench_pro_v2_scores",
+            update_swe_bench_pro_v2_scores,
+            doc, swe_bench_pro_v2_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(swe_bench_pro_v2_changes)
+
     # And again for ZeroBench: the maintainers' own board over the model-card
     # and evals.report readings of it, which is the whole point of reading it --
     # the board has Maverick at 0.4 and Scout at 1.6 where evals.report has 0.0.
@@ -3951,6 +4054,8 @@ def main() -> int:
         print(f"models returned by swe_marathon: {revision_model_count(swe_marathon_by_slug)}" + revision_breakdown(swe_marathon_by_slug))
     if not args.skip_mcp_atlas:
         print(f"models returned by mcp_atlas: {len(mcp_atlas_by_slug)}")
+    if not args.skip_swe_bench_pro_v2:
+        print(f"models returned by swe_bench_pro_v2: {len(swe_bench_pro_v2_by_slug)}")
     if not args.skip_zerobench:
         print(f"models returned by zerobench: {len(zerobench_by_slug)}")
     if not args.skip_cybergym:
@@ -4019,6 +4124,8 @@ def main() -> int:
         print(f"models matched on swe_marathon: {swe_marathon_matched}")
     if not args.skip_mcp_atlas:
         print(f"models matched on mcp_atlas: {mcp_atlas_matched}")
+    if not args.skip_swe_bench_pro_v2:
+        print(f"models matched on swe_bench_pro_v2: {swe_bench_pro_v2_matched}")
     if not args.skip_zerobench:
         print(f"models matched on zerobench: {zerobench_matched}")
     if not args.skip_cybergym:
@@ -4076,6 +4183,8 @@ def main() -> int:
         print(f"{action} from swe_marathon: {swe_marathon_updated}")
     if not args.skip_mcp_atlas:
         print(f"{action} from mcp_atlas: {mcp_atlas_updated}")
+    if not args.skip_swe_bench_pro_v2:
+        print(f"{action} from swe_bench_pro_v2: {swe_bench_pro_v2_updated}")
     if not args.skip_zerobench:
         print(f"{action} from zerobench: {zerobench_updated}")
     if not args.skip_cybergym:

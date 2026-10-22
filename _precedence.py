@@ -137,6 +137,7 @@ import fetch_programbench
 import fetch_real_swe
 import fetch_sec_bench
 import fetch_swe_atlas
+import fetch_swe_bench_pro_v2
 import fetch_swe_marathon
 import fetch_tbench
 import fetch_toolathlon
@@ -176,6 +177,9 @@ OSWORLD_KEY_URLS = {
 LLMSTATS_SOURCE_URL = canonical(fetch_llmstats.LEADERBOARD_URL)
 TOOLATHLON_SOURCE_URL = canonical(fetch_toolathlon.URL)
 MCP_ATLAS_SOURCE_URL = canonical(fetch_mcp_atlas.URL)
+# Scale's own SWE-Bench Pro V2 board. Its Full and Hard tables are variants on
+# one page, so both columns cite it; the column is what keeps them apart.
+SWE_BENCH_PRO_V2_SOURCE_URL = canonical(fetch_swe_bench_pro_v2.URL)
 REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # The extended table, which is the complete board, not the site root: the
 # root is the top ten of the same runs and prefix-matches everything under
@@ -280,6 +284,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (OSWORLD_V2_SOURCE_URL, RANK_BENCHMARK_SITE),
         (TOOLATHLON_SOURCE_URL, RANK_BENCHMARK_SITE),
         (MCP_ATLAS_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (SWE_BENCH_PRO_V2_SOURCE_URL, RANK_BENCHMARK_SITE),
         (REAL_SWE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (PROGRAMBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         (BFCL_SOURCE_URL, RANK_BENCHMARK_SITE),
