@@ -4,197 +4,76 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "gemini-4-argon",
-          "reason": "exact to gemini 4 argon, exact match"
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek v4.1 flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to deepseek v4.1 flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to deepseek v4.1 flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek v4.1 flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'gemini 4 argon' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
+      "question": "Map Coding Agent Index model 'deepseek v4.1 flash' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "gemini 4 argon",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "deepseek v4.1 flash",
       "universe": "models"
     },
     {
       "candidates": [
         {
           "confidence": "exact",
-          "option": "gpt-6-1-sol",
-          "reason": "exact to gpt 6.1 sol, exact match"
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to deepseek v4.1 flash 1017, exact match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-sol",
-          "reason": "exact to gpt 6.1 sol, most components match"
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek v4.1 flash 1017, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to gpt 6.1 sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-luna",
+          "option": "deepseek-v4-flash",
           "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'gpt 6.1 sol' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "gpt 6.1 sol",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-haiku-5-5",
-          "reason": "exact to haiku 4.5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'haiku 4.5' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "haiku 4.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-haiku-5-5",
-          "reason": "exact to haiku 5.5, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'haiku 5.5' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "haiku 5.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-spark-open",
-          "reason": "exact to muse spark open, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'muse spark open' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "muse spark open",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "muse-wonder",
+          "option": "deepseek-v4-flash-vision",
           "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "muse-wonder-full",
+          "option": "deepseek-v4-pro",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'muse wonder 1.0' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
+      "question": "Map Coding Agent Index model 'deepseek v4.1 flash 1017' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "muse wonder 1.0",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "exact to opus 5, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'opus 5' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "opus 5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to sonnet 5, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'sonnet 5' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "sonnet 5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to sonnet 5.5, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'sonnet 5.5' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "sonnet 5.5",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "deepseek v4.1 flash 1017",
       "universe": "models"
     }
   ]
