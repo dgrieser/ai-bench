@@ -64,6 +64,7 @@ from _precedence import (
     SWE_BENCH_PRO_V2_SOURCE_URL,
     OSWORLD_KEY_URLS,
     OSWORLD_SOURCE_URL,
+    KERNELBENCH_SOURCE_URL,
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
     SEC_BENCH_SOURCE_URL,
@@ -109,6 +110,7 @@ from _huggingface_mapping import load_hf_card_exclusions, load_hf_to_key_mapping
 from _deepswe_mapping import load_deepswe_to_slug_mapping
 from _toolathlon_mapping import load_toolathlon_to_slug_mapping
 from _programbench_mapping import load_programbench_to_slug_mapping
+from _kernelbench_mapping import load_kernelbench_to_slug_mapping
 from _real_swe_mapping import load_real_swe_to_slug_mapping
 from _frontierswe_mapping import load_frontierswe_to_slug_mapping
 from _frontiercode_mapping import load_frontiercode_to_slug_mapping
@@ -140,6 +142,7 @@ CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
 SEC_BENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_sec_bench.py")
 HLE_DIAMOND_SCRIPT = Path(__file__).resolve().with_name("fetch_hle_diamond.py")
 PROGRAMBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_programbench.py")
+KERNELBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_kernelbench.py")
 REAL_SWE_SCRIPT = Path(__file__).resolve().with_name("fetch_real_swe.py")
 BFCL_SCRIPT = Path(__file__).resolve().with_name("fetch_bfcl.py")
 FRONTIERSWE_SCRIPT = Path(__file__).resolve().with_name("fetch_frontierswe.py")
@@ -412,6 +415,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-programbench",
         action="store_true",
         help="Skip fetching scores from the ProgramBench leaderboard.",
+    )
+    parser.add_argument(
+        "--skip-kernelbench",
+        action="store_true",
+        help="Skip fetching scores from the kernelbench.com leaderboard.",
     )
     parser.add_argument(
         "--skip-real-swe",
@@ -1736,6 +1744,68 @@ def update_programbench_scores(
         updated += apply_score(
             doc, model, slug, "programbench_almost", programbench_model.get("score"),
             PROGRAMBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
+        )
+
+    return matched, updated, changes
+
+
+def build_fetch_kernelbench_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_kernelbench_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, Any]]:
+    cmd = build_fetch_kernelbench_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"fetch_kernelbench.py failed ({proc.returncode}): {proc.stderr.strip()}"
+        )
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected kernelbench JSON format: expected a list")
+
+    kernelbench_to_slug = load_kernelbench_to_slug_mapping(mapping_path)
+    by_slug: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        kernelbench_name = row.get("model")
+        if not isinstance(kernelbench_name, str) or not kernelbench_name:
+            continue
+        slug = kernelbench_to_slug.get(kernelbench_name)
+        if not slug:
+            continue
+        # The board shows one row per model today, but a slug that collects two
+        # names (a dated snapshot beside its alias) keeps the best reported run.
+        keep_best_row(by_slug, slug, row, "score")
+    return by_slug
+
+
+def update_kernelbench_scores(
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    models = doc.get("models", [])
+    matched = 0
+    updated = 0
+    changes: list[tuple[str, str, Any, Any]] = []
+
+    for model in models:
+        slug = model.get("name")
+        if not isinstance(slug, str) or not slug:
+            continue
+        kernelbench_model = by_slug.get(slug)
+        if kernelbench_model is None:
+            continue
+
+        matched += 1
+        updated += apply_score(
+            doc, model, slug, "kernelbench_cuda", kernelbench_model.get("score"),
+            KERNELBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
     return matched, updated, changes
@@ -3279,6 +3349,7 @@ def main() -> int:
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     programbench_path = PROGRAMBENCH_SCRIPT
+    kernelbench_path = KERNELBENCH_SCRIPT
     real_swe_path = REAL_SWE_SCRIPT
     tbench_path = TBENCH_SCRIPT
     agents_last_exam_path = AGENTS_LAST_EXAM_SCRIPT
@@ -3311,6 +3382,9 @@ def main() -> int:
     )
     programbench_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-programbench-to-artificialanalysis.json"
+    )
+    kernelbench_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-kernelbench-to-artificialanalysis.json"
     )
     real_swe_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-real-swe-to-artificialanalysis.json"
@@ -3431,6 +3505,8 @@ def main() -> int:
         listed.append(build_fetch_toolathlon_cmd(toolathlon_path))
     if not args.skip_programbench:
         listed.append(build_fetch_programbench_cmd(programbench_path))
+    if not args.skip_kernelbench:
+        listed.append(build_fetch_kernelbench_cmd(kernelbench_path))
     if not args.skip_real_swe:
         listed.append(build_fetch_real_swe_cmd(real_swe_path))
     if not args.skip_deepswe:
@@ -3672,6 +3748,25 @@ def main() -> int:
             )
         )
         changes.extend(programbench_changes)
+
+    # kernelbench.com: the CUDA deck on the RTX PRO 6000, as each model's mean
+    # share of the best audited kernel per problem. Nothing else feeds the
+    # column; see fetch_kernelbench.py for why that deck and that number.
+    kernelbench_by_slug: dict[str, dict[str, Any]] = {}
+    kernelbench_matched = 0
+    kernelbench_updated = 0
+    if not args.skip_kernelbench:
+        kernelbench_by_slug = source_data(
+            fetch_failures, fetch_kernelbench_data,
+            kernelbench_path, kernelbench_mapping_path
+        )
+        kernelbench_matched, kernelbench_updated, kernelbench_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_kernelbench_scores",
+            update_kernelbench_scores,
+            doc, kernelbench_by_slug, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(kernelbench_changes)
 
     real_swe_by_slug: dict[str, dict[str, Any]] = {}
     real_swe_matched = 0
@@ -4030,6 +4125,8 @@ def main() -> int:
         print(f"models returned by toolathlon: {len(toolathlon_by_slug)}")
     if not args.skip_programbench:
         print(f"models returned by programbench: {len(programbench_by_slug)}")
+    if not args.skip_kernelbench:
+        print(f"models returned by kernelbench: {len(kernelbench_by_slug)}")
     if not args.skip_real_swe:
         print(f"models returned by real-swe: {len(real_swe_by_slug)}")
     if not args.skip_deepswe:
@@ -4100,6 +4197,8 @@ def main() -> int:
         print(f"models matched on toolathlon: {toolathlon_matched}")
     if not args.skip_programbench:
         print(f"models matched on programbench: {programbench_matched}")
+    if not args.skip_kernelbench:
+        print(f"models matched on kernelbench: {kernelbench_matched}")
     if not args.skip_real_swe:
         print(f"models matched on real-swe: {real_swe_matched}")
     if not args.skip_deepswe:
@@ -4159,6 +4258,8 @@ def main() -> int:
         print(f"{action} from toolathlon: {toolathlon_updated}")
     if not args.skip_programbench:
         print(f"{action} from programbench: {programbench_updated}")
+    if not args.skip_kernelbench:
+        print(f"{action} from kernelbench: {kernelbench_updated}")
     if not args.skip_real_swe:
         print(f"{action} from real-swe: {real_swe_updated}")
     if not args.skip_deepswe:

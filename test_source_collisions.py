@@ -80,6 +80,7 @@ class TestRowFetchers(unittest.TestCase):
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("real_swe", "score", "fetch_real_swe_data"),
         ("programbench", "score", "fetch_programbench_data"),
+        ("kernelbench", "score", "fetch_kernelbench_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),

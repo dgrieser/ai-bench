@@ -359,6 +359,30 @@ INDEXES: list[IndexDef] = [
             # 0.5 to 0.94 ranks the same field; from 0.95 up, 16 more models
             # fall under the evidence bar.
             ("programbench_almost", 0.9),
+            # 0.15 since 2026-10-23: kernelbench.com's CUDA deck, the only
+            # member that measures making code fast rather than making it
+            # correct -- four GPU-kernel problems on an RTX PRO 6000, every
+            # published cell audited by hand for reward hacking, scored as the
+            # mean share of each problem's best audited kernel.
+            #
+            # For it: a construct nothing else here covers; the widest head of
+            # any member, 35.4 points between the best model and the fifth; and
+            # a ranking that agrees with this index at 0.89 over its 16 models
+            # without copying any one member (0.89 FrontierCode Extended, 0.88
+            # FrontierSWE 2.0, 0.81 Real-SWE and ProgramBench).
+            #
+            # Against it: 16 scored models, 7 of them open; four problems, so
+            # one problem is a quarter of the scale; a share of the best, which
+            # moves when a new leader posts a better kernel; and whatever
+            # harness each row ran in. That prices it at the bottom rung with
+            # SWE-bench Verified's neighbours.
+            #
+            # 0.15 is also the room there is: 17 models sit at 1.70 of scored
+            # weight, and anything above 0.19 takes the total past the 9.44 at
+            # which they drop through the evidence bar. At 0.15 all 96 stay
+            # ranked and five move, at most three places. See README, "Why
+            # KernelBench CUDA enters at 0.15".
+            ("kernelbench_cuda", 0.15),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),
         ],

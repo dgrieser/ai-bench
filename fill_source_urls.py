@@ -44,6 +44,7 @@ import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_openrouter
 import fetch_osworld
+import fetch_kernelbench
 import fetch_programbench
 import fetch_real_swe
 import fetch_sec_bench
@@ -185,6 +186,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_real_swe.URL, ("real_swe",)),
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
+        (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_cuda",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         # Full and Hard are two tables of one page, so the page covers both.

@@ -35,6 +35,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
+| **kernelbench.com** | Research (benchmark's own leaderboard: the CUDA deck on the RTX PRO 6000) | RSC flight payload (every deck's audited cells) |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench and CyberBench) | Astro island props |
 | **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
@@ -432,6 +433,7 @@ current address.
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
+./fetch_kernelbench.py                  # KernelBench CUDA share of best %, from kernelbench.com
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
@@ -458,6 +460,7 @@ current address.
 ./update_tbench_mapping.py
 ./update_agents_last_exam_mapping.py
 ./update_programbench_mapping.py
+./update_kernelbench_mapping.py
 ./update_frontiercode_mapping.py
 ./update_huggingface_mapping.py
 ./update_llmstats_mapping.py
@@ -761,7 +764,7 @@ already gives row collisions inside a single source.
 | --- | --- | --- |
 | 0 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
 | 1 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design. Since 2026-10-03 the model pages rank above it, so AA's single-harness run lands wherever both report, whichever ingest ran last: a column that compares models should hold the harness fixed, and the vendor agents do not. The index fills what the pages leave empty — Terminal-Bench 4.0 for a model AA has not run itself, and its DeepSWE and SWE Atlas rows — and outranks every benchmark site there. |
-| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas, SWE-Bench Pro V2), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, HLE-Diamond's announcement post, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
+| 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas, SWE-Bench Pro V2), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, kernelbench.com, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, HLE-Diamond's announcement post, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
@@ -2419,6 +2422,79 @@ for the new member (0.013 → 0.012).
 Revisit it when the review queue lands the rest of the board's names, or when a
 lab's model card starts reporting V2 Hard: either can widen it enough to move
 the weight, and either moves the bar with it.
+
+### Why KernelBench CUDA enters at 0.15
+
+[kernelbench.com](https://kernelbench.com/) is an agentic GPU-kernel board: a
+coding agent gets a reference PyTorch module and an unlimited budget to replace
+it with a faster kernel on real hardware, and every published cell is audited by
+hand for reward hacking before it counts. It takes Stanford's KernelBench name
+and problem style and says on every page that it is not affiliated with it.
+Stanford's own [board](https://scalingintelligence.stanford.edu/KernelBenchLeaderboard/)
+stops at the 2024 models (gpt-4o, claude-3.5-sonnet) and scores nothing in this
+file, so it is not read.
+
+**What the column holds.** The site publishes three decks (Mega, CUDA, Hard),
+each scored in its own native units: speedup over torch, fraction of the GPU's
+roofline, inverse latency. Those cannot be added, so the site divides each audited
+pass by the best audited pass on that problem and averages over the *whole* deck,
+a failed, flagged or missing cell counting as zero. `kernelbench_cuda` is that
+number for the CUDA deck (four problems: a GLM-5.2 fused MoE, DeepSeek native
+sparse attention, a MegaQwen decode step, a Grid + MinGRU scan) on the RTX PRO
+6000, the board the site calls canonical. `fetch_kernelbench.py` recomputes it
+from the cells the homepage ships, and the result matches the site's own
+`/models` bars to the tenth for every model run only on Mega and CUDA. Two
+alternatives were turned down:
+
+- **The `/models` headline** averages those per-deck shares over whichever decks
+  a model was run on. Claude Opus 5 has no Mega cell and GPT-5.6 Sol no CUDA row,
+  so two headlines can average different task sets.
+- **The Hard deck** is run on 11 models rather than 22, and its per-deck share
+  does not reproduce from the shipped cells.
+
+A share of the best moves when the best moves. A new leader on a problem lowers
+everyone else's number on it, so a refresh that shifts the whole column at once
+is a new best kernel, not a regression.
+
+**Already in a current source?** Barely, and never this number. Only llm-stats
+carries a kernel benchmark: its `kernelbench-hard` board has one self-reported
+row (MiniMax M3, a TFLOPs-of-peak fraction) and `kernel-bench-l3` one (Qwen3.7
+Max, the share of Stanford Level 3 problems faster than `torch.compile`). Those
+are two other metrics on two other problem sets, so neither is mapped here. No
+Hugging Face card, Epoch AI, evals.report, Vals AI or Artificial Analysis
+publishes one. The column has one source, the board itself, at the
+benchmark-site rung.
+
+Measured on 2026-10-23, on the file as it then stood:
+
+| Axis | Measurement | Pull |
+| --- | --- | --- |
+| What it tests | Making code *fast*: writing and tuning CUDA kernels against a roofline. No other member asks it; every other board here grades whether code is correct. | **up** |
+| Saturation | 86.7 at the top, and by construction the leader on each problem sits at 1.00, so the column can never saturate below 100. | **up** |
+| Head resolution | **35.4 points** between the best model and the fifth (86.7 to 51.3), the widest of any member. But with four problems, one problem is 25 points of scale. | — |
+| Redundancy | Spearman **0.89** with the coding index on its 16 models; 0.89 with FrontierCode Extended, 0.88 FrontierSWE 2.0, 0.81 Real-SWE and ProgramBench, 0.69 Terminal-Bench 4.0. It agrees with the field without copying any one member. | — |
+| Trust | Every cell is the site's own run, hand-audited for reward hacking. Flagged cells score zero and never set the best. The harness varies by row (Claude Code, Codex, OpenRouter agents). | **up** |
+| Coverage | **16** scored models, **7** of them open (DeepSeek V4 Flash, V4.1 Flash and its 1017 snapshot, Kimi K3, Qwen3.8 Max, GLM 5.3 and 5.3 Flash); the board lists 22. GPT-6 Astra Pro is in the review queue. | **down** |
+
+The merits alone would put it with the narrow first-party columns at 0.35–0.4.
+**The weight is set by the evidence bar instead.** After SWE-Bench Pro V2 Hard
+the total stood at 9.25, and seventeen models (most of them measured only on
+Artificial Analysis' four columns) sit at exactly **1.70** of scored weight.
+Anything above **0.19** takes the total past 9.44 and drops all seventeen to
+`null` at once (96 → 79 ranked; at 0.9 it is 71). 0.15 is the largest round
+step under that cliff. It puts KernelBench level with what SWE-bench Verified
+carried before October, a rung above it now.
+
+**What it cost, measured: almost nothing.** All 96 models stay ranked. Five
+move, none by more than three places: Grok 4.7 20 → 17, GLM 5.3 17 → 18,
+GPT-5.6 Terra 18 → 20, GPT-6 Luna 28 → 27, MiniMax M3.1 Flash 27 → 28.
+Recalibrating the coding `transfer_ratio` with the new member leaves it at
+0.011.
+
+Raise it when the bar moves: a re-weighting that lifts the seventeen
+AA-only models off 1.70, or a wider KernelBench field (the Hard deck reaching
+the CUDA deck's reach, or more open models on the board). Either one opens room
+up to the 0.35–0.4 the column earns on merit.
 
 ### Why Vibe Code Bench enters at 0.75
 
