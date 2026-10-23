@@ -2471,7 +2471,7 @@ Measured on 2026-10-23, on the file as it then stood:
 | What it tests | Making code *fast*: writing and tuning GPU kernels against a roofline. No other member asks it; every other board here grades whether code is correct. | **up** |
 | Saturation | 21.8% of roofline at the top of the board, 28.8% claimed. Nowhere near a ceiling. | **up** |
 | Head resolution | **3.0 points** between the best model and the fifth on the board (21.8 to 18.8); 10.7 in this file, where the MiniMax claim leads. One problem dominates: paged attention reaches 69% of roofline where KDA tops out at 4%. | **down** |
-| Redundancy | Spearman **0.07** with the coding index on its 9 models: it ranks the field in an order of its own. GPT-5.6 Sol, a frontier model, sits second from the bottom at 10.4. Its nearest member is ProgramBench at 0.51. | — |
+| Redundancy | Spearman **0.07** with the coding index on its 9 models, 0.51 with ProgramBench, its nearest member. It repeats no member, which is what a different construct should look like, and at 0.4 it reorders the field toward kernel skill rather than confirming the existing order. Most of the gap comes from two rows: MiniMax M3's claim (first here, last of the nine on coding) and GPT-5.6 Sol (3 of 6 problems failed, 10.4). On nine models that is as much sample noise as signal, and it settles as the deck's field grows. | **up** |
 | Trust | Eight values are the site's own runs, hand-audited for reward hacking; one is a lab claim on a 9-question set. The harness varies by row (Claude Code, Codex, OpenRouter agents). | — |
 | Coverage | **9** scored models, **8** of them open: both DeepSeek V4.1 Flash runs, DeepSeek V4 Flash, Kimi K3, Qwen3.8 Max, GLM 5.3 and 5.3 Flash, MiniMax M3; plus GPT-5.6 Sol. | **down** |
 
