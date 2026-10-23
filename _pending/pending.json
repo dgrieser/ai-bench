@@ -1,3 +1,15 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-23 - NVIDIA",
+      "question": "Carry newly released closed model 'nemotron-3-5-bolt-e4b-4gb' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "nemotron-3-5-bolt-e4b-4gb",
+      "universe": null
+    }
+  ]
 }
