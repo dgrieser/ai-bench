@@ -1804,7 +1804,7 @@ def update_kernelbench_scores(
 
         matched += 1
         updated += apply_score(
-            doc, model, slug, "kernelbench_cuda", kernelbench_model.get("score"),
+            doc, model, slug, "kernelbench_hard", kernelbench_model.get("score"),
             KERNELBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
         )
 
@@ -3749,9 +3749,9 @@ def main() -> int:
         )
         changes.extend(programbench_changes)
 
-    # kernelbench.com: the CUDA deck on the RTX PRO 6000, as each model's mean
-    # share of the best audited kernel per problem. Nothing else feeds the
-    # column; see fetch_kernelbench.py for why that deck and that number.
+    # kernelbench.com: the Hard deck on the RTX PRO 6000, as each model's mean
+    # fraction of roofline over the full deck. The board is the column's
+    # first-hand source; see fetch_kernelbench.py for why that deck and number.
     kernelbench_by_slug: dict[str, dict[str, Any]] = {}
     kernelbench_matched = 0
     kernelbench_updated = 0

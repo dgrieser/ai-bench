@@ -187,7 +187,7 @@ REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # the host, including the per-run pages.
 PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
 # kernelbench.com's homepage, which ships every deck's cells; the column reads
-# its CUDA deck on the RTX PRO 6000.
+# its Hard deck on the RTX PRO 6000.
 KERNELBENCH_SOURCE_URL = canonical(fetch_kernelbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
 # cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.

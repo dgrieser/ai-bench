@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch KernelBench CUDA scores from https://kernelbench.com
+Fetch KernelBench Hard scores from https://kernelbench.com
 
 kernelbench.com (Elliot Arledge, 2026) is an agentic GPU-kernel board: a coding
 agent -- Claude Code, Codex, an OpenRouter harness, whichever the row names --
@@ -18,36 +18,29 @@ The site publishes decks of problems, each on one or more GPUs:
 
   * **Mega**  one problem, a whole-model decode megakernel, scored as speedup
               over the torch baseline.
-  * **CUDA**  four problems (GLM-5.2 fused MoE, DeepSeek NSA, MegaQwen decode,
-              Grid + MinGRU), each scored on its own native scale -- fraction of
-              the board's roofline for most, inverse latency for NSA.
-  * **Hard**  six problems (FP8 GEMM, KDA, paged attention, ...), the same way.
+  * **CUDA**  four problems, each on its own native scale -- fraction of the
+              roofline for most, inverse latency for NSA.
+  * **Hard**  six problems (FP8 GEMM, KDA CUTLASS, paged attention, top-k
+              bitonic, Sonic MoE SwiGLU, W4A16 GEMM), every one scored as the
+              fraction of the board's roofline the submitted kernel reaches.
   * **Multi** announced, empty.
 
-**The score is the CUDA deck on the RTX PRO 6000, as the site's own "share of
-best" -- and that is a choice this file has to keep making.** The native cell
-scores cannot be added across problems (35x, 10% of roofline and 0.09 ms are
-three different units), so the site normalises each cell by the best audited
-pass on that problem and averages over the *full* deck, a failed, hacked or
-missing cell counting as zero. That per-board mean is what its bars draw, and
-the /models headline is the mean of those bars over whichever decks a model
-was run on. The headline is not stored: Claude Opus 5 has no Mega cell and
-GPT-5.6 Sol no CUDA row, so two headlines can average different decks. One deck
-on one GPU holds the task set fixed, and CUDA is the deck nearly every model
-was run on -- 22 of 23 -- where Hard has 11 and Mega is a single problem.
-The RTX PRO 6000 is the board the site calls canonical; the CUDA deck runs on
-no other GPU today.
+**The score is the Hard deck on the RTX PRO 6000, as the mean fraction of
+roofline over the full deck -- an absolute number, not the site's "share of
+best".** Because every Hard cell is in the same unit, the cells can be averaged
+as they are: a failed, hacked or missing cell counts as zero, and the mean is
+reported as a percentage of peak. That is the quantity vendors publish for
+"KernelBench Hard" (MiniMax: "operator TFLOPs relative to theoretical peak of
+current hardware ... average of [the] questions"), so a lab's claim lands on
+the column's own scale. It is also what keeps the column still between real
+changes: the site's bars divide each cell by the best pass on its problem, so a
+new leader moves every other model, where a fraction of roofline moves only
+when the model's own kernel does. The share of best is reported beside it on
+every row as ``share`` and never stored.
 
-Recomputed here from the cells the homepage ships, this reproduces the site's
-own /models headline to the tenth for every model run on Mega and CUDA alone
-(Hard's normalisation does not reproduce exactly from the shipped cells, which
-is a second reason it is not read).
-
-A share of the best moves when the best moves: a new leader on a problem lowers
-every other model's number on that problem. The column is read as what it is --
-how close a model came to the best kernel anyone has published for these four
-problems -- and a refresh that moves the whole field at once is that, not a
-regression.
+The RTX PRO 6000 is the board the site calls canonical; Hard also runs on an
+H100 and a B200 for a handful of models, and those boards are not read --
+another GPU is another roofline.
 
 Rows name the harness the run used and, where it did, an effort ("claude ·
 max", "codex · xhigh"); both are reported beside the published model name and
@@ -65,7 +58,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from _fetch_checks import check_percentages, require_rows
+from _fetch_checks import check_fractions, check_percentages, require_rows
 
 
 SITE_URL = "https://kernelbench.com"
@@ -73,7 +66,7 @@ SITE_URL = "https://kernelbench.com"
 LEADERBOARD_URL = f"{SITE_URL}/"
 
 # The deck the column reads, and the GPU it reads it on.
-DECK = "cuda"
+DECK = "hard"
 GPU = "rtxpro6000"
 
 HEADERS = {
@@ -239,6 +232,21 @@ def _harness_and_effort(subtitle: Any) -> tuple[str | None, str | None]:
     return harness, effort
 
 
+def fraction_of_roofline(row: dict, problems: list[str]) -> float:
+    """Mean fraction of the roofline over the full deck, as a percentage.
+
+    The Hard deck scores every cell in that unit, so the cells average as they
+    are; a cell that is not an audited pass counts as zero.
+    """
+    cells = _cells(row)
+    total = 0.0
+    for problem in problems:
+        score = _passed_score(cells.get(problem))
+        if score is not None:
+            total += score
+    return 100.0 * total / len(problems)
+
+
 def read_rows(board: dict, deck: str = DECK, gpu: str = GPU) -> list[dict]:
     problems = [
         p["id"] for p in board["problems"] if isinstance(p, dict) and isinstance(p.get("id"), str)
@@ -262,7 +270,8 @@ def read_rows(board: dict, deck: str = DECK, gpu: str = GPU) -> list[dict]:
                 "site_slug": row.get("slug") if isinstance(row.get("slug"), str) else None,
                 "harness": harness,
                 "effort": effort,
-                "score": round(share_of_best(row, problems, best), 2),
+                "score": round(fraction_of_roofline(row, problems), 2),
+                "share": round(share_of_best(row, problems, best), 2),
                 "passed": sum(_passed_score(cells.get(p)) is not None for p in problems),
                 "problems": len(problems),
                 "flagged": row.get("flagged") if isinstance(row.get("flagged"), int) else None,
@@ -277,11 +286,19 @@ def get_scores(deck: str = DECK, gpu: str = GPU) -> list[dict]:
     """Return a list of score dicts for one kernelbench.com board.
 
     Keys: model (the board's display name), site_slug, harness, effort, score
-    (mean share of each problem's best, 0-100), passed, problems, flagged
-    (audited sessions the reward-hack review flagged), deck, gpu.
+    (mean fraction of roofline over the full deck, 0-100), share (mean share of
+    each problem's best, 0-100, the site's bars; reported, never stored),
+    passed, problems, flagged (audited sessions the reward-hack review
+    flagged), deck, gpu.
     """
     print(f"Fetching {LEADERBOARD_URL} ...", file=sys.stderr)
     board = select_board(extract_decks(fetch_html()), deck, gpu)
+    check_fractions(
+        (chip.get("score") for row in board["rows"] if isinstance(row, dict)
+         for chip in _cells(row).values() if chip.get("kind") == PASS),
+        LEADERBOARD_URL,
+        f"{deck} cell score (fraction of roofline)",
+    )
     scores = read_rows(board, deck, gpu)
     print(
         f"  parsed {len(scores)} KernelBench {deck} row(s) on {gpu} "
@@ -295,7 +312,7 @@ def get_scores(deck: str = DECK, gpu: str = GPU) -> list[dict]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch kernelbench.com scores (CUDA deck, RTX PRO 6000, share of best %)."
+        description="Fetch kernelbench.com scores (Hard deck, RTX PRO 6000, mean %% of roofline)."
     )
     parser.add_argument(
         "--format",
@@ -318,13 +335,14 @@ def main() -> int:
     else:
         width = max([len("MODEL"), *(len(e["model"]) for e in scores)])
         harness_width = max([len("HARNESS"), *(len(e.get("harness") or "") for e in scores)])
-        fmt = f"{{:<{width}}}  {{:>6}}  {{:>6}}  {{:<{harness_width}}}  {{}}"
-        print(fmt.format("MODEL", "SHARE", "PASSED", "HARNESS", "EFFORT"))
+        fmt = f"{{:<{width}}}  {{:>9}}  {{:>6}}  {{:>6}}  {{:<{harness_width}}}  {{}}"
+        print(fmt.format("MODEL", "ROOFLINE", "SHARE", "PASSED", "HARNESS", "EFFORT"))
         for entry in sorted(scores, key=lambda e: -e["score"]):
             print(
                 fmt.format(
                     entry["model"],
-                    f"{entry['score']:.1f}",
+                    f"{entry['score']:.1f}%",
+                    f"{entry['share']:.1f}",
                     f"{entry['passed']}/{entry['problems']}",
                     entry.get("harness") or "",
                     entry.get("effort") or "",

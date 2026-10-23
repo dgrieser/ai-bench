@@ -359,30 +359,22 @@ INDEXES: list[IndexDef] = [
             # 0.5 to 0.94 ranks the same field; from 0.95 up, 16 more models
             # fall under the evidence bar.
             ("programbench_almost", 0.9),
-            # 0.15 since 2026-10-23: kernelbench.com's CUDA deck, the only
+            # 0.4 since 2026-10-23: kernelbench.com's Hard deck, the only
             # member that measures making code fast rather than making it
-            # correct -- four GPU-kernel problems on an RTX PRO 6000, every
+            # correct -- six GPU-kernel problems on an RTX PRO 6000, every
             # published cell audited by hand for reward hacking, scored as the
-            # mean share of each problem's best audited kernel.
+            # mean fraction of the GPU's roofline over the full deck. An
+            # absolute number, so it moves only when a model's own kernel does,
+            # and the one labs report as KernelBench Hard.
             #
-            # For it: a construct nothing else here covers; the widest head of
-            # any member, 35.4 points between the best model and the fifth; and
-            # a ranking that agrees with this index at 0.89 over its 16 models
-            # without copying any one member (0.89 FrontierCode Extended, 0.88
-            # FrontierSWE 2.0, 0.81 Real-SWE and ProgramBench).
-            #
-            # Against it: 16 scored models, 7 of them open; four problems, so
-            # one problem is a quarter of the scale; a share of the best, which
-            # moves when a new leader posts a better kernel; and whatever
-            # harness each row ran in. That prices it at the bottom rung with
-            # SWE-bench Verified's neighbours.
-            #
-            # 0.15 is also the room there is: 17 models sit at 1.70 of scored
-            # weight, and anything above 0.19 takes the total past the 9.44 at
-            # which they drop through the evidence bar. At 0.15 all 96 stay
-            # ranked and five move, at most three places. See README, "Why
-            # KernelBench CUDA enters at 0.15".
-            ("kernelbench_cuda", 0.15),
+            # Chosen over the CUDA deck it was first admitted on, and priced
+            # with the narrow first-party columns (SWE Atlas Test Writing 0.4)
+            # on its construct rather than its reach: 8 scored models here, 7
+            # of them open. 0.4 takes the total to 9.65, past the 9.44 at which
+            # the 17 models sitting at 1.70 of scored weight drop through the
+            # evidence bar, and that cost is taken knowingly. See README, "Why
+            # KernelBench Hard enters at 0.40".
+            ("kernelbench_hard", 0.4),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),
         ],

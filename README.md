@@ -35,7 +35,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
-| **kernelbench.com** | Research (benchmark's own leaderboard: the CUDA deck on the RTX PRO 6000) | RSC flight payload (every deck's audited cells) |
+| **kernelbench.com** | Research (benchmark's own leaderboard: the Hard deck on the RTX PRO 6000) | RSC flight payload (every deck's audited cells) |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench and CyberBench) | Astro island props |
 | **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
@@ -433,7 +433,7 @@ current address.
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
-./fetch_kernelbench.py                  # KernelBench CUDA share of best %, from kernelbench.com
+./fetch_kernelbench.py                  # KernelBench Hard mean % of roofline, from kernelbench.com
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
@@ -2423,7 +2423,7 @@ Revisit it when the review queue lands the rest of the board's names, or when a
 lab's model card starts reporting V2 Hard: either can widen it enough to move
 the weight, and either moves the bar with it.
 
-### Why KernelBench CUDA enters at 0.15
+### Why KernelBench Hard enters at 0.40
 
 [kernelbench.com](https://kernelbench.com/) is an agentic GPU-kernel board: a
 coding agent gets a reference PyTorch module and an unlimited budget to replace
@@ -2434,67 +2434,84 @@ Stanford's own [board](https://scalingintelligence.stanford.edu/KernelBenchLeade
 stops at the 2024 models (gpt-4o, claude-3.5-sonnet) and scores nothing in this
 file, so it is not read.
 
-**What the column holds.** The site publishes three decks (Mega, CUDA, Hard),
-each scored in its own native units: speedup over torch, fraction of the GPU's
-roofline, inverse latency. Those cannot be added, so the site divides each audited
-pass by the best audited pass on that problem and averages over the *whole* deck,
-a failed, flagged or missing cell counting as zero. `kernelbench_cuda` is that
-number for the CUDA deck (four problems: a GLM-5.2 fused MoE, DeepSeek native
-sparse attention, a MegaQwen decode step, a Grid + MinGRU scan) on the RTX PRO
-6000, the board the site calls canonical. `fetch_kernelbench.py` recomputes it
-from the cells the homepage ships, and the result matches the site's own
-`/models` bars to the tenth for every model run only on Mega and CUDA. Two
-alternatives were turned down:
+**What the column holds.** The site publishes three decks (Mega, CUDA, Hard).
+`kernelbench_hard` is the Hard deck on the RTX PRO 6000, the board the site
+calls canonical: six problems (FP8 GEMM, KDA on CUTLASS, paged attention, top-k
+bitonic sort, a Sonic MoE SwiGLU, W4A16 GEMM), each scored as the fraction of
+the GPU's roofline the submitted kernel reaches. `fetch_kernelbench.py` averages
+those fractions over the whole deck, a failed, flagged or missing problem
+counting as zero, and stores the mean as a percentage of peak.
 
-- **The `/models` headline** averages those per-deck shares over whichever decks
-  a model was run on. Claude Opus 5 has no Mega cell and GPT-5.6 Sol no CUDA row,
-  so two headlines can average different task sets.
-- **The Hard deck** is run on 11 models rather than 22, and its per-deck share
-  does not reproduce from the shipped cells.
+That is an absolute number, and it is chosen over the two relative ones the
+site draws. The site's bars divide each cell by the best pass on its problem,
+so a new leader lowers everyone else; a fraction of roofline moves only when a
+model's own kernel does. It is also the quantity labs publish as "KernelBench
+Hard". MiniMax's M3 post reports 28.8% as "operator TFLOPs relative to
+theoretical peak of current hardware", averaged over its questions, run in
+Claude Code on sm_120 Blackwell GPUs, the RTX PRO 6000's architecture. That claim
+is entered by hand at the second-hand rung, citing the post. MiniMax averages
+**9** questions where the board's deck has **6**, so it is the same metric on a
+problem set that is not shown to be the same one.
 
-A share of the best moves when the best moves. A new leader on a problem lowers
-everyone else's number on it, so a refresh that shifts the whole column at once
-is a new best kernel, not a regression.
+The deck was first admitted as the CUDA deck at 0.15 and switched the same day.
+CUDA covered 16 models here against Hard's 8, and it ranked the seven open
+models they share in exactly the same order. Its four problems are in different
+units, though, so it could only be stored as share of best.
 
-**Already in a current source?** Barely, and never this number. Only llm-stats
-carries a kernel benchmark: its `kernelbench-hard` board has one self-reported
-row (MiniMax M3, a TFLOPs-of-peak fraction) and `kernel-bench-l3` one (Qwen3.7
-Max, the share of Stanford Level 3 problems faster than `torch.compile`). Those
-are two other metrics on two other problem sets, so neither is mapped here. No
-Hugging Face card, Epoch AI, evals.report, Vals AI or Artificial Analysis
-publishes one. The column has one source, the board itself, at the
-benchmark-site rung.
+**Other sources.** Besides the MiniMax claim, llm-stats carries one
+`kernel-bench-l3` row: Qwen3.7 Max, the share of Stanford Level 3 problems
+faster than `torch.compile`. That is another problem set and another metric, and
+the model is not in this file. No Hugging Face card, Epoch AI, evals.report,
+Vals AI or Artificial Analysis publishes a KernelBench number.
 
 Measured on 2026-10-23, on the file as it then stood:
 
 | Axis | Measurement | Pull |
 | --- | --- | --- |
-| What it tests | Making code *fast*: writing and tuning CUDA kernels against a roofline. No other member asks it; every other board here grades whether code is correct. | **up** |
-| Saturation | 86.7 at the top, and by construction the leader on each problem sits at 1.00, so the column can never saturate below 100. | **up** |
-| Head resolution | **35.4 points** between the best model and the fifth (86.7 to 51.3), the widest of any member. But with four problems, one problem is 25 points of scale. | — |
-| Redundancy | Spearman **0.89** with the coding index on its 16 models; 0.89 with FrontierCode Extended, 0.88 FrontierSWE 2.0, 0.81 Real-SWE and ProgramBench, 0.69 Terminal-Bench 4.0. It agrees with the field without copying any one member. | — |
-| Trust | Every cell is the site's own run, hand-audited for reward hacking. Flagged cells score zero and never set the best. The harness varies by row (Claude Code, Codex, OpenRouter agents). | **up** |
-| Coverage | **16** scored models, **7** of them open (DeepSeek V4 Flash, V4.1 Flash and its 1017 snapshot, Kimi K3, Qwen3.8 Max, GLM 5.3 and 5.3 Flash); the board lists 22. GPT-6 Astra Pro is in the review queue. | **down** |
+| What it tests | Making code *fast*: writing and tuning GPU kernels against a roofline. No other member asks it; every other board here grades whether code is correct. | **up** |
+| Saturation | 21.8% of roofline at the top of the board, 28.8% claimed. Nowhere near a ceiling. | **up** |
+| Head resolution | **3.0 points** between the best model and the fifth on the board (21.8 to 18.8); 10.7 in this file, where the MiniMax claim leads. One problem dominates: paged attention reaches 69% of roofline where KDA tops out at 4%. | **down** |
+| Redundancy | Spearman **0.07** with the coding index on its 9 models: it ranks the field in an order of its own. GPT-5.6 Sol, a frontier model, sits second from the bottom at 10.4. Its nearest member is ProgramBench at 0.51. | — |
+| Trust | Eight values are the site's own runs, hand-audited for reward hacking; one is a lab claim on a 9-question set. The harness varies by row (Claude Code, Codex, OpenRouter agents). | — |
+| Coverage | **9** scored models, **8** of them open: both DeepSeek V4.1 Flash runs, DeepSeek V4 Flash, Kimi K3, Qwen3.8 Max, GLM 5.3 and 5.3 Flash, MiniMax M3; plus GPT-5.6 Sol. | **down** |
 
-The merits alone would put it with the narrow first-party columns at 0.35–0.4.
-**The weight is set by the evidence bar instead.** After SWE-Bench Pro V2 Hard
-the total stood at 9.25, and seventeen models (most of them measured only on
-Artificial Analysis' four columns) sit at exactly **1.70** of scored weight.
-Anything above **0.19** takes the total past 9.44 and drops all seventeen to
-`null` at once (96 → 79 ranked; at 0.9 it is 71). 0.15 is the largest round
-step under that cliff. It puts KernelBench level with what SWE-bench Verified
-carried before October, a rung above it now.
+**0.4 prices it with SWE Atlas Test Writing on construct, not reach.** It is
+the only measure of performance engineering in the group, and that is what the
+weight pays for.
 
-**What it cost, measured: almost nothing.** All 96 models stay ranked. Five
-move, none by more than three places: Grok 4.7 20 → 17, GLM 5.3 17 → 18,
-GPT-5.6 Terra 18 → 20, GPT-6 Luna 28 → 27, MiniMax M3.1 Flash 27 → 28.
-Recalibrating the coding `transfer_ratio` with the new member leaves it at
-0.011.
+**What it cost: seventeen models.** The total rises from 9.25 to 9.65, and the
+evidence bar (18%) with it to 1.737. Seventeen models sit at exactly **1.70** of
+scored weight, most of them measured only on Artificial Analysis' four columns
+(Terminal-Bench 4.0 and 2.1, LiveCodeBench, SciCode), so they fall under it
+together and leave the coding index, and with it the OpenBench Index:
 
-Raise it when the bar moves: a re-weighting that lifts the seventeen
-AA-only models off 1.70, or a wider KernelBench field (the Hard deck reaching
-the CUDA deck's reach, or more open models on the board). Either one opens room
-up to the 0.35–0.4 the column earns on merit.
+| Dropped from the coding index | Rank before |
+| --- | --- |
+| `minimax-m3-1-flash` | 28 |
+| `qwen3-5-9b` | 58 |
+| `a-x-k2` | 62 |
+| `qwen3-235b-a22b-instruct-2507-reasoning` | 67 |
+| `qwen3-32b-instruct` | 80 |
+| `granite-4-2-3b` | 84 |
+| `qwen3-14b-instruct` | 85 |
+| `llama-4-maverick` | 86 |
+| `qwen3-8b-instruct` | 88 |
+| `ministral-3-14b` | 89 |
+| `gemma-4-e4b` | 90 |
+| `llama-4-scout` | 91 |
+| `gemma-3-27b` | 92 |
+| `ministral-3-8b` | 93 |
+| `k2-horizon-0-9b` | 94 |
+| `ministral-3-3b` | 95 |
+| `gemma-3-12b` | 96 |
+
+The coding index ranks 79 models where it ranked 96, and the OpenBench Index 74
+where it ranked 91. Among the models that stay, 63 move, most by a place or two.
+The largest moves are Qwen3.8 Max 29 → 24, Grok 4.7 17 → 21, MiniMax M3 40 → 37
+and DeepSeek V4 Flash 32 → 30. Any of the seventeen comes back once it is
+measured on one more coding member, and all of them do if the group is
+re-weighted under 9.44. Recalibrating the coding `transfer_ratio` with the new
+member leaves it at 0.011.
 
 ### Why Vibe Code Bench enters at 0.75
 

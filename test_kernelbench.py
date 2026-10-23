@@ -3,19 +3,20 @@
 
 Three things carry the weight here.
 
-``test_a_cell_is_read_against_its_problems_best``: the native cell scores are
-three different units (speedup, fraction of roofline, inverse latency), so a
-reader that averaged them raw would let one problem's scale decide the ranking.
-Each cell is divided by the best audited pass on its own problem first.
+``test_the_score_is_the_mean_fraction_of_roofline``: the column stores the
+Hard deck's cells as they are -- every one a fraction of the GPU's roofline --
+averaged over the deck, not the site's share of the best model. The two are far
+apart (21.2 against 84.2 for the board's leader), so reading the wrong one would
+move every value while still looking like a plausible score.
 
-``test_a_failed_cell_counts_as_zero_over_the_full_deck``: the site averages
-over every problem in the deck, a fail, hack or missing cell scoring zero; a
-reader that averaged only the passes would put a model that solved one problem
-well above one that solved all four.
+``test_a_failed_cell_counts_as_zero_over_the_full_deck``: the mean is over
+every problem in the deck, a fail, hack or missing cell scoring zero; a reader
+that averaged only the passes would put a model that solved one problem well
+above one that solved all six.
 
-``test_another_gpu_is_refused``: the column is the CUDA deck on the RTX PRO
+``test_another_gpu_is_refused``: the column is the Hard deck on the RTX PRO
 6000, and a page that no longer carries that board raises instead of reading
-whichever GPU is there.
+whichever GPU is there -- another GPU is another roofline.
 """
 
 from __future__ import annotations
@@ -41,7 +42,7 @@ def model(name: str, *chips: dict, subtitle: str = "claude · max") -> dict:
 
 def decks(rows: list[dict], gpu: str = kb.GPU, deck: str = kb.DECK) -> list[dict]:
     return [
-        {"key": "mega", "byGpu": {gpu: {"problems": [{"id": "m"}], "rows": []}}},
+        {"key": "cuda", "byGpu": {gpu: {"problems": [{"id": "m"}], "rows": []}}},
         {"key": deck, "byGpu": {gpu: {"problems": PROBLEMS, "rows": rows}}},
     ]
 
@@ -67,48 +68,52 @@ def scores(*rows: dict) -> dict[str, dict]:
         return {entry["model"]: entry for entry in kb.get_scores()}
 
 
-class TestShareOfBest(unittest.TestCase):
-    def test_a_cell_is_read_against_its_problems_best(self) -> None:
-        # p1 is a 30x speedup board and p2 a 0.4-of-roofline one; raw, A's 30
-        # would swamp everything B does on p2.
+class TestScore(unittest.TestCase):
+    def test_the_score_is_the_mean_fraction_of_roofline(self) -> None:
         got = scores(
-            model("A", chip("p1", score=30.0), chip("p2", score=0.2)),
-            model("B", chip("p1", score=15.0), chip("p2", score=0.4)),
+            model("A", chip("p1", score=0.3), chip("p2", score=0.1)),
+            model("B", chip("p1", score=0.15), chip("p2", score=0.2)),
         )
-        self.assertEqual(got["A"]["score"], 75.0)
-        self.assertEqual(got["B"]["score"], 75.0)
+        self.assertEqual(got["A"]["score"], 20.0)
+        self.assertEqual(got["B"]["score"], 17.5)
+
+    def test_the_share_of_best_rides_along_unstored(self) -> None:
+        got = scores(
+            model("A", chip("p1", score=0.3), chip("p2", score=0.1)),
+            model("B", chip("p1", score=0.15), chip("p2", score=0.2)),
+        )
+        self.assertEqual(got["A"]["share"], 75.0)
+        self.assertEqual(got["B"]["share"], 75.0)
 
     def test_a_failed_cell_counts_as_zero_over_the_full_deck(self) -> None:
         got = scores(
-            model("A", chip("p1", score=10.0), chip("p2", "fail")),
-            model("B", chip("p1", score=5.0), chip("p2", score=1.0)),
+            model("A", chip("p1", score=0.4), chip("p2", "fail")),
+            model("B", chip("p1", score=0.2), chip("p2", score=0.2)),
         )
-        self.assertEqual(got["A"]["score"], 50.0)
+        self.assertEqual(got["A"]["score"], 20.0)
         self.assertEqual(got["A"]["passed"], 1)
-        self.assertEqual(got["B"]["score"], 75.0)
+        self.assertEqual(got["B"]["score"], 20.0)
 
     def test_a_missing_cell_counts_as_zero(self) -> None:
-        got = scores(model("A", chip("p1", score=10.0)), model("B", chip("p2", score=1.0)))
-        self.assertEqual(got["A"]["score"], 50.0)
+        got = scores(model("A", chip("p1", score=0.4)), model("B", chip("p2", score=0.2)))
+        self.assertEqual(got["A"]["score"], 20.0)
 
-    def test_a_flagged_cell_neither_scores_nor_sets_the_best(self) -> None:
-        # A hacked cell may still carry a number; it must not become the 1.00
-        # the honest runs are measured against.
-        got = scores(
-            model("A", chip("p1", "hack", 100.0), chip("p2", score=1.0)),
-            model("B", chip("p1", score=10.0), chip("p2", score=1.0)),
-        )
-        self.assertEqual(got["A"]["score"], 50.0)
-        self.assertEqual(got["B"]["score"], 100.0)
+    def test_a_flagged_cell_does_not_score(self) -> None:
+        # A hacked cell may still carry a number; it must not count.
+        got = scores(model("A", chip("p1", "hack", 0.9), chip("p2", score=0.2)))
+        self.assertEqual(got["A"]["score"], 10.0)
 
-    def test_a_problem_nobody_passed_scores_zero_for_everyone(self) -> None:
-        got = scores(model("A", chip("p1", score=2.0), chip("p2", "fail")))
-        self.assertEqual(got["A"]["score"], 50.0)
+    def test_a_cell_above_the_roofline_is_refused(self) -> None:
+        # A cell over 1.0 is a board that switched units, not a kernel faster
+        # than the hardware.
+        with stub(page(decks([model("A", chip("p1", score=35.0))]))):
+            with self.assertRaisesRegex(ValueError, "0-1 fraction"):
+                kb.get_scores()
 
     def test_harness_and_effort_are_reported_beside_the_name(self) -> None:
         got = scores(
-            model("A", chip("p1", score=1.0), subtitle="codex · xhigh"),
-            model("B", chip("p1", score=1.0), subtitle="or-fable"),
+            model("A", chip("p1", score=0.1), subtitle="codex · xhigh"),
+            model("B", chip("p1", score=0.1), subtitle="or-fable"),
         )
         self.assertEqual((got["A"]["harness"], got["A"]["effort"]), ("codex", "xhigh"))
         self.assertEqual((got["B"]["harness"], got["B"]["effort"]), ("or-fable", None))
@@ -117,13 +122,13 @@ class TestShareOfBest(unittest.TestCase):
 
 class TestLayout(unittest.TestCase):
     def test_another_gpu_is_refused(self) -> None:
-        with stub(page(decks([model("A", chip("p1", score=1.0))], gpu="h100"))):
+        with stub(page(decks([model("A", chip("p1", score=0.1))], gpu="h100"))):
             with self.assertRaisesRegex(ValueError, "no 'rtxpro6000' board"):
                 kb.get_scores()
 
     def test_a_missing_deck_is_refused(self) -> None:
-        with stub(page(decks([model("A", chip("p1", score=1.0))], deck="hard"))):
-            with self.assertRaisesRegex(ValueError, "names deck 'cuda' 0 times"):
+        with stub(page(decks([model("A", chip("p1", score=0.1))], deck="cuda"))):
+            with self.assertRaisesRegex(ValueError, "names deck 'hard' 0 times"):
                 kb.get_scores()
 
     def test_a_page_without_decks_is_refused(self) -> None:
@@ -132,8 +137,8 @@ class TestLayout(unittest.TestCase):
                 kb.get_scores()
 
     def test_two_different_deck_arrays_are_refused(self) -> None:
-        one = page(decks([model("A", chip("p1", score=1.0))]))
-        two = page(decks([model("B", chip("p1", score=1.0))]))
+        one = page(decks([model("A", chip("p1", score=0.1))]))
+        two = page(decks([model("B", chip("p1", score=0.1))]))
         with stub(one.replace("</body>", two.split("<body>")[1].split("</body>")[0] + "</body>")):
             with self.assertRaisesRegex(ValueError, "2 different"):
                 kb.get_scores()
@@ -154,8 +159,8 @@ class TestSourceIdentity(unittest.TestCase):
         import pathlib
 
         doc = json.loads(pathlib.Path(kb.__file__).with_name("llm.json").read_text(encoding="utf-8"))
-        self.assertIn("kernelbench_cuda", doc["benchmarks"])
-        self.assertEqual(doc["benchmarks"]["kernelbench_cuda"]["urls"][0], kb.LEADERBOARD_URL)
+        self.assertIn("kernelbench_hard", doc["benchmarks"])
+        self.assertEqual(doc["benchmarks"]["kernelbench_hard"]["urls"][0], kb.LEADERBOARD_URL)
 
 
 if __name__ == "__main__":

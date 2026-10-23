@@ -186,7 +186,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_real_swe.URL, ("real_swe",)),
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
-        (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_cuda",)),
+        (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_hard",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         # Full and Hard are two tables of one page, so the page covers both.
