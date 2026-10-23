@@ -359,6 +359,22 @@ INDEXES: list[IndexDef] = [
             # 0.5 to 0.94 ranks the same field; from 0.95 up, 16 more models
             # fall under the evidence bar.
             ("programbench_almost", 0.9),
+            # 0.4 since 2026-10-23: kernelbench.com's Hard deck, the only
+            # member that measures making code fast rather than making it
+            # correct -- six GPU-kernel problems on an RTX PRO 6000, every
+            # published cell audited by hand for reward hacking, scored as the
+            # mean fraction of the GPU's roofline over the full deck. An
+            # absolute number, so it moves only when a model's own kernel does,
+            # and the one labs report as KernelBench Hard.
+            #
+            # Chosen over the CUDA deck it was first admitted on, and priced
+            # with the narrow first-party columns (SWE Atlas Test Writing 0.4)
+            # on its construct rather than its reach: 8 scored models here, 7
+            # of them open. 0.4 takes the total to 9.65, past the 9.44 at which
+            # the 17 models sitting at 1.70 of scored weight drop through the
+            # evidence bar, and that cost is taken knowingly. See README, "Why
+            # KernelBench Hard enters at 0.40".
+            ("kernelbench_hard", 0.4),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),
         ],

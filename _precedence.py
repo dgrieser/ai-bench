@@ -133,6 +133,7 @@ import fetch_llmstats
 import fetch_mcp_atlas
 import fetch_openrouter
 import fetch_osworld
+import fetch_kernelbench
 import fetch_programbench
 import fetch_real_swe
 import fetch_sec_bench
@@ -185,6 +186,9 @@ REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # root is the top ten of the same runs and prefix-matches everything under
 # the host, including the per-run pages.
 PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
+# kernelbench.com's homepage, which ships every deck's cells; the column reads
+# its Hard deck on the RTX PRO 6000.
+KERNELBENCH_SOURCE_URL = canonical(fetch_kernelbench.LEADERBOARD_URL)
 # The board's own run only. The same page's externally-reported table is model
 # cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)
@@ -287,6 +291,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (SWE_BENCH_PRO_V2_SOURCE_URL, RANK_BENCHMARK_SITE),
         (REAL_SWE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (PROGRAMBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        (KERNELBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         (BFCL_SOURCE_URL, RANK_BENCHMARK_SITE),
         (DATACURVE_SOURCE_URL, RANK_BENCHMARK_SITE),
         (FRONTIERSWE_SOURCE_URL, RANK_BENCHMARK_SITE),
