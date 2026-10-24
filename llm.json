@@ -90987,9 +90987,9 @@
       "params": "8B-A4.5B",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 16,
+        "int8": 8.2,
+        "int4": 4.1
       },
       "creator": {
         "name": "NVIDIA",
@@ -91232,6 +91232,11 @@
       "aa_variant": {
         "slug": "nemotron-3-5-bolt-e4b-4gb",
         "name": "Nemotron 3.5 Bolt E4B 4GB (Reasoning)"
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/"
       }
     }
   ],
