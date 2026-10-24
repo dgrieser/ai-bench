@@ -1,3 +1,27 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to kimi-k3.1-pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'kimi/kimi-k3.1-pro' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "kimi/kimi-k3.1-pro",
+      "universe": "models"
+    }
+  ]
 }
