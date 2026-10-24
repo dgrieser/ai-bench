@@ -1,37 +1,41 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-23 - NVIDIA",
-      "question": "Carry newly released closed model 'nemotron-3-5-bolt-e4b-4gb' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "nemotron-3-5-bolt-e4b-4gb",
-      "universe": null
-    },
-    {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "kimi-k3-1-pro",
-          "reason": "exact to Kimi-K3.1-Pro, exact match"
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "kimi-k3",
+          "option": "nvidia-nemotron-3-ultra-550b-a55b",
           "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-bolt-e4b-4gb",
+          "reason": "the same name without its first 1 word(s)"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-bolt",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         }
       ],
-      "default": "kimi-k3-1-pro",
+      "default": "nemotron-3-5-bolt-e4b-4gb",
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'moonshotai/Kimi-K3.1-Pro' to llm.json model",
+      "question": "Map Spheron path 'nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB' to llm.json model",
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/moonshotai/Kimi-K3.1-Pro/",
-      "subject": "moonshotai/Kimi-K3.1-Pro",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/",
+      "subject": "nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB",
       "universe": "models"
     }
   ]
