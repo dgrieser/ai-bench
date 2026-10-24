@@ -4,17 +4,6 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
-      "note": "released 2026-10-23 - Kimi",
-      "question": "Carry newly released closed model 'kimi-k3-1-pro' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "kimi-k3-1-pro",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
       "note": "released 2026-10-23 - NVIDIA",
       "question": "Carry newly released closed model 'nemotron-3-5-bolt-e4b-4gb' as a reference model?",
       "route": "check_new.py",
@@ -23,232 +12,26 @@
       "universe": null
     },
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'BabyVision (with tools)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "BabyVision (with tools)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'BankerToolBench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "BankerToolBench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_lcr",
-          "reason": "the same name without its first 2 word(s): exact to aa, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gdpval_aa",
-          "reason": "the same name without its first 2 word(s): exact to aa, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "itbench_aa",
-          "reason": "the same name without its first 2 word(s): exact to aa, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_briefcase",
-          "reason": "the same name without its first 2 word(s): exact to aa, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience",
-          "reason": "the same name without its first 2 word(s): exact to aa, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'GDP.pdf AA' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "GDP.pdf AA",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hle",
-          "reason": "the same name without the parenthetical"
-        },
-        {
-          "confidence": "weak",
-          "option": "hle_diamond",
-          "reason": "the same name without the parenthetical: exact to HLE, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'HLE (without tools)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "HLE (without tools)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ifbench",
-          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "zerobench",
-          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "itbench_aa",
-          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "exploitbench",
-          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "livecodebench",
-          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'LOCA-Bench 256K' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "LOCA-Bench 256K",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'PostTrain Bench v1.1' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "PostTrain Bench v1.1",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "swe_bench_pro",
-          "reason": "exact to SWE Refactor Bench, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_verified",
-          "reason": "exact to SWE Refactor Bench, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multimodal",
-          "reason": "exact to SWE Refactor Bench, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multilingual",
-          "reason": "exact to SWE Refactor Bench, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_pro_2_0",
-          "reason": "exact to SWE Refactor Bench, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'SWE Refactor Bench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
-      "subject": "SWE Refactor Bench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "kimi-k3",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'moonshotai/kimi-k3.1-pro' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/moonshotai/kimi-k3.1-pro",
-      "subject": "moonshotai/kimi-k3.1-pro",
-      "universe": "models"
-    },
-    {
       "candidates": [
         {
           "confidence": "exact",
-          "option": "minimax-m3-1-flash",
-          "reason": "exact to MiniMax-M3.1-Flash, exact match"
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to Kimi-K3.1-Pro, exact match"
         },
         {
           "confidence": "weak",
-          "option": "minimax-m3",
+          "option": "kimi-k3",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash-1019",
-          "reason": "the same name without its first 2 word(s): exact to 1-flash, substring match"
         }
       ],
-      "default": "minimax-m3-1-flash",
+      "default": "kimi-k3-1-pro",
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'MiniMaxAI/MiniMax-M3.1-Flash' to llm.json model",
+      "question": "Map Spheron path 'moonshotai/Kimi-K3.1-Pro' to llm.json model",
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/MiniMaxAI/MiniMax-M3.1-Flash/",
-      "subject": "MiniMaxAI/MiniMax-M3.1-Flash",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/moonshotai/Kimi-K3.1-Pro/",
+      "subject": "moonshotai/Kimi-K3.1-Pro",
       "universe": "models"
     }
   ]
