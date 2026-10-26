@@ -1,6 +1,110 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra-non-reasoning' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra-non-reasoning",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-26 - OpenAI",
+      "question": "Carry newly released closed model 'gpt-6-1-terra-xhigh' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gpt-6-1-terra-xhigh",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt 6.1 terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt 6.1 terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'gpt 6.1 terra' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "gpt 6.1 terra",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "exact",
@@ -16,11 +120,101 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Real-SWE model 'Kimi K3.1 Pro' to llm.json model",
-      "route": "update_real_swe_mapping.py",
+      "question": "Map HLE-Diamond model 'Kimi K3.1 Pro' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://realswe.withspecific.com/",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
       "subject": "Kimi K3.1 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-spark-open",
+          "reason": "exact to Muse Spark Open, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open2-250b",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "solar-open-100b-reasoning",
+          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'Muse Spark Open' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
+      "subject": "Muse Spark Open",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'VCLab-PolyU/OmniCompass (OmniCompass-AV)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
+      "subject": "VCLab-PolyU/OmniCompass (OmniCompass-AV)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'VCLab-PolyU/OmniCompass (OmniCompass-VL)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
+      "subject": "VCLab-PolyU/OmniCompass (OmniCompass-VL)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.1-terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.1-terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'openai/gpt-6.1-terra' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/openai/gpt-6.1-terra",
+      "subject": "openai/gpt-6.1-terra",
       "universe": "models"
     }
   ]
