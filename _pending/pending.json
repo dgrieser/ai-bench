@@ -1,3 +1,27 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to Kimi K3.1 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Real-SWE model 'Kimi K3.1 Pro' to llm.json model",
+      "route": "update_real_swe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://realswe.withspecific.com/",
+      "subject": "Kimi K3.1 Pro",
+      "universe": "models"
+    }
+  ]
 }
