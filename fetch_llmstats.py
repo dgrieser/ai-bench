@@ -126,7 +126,7 @@ BOARD_FIELDS = {
     # boards never ran, which is most of the open-weight field. ExploitBench's
     # only other source is Epoch's copy of its board, which yields to these.
     "cybergym": "cybergym",
-    # The same board read a second time for the rows the label above drops:
+    # The same board, read once, for the rows the label above drops:
     # AA's CyberGym-E2E reproduce-and-patch score, which llm-stats files under
     # CyberGym and names in the note. It fills cybergym_e2e_aa below AA's own
     # evaluation page.
@@ -451,11 +451,8 @@ def resolve_tool_modes(results: list[dict], timeout: int = 30) -> None:
         print(f"  other gated columns: dropped {rejected} run with tools or a non-default scaffold", file=sys.stderr)
 
 
-def board_scores(benchmark_id: str, timeout: int = 60, label: str | None = None) -> dict[str, float]:
-    """model_id -> 0-1 score on one llm-stats board, from its details endpoint.
-
-    With ``label``, rows whose note fails that label's BOARD_METHOD_FILTERS
-    rule are left out.
+def board_entries(benchmark_id: str, timeout: int = 60) -> list:
+    """The rows of one llm-stats board, from its details endpoint.
 
     A failed request or a changed layout yields nothing, with a warning: the
     board's column simply gets no llm-stats scores this refresh, which is what
@@ -466,13 +463,27 @@ def board_scores(benchmark_id: str, timeout: int = 60, label: str | None = None)
         payload = fetch_json(url, timeout=timeout)
     except (urllib.error.URLError, OSError, ValueError) as exc:
         print(f"warning: board {benchmark_id}: fetch failed: {exc}", file=sys.stderr)
-        return {}
+        return []
     models = payload.get("models") if isinstance(payload, dict) else None
     if not isinstance(models, list):
         print(f"warning: board {benchmark_id}: no models list in {url}", file=sys.stderr)
-        return {}
+        return []
+    return models
+
+
+def board_scores(
+    benchmark_id: str, timeout: int = 60, label: str | None = None, entries: list | None = None
+) -> dict[str, float]:
+    """model_id -> 0-1 score on one llm-stats board.
+
+    With ``label``, rows whose note fails that label's BOARD_METHOD_FILTERS
+    rule are left out. ``entries`` are the board's rows when the caller has
+    already read them: CyberGym's board serves two labels, and is read once.
+    """
+    if entries is None:
+        entries = board_entries(benchmark_id, timeout=timeout)
     out: dict[str, float] = {}
-    for entry in models:
+    for entry in entries:
         if not isinstance(entry, dict):
             continue
         model_id = entry.get("model_id")
@@ -526,8 +537,12 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
         for label in BOARD_FIELDS:
             record["scores"].pop(label, None)
 
+    # One request per board, however many labels it serves.
+    boards: dict[str, list] = {}
     for label, benchmark_id in BOARD_FIELDS.items():
-        for model_id, score in board_scores(benchmark_id, label=label).items():
+        if benchmark_id not in boards:
+            boards[benchmark_id] = board_entries(benchmark_id)
+        for model_id, score in board_scores(benchmark_id, label=label, entries=boards[benchmark_id]).items():
             record = by_id.get(model_id)
             if record is None:
                 # On the board but not on the leaderboard: no licence to read,

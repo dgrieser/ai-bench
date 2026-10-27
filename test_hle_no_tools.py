@@ -533,6 +533,34 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertEqual(got["d"], {"cybergym": 0.88})
         self.assertNotIn("gpt-6-astra", got)
 
+    def test_a_board_serving_two_labels_is_read_once(self) -> None:
+        reads = []
+        boards = {"cybergym": [
+            {"model_id": "c", "score": 0.82, "analysis_method": "CyberGym-E2E (AA)"},
+            {"model_id": "d", "score": 0.88, "analysis_method": "Pass@1"},
+        ]}
+
+        def fake_fetch_json(url, timeout=60):
+            reads.append(url)
+            if url == fetch_llmstats.URL:
+                return []
+            benchmark_id = url.rsplit("/", 2)[-2]
+            return {"models": boards.get(benchmark_id, [])}
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = fake_fetch_json
+        try:
+            got = {r["model"]: r["scores"] for r in fetch_llmstats.get_scores(resolve_hle=False)}
+        finally:
+            fetch_llmstats.fetch_json = original
+        cybergym_url = fetch_llmstats.BOARD_URL.format(benchmark_id="cybergym")
+        self.assertEqual(reads.count(cybergym_url), 1)
+        self.assertEqual(got["c"], {"cybergym_e2e": 0.82})
+        self.assertEqual(got["d"], {"cybergym": 0.88})
+        # Every board is read exactly once.
+        board_reads = [u for u in reads if u != fetch_llmstats.URL]
+        self.assertEqual(len(board_reads), len(set(fetch_llmstats.BOARD_FIELDS.values())))
+
     def test_a_failed_board_read_costs_only_that_board(self) -> None:
         payload = [{"model_id": "a", "license": "mit", "gpqa_score": 0.9}]
 
