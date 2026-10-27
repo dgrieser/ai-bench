@@ -99,6 +99,14 @@ Each model object contains:
   are not tracked at all, because their dates move when their inputs are
   recomputed; and the map is sparse — unlike the other three it holds only keys
   that have carried a value
+- **`scores_refusal`**: benchmark key → the percentage of tasks the model
+  refused, for runs that score a refusal as a failure (today the AA Cyber
+  Index's three components). Sparse, and absent from a model with none. A rate
+  describes one run, so `update.py` keeps it only while `scores_source` credits
+  that run's page (`AA_REFUSAL_RATES`, `prune_refusal_rates`): a score filled by
+  another source, edited by hand or withdrawn carries no rate. `llm.html` shows
+  it in the score's slip and dialog; a composite whose benchmark entry lists
+  **`components`** quotes its components' rates instead
 - **`date_added`**: ISO date the index first listed the model. It drives the `NEW`
   badge and the **Recently Added** panel, and it is what `llm.html`'s **Date
   Added** filter narrows on — its relative windows count calendar days back from
@@ -1359,7 +1367,7 @@ When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
 
 ## Cybersecurity
 
-Seven columns measure offensive security work. Each is an agentic coding task at
+Ten columns measure offensive security work. Each is an agentic coding task at
 heart — write a crashing input, turn a crash into an exploit — and each
 correlates with the Coding index across the few models both cover (Spearman
 0.76 to 0.95 over 7 to 12 models). But it measures a dual-use specialty that
@@ -1379,7 +1387,10 @@ these choices is
 | `cyberbench_1_1` | Writes a PoC that triggers an OSS-Fuzz vulnerability, then a patch that fixes it, on Vals' private set | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; the column is the board's pooled headline. Version-pinned to 1.1 in `fetch_vals.VERSIONS`, since the slug names no revision |
 | `cyberbench_1_0` | The same PoC + patch task on v1's older private set, which 1.1 superseded; archived since 2026-09-16 | Vals AI (2), its own benchmark | — | The PoC-only and patch-only task scores; any 1.1 run. The slug (`cyber-v1`) names the revision, so no pin is needed. Read for its field: 26 models, most never re-run on 1.1 |
 | `sec_bench_pro` | Writes a PoC for a real bug in V8 or SpiderMonkey from a vague report, with no crash trace | SEC-bench Pro's own board (2) | llm-stats board, model cards | Every snapshot but 260505 (the 344-task 260617 adds the Linux kernel and scores the same model up to 12 points higher); the completed-only rate, which drops timeouts |
-| `aa_cyber_index` | Artificial Analysis' composite of three evaluations it runs itself: CWE-Bench-AA (name the weakness class), DeepSec-AA (find vulnerabilities in review, F2) and CyberGym-E2E-AA (reproduce, then patch, an OSS-Fuzz bug); 0-100, refusals scored as failures | Artificial Analysis' Cyber Index page (0) | — | The three component scores and their refusal rates; unmitigated variants AA lists beside a standard release (`gpt-6-sol-daybreak-blue`) |
+| `aa_cyber_index` | Artificial Analysis' composite of the three columns below, which it runs itself on every model; 0-100, refusals scored as failures | Artificial Analysis' Cyber Index page (0) | — | Unmitigated variants AA lists beside a standard release (`gpt-6-sol-daybreak-blue`) |
+| `cwe_bench_aa` | AA's run of Collinear's CWE-bench: audit a real codebase, find a vulnerability in a described area of concern, patch it without breaking legitimate behaviour (pass@1) | Artificial Analysis' Cyber Index page (0) | — | Collinear's own board and lab-reported CWE-bench runs (llm-stats' `cwe-bench` board: two closed models, other harnesses); unmitigated variants |
+| `deepsec_bench_aa` | AA's run of Vercel's DeepsecBench: find the vulnerabilities in real application code, scored by F2 (recall weighted above precision) | Artificial Analysis' Cyber Index page (0) | — | Unmitigated variants |
+| `cybergym_e2e_aa` | AA's run of CyberGym-E2E: find a memory-safety bug in a C/C++ project, reproduce it with a PoC, patch it without breaking the tests (pass@1) | Artificial Analysis' Cyber Index page (0) | llm-stats' CyberGym board, its rows whose note says E2E (`fetch_llmstats.BOARD_FIELDS["cybergym_e2e"]`) | Level 1 runs, which are `cybergym`; unmitigated variants |
 
 The sources are thinner than they look. cybergym.io's CyberGym board runs no
 current open-weight model itself: its model-focused rows are the labs' own
@@ -1418,20 +1429,25 @@ ceiling for the frontier. It is carried for completeness, not for resolution.
 When the columns were added they held 21 models: CyberGym 12, ExploitGym 10,
 ExploitBench 9, SEC-bench Pro 9.
 
-**The AA Cyber Index** is the one column here that a single independent
-evaluator runs on every model under one harness. AA publishes it on no model
-page and in no API tier, only on its evaluation page, so `artificialanalysis.py`
-reads that page's `initialModels` list once a run (`CYBER_INDEX_URL`), joins it
-on the AA slug the row already maps to, and `update.py` credits the score to
-that page rather than the model page (`AA_EVAL_PAGE_SOURCES`). A page that fails
-to load drops nothing. The index scores a refusal as a failure, so it measures
-what a model *will* do as much as what it can: Claude Opus 5.5, GPT-6 Sol and
-both Qwen3.8 models refuse 98-100% of CyberGym-E2E and land at 12-37, while
-GPT-6 Sol's unmitigated Daybreak Blue variant scores 68.7. It is not a
-[Security index](#security-index) member (yet): it prices a lab's refusal
-policy in with capability, and no weight for it has been calibrated against the
-index's other members. When it was added it carried
-23 AA models, 20 of them rows in `llm.json`.
+**The AA Cyber Index and its three components** are the columns here that a
+single independent evaluator runs on every model under one harness. AA
+publishes them on no model page and in no API tier, only on the index's
+evaluation page, so `artificialanalysis.py` reads that page's `initialModels`
+list once a run (`CYBER_INDEX_URL`), joins it on the AA slug the row already
+maps to, and `update.py` credits each score to that page rather than the model
+page (`AA_EVAL_PAGE_SOURCES`). A page that fails to load drops nothing. Each
+component's refusal rate is stored beside its score in `scores_refusal`.
+llm-stats files AA's CyberGym-E2E numbers under CyberGym when a lab quotes them;
+those rows, which the `cybergym` column drops, fill `cybergym_e2e_aa` below AA's
+own run (one today: Mistral Large 4, quoting AA's chart).
+
+All four score a refusal as a failure, so they measure what a model *will* do
+as much as what it can: Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models
+refuse 98-100% of CyberGym-E2E and land at 12-37 on the index, while GPT-6
+Sol's unmitigated Daybreak Blue variant scores 68.7. None of the four is a [Security index](#security-index) member (yet): they price a lab's
+refusal policy in with capability, and no weight for them has been calibrated
+against the index's other members. When they were added they
+carried 23 AA models each, 20 of them rows in `llm.json`.
 
 ## Mapping System
 

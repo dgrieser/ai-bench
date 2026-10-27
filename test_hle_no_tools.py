@@ -511,8 +511,9 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertNotIn("d", got)
 
     def test_board_notes_and_exclusions_filter_rows(self) -> None:
-        # Toolathlon keeps only rows whose note says Verified; CyberGym drops
-        # AA's E2E variant; a listed (label, model) pair goes whatever its note.
+        # Toolathlon keeps only rows whose note says Verified; CyberGym hands
+        # AA's E2E variant to a label of its own; a listed (label, model) pair
+        # goes whatever its note.
         payload = [{"model_id": "a", "license": "mit", "toolathlon_score": 0.58}]
         boards = {
             "toolathlon": [
@@ -528,7 +529,7 @@ class TestLlmStatsResolution(unittest.TestCase):
         got = self._run(payload, lambda _mid: {"benchmarks": []}, boards)
         self.assertNotIn("a", got)
         self.assertEqual(got["b"], {"toolathlon": 0.73})
-        self.assertNotIn("c", got)
+        self.assertEqual(got["c"], {"cybergym_e2e": 0.82})
         self.assertEqual(got["d"], {"cybergym": 0.88})
         self.assertNotIn("gpt-6-astra", got)
 
@@ -575,6 +576,9 @@ class TestLlmStatsResolution(unittest.TestCase):
             benchmark_id: [{"model_id": "a", "score": 0.2, "analysis_method": "Verified"}]
             for benchmark_id in fetch_llmstats.BOARD_FIELDS.values()
         }
+        # CyberGym's board serves two labels, split by the note: one E2E row
+        # scores the second.
+        boards["cybergym"].append({"model_id": "b", "score": 0.3, "analysis_method": "CyberGym-E2E (AA)"})
         resolved = self._run(payload, lambda _mid: detail, boards)
         expected = sorted({label for scores in resolved.values() for label in scores})
 

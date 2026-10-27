@@ -9112,6 +9112,7 @@
         const fresh = scored && scoreFreshness(model, key) > 0;
         // Newest first, because the head of the list is what the dialog quotes.
         const history = scoreHistoryDesc(model, key);
+        const refusal = scored ? refusalDetail(model, key) : "";
 
         ui.benchDialog.innerHTML = `
           <button type="button" class="bench-dialog-close" aria-label="Close">&times;</button>
@@ -9124,6 +9125,8 @@
             <dd${fresh ? ' class="fresh"' : ""}>${formatScore(value, key)}</dd>
             <dt>Percentile</dt>
             <dd>${Number.isFinite(pct) ? `p${Math.round(pct * 100)} of ${rankedCount(key)} ranked` : '<span class="na">&mdash;</span>'}</dd>
+            ${refusal ? `<dt>Refused</dt>
+            <dd>${escapeHtml(refusal)}</dd>` : ""}
             <dt>Updated</dt>
             <dd${fresh ? ' class="fresh"' : ""}>${updated ? `${escapeHtml(updated)}${age !== null && age >= 0 ? ` (${escapeHtml(describeAge(age))})` : ""}` : '<span class="na">&mdash;</span>'}</dd>
             <dt>History</dt>
@@ -10656,6 +10659,45 @@
         return state.data?.benchmarks?.[key]?.name || getBenchmarkLabel(key);
       }
 
+      // The share of tasks a model refused, for the runs that score a refusal
+      // as a failure (AA's cyber evaluations): scores_refusal, in percent,
+      // stored only while the score beside it is that run's. A composite with
+      // "components" in its benchmark entry quotes its components' rates, so
+      // the index explains itself without opening three columns.
+      function refusalRate(model, key) {
+        const value = toNumber(model?.scores_refusal?.[key]);
+        return Number.isFinite(value) ? value : null;
+      }
+
+      function formatRefusal(value) {
+        return `${Number(value.toFixed(1))}%`;
+      }
+
+      // The rates alone, for a row already labelled "Refused": the own rate,
+      // or each component's, in the order the benchmark entry lists them.
+      function refusalDetail(model, key) {
+        const own = refusalRate(model, key);
+        if (own !== null) return `${formatRefusal(own)} of tasks, each scored as a failure`;
+        const components = state.data?.benchmarks?.[key]?.components;
+        if (!Array.isArray(components)) return "";
+        return components
+          .map((component) => {
+            const rate = refusalRate(model, component);
+            return rate === null ? "" : `${getBenchmarkFullName(component)} ${formatRefusal(rate)}`;
+          })
+          .filter(Boolean)
+          .join(" · ");
+      }
+
+      // The same as one line of a slip, which has no label to lean on.
+      function refusalSummary(model, key) {
+        const detail = refusalDetail(model, key);
+        if (!detail) return "";
+        return refusalRate(model, key) !== null
+          ? `Refused ${detail}.`
+          : `Refused: ${detail}, each refusal scored as a failure.`;
+      }
+
       // Serializes tooltip fields into the data-tip* attributes an anchor needs.
       // data-tip is always written, even when empty: it is what marks the
       // element as an anchor.
@@ -11048,7 +11090,7 @@
             // export whose benchmarks map has lost a key must not still carry
             // that key's source URL or its history, or the document describes
             // a column it no longer declares.
-            ["scores", "scores_updated", "scores_source", "scores_history", "index_coverage"].forEach((field) => {
+            ["scores", "scores_updated", "scores_source", "scores_history", "scores_refusal", "index_coverage"].forEach((field) => {
               if (pruned[field]) pruned[field] = withoutKeys(pruned[field], hidden);
             });
             return pruned;
@@ -11355,6 +11397,7 @@
             body: scoreTipBody(key),
             meta: [
               ...indexCoverageLines(model, key),
+              refusalSummary(model, key),
               updated ? `Updated ${updated}${newness}` : "",
               aaRunLabel(source, model),
               source ? "" : "No source recorded for this score."

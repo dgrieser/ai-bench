@@ -1087,19 +1087,82 @@
       "name": "AA Cyber Index",
       "short_name": "AA Cyber",
       "category": "Cybersecurity",
-      "description": "Artificial Analysis' composite of three cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (identifying the weakness class of vulnerable code), DeepSec-AA (finding vulnerabilities in code review, scored by F2) and CyberGym-E2E-AA (reproducing and then patching real OSS-Fuzz vulnerabilities end to end). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the offensive tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
+      "description": "Artificial Analysis' composite of three defensive cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (audit a codebase, find a vulnerability in a described area and patch it), DeepsecBench-AA (find vulnerabilities in real application code, scored by F2) and CyberGym-E2E-AA (find, reproduce and patch real memory-safety bugs in C/C++ projects). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
       "settings": [
         "index scale",
         "refusals scored as failures",
         "Artificial Analysis"
       ],
       "excludes": [
-        "the three component scores and their refusal rates",
         "unmitigated variants AA lists beside a model's standard release"
       ],
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+      ],
+      "components": [
+        "cwe_bench_aa",
+        "deepsec_bench_aa",
+        "cybergym_e2e_aa"
+      ]
+    },
+    "cwe_bench_aa": {
+      "name": "CWE-Bench-AA",
+      "short_name": "CWE-AA",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Collinear AI's CWE-bench: a coding agent audits a real open-source codebase, finds a vulnerability in a described area of concern and patches it without breaking legitimate behaviour. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "pass@1",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "Collinear's own CWE-bench leaderboard and lab-reported CWE-bench runs, on other harnesses",
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/cwe-bench-aa",
+        "https://cwe-bench.com/"
+      ]
+    },
+    "deepsec_bench_aa": {
+      "name": "DeepsecBench-AA",
+      "short_name": "Deepsec",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Vercel's DeepsecBench: an agent reviews real open-source application code and reports the vulnerabilities it finds, scored by F2, which weights recall above precision. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "F2 score",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/deepsecbench-aa"
+      ]
+    },
+    "cybergym_e2e_aa": {
+      "name": "CyberGym-E2E-AA",
+      "short_name": "CG-E2E",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Berkeley RDI's CyberGym-E2E: an agent finds a real memory-safety vulnerability in a C/C++ open-source project, reproduces it with a proof-of-concept input and patches it without breaking the project's tests. End to end, unlike the CyberGym column's Level 1, which hands the agent the vulnerability's description and asks only for a crashing input. A refusal counts as a failed task; the share refused is shown beside each score, and on this component it decides most frontier closed models' results. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "pass@1",
+        "end to end",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "CyberGym Level 1 runs, which are the cybergym column",
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/cybergym-e2e-aa",
+        "https://www.cybergym.io/"
       ]
     },
     "cybergym": {

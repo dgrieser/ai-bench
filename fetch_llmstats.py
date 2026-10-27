@@ -126,6 +126,11 @@ BOARD_FIELDS = {
     # boards never ran, which is most of the open-weight field. ExploitBench's
     # only other source is Epoch's copy of its board, which yields to these.
     "cybergym": "cybergym",
+    # The same board read a second time for the rows the label above drops:
+    # AA's CyberGym-E2E reproduce-and-patch score, which llm-stats files under
+    # CyberGym and names in the note. It fills cybergym_e2e_aa below AA's own
+    # evaluation page.
+    "cybergym_e2e": "cybergym",
     "exploitgym": "exploitgym",
     "exploitbench": "exploitbench",
     "sec_bench_pro": "sec-bench-pro",
@@ -154,14 +159,17 @@ BOARD_FIELDS = {
 # pattern a row's analysis_method must match (keep) or must not match (drop).
 # A row with no note passes a "drop" rule and fails a "keep" rule, so the keep
 # rules are kept for boards where the unwanted series is the common one.
+_CYBERGYM_E2E_RE = re.compile(r"\bE2E\b", re.IGNORECASE)
 BOARD_METHOD_FILTERS: dict[str, tuple[str, re.Pattern[str]]] = {
     # Pre-Verified Toolathlon numbers are labelled "Toolathlon" or not at all;
     # Verified ones say so, as the series' own leaderboard does.
     "toolathlon": ("keep", re.compile(r"verified", re.IGNORECASE)),
     # CyberGym-E2E is Artificial Analysis' reproduce-and-patch variant in its
     # Cyber Index, a different task from CyberGym's Level 1 reproduction
-    # (Mistral Large 4: 82 there, under no CyberGym run of its own).
-    "cybergym": ("drop", re.compile(r"\bE2E\b", re.IGNORECASE)),
+    # (Mistral Large 4: 82 there, under no CyberGym run of its own). Those rows
+    # go to their own label instead.
+    "cybergym": ("drop", _CYBERGYM_E2E_RE),
+    "cybergym_e2e": ("keep", _CYBERGYM_E2E_RE),
     # The SWE-bench sets exclude runs named for a harness the column leaves
     # out, and Multimodal's public dev split is not the 517-task test set.
     "swe_bench_multilingual": ("drop", re.compile(r"\bOpenHands\b", re.IGNORECASE)),
