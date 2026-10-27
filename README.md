@@ -1367,14 +1367,17 @@ When the column was added it held 9 models: `glm-5-3` (22.6, text-only subset),
 
 ## Cybersecurity
 
-Ten columns measure offensive security work. Each is an agentic coding task at
-heart — write a crashing input, turn a crash into an exploit — and each
-correlates with the Coding index across the few models both cover (Spearman
-0.76 to 0.95 over 7 to 12 models). But it measures a dual-use specialty that
+Ten columns measure security work: six offensive, and Artificial Analysis'
+Cyber Index with its three defensive components. Each is an agentic coding
+task at heart — write a crashing input, turn a crash into an exploit, find and
+patch a vulnerability — and the offensive six correlate with the Coding index
+across the few models both cover (Spearman 0.76 to 0.95 over 7 to 12 models;
+AA's CWE-bench and DeepSec 0.66 and 0.76 over 20, CyberGym-E2E, which refusal
+decides, −0.05). But the group measures a dual-use specialty that
 labs now train for directly (Xiaomi's MiMo-V2.6 cards describe cyber tasks in
 the RL mix), and almost every open-weight number is the lab's own report under
 a harness it chose. Voting that into the Coding index would pay a
-specialisation as general coding, so five of them feed an index of their own,
+specialisation as general coding, so seven of them feed an index of their own,
 the [Security index](#security-index), and nothing else. The research behind
 these choices is
 [docs/security-benchmarks-2026-09.md](docs/security-benchmarks-2026-09.md).
@@ -1444,9 +1447,9 @@ own run (one today: Mistral Large 4, quoting AA's chart).
 All four score a refusal as a failure, so they measure what a model *will* do
 as much as what it can: Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models
 refuse 98-100% of CyberGym-E2E and land at 12-37 on the index, while GPT-6
-Sol's unmitigated Daybreak Blue variant scores 68.7. None of the four is a [Security index](#security-index) member (yet): they price a lab's
-refusal policy in with capability, and no weight for them has been calibrated
-against the index's other members. When they were added they
+Sol's unmitigated Daybreak Blue variant scores 68.7. CWE-Bench-AA and DeepsecBench-AA are [Security index](#security-index) members;
+CyberGym-E2E-AA and the index itself are not, since refusal decides the first
+and the second is a composite of all three. When they were added they
 carried 23 AA models each, 20 of them rows in `llm.json`.
 
 ## Mapping System
@@ -3461,21 +3464,32 @@ The sixth derived column, **Security**, ranks offensive-security capability:
 finding the input that crashes a real program, and turning a crash into a
 working exploit. Same script (`derive_indexes.py`), same comparison-and-fit
 math, shrinkage and coverage rules as [above](#coding-index), computed over
-five of the six [Cybersecurity](#cybersecurity) columns and written to each
+seven of the ten [Cybersecurity](#cybersecurity) columns and written to each
 model's `scores.security_index`. Ranked values cite this section
 (`https://github.com/dgrieser/ai-bench#security-index`).
 
 | Benchmark | Weight | Why there |
 | --- | --- | --- |
 | ExploitGym (`exploitgym`) | 1.0 | The anchor. 869 tasks across userspace, V8 and the kernel; nobody near the ceiling (33.7 on the board, 42.4 claimed) and an 18.9-point top-five spread. Floor-compressed — most models below the frontier solve almost none — which the members beneath it cover |
-| CyberBench v1.1 (`cyberbench_1_1`) | 0.9 | The one member nobody self-reports: Vals runs every model itself on a private set, so its comparisons count in full while the lab-reported values in ExploitGym, SEC-bench Pro and CyberGym count half (`SECOND_HAND_WEIGHT`). Under the anchor because its headline pools a PoC task with a patch task near its ceiling for everyone (82-88%) |
-| CyberBench v1 (`cyberbench_1_0`) | 0.65 | The revision 1.1 superseded, on an older private set, archived since 2026-09-16; Vals-run like 1.1, so it counts in full. Under 1.1 because it is the old instrument and its PoC half carries the refusal artefact harder (`claude-opus-5`, `gemini-3.8-flash` and `qwen3.7-plus` score 0% there). Kept for its field of 26 models; 0.65 is the least weight at which a model with this column alone clears the evidence bar (0.65 of 3.55 is 18.3%) |
+| CyberBench v1.1 (`cyberbench_1_1`) | 0.9 | One of the three members nobody self-reports: Vals runs every model itself on a private set, so its comparisons count in full while the lab-reported values in ExploitGym, SEC-bench Pro and CyberGym count half (`SECOND_HAND_WEIGHT`). Under the anchor because its headline pools a PoC task with a patch task near its ceiling for everyone (82-88%) |
+| CyberBench v1 (`cyberbench_1_0`) | 0.85 | The revision 1.1 superseded, on an older private set, archived since 2026-09-16; Vals-run like 1.1, so it counts in full. Under 1.1 because it is the old instrument and its PoC half carries the refusal artefact harder (`claude-opus-5`, `gemini-3.8-flash` and `qwen3.7-plus` score 0% there). Kept for its field of 26 models; its weight is set by the evidence bar, not its signal: 0.85 is about the least at which a model with this column alone clears it (0.85 of 4.6 is 18.5%). It was 0.65 of 3.55 until the AA pair joined |
 | SEC-bench Pro (`sec_bench_pro`) | 0.6 | Wide spread, far from its ceiling, on the 183-task snapshot vendors report; but the maintainers' own board is six rows frozen since June, so nearly every value is a lab's claim |
+| CWE-Bench-AA (`cwe_bench_aa`) | 0.45 | Artificial Analysis' run of Collinear's CWE-bench: find and patch a vulnerability in a described area of a real codebase. AA runs every model itself, so it counts in full. Half of a pair with DeepsecBench-AA, which it tracks at Spearman 0.85: one defensive find-and-fix signal, weighted 0.85 together rather than twice |
+| DeepsecBench-AA (`deepsec_bench_aa`) | 0.4 | AA's run of Vercel's DeepsecBench: find the vulnerabilities in real application code, scored by F2. The other half of the pair, a little under CWE-bench because its F2 spread is narrower (1-48 against 27-69). Together the two clear the bar on their own (0.85 of 4.6), which is what ranks the models only AA measures |
 | CyberGym (`cybergym`) | 0.4 | The widest open-weight coverage and the least resolving: Level 1 hands the agent the description, vendor pipelines already reach 0.95-0.99, and model-focused values cluster at 77-95 at the top. Kept for the mid-field it still separates, at a weight that breaks ties rather than sets the order |
 
 **ExploitBench is left out**: 41 V8 tasks from one target, an official board
 that has not moved since June, a self-reported 100% at the top, and a
 third-party repository claiming to hold its answers. It stays a column.
+
+**So are CyberGym-E2E-AA and the AA Cyber Index.** All of AA's cyber runs score
+a refusal as a failure, and on CyberGym-E2E refusal decides the result: Claude
+Opus 5.5, Fable 5.1, GPT-6 Astra and GPT-6 Sol refuse 98-100% of it, and it
+correlates −0.05 with the Coding index across the 20 rows AA covers, against
+0.66 and 0.76 for the other two components. In a trial it mostly moved GPT-6
+Sol and Luna down for declining. The Cyber Index is a composite of all three,
+so it would count the pair twice and bring the refusal effect in with them
+(at 0.8 it took `gpt-6-sol` down 22.5k).
 
 **It ranks 13 models** — 7 open-weight, 6 of the closed reference rows — which
 makes it the thinnest index here by a wide margin, and every reading of it
@@ -3522,6 +3536,24 @@ ranked models to 21 (14 open, 7 closed references). The same refusal caveat
 applies with more force: v1 has `claude-opus-5` at 0% on the PoC half, which
 takes it from 51.1k to 38.5k. Recalibrated with v1 in at `transfer_ratio` 0.215
 over 22 samples.
+
+**CWE-Bench-AA and DeepsecBench-AA joined on 2026-10-27**, at 0.45 and 0.4,
+with CyberBench v1 raised from 0.65 to 0.85 to keep its single-column models
+over the bar the new weight lifts (0.18 of 4.6 is 0.828; at 0.65, `kimi-k2-6`
+fell under it). Measured before the columns had filled, by putting AA's live
+Cyber Index values into a copy of `llm.json`: the index goes from 33 ranked
+models to 40 and loses none. The seven are `kimi-k3-1-pro`,
+`deepseek-v4-1-flash-1017`, `mistral-large-4`, `step-5-preview`,
+`reflection-beam` and `nvidia-nemotron-3-ultra-550b-a55b`, which no other
+member measures, and `grok-4-7`, whose CyberGym score alone was under the bar.
+The open-weight top three stay put (`deepseek-v4-1-flash`, `mimo-v2-6-pro`,
+`claude-mythos-5-1`); the two new AA-only DeepSeek and Kimi releases enter
+fourth and fifth. The largest moves are the refusal artefact being diluted
+rather than added to: `gpt-6-astra`, held down by its 0% CyberBench PoC half,
+goes from 17.1k to about 45k on CWE-bench and DeepSec, which it does not
+refuse. The exception runs the other way: `qwen3-8-27b` falls from 43.4k to
+about 30k, since both Qwen3.8 models refuse ~60% of CWE-bench. The pair is
+not refusal-free, only refused rarely.
 
 ## Openness Classification
 

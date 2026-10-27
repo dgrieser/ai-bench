@@ -245,7 +245,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), CyberBench v1 (0.65), SEC-bench Pro (0.6), CyberGym (0.4).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), CyberBench v1 (0.85), SEC-bench Pro (0.6), CWE-Bench-AA (0.45), DeepsecBench-AA (0.4), CyberGym (0.4).",
       "settings": [
         "derived",
         "index scale"
@@ -17754,7 +17754,7 @@
         "knowledge_index": 76469,
         "vision_index": null,
         "trust_index": 52989,
-        "security_index": 46838,
+        "security_index": 47091,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 88.8,
         "swe_bench_multimodal": null,
@@ -18448,7 +18448,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549
+          "share": 0.573
         }
       }
     },
@@ -24012,7 +24012,7 @@
         "knowledge_index": 85680,
         "vision_index": null,
         "trust_index": 69006,
-        "security_index": 38550,
+        "security_index": 39780,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 82.8,
         "swe_bench_multimodal": null,
@@ -24684,7 +24684,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.577
+          "share": 0.6
         }
       }
     },
@@ -24705,7 +24705,7 @@
         "knowledge_index": 78125,
         "vision_index": 69840,
         "trust_index": 69822,
-        "security_index": 35629,
+        "security_index": 35698,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
         "swe_bench_multimodal": null,
@@ -25308,7 +25308,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -50346,7 +50346,7 @@
         "knowledge_index": 77428,
         "vision_index": 43070,
         "trust_index": 63421,
-        "security_index": 27683,
+        "security_index": 25622,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -50958,7 +50958,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -50989,7 +50989,7 @@
         "knowledge_index": 83966,
         "vision_index": null,
         "trust_index": 51144,
-        "security_index": 56236,
+        "security_index": 56399,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 96.4,
         "swe_bench_multimodal": null,
@@ -51674,7 +51674,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.366
+          "share": 0.347
         }
       }
     },
@@ -52569,7 +52569,7 @@
         "knowledge_index": 71881,
         "vision_index": 52567,
         "trust_index": 62696,
-        "security_index": 20327,
+        "security_index": 21211,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": null,
@@ -53171,7 +53171,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.282
+          "share": 0.267
         }
       }
     },
@@ -53202,7 +53202,7 @@
         "knowledge_index": 82817,
         "vision_index": 69902,
         "trust_index": 69535,
-        "security_index": 40183,
+        "security_index": 38781,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
         "swe_bench_multimodal": null,
@@ -53860,7 +53860,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.183
+          "share": 0.227
         }
       }
     },
@@ -54430,7 +54430,7 @@
         "knowledge_index": 91350,
         "vision_index": 85036,
         "trust_index": 69287,
-        "security_index": 66074,
+        "security_index": 66730,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -55146,7 +55146,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549,
+          "share": 0.573,
           "second_hand": [
             "cybergym"
           ]
@@ -56613,7 +56613,7 @@
         "knowledge_index": 73941,
         "vision_index": 43341,
         "trust_index": 62988,
-        "security_index": 25870,
+        "security_index": 24802,
         "aa_intelligence_index": 25.7,
         "swe_bench_verified": 82.2,
         "swe_bench_multimodal": null,
@@ -57156,7 +57156,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -57558,7 +57558,7 @@
         "knowledge_index": 87663,
         "vision_index": 90199,
         "trust_index": 69870,
-        "security_index": 2447,
+        "security_index": 2773,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
         "swe_bench_multimodal": null,
@@ -58178,7 +58178,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -60131,7 +60131,7 @@
         "knowledge_index": 44257,
         "vision_index": null,
         "trust_index": 55279,
-        "security_index": 6601,
+        "security_index": 7065,
         "aa_intelligence_index": 12.9,
         "swe_bench_verified": 52.8,
         "swe_bench_multimodal": null,
@@ -60630,7 +60630,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -60656,7 +60656,7 @@
         "knowledge_index": 87106,
         "vision_index": null,
         "trust_index": 71483,
-        "security_index": 53822,
+        "security_index": 54226,
         "aa_intelligence_index": 44.8,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -61350,7 +61350,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.648
+          "share": 0.613
         }
       }
     },
@@ -61376,7 +61376,7 @@
         "knowledge_index": 72597,
         "vision_index": 70096,
         "trust_index": 64060,
-        "security_index": 43387,
+        "security_index": 43718,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
         "swe_bench_multimodal": 38.6,
@@ -61940,7 +61940,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -64669,7 +64669,7 @@
         "knowledge_index": 84593,
         "vision_index": null,
         "trust_index": 70600,
-        "security_index": 35371,
+        "security_index": 33980,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
         "swe_bench_multimodal": null,
@@ -65253,7 +65253,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -67334,7 +67334,7 @@
         "knowledge_index": 86154,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 22495,
+        "security_index": 20271,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -67777,7 +67777,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549,
+          "share": 0.573,
           "second_hand": [
             "cybergym"
           ]
@@ -68829,7 +68829,7 @@
         "knowledge_index": 79064,
         "vision_index": 64868,
         "trust_index": 49506,
-        "security_index": 66549,
+        "security_index": 66653,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -69887,7 +69887,7 @@
         "knowledge_index": 97776,
         "vision_index": null,
         "trust_index": 67463,
-        "security_index": 46833,
+        "security_index": 47137,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.7,
@@ -70574,7 +70574,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -70601,7 +70601,7 @@
         "knowledge_index": 79114,
         "vision_index": 72961,
         "trust_index": 53028,
-        "security_index": 62697,
+        "security_index": 64131,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
         "swe_bench_multimodal": null,
@@ -71261,7 +71261,7 @@
             "sec_bench_pro"
           ],
           "of": 5,
-          "share": 0.887,
+          "share": 0.893,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71292,7 +71292,7 @@
         "knowledge_index": 86386,
         "vision_index": 84681,
         "trust_index": 58290,
-        "security_index": 60390,
+        "security_index": 60692,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -71931,7 +71931,7 @@
             "sec_bench_pro"
           ],
           "of": 5,
-          "share": 0.704,
+          "share": 0.667,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71962,7 +71962,7 @@
         "knowledge_index": 95060,
         "vision_index": 91146,
         "trust_index": 56406,
-        "security_index": 85491,
+        "security_index": 86216,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
         "swe_bench_multimodal": null,
@@ -72762,7 +72762,7 @@
         "knowledge_index": 99253,
         "vision_index": 98684,
         "trust_index": 68298,
-        "security_index": 17126,
+        "security_index": 17571,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -73452,7 +73452,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -76087,7 +76087,7 @@
         "knowledge_index": 91061,
         "vision_index": 71772,
         "trust_index": 70381,
-        "security_index": 67863,
+        "security_index": 68062,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -76655,7 +76655,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.817,
+          "share": 0.773,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -76686,7 +76686,7 @@
         "knowledge_index": 72128,
         "vision_index": 51068,
         "trust_index": 60758,
-        "security_index": 60706,
+        "security_index": 61019,
         "aa_intelligence_index": 37.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -77283,7 +77283,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.817,
+          "share": 0.773,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -77319,7 +77319,7 @@
         "knowledge_index": 98652,
         "vision_index": 99139,
         "trust_index": 69251,
-        "security_index": 57431,
+        "security_index": 57738,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 61.4,
@@ -77948,7 +77948,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535
+          "share": 0.507
         }
       }
     },
@@ -77975,7 +77975,7 @@
         "knowledge_index": 82014,
         "vision_index": 78662,
         "trust_index": 63753,
-        "security_index": 79229,
+        "security_index": 78800,
         "aa_intelligence_index": 38.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -78522,7 +78522,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -78549,7 +78549,7 @@
         "knowledge_index": 95206,
         "vision_index": 91702,
         "trust_index": 68088,
-        "security_index": 89687,
+        "security_index": 89145,
         "aa_intelligence_index": 47.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -79084,7 +79084,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -80913,7 +80913,7 @@
         "knowledge_index": 96702,
         "vision_index": null,
         "trust_index": 69329,
-        "security_index": 47293,
+        "security_index": 47761,
         "aa_intelligence_index": 56,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.3,
@@ -81487,7 +81487,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535,
+          "share": 0.507,
           "second_hand": [
             "exploitgym"
           ]
@@ -81517,7 +81517,7 @@
         "knowledge_index": 98474,
         "vision_index": 96019,
         "trust_index": 68754,
-        "security_index": 11526,
+        "security_index": 12049,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -82062,7 +82062,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -82415,7 +82415,7 @@
         "knowledge_index": 97721,
         "vision_index": null,
         "trust_index": 79070,
-        "security_index": 89687,
+        "security_index": 89145,
         "aa_intelligence_index": 52.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -82948,7 +82948,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -85159,7 +85159,7 @@
         "knowledge_index": 87811,
         "vision_index": null,
         "trust_index": 69344,
-        "security_index": 61156,
+        "security_index": 61359,
         "aa_intelligence_index": 43.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 30.7,
@@ -85693,7 +85693,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535,
+          "share": 0.507,
           "second_hand": [
             "exploitgym"
           ]
@@ -85723,7 +85723,7 @@
         "knowledge_index": 94086,
         "vision_index": null,
         "trust_index": 74249,
-        "security_index": 96806,
+        "security_index": 96409,
         "aa_intelligence_index": 52.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86154,7 +86154,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -86181,7 +86181,7 @@
         "knowledge_index": 97112,
         "vision_index": null,
         "trust_index": 79612,
-        "security_index": 61622,
+        "security_index": 61587,
         "aa_intelligence_index": 55.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86594,7 +86594,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -92033,7 +92033,7 @@
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 66396,
+        "security_index": 66378,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -92266,7 +92266,7 @@
             "exploitgym"
           ],
           "of": 5,
-          "share": 0.282
+          "share": 0.267
         }
       }
     }

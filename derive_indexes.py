@@ -527,10 +527,10 @@ INDEXES: list[IndexDef] = [
             # below the frontier solve almost none -- which is what the members
             # beneath it are for.
             ("exploitgym", 1.0),
-            # The one member nobody self-reports: Vals runs every model itself
-            # on a private set, so its comparisons count in full where the
-            # llm-stats and model-card values the other members lean on count
-            # SECOND_HAND_WEIGHT. Below the anchor only because its headline
+            # One of the three members nobody self-reports: Vals runs every
+            # model itself on a private set, so its comparisons count in full
+            # where the llm-stats and model-card values ExploitGym, SEC-bench
+            # Pro and CyberGym lean on count SECOND_HAND_WEIGHT. Below the anchor only because its headline
             # pools a PoC task with a patch task that is near its ceiling for
             # everyone (82-88%), so its spread is the PoC half's.
             ("cyberbench_1_1", 0.9),
@@ -539,16 +539,35 @@ INDEXES: list[IndexDef] = [
             # it is the old instrument, and because its PoC half carries the
             # same refusal artefact harder -- claude-opus-5, gemini-3.8-flash
             # and qwen3.7-plus score 0% there. Kept for its field: 26 models,
-            # six of ours measured on nothing else in this group. 0.65 is the
-            # least weight that lets a model with this column alone clear the
-            # evidence bar (0.65 / 3.55 = 18.3%); any less and those six stay
-            # unranked.
-            ("cyberbench_1_0", 0.65),
+            # six of ours measured on nothing else in this group. Its weight is
+            # set by the evidence bar rather than its signal: 0.85 is about the
+            # least that lets a model with this column alone clear it
+            # (0.85 / 4.6 = 18.5%; kimi-k2-6 has nothing else). It was 0.65
+            # until the AA pair below joined and raised the total from 3.55.
+            ("cyberbench_1_0", 0.85),
             # The snapshot vendors report (260505, 183 tasks). Wide spread and
             # far from its ceiling, but the maintainers' own board is six rows
             # frozen since June, so nearly every value is a lab's claim under a
             # harness it chose.
             ("sec_bench_pro", 0.6),
+            # Artificial Analysis' runs of Collinear's CWE-bench (find and
+            # patch a vulnerability in a described area of a real codebase)
+            # and Vercel's DeepsecBench (find the vulnerabilities in real
+            # application code, F2), off the Cyber Index page. Like CyberBench,
+            # AA runs every model itself, so both count in full. Spearman
+            # 0.59 / 0.51 with this index and 0.66 / 0.76 with Coding on the 20
+            # rows AA covers, but 0.85 with each other: one defensive
+            # find-and-fix signal, weighted as a pair (0.85 together) rather
+            # than twice. 0.85 is also about the least that lets a model AA
+            # alone measures clear the bar (0.85 / 4.6 = 18.5%): five of ours
+            # had no other member. Refusals score as failures, but these two
+            # are refused rarely (both Qwen3.8 models refuse ~60% of CWE-bench
+            # and are the exception). CyberGym-E2E-AA, the third component, is
+            # left out: refusal decides it (Spearman -0.05 with Coding; four
+            # frontier closed models refuse 98-100%), and aa_cyber_index is a
+            # composite of all three -- see README, "Security index".
+            ("cwe_bench_aa", 0.45),
+            ("deepsec_bench_aa", 0.4),
             # The widest open-weight coverage of the four and the least
             # resolving: Level 1 hands the agent the vulnerability description,
             # vendors' pipelines already reach 0.95-0.99, and the model-focused
