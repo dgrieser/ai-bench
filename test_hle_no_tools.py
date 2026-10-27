@@ -511,8 +511,9 @@ class TestLlmStatsResolution(unittest.TestCase):
         self.assertNotIn("d", got)
 
     def test_board_notes_and_exclusions_filter_rows(self) -> None:
-        # Toolathlon keeps only rows whose note says Verified; CyberGym drops
-        # AA's E2E variant; a listed (label, model) pair goes whatever its note.
+        # Toolathlon keeps only rows whose note says Verified; CyberGym hands
+        # AA's E2E variant to a label of its own; a listed (label, model) pair
+        # goes whatever its note.
         payload = [{"model_id": "a", "license": "mit", "toolathlon_score": 0.58}]
         boards = {
             "toolathlon": [
@@ -528,9 +529,37 @@ class TestLlmStatsResolution(unittest.TestCase):
         got = self._run(payload, lambda _mid: {"benchmarks": []}, boards)
         self.assertNotIn("a", got)
         self.assertEqual(got["b"], {"toolathlon": 0.73})
-        self.assertNotIn("c", got)
+        self.assertEqual(got["c"], {"cybergym_e2e": 0.82})
         self.assertEqual(got["d"], {"cybergym": 0.88})
         self.assertNotIn("gpt-6-astra", got)
+
+    def test_a_board_serving_two_labels_is_read_once(self) -> None:
+        reads = []
+        boards = {"cybergym": [
+            {"model_id": "c", "score": 0.82, "analysis_method": "CyberGym-E2E (AA)"},
+            {"model_id": "d", "score": 0.88, "analysis_method": "Pass@1"},
+        ]}
+
+        def fake_fetch_json(url, timeout=60):
+            reads.append(url)
+            if url == fetch_llmstats.URL:
+                return []
+            benchmark_id = url.rsplit("/", 2)[-2]
+            return {"models": boards.get(benchmark_id, [])}
+
+        original = fetch_llmstats.fetch_json
+        fetch_llmstats.fetch_json = fake_fetch_json
+        try:
+            got = {r["model"]: r["scores"] for r in fetch_llmstats.get_scores(resolve_hle=False)}
+        finally:
+            fetch_llmstats.fetch_json = original
+        cybergym_url = fetch_llmstats.BOARD_URL.format(benchmark_id="cybergym")
+        self.assertEqual(reads.count(cybergym_url), 1)
+        self.assertEqual(got["c"], {"cybergym_e2e": 0.82})
+        self.assertEqual(got["d"], {"cybergym": 0.88})
+        # Every board is read exactly once.
+        board_reads = [u for u in reads if u != fetch_llmstats.URL]
+        self.assertEqual(len(board_reads), len(set(fetch_llmstats.BOARD_FIELDS.values())))
 
     def test_a_failed_board_read_costs_only_that_board(self) -> None:
         payload = [{"model_id": "a", "license": "mit", "gpqa_score": 0.9}]
@@ -575,6 +604,9 @@ class TestLlmStatsResolution(unittest.TestCase):
             benchmark_id: [{"model_id": "a", "score": 0.2, "analysis_method": "Verified"}]
             for benchmark_id in fetch_llmstats.BOARD_FIELDS.values()
         }
+        # CyberGym's board serves two labels, split by the note: one E2E row
+        # scores the second.
+        boards["cybergym"].append({"model_id": "b", "score": 0.3, "analysis_method": "CyberGym-E2E (AA)"})
         resolved = self._run(payload, lambda _mid: detail, boards)
         expected = sorted({label for scores in resolved.values() for label in scores})
 

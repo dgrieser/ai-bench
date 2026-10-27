@@ -297,7 +297,81 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "scicode": (("scicode",), to_percent),
     "hle": (("hle",), to_percent),
     "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # Read off the Cyber Index's evaluation page (artificialanalysis.CYBER_INDEX_URL),
+    # the only place AA publishes it; 0-100, so it passes through unscaled.
+    "aa_cyber_index": (("cyber_index",), to_index),
+    # The index's three components, off the same page. Each one's refusal rate
+    # rides along into scores_refusal (AA_REFUSAL_RATES).
+    "cwe_bench_aa": (("cwe_bench",), to_percent),
+    "deepsec_bench_aa": (("deepsec_bench",), to_percent),
+    "cybergym_e2e_aa": (("cybergym_e2e",), to_percent),
 }
+
+# Columns AA publishes on an evaluation page and on no model page. Their scores
+# are credited to that page, the one a reader can check them on, rather than to
+# the model page the rest of the record came from.
+AA_EVAL_PAGE_SOURCES: dict[str, str] = {
+    key: canonical(artificialanalysis.CYBER_INDEX_URL)
+    for key in ("aa_cyber_index", "cwe_bench_aa", "deepsec_bench_aa", "cybergym_e2e_aa")
+}
+
+# Columns whose AA run scores a refusal as a failure, and the AA field holding
+# the share of tasks the model refused. Stored per model in scores_refusal as a
+# percentage beside the score, so a reader can tell a model that could not do
+# the task from one that would not.
+AA_REFUSAL_RATES: dict[str, str] = {
+    "cwe_bench_aa": "cwe_bench_refusal_rate",
+    "deepsec_bench_aa": "deepsec_bench_refusal_rate",
+    "cybergym_e2e_aa": "cybergym_e2e_refusal_rate",
+}
+
+
+def record_refusal_rate(
+    model: dict[str, Any], key: str, evaluations: dict[str, Any], url: str
+) -> None:
+    """Store AA's refusal rate for key, if the score is AA's own run.
+
+    A rate describes one run, so it is kept only while scores_source credits
+    that run's page: where a lower-ranked source kept its value, or AA sent the
+    score without a rate, nothing is written for it.
+    """
+    if key not in AA_REFUSAL_RATES:
+        return
+    if (model.get("scores_source") or {}).get(key) != canonical(url):
+        return
+    rate = evaluations.get(AA_REFUSAL_RATES[key])
+    refusals = model.get("scores_refusal")
+    if is_number(rate):
+        if not isinstance(refusals, dict):
+            refusals = model["scores_refusal"] = {}
+        refusals[key] = round(float(rate) * 100.0, 1)
+    elif isinstance(refusals, dict):
+        refusals.pop(key, None)
+
+
+def prune_refusal_rates(doc: dict[str, Any]) -> None:
+    """Drop refusal rates whose score is gone or now credited to another page.
+
+    Run once every source has written: a rate outlives its score only if the
+    score was cleared, replaced by another fetcher, or edited by hand, and in
+    each case it no longer describes the number beside it.
+    """
+    for model in doc.get("models", []):
+        refusals = model.get("scores_refusal")
+        if not isinstance(refusals, dict):
+            continue
+        scores = model.get("scores") or {}
+        sources = model.get("scores_source") or {}
+        for key in list(refusals):
+            if (
+                scores.get(key) is None
+                or key not in AA_EVAL_PAGE_SOURCES
+                or sources.get(key) != AA_EVAL_PAGE_SOURCES[key]
+                or not is_number(refusals[key])
+            ):
+                del refusals[key]
+        if not refusals:
+            del model["scores_refusal"]
 
 # Per-score source pages live in _precedence.py, next to the rank each source
 # carries: the page a score is attributed to and the authority that attribution
@@ -1317,11 +1391,13 @@ def update_scores(
                     updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
                 continue
             origin_slug = origins.get(aa_key_used) or aa_model.get("slug")
-            url = aa_model_page_url(origin_slug)
+            url = AA_EVAL_PAGE_SOURCES.get(llm_key) or aa_model_page_url(origin_slug)
             updated += apply_score(
                 doc, model, slug, llm_key, new_value, url, changes,
                 fill_urls_only=fill_urls_only,
             )
+            if not fill_urls_only:
+                record_refusal_rate(model, llm_key, evaluations, url)
 
     # An API-only field (MMLU-Pro, which the model pages do not carry) arrives
     # with the API record or not at all. A run whose API answer carried one for
@@ -1332,7 +1408,8 @@ def update_scores(
     # back when AA-LCR and the tau benches were read off the API alone too.
     if not fill_urls_only:
         for llm_key in SCORE_MAPPINGS.keys() - delivered:
-            RUN_REPORTS.could_not_show(llm_key, all_read_pages)
+            eval_page = AA_EVAL_PAGE_SOURCES.get(llm_key)
+            RUN_REPORTS.could_not_show(llm_key, {eval_page} if eval_page else all_read_pages)
 
     return matched, updated, seen_eval_keys, changes
 
@@ -4078,6 +4155,8 @@ def main() -> int:
         if dropped_replaced:
             print(f"scores replaced after their source dropped them: {dropped_replaced}")
     changes = undo_round_trips(doc, found, changes)
+    if not args.fill_source_urls:
+        prune_refusal_rates(doc)
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if aa_ok else []
     if args.write:
         # The derived indexes are a function of the scores just fetched, so
@@ -4171,6 +4250,7 @@ def main() -> int:
             print(f"  - {slug}")
     if not args.skip_aa:
         mapped_aa_keys = {aa_key for aa_keys, _transform in SCORE_MAPPINGS.values() for aa_key in aa_keys}
+        mapped_aa_keys |= set(AA_REFUSAL_RATES.values())
         ignored_aa_keys = sorted(seen_eval_keys - mapped_aa_keys)
         print("ignored keys:")
         if ignored_aa_keys:

@@ -38,6 +38,12 @@ DEFAULT_TIER = _ENV_TIER if _ENV_TIER in TIERS else "auto"
 MAX_PAGES = 25
 FORMATS = {"json", "yaml", "md", "text"}
 MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
+# The Cyber Index and its three components (CWE-Bench-AA, DeepsecBench-AA and
+# CyberGym-E2E-AA, refusals scored as failures), with each component's refusal
+# rate, are on no model page and in no API tier: the index's evaluation page is
+# the one place AA publishes them, as the "initialModels" list it renders its
+# charts from. One read serves every model, joined on the AA slug.
+CYBER_INDEX_URL = "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
 # One update-all run reads the list three times in three processes:
 # update_artificialanalysis_mapping.py and update.py each ask for the slugs,
 # then update.py asks for the records. Paged, that is 3 x 4 requests against a
@@ -64,6 +70,7 @@ PAGE_RETRY_DELAY = 2.0
 # nothing in it, which would otherwise commit an empty list over a good one.
 MIN_PUBLISHED_MODELS = 100
 _PAGE_METRICS_CACHE = {}
+_EVAL_PAGE_CACHE = {}
 _CONTEXT_ENABLED = True
 _PARAMS_ENABLED = True
 _MMMU_PRO_ENABLED = True
@@ -781,7 +788,11 @@ def _fetch_page_text(slug: str):
     model that silently reports none of them. They cost no API request, which
     is what lets --audit-page-fields run without a key.
     """
-    url = MODEL_PAGE_URL.format(slug)
+    return _fetch_rsc_text(MODEL_PAGE_URL.format(slug))
+
+
+def _fetch_rsc_text(url: str):
+    """An AA page's RSC payload, or None if it could not be read."""
     resp = None
     for attempt in range(PAGE_RETRIES + 1):
         try:
@@ -803,6 +814,72 @@ def _fetch_page_text(slug: str):
     if resp.status_code != 200:
         return None
     return resp.text
+
+
+# The evaluation pages' own spellings, as on the model records they list.
+_CYBER_INDEX_FIELDS = [
+    ("cyberIndex", "cyber_index"),
+    ("cweBench", "cwe_bench"),
+    ("cweBenchRefusalRate", "cwe_bench_refusal_rate"),
+    ("deepsecBench", "deepsec_bench"),
+    ("deepsecBenchRefusalRate", "deepsec_bench_refusal_rate"),
+    ("cybergymE2e", "cybergym_e2e"),
+    ("cybergymE2eRefusalRate", "cybergym_e2e_refusal_rate"),
+]
+_CYBER_INDEX_KEYS = [key for _page_key, key in _CYBER_INDEX_FIELDS]
+
+
+def _parse_eval_page_models(text: str, fields) -> dict:
+    """slug -> {key: value} off an evaluation page's "initialModels" list.
+
+    The list is plain JSON inside the RSC payload, so it is decoded rather than
+    pattern-matched: each record carries its own slug, and a field the record
+    has no number for (null) is left out, like a model page's missing metric.
+    """
+    marker = '"initialModels":'
+    start = text.find(marker)
+    if start < 0:
+        return {}
+    try:
+        records, _ = json.JSONDecoder().raw_decode(text, start + len(marker))
+    except json.JSONDecodeError:
+        return {}
+    result = {}
+    for record in records if isinstance(records, list) else []:
+        slug = record.get("slug") if isinstance(record, dict) else None
+        if not isinstance(slug, str) or not slug:
+            continue
+        values = {}
+        for page_key, key in fields:
+            value = record.get(page_key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                values[key] = float(value)
+        if values:
+            result[slug] = values
+    return result
+
+
+def _fetch_eval_page_models(url: str, fields) -> dict:
+    """An evaluation page's per-model values, read once per process.
+
+    None if the page could not be read or no longer carries the list, so a
+    caller can tell that apart from a page that lists no number for a model.
+    """
+    if url not in _EVAL_PAGE_CACHE:
+        text = _fetch_rsc_text(url)
+        parsed = _parse_eval_page_models(text, fields) if text is not None else {}
+        if not parsed and _VERBOSE:
+            print(f"< no per-model values read from {url}", file=sys.stderr)
+        _EVAL_PAGE_CACHE[url] = parsed or None
+    return _EVAL_PAGE_CACHE[url]
+
+
+def _extract_cyber_metric(m: dict, key: str):
+    val = _extract_eval_any(m, [key])
+    if val is not None:
+        return val
+    by_slug = _fetch_eval_page_models(CYBER_INDEX_URL, _CYBER_INDEX_FIELDS) or {}
+    return (by_slug.get(m.get("slug", "")) or {}).get(key)
 
 
 def _fetch_page_metrics(slug: str, creator_name: str = ""):
@@ -1072,6 +1149,8 @@ def _enrich_structured_metrics(models):
         if not isinstance(evals, dict):
             evals = {}
         evals["mmmu_pro"] = _extract_mmmu_pro(m)
+        for key in _CYBER_INDEX_KEYS:
+            evals[key] = _extract_cyber_metric(m, key)
 
         page_metrics = _fetch_page_metrics(m.get("slug", ""))
         for key in _PAGE_EVALS:
@@ -1217,6 +1296,10 @@ def _print_table(models, output):
         ("Coding Index", lambda m: _extract_eval_any(m, ["artificial_analysis_coding_index"])),
         ("Math Index", lambda m: _extract_eval_any(m, ["artificial_analysis_math_index"])),
         ("Agentic Index", lambda m: _extract_metric(m, "agentic_index")),
+        ("Cyber Index", lambda m: _extract_cyber_metric(m, "cyber_index")),
+        ("CWE-Bench-AA", lambda m: _extract_cyber_metric(m, "cwe_bench")),
+        ("DeepsecBench-AA", lambda m: _extract_cyber_metric(m, "deepsec_bench")),
+        ("CyberGym-E2E-AA", lambda m: _extract_cyber_metric(m, "cybergym_e2e")),
         ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
         ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0"], "terminalbench_4_0")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
@@ -1261,6 +1344,9 @@ def _print_table(models, output):
         "IT-Bench SRE",
         "Crit-Pt",
         "Apex Agents",
+        "CWE-Bench-AA",
+        "DeepsecBench-AA",
+        "CyberGym-E2E-AA",
     }
     for m in models:
         row = []

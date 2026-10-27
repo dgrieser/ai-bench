@@ -245,7 +245,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), CyberBench v1 (0.65), SEC-bench Pro (0.6), CyberGym (0.4).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: ExploitGym (1), CyberBench v1.1 (0.9), CyberBench v1 (0.85), SEC-bench Pro (0.6), CWE-Bench-AA (0.45), DeepsecBench-AA (0.4), CyberGym (0.4).",
       "settings": [
         "derived",
         "index scale"
@@ -1081,6 +1081,88 @@
       ],
       "urls": [
         "https://openai.com/index/browsecomp/"
+      ]
+    },
+    "aa_cyber_index": {
+      "name": "AA Cyber Index",
+      "short_name": "AA Cyber",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' composite of three defensive cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (audit a codebase, find a vulnerability in a described area and patch it), DeepsecBench-AA (find vulnerabilities in real application code, scored by F2) and CyberGym-E2E-AA (find, reproduce and patch real memory-safety bugs in C/C++ projects). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
+      "settings": [
+        "index scale",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+      ],
+      "components": [
+        "cwe_bench_aa",
+        "deepsec_bench_aa",
+        "cybergym_e2e_aa"
+      ]
+    },
+    "cwe_bench_aa": {
+      "name": "CWE-Bench-AA",
+      "short_name": "CWE-AA",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Collinear AI's CWE-bench: a coding agent audits a real open-source codebase, finds a vulnerability in a described area of concern and patches it without breaking legitimate behaviour. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "pass@1",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "Collinear's own CWE-bench leaderboard and lab-reported CWE-bench runs, on other harnesses",
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/cwe-bench-aa",
+        "https://cwe-bench.com/"
+      ]
+    },
+    "deepsec_bench_aa": {
+      "name": "DeepsecBench-AA",
+      "short_name": "Deepsec",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Vercel's DeepsecBench: an agent reviews real open-source application code and reports the vulnerabilities it finds, scored by F2, which weights recall above precision. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "F2 score",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/deepsecbench-aa"
+      ]
+    },
+    "cybergym_e2e_aa": {
+      "name": "CyberGym-E2E-AA",
+      "short_name": "CG-E2E",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' implementation of Berkeley RDI's CyberGym-E2E: an agent finds a real memory-safety vulnerability in a C/C++ open-source project, reproduces it with a proof-of-concept input and patches it without breaking the project's tests. End to end, unlike the CyberGym column's Level 1, which hands the agent the vulnerability's description and asks only for a crashing input. A refusal counts as a failed task; the share refused is shown beside each score, and on this component it decides most frontier closed models' results. One of the three components of the AA Cyber Index.",
+      "settings": [
+        "pass@1",
+        "end to end",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "CyberGym Level 1 runs, which are the cybergym column",
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/cybergym-e2e-aa",
+        "https://www.cybergym.io/"
       ]
     },
     "cybergym": {
@@ -17672,7 +17754,7 @@
         "knowledge_index": 76465,
         "vision_index": null,
         "trust_index": 52989,
-        "security_index": 46838,
+        "security_index": 47091,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 88.8,
         "swe_bench_multimodal": null,
@@ -18366,7 +18448,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549
+          "share": 0.573
         }
       }
     },
@@ -23930,7 +24012,7 @@
         "knowledge_index": 85680,
         "vision_index": null,
         "trust_index": 69006,
-        "security_index": 38550,
+        "security_index": 39780,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 82.8,
         "swe_bench_multimodal": null,
@@ -24602,7 +24684,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.577
+          "share": 0.6
         }
       }
     },
@@ -24623,7 +24705,7 @@
         "knowledge_index": 78119,
         "vision_index": 69840,
         "trust_index": 69822,
-        "security_index": 35629,
+        "security_index": 35698,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
         "swe_bench_multimodal": null,
@@ -25226,7 +25308,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -50269,7 +50351,7 @@
         "knowledge_index": 77430,
         "vision_index": 43070,
         "trust_index": 63421,
-        "security_index": 27683,
+        "security_index": 25622,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -50881,7 +50963,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -50912,7 +50994,7 @@
         "knowledge_index": 83961,
         "vision_index": null,
         "trust_index": 51144,
-        "security_index": 56236,
+        "security_index": 56399,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 96.4,
         "swe_bench_multimodal": null,
@@ -51597,7 +51679,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.366
+          "share": 0.347
         }
       }
     },
@@ -52492,7 +52574,7 @@
         "knowledge_index": 71880,
         "vision_index": 52567,
         "trust_index": 62696,
-        "security_index": 20327,
+        "security_index": 21211,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": null,
@@ -53094,7 +53176,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.282
+          "share": 0.267
         }
       }
     },
@@ -53125,7 +53207,7 @@
         "knowledge_index": 82815,
         "vision_index": 69902,
         "trust_index": 69535,
-        "security_index": 40183,
+        "security_index": 38781,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
         "swe_bench_multimodal": null,
@@ -53783,7 +53865,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.183
+          "share": 0.227
         }
       }
     },
@@ -54353,7 +54435,7 @@
         "knowledge_index": 91332,
         "vision_index": 85036,
         "trust_index": 69287,
-        "security_index": 66074,
+        "security_index": 66730,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -55069,7 +55151,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549,
+          "share": 0.573,
           "second_hand": [
             "cybergym"
           ]
@@ -56536,7 +56618,7 @@
         "knowledge_index": 73939,
         "vision_index": 43341,
         "trust_index": 62988,
-        "security_index": 25870,
+        "security_index": 24802,
         "aa_intelligence_index": 25.7,
         "swe_bench_verified": 82.2,
         "swe_bench_multimodal": null,
@@ -57079,7 +57161,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -57481,7 +57563,7 @@
         "knowledge_index": 87656,
         "vision_index": 90199,
         "trust_index": 69870,
-        "security_index": 2447,
+        "security_index": 2773,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
         "swe_bench_multimodal": null,
@@ -58101,7 +58183,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -60054,7 +60136,7 @@
         "knowledge_index": 44258,
         "vision_index": null,
         "trust_index": 55279,
-        "security_index": 6601,
+        "security_index": 7065,
         "aa_intelligence_index": 12.9,
         "swe_bench_verified": 52.8,
         "swe_bench_multimodal": null,
@@ -60553,7 +60635,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -60579,7 +60661,7 @@
         "knowledge_index": 87101,
         "vision_index": null,
         "trust_index": 71483,
-        "security_index": 53822,
+        "security_index": 54226,
         "aa_intelligence_index": 44.8,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -61273,7 +61355,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.648
+          "share": 0.613
         }
       }
     },
@@ -61299,7 +61381,7 @@
         "knowledge_index": 72592,
         "vision_index": 70096,
         "trust_index": 64060,
-        "security_index": 43387,
+        "security_index": 43718,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
         "swe_bench_multimodal": 38.6,
@@ -61863,7 +61945,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -64592,7 +64674,7 @@
         "knowledge_index": 84591,
         "vision_index": null,
         "trust_index": 70600,
-        "security_index": 35371,
+        "security_index": 33980,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
         "swe_bench_multimodal": null,
@@ -65176,7 +65258,7 @@
             "cyberbench_1_0"
           ],
           "of": 5,
-          "share": 0.437
+          "share": 0.467
         }
       }
     },
@@ -67257,7 +67339,7 @@
         "knowledge_index": 86144,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 22495,
+        "security_index": 20271,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -67700,7 +67782,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.549,
+          "share": 0.573,
           "second_hand": [
             "cybergym"
           ]
@@ -68752,7 +68834,7 @@
         "knowledge_index": 79062,
         "vision_index": 64868,
         "trust_index": 49506,
-        "security_index": 66549,
+        "security_index": 66653,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -69810,7 +69892,7 @@
         "knowledge_index": 97757,
         "vision_index": null,
         "trust_index": 67463,
-        "security_index": 46833,
+        "security_index": 47137,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.7,
@@ -70502,7 +70584,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -70529,7 +70611,7 @@
         "knowledge_index": 79111,
         "vision_index": 72961,
         "trust_index": 53028,
-        "security_index": 62697,
+        "security_index": 64131,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
         "swe_bench_multimodal": null,
@@ -71189,7 +71271,7 @@
             "sec_bench_pro"
           ],
           "of": 5,
-          "share": 0.887,
+          "share": 0.893,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71220,7 +71302,7 @@
         "knowledge_index": 86381,
         "vision_index": 84681,
         "trust_index": 58290,
-        "security_index": 60390,
+        "security_index": 60692,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -71859,7 +71941,7 @@
             "sec_bench_pro"
           ],
           "of": 5,
-          "share": 0.704,
+          "share": 0.667,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71890,7 +71972,7 @@
         "knowledge_index": 95033,
         "vision_index": 91146,
         "trust_index": 56406,
-        "security_index": 85491,
+        "security_index": 86216,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
         "swe_bench_multimodal": null,
@@ -72690,7 +72772,7 @@
         "knowledge_index": 99252,
         "vision_index": 98684,
         "trust_index": 68298,
-        "security_index": 17126,
+        "security_index": 17571,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -73380,7 +73462,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -76015,7 +76097,7 @@
         "knowledge_index": 91053,
         "vision_index": 71772,
         "trust_index": 70381,
-        "security_index": 67863,
+        "security_index": 68062,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -76583,7 +76665,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.817,
+          "share": 0.773,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -76614,7 +76696,7 @@
         "knowledge_index": 72137,
         "vision_index": 51068,
         "trust_index": 60758,
-        "security_index": 60706,
+        "security_index": 61019,
         "aa_intelligence_index": 37.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -77211,7 +77293,7 @@
             "cybergym"
           ],
           "of": 5,
-          "share": 0.817,
+          "share": 0.773,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -77247,7 +77329,7 @@
         "knowledge_index": 98637,
         "vision_index": 99139,
         "trust_index": 69251,
-        "security_index": 57431,
+        "security_index": 57738,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 61.4,
@@ -77876,7 +77958,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535
+          "share": 0.507
         }
       }
     },
@@ -77903,7 +77985,7 @@
         "knowledge_index": 82015,
         "vision_index": 78662,
         "trust_index": 63753,
-        "security_index": 79229,
+        "security_index": 78800,
         "aa_intelligence_index": 38.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -78450,7 +78532,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -78477,7 +78559,7 @@
         "knowledge_index": 95180,
         "vision_index": 91702,
         "trust_index": 68088,
-        "security_index": 89687,
+        "security_index": 89145,
         "aa_intelligence_index": 47.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -79012,7 +79094,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -80841,7 +80923,7 @@
         "knowledge_index": 96680,
         "vision_index": null,
         "trust_index": 69329,
-        "security_index": 47293,
+        "security_index": 47761,
         "aa_intelligence_index": 56,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.3,
@@ -81415,7 +81497,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535,
+          "share": 0.507,
           "second_hand": [
             "exploitgym"
           ]
@@ -81445,7 +81527,7 @@
         "knowledge_index": 98464,
         "vision_index": 96019,
         "trust_index": 68754,
-        "security_index": 11526,
+        "security_index": 12049,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -81990,7 +82072,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -82343,7 +82425,7 @@
         "knowledge_index": 97716,
         "vision_index": null,
         "trust_index": 79070,
-        "security_index": 89687,
+        "security_index": 89145,
         "aa_intelligence_index": 52.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -82876,7 +82958,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -85087,7 +85169,7 @@
         "knowledge_index": 87812,
         "vision_index": null,
         "trust_index": 69344,
-        "security_index": 61156,
+        "security_index": 61359,
         "aa_intelligence_index": 43.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 30.7,
@@ -85621,7 +85703,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.535,
+          "share": 0.507,
           "second_hand": [
             "exploitgym"
           ]
@@ -85651,7 +85733,7 @@
         "knowledge_index": 94070,
         "vision_index": null,
         "trust_index": 74249,
-        "security_index": 96806,
+        "security_index": 96409,
         "aa_intelligence_index": 52.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86082,7 +86164,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -86109,7 +86191,7 @@
         "knowledge_index": 97108,
         "vision_index": null,
         "trust_index": 79612,
-        "security_index": 61622,
+        "security_index": 61587,
         "aa_intelligence_index": 55.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86522,7 +86604,7 @@
             "cyberbench_1_1"
           ],
           "of": 5,
-          "share": 0.254
+          "share": 0.24
         }
       }
     },
@@ -91972,7 +92054,7 @@
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 66396,
+        "security_index": 66378,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -92205,7 +92287,7 @@
             "exploitgym"
           ],
           "of": 5,
-          "share": 0.282
+          "share": 0.267
         }
       }
     },
