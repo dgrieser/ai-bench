@@ -121,6 +121,26 @@ _INLINE_TAG_RE = re.compile(r"<[^<>]{0,400}?>")
 # see past -- and a link to a *sibling* repo is how one variant's row gets read
 # as another's.
 _MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+# A footnote reference closing a cell: "DeepSWE<sup>3</sup>",
+# "Toolathlon-Verified<sup>10</sup>", "MMLU<sup>[1,2]</sup>". Stripped as a tag
+# it would read "DeepSWE 3", a new label for every footnote number a card uses
+# -- and a label the global name mapping then decides for every card that
+# happens to number the same footnote alike. Only a <sup> holding nothing but
+# reference marks, and only at the end of the cell: "τ<sup>2</sup>-Bench" is a
+# name, not a footnote, and so is a bare "τ<sup>2</sup>" closing a cell.
+_FOOTNOTE_SUP_RE = re.compile(
+    r"(?<![τ𝜏𝛕])<sup\b[^<>]*>(?:\s|<[^<>]*>|[\d,\[\]()" + _FOOTNOTE_CHARS + r"])*</sup>"
+    r"(?=(?:\s|<[^<>]*>)*$)",
+    re.IGNORECASE,
+)
+
+
+def _drop_footnote_sups(markup: str) -> str:
+    while True:
+        stripped = _FOOTNOTE_SUP_RE.sub("", markup.rstrip())
+        if stripped == markup.rstrip():
+            return markup
+        markup = stripped
 
 
 def clean_cell(text: str) -> str:
@@ -137,6 +157,7 @@ def clean_cell(text: str) -> str:
     for ch in _INVISIBLE_SPACES:
         s = s.replace(ch, " ")
     # After unescape, so an entity that decoded into a tag is dropped too.
+    s = _drop_footnote_sups(s)
     s = _INLINE_TAG_RE.sub(" ", s)
     s = _MD_LINK_RE.sub(r"\1", s)
     s = re.sub(r"\s+", " ", s).strip()
@@ -316,7 +337,7 @@ def parse_markdown_tables(md: str) -> list[Table]:
 
 
 def _strip_tags(markup: str) -> str:
-    text = re.sub(r"<[^>]+>", " ", markup)
+    text = re.sub(r"<[^>]+>", " ", _drop_footnote_sups(markup))
     text = html.unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 

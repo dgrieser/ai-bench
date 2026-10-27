@@ -480,6 +480,38 @@ class TestLabelNormalisation(unittest.TestCase):
             },
         )
 
+    def test_a_footnote_reference_is_not_part_of_the_label(self):
+        # Nanbeige4.3-33B and the Nex-N2.5 cards: "DeepSWE<sup>3</sup>" used
+        # to read "DeepSWE 3", a fresh label per footnote number.
+        html = (
+            "<table><tr><th>Benchmark</th><th>Example-30B<sup>1</sup></th></tr>"
+            "<tr><td>DeepSWE<sup>3</sup></td><td><strong>65.5</strong></td></tr>"
+            "<tr><td>Toolathlon-Verified<sup>10</sup></td><td>70.4</td></tr>"
+            "<tr><td>Claw-Eval<sub>pass^3</sub><sup>9</sup></td><td>78.3</td></tr>"
+            "<tr><td>&tau;<sup>2</sup>-Bench</td><td>80.3</td></tr>"
+            "<tr><td>Terminal Bench 2</td><td>32.6</td></tr>"
+            "</table>"
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_html_tables(html), REPO)
+        self.assertEqual(
+            scores,
+            {
+                "DeepSWE": 65.5,
+                "Toolathlon-Verified": 70.4,
+                "Claw-Eval pass^3": 78.3,
+                "τ 2 -Bench": 80.3,
+                "Terminal Bench 2": 32.6,
+            },
+        )
+        md = md_table(
+            "| Benchmark | Example-30B |",
+            "| :--- | :---: |",
+            "| BrowseComp<sup>6</sup> | 89.7 |",
+            "| GDPval<sup>[8]</sup> | 84.8 |",
+        )
+        scores = fh.extract_scores_from_tables(fh.parse_markdown_tables(md), REPO)
+        self.assertEqual(scores, {"BrowseComp": 89.7, "GDPval": 84.8})
+
     def test_a_nested_row_keeps_the_benchmark_it_hangs_off(self):
         md = md_table(
             "| Benchmark | Example-30B |",
