@@ -1,3 +1,357 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "automation_bench_aa",
+          "reason": "exact to Automation Bench 6, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Automation Bench 6' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Automation Bench 6",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Claw-Eval pass^3 9' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Claw-Eval pass^3 9",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepPlanning 12' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "DeepPlanning 12",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_0",
+          "reason": "the first 1 word(s) of the label: exact to deepswe, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_1",
+          "reason": "the first 1 word(s) of the label: exact to deepswe, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepSWE 3' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "DeepSWE 3",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'EnterpriseOps-Gym 12' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "EnterpriseOps-Gym 12",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to gdpval, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GDPval 8' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "GDPval 8",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'JobBench 7' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "JobBench 7",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'NL2Repo 5' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "NL2Repo 5",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_atlas_qna",
+          "reason": "exact to SWE-Atlas-QnA 4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_atlas_rf",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_atlas_tw",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "real_swe",
+          "reason": "the first 1 word(s) of the label: exact to swe, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_0",
+          "reason": "the first 1 word(s) of the label: exact to swe, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-Atlas-QnA 4' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "SWE-Atlas-QnA 4",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "exact to SWE-Bench Pro 3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_2_0",
+          "reason": "exact to SWE-Bench Pro 3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_hard_2_0",
+          "reason": "exact to SWE-Bench Pro 3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-Bench Pro 3' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "SWE-Bench Pro 3",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "scicode",
+          "reason": "exact to Scicode, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Scicode' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Scicode",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "tau3_bench_banking",
+          "reason": "exact to Tau3-Bench 12, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Tau3-Bench 12' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Tau3-Bench 12",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "exact to Terminal-Bench 2.1 2, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "exact to Terminal-Bench 2.1 2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_4_0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Terminal-Bench 2.1 2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Terminal-Bench 2.1 2",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_4_0",
+          "reason": "exact to Terminal-Bench 4.0 3, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Terminal-Bench 4.0 3' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Terminal-Bench 4.0 3",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "toolathlon",
+          "reason": "the same name spelled without punctuation, plus a version, as 'Toolathlon-Verified'"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Toolathlon-Verified 10' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+      "subject": "Toolathlon-Verified 10",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "nanbeige4-3-33b",
+          "reason": "exact to Nanbeige4.3-33B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hy3",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "g9v3-3b",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "default": "nanbeige4-3-33b",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'Nanbeige/Nanbeige4.3-33B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/Nanbeige/Nanbeige4.3-33B/",
+      "subject": "Nanbeige/Nanbeige4.3-33B",
+      "universe": "models"
+    }
+  ]
 }
