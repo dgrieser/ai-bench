@@ -107,6 +107,44 @@
     {
       "candidates": [
         {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.1 Terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to GPT-6.1 Terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'GPT-6.1 Terra' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "GPT-6.1 Terra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "exact",
           "option": "kimi-k3-1-pro",
           "reason": "exact to Kimi K3.1 Pro, exact match"
