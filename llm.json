@@ -92216,9 +92216,9 @@
       "params": "9B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 3.2,
+        "int8": 1.6,
+        "int4": 0.8
       },
       "creator": {
         "name": "PrismML",
@@ -92448,6 +92448,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/"
       }
     }
   ],
