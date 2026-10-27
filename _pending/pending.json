@@ -108,6 +108,72 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Mythos 5.1, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map cybergym.io model 'Claude Mythos 5.1' to llm.json model",
+      "route": "update_cybergym_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.cybergym.io/exploitgym/",
+      "subject": "Claude Mythos 5.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-opus-5-5",
+          "reason": "exact to Claude Opus 5.5, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Opus 5.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map cybergym.io model 'Claude Opus 5.5' to llm.json model",
+      "route": "update_cybergym_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.cybergym.io/exploitgym/",
+      "subject": "Claude Opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "gpt-6-1-sol",
           "reason": "exact to GPT-6.1 Terra, most components match"
         },
@@ -252,6 +318,82 @@
       "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
       "source_url": "https://openrouter.ai/openai/gpt-6.1-terra",
+      "subject": "openai/gpt-6.1-terra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'openai/gpt-6.1-terra-pro' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/openai/gpt-6.1-terra-pro",
+      "subject": "openai/gpt-6.1-terra-pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt-6.1-terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-terra",
+          "reason": "exact to gpt-6.1-terra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'openai/gpt-6.1-terra' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
       "subject": "openai/gpt-6.1-terra",
       "universe": "models"
     }
