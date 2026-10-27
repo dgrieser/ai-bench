@@ -17754,7 +17754,7 @@
         "knowledge_index": 76465,
         "vision_index": null,
         "trust_index": 52989,
-        "security_index": 47091,
+        "security_index": 47061,
         "aa_intelligence_index": 34.3,
         "swe_bench_verified": 88.8,
         "swe_bench_multimodal": null,
@@ -18447,8 +18447,8 @@
             "cyberbench_1_0",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.573
+          "of": 7,
+          "share": 0.467
         }
       }
     },
@@ -24012,7 +24012,7 @@
         "knowledge_index": 85680,
         "vision_index": null,
         "trust_index": 69006,
-        "security_index": 39780,
+        "security_index": 39342,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 82.8,
         "swe_bench_multimodal": null,
@@ -24683,8 +24683,8 @@
             "cyberbench_1_0",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.6
+          "of": 7,
+          "share": 0.489
         }
       }
     },
@@ -24705,7 +24705,7 @@
         "knowledge_index": 78119,
         "vision_index": 69840,
         "trust_index": 69822,
-        "security_index": 35698,
+        "security_index": 28183,
         "aa_intelligence_index": 29.2,
         "swe_bench_verified": 75,
         "swe_bench_multimodal": null,
@@ -24771,7 +24771,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "cyberbench_1_0": 76.3
+        "cyberbench_1_0": 76.3,
+        "aa_cyber_index": 22.4,
+        "cwe_bench_aa": 41.7,
+        "deepsec_bench_aa": 1.1,
+        "cybergym_e2e_aa": 24.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -24845,7 +24849,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "cyberbench_1_0": "2026-09-28"
+        "cyberbench_1_0": "2026-09-28",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -24919,7 +24927,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -25125,6 +25137,34 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 22.4,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 41.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 1.1,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 24.4,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cyberbench_1_1": [
           {
             "date": "2026-09-28",
@@ -25305,11 +25345,18 @@
         "security_index": {
           "measured": [
             "cyberbench_1_1",
-            "cyberbench_1_0"
+            "cyberbench_1_0",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.467
+          "of": 7,
+          "share": 0.565
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -49365,7 +49412,7 @@
         "knowledge_index": 72886,
         "vision_index": null,
         "trust_index": 68779,
-        "security_index": null,
+        "security_index": 20112,
         "aa_intelligence_index": 22.9,
         "swe_bench_verified": 69,
         "swe_bench_multimodal": null,
@@ -49430,7 +49477,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 13.1,
+        "cwe_bench_aa": 27.5,
+        "deepsec_bench_aa": 1,
+        "cybergym_e2e_aa": 10.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -49439,7 +49490,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": null,
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-09-19",
         "swe_bench_verified": "2026-09-10",
         "swe_bench_multimodal": null,
@@ -49504,7 +49555,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15"
+        "real_swe": "2026-10-15",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -49513,7 +49568,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b",
         "swe_bench_verified": "https://www.vals.ai/benchmarks/swebench",
         "swe_bench_multimodal": null,
@@ -49578,7 +49633,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -49770,6 +49829,34 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 13.1,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 27.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 1,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 10.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "aa_omniscience": [
           {
             "date": "2026-08-07",
@@ -49897,7 +49984,20 @@
           ],
           "of": 4,
           "share": 1.0
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
+          ],
+          "of": 7,
+          "share": 0.185
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -50351,7 +50451,7 @@
         "knowledge_index": 77430,
         "vision_index": 43070,
         "trust_index": 63421,
-        "security_index": 25622,
+        "security_index": 26219,
         "aa_intelligence_index": 25,
         "swe_bench_verified": 77.6,
         "swe_bench_multimodal": null,
@@ -50962,8 +51062,8 @@
             "cyberbench_1_1",
             "cyberbench_1_0"
           ],
-          "of": 5,
-          "share": 0.467
+          "of": 7,
+          "share": 0.38
         }
       }
     },
@@ -50994,7 +51094,7 @@
         "knowledge_index": 83961,
         "vision_index": null,
         "trust_index": 51144,
-        "security_index": 56399,
+        "security_index": 55742,
         "aa_intelligence_index": 36,
         "swe_bench_verified": 96.4,
         "swe_bench_multimodal": null,
@@ -51678,8 +51778,8 @@
             "cyberbench_1_1",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.347
+          "of": 7,
+          "share": 0.283
         }
       }
     },
@@ -52574,7 +52674,7 @@
         "knowledge_index": 71880,
         "vision_index": 52567,
         "trust_index": 62696,
-        "security_index": 21211,
+        "security_index": 21236,
         "aa_intelligence_index": 23.5,
         "swe_bench_verified": 70,
         "swe_bench_multimodal": null,
@@ -53175,8 +53275,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.267
+          "of": 7,
+          "share": 0.217
         }
       }
     },
@@ -53207,7 +53307,7 @@
         "knowledge_index": 82815,
         "vision_index": 69902,
         "trust_index": 69535,
-        "security_index": 38781,
+        "security_index": 38939,
         "aa_intelligence_index": 27,
         "swe_bench_verified": 76.2,
         "swe_bench_multimodal": null,
@@ -53864,8 +53964,8 @@
           "measured": [
             "cyberbench_1_0"
           ],
-          "of": 5,
-          "share": 0.227
+          "of": 7,
+          "share": 0.185
         }
       }
     },
@@ -54435,7 +54535,7 @@
         "knowledge_index": 91332,
         "vision_index": 85036,
         "trust_index": 69287,
-        "security_index": 66730,
+        "security_index": 58582,
         "aa_intelligence_index": 43.6,
         "swe_bench_verified": 93.4,
         "swe_bench_multimodal": null,
@@ -54501,7 +54601,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 84.8,
-        "cyberbench_1_0": 79
+        "cyberbench_1_0": 79,
+        "aa_cyber_index": 41.3,
+        "cwe_bench_aa": 53.3,
+        "deepsec_bench_aa": 12.5,
+        "cybergym_e2e_aa": 58
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -54576,7 +54680,11 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
         "real_swe": "2026-10-15",
-        "cyberbench_1_0": "2026-09-28"
+        "cyberbench_1_0": "2026-09-28",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -54651,7 +54759,11 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3",
         "real_swe": "https://realswe.withspecific.com",
-        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -54940,6 +55052,34 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 41.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 53.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 12.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 58,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cybergym": [
           {
             "date": "2026-09-30",
@@ -55148,14 +55288,21 @@
           "measured": [
             "cyberbench_1_1",
             "cyberbench_1_0",
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.573,
+          "of": 7,
+          "share": 0.652,
           "second_hand": [
             "cybergym"
           ]
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -56618,7 +56765,7 @@
         "knowledge_index": 73939,
         "vision_index": 43341,
         "trust_index": 62988,
-        "security_index": 24802,
+        "security_index": 25417,
         "aa_intelligence_index": 25.7,
         "swe_bench_verified": 82.2,
         "swe_bench_multimodal": null,
@@ -57160,8 +57307,8 @@
             "cyberbench_1_1",
             "cyberbench_1_0"
           ],
-          "of": 5,
-          "share": 0.467
+          "of": 7,
+          "share": 0.38
         }
       }
     },
@@ -57563,7 +57710,7 @@
         "knowledge_index": 87656,
         "vision_index": 90199,
         "trust_index": 69870,
-        "security_index": 2773,
+        "security_index": 12617,
         "aa_intelligence_index": 39.9,
         "swe_bench_verified": 85.6,
         "swe_bench_multimodal": null,
@@ -57628,7 +57775,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 12.6,
+        "cwe_bench_aa": 28.3,
+        "deepsec_bench_aa": 9.5,
+        "cybergym_e2e_aa": 0
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -57701,7 +57852,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -57774,7 +57929,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -57999,6 +58158,34 @@
             "source": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 12.6,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 28.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 9.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cyberbench_1_1": [
           {
             "date": "2026-09-28",
@@ -58180,11 +58367,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 63.3,
+        "deepsec_bench_aa": 24.2,
+        "cybergym_e2e_aa": 100.0
       }
     },
     {
@@ -60136,7 +60330,7 @@
         "knowledge_index": 44258,
         "vision_index": null,
         "trust_index": 55279,
-        "security_index": 7065,
+        "security_index": 17374,
         "aa_intelligence_index": 12.9,
         "swe_bench_verified": 52.8,
         "swe_bench_multimodal": null,
@@ -60634,8 +60828,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.196
         }
       }
     },
@@ -60661,7 +60855,7 @@
         "knowledge_index": 87101,
         "vision_index": null,
         "trust_index": 71483,
-        "security_index": 54226,
+        "security_index": 54586,
         "aa_intelligence_index": 44.8,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -60726,7 +60920,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 36.4,
+        "cwe_bench_aa": 55.8,
+        "deepsec_bench_aa": 24.3,
+        "cybergym_e2e_aa": 29
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -60800,7 +60998,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15"
+        "real_swe": "2026-10-15",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -60874,7 +61076,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -61176,6 +61382,34 @@
             "source": "https://artificialanalysis.ai/models/glm-5-3"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 36.4,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 55.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 24.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 29,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cybergym": [
           {
             "date": "2026-09-26",
@@ -61352,11 +61586,18 @@
           "measured": [
             "exploitgym",
             "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.613
+          "of": 7,
+          "share": 0.685
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -61381,7 +61622,7 @@
         "knowledge_index": 72592,
         "vision_index": 70096,
         "trust_index": 64060,
-        "security_index": 43718,
+        "security_index": 30319,
         "aa_intelligence_index": 33.7,
         "swe_bench_verified": 86,
         "swe_bench_multimodal": 38.6,
@@ -61446,7 +61687,11 @@
         "osworld_2_0_vendor": 19.4,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": 83.7
+        "charxiv_reasoning": 83.7,
+        "aa_cyber_index": 12.7,
+        "cwe_bench_aa": 26.7,
+        "deepsec_bench_aa": 11.5,
+        "cybergym_e2e_aa": 0
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -61519,7 +61764,11 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "2026-09-09"
+        "charxiv_reasoning": "2026-09-09",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -61592,7 +61841,11 @@
         "osworld_2_0_vendor": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.8-27B"
+        "charxiv_reasoning": "https://huggingface.co/Qwen/Qwen3.8-27B",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -61762,6 +62015,34 @@
             "date": "2026-10-02",
             "score": 1395,
             "source": "https://artificialanalysis.ai/models/qwen3-8-27b"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 12.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 26.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 11.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cyberbench_1_1": [
@@ -61942,11 +62223,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 61.3,
+        "deepsec_bench_aa": 9.1,
+        "cybergym_e2e_aa": 100.0
       }
     },
     {
@@ -64674,7 +64962,7 @@
         "knowledge_index": 84591,
         "vision_index": null,
         "trust_index": 70600,
-        "security_index": 33980,
+        "security_index": 36883,
         "aa_intelligence_index": 41.8,
         "swe_bench_verified": 92,
         "swe_bench_multimodal": null,
@@ -64740,7 +65028,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": 89.4,
-        "cyberbench_1_0": 71.5
+        "cyberbench_1_0": 71.5,
+        "aa_cyber_index": 49.9,
+        "cwe_bench_aa": 55.8,
+        "deepsec_bench_aa": 19.9,
+        "cybergym_e2e_aa": 74
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -64814,7 +65106,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
-        "cyberbench_1_0": "2026-09-28"
+        "cyberbench_1_0": "2026-09-28",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -64888,7 +65184,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://www.edenai.co/post/glm-5-3-flash-benchmark-vs-gemini-deepseek-gpt-5-6",
-        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1"
+        "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -65093,6 +65393,34 @@
             "source": "https://artificialanalysis.ai/models/glm-5-3-flash"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 49.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 55.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 19.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 74,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cyberbench_1_1": [
           {
             "date": "2026-09-28",
@@ -65255,11 +65583,18 @@
         "security_index": {
           "measured": [
             "cyberbench_1_1",
-            "cyberbench_1_0"
+            "cyberbench_1_0",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.467
+          "of": 7,
+          "share": 0.565
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -67339,7 +67674,7 @@
         "knowledge_index": 86144,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 20271,
+        "security_index": 20624,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -67781,8 +68116,8 @@
             "cyberbench_1_0",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.573,
+          "of": 7,
+          "share": 0.467,
           "second_hand": [
             "cybergym"
           ]
@@ -68834,7 +69169,7 @@
         "knowledge_index": 79062,
         "vision_index": 64868,
         "trust_index": 49506,
-        "security_index": 66653,
+        "security_index": 72198,
         "aa_intelligence_index": 39.5,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -68900,7 +69235,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "cyberbench_1_0": 78.8
+        "cyberbench_1_0": 78.8,
+        "aa_cyber_index": 40.8,
+        "cwe_bench_aa": 68.3,
+        "deepsec_bench_aa": 31.2,
+        "cybergym_e2e_aa": 22.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -68975,7 +69314,11 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "2026-09-28",
-        "real_swe": "2026-10-15"
+        "real_swe": "2026-10-15",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -69050,7 +69393,11 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -69217,6 +69564,34 @@
             "date": "2026-10-01",
             "score": 1420,
             "source": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 40.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 68.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 31.2,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 22.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cybergym": [
@@ -69434,9 +69809,11 @@
             "cyberbench_1_1",
             "cyberbench_1_0",
             "sec_bench_pro",
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
             "cybergym"
           ],
-          "of": 5,
+          "of": 7,
           "share": 1.0,
           "second_hand": [
             "exploitgym",
@@ -69444,6 +69821,11 @@
             "cybergym"
           ]
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -69892,7 +70274,7 @@
         "knowledge_index": 97757,
         "vision_index": null,
         "trust_index": 67463,
-        "security_index": 47137,
+        "security_index": 44262,
         "aa_intelligence_index": 53.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.7,
@@ -69957,7 +70339,11 @@
         "osworld_2_0_vendor": 77.9,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 25,
+        "cwe_bench_aa": 50.8,
+        "deepsec_bench_aa": 23.5,
+        "cybergym_e2e_aa": 0.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -70031,7 +70417,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15"
+        "real_swe": "2026-10-15",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -70105,7 +70495,11 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -70394,6 +70788,34 @@
             "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 25,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 50.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 23.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cyberbench_1_1": [
           {
             "date": "2026-09-26",
@@ -70581,11 +71003,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 16.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 99.2
       }
     },
     {
@@ -70611,7 +71040,7 @@
         "knowledge_index": 79111,
         "vision_index": 72961,
         "trust_index": 53028,
-        "security_index": 64131,
+        "security_index": 64509,
         "aa_intelligence_index": 37.3,
         "swe_bench_verified": 93,
         "swe_bench_multimodal": null,
@@ -71270,8 +71699,8 @@
             "cyberbench_1_0",
             "sec_bench_pro"
           ],
-          "of": 5,
-          "share": 0.893,
+          "of": 7,
+          "share": 0.728,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71302,7 +71731,7 @@
         "knowledge_index": 86381,
         "vision_index": 84681,
         "trust_index": 58290,
-        "security_index": 60692,
+        "security_index": 60888,
         "aa_intelligence_index": 42.1,
         "swe_bench_verified": 95.4,
         "swe_bench_multimodal": null,
@@ -71940,8 +72369,8 @@
             "cyberbench_1_1",
             "sec_bench_pro"
           ],
-          "of": 5,
-          "share": 0.667,
+          "of": 7,
+          "share": 0.543,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro"
@@ -71972,7 +72401,7 @@
         "knowledge_index": 95033,
         "vision_index": 91146,
         "trust_index": 56406,
-        "security_index": 86216,
+        "security_index": 86881,
         "aa_intelligence_index": 47,
         "swe_bench_verified": 96.2,
         "swe_bench_multimodal": null,
@@ -72740,8 +73169,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 5,
-          "share": 1.0,
+          "of": 7,
+          "share": 0.815,
           "second_hand": [
             "sec_bench_pro",
             "cybergym"
@@ -72772,7 +73201,7 @@
         "knowledge_index": 99252,
         "vision_index": 98684,
         "trust_index": 68298,
-        "security_index": 17571,
+        "security_index": 48698,
         "aa_intelligence_index": 52.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -72837,7 +73266,11 @@
         "osworld_2_0_vendor": 72.6,
         "zerobench": 43.2,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 33.4,
+        "cwe_bench_aa": 63.3,
+        "deepsec_bench_aa": 36.9,
+        "cybergym_e2e_aa": 0
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -72911,7 +73344,11 @@
         "zerobench": "2026-09-22",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-20"
+        "real_swe": "2026-10-20",
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -72985,7 +73422,11 @@
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com"
+        "real_swe": "https://realswe.withspecific.com",
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -73256,6 +73697,34 @@
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 33.4,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 63.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 36.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "exploitgym": [
           {
             "date": "2026-09-26",
@@ -73459,11 +73928,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 13.3,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 100.0
       }
     },
     {
@@ -76097,7 +76573,7 @@
         "knowledge_index": 91053,
         "vision_index": 71772,
         "trust_index": 70381,
-        "security_index": 68062,
+        "security_index": 70248,
         "aa_intelligence_index": 46.3,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -76162,7 +76638,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 56.1,
+        "cwe_bench_aa": 63.3,
+        "deepsec_bench_aa": 26.2,
+        "cybergym_e2e_aa": 78.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -76236,7 +76716,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -76310,7 +76794,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -76455,6 +76943,34 @@
             "date": "2026-10-23",
             "score": 1510,
             "source": "https://artificialanalysis.ai/models/mimo-v2-6-pro"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 56.1,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 63.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 26.2,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 78.6,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cybergym": [
@@ -76662,16 +77178,23 @@
             "exploitgym",
             "cyberbench_1_1",
             "sec_bench_pro",
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.773,
+          "of": 7,
+          "share": 0.815,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
             "cybergym"
           ]
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -76696,7 +77219,7 @@
         "knowledge_index": 72137,
         "vision_index": 51068,
         "trust_index": 60758,
-        "security_index": 61019,
+        "security_index": 61281,
         "aa_intelligence_index": 37.9,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -77292,8 +77815,8 @@
             "sec_bench_pro",
             "cybergym"
           ],
-          "of": 5,
-          "share": 0.773,
+          "of": 7,
+          "share": 0.63,
           "second_hand": [
             "exploitgym",
             "sec_bench_pro",
@@ -77329,7 +77852,7 @@
         "knowledge_index": 98637,
         "vision_index": 99139,
         "trust_index": 69251,
-        "security_index": 57738,
+        "security_index": 61441,
         "aa_intelligence_index": 57.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 61.4,
@@ -77394,7 +77917,11 @@
         "osworld_2_0_vendor": 81.8,
         "zerobench": 35,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 28.7,
+        "cwe_bench_aa": 58.3,
+        "deepsec_bench_aa": 26.9,
+        "cybergym_e2e_aa": 0.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -77468,7 +77995,11 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": "2026-09-26",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -77542,7 +78073,11 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -77742,6 +78277,34 @@
             "date": "2026-10-21",
             "score": 1800,
             "source": "https://artificialanalysis.ai/models/claude-opus-5-5"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 28.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 58.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 26.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "exploitgym": [
@@ -77955,11 +78518,18 @@
         "security_index": {
           "measured": [
             "exploitgym",
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.507
+          "of": 7,
+          "share": 0.598
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 9.2,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 98.5
       }
     },
     {
@@ -77985,7 +78555,7 @@
         "knowledge_index": 82015,
         "vision_index": 78662,
         "trust_index": 63753,
-        "security_index": 78800,
+        "security_index": 66297,
         "aa_intelligence_index": 38.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -78050,7 +78620,11 @@
         "osworld_2_0_vendor": 52.7,
         "zerobench": 12.2,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 52.7,
+        "cwe_bench_aa": 56.7,
+        "deepsec_bench_aa": 23.5,
+        "cybergym_e2e_aa": 77.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -78124,7 +78698,11 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": "2026-09-24",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78198,7 +78776,11 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -78361,6 +78943,34 @@
             "date": "2026-10-01",
             "score": 1335,
             "source": "https://artificialanalysis.ai/models/gpt-6-luna"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 52.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 56.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 23.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 77.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cyberbench_1_1": [
@@ -78529,11 +79139,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -78559,7 +79176,7 @@
         "knowledge_index": 95180,
         "vision_index": 91702,
         "trust_index": 68088,
-        "security_index": 89145,
+        "security_index": 85770,
         "aa_intelligence_index": 47.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -78624,7 +79241,11 @@
         "osworld_2_0_vendor": 64.4,
         "zerobench": 28.8,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 36.8,
+        "cwe_bench_aa": 64.2,
+        "deepsec_bench_aa": 46.3,
+        "cybergym_e2e_aa": 0
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -78698,7 +79319,11 @@
         "osworld_2_0_vendor": "2026-09-25",
         "zerobench": "2026-09-24",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78772,7 +79397,11 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -78915,6 +79544,34 @@
             "date": "2026-10-23",
             "score": 1475,
             "source": "https://artificialanalysis.ai/models/gpt-6-sol"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 36.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 64.2,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 46.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 0,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cyberbench_1_1": [
@@ -79091,11 +79748,18 @@
         },
         "security_index": {
           "measured": [
-            "cyberbench_1_1"
+            "cyberbench_1_1",
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.38
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 9.2,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 100.0
       }
     },
     {
@@ -80923,7 +81587,7 @@
         "knowledge_index": 96680,
         "vision_index": null,
         "trust_index": 69329,
-        "security_index": 47761,
+        "security_index": 47704,
         "aa_intelligence_index": 56,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 54.3,
@@ -81496,8 +82160,8 @@
             "exploitgym",
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.507,
+          "of": 7,
+          "share": 0.413,
           "second_hand": [
             "exploitgym"
           ]
@@ -81527,7 +82191,7 @@
         "knowledge_index": 98464,
         "vision_index": 96019,
         "trust_index": 68754,
-        "security_index": 12049,
+        "security_index": 21358,
         "aa_intelligence_index": 51.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -82071,8 +82735,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.196
         }
       }
     },
@@ -82425,7 +83089,7 @@
         "knowledge_index": 97716,
         "vision_index": null,
         "trust_index": 79070,
-        "security_index": 89145,
+        "security_index": 82433,
         "aa_intelligence_index": 52.6,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -82957,8 +83621,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.196
         }
       }
     },
@@ -83467,7 +84131,7 @@
         "knowledge_index": 91015,
         "vision_index": 61607,
         "trust_index": 70969,
-        "security_index": null,
+        "security_index": 45367,
         "aa_intelligence_index": 43.7,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -83533,7 +84197,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 47.7,
+        "cwe_bench_aa": 52.5,
+        "deepsec_bench_aa": 15.8,
+        "cybergym_e2e_aa": 74.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -83542,7 +84210,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": "2026-10-27",
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-08",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -83608,7 +84276,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -83617,7 +84289,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/step-5",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -83683,7 +84355,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -83867,6 +84543,34 @@
             "source": "https://huggingface.co/SHSLab/Step-5-Preview-BF16"
           }
         ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 47.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 52.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 15.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 74.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
         "cybergym": [
           {
             "date": "2026-10-03",
@@ -84008,11 +84712,28 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
+            "cybergym"
+          ],
+          "of": 7,
+          "share": 0.272,
+          "second_hand": [
+            "cybergym"
+          ]
         }
       },
       "aa_variant": {
         "slug": "step-5",
         "name": "Step 5 Preview"
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -84707,7 +85428,7 @@
         "knowledge_index": 76283,
         "vision_index": 61607,
         "trust_index": 65682,
-        "security_index": null,
+        "security_index": 41109,
         "aa_intelligence_index": 38.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -84773,7 +85494,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 49.5,
+        "cwe_bench_aa": 50.8,
+        "deepsec_bench_aa": 16,
+        "cybergym_e2e_aa": 81.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -84782,7 +85507,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": "2026-10-27",
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-06",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -84848,7 +85573,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -84857,7 +85586,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/mistral-large-4",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -84923,7 +85652,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -85026,6 +85759,34 @@
             "date": "2026-10-16",
             "score": 1390,
             "source": "https://artificialanalysis.ai/models/mistral-large-4"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 49.5,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 50.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 16,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 81.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "aa_omniscience": [
@@ -85143,7 +85904,20 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
+          ],
+          "of": 7,
+          "share": 0.185
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -85169,7 +85943,7 @@
         "knowledge_index": 87812,
         "vision_index": null,
         "trust_index": 69344,
-        "security_index": 61359,
+        "security_index": 61236,
         "aa_intelligence_index": 43.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": 30.7,
@@ -85702,8 +86476,8 @@
             "exploitgym",
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.507,
+          "of": 7,
+          "share": 0.413,
           "second_hand": [
             "exploitgym"
           ]
@@ -85733,7 +86507,7 @@
         "knowledge_index": 94070,
         "vision_index": null,
         "trust_index": 74249,
-        "security_index": 96409,
+        "security_index": 92104,
         "aa_intelligence_index": 52.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86163,8 +86937,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.196
         }
       }
     },
@@ -86191,7 +86965,7 @@
         "knowledge_index": 97108,
         "vision_index": null,
         "trust_index": 79612,
-        "security_index": 61587,
+        "security_index": 60143,
         "aa_intelligence_index": 55.8,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86603,8 +87377,8 @@
           "measured": [
             "cyberbench_1_1"
           ],
-          "of": 5,
-          "share": 0.24
+          "of": 7,
+          "share": 0.196
         }
       }
     },
@@ -86631,7 +87405,7 @@
         "knowledge_index": 90195,
         "vision_index": null,
         "trust_index": 72390,
-        "security_index": null,
+        "security_index": 65777,
         "aa_intelligence_index": 46.4,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86697,7 +87471,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 56.4,
+        "cwe_bench_aa": 68.3,
+        "deepsec_bench_aa": 26.9,
+        "cybergym_e2e_aa": 74
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -86706,7 +87484,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": null,
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-13",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86772,7 +87550,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -86781,7 +87563,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/grok-4-7",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -86847,7 +87629,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -86931,6 +87717,34 @@
             "date": "2026-10-16",
             "score": 1640,
             "source": "https://artificialanalysis.ai/models/grok-4-7"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 56.4,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 68.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 26.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 74,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "cybergym": [
@@ -87024,7 +87838,24 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa",
+            "cybergym"
+          ],
+          "of": 7,
+          "share": 0.272,
+          "second_hand": [
+            "cybergym"
+          ]
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -88270,7 +89101,7 @@
         "knowledge_index": 80100,
         "vision_index": null,
         "trust_index": 63941,
-        "security_index": null,
+        "security_index": 30868,
         "aa_intelligence_index": 30.3,
         "swe_bench_verified": 81.6,
         "swe_bench_multimodal": null,
@@ -88336,7 +89167,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 33.7,
+        "cwe_bench_aa": 49.2,
+        "deepsec_bench_aa": 6.9,
+        "cybergym_e2e_aa": 45
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -88345,7 +89180,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": null,
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-16",
         "swe_bench_verified": "2026-10-16",
         "swe_bench_multimodal": null,
@@ -88411,7 +89246,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -88420,7 +89259,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/reflection-beam",
         "swe_bench_verified": "https://huggingface.co/reflection/Beam-1.0-501B-A23B",
         "swe_bench_multimodal": null,
@@ -88486,7 +89325,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -88590,6 +89433,34 @@
             "date": "2026-10-16",
             "score": 975,
             "source": "https://artificialanalysis.ai/models/reflection-beam"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 33.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 49.2,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 6.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 45,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "aa_omniscience": [
@@ -88726,7 +89597,20 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
+          ],
+          "of": 7,
+          "share": 0.185
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -88751,7 +89635,7 @@
         "knowledge_index": 88152,
         "vision_index": 84606,
         "trust_index": 64872,
-        "security_index": null,
+        "security_index": 66099,
         "aa_intelligence_index": 45.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -88817,7 +89701,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 56.8,
+        "cwe_bench_aa": 69.2,
+        "deepsec_bench_aa": 24.9,
+        "cybergym_e2e_aa": 76.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -88826,7 +89714,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": "2026-10-27",
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-19",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -88892,7 +89780,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -88901,7 +89793,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -88967,7 +89859,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -89057,6 +89953,34 @@
             "date": "2026-10-19",
             "score": 1570,
             "source": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 56.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 69.2,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 24.9,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 76.3,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "aa_omniscience": [
@@ -89210,6 +90134,14 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
+          ],
+          "of": 7,
+          "share": 0.185
         }
       },
       "vram_source": {
@@ -89220,6 +90152,11 @@
       "aa_variant": {
         "slug": "deepseek-v4-1-flash-1017",
         "name": "DeepSeek V4.1 Flash 1017 (Max)"
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -90964,7 +91901,7 @@
         "knowledge_index": 93534,
         "vision_index": 93497,
         "trust_index": 71915,
-        "security_index": null,
+        "security_index": 63682,
         "aa_intelligence_index": 55.1,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -91030,7 +91967,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": 64.1,
+        "cwe_bench_aa": 60.8,
+        "deepsec_bench_aa": 36.7,
+        "cybergym_e2e_aa": 94.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-27",
@@ -91039,7 +91980,7 @@
         "knowledge_index": "2026-10-27",
         "vision_index": "2026-10-27",
         "trust_index": "2026-10-27",
-        "security_index": null,
+        "security_index": "2026-10-27",
         "aa_intelligence_index": "2026-10-24",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -91105,7 +92046,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "2026-10-27",
+        "cwe_bench_aa": "2026-10-27",
+        "deepsec_bench_aa": "2026-10-27",
+        "cybergym_e2e_aa": "2026-10-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -91114,7 +92059,7 @@
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": "https://github.com/dgrieser/ai-bench#vision-index",
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
+        "security_index": "https://github.com/dgrieser/ai-bench#security-index",
         "aa_intelligence_index": "https://artificialanalysis.ai/models/kimi-k3-1-pro",
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -91180,7 +92125,11 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+        "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -91237,6 +92186,34 @@
             "date": "2026-10-24",
             "score": 1680,
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
+          }
+        ],
+        "aa_cyber_index": [
+          {
+            "date": "2026-10-27",
+            "score": 64.1,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cwe_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 60.8,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "deepsec_bench_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 36.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+          }
+        ],
+        "cybergym_e2e_aa": [
+          {
+            "date": "2026-10-27",
+            "score": 94.7,
+            "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
           }
         ],
         "aa_omniscience": [
@@ -91345,7 +92322,20 @@
           ],
           "of": 4,
           "share": 0.872
+        },
+        "security_index": {
+          "measured": [
+            "cwe_bench_aa",
+            "deepsec_bench_aa"
+          ],
+          "of": 7,
+          "share": 0.185
         }
+      },
+      "scores_refusal": {
+        "cwe_bench_aa": 0.0,
+        "deepsec_bench_aa": 0.0,
+        "cybergym_e2e_aa": 0.0
       }
     },
     {
@@ -92054,7 +93044,7 @@
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
-        "security_index": 66378,
+        "security_index": 66411,
         "aa_intelligence_index": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
@@ -92286,8 +93276,8 @@
           "measured": [
             "exploitgym"
           ],
-          "of": 5,
-          "share": 0.267
+          "of": 7,
+          "share": 0.217
         }
       }
     },
