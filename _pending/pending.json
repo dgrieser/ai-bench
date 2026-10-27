@@ -1,73 +1,12 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra-medium",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra-non-reasoning' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra-non-reasoning",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-26 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-1-terra-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-1-terra-xhigh",
-      "universe": null
-    },
-    {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-1-terra",
+          "reason": "exact to gpt 6.1 terra, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gpt-6-1-sol",
@@ -86,11 +25,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
@@ -141,37 +75,9 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "claude-opus-5-5",
-          "reason": "exact to Claude Opus 5.5, exact match"
+          "option": "gpt-6-1-terra",
+          "reason": "exact to GPT-6.1 Terra, exact match"
         },
-        {
-          "confidence": "weak",
-          "option": "claude-haiku-5-5",
-          "reason": "exact to Claude Opus 5.5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5-5",
-          "reason": "exact to Claude Opus 5.5, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to Claude Opus 5.5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map cybergym.io model 'Claude Opus 5.5' to llm.json model",
-      "route": "update_cybergym_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.cybergym.io/exploitgym/",
-      "subject": "Claude Opus 5.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [
         {
           "confidence": "weak",
           "option": "gpt-6-1-sol",
@@ -190,11 +96,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
@@ -211,80 +112,10 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "kimi-k3-1-pro",
-          "reason": "exact to Kimi K3.1 Pro, exact match"
-        },
-        {
           "confidence": "weak",
-          "option": "kimi-k3",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HLE-Diamond model 'Kimi K3.1 Pro' to llm.json model",
-      "route": "update_hle_diamond_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://lastexam.ai/blog/hle-diamond",
-      "subject": "Kimi K3.1 Pro",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "muse-spark-open",
-          "reason": "exact to Muse Spark Open, exact match"
+          "option": "gpt-6-1-terra",
+          "reason": "the same name without the vendor prefix"
         },
-        {
-          "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HLE-Diamond model 'Muse Spark Open' to llm.json model",
-      "route": "update_hle_diamond_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://lastexam.ai/blog/hle-diamond",
-      "subject": "Muse Spark Open",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'VCLab-PolyU/OmniCompass (OmniCompass-AV)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
-      "subject": "VCLab-PolyU/OmniCompass (OmniCompass-AV)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'VCLab-PolyU/OmniCompass (OmniCompass-VL)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
-      "subject": "VCLab-PolyU/OmniCompass (OmniCompass-VL)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
         {
           "confidence": "weak",
           "option": "gpt-6-1-sol",
@@ -303,11 +134,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-luna",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
@@ -325,6 +151,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "gpt-6-1-terra",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.1-terra-pro, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "gpt-6-1-sol",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
@@ -341,11 +172,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-luna",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
@@ -362,6 +188,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-1-terra",
+          "reason": "exact to gpt-6.1-terra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-1-sol",
           "reason": "exact to gpt-6.1-terra, most components match"
@@ -379,11 +210,6 @@
         {
           "confidence": "weak",
           "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
