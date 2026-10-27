@@ -297,6 +297,16 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "scicode": (("scicode",), to_percent),
     "hle": (("hle",), to_percent),
     "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # Read off the Cyber Index's evaluation page (artificialanalysis.CYBER_INDEX_URL),
+    # the only place AA publishes it; 0-100, so it passes through unscaled.
+    "aa_cyber_index": (("cyber_index",), to_index),
+}
+
+# Columns AA publishes on an evaluation page and on no model page. Their scores
+# are credited to that page, the one a reader can check them on, rather than to
+# the model page the rest of the record came from.
+AA_EVAL_PAGE_SOURCES: dict[str, str] = {
+    "aa_cyber_index": canonical(artificialanalysis.CYBER_INDEX_URL),
 }
 
 # Per-score source pages live in _precedence.py, next to the rank each source
@@ -1317,7 +1327,7 @@ def update_scores(
                     updated += drop_other_variant_score(model, slug, llm_key, read_pages, changes)
                 continue
             origin_slug = origins.get(aa_key_used) or aa_model.get("slug")
-            url = aa_model_page_url(origin_slug)
+            url = AA_EVAL_PAGE_SOURCES.get(llm_key) or aa_model_page_url(origin_slug)
             updated += apply_score(
                 doc, model, slug, llm_key, new_value, url, changes,
                 fill_urls_only=fill_urls_only,
@@ -1332,7 +1342,8 @@ def update_scores(
     # back when AA-LCR and the tau benches were read off the API alone too.
     if not fill_urls_only:
         for llm_key in SCORE_MAPPINGS.keys() - delivered:
-            RUN_REPORTS.could_not_show(llm_key, all_read_pages)
+            eval_page = AA_EVAL_PAGE_SOURCES.get(llm_key)
+            RUN_REPORTS.could_not_show(llm_key, {eval_page} if eval_page else all_read_pages)
 
     return matched, updated, seen_eval_keys, changes
 

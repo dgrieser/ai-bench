@@ -23,6 +23,18 @@ from unittest import mock
 import artificialanalysis as aa
 
 
+_FETCH_EVAL_PAGE_MODELS = aa._fetch_eval_page_models
+
+
+def setUpModule() -> None:
+    # The Cyber Index lives on an evaluation page that enrichment reads once
+    # per process. No test here may reach the network for it; the ones about
+    # it patch their own page in.
+    patcher = mock.patch.object(aa, "_fetch_eval_page_models", return_value=None)
+    patcher.start()
+    unittest.addModuleCleanup(patcher.stop)
+
+
 class FakeResponse:
     def __init__(self, status_code=200, payload=None, headers=None):
         self.status_code = status_code
@@ -534,6 +546,80 @@ class TestFieldsTheFreeTierDropped(unittest.TestCase):
         metrics = aa._parse_metrics_block(page, "phi-4")
         self.assertEqual(metrics["tau2"], 0.0)
         self.assertNotIn("tau_banking", metrics)
+
+
+class TestCyberIndexEvaluationPage(unittest.TestCase):
+    # Trimmed from the evaluation page's RSC payload: the records it renders
+    # its charts from, each carrying its own AA slug.
+    PAGE = (
+        '24:["$","div",null,{"children":["$","$L29",null,{"slug":"artificial-analysis-cyber-index",'
+        '"initialModels":[{"slug":"kimi-k3","name":"Kimi K3 (Max)","release":{"slug":"kimi-k3"},'
+        '"creator":{"slug":"kimi","name":"Kimi"},"cweBench":0.533333333333333,'
+        '"cyberIndex":41.2676448723918,"deepsecBench":0.124543341082697,"cybergymE2e":0.58},'
+        '{"slug":"glm-5-3","name":"GLM-5.3 (Max)","cyberIndex":36.3757005819883},'
+        '{"slug":"unrun","name":"Unrun","cyberIndex":null},'
+        '{"slug":"step-5","release":{"slug":"step-5-preview"},"cyberIndex":"$undefined"}]}]}]'
+    )
+
+    def test_each_model_is_keyed_by_its_own_slug(self) -> None:
+        by_slug = aa._parse_eval_page_models(self.PAGE, aa._CYBER_INDEX_FIELDS)
+        self.assertEqual(set(by_slug), {"kimi-k3", "glm-5-3"})
+        self.assertAlmostEqual(by_slug["kimi-k3"]["cyber_index"], 41.2676448723918)
+        # The creator's slug sits inside the record; it must not become a key.
+        self.assertNotIn("kimi", by_slug)
+
+    def test_a_model_without_a_number_is_left_out(self) -> None:
+        by_slug = aa._parse_eval_page_models(self.PAGE, aa._CYBER_INDEX_FIELDS)
+        self.assertNotIn("unrun", by_slug)
+        self.assertNotIn("step-5", by_slug)
+
+    def test_a_page_without_the_list_reads_as_nothing(self) -> None:
+        self.assertEqual(aa._parse_eval_page_models('{"slug":"kimi-k3","cyberIndex":41}', aa._CYBER_INDEX_FIELDS), {})
+        self.assertEqual(aa._parse_eval_page_models('"initialModels":[{"slug"', aa._CYBER_INDEX_FIELDS), {})
+
+    def test_a_page_that_failed_to_load_is_told_apart_from_an_empty_one(self) -> None:
+        # None, so update.py can see the column went unread rather than
+        # empty; and a failure is cached too, so the page is tried once a run.
+        for text in (None, "<html>no list</html>"):
+            with self.subTest(text=text), mock.patch.dict(aa._EVAL_PAGE_CACHE, clear=True), \
+                    mock.patch.object(aa, "_fetch_rsc_text", return_value=text) as fetch:
+                self.assertIsNone(_FETCH_EVAL_PAGE_MODELS(aa.CYBER_INDEX_URL, aa._CYBER_INDEX_FIELDS))
+                self.assertIsNone(_FETCH_EVAL_PAGE_MODELS(aa.CYBER_INDEX_URL, aa._CYBER_INDEX_FIELDS))
+                self.assertEqual(fetch.call_count, 1)
+        with mock.patch.dict(aa._EVAL_PAGE_CACHE, clear=True), \
+                mock.patch.object(aa, "_fetch_rsc_text", return_value=self.PAGE):
+            self.assertIn("kimi-k3", _FETCH_EVAL_PAGE_MODELS(aa.CYBER_INDEX_URL, aa._CYBER_INDEX_FIELDS))
+
+    def enrich(self, model: dict) -> dict:
+        by_slug = aa._parse_eval_page_models(self.PAGE, aa._CYBER_INDEX_FIELDS)
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value={"page_read": True}), \
+                mock.patch.object(aa, "_fetch_eval_page_models", return_value=by_slug):
+            aa._enrich_structured_metrics([model])
+        return model["evaluations"]
+
+    def test_it_reaches_the_key_update_reads(self) -> None:
+        import update
+
+        evals = self.enrich({"slug": "glm-5-3"})
+        (aa_key,), _transform = update.SCORE_MAPPINGS["aa_cyber_index"]
+        self.assertAlmostEqual(evals[aa_key], 36.3757005819883)
+
+    def test_a_model_the_page_does_not_list_gets_none(self) -> None:
+        self.assertIsNone(self.enrich({"slug": "claude-opus-5"})["cyber_index"])
+
+    def test_an_api_value_is_not_displaced(self) -> None:
+        self.assertEqual(self.enrich({"slug": "glm-5-3", "evaluations": {"cyber_index": 40.0}})["cyber_index"], 40.0)
+
+    def test_the_score_is_credited_to_the_evaluation_page(self) -> None:
+        import update
+
+        doc = {"benchmarks": {}, "models": [{"name": "m", "scores": {}, "scores_updated": {}, "scores_source": {}}]}
+        record = {"slug": "glm-5-3", "name": "GLM-5.3", "evaluations": {"cyber_index": 36.3757005819883}}
+        update.update_scores(doc, {"m": update.merge_aa_models([record])})
+        model = doc["models"][0]
+        self.assertEqual(model["scores"]["aa_cyber_index"], 36.4)
+        self.assertEqual(model["scores_source"]["aa_cyber_index"], update.AA_EVAL_PAGE_SOURCES["aa_cyber_index"])
+        self.assertEqual(update.source_rank(model["scores_source"]["aa_cyber_index"]), update.RANK_AA)
 
 
 # The October 2026 page layout: no "currentModel" wrapper. The slug first

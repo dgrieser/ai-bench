@@ -1083,6 +1083,25 @@
         "https://openai.com/index/browsecomp/"
       ]
     },
+    "aa_cyber_index": {
+      "name": "AA Cyber Index",
+      "short_name": "AA Cyber",
+      "category": "Cybersecurity",
+      "description": "Artificial Analysis' composite of three cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (identifying the weakness class of vulnerable code), DeepSec-AA (finding vulnerabilities in code review, scored by F2) and CyberGym-E2E-AA (reproducing and then patching real OSS-Fuzz vulnerabilities end to end). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the offensive tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
+      "settings": [
+        "index scale",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the three component scores and their refusal rates",
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+      ]
+    },
     "cybergym": {
       "name": "CyberGym",
       "short_name": "CyberGym",
