@@ -1748,12 +1748,16 @@ that stands on its own in the cell:
 elsewhere is ruled out card by card.** `huggingface-benchmark-name-mapping.json`
 says what a label means everywhere it appears, but the variant that disqualifies
 a number is sometimes stated only in a footnote the table marks with a bare
-superscript (`BrowseComp 6` on the Nex-N2.5 card, footnote 6: "Summary
-context-compaction"), in prose under the table (K2-Horizon-7B's
+superscript (`BrowseComp<sup>6</sup>` on the Nex-N2.5 card, footnote 6:
+"Summary context-compaction"), in prose under the table (K2-Horizon-7B's
 "Discard-all@95k" BrowseComp), or in a tech report (DeepSeek-V4.1-Flash's
 "Agents' Last Exam" is the ALE-CLI tier). Those are listed per repo in
 `huggingface-card-exclusions.json`, each with the sentence that rules it out,
-and `update.fetch_huggingface_data` skips them for that card alone. The ingest
+and `update.fetch_huggingface_data` skips them for that card alone. The
+superscript itself is not part of the label: `clean_cell` drops a `<sup>`
+holding only reference marks at the end of a cell, so the card reads
+`BrowseComp` rather than `BrowseComp 6`, and a footnote number never mints a
+label of its own that the global mapping would then decide for every card. The ingest
 is fill-only, so a wrong cell cleared by hand would otherwise come straight
 back on the next refresh. `test_source_collisions.py` checks that every repo
 named there is one the index reads, since a misspelled repo rules nothing out.
