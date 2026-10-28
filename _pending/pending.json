@@ -377,6 +377,34 @@
       "universe": "models"
     },
     {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam",
+          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'google/physical-engineerings-last-exam (overall-score)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/openai/gpt-oss-120b",
+      "subject": "google/physical-engineerings-last-exam (overall-score)",
+      "universe": "benchmarks"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
