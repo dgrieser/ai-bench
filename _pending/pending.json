@@ -1,17 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-28 - Google",
-      "question": "Carry newly released closed model 'gemini-4-carbon' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-carbon",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
@@ -32,6 +21,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 carbon, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gemini-4-argon",
           "reason": "exact to gemini 4 carbon, most components match"
@@ -49,6 +43,323 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "weak",
+          "option": "command-a-plus",
+          "reason": "the same name without its first 1 word(s): exact to command-a, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 2 word(s): exact to a, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-2",
+          "reason": "the same name without its first 2 word(s): exact to a, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "g9v3-39a5b",
+          "reason": "the same name without its first 2 word(s): exact to a, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-1b",
+          "reason": "the same name without its first 2 word(s): exact to a, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Cohere Command A' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Cohere Command A",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Carbon, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Gemini 4 Carbon' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Gemini 4 Carbon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemma-3-270m",
+          "reason": "exact to Gemma 3 270M, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-1b",
+          "reason": "exact to Gemma 3 270M, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-4b",
+          "reason": "exact to Gemma 3 270M, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-12b",
+          "reason": "exact to Gemma 3 270M, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-27b",
+          "reason": "exact to Gemma 3 270M, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Gemma 3 270M' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Gemma 3 270M",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to Kimi K3.1 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Kimi K3.1 Pro' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Kimi K3.1 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-70b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hermes-4-llama-3-1-405b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-27b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemma-3-270m",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v3-2-0925",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Llama 3.2 11B' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Llama 3.2 11B",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen3-5-0-8b",
+          "reason": "exact to Qwen3.5-0.8B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen3.5-0.8B' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen3.5-0.8B",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen3-5-2b",
+          "reason": "exact to Qwen3.5-2B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "exact to Qwen3.5-2B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "exact to Qwen3.5-2B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "exact to Qwen3.5-2B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-0-8b",
+          "reason": "exact to Qwen3.5-2B, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen3.5-2B' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen3.5-2B",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen3-5-4b",
+          "reason": "exact to Qwen3.5-4B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "exact to Qwen3.5-4B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "exact to Qwen3.5-4B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "exact to Qwen3.5-4B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-4b-instruct",
+          "reason": "exact to Qwen3.5-4B, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen3.5-4B' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen3.5-4B",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "reka-flash-3",
+          "reason": "exact to Reka Flash 3, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash-3, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash-3, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash-3, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash-3, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Reka Flash 3' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Reka Flash 3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Carbon, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
@@ -79,6 +390,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini-4-carbon, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
