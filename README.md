@@ -2922,6 +2922,71 @@ right is now an empirical question with an answer on this page rather than a pol
 baked into the arithmetic, and the answer moves when the data does — which is why
 it is re-measured every night.
 
+### Calibrated on the head of the field
+
+Since 2026-10-28 the ratio is measured on the **head** of the ranked field: the
+top 15% of the models an index ranks, by fitted ability, and never fewer than 12
+(`CALIBRATION_TOP_FRACTION`, `CALIBRATION_TOP_MIN`). Both halves of the ratio are
+read from that group: the held-out gaps are only those of head models, and the
+between-model variance they are divided by is the spread among them.
+
+**Why.** The ratio is a disagreement divided by a spread, and across a whole field
+the spread is dominated by the distance from the frontier to small open models. On
+the coding group that is 3.14 log-odds sd across the 83 ranked models against 0.94
+among the top 12. Measured on everyone, the ratio said a model on 42% of the weight
+should keep 97% of its distance from the middle. That is right for telling a
+frontier model from a 4B one, but at the top, where models are tenths of a log-odds
+apart, the same coverage error is as large as the spread itself. `muse-wonder-full`
+showed it: top-two on most of the seven coding boards it was run on, and none of
+the three heaviest (Real-SWE, FrontierSWE, FrontierCode Extended), it ranked
+**second** on Coding at 97,054, 38 points under `claude-opus-5-5`, which is
+measured on 78% of the weight. Calibrated on the head, it keeps 72% and ranks fifth.
+
+**Why 15%, at least 12.** Measured on the coding group:
+
+| Calibrated on | Models | sd between them | Ratio | `muse-wonder-full` | Spearman vs. whole field |
+| --- | --- | --- | --- | --- | --- |
+| whole field | 83 | 3.14 | 0.011 | #2 | 1.000 |
+| top 50% | 42 | 1.90 | 0.035 | #2 | 1.000 |
+| top 33% | 27 | 1.46 | 0.070 | #2 | 0.998 |
+| top 25% | 21 | 1.35 | 0.085 | #2 | 0.998 |
+| **top 15%** | **12** | **0.94** | **0.160** | **#5** | **0.996** |
+| top 10% | 8 | 0.74 | 0.286 | #5 | 0.994 |
+
+25% and wider still reach into the mid-field and barely move the ratio. 15% is the
+head a reader looks at, about the top ten plus a margin. Below 12 models a variance
+is too noisy to re-measure every night. The rest of the table hardly moves (0.996).
+What does change is that thinly covered mid-field models are pulled harder toward
+the middle too, for example `minimax-m3-1-flash` 26 → 35 on Coding.
+
+**What it does not fix.** The shrinkage still targets the middle of the whole field,
+and a ratio cannot see *which* benchmarks are missing. A model whose missing boards
+are the ones it would lose on is missing them by selection, not at random, and
+leave-one-out calibration only measures random absence.
+
+**Trust is calibrated on the whole field** (`head_calibrated=False`). Its top ten
+are measured on 87% of the weight or more, because the anchor is carried by every
+model it ranks, so thin coverage reorders nobody there. On the head its ratio reads
+7.97 against 1.17. That changes no rank (Spearman 1.000) and only squeezes the column
+from 16.6k–80.5k to 39.6k–58.8k, which would cut Trust's say in the
+[OpenBench index](#openbench-index) by about two thirds through a calibration
+setting rather than a weight.
+
+Effect of the change, by index:
+
+| Index | Ratio before → after | Spearman vs. before | Notable |
+| --- | --- | --- | --- |
+| Coding | 0.011 → 0.160 | 0.996 | `muse-wonder-full` 2 → 5; `minimax-m3-1-flash` 26 → 35 |
+| Tooling | 0.016 → 0.304 | 0.994 | `claude-fable-5-1` 8 → 3; `nex-n2-5-max` 16 → 36 |
+| Knowledge | 0.045 → 0.152 | 1.000 | top ten unchanged |
+| Vision | 0.022 → 0.071 | 0.999 | top ten unchanged |
+| Security | 0.121 → 0.109 | 1.000 | `mimo-v2-6-pro` 7 → 8 |
+| Trust | unchanged (whole field) | — | — |
+
+The table further up, of what a model on 18% of the group keeps, shows the ratios
+when the nightly run was introduced, not today's: `index-calibration.json` has the
+current ones.
+
 ## Tooling Index
 
 The second derived column, **Tooling**, is the Coding index's sibling for agentic

@@ -533,6 +533,54 @@ class TestCalibrationIsHeldOut(unittest.TestCase):
         )
 
 
+class TestCalibrationHead(unittest.TestCase):
+    """`--calibrate` measures the head of the ranked field, not all of it: the
+    top CALIBRATION_TOP_FRACTION by ability, never fewer than
+    CALIBRATION_TOP_MIN, and only models the index would rank."""
+
+    SPEC = index(("p", 1.0), ("q", 1.0), ("r", 1.0))
+
+    def field(self, size: int) -> list[dict]:
+        # Model m00 is best everywhere, the rest in order below it, with a
+        # wobble on q so no benchmark is a clean sweep.
+        return [
+            model(
+                f"m{i:02d}",
+                p=100.0 - i,
+                q=100.0 - i + (3.0 if i % 2 else -3.0),
+                r=100.0 - i,
+            )
+            for i in range(size)
+        ]
+
+    def head(self, models: list[dict]) -> set[str]:
+        record = di.comparisons(models, DOC, self.SPEC)
+        return di.calibration_head(models, record, di.bradley_terry(record))
+
+    def test_the_floor_holds_on_a_small_field(self) -> None:
+        models = self.field(30)
+        self.assertEqual(
+            self.head(models), {f"m{i:02d}" for i in range(di.CALIBRATION_TOP_MIN)}
+        )
+
+    def test_the_fraction_takes_over_on_a_large_field(self) -> None:
+        models = self.field(120)
+        size = round(di.CALIBRATION_TOP_FRACTION * 120)
+        self.assertGreater(size, di.CALIBRATION_TOP_MIN)
+        self.assertEqual(self.head(models), {f"m{i:02d}" for i in range(size)})
+
+    def test_a_model_too_thin_to_rank_is_not_in_the_head(self) -> None:
+        # Best on the one benchmark it ran, but a third of the weight is under
+        # no bar here -- so lift the bar above it, as compute_index would.
+        models = [*self.field(30), model("thin", p=200.0)]
+        original = di.MIN_SCORED_FRACTION
+        di.MIN_SCORED_FRACTION = 0.5
+        try:
+            self.assertNotIn("thin", self.head(models))
+        finally:
+            di.MIN_SCORED_FRACTION = original
+
+
 class TestTieTolerance(unittest.TestCase):
     """Scores one step of the column's rounding grid apart split the comparison;
     the stored precision does not get to decide it."""

@@ -151,12 +151,19 @@ class IndexDef(NamedTuple):
     rather than chosen: ./derive_indexes.py --calibrate -w re-derives it into
     CALIBRATION_JSON, which a nightly workflow does, and INDEXES picks the
     stored value up at import. 0.0 means never calibrated and shrinks nobody.
+
+    `head_calibrated` says which field that ratio is measured on: the head of
+    the ranked field (see CALIBRATION_TOP_FRACTION) when True, all of it when
+    False. The head is what a thinly covered model can reorder, so it is the
+    default; an index whose top is measured almost in full has nothing there
+    for it to protect.
     """
 
     key: str
     fallback_source_url: str
     contributing: list[tuple[str, float]]
     transfer_ratio: float = 0.0
+    head_calibrated: bool = True
 
 
 # The derived columns this script fills, in the order their score keys are
@@ -516,6 +523,14 @@ INDEXES: list[IndexDef] = [
             # whose whole subject is trustworthiness -- see README, "What the
             # Trust index leaves out".
         ],
+        # Calibrated on the whole field, not the head. Its top ten are measured
+        # on 87% of the weight or more -- the anchor is carried by every model
+        # it ranks -- so thin coverage reorders nobody there; measured on the
+        # head the ratio reads 7.97 against 1.17, which changes no rank
+        # (Spearman 1.000) and only squeezes the column from 16.6k-80.5k to
+        # 39.6k-58.8k, cutting Trust's say in the OpenBench index by two
+        # thirds. See README, "Calibrated on the head of the field".
+        head_calibrated=False,
     ),
     IndexDef(
         key="security_index",
@@ -904,6 +919,22 @@ _SCALE_SEARCH_STEPS = 60
 # with. 0.30 keeps a few hundred comparisons per index, which is enough for a
 # variance and strict enough to keep two-benchmark models out of it.
 CALIBRATION_MIN_COVERAGE = 0.30
+
+# Calibration only (--calibrate). The ratio is measured on the head of the
+# ranked field -- the top CALIBRATION_TOP_FRACTION by fitted ability, never
+# fewer than CALIBRATION_TOP_MIN -- and not on all of it. Its denominator is
+# the variance between models, and across a whole field that runs from the
+# frontier down to small open models it is several times what separates the
+# models contending for the top: on the coding group 3.14 log-odds sd against
+# 0.94 among the top 12. Measured on everyone, a gap of half a log-odds reads
+# as negligible, and a model measured on 42% of the weight kept 97% of its
+# distance from the middle -- enough to rank second on the boards it chose.
+# Measured on the head, the same coverage keeps 72%. 15% is the head a reader
+# reads, about the top ten with a margin; 25% and wider still reach into the
+# mid-field and barely move the ratio, and below 12 models a variance swings
+# night to night. See README, "Calibrated on the head of the field".
+CALIBRATION_TOP_FRACTION = 0.15
+CALIBRATION_TOP_MIN = 12
 
 # The bisection's range, in log-odds. Wide enough that no real model reaches
 # it: touching it means a clean sweep, which no finite ability explains.
@@ -1560,7 +1591,10 @@ def calibrate(
 
     Only models already measured on a decent share of the remaining benchmarks
     are asked, because the question is whether a benchmark agrees with a
-    trustworthy estimate, not whether two thin estimates agree.
+    trustworthy estimate, not whether two thin estimates agree. And only the
+    head of the ranked field is asked, with the spread between models read
+    from the same head (see CALIBRATION_TOP_FRACTION), because the ranking a
+    thinly covered model can distort is the one at the top.
 
     Returns (ratio, sample size), or None when the index is too small to hold a
     benchmark out.
@@ -1574,10 +1608,23 @@ def calibrate(
     ability = bradley_terry(full)
     if len(ability) < 2:
         return None
-    centre = sum(ability.values()) / len(ability)
+
+    # The head of the ranked field: ranked by the same coverage bar
+    # compute_index applies, then cut to the top by fitted ability. Both halves
+    # of the ratio are read from it -- the spread between these models, and
+    # the gaps these models' held-out benchmarks show -- so the ratio says how
+    # far coverage error reaches against the differences that order the top.
+    head = (
+        calibration_head(models, full, ability, factors)
+        if index.head_calibrated
+        else set(ability)
+    )
+    if len(head) < 2:
+        return None
+    centre = sum(ability[name] for name in head) / len(head)
     between_models = sum(
-        (value - centre) ** 2 for value in ability.values()
-    ) / len(ability)
+        (ability[name] - centre) ** 2 for name in head
+    ) / len(head)
     if between_models <= 0:
         return None
 
@@ -1621,6 +1668,8 @@ def calibrate(
             name = model.get("name")
             if not isinstance(name, str) or name not in without:
                 continue
+            if name not in head:
+                continue
             covered = sum(
                 weight
                 for key, weight in record.weight.items()
@@ -1644,6 +1693,36 @@ def calibrate(
         weight * (gap - mean) ** 2 for weight, gap in gaps
     ) / len(gaps)
     return between_benchmarks / between_models, len(gaps)
+
+
+def calibration_head(
+    models: list[dict[str, Any]],
+    record: Comparisons,
+    ability: dict[str, float],
+    factors: dict[str, RevisionFactor] | None = None,
+) -> set[str]:
+    """The models calibrate() measures on: the ranked field -- those clearing
+    MIN_SCORED_FRACTION, as in compute_index -- cut to its top
+    CALIBRATION_TOP_FRACTION by fitted ability, and never to fewer than
+    CALIBRATION_TOP_MIN (or the whole ranked field, when that is smaller)."""
+    total_weight = sum(record.weight.values())
+    if total_weight <= 0:
+        return set()
+    ranked = []
+    for model in models:
+        name = model.get("name")
+        if not isinstance(name, str) or name not in ability:
+            continue
+        covered = sum(
+            weight
+            for key, weight in record.weight.items()
+            if math.isfinite(index_score(model, key, factors))
+        )
+        if covered > 0 and covered >= MIN_SCORED_FRACTION * total_weight:
+            ranked.append(name)
+    ranked.sort(key=lambda name: (-ability[name], name))
+    size = max(CALIBRATION_TOP_MIN, round(CALIBRATION_TOP_FRACTION * len(ranked)))
+    return set(ranked[:size])
 
 
 def scored_count(
