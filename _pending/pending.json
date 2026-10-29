@@ -15,12 +15,238 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
+      "note": "released 2026-10-29 - Mistral - https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+      "question": "Add newly released model 'mistral-large-4-medium' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+      "subject": "mistral-large-4-medium",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mistral-large-4",
+          "reason": "exact to mistral large 4, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "exact to mistral large 4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "exact to mistral large 4, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'particle-ai/particle-1' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map Coding Agent Index model 'mistral large 4' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/particle-ai/particle-1",
-      "subject": "particle-ai/particle-1",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "mistral large 4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini-4-carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini-4-carbon, most components match"
+        }
+      ],
+      "default": "gemini-4-carbon",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gemini-4-carbon'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/gemini-4-carbon",
+      "subject": "gemini-4-carbon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "k2-horizon-3-7b",
+          "reason": "exact to k2-horizon-3.7b, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-7b",
+          "reason": "exact to k2-horizon-3.7b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-0-9b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-mova-36b-a4b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "k2-horizon-3-7b",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'k2-horizon-3.7b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/k2-horizon-3.7b",
+      "subject": "k2-horizon-3.7b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "exact to k2-horizon-375b-a23b, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-7b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-0-9b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-3-7b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-mova-36b-a4b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "k2-horizon-375b-a23b",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'k2-horizon-375b-a23b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/k2-horizon-375b-a23b",
+      "subject": "k2-horizon-375b-a23b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "k2-horizon-7b",
+          "reason": "exact to k2-horizon-7b, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-3-7b",
+          "reason": "exact to k2-horizon-7b, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-0-9b",
+          "reason": "exact to k2-horizon-7b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "exact to k2-horizon-7b, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-mova-36b-a4b",
+          "reason": "exact to k2-horizon-7b, most components match"
+        }
+      ],
+      "default": "k2-horizon-7b",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'k2-horizon-7b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/k2-horizon-7b",
+      "subject": "k2-horizon-7b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to kimi-k3.1-pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "kimi-k3-1-pro",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'kimi-k3.1-pro'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/kimi-k3.1-pro",
+      "subject": "kimi-k3.1-pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mistral-large-4",
+          "reason": "exact to mistral-large-4-oss, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-large-3",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-small-4",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-oss-20b",
+          "reason": "the same name without its first 3 word(s): exact to oss, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-oss-120b",
+          "reason": "the same name without its first 3 word(s): exact to oss, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'mistralai/mistral-large-4-oss' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "mistralai/mistral-large-4-oss",
       "universe": "models"
     }
   ]
