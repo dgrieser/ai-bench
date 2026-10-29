@@ -4,6 +4,17 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
+      "note": "released 2026-10-06 - Mistral",
+      "question": "Carry newly released closed model 'mistral-large-4-preview' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "mistral-large-4-preview",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
       "note": null,
       "question": "Map OpenRouter model 'particle-ai/particle-1' to llm.json model",
       "route": "update_openrouter_mapping.py",
