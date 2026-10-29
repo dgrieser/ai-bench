@@ -10,39 +10,6 @@
       "route_kind": "new-closed-model",
       "subject": "mistral-large-4-preview",
       "universe": null
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mistral-large-4",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mistral-large-4-medium",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mistral-large-3",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mistral-small-4",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "default": "mistral-large-4-medium",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'mistralai/Mistral-Large-4-1T-A52B' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/mistralai/Mistral-Large-4-1T-A52B/",
-      "subject": "mistralai/Mistral-Large-4-1T-A52B",
-      "universe": "models"
     }
   ]
 }
