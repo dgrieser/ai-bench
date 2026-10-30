@@ -577,11 +577,30 @@
         "https://www.frontierswe.com"
       ]
     },
+    "frontiercode_2_0": {
+      "name": "FrontierCode 2.0",
+      "short_name": "FCo 2.0",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. One board; not comparable with 1.x.",
+      "settings": [
+        "would-be-merged score",
+        "132 tasks",
+        "internet allowed",
+        "best effort"
+      ],
+      "excludes": [
+        "FrontierCode 1.1 Main and Extended",
+        "FrontierCode 1.0"
+      ],
+      "urls": [
+        "https://cognition.com/frontiercode"
+      ]
+    },
     "frontiercode_1_1": {
       "name": "FrontierCode 1.1",
       "short_name": "FCo 1.1",
       "category": "Software Engineering",
-      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 is the current re-run and covers only the models Cognition re-ran; its scores are not comparable with 1.0's. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 re-ran a subset of 1.0's models and was superseded by 2.0 on 2026-10-27; its scores are comparable with neither. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
       "settings": [
         "would-be-merged score",
         "Main board, 100 tasks",
@@ -589,7 +608,8 @@
       ],
       "excludes": [
         "the Extended board, which reads about 13 points higher off the same runs",
-        "FrontierCode 1.0"
+        "FrontierCode 1.0",
+        "FrontierCode 2.0"
       ],
       "urls": [
         "https://cognition.com/frontiercode",
@@ -609,7 +629,8 @@
       ],
       "excludes": [
         "the Main board, the 100 hardest of the same tasks",
-        "1.0's Extended board"
+        "1.0's Extended board",
+        "FrontierCode 2.0"
       ],
       "urls": [
         "https://cognition.com/frontiercode",
@@ -2139,8 +2160,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29212,
-        "coding_index": 17199,
+        "openbench_index": 29213,
+        "coding_index": 17200,
         "tooling_index": 31463,
         "knowledge_index": 22180,
         "vision_index": null,
@@ -2657,7 +2678,7 @@
       },
       "scores": {
         "openbench_index": 25933,
-        "coding_index": 16426,
+        "coding_index": 16427,
         "tooling_index": 30459,
         "knowledge_index": 16256,
         "vision_index": 10898,
@@ -4048,7 +4069,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 26802,
+        "coding_index": 26808,
         "tooling_index": null,
         "knowledge_index": 51197,
         "vision_index": null,
@@ -5003,8 +5024,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 26415,
-        "coding_index": 18388,
+        "openbench_index": 26416,
+        "coding_index": 18390,
         "tooling_index": 26290,
         "knowledge_index": 28996,
         "vision_index": null,
@@ -6516,8 +6537,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44776,
-        "coding_index": 28781,
+        "openbench_index": 44777,
+        "coding_index": 28786,
         "tooling_index": 44010,
         "knowledge_index": 63709,
         "vision_index": 61251,
@@ -10892,8 +10913,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 35193,
-        "coding_index": 17578,
+        "openbench_index": 35194,
+        "coding_index": 17580,
         "tooling_index": 30766,
         "knowledge_index": 54688,
         "vision_index": null,
@@ -11931,8 +11952,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 27317,
-        "coding_index": 19796,
+        "openbench_index": 27318,
+        "coding_index": 19798,
         "tooling_index": 23474,
         "knowledge_index": 35382,
         "vision_index": null,
@@ -12470,8 +12491,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 32588,
-        "coding_index": 19907,
+        "openbench_index": 32589,
+        "coding_index": 19909,
         "tooling_index": 27165,
         "knowledge_index": 47799,
         "vision_index": null,
@@ -13603,8 +13624,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 32305,
-        "coding_index": 17545,
+        "openbench_index": 32306,
+        "coding_index": 17547,
         "tooling_index": 24828,
         "knowledge_index": 44087,
         "vision_index": 24661,
@@ -14162,8 +14183,8 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 46672,
-        "coding_index": 27802,
+        "openbench_index": 46673,
+        "coding_index": 27806,
         "tooling_index": 40909,
         "knowledge_index": 65763,
         "vision_index": null,
@@ -16045,8 +16066,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 40358,
-        "coding_index": 24657,
+        "openbench_index": 40359,
+        "coding_index": 24661,
         "tooling_index": 41432,
         "knowledge_index": 53254,
         "vision_index": 42698,
@@ -18127,8 +18148,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 40307,
-        "coding_index": 21379,
+        "openbench_index": 40308,
+        "coding_index": 21382,
         "tooling_index": 38858,
         "knowledge_index": 55690,
         "vision_index": 48728,
@@ -18737,8 +18758,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44777,
-        "coding_index": 26404,
+        "openbench_index": 44778,
+        "coding_index": 26408,
         "tooling_index": 44656,
         "knowledge_index": 60052,
         "vision_index": 47807,
@@ -19331,8 +19352,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 64364,
-        "coding_index": 59699,
+        "openbench_index": 64378,
+        "coding_index": 59747,
         "tooling_index": 73063,
         "knowledge_index": 76691,
         "vision_index": null,
@@ -20154,8 +20175,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 52459,
-        "coding_index": 35302,
+        "openbench_index": 52461,
+        "coding_index": 35308,
         "tooling_index": 59922,
         "knowledge_index": 63191,
         "vision_index": null,
@@ -22038,8 +22059,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37668,
-        "coding_index": 21154,
+        "openbench_index": 37669,
+        "coding_index": 21157,
         "tooling_index": 40878,
         "knowledge_index": 39075,
         "vision_index": 29895,
@@ -25471,8 +25492,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 36264,
-        "coding_index": 26734,
+        "openbench_index": 36265,
+        "coding_index": 26737,
         "tooling_index": 33986,
         "knowledge_index": 41565,
         "vision_index": null,
@@ -25983,8 +26004,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 67802,
-        "coding_index": 53449,
+        "openbench_index": 67813,
+        "coding_index": 53486,
         "tooling_index": 72415,
         "knowledge_index": 84858,
         "vision_index": null,
@@ -26843,8 +26864,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 58277,
-        "coding_index": 48253,
+        "openbench_index": 58285,
+        "coding_index": 48279,
         "tooling_index": 62322,
         "knowledge_index": 74808,
         "vision_index": 70147,
@@ -28973,7 +28994,7 @@
       "context": "1m",
       "scores": {
         "openbench_index": 24162,
-        "coding_index": 14340,
+        "coding_index": 14342,
         "tooling_index": 14616,
         "knowledge_index": 26623,
         "vision_index": 20630,
@@ -36283,8 +36304,8 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 35603,
-        "coding_index": 20343,
+        "openbench_index": 35604,
+        "coding_index": 20346,
         "tooling_index": 39328,
         "knowledge_index": 48426,
         "vision_index": null,
@@ -46900,7 +46921,7 @@
       "context": "256k",
       "scores": {
         "openbench_index": 27948,
-        "coding_index": 15736,
+        "coding_index": 15738,
         "tooling_index": 25323,
         "knowledge_index": 27871,
         "vision_index": 23206,
@@ -51608,7 +51629,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 17644,
+        "coding_index": 17646,
         "tooling_index": 36490,
         "knowledge_index": null,
         "vision_index": null,
@@ -51975,7 +51996,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 36452,
+        "coding_index": 36463,
         "tooling_index": 46581,
         "knowledge_index": null,
         "vision_index": null,
@@ -52342,7 +52363,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 51207,
+        "coding_index": 51237,
         "tooling_index": 54706,
         "knowledge_index": null,
         "vision_index": null,
@@ -52708,8 +52729,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 51579,
-        "coding_index": 33113,
+        "openbench_index": 51568,
+        "coding_index": 33079,
         "tooling_index": 46215,
         "knowledge_index": 73925,
         "vision_index": null,
@@ -52986,6 +53007,13 @@
             "date": "2026-08-23",
             "score": 67.7,
             "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 4.8,
+            "source": "https://realswe.withspecific.com"
           }
         ],
         "frontiercode_1_1": [
@@ -53277,13 +53305,6 @@
             "score": 85.8,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 4.8,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "vram": {
@@ -53303,6 +53324,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
             "terminal_bench_2_1",
@@ -53835,8 +53857,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 54548,
-        "coding_index": 37538,
+        "openbench_index": 54566,
+        "coding_index": 37596,
         "tooling_index": 56425,
         "knowledge_index": 74140,
         "vision_index": 43433,
@@ -54136,6 +54158,13 @@
             "date": "2026-10-22",
             "score": 56.9,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 8,
+            "source": "https://realswe.withspecific.com"
           }
         ],
         "frontierswe_2_0": [
@@ -54489,13 +54518,6 @@
             "score": 78.1,
             "source": "https://evals.report/benchmarks/charxiv"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 8,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -54505,6 +54527,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
@@ -54620,8 +54643,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 67292,
-        "coding_index": 63181,
+        "openbench_index": 67310,
+        "coding_index": 63239,
         "tooling_index": 75801,
         "knowledge_index": 82155,
         "vision_index": null,
@@ -55520,8 +55543,8 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 42115,
-        "coding_index": 24508,
+        "openbench_index": 42116,
+        "coding_index": 24511,
         "tooling_index": 38423,
         "knowledge_index": 62387,
         "vision_index": null,
@@ -56397,8 +56420,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 47951,
-        "coding_index": 31430,
+        "openbench_index": 47953,
+        "coding_index": 31438,
         "tooling_index": 42413,
         "knowledge_index": 70816,
         "vision_index": 52632,
@@ -57152,8 +57175,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 59112,
-        "coding_index": 42449,
+        "openbench_index": 59116,
+        "coding_index": 42461,
         "tooling_index": 58359,
         "knowledge_index": 81691,
         "vision_index": 70374,
@@ -57977,8 +58000,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 57820,
-        "coding_index": 44783,
+        "openbench_index": 57825,
+        "coding_index": 44800,
         "tooling_index": 62981,
         "knowledge_index": 73421,
         "vision_index": null,
@@ -58608,8 +58631,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 80272,
-        "coding_index": 78413,
+        "openbench_index": 80340,
+        "coding_index": 78642,
         "tooling_index": 83920,
         "knowledge_index": 89860,
         "vision_index": 85604,
@@ -58697,7 +58720,8 @@
         "arena_agent": 1.1,
         "arena_agent_tool_hallucination": 0.8,
         "real_swe_1_0": 20,
-        "real_swe_1_1": 11.2
+        "real_swe_1_1": 11.2,
+        "frontiercode_2_0": 17.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -58789,7 +58813,8 @@
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "real_swe_1_0": "2026-09-23",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -58881,7 +58906,8 @@
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
         "real_swe_1_0": "https://realswe.withspecific.com",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -58941,6 +58967,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 11.2,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 18.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 20,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-08-09",
@@ -58963,6 +59008,13 @@
             "date": "2026-09-03",
             "score": 25.9,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 17.7,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -59391,25 +59443,6 @@
             "score": 84.8,
             "source": "https://huggingface.co/moonshotai/Kimi-K3"
           }
-        ],
-        "real_swe_1_0": [
-          {
-            "date": "2026-09-14",
-            "score": 18.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 20,
-            "source": "https://realswe.withspecific.com"
-          }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 11.2,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -59419,6 +59452,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -59904,8 +59938,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 46843,
-        "coding_index": 28288,
+        "openbench_index": 46844,
+        "coding_index": 28293,
         "tooling_index": 46139,
         "knowledge_index": 66107,
         "vision_index": 56644,
@@ -60492,8 +60526,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52118,
-        "coding_index": 31285,
+        "openbench_index": 52120,
+        "coding_index": 31291,
         "tooling_index": 49055,
         "knowledge_index": 76151,
         "vision_index": 67799,
@@ -61117,8 +61151,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 54871,
-        "coding_index": 39620,
+        "openbench_index": 54873,
+        "coding_index": 39629,
         "tooling_index": 57349,
         "knowledge_index": 73172,
         "vision_index": 43708,
@@ -61198,7 +61232,8 @@
         "arena_text_non_english": 1390,
         "arena_webdev": 1409,
         "arena_agent": -17,
-        "arena_agent_tool_hallucination": -2.7
+        "arena_agent_tool_hallucination": -2.7,
+        "frontiercode_2_0": 3.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -61282,7 +61317,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -61366,7 +61402,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -61403,6 +61440,13 @@
             "date": "2026-07-30",
             "score": 55.9,
             "source": "https://huggingface.co/thinkingmachines/Inkling-Small"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 3.2,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -62187,8 +62231,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 75043,
-        "coding_index": 65392,
+        "openbench_index": 75061,
+        "coding_index": 65452,
         "tooling_index": 82576,
         "knowledge_index": 88643,
         "vision_index": 90576,
@@ -62956,8 +63000,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43433,
-        "coding_index": 25582,
+        "openbench_index": 43434,
+        "coding_index": 25585,
         "tooling_index": 42128,
         "knowledge_index": 60534,
         "vision_index": null,
@@ -64988,8 +65032,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 37390,
-        "coding_index": 21585,
+        "openbench_index": 37391,
+        "coding_index": 21587,
         "tooling_index": 35928,
         "knowledge_index": 44319,
         "vision_index": null,
@@ -65562,8 +65606,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 79644,
-        "coding_index": 76661,
+        "openbench_index": 79645,
+        "coding_index": 76664,
         "tooling_index": 88614,
         "knowledge_index": 85935,
         "vision_index": null,
@@ -65650,7 +65694,8 @@
         "arena_agent": 0.9,
         "arena_agent_tool_hallucination": 0.7,
         "real_swe_1_0": 37.5,
-        "real_swe_1_1": 26.4
+        "real_swe_1_1": 26.4,
+        "frontiercode_2_0": 17.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -65741,7 +65786,8 @@
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "real_swe_1_0": "2026-09-23",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -65832,7 +65878,8 @@
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
         "real_swe_1_0": "https://realswe.withspecific.com",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -65892,6 +65939,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 26.4,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 28.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 37.5,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-08-20",
@@ -65921,6 +65987,13 @@
             "date": "2026-09-12",
             "score": 78.1,
             "source": "https://www.frontierswe.com/v1"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 17.8,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -66354,25 +66427,6 @@
             "score": 86.8,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
-        ],
-        "real_swe_1_0": [
-          {
-            "date": "2026-09-14",
-            "score": 28.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 37.5,
-            "source": "https://realswe.withspecific.com"
-          }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 26.4,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "vram_source": {
@@ -66387,6 +66441,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -66499,8 +66554,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 63078,
-        "coding_index": 48478,
+        "openbench_index": 63082,
+        "coding_index": 48491,
         "tooling_index": 71808,
         "knowledge_index": 72772,
         "vision_index": 70584,
@@ -69535,8 +69590,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 61164,
-        "coding_index": 48714,
+        "openbench_index": 61171,
+        "coding_index": 48739,
         "tooling_index": 76418,
         "knowledge_index": 71113,
         "vision_index": 51230,
@@ -70063,8 +70118,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 73271,
-        "coding_index": 58313,
+        "openbench_index": 73286,
+        "coding_index": 58363,
         "tooling_index": 89459,
         "knowledge_index": 80401,
         "vision_index": null,
@@ -70149,7 +70204,8 @@
         "arena_text_non_english": 1466,
         "arena_webdev": 1607,
         "arena_agent": -2.3,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "frontiercode_2_0": 14.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -70238,7 +70294,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -70327,7 +70384,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -70373,6 +70431,13 @@
             "date": "2026-10-02",
             "score": 18.1,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 14.2,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -70862,8 +70927,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 68334,
-        "coding_index": 58349,
+        "openbench_index": 68339,
+        "coding_index": 58367,
         "tooling_index": 80520,
         "knowledge_index": 74495,
         "vision_index": 79336,
@@ -71995,8 +72060,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 33148,
-        "coding_index": 15671,
+        "openbench_index": 33149,
+        "coding_index": 15673,
         "tooling_index": 29659,
         "knowledge_index": 43716,
         "vision_index": null,
@@ -72553,8 +72618,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 36000,
-        "coding_index": 18079,
+        "openbench_index": 36001,
+        "coding_index": 18081,
         "tooling_index": 32943,
         "knowledge_index": 48336,
         "vision_index": null,
@@ -73087,7 +73152,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 66788,
+        "coding_index": 66080,
         "tooling_index": 74430,
         "knowledge_index": 82802,
         "vision_index": null,
@@ -73376,6 +73441,13 @@
             "source": null
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 33.6,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "vibe_code_bench_1_1": [
           {
             "date": "2026-09-18",
@@ -73516,13 +73588,6 @@
             "score": 43.4,
             "source": "https://huggingface.co/tencent/Hy4-preview"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 33.6,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "vram_source": {
@@ -73533,6 +73598,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "terminal_bench_4_0",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -73611,8 +73677,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 58651,
-        "coding_index": 40654,
+        "openbench_index": 58655,
+        "coding_index": 40665,
         "tooling_index": 66066,
         "knowledge_index": 72677,
         "vision_index": null,
@@ -74139,7 +74205,7 @@
       },
       "scores": {
         "openbench_index": 35380,
-        "coding_index": 14700,
+        "coding_index": 14701,
         "tooling_index": 35890,
         "knowledge_index": 43985,
         "vision_index": null,
@@ -74688,8 +74754,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 74059,
-        "coding_index": 78800,
+        "openbench_index": 73998,
+        "coding_index": 78596,
         "tooling_index": 82363,
         "knowledge_index": 80232,
         "vision_index": 64631,
@@ -74776,7 +74842,8 @@
         "arena_webdev": 1619,
         "arena_agent": 1.9,
         "arena_agent_tool_hallucination": 0.6,
-        "real_swe_1_1": 38.4
+        "real_swe_1_1": 38.4,
+        "frontiercode_2_0": 19.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -74867,7 +74934,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -74958,7 +75026,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -74982,11 +75051,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 38.4,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-10",
             "score": 74.2,
             "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 19.3,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -75373,13 +75456,6 @@
             "score": null,
             "source": null
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 38.4,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "vram_source": {
@@ -75394,6 +75470,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
@@ -75938,8 +76015,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88209,
-        "coding_index": 93915,
+        "openbench_index": 88200,
+        "coding_index": 93887,
         "tooling_index": 92113,
         "knowledge_index": 97148,
         "vision_index": null,
@@ -76026,7 +76103,8 @@
         "arena_agent": 13.4,
         "arena_agent_tool_hallucination": 0.6,
         "real_swe_1_0": 45,
-        "real_swe_1_1": 45.6
+        "real_swe_1_1": 45.6,
+        "frontiercode_2_0": 32.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -76117,7 +76195,8 @@
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "real_swe_1_0": "2026-09-23",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -76208,7 +76287,8 @@
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
         "real_swe_1_0": "https://realswe.withspecific.com",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -76294,6 +76374,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 45.6,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 38.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 45,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-11",
@@ -76311,6 +76410,13 @@
             "date": "2026-09-11",
             "score": 56.3,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 32.4,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -76725,25 +76831,6 @@
             "score": 77.9,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
-        ],
-        "real_swe_1_0": [
-          {
-            "date": "2026-09-14",
-            "score": 38.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 45,
-            "source": "https://realswe.withspecific.com"
-          }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 45.6,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -76753,6 +76840,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -76865,8 +76953,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 67876,
-        "coding_index": 64296,
+        "openbench_index": 67892,
+        "coding_index": 64348,
         "tooling_index": 75652,
         "knowledge_index": 83535,
         "vision_index": 72972,
@@ -77668,8 +77756,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 76250,
-        "coding_index": 73301,
+        "openbench_index": 76271,
+        "coding_index": 73370,
         "tooling_index": 86050,
         "knowledge_index": 87108,
         "vision_index": 84688,
@@ -78481,8 +78569,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 79777,
-        "coding_index": 77809,
+        "openbench_index": 79806,
+        "coding_index": 77903,
         "tooling_index": 89428,
         "knowledge_index": 94855,
         "vision_index": 91260,
@@ -78564,7 +78652,8 @@
         "arena_text_non_english": 1475,
         "arena_agent": 4.8,
         "arena_agent_tool_hallucination": 0.6,
-        "real_swe_1_0": 26.3
+        "real_swe_1_0": 26.3,
+        "frontiercode_2_0": 27.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -78650,7 +78739,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_0": "2026-09-23"
+        "real_swe_1_0": "2026-09-23",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78736,7 +78826,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_0": "https://realswe.withspecific.com"
+        "real_swe_1_0": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -78803,6 +78894,18 @@
             "source": "https://labs.scale.com/leaderboard/sweatlas-qna"
           }
         ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 16.2,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 26.3,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-11",
@@ -78825,6 +78928,13 @@
             "date": "2026-09-26",
             "score": 32.2,
             "source": "https://epoch.ai/benchmarks/frontierswe"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 27.6,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -79265,18 +79375,6 @@
             "score": 22,
             "source": "https://zerobench.github.io"
           }
-        ],
-        "real_swe_1_0": [
-          {
-            "date": "2026-09-14",
-            "score": 16.2,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 26.3,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -79305,7 +79403,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.888,
+          "share": 0.791,
           "second_hand": [
             "frontierswe_2_0",
             "swe_bench_pro",
@@ -79414,8 +79512,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88999,
-        "coding_index": 95070,
+        "openbench_index": 89006,
+        "coding_index": 95093,
         "tooling_index": 91156,
         "knowledge_index": 98736,
         "vision_index": 98579,
@@ -79502,7 +79600,8 @@
         "arena_agent": 13,
         "arena_agent_tool_hallucination": 0.7,
         "real_swe_1_0": 46.3,
-        "real_swe_1_1": 56
+        "real_swe_1_1": 56,
+        "frontiercode_2_0": 42.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -79593,7 +79692,8 @@
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "real_swe_1_0": "2026-09-23",
-        "real_swe_1_1": "2026-10-20"
+        "real_swe_1_1": "2026-10-20",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -79684,7 +79784,8 @@
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
         "real_swe_1_0": "https://realswe.withspecific.com",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -79749,6 +79850,30 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 44.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-20",
+            "score": 56,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 33.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 46.3,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-11",
@@ -79771,6 +79896,13 @@
             "date": "2026-09-18",
             "score": 65.5,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 42.8,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -80194,30 +80326,6 @@
             "score": 43.2,
             "source": "https://zerobench.github.io"
           }
-        ],
-        "real_swe_1_0": [
-          {
-            "date": "2026-09-14",
-            "score": 33.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 46.3,
-            "source": "https://realswe.withspecific.com"
-          }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 44.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-20",
-            "score": 56,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -80227,6 +80335,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -83011,8 +83120,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 75414,
-        "coding_index": 69070,
+        "openbench_index": 75423,
+        "coding_index": 69099,
         "tooling_index": 86020,
         "knowledge_index": 85129,
         "vision_index": 70496,
@@ -83744,8 +83853,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 69773,
-        "coding_index": 67410,
+        "openbench_index": 69781,
+        "coding_index": 67438,
         "tooling_index": 80732,
         "knowledge_index": 71660,
         "vision_index": 51256,
@@ -84457,8 +84566,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89617,
-        "coding_index": 96873,
+        "openbench_index": 89625,
+        "coding_index": 96901,
         "tooling_index": 92124,
         "knowledge_index": 98197,
         "vision_index": 99105,
@@ -84544,7 +84653,8 @@
         "arena_webdev": 1810,
         "arena_agent": 20.9,
         "arena_agent_tool_hallucination": 0.5,
-        "real_swe_1_1": 56.8
+        "real_swe_1_1": 56.8,
+        "frontiercode_2_0": 45.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -84634,7 +84744,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-19"
+        "real_swe_1_1": "2026-10-19",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -84724,7 +84835,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -84772,6 +84884,18 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 42.4,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-19",
+            "score": 56.8,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-24",
@@ -84784,6 +84908,13 @@
             "date": "2026-09-22",
             "score": 62.3,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 45.5,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -85173,18 +85304,6 @@
             "score": 35,
             "source": "https://zerobench.github.io"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 42.4,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-19",
-            "score": 56.8,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -85194,6 +85313,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -85314,8 +85434,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 69683,
-        "coding_index": 63187,
+        "openbench_index": 69725,
+        "coding_index": 63326,
         "tooling_index": 72645,
         "knowledge_index": 82936,
         "vision_index": 78580,
@@ -85400,7 +85520,8 @@
         "arena_webdev": 1579,
         "arena_agent": 2.2,
         "arena_agent_tool_hallucination": 0.7,
-        "real_swe_1_1": 10.4
+        "real_swe_1_1": 10.4,
+        "frontiercode_2_0": 21.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -85489,7 +85610,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -85578,7 +85700,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -85610,11 +85733,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 10.4,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-22",
             "score": 63.7,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 21.9,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -85957,13 +86094,6 @@
             "score": 12.2,
             "source": "https://zerobench.github.io"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 10.4,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -85973,6 +86103,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -86081,8 +86212,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 83815,
-        "coding_index": 83958,
+        "openbench_index": 83823,
+        "coding_index": 83984,
         "tooling_index": 87766,
         "knowledge_index": 95135,
         "vision_index": 91817,
@@ -86167,7 +86298,8 @@
         "arena_text_non_english": 1447,
         "arena_webdev": 1678,
         "arena_agent": 8,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "frontiercode_2_0": 34.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -86256,7 +86388,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -86345,7 +86478,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -86372,6 +86506,13 @@
             "date": "2026-09-22",
             "score": 69,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 34.3,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -87187,8 +87328,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 67633,
-        "coding_index": 60326,
+        "openbench_index": 67637,
+        "coding_index": 60341,
         "tooling_index": 80751,
         "knowledge_index": 82332,
         "vision_index": 75696,
@@ -88691,8 +88832,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89376,
-        "coding_index": 94136,
+        "openbench_index": 89378,
+        "coding_index": 94143,
         "tooling_index": 95473,
         "knowledge_index": 95518,
         "vision_index": null,
@@ -88775,7 +88916,8 @@
         "arena_webdev": 1770,
         "arena_agent": 13.8,
         "arena_agent_tool_hallucination": 0.7,
-        "real_swe_1_1": 51.2
+        "real_swe_1_1": 51.2,
+        "frontiercode_2_0": 41
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -88862,7 +89004,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -88949,7 +89092,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -89011,6 +89155,13 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 51.2,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-28",
@@ -89023,6 +89174,13 @@
             "date": "2026-09-29",
             "score": 61.9,
             "source": "https://epoch.ai/benchmarks/frontierswe"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 41,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -89339,13 +89497,6 @@
             "score": 80.1,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 51.2,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -89355,6 +89506,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -89459,8 +89611,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 85195,
-        "coding_index": 88139,
+        "openbench_index": 85199,
+        "coding_index": 88154,
         "tooling_index": 84983,
         "knowledge_index": 98378,
         "vision_index": 95604,
@@ -89542,7 +89694,8 @@
         "arena_webdev": 1751,
         "arena_agent": 12.5,
         "arena_agent_tool_hallucination": 0.8,
-        "real_swe_1_1": 47.2
+        "real_swe_1_1": 47.2,
+        "frontiercode_2_0": 39
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -89628,7 +89781,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -89714,7 +89868,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -89748,11 +89903,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 47.2,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-09-29",
             "score": 73.2,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 39,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -90068,13 +90237,6 @@
             "score": 71.4,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 47.2,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -90084,6 +90246,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -90495,8 +90658,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 88564,
-        "coding_index": 89265,
+        "openbench_index": 88539,
+        "coding_index": 89183,
         "tooling_index": 92517,
         "knowledge_index": 96249,
         "vision_index": null,
@@ -90579,7 +90742,8 @@
         "arena_webdev": 1679,
         "arena_agent": 10.7,
         "arena_agent_tool_hallucination": 0.3,
-        "real_swe_1_1": 39.2
+        "real_swe_1_1": 39.2,
+        "frontiercode_2_0": 26.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -90666,7 +90830,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -90753,7 +90918,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -90794,6 +90960,13 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 39.2,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-10-01",
@@ -90806,6 +90979,13 @@
             "date": "2026-10-01",
             "score": 55,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 26.3,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -91100,13 +91280,6 @@
             "score": 69.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 39.2,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -91116,6 +91289,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -91210,8 +91384,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 73318,
-        "coding_index": 66272,
+        "openbench_index": 73328,
+        "coding_index": 66305,
         "tooling_index": 82591,
         "knowledge_index": 81860,
         "vision_index": null,
@@ -91705,8 +91879,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 78165,
-        "coding_index": 68631,
+        "openbench_index": 78181,
+        "coding_index": 68682,
         "tooling_index": 86333,
         "knowledge_index": 89313,
         "vision_index": 61524,
@@ -93095,8 +93269,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70224,
-        "coding_index": 65899,
+        "openbench_index": 70238,
+        "coding_index": 65948,
         "tooling_index": 74799,
         "knowledge_index": 80701,
         "vision_index": 61524,
@@ -93180,7 +93354,8 @@
         "arena_text_non_english": 1421,
         "arena_webdev": 1544,
         "arena_agent": -6,
-        "arena_agent_tool_hallucination": -19.3
+        "arena_agent_tool_hallucination": -19.3,
+        "frontiercode_2_0": 19.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -93268,7 +93443,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -93356,7 +93532,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -93393,6 +93570,13 @@
             "date": "2026-10-06",
             "score": 61.7,
             "source": "https://mistral.ai/news/mistral-large-4"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 19.7,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -93834,8 +94018,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 76470,
-        "coding_index": 79588,
+        "openbench_index": 76488,
+        "coding_index": 79649,
         "tooling_index": 76574,
         "knowledge_index": 88017,
         "vision_index": null,
@@ -93917,7 +94101,8 @@
         "arena_text_non_english": 1409,
         "arena_webdev": 1589,
         "arena_agent": 1.4,
-        "arena_agent_tool_hallucination": -1
+        "arena_agent_tool_hallucination": -1,
+        "frontiercode_2_0": 27.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -94003,7 +94188,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -94089,7 +94275,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -94163,6 +94350,13 @@
             "date": "2026-10-08",
             "score": 43.8,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 27.7,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -94552,8 +94746,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 84336,
-        "coding_index": 87194,
+        "openbench_index": 84305,
+        "coding_index": 87093,
         "tooling_index": 89040,
         "knowledge_index": 92840,
         "vision_index": null,
@@ -94633,7 +94827,8 @@
         "arena_webdev": 1652,
         "arena_agent": 3.1,
         "arena_agent_tool_hallucination": -1,
-        "real_swe_1_1": 42.4
+        "real_swe_1_1": 42.4,
+        "frontiercode_2_0": 24.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -94717,7 +94912,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-15"
+        "real_swe_1_1": "2026-10-15",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -94801,7 +94997,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -94842,11 +95039,25 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 42.4,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "deepswe_1_1": [
           {
             "date": "2026-10-13",
             "score": 75.8,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 24.3,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "swe_marathon_1_1": [
@@ -95038,13 +95249,6 @@
             "score": 72.6,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 42.4,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -95054,6 +95258,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "deepswe_1_1",
             "swe_marathon_1_1",
             "terminal_bench_4_0",
@@ -95132,8 +95337,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 87750,
-        "coding_index": 92706,
+        "openbench_index": 87754,
+        "coding_index": 92717,
         "tooling_index": 89337,
         "knowledge_index": 95543,
         "vision_index": null,
@@ -95620,8 +95825,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81381,
-        "coding_index": 81670,
+        "openbench_index": 81302,
+        "coding_index": 81407,
         "tooling_index": 83945,
         "knowledge_index": 84619,
         "vision_index": null,
@@ -95707,7 +95912,8 @@
         "arena_webdev": 1637,
         "arena_agent": 2.4,
         "arena_agent_tool_hallucination": 0.7,
-        "real_swe_1_1": 28
+        "real_swe_1_1": 28,
+        "frontiercode_2_0": 28.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -95797,7 +96003,8 @@
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
-        "real_swe_1_1": "2026-10-20"
+        "real_swe_1_1": "2026-10-20",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -95887,7 +96094,8 @@
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
-        "real_swe_1_1": "https://realswe.withspecific.com"
+        "real_swe_1_1": "https://realswe.withspecific.com",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -95909,11 +96117,30 @@
             "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 25.6,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-20",
+            "score": 28,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "frontierswe_2_0": [
           {
             "date": "2026-10-28",
             "score": 29.5,
             "source": "https://epoch.ai/benchmarks/frontierswe"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 28.6,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "frontiercode_1_1": [
@@ -96204,18 +96431,6 @@
             "score": 61.4,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-15",
-            "score": 25.6,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-20",
-            "score": 28,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -96225,6 +96440,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -96643,8 +96859,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 46464,
-        "coding_index": 23454,
+        "openbench_index": 46465,
+        "coding_index": 23457,
         "tooling_index": 44864,
         "knowledge_index": 74930,
         "vision_index": null,
@@ -97144,8 +97360,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 71905,
-        "coding_index": 61068,
+        "openbench_index": 71921,
+        "coding_index": 61123,
         "tooling_index": 74499,
         "knowledge_index": 87257,
         "vision_index": 87098,
@@ -97723,8 +97939,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 63589,
-        "coding_index": 50108,
+        "openbench_index": 63596,
+        "coding_index": 50130,
         "tooling_index": 69948,
         "knowledge_index": 79246,
         "vision_index": null,
@@ -97805,7 +98021,8 @@
         "arena_agent": -4.9,
         "arena_agent_tool_hallucination": -0.8,
         "apex_agents": 48.8,
-        "arc_agi_2": 23.5
+        "arc_agi_2": 23.5,
+        "frontiercode_2_0": 2.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -97890,7 +98107,8 @@
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "apex_agents": "2026-10-30",
-        "arc_agi_2": "2026-10-30"
+        "arc_agi_2": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -97975,7 +98193,8 @@
         "arena_agent": "https://arena.ai/leaderboard/agent",
         "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
         "apex_agents": "https://epoch.ai/benchmarks/apex-agents",
-        "arc_agi_2": "https://epoch.ai/benchmarks/arc-agi-2"
+        "arc_agi_2": "https://epoch.ai/benchmarks/arc-agi-2",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -98028,6 +98247,13 @@
             "date": "2026-10-16",
             "score": 39.8,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 2.9,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -98347,8 +98573,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 80891,
-        "coding_index": 83666,
+        "openbench_index": 80901,
+        "coding_index": 83698,
         "tooling_index": 87902,
         "knowledge_index": 86653,
         "vision_index": 83758,
@@ -100760,8 +100986,8 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 84596,
-        "coding_index": 79475,
+        "openbench_index": 84503,
+        "coding_index": 79165,
         "tooling_index": 94322,
         "knowledge_index": 92511,
         "vision_index": 92796,
@@ -101024,6 +101250,13 @@
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
           }
         ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-26",
+            "score": 39.2,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
         "vibe_code_bench_1_1": [
           {
             "date": "2026-10-25",
@@ -101237,13 +101470,6 @@
             "score": 83.9,
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
           }
-        ],
-        "real_swe_1_1": [
-          {
-            "date": "2026-10-26",
-            "score": 39.2,
-            "source": "https://realswe.withspecific.com"
-          }
         ]
       },
       "aa_variant": {
@@ -101253,6 +101479,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
+            "real_swe_1_1",
             "terminal_bench_4_0",
             "vibe_code_bench_1_1",
             "scicode",
@@ -101600,8 +101827,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 80220,
-        "coding_index": 73153,
+        "openbench_index": 80231,
+        "coding_index": 73190,
         "tooling_index": 83972,
         "knowledge_index": 94683,
         "vision_index": 94389,
@@ -102637,8 +102864,7 @@
         "fp16": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
         "int8": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
         "int4": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/"
-      },
-      "scores_history": {}
+      }
     },
     {
       "name": "nanbeige4-3-33b",
@@ -102657,7 +102883,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 58089,
+        "coding_index": 58115,
         "tooling_index": 71133,
         "knowledge_index": null,
         "vision_index": null,
@@ -103053,8 +103279,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 88176,
-        "coding_index": 86922,
+        "openbench_index": 88181,
+        "coding_index": 86937,
         "tooling_index": 94172,
         "knowledge_index": 98985,
         "vision_index": null,
@@ -103134,7 +103360,8 @@
         "arena_text_non_english": 1521,
         "arena_webdev": 1768,
         "arena_agent": 16,
-        "arena_agent_tool_hallucination": 0.5
+        "arena_agent_tool_hallucination": 0.5,
+        "frontiercode_2_0": 40
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -103218,7 +103445,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "frontiercode_2_0": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -103302,7 +103530,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "frontiercode_2_0": "https://cognition.com/frontiercode"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -103324,6 +103553,13 @@
             "date": "2026-10-29",
             "score": 61.2,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-10-30",
+            "score": 40,
+            "source": "https://cognition.com/frontiercode"
           }
         ],
         "vibe_code_bench_1_1": [

@@ -346,7 +346,7 @@ class TestRevisionRouting(unittest.TestCase):
                 self.assertEqual(list(by_key), [f"{base}_1_0"])
 
     def test_a_benchmark_only_takes_the_revisions_it_published(self) -> None:
-        """FrontierSWE numbered its re-run 2.0; the others went to 1.1.
+        """FrontierSWE numbered its re-run 2.0; DeepSWE went to 1.1.
 
         Each base knows its own labels, so the row a sibling's numbering would
         produce is refused rather than landing in a column nothing renders.
@@ -356,7 +356,7 @@ class TestRevisionRouting(unittest.TestCase):
             ["frontierswe_2_0"],
         )
         self.assertEqual(self.route({"revision": "1.1", "score": 1.0}, base="frontierswe"), {})
-        self.assertEqual(self.route({"revision": "2.0", "score": 1.0}, base="frontiercode"), {})
+        self.assertEqual(self.route({"revision": "2.0", "score": 1.0}, base="deepswe"), {})
 
     def test_fetch_routes_a_folded_name_by_revision(self) -> None:
         """Two leaderboard names folding onto one slug, one per revision."""

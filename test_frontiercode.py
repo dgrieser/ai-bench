@@ -59,8 +59,46 @@ PAYLOAD = {
 
 
 def scores(**kwargs) -> list[dict]:
-    with mock.patch.object(fc, "fetch_json", return_value=PAYLOAD):
+    # The shared file only: no revision published in a file of its own.
+    with mock.patch.object(fc, "fetch_json", return_value=PAYLOAD), \
+            mock.patch.object(fc, "split_file_versions", return_value=[]):
         return fc.get_scores(**kwargs)
+
+
+class TestSplitFiles(unittest.TestCase):
+    """FrontierCode 2.0 onwards lives in a file of its own, named in the page's JS."""
+
+    BLOCK_2_0 = {"subsets": {"main": 132}, "harness": {"Alpha": "codex"},
+                 "data": {"Alpha": {"max": {"main": leaf(0.4545)}}}}
+
+    def test_versions_are_read_from_the_pages_scripts(self) -> None:
+        pages = {
+            fc.LEADERBOARD_URL: '<script src="/_next/static/chunks/a1.js"></script>',
+            "https://cognition.com/_next/static/chunks/a1.js":
+                'fetch("/data/frontier-code-2.1/data.json")',
+        }
+        self.assertEqual(fc.split_file_versions(pages.__getitem__), ["2.0", "2.1"])
+
+    def test_an_unreadable_page_falls_back_to_the_known_versions(self) -> None:
+        def down(url: str) -> str:
+            raise OSError("unreachable")
+        self.assertEqual(fc.split_file_versions(down), list(fc.KNOWN_SPLIT_VERSIONS))
+
+    def test_a_split_file_joins_the_payload_under_its_version(self) -> None:
+        files = {fc.URL: PAYLOAD, fc.SPLIT_FILE_URL.format(version="2.0"): self.BLOCK_2_0}
+        with mock.patch.object(fc, "split_file_versions", return_value=["2.0"]):
+            payload = fc.load_payload(files.__getitem__)
+        self.assertIs(payload["v2_0"], self.BLOCK_2_0)
+        with mock.patch.object(fc, "load_payload", return_value=payload):
+            rows = [r for r in fc.get_scores() if r["revision"] == "2.0"]
+        self.assertEqual([(r["model"], r["subset"], r["score"]) for r in rows],
+                         [("Alpha", "main", 45.45)])
+
+    def test_a_split_file_without_a_block_is_refused(self) -> None:
+        files = {fc.URL: PAYLOAD, fc.SPLIT_FILE_URL.format(version="2.0"): {"models": []}}
+        with mock.patch.object(fc, "split_file_versions", return_value=["2.0"]):
+            with self.assertRaisesRegex(ValueError, "no revision block"):
+                fc.load_payload(files.__getitem__)
 
 
 class TestRevisionOrdering(unittest.TestCase):
@@ -236,7 +274,8 @@ class TestGetScores(unittest.TestCase):
             "subsets": {"main": 100},
             "data": {"Single Effort": {"none": {"main": leaf(0.31)}}},
         }}
-        with mock.patch.object(fc, "fetch_json", return_value=payload):
+        with mock.patch.object(fc, "fetch_json", return_value=payload), \
+                mock.patch.object(fc, "split_file_versions", return_value=[]):
             rows = fc.get_scores()
         self.assertEqual({r["revision"] for r in rows}, {"1.0", "1.1", "1.2"})
         # Newest first, so a consumer reading in order meets the current run first.
@@ -297,6 +336,7 @@ class TestNamesOutput(unittest.TestCase):
     def names(self) -> list[str]:
         out = io.StringIO()
         with mock.patch.object(fc, "fetch_json", return_value=PAYLOAD), \
+                mock.patch.object(fc, "split_file_versions", return_value=[]), \
                 mock.patch("sys.argv", ["fetch_frontiercode.py", "--format", "names"]), \
                 redirect_stdout(out):
             fc.main()

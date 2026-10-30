@@ -49,7 +49,9 @@ _REVISION_NUM_RE = re.compile(r"\d+")
 # "<base>_<major>_<minor>" benchmark entry, which is what revision_key() spells.
 KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     "deepswe": ("1.0", "1.1"),
-    "frontiercode": ("1.0", "1.1"),
+    # 2.0 (2026-10-27) rebuilt the suite as 132 tasks scored as one board, so it
+    # has a Main column only.
+    "frontiercode": ("1.0", "1.1", "2.0"),
     # Cognition scores two task sets from the same run and publishes them as
     # two leaderboards: Main, the 100 hardest tasks, and Extended, all 150.
     # Extended's columns are spelled with a base of their own (see
