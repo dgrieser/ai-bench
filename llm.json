@@ -691,7 +691,7 @@
     },
     "kernelbench_hard": {
       "name": "KernelBench Hard",
-      "short_name": "KernelB-H",
+      "short_name": "KernBench",
       "category": "Software Engineering",
       "description": "Agentic GPU kernel engineering on kernelbench.com: a coding agent gets a reference PyTorch module and an unlimited budget to replace it with a faster kernel on real hardware, and every published cell is audited for reward hacking. This column holds the board's Hard deck -- six problems (FP8 GEMM, KDA on CUTLASS, paged attention, top-k bitonic sort, a Sonic MoE SwiGLU, W4A16 GEMM) on the RTX PRO 6000 the site calls canonical -- as the mean fraction of the GPU's roofline the submitted kernels reach, a failed, flagged or missing problem counting as zero. It is an absolute number, the one labs report as KernelBench Hard (operator TFLOPs over theoretical peak, averaged over the questions), not the site's share of the best model. The site borrows Stanford's KernelBench name and problem style but is not affiliated with it.",
       "settings": [
@@ -995,7 +995,7 @@
     },
     "mcp_atlas": {
       "name": "MCP-Atlas",
-      "short_name": "MCP Atlas",
+      "short_name": "MCPAtlas",
       "category": "Agentic Tool Use",
       "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks over 40+ real MCP servers exposing 300+ tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard runs the representative 500-task public subset under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task. Metric is pass rate.",
       "settings": [
@@ -1037,7 +1037,7 @@
     },
     "vending_bench_2": {
       "name": "Vending-Bench 2",
-      "short_name": "Vending2",
+      "short_name": "VendBench 2",
       "category": "Agentic Tool Use",
       "decimals": 0,
       "range": [
@@ -1061,7 +1061,7 @@
     },
     "claw_eval": {
       "name": "Claw-Eval",
-      "short_name": "Claw",
+      "short_name": "ClawEval",
       "category": "Agentic Tool Use",
       "description": "A benchmark of real-world agent tasks run in a claw-style agent harness, each over three trials and scored for completion, safety and robustness. The column holds the score on the 161-task General split — core service-orchestration tasks across 24 categories — as the official leaderboard prints it, carried into the models' Hugging Face eval results.",
       "settings": [
@@ -1195,7 +1195,7 @@
     },
     "apex_agents": {
       "name": "APEX-Agents",
-      "short_name": "APEX-Ag",
+      "short_name": "APEX",
       "category": "Real-world Professional Work",
       "description": "Mercor's AI Productivity Index for agents: long-horizon tasks written by investment bankers, management consultants and corporate lawyers, each carried out inside a simulated work environment of files and applications and graded against an expert rubric. The column is pass@1, the share of tasks whose deliverable passes. Read from Epoch AI's copy of Mercor's board.",
       "settings": [
@@ -1262,7 +1262,7 @@
     },
     "arena_text_non_english": {
       "name": "Arena Text (non-English)",
-      "short_name": "Arena ≠EN",
+      "short_name": "ArenaNE",
       "category": "Human Preference",
       "decimals": 0,
       "range": [
@@ -1287,7 +1287,7 @@
     },
     "arena_webdev": {
       "name": "Arena Code (WebDev)",
-      "short_name": "Arena Web",
+      "short_name": "ArenaWeb",
       "category": "Human Preference",
       "decimals": 0,
       "range": [
@@ -1310,7 +1310,7 @@
     },
     "arena_agent": {
       "name": "Arena Agent",
-      "short_name": "Arena Ag",
+      "short_name": "ArenaAg",
       "category": "Human Preference",
       "decimals": 1,
       "range": [
@@ -1334,7 +1334,7 @@
     },
     "arena_agent_tool_hallucination": {
       "name": "Arena Agent: Tool Hallucination",
-      "short_name": "Arena ToolH",
+      "short_name": "ArenaHall",
       "category": "Human Preference",
       "decimals": 1,
       "range": [
@@ -1637,7 +1637,7 @@
     },
     "simpleqa_verified": {
       "name": "SimpleQA Verified",
-      "short_name": "SQA-V",
+      "short_name": "SimpQA",
       "category": "Reasoning & Knowledge",
       "description": "Google DeepMind's cleaned 1,000-prompt successor to OpenAI's SimpleQA: short fact-seeking questions with one indisputable answer, after de-duplication, re-balancing of topics and correction of the original's wrong labels. Answers are graded correct, incorrect or not attempted, so a model that declines to guess loses less than one that confidently answers wrong. Run by Epoch AI on its own harness, the same for every model.",
       "settings": [
@@ -1753,7 +1753,7 @@
     },
     "frontiermath_tiers_1_3": {
       "name": "FrontierMath Tiers 1-3",
-      "short_name": "FM 1-3",
+      "short_name": "FMath",
       "category": "Scientific Reasoning",
       "description": "Epoch AI's unpublished, expert-written mathematics problems from undergraduate-hard to research level, each with an automatically checkable answer. The v2 private set, run by Epoch on its own harness with a Python tool for computation, the same for every model; problems are never released, so the column cannot be trained on.",
       "settings": [
@@ -1773,7 +1773,7 @@
     },
     "frontiermath_tier_4": {
       "name": "FrontierMath Tier 4",
-      "short_name": "FM T4",
+      "short_name": "FMathT4",
       "category": "Scientific Reasoning",
       "description": "The research-level tier of Epoch AI's FrontierMath: problems written by research mathematicians to take a specialist days, each with an automatically checkable answer. The v2 private set, run by Epoch on its own harness with a Python tool for computation, the same for every model. The hardest mathematics column in the table, with the widest spread at the top.",
       "settings": [
