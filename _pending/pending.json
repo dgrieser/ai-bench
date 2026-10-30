@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-17 - DeepSeek",
+      "question": "Carry newly released closed model 'deepseek-v4-1-flash-1017-non-reasoning' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "deepseek-v4-1-flash-1017-non-reasoning",
+      "universe": null
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
