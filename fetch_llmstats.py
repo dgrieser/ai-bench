@@ -153,6 +153,15 @@ BOARD_FIELDS = {
     "swe_bench_multimodal": "swe-bench-multimodal",
     "swe_atlas_qna": "swe-atlas-codebase-qna",
     "osworld_2_1_partial": "osworld-2.1-partial",
+    # Self-reports for columns whose only other source is the model cards:
+    # the two τ²-Bench domains that are not yet saturated (Telecom is), HMMT
+    # February 2026, and NL2Repo. Claw-Eval's board is not read: its rows mix
+    # pass@3, pass^3 and averages over different splits, while the column holds
+    # the official General-split score the cards' eval results carry.
+    "tau2_retail": "tau2-retail",
+    "tau2_airline": "tau2-airline",
+    "hmmt_feb_2026": "hmmt-feb-26",
+    "nl2repo": "nl2repo",
 }
 
 # Board rows whose note says they are not what the column holds: label ->
