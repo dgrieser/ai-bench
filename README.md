@@ -496,6 +496,13 @@ current address.
 ./edit.py -m devstral-2 --swe-bench-verified=72.2 \
           --score-date=2026-08-06 --score-url=https://example.com/leaderboard
 
+# ... and a VRAM figure, where Spheron's is plainly wrong. The Spheron reading
+# it replaces is pinned in spheron-vram-overrides.json and ignored until
+# Spheron reports another (see GPU Fit Filter and Hosting Presets)
+./edit.py -m mistral-large-4 --vram-fp16=2297 --vram-int8=1148 --vram-int4=574 \
+          --vram-url=https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B \
+          --vram-reason="Spheron reads A52B, the active count, as the total"
+
 # Rename a model's slug in llm.json and every mapping file that names it
 # (dry-run; -w to persist)
 ./rename.py glm-5.3 glm-5-3
@@ -1603,7 +1610,8 @@ benchmark. Source row ordering never decides a published number.
 
 Two deliberate exceptions:
 - **VRAM** (spheron): the *largest* estimate wins. It is a requirement, not a
-  score, so the conservative direction is the safe one.
+  score, so the conservative direction is the safe one. A reading pinned as
+  known-wrong in `spheron-vram-overrides.json` is skipped instead (below).
 - **Artificial Analysis**: several slugs per model merge by the priority order in
   the mapping list, not by score (see above) — the leading slug is the model's
   current release, and a higher number from an older one must not displace it.
@@ -4015,6 +4023,28 @@ VRAM there is the single source of truth for the labels. Tiers live in
 `HOSTING_PRESET_VENDOR`/`HOSTING_PRESET_GPU`. If that card is missing from
 `gpu.json`, the strip stays hidden rather than offering a preset it cannot apply.
 
+### When Spheron's VRAM figure is wrong
+
+The `vram` columns the filter reads come from Spheron's GPU recommender, which
+`update.py` lets overwrite them on every run. That is usually right, but now and
+then the recommender sizes a model wrongly: it reads `mistralai/Mistral-Large-4-1T-A52B`
+as a 52B model, taking the active count in the repo name for the total, and asks
+113 GB at FP16 for a checkpoint of 1,053,161,553,184 parameters.
+
+`edit.py --vram-fp16/--vram-int8/--vram-int4 --vram-url` writes a figure by hand
+and, in the same step, records the Spheron reading it replaces in
+`spheron-vram-overrides.json` (`_vram_overrides.py`), with the `--vram-reason`
+for it. A refresh skips a quant while Spheron still reports exactly that reading,
+so the hand figure and its source stand. Once Spheron reports anything else, the
+pin no longer matches: Spheron takes the cell back, the run prints a note, and
+the entry can be deleted. The override pins the wrong *value*, not the model, so
+it lapses as soon as the bug is fixed. `test_vram_overrides.py` checks both halves,
+and fails if a pinned cell is still credited to Spheron.
+
+Mistral Large 4's hand figures, 2297 / 1148 / 574 GB, apply Spheron's own rate
+(Mistral Large 3: 1472 GB at FP16 for 675B) to the checkpoint's parameter count,
+read from the headers of its 54 safetensors shards.
+
 ### Device Presets
 
 A second band sits directly under the tier strip, aimed the other way: hardware
@@ -4180,6 +4210,8 @@ ai-bench/
 ├── huggingface-model-column-mapping.json   # repo -> the heading its card uses
 ├── llmstats-benchmark-name-mapping.json
 ├── gpu.json                    # GPU configuration reference
+├── spheron-vram-overrides.json # Spheron VRAM readings ruled out by a hand figure
+├── _vram_overrides.py          # Reading and writing it (edit.py --vram-*, update.py)
 ├── model-names-*.txt           # Cached model name lists
 │
 ├── icons/mittwald.svg             # mittwald wordmark (source of truth; inlined into llm.html)

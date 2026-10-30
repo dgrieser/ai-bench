@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import _history
+import _vram_overrides
 import derive_indexes
 from _scores import editable_benchmarks, round_score, stamp_score_source, stamp_score_updated
 from _selector import (
@@ -30,8 +31,9 @@ SCORE_RE = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 # Every metadata field a person may set on an existing entry, and its prompt
 # label. The set is add.py's: what that script asks when a model is created is
 # what this one can change afterwards, so nothing is enterable once and then
-# frozen. vram/vram_source are absent on purpose -- Spheron writes those, and a
-# hand-typed figure would be recomputed away on the next run.
+# frozen. vram/vram_source are not among them: Spheron writes those, and a
+# hand-typed figure would be recomputed away on the next run. --vram-* below is
+# the exception for a Spheron reading that is plainly wrong (_vram_overrides).
 METADATA_FIELDS = {
     "context": "Context Window",
     "params": "Model Size",
@@ -85,6 +87,7 @@ def write_field(model: dict[str, Any], key: str, value: str | None) -> None:
 # because the answer is the same for every score typed in from one page in one
 # sitting; a second sitting is a second run.
 SCORE_PROVENANCE_FLAGS = ("--score-date", "--score-url")
+VRAM_FLAGS = tuple(f"vram_{quant}" for quant in _vram_overrides.QUANTS)
 
 
 class HelpOnErrorArgumentParser(argparse.ArgumentParser):
@@ -181,10 +184,31 @@ def parse_args(doc: dict[str, Any], argv: list[str] | None = None) -> argparse.N
         help="Page the scores this run changes were read from. Required whenever the run "
         "writes a score; clearing one needs none.",
     )
+    for key in VRAM_FLAGS:
+        parser.add_argument(
+            f"--{key.replace('_', '-')}",
+            dest=key,
+            metavar="GB",
+            help=f"Hand-entered {key.split('_')[1].upper()} VRAM in GB, replacing a wrong Spheron "
+            "figure. The Spheron value it replaces is recorded in "
+            f"{_vram_overrides.OVERRIDES_PATH.name} and ignored until Spheron reports another.",
+        )
+    parser.add_argument(
+        "--vram-url",
+        metavar="URL",
+        help="Page the --vram-* figures were worked out from. Required with them.",
+    )
+    parser.add_argument(
+        "--vram-reason",
+        metavar="TEXT",
+        help="Why the Spheron figure is wrong; stored with the override.",
+    )
 
     reserved_flags = {
         f"--{key.replace('_', '-')}" for key in METADATA_FIELDS
-    } | set(SCORE_PROVENANCE_FLAGS)
+    } | set(SCORE_PROVENANCE_FLAGS) | {
+        f"--{key.replace('_', '-')}" for key in VRAM_FLAGS
+    } | {"--vram-url", "--vram-reason"}
     for key, benchmark in editable_benchmarks(doc).items():
         flag = f"--{key.replace('_', '-')}"
         if flag in reserved_flags:
@@ -643,6 +667,58 @@ def collect_missing_updates(
     return planned
 
 
+def parse_vram_updates(args: argparse.Namespace) -> dict[str, int]:
+    """quant -> GB from the --vram-* flags, refusing them without --vram-url."""
+    updates: dict[str, int] = {}
+    for key in VRAM_FLAGS:
+        raw = getattr(args, key)
+        if raw is None:
+            continue
+        try:
+            value = int(raw)
+        except ValueError:
+            raise ValueError(f"--{key.replace('_', '-')} must be a whole number of GB, got {raw!r}.")
+        if value <= 0:
+            raise ValueError(f"--{key.replace('_', '-')} must be positive, got {value}.")
+        updates[key.split("_", 1)[1]] = value
+    if updates:
+        args.vram_url = parse_url_field(args.vram_url, "--vram-url")
+        if args.vram_url is None:
+            raise ValueError("--vram-url is required with --vram-*: name the page the figure comes from.")
+    elif args.vram_url is not None or args.vram_reason is not None:
+        raise ValueError("--vram-url and --vram-reason need a --vram-* figure to go with.")
+    return updates
+
+
+def apply_vram_updates(
+    model: dict[str, Any], updates: dict[str, int], url: str, reason: str | None
+) -> int:
+    """Write hand VRAM figures, ruling out the Spheron readings they replace.
+
+    The override file is written before llm.json, so a refresh can never see
+    the hand figure without the pin that protects it.
+    """
+    overrides = _vram_overrides.load()
+    recorded = _vram_overrides.record(overrides, model["name"], model, list(updates), reason)
+    if recorded:
+        _vram_overrides.save(overrides)
+        print(
+            f"Ignoring spheron's {', '.join(recorded)} reading(s) for '{model['name']}' "
+            f"in {_vram_overrides.OVERRIDES_PATH.name} until it reports another."
+        )
+    vram = model.setdefault("vram", {})
+    sources = model.get("vram_source")
+    if not isinstance(sources, dict):
+        sources = model["vram_source"] = {}
+    changed = 0
+    for quant, value in updates.items():
+        if vram.get(quant) != value or sources.get(quant) != url:
+            changed += 1
+        vram[quant] = value
+        sources[quant] = url
+    return changed
+
+
 def refresh_derived_scores(doc: dict[str, Any]) -> None:
     """Recompute the derived columns after a hand-edited score, before the write.
 
@@ -696,6 +772,15 @@ def main() -> int:
             raise ValueError(
                 "--missing cannot be combined with metadata flags: "
                 + ", ".join(f"--{key}" for key in metadata_flags)
+            )
+        vram_flags = [
+            key for key in (*VRAM_FLAGS, "vram_url", "vram_reason") if getattr(args, key) is not None
+        ]
+        if vram_flags:
+            raise ValueError(
+                "--missing cannot be combined with "
+                + ", ".join(f"--{key.replace('_', '-')}" for key in vram_flags)
+                + "."
             )
         if provenance_flags:
             # --missing walks every model with a gap; one date and one page
@@ -768,8 +853,10 @@ def main() -> int:
     score_date = parse_date(args.score_date).isoformat() if args.score_date is not None else None
     score_url = parse_score_source(args.score_url)
 
+    vram_updates = parse_vram_updates(args)
+
     model, score_updates, metadata_updates = collect_updates(doc, args, interactive)
-    if not score_updates and not metadata_updates:
+    if not score_updates and not metadata_updates and not vram_updates:
         raise ValueError("No score or metadata updates provided.")
     if provenance_flags and not score_updates:
         raise ValueError(
@@ -798,6 +885,9 @@ def main() -> int:
         if read_field(model, key) != value:
             write_field(model, key, value)
             changed += 1
+
+    if vram_updates:
+        changed += apply_vram_updates(model, vram_updates, args.vram_url, args.vram_reason)
 
     if scores_changed:
         refresh_derived_scores(doc)

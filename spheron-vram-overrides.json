@@ -1,0 +1,10 @@
+{
+  "mistral-large-4": {
+    "spheron": {
+      "fp16": 113,
+      "int8": 57,
+      "int4": 28
+    },
+    "reason": "Spheron sizes the repo as a 52B model (its page: 'about 52.0B parameters'), reading A52B, the active count, as the total. The checkpoint's 54 safetensors shards hold 1,053,161,553,184 parameters; the hand figures apply Spheron's own rate (Mistral Large 3: 1472 GB FP16 for 675B) to that count."
+  }
+}
