@@ -1,3 +1,332 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Beam 1.0' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Beam 1.0",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Codestral' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Codestral",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-6",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-thinking",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k2-7-code",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "the same name without the parenthetical: drop short code to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Kimi K2 (Sep 2025)' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Kimi K2 (Sep 2025)",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mistral-small-4",
+          "reason": "exact to Mistral Small 4, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-large-4",
+          "reason": "exact to Mistral Small 4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mistral-large-4-medium",
+          "reason": "exact to Mistral Small 4, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "phi-4",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-6",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Mistral Small 4' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Mistral Small 4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "qwen3-235b-a22b-instruct-2507",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-235b-a22b-instruct-2507-reasoning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-4b-instruct",
+          "reason": "the same name without the parenthetical: drop size to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8b-instruct",
+          "reason": "the same name without the parenthetical: drop size to a variant, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-14b-instruct",
+          "reason": "the same name without the parenthetical: drop size to a variant, all components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen3-235B-A22B-Instruct (Jul 2025)' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen3-235B-A22B-Instruct (Jul 2025)",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen3-5-27b",
+          "reason": "exact to Qwen3.5-27B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-2b",
+          "reason": "exact to Qwen3.5-27B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-4b",
+          "reason": "exact to Qwen3.5-27B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-9b",
+          "reason": "exact to Qwen3.5-27B, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-6-27b",
+          "reason": "exact to Qwen3.5-27B, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen3.5-27B' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen3.5-27B",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to deepseek-v4-flash-vision-exp, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'deepseek-v4-flash-vision-exp'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/deepseek-v4-flash-vision-exp",
+      "subject": "deepseek-v4-flash-vision-exp",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to deepseek-v4.1-flash-1017, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-v4.1-flash-1017, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "deepseek-v4-1-flash-1017",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'deepseek-v4.1-flash-1017'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/deepseek-v4.1-flash-1017",
+      "subject": "deepseek-v4.1-flash-1017",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "k2-horizon-0-9b",
+          "reason": "exact to k2-horizon-0.9b, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-7b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-3-7b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-375b-a23b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "k2-horizon-mova-36b-a4b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": "k2-horizon-0-9b",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'k2-horizon-0.9b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/k2-horizon-0.9b",
+      "subject": "k2-horizon-0.9b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-super-vl",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-bolt",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-lightning",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-3-5-bolt-e4b-4gb",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nvidia-nemotron-3-super-120b-a12b",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'baseten/nemotron-3.5-super-vl-120b-a12b' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "baseten/nemotron-3.5-super-vl-120b-a12b",
+      "universe": "models"
+    }
+  ]
 }
