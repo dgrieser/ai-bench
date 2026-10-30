@@ -25,10 +25,24 @@ fetcher's own board order.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Callable, Iterable
+
+# Seconds a fetcher run for its pages may take, the same variable and default
+# update.py's fetches use (update.FETCH_TIMEOUT_VAR; not imported, since
+# update.py imports the mapping modules that import this one).
+FETCH_TIMEOUT_VAR = "AI_BENCH_FETCH_TIMEOUT"
+DEFAULT_FETCH_TIMEOUT = 900
+
+
+def fetch_timeout() -> float:
+    try:
+        return float(os.getenv(FETCH_TIMEOUT_VAR, str(DEFAULT_FETCH_TIMEOUT)))
+    except ValueError:
+        return float(DEFAULT_FETCH_TIMEOUT)
 
 
 def same_page(names: Iterable[str], url: str | None) -> dict[str, str | None]:
@@ -53,12 +67,24 @@ def emit(rows: Iterable[dict[str, Any]], url_of: Callable[[dict[str, Any]], str 
 
 
 def run(script: Path, *args: str) -> dict[str, str | None]:
-    """Run `script --format pages` and read the mapping back."""
-    proc = subprocess.run(
-        [sys.executable, str(script), "--format", "pages", *args],
-        capture_output=True,
-        text=True,
-    )
+    """Run `script --format pages` and read the mapping back.
+
+    Bounded by the fetcher timeout update.py applies (AI_BENCH_FETCH_TIMEOUT):
+    a fetcher that never exits would otherwise hold its mapping updater, and
+    update-all with it, until the workflow's own timeout cancels the job.
+    """
+    limit = fetch_timeout()
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(script), "--format", "pages", *args],
+            capture_output=True,
+            text=True,
+            timeout=limit,
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(
+            f"{script.name} killed after {limit:.0f}s ({FETCH_TIMEOUT_VAR})"
+        ) from None
     if proc.returncode != 0:
         raise RuntimeError(f"{script.name} failed ({proc.returncode}): {proc.stderr.strip()}")
     raw: Any = json.loads(proc.stdout)

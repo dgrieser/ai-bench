@@ -74,6 +74,16 @@ class TestRun(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "boom"):
                 _source_pages.run(Path("fetch_x.py"))
 
+    def test_a_fetcher_that_never_exits_is_killed_and_raises(self) -> None:
+        # A hung fetcher used to hold its mapping updater, and update-all with
+        # it, until the workflow cancelled the job (fetch_arena.py, 2026-10-30).
+        hung = _source_pages.subprocess.TimeoutExpired(cmd="fetch_x.py", timeout=5.0)
+        with mock.patch.dict(_source_pages.os.environ, {_source_pages.FETCH_TIMEOUT_VAR: "5"}):
+            with mock.patch.object(_source_pages.subprocess, "run", side_effect=hung) as run:
+                with self.assertRaisesRegex(RuntimeError, "killed after 5s"):
+                    _source_pages.run(Path("fetch_x.py"))
+        self.assertEqual(run.call_args.kwargs["timeout"], 5.0)
+
 
 if __name__ == "__main__":
     unittest.main()
