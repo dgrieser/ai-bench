@@ -183,7 +183,10 @@ INDEXES: list[IndexDef] = [
             # field that no longer exists; aggregating both would also count
             # the benchmark twice for whoever was re-run and once for everyone
             # else. The archived columns stay visible in the table.
-            ("real_swe", 1.0),
+            # Real-SWE 1.1 (25 tasks, 16 tracked models) since 2026-10-30; 1.0
+            # (10 tasks, 5 models) is archived and not aggregated -- 1.1 covers
+            # more than three times the field, so the current release alone.
+            ("real_swe_1_1", 1.0),
             # 0.6: the group's narrowest head (4.6 points between the best
             # model and the fifth, against Real-SWE's 15.0) on a board the rest
             # of the group predicts well -- 0.85 Spearman with SWE-bench

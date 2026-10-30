@@ -61,6 +61,10 @@ KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     # FrontierSWE numbered its re-run V2, not 1.1; a bare major fills out to
     # ".0" the same way, so the columns are frontierswe_1_0 and frontierswe_2_0.
     "frontierswe": ("1.0", "2.0"),
+    # Real-SWE 1.1 (25 tasks) replaced 1.0 (10 tasks) on the same page in
+    # October 2026, without keeping 1.0's board; 1.0's column holds the values
+    # read before the switch.
+    "real_swe": ("1.0", "1.1"),
     "swe_marathon": ("1.0", "1.1"),
 }
 

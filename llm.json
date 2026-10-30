@@ -457,18 +457,40 @@
         "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
-    "real_swe": {
-      "name": "Real-SWE",
-      "short_name": "RealSWE",
+    "real_swe_1_1": {
+      "name": "Real-SWE 1.1",
+      "short_name": "RealSWE 1.1",
       "category": "Software Engineering",
-      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time; the reference solution touches a median of 11 files. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
+      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
       "settings": [
         "Resolved %",
+        "25 tasks",
         "pass@1 over 8 runs",
         "native harness",
         "private repos"
       ],
       "excludes": [
+        "Real-SWE 1.0, a 10-task set",
+        "public SWE-bench-style boards"
+      ],
+      "urls": [
+        "https://realswe.withspecific.com"
+      ]
+    },
+    "real_swe_1_0": {
+      "name": "Real-SWE 1.0",
+      "short_name": "RealSWE 1.0",
+      "category": "Software Engineering",
+      "description": "The first release of Real-SWE (September 2026): 10 tasks from private production codebases licensed from real companies, graded by verifiers built from each repository's own test suite; pass@1 averaged over eight runs per task, each model in its native harness. Replaced by 1.1 on the same page on 2026-10-15 without its board being kept, so this column holds the values read before the switch and receives no new ones.",
+      "settings": [
+        "Resolved %",
+        "10 tasks",
+        "pass@1 over 8 runs",
+        "native harness",
+        "archived"
+      ],
+      "excludes": [
+        "Real-SWE 1.1, a 25-task set",
         "public SWE-bench-style boards"
       ],
       "urls": [
@@ -2134,7 +2156,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -2652,7 +2673,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3175,7 +3195,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -3601,7 +3620,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4046,7 +4064,6 @@
         "swe_atlas_rf": 19.5,
         "swe_atlas_tw": 18.6,
         "swe_atlas_qna": 10.3,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -4604,7 +4621,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5004,7 +5020,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -5505,7 +5520,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6043,7 +6057,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -6520,7 +6533,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7225,7 +7237,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -7821,7 +7832,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8386,7 +8396,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -8922,7 +8931,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -9488,7 +9496,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -9957,7 +9964,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10433,7 +10439,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -10904,7 +10909,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11530,7 +11534,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -11945,7 +11948,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -12485,7 +12487,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13071,7 +13072,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -13620,7 +13620,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -14180,7 +14179,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 0.2,
         "frontierswe_2_0": null,
@@ -14833,7 +14831,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15230,7 +15227,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -15627,7 +15623,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16067,7 +16062,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -16692,7 +16686,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17220,7 +17213,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -17698,7 +17690,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18153,7 +18144,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -18764,7 +18754,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -19359,7 +19348,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 51.3,
-        "real_swe": null,
         "deepswe_1_1": 53.3,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20183,7 +20171,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -20799,7 +20786,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -21222,7 +21208,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -21649,7 +21634,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -22071,7 +22055,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -22709,7 +22692,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23205,7 +23187,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -23634,7 +23615,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24054,7 +24034,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -24558,7 +24537,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25017,7 +24995,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -25511,7 +25488,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -26024,7 +26000,6 @@
         "swe_atlas_rf": 42.4,
         "swe_atlas_tw": 41.5,
         "swe_atlas_qna": 48.1,
-        "real_swe": null,
         "deepswe_1_1": 43.8,
         "deepswe_1_0": 41.5,
         "frontierswe_2_0": null,
@@ -26885,7 +26860,6 @@
         "swe_atlas_rf": 28.1,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 37.9,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 20.4,
         "frontierswe_2_0": null,
@@ -27687,7 +27661,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -28108,7 +28081,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -28480,7 +28452,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29018,7 +28989,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -29610,7 +29580,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -30012,7 +29981,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -30409,7 +30377,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -30793,7 +30760,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -31169,7 +31135,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -31545,7 +31510,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -31921,7 +31885,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -32297,7 +32260,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -32829,7 +32791,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -33294,7 +33255,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -33754,7 +33714,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -34130,7 +34089,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -34589,7 +34547,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -35089,7 +35046,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -35526,7 +35482,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -35931,7 +35886,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -36346,7 +36300,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -36987,7 +36940,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -37539,7 +37491,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -37899,7 +37850,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -38275,7 +38225,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -38668,7 +38617,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -39064,7 +39012,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -39460,7 +39407,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -39836,7 +39782,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -40423,7 +40368,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -40764,7 +40708,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -41107,7 +41050,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -41490,7 +41432,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -42024,7 +41965,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -42563,7 +42503,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -43097,7 +43036,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -43487,7 +43425,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -43949,7 +43886,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -44493,7 +44429,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -44942,7 +44877,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -45313,7 +45247,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -45776,7 +45709,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -46230,7 +46162,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -46610,7 +46541,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -46986,7 +46916,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -47566,7 +47495,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -48057,7 +47985,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -48538,7 +48465,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -48914,7 +48840,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -49408,7 +49333,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -49851,7 +49775,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -50234,7 +50157,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -50603,7 +50525,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -50916,7 +50837,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -51250,7 +51170,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -51705,7 +51624,6 @@
         "swe_atlas_rf": 16.6,
         "swe_atlas_tw": 15.3,
         "swe_atlas_qna": 17.9,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -52073,7 +51991,6 @@
         "swe_atlas_rf": 29.7,
         "swe_atlas_tw": 27.8,
         "swe_atlas_qna": 37.1,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -52441,7 +52358,6 @@
         "swe_atlas_rf": 42.6,
         "swe_atlas_tw": 39.1,
         "swe_atlas_qna": 41.2,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -52809,7 +52725,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": 4.8,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -52872,7 +52787,8 @@
         "arena_text": 1427,
         "arena_text_non_english": 1405,
         "arena_agent": -15.8,
-        "arena_agent_tool_hallucination": -0.7
+        "arena_agent_tool_hallucination": -0.7,
+        "real_swe_1_1": 4.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -52946,7 +52862,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
         "deepsec_bench_aa": "2026-10-27",
@@ -52955,7 +52870,8 @@
         "arena_text": "2026-10-30",
         "arena_text_non_english": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -53029,7 +52945,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -53038,7 +52953,8 @@
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -53070,13 +52986,6 @@
             "date": "2026-08-23",
             "score": 67.7,
             "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 4.8,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "frontiercode_1_1": [
@@ -53368,6 +53277,13 @@
             "score": 85.8,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 4.8,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "vram": {
@@ -53387,7 +53303,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
             "terminal_bench_2_1",
@@ -53499,7 +53414,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -53938,7 +53852,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": 8,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 4.1,
@@ -54004,7 +53917,8 @@
         "arena_text_non_english": 1431,
         "arena_webdev": 1415,
         "arena_agent": -15.8,
-        "arena_agent_tool_hallucination": -1.9
+        "arena_agent_tool_hallucination": -1.9,
+        "real_swe_1_1": 8
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -54079,7 +53993,6 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
         "cyberbench_1_0": "2026-09-28",
-        "real_swe": "2026-10-15",
         "frontiermath_tier_4": "2026-10-30",
         "frontiermath_tiers_1_3": "2026-10-30",
         "simpleqa_verified": "2026-10-30",
@@ -54090,7 +54003,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -54165,7 +54079,6 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "https://evals.report/benchmarks/charxiv",
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
-        "real_swe": "https://realswe.withspecific.com",
         "frontiermath_tier_4": "https://epoch.ai/benchmarks/frontiermath-tier-4-v2",
         "frontiermath_tiers_1_3": "https://epoch.ai/benchmarks/frontiermath-tiers-1-3-v2",
         "simpleqa_verified": "https://epoch.ai/benchmarks/simple-qa-verified",
@@ -54176,7 +54089,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -54222,13 +54136,6 @@
             "date": "2026-10-22",
             "score": 56.9,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 8,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "frontierswe_2_0": [
@@ -54582,6 +54489,13 @@
             "score": 78.1,
             "source": "https://evals.report/benchmarks/charxiv"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 8,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -54591,7 +54505,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
@@ -54724,7 +54637,6 @@
         "swe_atlas_rf": 53.8,
         "swe_atlas_tw": 27.1,
         "swe_atlas_qna": 27.2,
-        "real_swe": null,
         "deepswe_1_1": 62.8,
         "deepswe_1_0": 7.5,
         "frontierswe_2_0": null,
@@ -55625,7 +55537,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -56080,7 +55991,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -56504,7 +56414,6 @@
         "swe_atlas_rf": 21,
         "swe_atlas_tw": 25.8,
         "swe_atlas_qna": 13.1,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -57260,7 +57169,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 15.9,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 23.9,
         "frontierswe_2_0": null,
@@ -58086,7 +57994,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 30.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -58718,7 +58625,6 @@
         "swe_atlas_rf": 46.2,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 60,
-        "real_swe": 11.2,
         "deepswe_1_1": 68.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": 25.9,
@@ -58789,7 +58695,9 @@
         "arena_text_non_english": 1477,
         "arena_webdev": 1656,
         "arena_agent": 1.1,
-        "arena_agent_tool_hallucination": 0.8
+        "arena_agent_tool_hallucination": 0.8,
+        "real_swe_1_0": 20,
+        "real_swe_1_1": 11.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -58863,7 +58771,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-09-09",
-        "real_swe": "2026-10-15",
         "cyberbench_1_0": "2026-09-28",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
@@ -58880,7 +58787,9 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_0": "2026-09-23",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -58954,7 +58863,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3",
-        "real_swe": "https://realswe.withspecific.com",
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -58971,7 +58879,9 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_0": "https://realswe.withspecific.com",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -59029,23 +58939,6 @@
             "date": "2026-10-22",
             "score": 60,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-09-14",
-            "score": 18.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 20,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-15",
-            "score": 11.2,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -59498,6 +59391,25 @@
             "score": 84.8,
             "source": "https://huggingface.co/moonshotai/Kimi-K3"
           }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 18.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 20,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 11.2,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -59507,7 +59419,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -59659,7 +59570,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -60011,7 +59921,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -60600,7 +60509,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": 19.5,
         "frontierswe_2_0": null,
@@ -61226,7 +61134,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -61931,7 +61838,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -62298,7 +62204,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 56.2,
-        "real_swe": null,
         "deepswe_1_1": 57.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": 15.8,
@@ -63068,7 +62973,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -63617,7 +63521,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -64056,7 +63959,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -64497,7 +64399,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -65104,7 +65005,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -65679,7 +65579,6 @@
         "swe_atlas_rf": 51.4,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 58.6,
-        "real_swe": 26.4,
         "deepswe_1_1": 69,
         "deepswe_1_0": null,
         "frontierswe_2_0": 30.2,
@@ -65749,7 +65648,9 @@
         "arena_text_non_english": 1465,
         "arena_webdev": 1623,
         "arena_agent": 0.9,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "real_swe_1_0": 37.5,
+        "real_swe_1_1": 26.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -65823,7 +65724,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
         "deepsec_bench_aa": "2026-10-27",
@@ -65839,7 +65739,9 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_0": "2026-09-23",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -65913,7 +65815,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -65929,7 +65830,9 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_0": "https://realswe.withspecific.com",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -65987,23 +65890,6 @@
             "date": "2026-10-22",
             "score": 58.6,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-09-14",
-            "score": 28.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 37.5,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-15",
-            "score": 26.4,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -66468,6 +66354,25 @@
             "score": 86.8,
             "source": "https://www.vals.ai/benchmarks/mmlu_pro"
           }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 28.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 37.5,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 26.4,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "vram_source": {
@@ -66482,7 +66387,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -66612,7 +66516,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 42.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -67354,7 +67257,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -67814,7 +67716,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -68286,7 +68187,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -68566,7 +68466,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 55.6,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -68929,7 +68828,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 39.8,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -69292,7 +69190,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 20.6,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -69655,7 +69552,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 14.8,
@@ -70184,7 +70080,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 63.4,
         "deepswe_1_0": null,
         "frontierswe_2_0": 18.1,
@@ -70984,7 +70879,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 58.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -71610,7 +71504,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -72119,7 +72012,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -72678,7 +72570,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -73212,7 +73103,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": 33.6,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -73272,7 +73162,8 @@
         "nl2repo": 58.9,
         "arena_webdev": 1631,
         "arena_agent": 1.2,
-        "arena_agent_tool_hallucination": 0.1
+        "arena_agent_tool_hallucination": 0.1,
+        "real_swe_1_1": 33.6
       },
       "scores_updated": {
         "openbench_index": null,
@@ -73347,12 +73238,12 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "2026-09-28",
-        "real_swe": "2026-10-15",
         "apex_agents": "2026-10-30",
         "nl2repo": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": null,
@@ -73427,12 +73318,12 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
-        "real_swe": "https://realswe.withspecific.com",
         "apex_agents": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "nl2repo": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "swe_bench_multilingual": [
@@ -73483,13 +73374,6 @@
             "date": "2026-09-15",
             "score": null,
             "source": null
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 33.6,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -73632,6 +73516,13 @@
             "score": 43.4,
             "source": "https://huggingface.co/tencent/Hy4-preview"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 33.6,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "vram_source": {
@@ -73642,7 +73533,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "terminal_bench_4_0",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -73738,7 +73628,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 48.4,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -74266,7 +74155,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -74817,7 +74705,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 61,
-        "real_swe": 38.4,
         "deepswe_1_1": 74.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -74888,7 +74775,8 @@
         "arena_text_non_english": 1461,
         "arena_webdev": 1619,
         "arena_agent": 1.9,
-        "arena_agent_tool_hallucination": 0.6
+        "arena_agent_tool_hallucination": 0.6,
+        "real_swe_1_1": 38.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -74963,7 +74851,6 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "2026-09-28",
-        "real_swe": "2026-10-15",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
         "deepsec_bench_aa": "2026-10-27",
@@ -74979,7 +74866,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -75054,7 +74942,6 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
-        "real_swe": "https://realswe.withspecific.com",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -75070,7 +74957,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -75092,13 +74980,6 @@
             "date": "2026-10-22",
             "score": 61,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 38.4,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -75492,6 +75373,13 @@
             "score": null,
             "source": null
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 38.4,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "vram_source": {
@@ -75506,7 +75394,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "terminal_bench_4_0",
@@ -75640,7 +75527,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -76069,7 +75955,6 @@
         "swe_atlas_rf": 56.7,
         "swe_atlas_tw": 67,
         "swe_atlas_qna": 66.4,
-        "real_swe": 45.6,
         "deepswe_1_1": 64.3,
         "deepswe_1_0": null,
         "frontierswe_2_0": 56.3,
@@ -76139,7 +76024,9 @@
         "arena_text_non_english": 1497,
         "arena_webdev": 1746,
         "arena_agent": 13.4,
-        "arena_agent_tool_hallucination": 0.6
+        "arena_agent_tool_hallucination": 0.6,
+        "real_swe_1_0": 45,
+        "real_swe_1_1": 45.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -76213,7 +76100,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-15",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
         "deepsec_bench_aa": "2026-10-27",
@@ -76229,7 +76115,9 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_0": "2026-09-23",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -76303,7 +76191,6 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -76319,7 +76206,9 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_0": "https://realswe.withspecific.com",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -76403,23 +76292,6 @@
             "date": "2026-10-27",
             "score": 66.4,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-09-14",
-            "score": 38.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 45,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-15",
-            "score": 45.6,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -76853,6 +76725,25 @@
             "score": 77.9,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 38.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 45,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 45.6,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -76862,7 +76753,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -76992,7 +76882,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 48.7,
-        "real_swe": null,
         "deepswe_1_1": 67.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -77796,7 +77685,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 69.6,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -78610,7 +78498,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": 45.9,
         "swe_atlas_qna": 46,
-        "real_swe": 26.3,
         "deepswe_1_1": 72.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": 32.2,
@@ -78676,7 +78563,8 @@
         "arena_text": 1485,
         "arena_text_non_english": 1475,
         "arena_agent": 4.8,
-        "arena_agent_tool_hallucination": 0.6
+        "arena_agent_tool_hallucination": 0.6,
+        "real_swe_1_0": 26.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -78750,7 +78638,6 @@
         "zerobench": "2026-09-16",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-09-23",
         "cyberbench_1_0": "2026-09-28",
         "frontiermath_tier_4": "2026-10-30",
         "frontiermath_tiers_1_3": "2026-10-30",
@@ -78762,7 +78649,8 @@
         "arena_text": "2026-10-30",
         "arena_text_non_english": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_0": "2026-09-23"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78836,7 +78724,6 @@
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com",
         "cyberbench_1_0": "https://www.vals.ai/benchmarks/cyber-v1",
         "frontiermath_tier_4": "https://epoch.ai/benchmarks/frontiermath-tier-4-v2",
         "frontiermath_tiers_1_3": "https://epoch.ai/benchmarks/frontiermath-tiers-1-3-v2",
@@ -78848,7 +78735,8 @@
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_0": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -78913,18 +78801,6 @@
             "date": "2026-10-22",
             "score": 46,
             "source": "https://labs.scale.com/leaderboard/sweatlas-qna"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-09-14",
-            "score": 16.2,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 26.3,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -79389,6 +79265,18 @@
             "score": 22,
             "source": "https://zerobench.github.io"
           }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 16.2,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 26.3,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -79398,7 +79286,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -79544,7 +79431,6 @@
         "swe_atlas_rf": 59.1,
         "swe_atlas_tw": 50.7,
         "swe_atlas_qna": 59.1,
-        "real_swe": 56,
         "deepswe_1_1": 74.1,
         "deepswe_1_0": null,
         "frontierswe_2_0": 65.5,
@@ -79614,7 +79500,9 @@
         "arena_text_non_english": 1463,
         "arena_webdev": 1773,
         "arena_agent": 13,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "real_swe_1_0": 46.3,
+        "real_swe_1_1": 56
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -79688,7 +79576,6 @@
         "zerobench": "2026-09-22",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "2026-10-20",
         "aa_cyber_index": "2026-10-27",
         "cwe_bench_aa": "2026-10-27",
         "deepsec_bench_aa": "2026-10-27",
@@ -79704,7 +79591,9 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_0": "2026-09-23",
+        "real_swe_1_1": "2026-10-20"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -79778,7 +79667,6 @@
         "zerobench": "https://zerobench.github.io",
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "real_swe": "https://realswe.withspecific.com",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -79794,7 +79682,9 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_0": "https://realswe.withspecific.com",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -79857,28 +79747,6 @@
             "date": "2026-10-22",
             "score": 59.1,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-09-14",
-            "score": 33.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-09-23",
-            "score": 46.3,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-15",
-            "score": 44.8,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-20",
-            "score": 56,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -80326,6 +80194,30 @@
             "score": 43.2,
             "source": "https://zerobench.github.io"
           }
+        ],
+        "real_swe_1_0": [
+          {
+            "date": "2026-09-14",
+            "score": 33.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-09-23",
+            "score": 46.3,
+            "source": "https://realswe.withspecific.com"
+          }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 44.8,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-20",
+            "score": 56,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -80335,7 +80227,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -80468,7 +80359,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -80542,7 +80432,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -80616,7 +80505,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -80765,7 +80653,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -80840,7 +80727,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -80915,7 +80801,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81233,7 +81118,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81308,7 +81192,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81383,7 +81266,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81692,7 +81574,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81767,7 +81648,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -81842,7 +81722,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82198,7 +82077,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82273,7 +82151,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82348,7 +82225,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82706,7 +82582,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82780,7 +82655,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -82854,7 +82728,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -83155,7 +83028,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 71.9,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -83240,7 +83112,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-09-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -83325,7 +83196,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -83891,7 +83761,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 67.9,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -83971,7 +83840,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-09-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -84051,7 +83919,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -84607,7 +84474,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 65.9,
-        "real_swe": 56.8,
         "deepswe_1_1": 68.4,
         "deepswe_1_0": null,
         "frontierswe_2_0": 62.3,
@@ -84677,7 +84543,8 @@
         "arena_text_non_english": 1497,
         "arena_webdev": 1810,
         "arena_agent": 20.9,
-        "arena_agent_tool_hallucination": 0.5
+        "arena_agent_tool_hallucination": 0.5,
+        "real_swe_1_1": 56.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -84697,7 +84564,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-19",
         "deepswe_1_1": "2026-09-24",
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-09-22",
@@ -84767,7 +84633,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-19"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -84787,7 +84654,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://www.frontierswe.com",
@@ -84857,7 +84723,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -84903,18 +84770,6 @@
             "date": "2026-10-22",
             "score": 65.9,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 42.4,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-19",
-            "score": 56.8,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -85318,6 +85173,18 @@
             "score": 35,
             "source": "https://zerobench.github.io"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 42.4,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-19",
+            "score": 56.8,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -85327,7 +85194,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -85465,7 +85331,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 38.2,
-        "real_swe": 10.4,
         "deepswe_1_1": 63.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -85534,7 +85399,8 @@
         "arena_text_non_english": 1429,
         "arena_webdev": 1579,
         "arena_agent": 2.2,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "real_swe_1_1": 10.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -85554,7 +85420,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-15",
         "deepswe_1_1": "2026-09-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -85623,7 +85488,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -85643,7 +85509,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -85712,7 +85577,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -85742,13 +85608,6 @@
             "date": "2026-10-22",
             "score": 38.2,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 10.4,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -86098,6 +85957,13 @@
             "score": 12.2,
             "source": "https://zerobench.github.io"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 10.4,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -86107,7 +85973,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -86233,7 +86098,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 57.5,
-        "real_swe": null,
         "deepswe_1_1": 69,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -86323,7 +86187,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-09-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-09-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -86413,7 +86276,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -86985,7 +86847,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87061,7 +86922,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87137,7 +86997,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87345,7 +87204,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 73.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87424,7 +87282,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-10-23",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87503,7 +87360,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87890,7 +87746,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 55.8,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -87965,7 +87820,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-09-28",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88040,7 +87894,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/nex-agi/Nex-N2.5-Pro",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88225,7 +88078,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 36.1,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88300,7 +88152,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-09-28",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88375,7 +88226,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/nex-agi/Nex-N2.5-mini",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88560,7 +88410,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": 65.6,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88635,7 +88484,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "2026-09-28",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88710,7 +88558,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/nex-agi/Nex-N2.5-max",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -88861,7 +88708,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 64.3,
-        "real_swe": 51.2,
         "deepswe_1_1": 72,
         "deepswe_1_0": null,
         "frontierswe_2_0": 61.9,
@@ -88928,7 +88774,8 @@
         "arena_text_non_english": 1458,
         "arena_webdev": 1770,
         "arena_agent": 13.8,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "real_swe_1_1": 51.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -88948,7 +88795,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-15",
         "deepswe_1_1": "2026-09-28",
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-09-29",
@@ -89015,7 +88861,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -89035,7 +88882,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://epoch.ai/benchmarks/frontierswe",
@@ -89102,7 +88948,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -89162,13 +89009,6 @@
             "date": "2026-10-22",
             "score": 64.3,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 51.2,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -89499,6 +89339,13 @@
             "score": 80.1,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 51.2,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -89508,7 +89355,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -89630,7 +89476,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 60,
-        "real_swe": 47.2,
         "deepswe_1_1": 73.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -89696,7 +89541,8 @@
         "arena_text_non_english": 1468,
         "arena_webdev": 1751,
         "arena_agent": 12.5,
-        "arena_agent_tool_hallucination": 0.8
+        "arena_agent_tool_hallucination": 0.8,
+        "real_swe_1_1": 47.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -89716,7 +89562,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-15",
         "deepswe_1_1": "2026-09-29",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -89782,7 +89627,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -89802,7 +89648,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -89868,7 +89713,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -89900,13 +89746,6 @@
             "date": "2026-10-22",
             "score": 60,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 47.2,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -90229,6 +90068,13 @@
             "score": 71.4,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 47.2,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -90238,7 +90084,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -90353,7 +90198,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -90428,7 +90272,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -90503,7 +90346,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -90670,7 +90512,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 55.1,
-        "real_swe": 39.2,
         "deepswe_1_1": 78.8,
         "deepswe_1_0": null,
         "frontierswe_2_0": 55,
@@ -90737,7 +90578,8 @@
         "arena_text_non_english": 1510,
         "arena_webdev": 1679,
         "arena_agent": 10.7,
-        "arena_agent_tool_hallucination": 0.3
+        "arena_agent_tool_hallucination": 0.3,
+        "real_swe_1_1": 39.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -90757,7 +90599,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-15",
         "deepswe_1_1": "2026-10-01",
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-10-01",
@@ -90824,7 +90665,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -90844,7 +90686,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://www.frontierswe.com",
@@ -90911,7 +90752,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -90950,13 +90792,6 @@
             "date": "2026-10-22",
             "score": 55.1,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 39.2,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -91265,6 +91100,13 @@
             "score": 69.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 39.2,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -91274,7 +91116,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
@@ -91386,7 +91227,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 55.9,
-        "real_swe": null,
         "deepswe_1_1": 59.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -91461,7 +91301,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-08",
-        "real_swe": null,
         "deepswe_1_1": "2026-09-30",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -91536,7 +91375,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-        "real_swe": null,
         "deepswe_1_1": "https://threatfrontier.com/articles/ling-3-1-flash-ant-group-best-flash-model-yet-cybergym",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -91884,7 +91722,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": 50.8,
         "swe_atlas_qna": 58.6,
-        "real_swe": null,
         "deepswe_1_1": 67.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -91969,7 +91806,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": "2026-10-03",
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -92054,7 +91890,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": "https://huggingface.co/SHSLab/Step-5-Preview-BF16",
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/SHSLab/Step-5-Preview-BF16",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -92589,7 +92424,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -92666,7 +92500,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -92743,7 +92576,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93028,7 +92860,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93103,7 +92934,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93178,7 +93008,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93283,7 +93112,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 58.9,
-        "real_swe": null,
         "deepswe_1_1": 61.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93372,7 +93200,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-29",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-06",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -93461,7 +93288,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://mistral.ai/news/mistral-large-4",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -94025,7 +93851,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 33.9,
-        "real_swe": null,
         "deepswe_1_1": 49,
         "deepswe_1_0": null,
         "frontierswe_2_0": 43.8,
@@ -94112,7 +93937,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-08",
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-10-08",
@@ -94199,7 +94023,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://www.frontierswe.com",
@@ -94746,7 +94569,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 61.6,
-        "real_swe": 42.4,
         "deepswe_1_1": 75.8,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -94810,7 +94632,8 @@
         "arena_text_non_english": 1497,
         "arena_webdev": 1652,
         "arena_agent": 3.1,
-        "arena_agent_tool_hallucination": -1
+        "arena_agent_tool_hallucination": -1,
+        "real_swe_1_1": 42.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -94830,7 +94653,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": "2026-10-15",
         "deepswe_1_1": "2026-10-13",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -94894,7 +94716,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-15"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -94914,7 +94737,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -94978,7 +94800,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -95017,13 +94840,6 @@
             "date": "2026-10-22",
             "score": 61.6,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 42.4,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "deepswe_1_1": [
@@ -95222,6 +95038,13 @@
             "score": 72.6,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 42.4,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -95231,7 +95054,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "deepswe_1_1",
             "swe_marathon_1_1",
             "terminal_bench_4_0",
@@ -95327,7 +95149,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 68.8,
-        "real_swe": null,
         "deepswe_1_1": 77,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -95405,7 +95226,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-13",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -95483,7 +95303,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -95818,7 +95637,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 62.9,
-        "real_swe": 28,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 29.5,
@@ -95888,7 +95706,8 @@
         "arena_text_non_english": 1428,
         "arena_webdev": 1637,
         "arena_agent": 2.4,
-        "arena_agent_tool_hallucination": 0.7
+        "arena_agent_tool_hallucination": 0.7,
+        "real_swe_1_1": 28
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -95908,7 +95727,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-28",
-        "real_swe": "2026-10-20",
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-10-28",
@@ -95978,7 +95796,8 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-20"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -95998,7 +95817,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://epoch.ai/benchmarks/frontierswe",
@@ -96068,7 +95886,8 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -96088,18 +95907,6 @@
             "date": "2026-10-28",
             "score": 62.9,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-15",
-            "score": 25.6,
-            "source": "https://realswe.withspecific.com"
-          },
-          {
-            "date": "2026-10-20",
-            "score": 28,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "frontierswe_2_0": [
@@ -96397,6 +96204,18 @@
             "score": 61.4,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-15",
+            "score": 25.6,
+            "source": "https://realswe.withspecific.com"
+          },
+          {
+            "date": "2026-10-20",
+            "score": 28,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -96406,7 +96225,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "frontierswe_2_0",
             "frontiercode_extended_1_1",
             "swe_marathon_1_1",
@@ -96525,7 +96343,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -96600,7 +96417,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -96675,7 +96491,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -96845,7 +96660,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -96925,7 +96739,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -97005,7 +96818,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -97349,7 +97161,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 50.8,
-        "real_swe": null,
         "deepswe_1_1": 60.2,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -97431,7 +97242,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-16",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -97513,7 +97323,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -97931,7 +97740,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 37.6,
-        "real_swe": null,
         "deepswe_1_1": 39.8,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -98017,7 +97825,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-16",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -98103,7 +97910,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://artificialanalysis.ai/agents/coding-agents",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -98558,7 +98364,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 61.6,
-        "real_swe": null,
         "deepswe_1_1": 77,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -98647,7 +98452,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-22",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-17",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -98736,7 +98540,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99249,7 +99052,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99324,7 +99126,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99399,7 +99200,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99560,7 +99360,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99635,7 +99434,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99710,7 +99508,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99922,7 +99719,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99997,7 +99793,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100072,7 +99867,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100316,7 +100110,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100391,7 +100184,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100466,7 +100258,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100599,7 +100390,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100674,7 +100464,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100749,7 +100538,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -100989,7 +100777,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": 39.2,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101053,7 +100840,8 @@
         "apex_agents": 67.2,
         "arena_webdev": 1695,
         "arena_agent": 6,
-        "arena_agent_tool_hallucination": 0.8
+        "arena_agent_tool_hallucination": 0.8,
+        "real_swe_1_1": 39.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -101073,7 +100861,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": "2026-10-26",
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101137,7 +100924,8 @@
         "apex_agents": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "real_swe_1_1": "2026-10-26"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -101157,7 +100945,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": "https://realswe.withspecific.com",
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101221,7 +101008,8 @@
         "apex_agents": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "real_swe_1_1": "https://realswe.withspecific.com"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -101234,13 +101022,6 @@
             "date": "2026-10-28",
             "score": 46,
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
-          }
-        ],
-        "real_swe": [
-          {
-            "date": "2026-10-26",
-            "score": 39.2,
-            "source": "https://realswe.withspecific.com"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -101456,6 +101237,13 @@
             "score": 83.9,
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
           }
+        ],
+        "real_swe_1_1": [
+          {
+            "date": "2026-10-26",
+            "score": 39.2,
+            "source": "https://realswe.withspecific.com"
+          }
         ]
       },
       "aa_variant": {
@@ -101465,7 +101253,6 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "real_swe",
             "terminal_bench_4_0",
             "vibe_code_bench_1_1",
             "scicode",
@@ -101573,7 +101360,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101648,7 +101434,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101723,7 +101508,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101833,7 +101617,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 54,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -101917,7 +101700,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-27",
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102001,7 +101783,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102392,7 +102173,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102467,7 +102247,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102542,7 +102321,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102651,7 +102429,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102726,7 +102503,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102801,7 +102577,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102862,7 +102637,8 @@
         "fp16": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
         "int8": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/",
         "int4": "https://www.spheron.network/tools/gpu-recommender/prism-ml/Ternary-Bonsai-2-9B-gguf/"
-      }
+      },
+      "scores_history": {}
     },
     {
       "name": "nanbeige4-3-33b",
@@ -102897,7 +102673,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 50.8,
-        "real_swe": null,
         "deepswe_1_1": 65.5,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -102978,7 +102753,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-27",
-        "real_swe": null,
         "deepswe_1_1": "2026-10-27",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -103059,7 +102833,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
-        "real_swe": null,
         "deepswe_1_1": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -103297,7 +103070,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": 63.7,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": 61.2,
@@ -103382,7 +103154,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "2026-10-29",
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": "2026-10-29",
@@ -103467,7 +103238,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": "https://artificialanalysis.ai/agents/coding-agents",
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": "https://www.frontierswe.com",
@@ -103799,7 +103569,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -103878,7 +103647,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -103957,7 +103725,6 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "real_swe": null,
         "deepswe_1_1": null,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,

@@ -78,7 +78,6 @@ class TestRowFetchers(unittest.TestCase):
 
     CASES = [
         ("toolathlon", "score", "fetch_toolathlon_data"),
-        ("real_swe", "score", "fetch_real_swe_data"),
         ("programbench", "score", "fetch_programbench_data"),
         ("kernelbench", "score", "fetch_kernelbench_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
@@ -105,6 +104,7 @@ class TestRowFetchers(unittest.TestCase):
         ),
         ("frontierswe", "fetch_frontierswe_data", "frontierswe", "2.0", {}),
         ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon", "1.1", {}),
+        ("real_swe", "fetch_real_swe_data", "real_swe", "1.1", {}),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:

@@ -1917,7 +1917,8 @@ def fetch_real_swe_data(
         raise RuntimeError("Unexpected real-swe JSON format: expected a list")
 
     real_swe_to_slug = load_real_swe_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1927,35 +1928,26 @@ def fetch_real_swe_data(
         slug = real_swe_to_slug.get(real_swe_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        # The page carries one release at a time and names it in its title;
+        # a release with no column is reported, never filed next door.
+        if not keep_best_by_revision(by_key, "real_swe", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} real-swe row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_real_swe_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        real_swe_model = by_slug.get(slug)
-        if real_swe_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "real_swe", real_swe_model.get("score"),
-            REAL_SWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, REAL_SWE_SOURCE_URL, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_mcp_atlas_cmd(script: Path) -> list[str]:
@@ -3930,7 +3922,7 @@ def main() -> int:
         )
         changes.extend(kernelbench_changes)
 
-    real_swe_by_slug: dict[str, dict[str, Any]] = {}
+    real_swe_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     real_swe_matched = 0
     real_swe_updated = 0
     if not args.skip_real_swe:
@@ -4309,7 +4301,7 @@ def main() -> int:
     if not args.skip_kernelbench:
         print(f"models returned by kernelbench: {len(kernelbench_by_slug)}")
     if not args.skip_real_swe:
-        print(f"models returned by real-swe: {len(real_swe_by_slug)}")
+        print(f"models returned by real-swe: {revision_model_count(real_swe_by_slug)}" + revision_breakdown(real_swe_by_slug))
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {revision_model_count(deepswe_by_slug)}" + revision_breakdown(deepswe_by_slug))
     if not args.skip_datacurve:
