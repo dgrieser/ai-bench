@@ -384,6 +384,16 @@ INDEXES: list[IndexDef] = [
             ("kernelbench_hard", 0.4),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),
+            # Added 2026-10-30 (docs/benchmark-candidates-2026-10.md). ALE-Bench
+            # is scored on a contest performance rating rather than pass/fail,
+            # so it does not saturate: 51 tracked models, 38 open, read off
+            # Epoch's copy of Sakana's board, 0.88 with this index. 0.4, the
+            # weight KernelBench Hard entered at, until the calibration sees it.
+            ("ale_bench", 0.4),
+            # Building a whole library from a spec, which nothing else here
+            # measures -- but every value is a lab self-report and the harness
+            # runs from an in-house loop to Claude Code, so it enters low.
+            ("nl2repo", 0.25),
         ],
     ),
     IndexDef(
@@ -418,6 +428,22 @@ INDEXES: list[IndexDef] = [
             ("terminal_bench_2_1", 0.2),
             ("tau2_bench_telecom", 0.15),
             ("ifbench", 0.15),
+            # Added 2026-10-30 (docs/benchmark-candidates-2026-10.md).
+            # APEX-Agents: professional-services work in simulated apps, 46
+            # tracked models off Mercor's board (via Epoch) with card and
+            # llm-stats fill, a 13.8-point head, 0.82 with this index.
+            ("apex_agents", 0.5),
+            # A simulated year of running a business: the only member that
+            # tests coherence over thousands of steps. Scored in dollars and
+            # noisy run to run, 27 models, so below the anchors.
+            ("vending_bench_2", 0.35),
+            # Claw-Eval's official General-split score, from the cards' eval
+            # results: self-reports, but of one published number.
+            ("claw_eval", 0.3),
+            # The two τ²-Bench domains Telecom's saturation left with headroom;
+            # self-reported with each lab's trial count, so held near Telecom.
+            ("tau2_bench_retail", 0.2),
+            ("tau2_bench_airline", 0.2),
         ],
     ),
     IndexDef(
@@ -435,6 +461,15 @@ INDEXES: list[IndexDef] = [
             # 0.78 with hle on the models both carry, but 9 models, 3 of them
             # open-weight, from one source. Raise it once others report it.
             ("hle_diamond", 0.3),
+            # Added 2026-10-30 (docs/benchmark-candidates-2026-10.md): the
+            # mathematics with headroom AIME no longer has. FrontierMath is
+            # Epoch's own run on an unreleased set -- the cleanest provenance
+            # in the group -- and Tier 4 has a 10-point head where AIME 2026
+            # has 27 of 37 models at 90 or above. HMMT February 2026 is
+            # post-cutoff, mostly self-reported.
+            ("frontiermath_tier_4", 0.6),
+            ("frontiermath_tiers_1_3", 0.4),
+            ("hmmt_feb_2026", 0.3),
             # Deliberately not aggregated, though they are knowledge columns in
             # llm.json: aa_omniscience_hallucination (the same AA run as
             # aa_omniscience, whose index already prices confident errors and
@@ -513,6 +548,15 @@ INDEXES: list[IndexDef] = [
             ("aa_omniscience_accuracy", 0.6),
             ("aa_lcr", 0.45),
             ("ifbench", 0.3),
+            # Added 2026-10-30 (docs/benchmark-candidates-2026-10.md).
+            # SimpleQA Verified grades a declined answer above a confident
+            # wrong one, as the anchor does, on a question set Epoch runs
+            # itself; 0.45 with this index, so it is not the anchor again.
+            ("simpleqa_verified", 0.4),
+            # Hallucinated tool calls in real agent sessions, first-party from
+            # Agent Arena: the one confident-error measure here that is not a
+            # question-answering run.
+            ("arena_agent_tool_hallucination", 0.3),
             # Deliberately not aggregated, though both are trust-adjacent
             # columns in llm.json: aa_omniscience is a function of the two
             # members above (accuracy netted against confident error) over the

@@ -1834,6 +1834,23 @@ index = round(0.30 × coding + 0.30 × tooling + 0.25 × trust + 0.15 × knowled
 The weights live in `OPENBENCH_INDEX` in `derive_indexes.py`; they are relative
 in the sense that only ratios matter, but are kept summing to 1.
 
+Of the columns added on 2026-10-30
+([docs/benchmark-candidates-2026-10.md](docs/benchmark-candidates-2026-10.md)),
+twelve joined an index — the rows dated that day in the Coding, Tooling,
+Knowledge and Trust tables below — and six did not:
+
+- **Arena Text, Text (non-English), Code (WebDev) and Agent** form the Human
+  Preference category. Human votes are the one signal the table had none of,
+  and that is a reason to show them beside the indexes rather than fold them
+  into one: a pairwise preference rating is a different kind of evidence from
+  a task pass rate, and Agent Arena has five months of history. Only its
+  tool-hallucination signal is aggregated, in Trust.
+- **ARC-AGI-2** is the one abstract-reasoning test available, but the best
+  model is at 95% with a 3.8-point head; ARC-AGI-3 is the version to index once
+  it covers enough models.
+- **MMMLU** is the table's first multilingual column, self-reported and with a
+  2.6-point head; it measures language coverage, which no index here is about.
+
 ## Coding Index
 
 The **Coding** column is not scraped: `derive_indexes.py` computes
@@ -2092,6 +2109,8 @@ the coding index as it stood before the change.
 | Terminal-Bench 2.1 | 119 (105) | 91.4 | 3.8 | 0.96 | 0.4 | **0.25** |
 | LiveCodeBench | 118 (84) | 92.4 | 3.0 | 0.82 | 0.4 | **0.25** |
 | SWE-bench Verified | 80 (29) | 96.4 | 3.0 | 0.90 | 0.15 | **0.1** |
+| ALE-Bench | 51 (51) | 2951 | 774 | 0.89 | — | **0.4** |
+| NL2Repo | 25 (0) | 68.2 | 8.7 | 0.92 | — | **0.25** |
 
 ¹ Both figures rest on one model-card claim, `step-5-preview` at 72.7, 21
 points above the board's best run. On the board's own runs the top is 51.3 and
@@ -3027,6 +3046,11 @@ Contributing benchmarks and why they carry the weight they do:
 | Terminal-Bench 2.1 | 0.2 | Coverage only. It has saturated — 91.4 at the top, 3.8 points to the fifth — and with 4.0 now on 85 models it is no longer the reach that kept it at 0.3. |
 | τ²-Bench Telecom | 0.15 | Saturated: 99.1 at the top and 2.0 points to the fifth, so it cannot separate anything above the mid-field. Kept at the floor for its 111 scored models. |
 | IFBench | 0.15 | A tool call has to be well-formed before it can be right, which is the whole of its claim here — it is not a tool-use benchmark, and it is weighted last accordingly. It correlates 0.81 with Terminal-Bench 2.1 but only 0.35 with Toolathlon and 0.33 with ITBench-AA, and it is the tightest head in the group, 1.6 points between the best model and the fifth. What it brings is reach: 122 scored models, the widest of the thirteen. |
+| APEX-Agents | 0.5 | Added 2026-10-30. Mercor's long-horizon professional-services tasks — banking, consulting, law — carried out in simulated work apps and graded against an expert rubric; pass@1. **46 tracked models**, 31 of them off Mercor's own board through Epoch's copy, the rest card and llm-stats fill; a 13.8-point head at 82.4, far from saturated. 0.91 with this index after joining, so it confirms the ranking more than it reorders it — the reason it sits mid-table rather than near the anchors. |
+| Vending-Bench 2 | 0.35 | Added 2026-10-30. A simulated year of running a vending business, scored by the balance it ends on: the only member that tests coherence over thousands of steps rather than minutes. Andon Labs' board via Epoch, 27 models. Dollars, and noisy from run to run (some models end in the red), which a pairwise fit tolerates but a high weight would amplify. |
+| Claw-Eval | 0.3 | Added 2026-10-30. The official General-split score (161 tasks) as the cards' Hugging Face eval results carry it — 17 models, every one a self-report of a single published number. The board's other figures (pass@3, pass^3, split averages) are not read. 0.62 with the index: the most independent of the new members. |
+| τ²-Bench Retail | 0.2 | Added 2026-10-30, with Airline: the two τ² domains that still have headroom (88.6 at the top, a 17.3-point head) where Telecom has saturated. 12 models, all self-reported under each lab's trial count, so held near Telecom. |
+| τ²-Bench Airline | 0.2 | As Retail: 13 models, an 88.0 top and a 27.5-point head, all self-reported. |
 
 **Re-weighted 2026-10-03.** Coverage and saturation had moved enough under the
 old rungs to reorder them: Terminal-Bench 4.0 rose from 32 scored models to 85,
@@ -3117,6 +3141,9 @@ Contributing benchmarks and why they carry the weight they do:
 | AIME 2025 | 0.4 | The math column, and the member that overlaps the others least: mean Spearman **0.65**, the lowest of the six, and it owns the two weakest links in the set — 0.41 with AA-Omniscience and 0.51 with CritPt — because working out a competition problem is not recalling a fact. 81 scored models, 33 creators, 59 values AA-run. Weighted below MMLU-Pro because 15 integer-answer problems is a narrow instrument, the head is saturated (13 models at 90 or above, 3.5 points between first and fifth), and a 2025 exam has had a year of public exposure — the contamination risk the newer paper is written for. |
 | GPQA Diamond | 0.3 | The coverage backbone: 152 of 160 models, 44 creators, 134 of those values AA-run — the widest column in the index. It is here for reach and tie-breaking rather than for information, on both of the usual counts. Saturated: 20 models at 90 or above and **2.6 points** between the best model and the fifth, so it cannot separate the frontier at all. And redundant: mean Spearman **0.860** against the other five, narrowly the highest of the six, including 0.95 with MMLU-Pro and 0.93 with HLE — the two strongest links anywhere in this set — which is what a graduate-science multiple-choice test shares with a broad multiple-choice test and a hard mixed exam. What it buys is that almost nobody in the table is unmeasured, which keeps thinly measured models from being ranked on a corner of the construct. |
 | Humanity's Last Exam Diamond | 0.3 | CAIS and Scale AI's refined 1,000-question subset of HLE (500 reasoning, 500 knowledge), every value the maintainers' own run at each model's highest reasoning effort, no tools. On signal it would earn far more: the least saturated column in the index — best 66.2, median 41.6, **24.6 points** between first and fifth, where GPQA Diamond has 2.6 — and not a copy of its parent, **0.78** with HLE on the nine models both carry (0.88 with AA-Omniscience, 0.79 with CritPt, 0.22 with GPQA Diamond). Held to 0.3 by evidence rather than information: **9 models, 3 of them open-weight** (GLM 5.3 on the text-only subset), from a single release post, at an effort setting that differs by vendor. Even so it reorders the head — GPT-6 Astra moves from third to first, Opus 5.5 and Fable 5.1 each down one — while the ranked field moves a mean of 0.1 places and no model falls under the evidence bar. Worth raising to 0.6–0.7 once a second source or some 20 models report it, and then as a share of HLE's weight rather than on top of it, since the two are one exam family. |
+| FrontierMath Tier 4 | 0.6 | Added 2026-10-30. Research-level mathematics from Epoch's unreleased set, every value Epoch's own run — the cleanest provenance in the group beside AA's. A 10-point head where AIME 2026 has 27 of 37 models at 90 or above. 30 models, 15 open. |
+| FrontierMath Tiers 1-3 | 0.4 | Added 2026-10-30. The easier tiers of the same set and run: 33 models, but a 3.5-point head at 93.7, so it adds reach rather than resolution at the top. |
+| HMMT February 2026 | 0.3 | Added 2026-10-30. A post-cutoff olympiad paper, uncontaminated as AIME 2025 no longer is. 20 models, nearly all self-reports; 0.95 with the index, so it is weighted for reach. |
 
 ### What the Knowledge index leaves out
 
@@ -3504,6 +3531,8 @@ weight **2.35**):
 | AA-Omniscience Accuracy | 0.6 | Not a discriminator in its own right so much as the **brake that lets the anchor carry 1.0**, for the reason argued above. Same run, same first-party provenance, and the [candidate audit](docs/benchmark-candidates-2026-08.md) measured its coverage at 91% of the table, level with the hallucination rate. Held well below parity because it is the knowledge half of a knowledge-and-honesty pair, and knowledge is already priced by the [Knowledge index](#knowledge-index) at 1.0 through `aa_omniscience` — the composite of this and the rate. Weighted for what it *prevents*, not what it measures. |
 | AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 121 models across 36 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
 | IFBench | 0.3 | The second reliability axis, and largely its own: **0.37 against the anchor**. It was the group's most independent pair until Accuracy landed at 0.02 against the same column. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 118 models across 37 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one comparison-ranked column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
+| SimpleQA Verified | 0.4 | Added 2026-10-30. Short factual questions graded correct, incorrect or not attempted, so declining beats guessing wrong — the anchor's logic on a second, independently run question set (Epoch's own harness, 32 models). 0.70 with the index: close enough to be measuring the same thing, far enough to be a second opinion on it. |
+| Arena Agent: Tool Hallucination | 0.3 | Added 2026-10-30. Hallucinated tool calls in real users' agent sessions, Agent Arena's own signal: the one confident-error measure here that is not a question-answering run. 40 models. Signed effects around the field's average, which the pairwise fit reads like any other score. |
 
 ### What the Trust index leaves out
 

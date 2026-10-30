@@ -10,6 +10,22 @@ llm-stats lists for each mapped model rather than only its flat leaderboard.
 
 Snapshot 2026-10-30. Method and caveats are in [Appendix A](#appendix-a--method).
 
+> **Outcome (2026-10-30).** Everything recommended was added as columns: the six
+> Epoch files plus FrontierMath Tiers 1-3, the Arena boards (Text, Text
+> non-English, Code/WebDev, Agent, Agent tool hallucination), τ²-Bench Retail and
+> Airline as two columns rather than one pooled column, HMMT February 2026,
+> MMMLU, Claw-Eval (its official General-split score only) and NL2Repo. Twelve
+> joined an index: ALE-Bench and NL2Repo in Coding; APEX-Agents, Vending-Bench 2,
+> Claw-Eval and both τ² domains in Tooling; both FrontierMath columns and HMMT in
+> Knowledge; SimpleQA Verified and Arena tool hallucination in Trust. See
+> README, "OpenBench Index", for the six that did not.
+>
+> **Correction.** Arena's `agent_tool_hallucination` score is *higher*-is-better
+> (rank 1 has the highest score), not lower-is-better as written in §1–§2. The
+> correlations below were computed with the sign flipped, so they read
+> +0.52 / +0.31 rather than −0.52 / −0.31: the same modest independence, in the
+> expected direction.
+
 ---
 
 ## 0. Headline
@@ -59,7 +75,7 @@ models.
 | 6 | **τ²-Bench Retail + Airline** | Tool-calling customer-service dialogue | **41 (41 / 0)** | HF cards + llm-stats | Self-reported | 3.1 pt | 0.86 Tooling | **Add**, low weight (2nd time recommended) |
 | 7 | **Vending-Bench 2** | Year-long agent coherence running a business ($) | **27 (13 / 14)** | Epoch `vending_bench_2_external.csv` | Andon Labs board via Epoch | wide | 0.81 Tooling, **0.77** Trust | **Add** → Tooling |
 | 8 | **ARC-AGI-2** | Abstract fluid reasoning on novel grid puzzles | **29 (16 / 13)** | Epoch `arc_agi_2_external.csv` | ARC Prize, verified runs | **3.8 pt (max 95%)** | 0.88 Knowledge | **Add as column, no index** — head saturating; watch ARC-AGI-3 |
-| 9 | **Arena Agent / Agent tool-hallucination** | Live agent-session success; rate of tool calls the model hallucinates | **35 (19 / 16)** | same HF dataset | Independent, telemetry-based | — | **−0.52** OpenBench | **Add hallucination to Trust**, agent score as column |
+| 9 | **Arena Agent / Agent tool-hallucination** | Live agent-session success; rate of tool calls the model hallucinates | **35 (19 / 16)** | same HF dataset | Independent, telemetry-based | — | **+0.52** OpenBench | **Add hallucination to Trust**, agent score as column |
 | 10 | **HMMT Feb 2026** | Post-cutoff olympiad math | **19 (19 / 0)** | MathArena board + HF/llm-stats | Independent (MathArena) | 10.9 pt | 0.88 Knowledge (n=8) | **Add** (2nd time recommended) |
 | 11 | **MMMLU** + Arena non-English | Multilingual knowledge (14 human-translated languages) | **24 (24 / 0)** | HF cards + llm-stats | Self-reported | 2.6 pt | 0.81 Knowledge | **Add, low weight** — no multilingual column exists |
 | 12 | **Claw-Eval / WildClawBench** | Agentic tasks in the "claw" harness family | **24 / 18 (all open)** | HF eval-results + llm-stats | Self-reported, public boards | 17.7 / 8.6 pt | — | **Add Claw-Eval**, defer WildClaw |
@@ -92,7 +108,7 @@ redundant candidate measured:
 | Text factuality | 62 (47) | 0.74 | 0.73 | 0.82 | 0.83 | 0.70 |
 | WebDev | 56 (42) | 0.95 | 0.94 | 0.94 | 0.94 | 0.81 |
 | Agent | 35 (19) | 0.89 | 0.90 | 0.78 | 0.91 | 0.59 |
-| Agent tool-hallucination (sign flipped) | 35 (19) | −0.52 | −0.51 | −0.54 | −0.62 | −0.31 |
+| Agent tool-hallucination | 35 (19) | 0.52 | 0.51 | 0.54 | 0.62 | 0.31 |
 | Vision | 29 (18) | 0.55 | 0.51 | 0.63 | 0.64 | 0.47 |
 
 **Coverage.** These matches use plain name normalisation only. Rows such as `GLM-5.1`,
@@ -119,12 +135,12 @@ The agent boards use `score`/`score_ci_*` in place of `rating`.
   `gdpval_aa` already does.
 - Lab pre-release testing (the 2025 private-variant controversy) means a released
   checkpoint and the tested row can differ. Map only names that match a released model.
-- **`agent_tool_hallucination` is lower-is-better**, like `aa_omniscience_hallucination`.
+- **`agent_tool_hallucination` is higher-is-better**: a higher score means fewer hallucinated tool calls.
 
 **Placement.** Add a new category, "Human Preference", holding Text (style-controlled) and
 WebDev. `agent_tool_hallucination` is a Trust-index candidate: it measures a failure mode
 nothing else in Trust covers, and it is only weakly correlated with the rest
-(ρ −0.31 against Trust). Start it at about 0.3 and recalibrate.
+(ρ 0.31 against Trust). Start it at about 0.3 and recalibrate.
 
 ---
 
