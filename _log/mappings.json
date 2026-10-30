@@ -1,14 +1,4 @@
 {"entries": [
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "toolathlon", "value": "__unmappable__"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "deepseek-v4-flash-max", "value": "deepseek-v4-flash"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gemma-3-12b-it", "value": "gemma-3-12b"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gemma-4-26b-a4b-it", "value": "gemma-4-26b-a4b"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gemma-4-31b-it", "value": "gemma-4-31b"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gemma-4-e2b-it", "value": "gemma-4-e2b"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gemma-4-e4b-it", "value": "gemma-4-e4b"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "glm-4.7-flash", "value": "glm-4-7-flash"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "glm-5.2", "value": "glm-5-2"},
-{"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gpt-oss-120b-high", "value": "gpt-oss-120b"},
 {"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "gpt-oss-20b-high", "value": "gpt-oss-20b"},
 {"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "longcat-flash-lite", "value": "longcat-flash-lite"},
 {"at": "2026-06-18T13:16:40Z", "by": "hand", "commit": "415d283", "previous": null, "route": "update_llmstats_mapping.py", "subject": "minimax-m2.5", "value": "minimax-m2-5"},
@@ -3998,5 +3988,15 @@
 {"at": "2026-10-29T20:34:45Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/40950238946", "subject": "kimi-k3.1-pro", "value": "kimi-k3-1-pro"},
 {"at": "2026-10-29T20:34:45Z", "by": "admin", "previous": null, "route": "update_vals_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/40950238946", "subject": "mistralai/mistral-large-4-oss", "value": "mistral-large-4"},
 {"at": "2026-10-29T21:13:22Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/40955726656", "subject": "mistralai/Mistral-Large-4-1T-A52B", "value": "mistral-large-4"},
-{"at": "2026-10-30T17:53:06Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41100683892", "subject": "harborframework/terminal-bench-science (terminalbenchscience_0_1)", "value": "__unmappable__"}
+{"at": "2026-10-30T17:53:06Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41100683892", "subject": "harborframework/terminal-bench-science (terminalbenchscience_0_1)", "value": "__unmappable__"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Beam 1.0", "value": "reflection-beam"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Codestral", "value": "__unmappable__"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Kimi K2 (Sep 2025)", "value": "__unmappable__"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Mistral Small 4", "value": "mistral-small-4"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Qwen3-235B-A22B-Instruct (Jul 2025)", "value": "qwen3-235b-a22b-instruct-2507"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "Qwen3.5-27B", "value": "qwen3-5-27b"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "deepseek-v4-flash-vision-exp", "value": "deepseek-v4-flash-vision"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "deepseek-v4.1-flash-1017", "value": "deepseek-v4-1-flash-1017"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "k2-horizon-0.9b", "value": "k2-horizon-0-9b"},
+{"at": "2026-10-30T23:36:57Z", "by": "admin", "previous": null, "route": "update_vals_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41145442968", "subject": "baseten/nemotron-3.5-super-vl-120b-a12b", "value": "nemotron-3-5-super-vl"}
 ]}
