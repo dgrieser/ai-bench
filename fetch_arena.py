@@ -39,7 +39,6 @@ slug and update.py keeps the best, as on every board.
 from __future__ import annotations
 
 import argparse
-import io
 import json
 import re
 import sys
@@ -145,9 +144,20 @@ def latest_path(subset: str, fetch_json=None) -> str:
 
 
 def read_parquet(data: bytes) -> list[dict[str, Any]]:
+    """The rows of one parquet file, read from memory on this thread only.
+
+    Handed a Python file object (io.BytesIO), pyarrow wraps it in a
+    PyReadableFile that an Arrow worker thread may be the last to release --
+    and at interpreter exit that thread waits for a GIL the finalizing main
+    thread never gives back, so the process hangs after it has printed its
+    output (17 of 20 runs did, and in CI it held update_arena_mapping.py until
+    the job was cancelled). A native buffer and a single-threaded read leave
+    no Python object behind on an Arrow thread.
+    """
+    import pyarrow as pa
     import pyarrow.parquet as pq
 
-    return pq.read_table(io.BytesIO(data)).to_pylist()
+    return pq.read_table(pa.BufferReader(data), use_threads=False).to_pylist()
 
 
 def split_effort(raw: str) -> tuple[str, str | None]:
