@@ -9,14 +9,17 @@ per benchmark, one row per model configuration ("glm-5.2_max"), plus
 CC BY 4.0 -- free to reuse with credit, which llm.json's ``credits`` carries
 and llm.html prints under the benchmarks (see EPOCH_CREDIT below).
 
-The hub holds two kinds of file, and eleven of them are read:
+The hub holds two kinds of file, and nineteen of them are read:
 
-  * Epoch's own runs, the same harness for every model: GPQA Diamond and
-    SWE-bench Verified.
+  * Epoch's own runs, the same harness for every model: GPQA Diamond,
+    SWE-bench Verified, FrontierMath (Tiers 1-3 and Tier 4, v2) and SimpleQA
+    Verified.
   * Mirrors of someone else's board (the ``*_external.csv`` files), each row
     citing the board it came from: DeepSWE (Datacurve), FrontierSWE, FrontierCode
     (Cognition), Terminal-Bench 2.0, OSWorld-Verified, OSWorld 2.0, Humanity's
-    Last Exam, and CritPt and SciCode as Artificial Analysis runs them.
+    Last Exam, CritPt and SciCode as Artificial Analysis runs them, ExploitBench,
+    APEX-Agents (Mercor), ARC-AGI-2 (ARC Prize), ALE-Bench (Sakana) and
+    Vending-Bench 2 (Andon Labs).
 
 Every one of them is a second source here, ranked just above the model cards
 (_precedence.RANK_BENCHMARKING_HUB): whatever the board itself, AA, Vals or
@@ -122,6 +125,8 @@ class Benchmark:
     2.0 release the official board ran it on. ``percent`` marks a file already
     in percentages (the hub's own metadata gives it a 0.01 scale), and ``keep``
     is the row filter for a file that holds rows its column does not.
+    ``bounds`` marks a file on a scale of its own -- a rating, a dollar
+    balance -- whose values are stored as published and must lie inside it.
     """
 
     file: str
@@ -132,6 +137,7 @@ class Benchmark:
     releases: bool = False
     percent: bool = False
     keep: Callable[[dict[str, str]], bool] | None = None
+    bounds: tuple[float, float] | None = None
 
 
 _STEPS_RE = re.compile(r"\((\d+)\s+steps?\)", re.IGNORECASE)
@@ -190,6 +196,29 @@ BENCHMARKS: dict[str, Benchmark] = {
     # are the column.
     "exploitbench": Benchmark(
         "exploitbench_external.csv", "Mean capability", key="exploitbench", keep=_exploitbench_plain_row
+    ),
+    # More of Epoch's own runs, each on a private or cleaned question set the
+    # hub alone publishes for the open-weight field: FrontierMath's v2 tiers
+    # (the only versions still run) and SimpleQA Verified.
+    "frontiermath-tier-4-v2": Benchmark(
+        "frontiermath_tier_4_v2.csv", "Best score (across scorers)", key="frontiermath_tier_4"
+    ),
+    "frontiermath-tiers-1-3-v2": Benchmark(
+        "frontiermath_tiers_1_3_v2.csv", "Best score (across scorers)", key="frontiermath_tiers_1_3"
+    ),
+    "simple-qa-verified": Benchmark(
+        "simpleqa_verified.csv", "Best score (across scorers)", key="simpleqa_verified"
+    ),
+    # Mirrors of boards this repo reads nowhere else. APEX-Agents is Mercor's
+    # pass@1 (the file's "Mean score" is the rubric mean, a different metric);
+    # ARC-AGI-2 is ARC Prize's semi-private set. ALE-Bench and Vending-Bench 2
+    # are not fractions: a contest performance rating, and the money balance a
+    # simulated year of running the business ends on.
+    "apex-agents": Benchmark("apex_agents_external.csv", "Pass@1 score", key="apex_agents"),
+    "arc-agi-2": Benchmark("arc_agi_2_external.csv", "Score", key="arc_agi_2"),
+    "ale-bench": Benchmark("ale_bench_external.csv", "Performance", key="ale_bench", bounds=(0, 5000)),
+    "vending-bench-2": Benchmark(
+        "vending_bench_2_external.csv", "Score", key="vending_bench_2", bounds=(-100000, 100000)
     ),
 }
 
@@ -407,6 +436,29 @@ def osworld_release(row: dict[str, str], value: float, board: list) -> str | Non
     return keys.pop() if len(keys) == 1 else None
 
 
+def check_bounds(
+    values: list[float], source: str, field: str, bounds: tuple[float, float]
+) -> None:
+    """Raise when a file on its own scale leaves it, or looks rescaled.
+
+    Both such files sit far above 1 at the top of the field, so a maximum of 1
+    or less is the file having switched to fractions, not a field that
+    collapsed overnight.
+    """
+    low, high = bounds
+    outside = [v for v in values if not low <= v <= high]
+    if outside:
+        raise ValueError(
+            f"{source}: {field} values outside {low:g}-{high:g} ({outside[:3]}) -- "
+            "the scale changed; refusing to store them."
+        )
+    if values and max(values) <= 1:
+        raise ValueError(
+            f"{source}: every {field} value is at most 1 -- the file looks rescaled "
+            "to a fraction; refusing to store it."
+        )
+
+
 def read_benchmark(
     archive: zipfile.ZipFile,
     models: dict[str, dict[str, object]],
@@ -453,11 +505,13 @@ def read_benchmark(
                 "model": model["model"] if model else version,
                 "version": version,
                 "open_weights": model["open_weights"] if model else None,
-                "score": round(value if bench.percent else value * 100, 2),
+                "score": round(value if bench.percent or bench.bounds else value * 100, 2),
                 "source": page_url(page),
             }
         )
-    if bench.percent:
+    if bench.bounds:
+        check_bounds(values, source, bench.column, bench.bounds)
+    elif bench.percent:
         check_percentages([{"score": v} for v in values], source)
     else:
         check_fractions(values, source, field=bench.column)

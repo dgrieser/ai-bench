@@ -258,6 +258,23 @@ class TestFilteredMirrors(unittest.TestCase):
                          [("glm-5.2_max", 62.9), ("mystery", 50.0)])
         self.assertEqual({r["key"] for r in rows}, {"osworld_verified"})
 
+    def test_a_rating_or_a_balance_is_stored_as_published(self) -> None:
+        zf = archive({
+            **board("ale-bench", [("glm-5.2_max", 1046.95)]),
+            **board("vending-bench-2", [("glm-5.2_max", 8314.2), ("gpt-5.6-sol_max", -23.16)]),
+        })
+        rows = fe.get_scores(["ale-bench", "vending-bench-2"], archive=zf)
+        self.assertEqual(
+            sorted((r["key"], r["score"]) for r in rows),
+            [("ale_bench", 1046.95), ("vending_bench_2", -23.16), ("vending_bench_2", 8314.2)],
+        )
+
+    def test_a_rating_off_its_scale_or_rescaled_to_a_fraction_is_refused(self) -> None:
+        with self.assertRaisesRegex(ValueError, "outside"):
+            fe.get_scores(["ale-bench"], archive=archive(board("ale-bench", [("glm-5.2_max", 9000)])))
+        with self.assertRaisesRegex(ValueError, "rescaled"):
+            fe.get_scores(["ale-bench"], archive=archive(board("ale-bench", [("glm-5.2_max", 0.52)])))
+
     def test_osworld_verified_refuses_a_fraction_scale(self) -> None:
         zf = archive(rows_file("os-world", [
             {fe.VERSION_COLUMN: v, "Score": x, "Agent": "a (100 steps)",
