@@ -2117,9 +2117,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29217,
-        "coding_index": 17209,
-        "tooling_index": 31470,
+        "openbench_index": 29212,
+        "coding_index": 17199,
+        "tooling_index": 31463,
         "knowledge_index": 22180,
         "vision_index": null,
         "trust_index": 45147,
@@ -2635,9 +2635,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 25938,
-        "coding_index": 16435,
-        "tooling_index": 30465,
+        "openbench_index": 25933,
+        "coding_index": 16426,
+        "tooling_index": 30459,
         "knowledge_index": 16256,
         "vision_index": 10898,
         "trust_index": 37717,
@@ -4030,7 +4030,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 26545,
+        "coding_index": 26802,
         "tooling_index": null,
         "knowledge_index": 51197,
         "vision_index": null,
@@ -4987,9 +4987,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 26422,
-        "coding_index": 18404,
-        "tooling_index": 26295,
+        "openbench_index": 26415,
+        "coding_index": 18388,
+        "tooling_index": 26290,
         "knowledge_index": 28996,
         "vision_index": null,
         "trust_index": 34650,
@@ -5490,7 +5490,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 19875,
+        "tooling_index": 19872,
         "knowledge_index": 33809,
         "vision_index": null,
         "trust_index": 44200,
@@ -6028,7 +6028,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 26162,
+        "tooling_index": 26156,
         "knowledge_index": 38401,
         "vision_index": null,
         "trust_index": 46661,
@@ -6503,9 +6503,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44795,
-        "coding_index": 28804,
-        "tooling_index": 44052,
+        "openbench_index": 44776,
+        "coding_index": 28781,
+        "tooling_index": 44010,
         "knowledge_index": 63709,
         "vision_index": 61251,
         "trust_index": 53528,
@@ -7210,7 +7210,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 42169,
+        "tooling_index": 42151,
         "knowledge_index": 56750,
         "vision_index": 46787,
         "trust_index": 51990,
@@ -7806,7 +7806,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 47128,
+        "tooling_index": 46966,
         "knowledge_index": 54587,
         "vision_index": 49870,
         "trust_index": 54518,
@@ -7880,7 +7880,9 @@
         "hmmt_feb_2026": 81.1,
         "arena_text": 1409,
         "arena_text_non_english": 1387,
-        "arena_webdev": 1358
+        "arena_webdev": 1358,
+        "ale_bench": 349,
+        "vending_bench_2": 202
       },
       "scores_updated": {
         "openbench_index": null,
@@ -7958,7 +7960,9 @@
         "hmmt_feb_2026": "2026-10-30",
         "arena_text": "2026-10-30",
         "arena_text_non_english": "2026-10-30",
-        "arena_webdev": "2026-10-30"
+        "arena_webdev": "2026-10-30",
+        "ale_bench": "2026-10-30",
+        "vending_bench_2": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": null,
@@ -8036,7 +8040,9 @@
         "hmmt_feb_2026": "https://huggingface.co/Qwen/Qwen3.5-27B",
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
-        "arena_webdev": "https://arena.ai/leaderboard/webdev"
+        "arena_webdev": "https://arena.ai/leaderboard/webdev",
+        "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
+        "vending_bench_2": "https://epoch.ai/benchmarks/vending-bench-2"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -8058,6 +8064,13 @@
             "date": "2026-07-28",
             "score": 51.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "ale_bench": [
+          {
+            "date": "2026-10-30",
+            "score": 349,
+            "source": "https://epoch.ai/benchmarks/ale-bench"
           }
         ],
         "livecodebench": [
@@ -8100,6 +8113,13 @@
             "date": "2026-08-21",
             "score": 68.5,
             "source": "https://huggingface.co/Qwen/Qwen3.5-27B"
+          }
+        ],
+        "vending_bench_2": [
+          {
+            "date": "2026-10-30",
+            "score": 202,
+            "source": "https://epoch.ai/benchmarks/vending-bench-2"
           }
         ],
         "ifbench": [
@@ -8283,12 +8303,14 @@
             "bfcl_v4",
             "terminal_bench_hard",
             "tau2_bench_telecom",
-            "ifbench"
+            "ifbench",
+            "vending_bench_2"
           ],
           "of": 18,
-          "share": 0.195,
+          "share": 0.237,
           "second_hand": [
-            "bfcl_v4"
+            "bfcl_v4",
+            "vending_bench_2"
           ]
         },
         "knowledge_index": {
@@ -8349,7 +8371,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 38814,
+        "tooling_index": 38759,
         "knowledge_index": 50807,
         "vision_index": 37585,
         "trust_index": 51507,
@@ -8885,7 +8907,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 34919,
+        "tooling_index": 34908,
         "knowledge_index": 41298,
         "vision_index": 32301,
         "trust_index": 48158,
@@ -9451,7 +9473,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 31877,
+        "tooling_index": 31866,
         "knowledge_index": 29774,
         "vision_index": 28133,
         "trust_index": 43440,
@@ -9920,7 +9942,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 16966,
+        "tooling_index": 16963,
         "knowledge_index": 12929,
         "vision_index": 10150,
         "trust_index": 39680,
@@ -10396,7 +10418,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 12840,
+        "tooling_index": 12838,
         "knowledge_index": 13559,
         "vision_index": 99,
         "trust_index": 38703,
@@ -10865,9 +10887,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 35218,
-        "coding_index": 17644,
-        "tooling_index": 30782,
+        "openbench_index": 35193,
+        "coding_index": 17578,
+        "tooling_index": 30766,
         "knowledge_index": 54688,
         "vision_index": null,
         "trust_index": 49947,
@@ -11906,9 +11928,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 27287,
-        "coding_index": 19692,
-        "tooling_index": 23478,
+        "openbench_index": 27317,
+        "coding_index": 19796,
+        "tooling_index": 23474,
         "knowledge_index": 35382,
         "vision_index": null,
         "trust_index": 36115,
@@ -12446,9 +12468,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 32565,
-        "coding_index": 19813,
-        "tooling_index": 27183,
+        "openbench_index": 32588,
+        "coding_index": 19907,
+        "tooling_index": 27165,
         "knowledge_index": 47799,
         "vision_index": null,
         "trust_index": 45186,
@@ -13034,7 +13056,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 23166,
+        "tooling_index": 23163,
         "knowledge_index": 42944,
         "vision_index": null,
         "trust_index": 47310,
@@ -13581,9 +13603,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 32397,
-        "coding_index": 17845,
-        "tooling_index": 24832,
+        "openbench_index": 32305,
+        "coding_index": 17545,
+        "tooling_index": 24828,
         "knowledge_index": 44087,
         "vision_index": 24661,
         "trust_index": 51922,
@@ -13652,7 +13674,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "ale_bench": 498
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -13725,7 +13748,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "ale_bench": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -13798,7 +13822,8 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "ale_bench": "https://epoch.ai/benchmarks/ale-bench"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -13823,6 +13848,13 @@
             "date": "2026-09-18",
             "score": 0,
             "source": "https://www.vals.ai/benchmarks/vibe-code"
+          }
+        ],
+        "ale_bench": [
+          {
+            "date": "2026-10-30",
+            "score": 498,
+            "source": "https://epoch.ai/benchmarks/ale-bench"
           }
         ],
         "livecodebench": [
@@ -14064,10 +14096,14 @@
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
             "livecodebench",
-            "scicode"
+            "scicode",
+            "ale_bench"
           ],
           "of": 21,
-          "share": 0.214
+          "share": 0.252,
+          "second_hand": [
+            "ale_bench"
+          ]
         },
         "tooling_index": {
           "measured": [
@@ -14127,9 +14163,9 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 46627,
-        "coding_index": 27628,
-        "tooling_index": 40936,
+        "openbench_index": 46672,
+        "coding_index": 27802,
+        "tooling_index": 40909,
         "knowledge_index": 65763,
         "vision_index": null,
         "trust_index": 64775,
@@ -15576,7 +15612,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 16431,
+        "tooling_index": 16429,
         "knowledge_index": 39620,
         "vision_index": null,
         "trust_index": 41271,
@@ -16014,9 +16050,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 40360,
-        "coding_index": 24634,
-        "tooling_index": 41463,
+        "openbench_index": 40358,
+        "coding_index": 24657,
+        "tooling_index": 41432,
         "knowledge_index": 53254,
         "vision_index": 42698,
         "trust_index": 50173,
@@ -16641,7 +16677,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 33538,
+        "tooling_index": 33517,
         "knowledge_index": 39845,
         "vision_index": 35139,
         "trust_index": 49053,
@@ -17169,7 +17205,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 18837,
+        "tooling_index": 18835,
         "knowledge_index": 34950,
         "vision_index": 17509,
         "trust_index": 49439,
@@ -17647,7 +17683,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 17025,
+        "tooling_index": 17021,
         "knowledge_index": 28903,
         "vision_index": 10898,
         "trust_index": 46029,
@@ -18100,9 +18136,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 40314,
-        "coding_index": 21395,
-        "tooling_index": 38865,
+        "openbench_index": 40307,
+        "coding_index": 21379,
+        "tooling_index": 38858,
         "knowledge_index": 55690,
         "vision_index": 48728,
         "trust_index": 55531,
@@ -18711,9 +18747,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44750,
-        "coding_index": 26298,
-        "tooling_index": 44673,
+        "openbench_index": 44777,
+        "coding_index": 26404,
+        "tooling_index": 44656,
         "knowledge_index": 60052,
         "vision_index": 47807,
         "trust_index": 57803,
@@ -19306,9 +19342,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 64367,
-        "coding_index": 59700,
-        "tooling_index": 73073,
+        "openbench_index": 64364,
+        "coding_index": 59699,
+        "tooling_index": 73063,
         "knowledge_index": 76691,
         "vision_index": null,
         "trust_index": 52126,
@@ -20130,9 +20166,9 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 52472,
-        "coding_index": 35319,
-        "tooling_index": 59949,
+        "openbench_index": 52459,
+        "coding_index": 35302,
+        "tooling_index": 59922,
         "knowledge_index": 63191,
         "vision_index": null,
         "trust_index": 57653,
@@ -21171,7 +21207,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 15093,
+        "tooling_index": 15090,
         "knowledge_index": 8401,
         "vision_index": null,
         "trust_index": 23875,
@@ -21598,7 +21634,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 20775,
+        "tooling_index": 20771,
         "knowledge_index": 13705,
         "vision_index": null,
         "trust_index": 31158,
@@ -22018,9 +22054,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37681,
-        "coding_index": 21182,
-        "tooling_index": 40892,
+        "openbench_index": 37668,
+        "coding_index": 21154,
+        "tooling_index": 40878,
         "knowledge_index": 39075,
         "vision_index": 29895,
         "trust_index": 52789,
@@ -22658,7 +22694,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 21090,
+        "tooling_index": 21087,
         "knowledge_index": 15808,
         "vision_index": 16085,
         "trust_index": 31381,
@@ -23583,7 +23619,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 15701,
+        "tooling_index": 15698,
         "knowledge_index": 13194,
         "vision_index": 5079,
         "trust_index": 19092,
@@ -24003,7 +24039,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 36348,
+        "tooling_index": 36338,
         "knowledge_index": 57317,
         "vision_index": 28388,
         "trust_index": 56727,
@@ -24507,7 +24543,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 42431,
+        "tooling_index": 42386,
         "knowledge_index": 54210,
         "vision_index": 56278,
         "trust_index": 53397,
@@ -24966,7 +25002,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 10662,
+        "tooling_index": 10661,
         "knowledge_index": 10217,
         "vision_index": 3529,
         "trust_index": 23885,
@@ -25458,9 +25494,9 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 36274,
-        "coding_index": 26758,
-        "tooling_index": 33995,
+        "openbench_index": 36264,
+        "coding_index": 26734,
+        "tooling_index": 33986,
         "knowledge_index": 41565,
         "vision_index": null,
         "trust_index": 47253,
@@ -25971,9 +26007,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 67820,
-        "coding_index": 53415,
-        "tooling_index": 72510,
+        "openbench_index": 67802,
+        "coding_index": 53449,
+        "tooling_index": 72415,
         "knowledge_index": 84858,
         "vision_index": null,
         "trust_index": 69255,
@@ -26832,9 +26868,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 58249,
-        "coding_index": 48174,
-        "tooling_index": 62308,
+        "openbench_index": 58277,
+        "coding_index": 48253,
+        "tooling_index": 62322,
         "knowledge_index": 74808,
         "vision_index": 70147,
         "trust_index": 55533,
@@ -28429,7 +28465,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11897,
+        "tooling_index": 11896,
         "knowledge_index": 18531,
         "vision_index": 15731,
         "trust_index": 44001,
@@ -28965,9 +29001,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 24175,
-        "coding_index": 14383,
-        "tooling_index": 14617,
+        "openbench_index": 24162,
+        "coding_index": 14340,
+        "tooling_index": 14616,
         "knowledge_index": 26623,
         "vision_index": 20630,
         "trust_index": 45926,
@@ -32246,7 +32282,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 34113,
+        "tooling_index": 34104,
         "knowledge_index": 49313,
         "vision_index": null,
         "trust_index": 46879,
@@ -36293,9 +36329,9 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 35688,
-        "coding_index": 20615,
-        "tooling_index": 39339,
+        "openbench_index": 35603,
+        "coding_index": 20343,
+        "tooling_index": 39328,
         "knowledge_index": 48426,
         "vision_index": null,
         "trust_index": 41752,
@@ -36936,7 +36972,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 43121,
+        "tooling_index": 43240,
         "knowledge_index": 60710,
         "vision_index": null,
         "trust_index": 46379,
@@ -41439,7 +41475,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 19273,
+        "tooling_index": 19271,
         "knowledge_index": 34536,
         "vision_index": null,
         "trust_index": 41428,
@@ -41973,7 +42009,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 16594,
+        "tooling_index": 16593,
         "knowledge_index": 24650,
         "vision_index": null,
         "trust_index": 42207,
@@ -43436,7 +43472,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 26534,
+        "tooling_index": 26529,
         "knowledge_index": 38240,
         "vision_index": null,
         "trust_index": 48170,
@@ -43509,7 +43545,8 @@
         "tau2_bench_retail": 71.3,
         "tau2_bench_airline": 44,
         "arena_text": 1422,
-        "arena_text_non_english": 1410
+        "arena_text_non_english": 1410,
+        "arc_agi_2": 1.3
       },
       "scores_updated": {
         "openbench_index": null,
@@ -43586,7 +43623,8 @@
         "tau2_bench_retail": "2026-10-30",
         "tau2_bench_airline": "2026-10-30",
         "arena_text": "2026-10-30",
-        "arena_text_non_english": "2026-10-30"
+        "arena_text_non_english": "2026-10-30",
+        "arc_agi_2": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": null,
@@ -43663,7 +43701,8 @@
         "tau2_bench_retail": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "tau2_bench_airline": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "arena_text": "https://arena.ai/leaderboard/text",
-        "arena_text_non_english": "https://arena.ai/leaderboard/text"
+        "arena_text_non_english": "https://arena.ai/leaderboard/text",
+        "arc_agi_2": "https://epoch.ai/benchmarks/arc-agi-2"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -43812,6 +43851,13 @@
             "score": 82.8,
             "source": "https://evals.report/benchmarks/mmlu-pro"
           }
+        ],
+        "arc_agi_2": [
+          {
+            "date": "2026-10-30",
+            "score": 1.3,
+            "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
         ]
       },
       "vram": {
@@ -43888,7 +43934,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 28341,
+        "tooling_index": 28324,
         "knowledge_index": 44415,
         "vision_index": null,
         "trust_index": 47765,
@@ -46923,9 +46969,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 27966,
-        "coding_index": 15794,
-        "tooling_index": 25327,
+        "openbench_index": 27948,
+        "coding_index": 15736,
+        "tooling_index": 25323,
         "knowledge_index": 27871,
         "vision_index": 23206,
         "trust_index": 45798,
@@ -47505,7 +47551,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 17765,
+        "tooling_index": 17763,
         "knowledge_index": 13430,
         "vision_index": 13181,
         "trust_index": 28108,
@@ -47996,7 +48042,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 15846,
+        "tooling_index": 15844,
         "knowledge_index": 14678,
         "vision_index": 6749,
         "trust_index": 37992,
@@ -49347,7 +49393,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 10914,
+        "tooling_index": 10912,
         "knowledge_index": 10201,
         "vision_index": 2136,
         "trust_index": 18787,
@@ -51189,7 +51235,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 32823,
+        "tooling_index": 32813,
         "knowledge_index": 34930,
         "vision_index": 37410,
         "trust_index": 49374,
@@ -51643,8 +51689,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 17616,
-        "tooling_index": 36489,
+        "coding_index": 17644,
+        "tooling_index": 36490,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -52011,8 +52057,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 36427,
-        "tooling_index": 46588,
+        "coding_index": 36452,
+        "tooling_index": 46581,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -52379,8 +52425,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 51206,
-        "tooling_index": 54718,
+        "coding_index": 51207,
+        "tooling_index": 54706,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -52746,9 +52792,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 51550,
-        "coding_index": 33003,
-        "tooling_index": 46229,
+        "openbench_index": 51579,
+        "coding_index": 33113,
+        "tooling_index": 46215,
         "knowledge_index": 73925,
         "vision_index": null,
         "trust_index": 66766,
@@ -53438,7 +53484,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 30250,
+        "tooling_index": 30241,
         "knowledge_index": 33149,
         "vision_index": 32892,
         "trust_index": 38934,
@@ -53875,9 +53921,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 54534,
-        "coding_index": 37455,
-        "tooling_index": 56462,
+        "openbench_index": 54548,
+        "coding_index": 37538,
+        "tooling_index": 56425,
         "knowledge_index": 74140,
         "vision_index": 43433,
         "trust_index": 60953,
@@ -54661,9 +54707,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 67316,
-        "coding_index": 63203,
-        "tooling_index": 75857,
+        "openbench_index": 67292,
+        "coding_index": 63181,
+        "tooling_index": 75801,
         "knowledge_index": 82155,
         "vision_index": null,
         "trust_index": 53098,
@@ -55562,9 +55608,9 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 42124,
-        "coding_index": 24528,
-        "tooling_index": 38433,
+        "openbench_index": 42115,
+        "coding_index": 24508,
+        "tooling_index": 38423,
         "knowledge_index": 62387,
         "vision_index": null,
         "trust_index": 55512,
@@ -56441,9 +56487,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 47867,
-        "coding_index": 31258,
-        "tooling_index": 42306,
+        "openbench_index": 47951,
+        "coding_index": 31430,
+        "tooling_index": 42413,
         "knowledge_index": 70816,
         "vision_index": 52632,
         "trust_index": 60702,
@@ -57197,9 +57243,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 59114,
-        "coding_index": 42407,
-        "tooling_index": 58408,
+        "openbench_index": 59112,
+        "coding_index": 42449,
+        "tooling_index": 58359,
         "knowledge_index": 81691,
         "vision_index": 70374,
         "trust_index": 66464,
@@ -58023,9 +58069,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 57813,
-        "coding_index": 44724,
-        "tooling_index": 63018,
+        "openbench_index": 57820,
+        "coding_index": 44783,
+        "tooling_index": 62981,
         "knowledge_index": 73421,
         "vision_index": null,
         "trust_index": 57909,
@@ -58655,9 +58701,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 80287,
-        "coding_index": 78414,
-        "tooling_index": 83971,
+        "openbench_index": 80272,
+        "coding_index": 78413,
+        "tooling_index": 83920,
         "knowledge_index": 89860,
         "vision_index": 85604,
         "trust_index": 72371,
@@ -59948,9 +59994,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 46803,
-        "coding_index": 28140,
-        "tooling_index": 46154,
+        "openbench_index": 46843,
+        "coding_index": 28288,
+        "tooling_index": 46139,
         "knowledge_index": 66107,
         "vision_index": 56644,
         "trust_index": 58394,
@@ -60537,9 +60583,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52105,
-        "coding_index": 31199,
-        "tooling_index": 49096,
+        "openbench_index": 52118,
+        "coding_index": 31285,
+        "tooling_index": 49055,
         "knowledge_index": 76151,
         "vision_index": 67799,
         "trust_index": 66374,
@@ -61163,9 +61209,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 54857,
-        "coding_index": 39561,
-        "tooling_index": 57361,
+        "openbench_index": 54871,
+        "coding_index": 39620,
+        "tooling_index": 57349,
         "knowledge_index": 73172,
         "vision_index": 43708,
         "trust_index": 59217,
@@ -62235,9 +62281,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 75041,
-        "coding_index": 65367,
-        "tooling_index": 82596,
+        "openbench_index": 75043,
+        "coding_index": 65392,
+        "tooling_index": 82576,
         "knowledge_index": 88643,
         "vision_index": 90576,
         "trust_index": 69424,
@@ -63005,9 +63051,9 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43476,
-        "coding_index": 25719,
-        "tooling_index": 42134,
+        "openbench_index": 43433,
+        "coding_index": 25582,
+        "tooling_index": 42128,
         "knowledge_index": 60534,
         "vision_index": null,
         "trust_index": 56161,
@@ -63556,7 +63602,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 29797,
+        "tooling_index": 29790,
         "knowledge_index": 42043,
         "vision_index": null,
         "trust_index": 51270,
@@ -63995,7 +64041,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 26991,
+        "tooling_index": 26985,
         "knowledge_index": 28647,
         "vision_index": null,
         "trust_index": 50128,
@@ -64436,7 +64482,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 51819,
+        "tooling_index": 51809,
         "knowledge_index": 56239,
         "vision_index": 50031,
         "trust_index": 57976,
@@ -65041,9 +65087,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 37421,
-        "coding_index": 21678,
-        "tooling_index": 35937,
+        "openbench_index": 37390,
+        "coding_index": 21585,
+        "tooling_index": 35928,
         "knowledge_index": 44319,
         "vision_index": null,
         "trust_index": 53953,
@@ -65616,9 +65662,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 79641,
-        "coding_index": 76649,
-        "tooling_index": 88617,
+        "openbench_index": 79644,
+        "coding_index": 76661,
+        "tooling_index": 88614,
         "knowledge_index": 85935,
         "vision_index": null,
         "trust_index": 68684,
@@ -66549,9 +66595,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 63108,
-        "coding_index": 48469,
-        "tooling_index": 71917,
+        "openbench_index": 63078,
+        "coding_index": 48478,
+        "tooling_index": 71808,
         "knowledge_index": 72772,
         "vision_index": 70584,
         "trust_index": 64306,
@@ -67293,7 +67339,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 45654,
+        "tooling_index": 45642,
         "knowledge_index": 74418,
         "vision_index": null,
         "trust_index": 63142,
@@ -67753,7 +67799,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 39002,
+        "tooling_index": 38991,
         "knowledge_index": 76081,
         "vision_index": null,
         "trust_index": 59687,
@@ -68505,7 +68551,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 66167,
+        "tooling_index": 66142,
         "knowledge_index": 84085,
         "vision_index": null,
         "trust_index": null,
@@ -68868,7 +68914,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 51296,
+        "tooling_index": 51286,
         "knowledge_index": 64767,
         "vision_index": null,
         "trust_index": null,
@@ -69231,7 +69277,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41374,
+        "tooling_index": 41372,
         "knowledge_index": 56146,
         "vision_index": null,
         "trust_index": null,
@@ -69592,9 +69638,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 61172,
-        "coding_index": 48722,
-        "tooling_index": 76439,
+        "openbench_index": 61164,
+        "coding_index": 48714,
+        "tooling_index": 76418,
         "knowledge_index": 71113,
         "vision_index": 51230,
         "trust_index": 51829,
@@ -70121,9 +70167,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 73277,
-        "coding_index": 58334,
-        "tooling_index": 89458,
+        "openbench_index": 73271,
+        "coding_index": 58313,
+        "tooling_index": 89459,
         "knowledge_index": 80401,
         "vision_index": null,
         "trust_index": 67517,
@@ -70921,9 +70967,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 68342,
-        "coding_index": 58358,
-        "tooling_index": 80540,
+        "openbench_index": 68334,
+        "coding_index": 58349,
+        "tooling_index": 80520,
         "knowledge_index": 74495,
         "vision_index": 79336,
         "trust_index": 61995,
@@ -71549,7 +71595,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 21600,
+        "tooling_index": 21597,
         "knowledge_index": 34636,
         "vision_index": null,
         "trust_index": 50727,
@@ -72056,9 +72102,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 33154,
-        "coding_index": 15682,
-        "tooling_index": 29666,
+        "openbench_index": 33148,
+        "coding_index": 15671,
+        "tooling_index": 29659,
         "knowledge_index": 43716,
         "vision_index": null,
         "trust_index": 51968,
@@ -72615,9 +72661,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 36007,
-        "coding_index": 18093,
-        "tooling_index": 32951,
+        "openbench_index": 36000,
+        "coding_index": 18079,
+        "tooling_index": 32943,
         "knowledge_index": 48336,
         "vision_index": null,
         "trust_index": 53772,
@@ -73150,8 +73196,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 66784,
-        "tooling_index": 74534,
+        "coding_index": 66788,
+        "tooling_index": 74430,
         "knowledge_index": 82802,
         "vision_index": null,
         "trust_index": null,
@@ -73675,9 +73721,9 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 58667,
-        "coding_index": 40668,
-        "tooling_index": 66104,
+        "openbench_index": 58651,
+        "coding_index": 40654,
+        "tooling_index": 66066,
         "knowledge_index": 72677,
         "vision_index": null,
         "trust_index": 62935,
@@ -74203,9 +74249,9 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 35386,
-        "coding_index": 14711,
-        "tooling_index": 35901,
+        "openbench_index": 35380,
+        "coding_index": 14700,
+        "tooling_index": 35890,
         "knowledge_index": 43985,
         "vision_index": null,
         "trust_index": 54419,
@@ -74754,9 +74800,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 74081,
-        "coding_index": 78784,
-        "tooling_index": 82452,
+        "openbench_index": 74059,
+        "coding_index": 78800,
+        "tooling_index": 82363,
         "knowledge_index": 80232,
         "vision_index": 64631,
         "trust_index": 54701,
@@ -75579,7 +75625,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 49943,
+        "tooling_index": 49930,
         "knowledge_index": 66283,
         "vision_index": 73915,
         "trust_index": 60089,
@@ -76006,9 +76052,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88207,
-        "coding_index": 93916,
-        "tooling_index": 92106,
+        "openbench_index": 88209,
+        "coding_index": 93915,
+        "tooling_index": 92113,
         "knowledge_index": 97148,
         "vision_index": null,
         "trust_index": 71312,
@@ -76929,9 +76975,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 67906,
-        "coding_index": 64317,
-        "tooling_index": 75732,
+        "openbench_index": 67876,
+        "coding_index": 64296,
+        "tooling_index": 75652,
         "knowledge_index": 83535,
         "vision_index": 72972,
         "trust_index": 53445,
@@ -77733,9 +77779,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 76253,
-        "coding_index": 73299,
-        "tooling_index": 86062,
+        "openbench_index": 76250,
+        "coding_index": 73301,
+        "tooling_index": 86050,
         "knowledge_index": 87108,
         "vision_index": 84688,
         "trust_index": 61514,
@@ -78547,9 +78593,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 79781,
-        "coding_index": 77815,
-        "tooling_index": 89435,
+        "openbench_index": 79777,
+        "coding_index": 77809,
+        "tooling_index": 89428,
         "knowledge_index": 94855,
         "vision_index": 91260,
         "trust_index": 61512,
@@ -79481,9 +79527,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89007,
-        "coding_index": 95071,
-        "tooling_index": 91182,
+        "openbench_index": 88999,
+        "coding_index": 95070,
+        "tooling_index": 91156,
         "knowledge_index": 98736,
         "vision_index": 98579,
         "trust_index": 73284,
@@ -80704,7 +80750,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 48720,
+        "tooling_index": 48685,
         "knowledge_index": 60280,
         "vision_index": null,
         "trust_index": 56863,
@@ -81172,7 +81218,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 13994,
+        "tooling_index": 13993,
         "knowledge_index": 15270,
         "vision_index": null,
         "trust_index": 36444,
@@ -81631,7 +81677,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 42459,
+        "tooling_index": 42444,
         "knowledge_index": 42689,
         "vision_index": null,
         "trust_index": 50061,
@@ -82137,7 +82183,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 56825,
+        "tooling_index": 56806,
         "knowledge_index": 52632,
         "vision_index": null,
         "trust_index": 53931,
@@ -82645,7 +82691,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 51234,
+        "tooling_index": 51221,
         "knowledge_index": 62945,
         "vision_index": null,
         "trust_index": 62245,
@@ -83092,9 +83138,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 75417,
-        "coding_index": 69078,
-        "tooling_index": 86023,
+        "openbench_index": 75414,
+        "coding_index": 69070,
+        "tooling_index": 86020,
         "knowledge_index": 85129,
         "vision_index": 70496,
         "trust_index": 64470,
@@ -83829,8 +83875,8 @@
       },
       "scores": {
         "openbench_index": 69773,
-        "coding_index": 67389,
-        "tooling_index": 80753,
+        "coding_index": 67410,
+        "tooling_index": 80732,
         "knowledge_index": 71660,
         "vision_index": 51256,
         "trust_index": 58324,
@@ -84544,9 +84590,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89618,
-        "coding_index": 96868,
-        "tooling_index": 92133,
+        "openbench_index": 89617,
+        "coding_index": 96873,
+        "tooling_index": 92124,
         "knowledge_index": 98197,
         "vision_index": 99105,
         "trust_index": 72753,
@@ -85402,9 +85448,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 69724,
-        "coding_index": 63213,
-        "tooling_index": 72754,
+        "openbench_index": 69683,
+        "coding_index": 63187,
+        "tooling_index": 72645,
         "knowledge_index": 82936,
         "vision_index": 78580,
         "trust_index": 65972,
@@ -86170,9 +86216,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 83828,
-        "coding_index": 83978,
-        "tooling_index": 87791,
+        "openbench_index": 83815,
+        "coding_index": 83958,
+        "tooling_index": 87766,
         "knowledge_index": 95135,
         "vision_index": 91817,
         "trust_index": 72110,
@@ -86924,7 +86970,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 56161,
+        "tooling_index": 56060,
         "knowledge_index": null,
         "vision_index": 74367,
         "trust_index": null,
@@ -87282,9 +87328,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 67628,
-        "coding_index": 60285,
-        "tooling_index": 80776,
+        "openbench_index": 67633,
+        "coding_index": 60326,
+        "tooling_index": 80751,
         "knowledge_index": 82332,
         "vision_index": 75696,
         "trust_index": 51840,
@@ -88798,9 +88844,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89374,
-        "coding_index": 94135,
-        "tooling_index": 95470,
+        "openbench_index": 89376,
+        "coding_index": 94136,
+        "tooling_index": 95473,
         "knowledge_index": 95518,
         "vision_index": null,
         "trust_index": 72661,
@@ -89567,9 +89613,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 85201,
-        "coding_index": 88150,
-        "tooling_index": 84994,
+        "openbench_index": 85195,
+        "coding_index": 88139,
+        "tooling_index": 84983,
         "knowledge_index": 98378,
         "vision_index": 95604,
         "trust_index": 74006,
@@ -90607,9 +90653,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 88573,
-        "coding_index": 89275,
-        "tooling_index": 92537,
+        "openbench_index": 88564,
+        "coding_index": 89265,
+        "tooling_index": 92517,
         "knowledge_index": 96249,
         "vision_index": null,
         "trust_index": 78367,
@@ -91323,9 +91369,9 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 73326,
-        "coding_index": 66280,
-        "tooling_index": 82607,
+        "openbench_index": 73318,
+        "coding_index": 66272,
+        "tooling_index": 82591,
         "knowledge_index": 81860,
         "vision_index": null,
         "trust_index": 65522,
@@ -91821,9 +91867,9 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 78168,
-        "coding_index": 68575,
-        "tooling_index": 86399,
+        "openbench_index": 78165,
+        "coding_index": 68631,
+        "tooling_index": 86333,
         "knowledge_index": 89313,
         "vision_index": 61524,
         "trust_index": 73117,
@@ -92528,7 +92574,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 42363,
+        "tooling_index": 42333,
         "knowledge_index": 52762,
         "vision_index": null,
         "trust_index": 51134,
@@ -93220,9 +93266,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70225,
+        "openbench_index": 70224,
         "coding_index": 65899,
-        "tooling_index": 74802,
+        "tooling_index": 74799,
         "knowledge_index": 80701,
         "vision_index": 61524,
         "trust_index": 63637,
@@ -93962,9 +94008,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 76472,
-        "coding_index": 79610,
-        "tooling_index": 76559,
+        "openbench_index": 76470,
+        "coding_index": 79588,
+        "tooling_index": 76574,
         "knowledge_index": 88017,
         "vision_index": null,
         "trust_index": 65675,
@@ -94683,9 +94729,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 84328,
-        "coding_index": 87174,
-        "tooling_index": 89033,
+        "openbench_index": 84336,
+        "coding_index": 87194,
+        "tooling_index": 89040,
         "knowledge_index": 92840,
         "vision_index": null,
         "trust_index": 70158,
@@ -95264,9 +95310,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 87743,
-        "coding_index": 92675,
-        "tooling_index": 89344,
+        "openbench_index": 87750,
+        "coding_index": 92706,
+        "tooling_index": 89337,
         "knowledge_index": 95543,
         "vision_index": null,
         "trust_index": 75224,
@@ -95755,9 +95801,9 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81394,
-        "coding_index": 81679,
-        "tooling_index": 83979,
+        "openbench_index": 81381,
+        "coding_index": 81670,
+        "tooling_index": 83945,
         "knowledge_index": 84619,
         "vision_index": null,
         "trust_index": 76014,
@@ -96782,9 +96828,9 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 46618,
-        "coding_index": 23955,
-        "tooling_index": 44876,
+        "openbench_index": 46464,
+        "coding_index": 23454,
+        "tooling_index": 44864,
         "knowledge_index": 74930,
         "vision_index": null,
         "trust_index": 58916,
@@ -96809,7 +96855,7 @@
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
-        "vibe_code_bench_1_1": null,
+        "vibe_code_bench_1_1": 3.5,
         "programbench_almost": null,
         "kernelbench_hard": null,
         "livecodebench": null,
@@ -96889,7 +96935,7 @@
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
-        "vibe_code_bench_1_1": null,
+        "vibe_code_bench_1_1": "2026-10-30",
         "programbench_almost": null,
         "kernelbench_hard": null,
         "livecodebench": null,
@@ -96969,7 +97015,7 @@
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
-        "vibe_code_bench_1_1": null,
+        "vibe_code_bench_1_1": "https://www.vals.ai/benchmarks/vibe-code",
         "programbench_almost": null,
         "kernelbench_hard": null,
         "livecodebench": null,
@@ -97053,6 +97099,13 @@
             "date": "2026-10-19",
             "score": 51.8,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1": [
+          {
+            "date": "2026-10-30",
+            "score": 3.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code"
           }
         ],
         "scicode": [
@@ -97210,13 +97263,14 @@
         "coding_index": {
           "measured": [
             "terminal_bench_4_0",
+            "vibe_code_bench_1_1",
             "swe_bench_pro",
             "scicode",
             "swe_bench_multilingual",
             "swe_bench_verified"
           ],
           "of": 21,
-          "share": 0.184,
+          "share": 0.233,
           "second_hand": [
             "swe_bench_pro",
             "swe_bench_multilingual",
@@ -97278,9 +97332,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 71931,
-        "coding_index": 61090,
-        "tooling_index": 74564,
+        "openbench_index": 71905,
+        "coding_index": 61068,
+        "tooling_index": 74499,
         "knowledge_index": 87257,
         "vision_index": 87098,
         "trust_index": 72584,
@@ -97860,9 +97914,9 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 62898,
-        "coding_index": 50105,
-        "tooling_index": 67647,
+        "openbench_index": 63589,
+        "coding_index": 50108,
+        "tooling_index": 69948,
         "knowledge_index": 79246,
         "vision_index": null,
         "trust_index": 62743,
@@ -97941,7 +97995,9 @@
         "arena_text_non_english": 1421,
         "arena_webdev": 1436,
         "arena_agent": -4.9,
-        "arena_agent_tool_hallucination": -0.8
+        "arena_agent_tool_hallucination": -0.8,
+        "apex_agents": 48.8,
+        "arc_agi_2": 23.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-30",
@@ -98025,7 +98081,9 @@
         "arena_text_non_english": "2026-10-30",
         "arena_webdev": "2026-10-30",
         "arena_agent": "2026-10-30",
-        "arena_agent_tool_hallucination": "2026-10-30"
+        "arena_agent_tool_hallucination": "2026-10-30",
+        "apex_agents": "2026-10-30",
+        "arc_agi_2": "2026-10-30"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -98109,7 +98167,9 @@
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": "https://arena.ai/leaderboard/agent",
-        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent"
+        "arena_agent_tool_hallucination": "https://arena.ai/leaderboard/agent",
+        "apex_agents": "https://epoch.ai/benchmarks/apex-agents",
+        "arc_agi_2": "https://epoch.ai/benchmarks/arc-agi-2"
       },
       "scores_history": {
         "aa_intelligence_index": [
@@ -98218,6 +98278,13 @@
             "date": "2026-10-16",
             "score": 975,
             "source": "https://artificialanalysis.ai/models/reflection-beam"
+          }
+        ],
+        "apex_agents": [
+          {
+            "date": "2026-10-30",
+            "score": 48.8,
+            "source": "https://epoch.ai/benchmarks/apex-agents"
           }
         ],
         "arena_text": [
@@ -98363,6 +98430,13 @@
             "score": 34.7,
             "source": "https://artificialanalysis.ai/models/reflection-beam"
           }
+        ],
+        "arc_agi_2": [
+          {
+            "date": "2026-10-30",
+            "score": 23.5,
+            "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
         ]
       },
       "aa_variant": {
@@ -98402,13 +98476,15 @@
             "terminal_bench_4_0",
             "gdpval_aa",
             "mcp_atlas",
-            "terminal_bench_2_1"
+            "terminal_bench_2_1",
+            "apex_agents"
           ],
           "of": 18,
-          "share": 0.426,
+          "share": 0.485,
           "second_hand": [
             "mcp_atlas",
-            "terminal_bench_2_1"
+            "terminal_bench_2_1",
+            "apex_agents"
           ]
         },
         "knowledge_index": {
@@ -98465,9 +98541,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 80896,
-        "coding_index": 83658,
-        "tooling_index": 87925,
+        "openbench_index": 80891,
+        "coding_index": 83666,
+        "tooling_index": 87902,
         "knowledge_index": 86653,
         "vision_index": 83758,
         "trust_index": 65692,
@@ -99469,7 +99545,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 38762,
+        "tooling_index": 38749,
         "knowledge_index": 42407,
         "vision_index": null,
         "trust_index": 45901,
@@ -99831,7 +99907,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41555,
+        "tooling_index": 41549,
         "knowledge_index": 63629,
         "vision_index": null,
         "trust_index": 54780,
@@ -100508,7 +100584,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 81368,
+        "tooling_index": 81345,
         "knowledge_index": 84493,
         "vision_index": null,
         "trust_index": 64727,
@@ -100896,9 +100972,9 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 84584,
-        "coding_index": 79457,
-        "tooling_index": 94299,
+        "openbench_index": 84596,
+        "coding_index": 79475,
+        "tooling_index": 94322,
         "knowledge_index": 92511,
         "vision_index": 92796,
         "trust_index": 74321,
@@ -101740,9 +101816,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 80240,
-        "coding_index": 73194,
-        "tooling_index": 83998,
+        "openbench_index": 80220,
+        "coding_index": 73153,
+        "tooling_index": 83972,
         "knowledge_index": 94683,
         "vision_index": 94389,
         "trust_index": 75521,
@@ -102805,8 +102881,8 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 58097,
-        "tooling_index": 71170,
+        "coding_index": 58089,
+        "tooling_index": 71133,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -103204,9 +103280,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 88179,
-        "coding_index": 86920,
-        "tooling_index": 94184,
+        "openbench_index": 88176,
+        "coding_index": 86922,
+        "tooling_index": 94172,
         "knowledge_index": 98985,
         "vision_index": null,
         "trust_index": 76002,
@@ -103708,7 +103784,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 67671,
+        "tooling_index": 67646,
         "knowledge_index": 78582,
         "vision_index": null,
         "trust_index": 63912,
