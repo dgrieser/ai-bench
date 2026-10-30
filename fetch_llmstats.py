@@ -194,6 +194,10 @@ SCORE_EXCLUSIONS: dict[tuple[str, str], str] = {
         "GPT-6 Astra system card, Fig 48: graded by OpenAI's own root-cause "
         "agent in place of the public grader"
     ),
+    ("scicode", "mistral-large-4"): (
+        "Mistral Large 4 preview post chart: SciCode-Verified pass@1 (n=6), "
+        "91.8 -- Mistral's own variant, not the main-problem SciCode column"
+    ),
     ("browsecomp", "atria-dawn-preview"): (
         "Atria tech report (arXiv 2609.15818, Appendix B): 'BrowseComp "
         "additionally uses the discard-all context-management strategy'"

@@ -19,6 +19,7 @@ from typing import Any, Callable
 
 import _fetch_warnings
 import _history
+import _vram_overrides
 import artificialanalysis
 import derive_indexes
 import fetch_aa_coding_agents
@@ -3036,8 +3037,12 @@ def fetch_spheron_data(
 
 
 def update_spheron_vram(
-    doc: dict[str, Any], by_slug: dict[str, dict[str, Any]]
+    doc: dict[str, Any],
+    by_slug: dict[str, dict[str, Any]],
+    overrides: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    if overrides is None:
+        overrides = _vram_overrides.load()
     models = doc.get("models", [])
     matched = 0
     updated = 0
@@ -3062,6 +3067,19 @@ def update_spheron_vram(
         for quant in ("fp16", "int8", "int4"):
             new_value = vram_data.get(quant)
             old_value = vram.get(quant)
+            # A reading ruled out by hand (_vram_overrides) leaves the hand
+            # figure and its source standing; any other reading means Spheron
+            # has moved, and it takes the cell back.
+            ignored = _vram_overrides.ignored_value(overrides, slug, quant)
+            if ignored is not None:
+                if new_value == ignored:
+                    continue
+                print(
+                    f"note: spheron now reports vram_{quant}={new_value} for {slug}, "
+                    f"not the {ignored} ruled out in {_vram_overrides.OVERRIDES_PATH.name}; "
+                    "taking it and the entry can be removed",
+                    file=sys.stderr,
+                )
             # Never overwrite an existing non-null value with null.
             if old_value is not None and new_value is None:
                 continue
