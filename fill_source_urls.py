@@ -31,6 +31,7 @@ import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
+import fetch_arena
 import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
@@ -120,6 +121,10 @@ COVERED_BY = [
         f"{fetch_epoch.DATA_URL} (one archive, every benchmark)",
         fetch_epoch.HUB_URL,
     ),
+    (
+        f"{fetch_arena.DATASET_URL} (one parquet file per arena)",
+        fetch_arena.board_url("arena_text"),
+    ),
 ]
 
 
@@ -200,6 +205,15 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
         # The snapshot the column is pinned to, not the site root (the newer one).
         (fetch_sec_bench.URL, (fetch_sec_bench.KEY,)),
+        # arena.ai's board pages, which the scores cite; the dataset they are
+        # read from is Arena's own publication of them.
+        *(
+            (fetch_arena.board_url(keys[0]), tuple(keys))
+            for keys in (
+                [k for k in fetch_arena.BOARDS if fetch_arena.board_url(k) == url]
+                for url in dict.fromkeys(fetch_arena.board_url(k) for k in fetch_arena.BOARDS)
+            )
+        ),
         # The announcement post; the JS chunk its chart reads is not a page.
         (fetch_hle_diamond.URL, (fetch_hle_diamond.KEY,)),
         (fetch_osworld.OSWORLD_XLSX_URL, ()),

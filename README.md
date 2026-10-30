@@ -41,6 +41,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
 | **HLE-Diamond (CAIS & Scale AI)** | Research (the maintainers' own runs, on the announcement post) | `JSON.parse` literals in the post's Next.js page chunk |
 | **Epoch AI Benchmarking Hub** | Independent evaluator (own runs) and mirror of benchmark boards; a second source, CC BY 4.0 | One zip of CSVs, plus each revision-split benchmark's hub page (and OSWorld 2.0's official board, for releases) |
+| **Arena (formerly LMArena)** | Human-preference votes and Agent Arena sessions (benchmark's own boards) | One parquet file per arena from its CC BY 4.0 Hugging Face dataset |
 
 ## Core Data Structure
 

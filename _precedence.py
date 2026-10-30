@@ -119,6 +119,7 @@ from __future__ import annotations
 import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
+import fetch_arena
 import fetch_bfcl
 import fetch_cybergym
 import fetch_datacurve
@@ -203,6 +204,11 @@ SEC_BENCH_SOURCE_URL = canonical(fetch_sec_bench.URL)
 # The announcement post, which is the maintainers' only public board; the chart
 # reads its data from the post's JS chunk, whose name changes every build.
 HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
+# arena.ai's page per board, not the Hugging Face dataset the scores are read
+# from: the dataset is Arena's own publication of those pages, and the page is
+# what a reader opens. Two columns share the Text page (overall and
+# non-English) and two the Agent page (aggregate and tool hallucination).
+ARENA_KEY_URLS = {key: canonical(fetch_arena.board_url(key)) for key in fetch_arena.BOARDS}
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 # benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
@@ -300,6 +306,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         *((url, RANK_BENCHMARK_SITE) for url in TBENCH_KEY_URLS.values()),
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        *((url, RANK_BENCHMARK_SITE) for url in set(ARENA_KEY_URLS.values())),
         *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
         (SEC_BENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         (HLE_DIAMOND_SOURCE_URL, RANK_BENCHMARK_SITE),
