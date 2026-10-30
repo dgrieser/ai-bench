@@ -1029,6 +1029,10 @@ hoping the labels agree:
   outside llm-stats' note (a system card, a tech report), the single score is
   ruled out in `fetch_llmstats.SCORE_EXCLUSIONS`, with the sentence that says
   so: GPT-6 Astra's three cyber numbers and Atria's context-managed BrowseComp.
+  The same table holds a score whose note names the variant but whose column
+  is read off the flat field, where no note reaches: Mistral Large 4's 91.8
+  "SciCode", which the note calls SciCode-Verified from Mistral's preview
+  post (AA and Epoch put the preview at 54.2 on SciCode itself).
 - **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
   spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
   different benchmark and stay unmapped.
