@@ -1,3 +1,42 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_4_0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience",
+          "reason": "the same name without its first 3 word(s): exact to science, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'harborframework/terminal-bench-science (terminalbenchscience_0_1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/zai-org/GLM-5.3",
+      "subject": "harborframework/terminal-bench-science (terminalbenchscience_0_1)",
+      "universe": "benchmarks"
+    }
+  ]
 }
