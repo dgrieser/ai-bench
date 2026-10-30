@@ -143,6 +143,7 @@ class TestNoMappedLabelContradictsItsColumn(unittest.TestCase):
     NO_TOOL_COLUMNS = {
         "hle", "hle_diamond", "aime_2025", "aime_2026", "gpqa_diamond", "mmlu_pro", "mmmu_pro",
         "scicode", "zerobench", "charxiv_reasoning", "mathvista_mini", "critpt",
+        "hmmt_feb_2026", "mmmlu", "simpleqa_verified", "arc_agi_2",
     }
     TOOLS = re.compile(
         r"w/\s*(?:tools?|python)|with\s+tools?|with\s+search|search\s+agent"

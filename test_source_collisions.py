@@ -168,6 +168,23 @@ class TestRowFetchers(unittest.TestCase):
                 self.assertEqual(by_key["cybergym"]["m"]["score"], 79.0)
                 self.assertEqual(by_key["exploitgym"]["m"]["score"], 7.0)
 
+    def test_arena_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
+        # fetch_arena.py names the column on every row, so a model listed at
+        # two efforts folds per board, and its rating on one board never
+        # stands in for another.
+        mapping = write_json({"model": "m", "model (0528)": "m"})
+        rows = [
+            {"key": "arena_text", "model": "model", "score": 1401.0},
+            {"key": "arena_text", "model": "model (0528)", "score": 1452.0},
+            {"key": "arena_webdev", "model": "model", "score": 1210.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_arena_data(SCRIPT, mapping)
+                self.assertEqual(by_key["arena_text"]["m"]["score"], 1452.0)
+                self.assertEqual(by_key["arena_webdev"]["m"]["score"], 1210.0)
+
     def test_best_row_wins_within_a_revision_in_either_payload_order(self) -> None:
         for source, func_name, base, revision, extra in self.REVISION_CASES:
             mapping = write_json({"Model": "m", "Model [high]": "m"})

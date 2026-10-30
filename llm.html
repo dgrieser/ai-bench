@@ -8438,14 +8438,14 @@
          detail page asks for the same handful over and over. */
 
       const RADAR_MIN_AXES = 3;
-      // How many axes "+ Add axis" builds up to. Nineteen because that is what
-      // the widest fixed preset needs (the Coding index aggregates nineteen
+      // How many axes "+ Add axis" builds up to. Twenty-one because that is what
+      // the widest fixed preset needs (the Coding index aggregates twenty-one
       // benchmarks), so the picker can reproduce every one of them. The
       // common-benchmarks preset is the exception: it is "all of them" by
       // definition and often runs past this, so the cap only stops the picker
       // adding more -- a longer set from that preset, the address or storage
       // is charted as it is.
-      const RADAR_MAX_AXES = 19;
+      const RADAR_MAX_AXES = 21;
       const RADAR_AXES_STORAGE_KEY = "radarAxes";
       const RADAR_DEFAULT_AXES = ["coding_index", "tooling_index", "knowledge_index", "trust_index", "vision_index", "security_index"];
 
@@ -8465,29 +8465,31 @@
         {
           id: "coding",
           label: "Coding",
-          axes: ["real_swe", "deepswe_1_1", "frontierswe_2_0", "frontiercode_extended_1_1",
-            "swe_marathon_1_1", "terminal_bench_4_0", "terminal_bench_2_1",
-            "vibe_code_bench_1_1", "swe_bench_pro", "swe_bench_pro_hard_2_0", "livecodebench", "scicode",
-            "swe_bench_multilingual", "swe_atlas_qna", "swe_atlas_rf", "swe_atlas_tw",
-            "programbench_almost", "kernelbench_hard", "swe_bench_verified"]
+          axes: ["real_swe", "deepswe_1_1", "frontierswe_2_0", "frontiercode_extended_1_1", "swe_marathon_1_1",
+            "terminal_bench_4_0", "terminal_bench_2_1", "vibe_code_bench_1_1", "swe_bench_pro",
+            "swe_bench_pro_hard_2_0", "livecodebench", "scicode", "swe_bench_multilingual", "swe_atlas_qna",
+            "swe_atlas_rf", "swe_atlas_tw", "programbench_almost", "kernelbench_hard", "swe_bench_verified",
+            "ale_bench", "nl2repo"]
         },
         {
           id: "tooling",
           label: "Tooling",
-          axes: ["automation_bench_aa", "terminal_bench_4_0", "toolathlon", "gdpval_aa",
-            "mcp_atlas", "itbench_aa", "tau3_bench_banking", "bfcl_v4", "agents_last_exam",
-            "terminal_bench_hard", "terminal_bench_2_1", "tau2_bench_telecom", "ifbench"]
+          axes: ["automation_bench_aa", "terminal_bench_4_0", "toolathlon", "gdpval_aa", "mcp_atlas",
+            "itbench_aa", "tau3_bench_banking", "bfcl_v4", "agents_last_exam", "terminal_bench_hard",
+            "terminal_bench_2_1", "tau2_bench_telecom", "ifbench", "apex_agents", "vending_bench_2",
+            "claw_eval", "tau2_bench_retail", "tau2_bench_airline"]
         },
         {
           id: "knowledge",
           label: "Knowledge",
-          axes: ["aa_omniscience", "hle", "critpt", "mmlu_pro", "aime_2025", "gpqa_diamond",
-            "hle_diamond"]
+          axes: ["aa_omniscience", "hle", "critpt", "mmlu_pro", "aime_2025", "gpqa_diamond", "hle_diamond",
+            "frontiermath_tier_4", "frontiermath_tiers_1_3", "hmmt_feb_2026"]
         },
         {
           id: "trust",
           label: "Trust",
-          axes: ["aa_omniscience_hallucination", "aa_omniscience_accuracy", "aa_lcr", "ifbench"]
+          axes: ["aa_omniscience_hallucination", "aa_omniscience_accuracy", "aa_lcr", "ifbench", "simpleqa_verified",
+            "arena_agent_tool_hallucination"]
         },
         {
           id: "vision",
