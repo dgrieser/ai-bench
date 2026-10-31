@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch SEC-bench Pro scores (snapshot 260505) from https://sec-bench.github.io
+Fetch SEC-bench Pro scores (snapshots 260505 and 260617) from https://sec-bench.github.io
 
 SEC-bench Pro republishes itself as dated snapshots, each a different task set:
 
@@ -8,12 +8,14 @@ SEC-bench Pro republishes itself as dated snapshots, each a different task set:
   * ``260617``  344 tasks, the same two plus 137 Linux kernel tasks -- the
                 site's current default.
 
-The column is **260505**, because that is the set the vendors report on --
+Each snapshot is its own column. ``sec_bench_pro`` is **260505**, because that
+is the set the vendors report on --
 OpenAI's system cards say so in as many words, and the DeepSeek and Xiaomi
 cards quote numbers on the same scale -- and the maintainers still publish it
 at ``/260505/``. Their board on the newer snapshot scores the same model up to
 twelve points higher (GPT-5.5: 46.4 on 260505, 58.4 on 260617), so a row from
-one would not rank against a row from the other.
+one would not rank against a row from the other. ``sec_bench_pro_260617`` is
+the newer set, credited to the site root, which is where it is published.
 
 The site is a static build whose pages inline their data; the build's own
 source, ``data/results.json`` in the site repository, carries every snapshot
@@ -22,11 +24,12 @@ in one file, and that is what this reads. Only the ``overall`` board of the
 over all instances, timeouts counted as failures. The ``completed`` mode drops
 the timeouts from the denominator, which moves a model that timed out on most
 of its tasks (Opus 4.6 there: 114 of 183) from 25.7 to 60.9; the per-target
-boards are V8 or SpiderMonkey alone.
+boards are V8 or SpiderMonkey alone. The same holds for each snapshot read.
 
-A snapshot the file no longer carries, or one whose overall board states a
-task count other than 183, stops the read rather than filing a different task
-set under this column.
+A tracked snapshot the file no longer carries, or one whose overall board
+states a task count other than its own (183, 344), stops the read rather than
+filing a different task set under its column; a snapshot the file carries
+beyond the tracked ones is reported and left unread.
 """
 
 from __future__ import annotations
@@ -40,6 +43,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import _fetch_warnings
 from _fetch_checks import check_percentages, require_rows
 
 
@@ -49,6 +53,25 @@ INSTANCES = 183
 SITE_URL = "https://sec-bench.github.io"
 # The snapshot's own page: what a score is credited to and what a reader opens.
 URL = f"{SITE_URL}/{SNAPSHOT}/"
+
+# Every snapshot llm.json carries a column for: snapshot -> (column, the
+# overall board's task count, the page a score is credited to). 260505 is the
+# set vendors report on; 260617 adds the Linux kernel (344 tasks) and is what
+# the site root shows, having no page of its own. A snapshot the data file
+# carries beyond these is reported, not read.
+SNAPSHOTS: dict[str, tuple[str, int, str]] = {
+    SNAPSHOT: (KEY, INSTANCES, URL),
+    "260617": ("sec_bench_pro_260617", 344, f"{SITE_URL}/"),
+}
+KEYS = tuple(key for key, _instances, _url in SNAPSHOTS.values())
+
+
+def source_url(key: str) -> str:
+    """The page a score in column ``key`` is credited to."""
+    for column, _instances, url in SNAPSHOTS.values():
+        if column == key:
+            return url
+    raise KeyError(key)
 # What this script requests: the site build's data, every snapshot in one file.
 DATA_URL = "https://raw.githubusercontent.com/SEC-bench/sec-bench.github.io/main/data/results.json"
 OVERALL_BOARD = "overall"
@@ -83,29 +106,37 @@ def normalize_model(raw: str) -> str:
     return re.sub(r"\s+", " ", raw).strip()
 
 
-def overall_board(payload: Any) -> dict:
-    """The 260505 snapshot's overall board, checked to be the 183-task set."""
+def overall_board(payload: Any, snapshot_id: str = SNAPSHOT) -> dict:
+    """A snapshot's overall board, checked to be the task set its column holds."""
+    instances = SNAPSHOTS[snapshot_id][1]
     snapshots = payload.get("snapshots") if isinstance(payload, dict) else None
-    snapshot = (snapshots or {}).get(SNAPSHOT)
+    snapshot = (snapshots or {}).get(snapshot_id)
     if not isinstance(snapshot, dict):
         raise ValueError(
-            f"{DATA_URL} no longer carries snapshot {SNAPSHOT} -- refusing to read "
+            f"{DATA_URL} no longer carries snapshot {snapshot_id} -- refusing to read "
             "another snapshot's task set into this column."
         )
     for board in snapshot.get("leaderboards") or []:
         if isinstance(board, dict) and board.get("name") == OVERALL_BOARD:
-            if board.get("instances") != INSTANCES:
+            if board.get("instances") != instances:
                 raise ValueError(
-                    f"snapshot {SNAPSHOT}'s overall board states {board.get('instances')!r} "
-                    f"tasks, not {INSTANCES} -- the task set changed under the same name."
+                    f"snapshot {snapshot_id}'s overall board states {board.get('instances')!r} "
+                    f"tasks, not {instances} -- the task set changed under the same name."
                 )
             return board
-    raise ValueError(f"snapshot {SNAPSHOT} has no {OVERALL_BOARD!r} board in {DATA_URL}")
+    raise ValueError(f"snapshot {snapshot_id} has no {OVERALL_BOARD!r} board in {DATA_URL}")
 
 
-def parse_rows(payload: Any) -> list[dict]:
+def unread_snapshots(payload: Any) -> list[str]:
+    """Snapshots the data file carries that llm.json has no column for."""
+    snapshots = payload.get("snapshots") if isinstance(payload, dict) else None
+    return sorted(s for s in (snapshots or {}) if s not in SNAPSHOTS)
+
+
+def parse_rows(payload: Any, snapshot_id: str = SNAPSHOT) -> list[dict]:
     rows: list[dict] = []
-    for row in overall_board(payload).get("results") or []:
+    key = SNAPSHOTS[snapshot_id][0]
+    for row in overall_board(payload, snapshot_id).get("results") or []:
         if not isinstance(row, dict) or not isinstance(row.get("model"), str):
             continue
         headline = (row.get("score_modes") or {}).get("headline") or {}
@@ -114,6 +145,8 @@ def parse_rows(payload: Any) -> list[dict]:
             continue
         rows.append(
             {
+                "key": key,
+                "snapshot": snapshot_id,
                 "model": normalize_model(row["model"]),
                 "raw": row["model"],
                 "agent": row.get("agent"),
@@ -129,26 +162,36 @@ def parse_rows(payload: Any) -> list[dict]:
     return rows
 
 
-def get_scores(fetch=fetch_json) -> list[dict]:
-    """One dict per row of the 260505 overall board.
+def get_scores(fetch=fetch_json, snapshots: tuple[str, ...] | None = None) -> list[dict]:
+    """One dict per row of each tracked snapshot's overall board.
 
-    Keys: model, raw, agent, effort, backend, solved, total, timeouts, date,
-    score (headline %, timeouts counted as failures), rank.
+    Keys: key (the llm.json column), snapshot, model, raw, agent, effort,
+    backend, solved, total, timeouts, date, score (headline %, timeouts counted
+    as failures), rank -- within its own snapshot, since two snapshots are two
+    task sets.
     """
-    print(f"Fetching {DATA_URL} (snapshot {SNAPSHOT}) ...", file=sys.stderr)
-    rows = parse_rows(fetch(DATA_URL))
-    require_rows(rows, f"{DATA_URL}#{SNAPSHOT}")
-    check_percentages(rows, URL)
-    print(f"  parsed {len(rows)} leaderboard rows", file=sys.stderr)
-    rows.sort(key=lambda r: -r["score"])
-    for i, row in enumerate(rows, 1):
-        row["rank"] = i
+    print(f"Fetching {DATA_URL} ...", file=sys.stderr)
+    payload = fetch(DATA_URL)
+    for snapshot_id in unread_snapshots(payload):
+        message = f"SEC-bench Pro snapshot {snapshot_id} has no llm.json column; not read"
+        print(f"  warning: {message}", file=sys.stderr)
+        _fetch_warnings.record("fetch_sec_bench.py", message, source="new-version:sec_bench")
+    rows: list[dict] = []
+    for snapshot_id in snapshots or tuple(SNAPSHOTS):
+        board = parse_rows(payload, snapshot_id)
+        require_rows(board, f"{DATA_URL}#{snapshot_id}")
+        check_percentages(board, SNAPSHOTS[snapshot_id][2])
+        board.sort(key=lambda r: -r["score"])
+        for i, row in enumerate(board, 1):
+            row["rank"] = i
+        print(f"  snapshot {snapshot_id}: {len(board)} leaderboard rows", file=sys.stderr)
+        rows.extend(board)
     return rows
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=f"Fetch SEC-bench Pro (snapshot {SNAPSHOT}) scores from sec-bench.github.io."
+        description="Fetch SEC-bench Pro scores, one board per tracked snapshot, from sec-bench.github.io."
     )
     parser.add_argument(
         "--format",
@@ -169,9 +212,9 @@ def main() -> int:
             print(name)
     else:
         width = max((len(e["model"]) for e in scores), default=5)
-        print(f"{'MODEL':<{width}}  {'SCORE':>6}  AGENT")
+        print(f"{'SNAPSHOT':<8}  {'MODEL':<{width}}  {'SCORE':>6}  AGENT")
         for e in scores:
-            print(f"{e['model']:<{width}}  {e['score']:>6}  {e.get('agent') or ''}")
+            print(f"{e['snapshot']:<8}  {e['model']:<{width}}  {e['score']:>6}  {e.get('agent') or ''}")
     return 0
 
 

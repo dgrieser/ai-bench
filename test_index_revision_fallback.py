@@ -222,22 +222,20 @@ class TestLiveRegistry(unittest.TestCase):
                 if key != current:
                     self.assertNotIn(key, contributing, key)
 
-    def test_frontiercode_is_aggregated_through_extended_and_not_main(self) -> None:
-        """One benchmark, one slot -- and for FrontierCode the slot is Extended.
+    def test_frontiercode_is_aggregated_through_its_current_release(self) -> None:
+        """One benchmark, one slot -- and for FrontierCode the slot is 2.0.
 
-        Main and Extended are the same 1.1 runs scored over nested task sets
-        (150 tasks against the hardest 100), so they rank the same field to
-        Spearman 0.99. Aggregating both would spend two of the coding group's
-        slots on one measurement; Extended is kept because it is the larger
-        sample. Main stays a column in llm.json that no index reads.
+        2.0 (2026-10-27) rebuilt the suite as one board. 1.1's Main and
+        Extended were the same runs scored over nested task sets, so only one
+        of them was ever aggregated, and now neither is directly: Extended, the
+        board the index read before, converts onto 2.0's scale for a model 2.0
+        has not run, and Main stays a column no index reads.
         """
         contributing = {k for index in di.INDEXES for k, _ in index.contributing}
-        self.assertIn("frontiercode_extended_1_1", contributing)
-        self.assertNotIn("frontiercode_1_1", contributing)
-        # And the archive converts onto the scale of the board actually read.
-        self.assertEqual(
-            di.REVISION_FALLBACKS["frontiercode_extended_1_1"], "frontiercode_1_0"
-        )
+        self.assertIn("frontiercode_2_0", contributing)
+        for retired in ("frontiercode_extended_1_1", "frontiercode_1_1", "frontiercode_1_0"):
+            self.assertNotIn(retired, contributing)
+        self.assertEqual(di.REVISION_FALLBACKS["frontiercode_2_0"], "frontiercode_extended_1_1")
         self.assertNotIn("frontiercode_1_1", di.REVISION_FALLBACKS)
 
     def test_frontierswe_is_deliberately_left_without_a_fallback(self) -> None:

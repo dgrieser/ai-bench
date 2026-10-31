@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import _fetch_warnings
+import _switch_detector
 import _history
 import _vram_overrides
 import artificialanalysis
@@ -47,11 +48,13 @@ import fetch_toolathlon
 import fetch_vals
 import fetch_zerobench
 import fetch_arena
+import fetch_arc_prize
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _precedence import (
     AA_CODING_AGENTS_SOURCE_URL,
     AGENTS_LAST_EXAM_SOURCE_URL,
+    AGENTS_LAST_EXAM_KEY_URLS,
     BFCL_SOURCE_URL,
     CYBERGYM_KEY_URLS,
     DATACURVE_SOURCE_URL,
@@ -70,6 +73,7 @@ from _precedence import (
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
     SEC_BENCH_SOURCE_URL,
+    SEC_BENCH_KEY_URLS,
     HLE_DIAMOND_SOURCE_URL,
     RANK_AA,
     SWE_ATLAS_KEY_URLS,
@@ -79,6 +83,7 @@ from _precedence import (
     VALS_KEY_URLS,
     ZEROBENCH_SOURCE_URL,
     ARENA_KEY_URLS,
+    ARC_PRIZE_KEY_URLS,
     is_fetcher_source,
     may_overwrite,
     source_rank,
@@ -104,6 +109,7 @@ from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _swe_bench_pro_v2_mapping import load_swe_bench_pro_v2_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
 from _arena_mapping import load_arena_to_slug_mapping
+from _arc_prize_mapping import load_arc_prize_to_slug_mapping
 from _cybergym_mapping import load_cybergym_to_slug_mapping
 from _sec_bench_mapping import load_sec_bench_to_slug_mapping
 from _hle_diamond_mapping import load_hle_diamond_to_slug_mapping
@@ -121,7 +127,7 @@ from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _vals_mapping import load_vals_to_slug_mapping
-from _revisions import known_revision_key, subset_base
+from _revisions import KNOWN_REVISIONS, known_revision_key, revision_label, revision_rank, subset_base
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
 from _tbench_mapping import load_tbench_to_slug_mapping
 from _agents_last_exam_mapping import load_agents_last_exam_to_slug_mapping
@@ -143,6 +149,7 @@ MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
 SWE_BENCH_PRO_V2_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_bench_pro_v2.py")
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
 ARENA_SCRIPT = Path(__file__).resolve().with_name("fetch_arena.py")
+ARC_PRIZE_SCRIPT = Path(__file__).resolve().with_name("fetch_arc_prize.py")
 CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
 SEC_BENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_sec_bench.py")
 HLE_DIAMOND_SCRIPT = Path(__file__).resolve().with_name("fetch_hle_diamond.py")
@@ -281,13 +288,17 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "gdpval_aa": (("gdpval",), to_index),
     # AA-Briefcase reports a composite Elo (GPT-5.5 (medium) = 1000), not a fraction.
     "aa_briefcase": (("briefcase",), to_index),
-    "aa_omniscience": (("omniscience",), to_index),
-    "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
+    # AA-Omniscience is versioned in place (v1.1, 2026-10-27, cut the set from
+    # 6,000 questions to 3,000), so its three columns are the current
+    # version's and are written only while AA's page states it -- see
+    # AA_VERSION_GATES. v1's values sit in the archived *_1_0 columns.
+    "aa_omniscience_1_1": (("omniscience",), to_index),
+    "aa_omniscience_hallucination_1_1": (("omniscience_hallucination_rate",), to_percent),
     # The other half of the same run: correct share before the Omniscience
     # Index nets confident errors off against it. Both halves feed the Trust
     # index, where the accuracy is what stops a model that abstains on
     # everything from topping the hallucination rate.
-    "aa_omniscience_accuracy": (("omniscience_accuracy",), to_percent),
+    "aa_omniscience_accuracy_1_1": (("omniscience_accuracy",), to_percent),
     "aa_lcr": (("lcr",), to_percent),
     # Ai2's IFBench, run independently by AA; the model pages carry it too.
     "ifbench": (("ifbench",), to_percent),
@@ -301,7 +312,19 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "livecodebench": (("livecodebench",), to_percent),
     "scicode": (("scicode",), to_percent),
     "hle": (("hle",), to_percent),
-    "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # The index is re-versioned in place as well (v4.3 on 2026-09-07, v5.0 on
+    # 2026-10-27, each on new components); the API envelope states which
+    # version it serves, and only the matching column is written.
+    "aa_intelligence_index_5_0": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # AA's six domain indexes, published per model beside the Intelligence
+    # Index on its own scale. AA states no version for them, so no gate holds
+    # them; a re-versioning shows up in _switch_detector's report instead.
+    "aa_finance_index": (("artificial_analysis_finance_and_accounting_index",), lambda v: v),
+    "aa_strategy_ops_index": (("artificial_analysis_strategy_and_ops_index",), lambda v: v),
+    "aa_legal_index": (("artificial_analysis_legal_index",), lambda v: v),
+    "aa_healthcare_index": (("artificial_analysis_healthcare_and_medical_index",), lambda v: v),
+    "aa_engineering_index": (("artificial_analysis_engineering_index",), lambda v: v),
+    "aa_economics_index": (("artificial_analysis_economics_index",), lambda v: v),
     # Read off the Cyber Index's evaluation page (artificialanalysis.CYBER_INDEX_URL),
     # the only place AA publishes it; 0-100, so it passes through unscaled.
     "aa_cyber_index": (("cyber_index",), to_index),
@@ -459,6 +482,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-arena",
         action="store_true",
         help="Skip fetching Arena leaderboard scores from its Hugging Face dataset.",
+    )
+    parser.add_argument(
+        "--skip-arc-prize",
+        action="store_true",
+        help="Skip fetching ARC-AGI-1, -2 and -3 scores from ARC Prize's leaderboard.",
     )
     parser.add_argument(
         "--skip-cybergym",
@@ -724,6 +752,100 @@ def fetch_available_slugs(aa_script: Path) -> set[str]:
     return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
 
 
+# Columns AA re-versions in place, and how this run learns which version AA is
+# serving. Neither record says: on 2026-10-27 AA moved the Intelligence Index to
+# v5.0 and AA-Omniscience to v1.1, the refresh kept writing into the same
+# columns, and each was left holding two versions -- 38 index values on v5.0
+# beside 133 on v4.x, a scale apart. So each versioned column names the
+# version it holds, and is written only while AA states that version: the
+# index's from the API envelope (intelligence_index_version), Omniscience's
+# from its evaluation page. A different version, or none stated, writes
+# nothing to the column and is reported -- a new version needs a column of its
+# own, and the old one is archived as it stands.
+AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
+    # gate name -> (the version the columns hold, the columns)
+    "intelligence_index": ("5.0", ("aa_intelligence_index_5_0",)),
+    "omniscience": ("1.1", (
+        "aa_omniscience_1_1", "aa_omniscience_accuracy_1_1", "aa_omniscience_hallucination_1_1",
+    )),
+    # The other evaluations AA versions in their page titles. Each of these
+    # columns switched in place before the gates existed -- AA-LCR to v1.1 on
+    # 2026-09-04, GDPval-AA's re-anchored v2.1 on 2026-09-19 -- re-scoring
+    # nearly the whole column at once, so it stayed one measurement; the next
+    # switch stops at the gate instead.
+    "gdpval": ("2.1", ("gdpval_aa",)),
+    "lcr": ("1.1", ("aa_lcr",)),
+    "briefcase": ("1.1", ("aa_briefcase",)),
+}
+# Gates read off an evaluation page's text rather than the API: gate name ->
+# (the page, the pattern its version label follows).
+AA_PAGE_VERSIONS: dict[str, tuple[str, re.Pattern[str]]] = {
+    "omniscience": (
+        "https://artificialanalysis.ai/evaluations/omniscience",
+        re.compile(r"AA-Omniscience v(\d+(?:\.\d+)*)"),
+    ),
+    "gdpval": (
+        "https://artificialanalysis.ai/evaluations/gdpval-aa",
+        re.compile(r"GDPval-AA v(\d+(?:\.\d+)*)"),
+    ),
+    "lcr": (
+        "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning",
+        re.compile(r"AA-LCR v(\d+(?:\.\d+)*)"),
+    ),
+    "briefcase": (
+        "https://artificialanalysis.ai/evaluations/aa-briefcase",
+        re.compile(r"AA-Briefcase v(\d+(?:\.\d+)*)"),
+    ),
+}
+AA_OMNISCIENCE_URL = AA_PAGE_VERSIONS["omniscience"][0]
+# What AA stated this run, filled in as the data is read: gate name -> version.
+AA_STATED_VERSIONS: dict[str, str | None] = {}
+
+
+def version_label(value: Any) -> str | None:
+    """4.1 / "4.1" / "v5" / 5 -> "4.1" / "4.1" / "5.0" / "5.0"; None if unstated."""
+    if isinstance(value, bool) or value is None:
+        return None
+    numbers = re.findall(r"\d+", str(value))
+    if not numbers:
+        return None
+    return ".".join(numbers if len(numbers) > 1 else [numbers[0], "0"])
+
+
+def aa_page_version(gate: str, fetch_text=None) -> str | None:
+    """The version an AA evaluation page names for itself, the most-cited one."""
+    url, pattern = AA_PAGE_VERSIONS[gate]
+    fetch_text = fetch_text or artificialanalysis._fetch_rsc_text
+    text = fetch_text(url)
+    if not text:
+        return None
+    found = pattern.findall(text)
+    if not found:
+        return None
+    return version_label(max(set(found), key=found.count))
+
+
+def aa_omniscience_version(fetch_text=None) -> str | None:
+    """The AA-Omniscience version AA's evaluation page names."""
+    return aa_page_version("omniscience", fetch_text)
+
+
+def aa_blocked_columns(stated: dict[str, str | None]) -> dict[str, str]:
+    """Columns this run must not write, each with the reason it is held back."""
+    blocked: dict[str, str] = {}
+    for gate, (expected, columns) in AA_VERSION_GATES.items():
+        got = stated.get(gate)
+        if got == expected:
+            continue
+        reason = (
+            f"AA states {gate} version {got}, which llm.json has no column for"
+            if got else f"AA stated no {gate} version this run"
+        ) + f" ({', '.join(columns)} hold{'s' if len(columns) == 1 else ''} {expected}); not written"
+        for column in columns:
+            blocked[column] = reason
+    return blocked
+
+
 def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_data_cmd(aa_script, slugs)
     proc = run_fetch(cmd, "artificialanalysis.py -o json")
@@ -731,6 +853,15 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
         raise RuntimeError(f"artificialanalysis.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
     payload = json.loads(proc.stdout)
+    AA_STATED_VERSIONS["intelligence_index"] = version_label(
+        payload.get("intelligence_index_version")
+    )
+    for gate, (url, _pattern) in AA_PAGE_VERSIONS.items():
+        try:
+            AA_STATED_VERSIONS[gate] = aa_page_version(gate)
+        except Exception as exc:  # a page that cannot be read states nothing
+            print(f"  warning: could not read {url}: {exc}", file=sys.stderr)
+            AA_STATED_VERSIONS[gate] = None
     data = payload.get("data", [])
     by_slug: dict[str, dict[str, Any]] = {}
     for row in data:
@@ -1173,6 +1304,23 @@ def apply_score(
     return 1
 
 
+# Revisions a source published this run that are newer than every revision
+# llm.json has a column for: (base, label). Reported once at the end of the run.
+NEWER_REVISIONS: set[tuple[str, str]] = set()
+
+
+def note_newer_revision(base: str, revision: Any) -> None:
+    """Remember a row's revision if it is newer than every column ``base`` has --
+    a re-run the source has published and this table has not split out yet.
+    An older or sideways one (a subset without a column) is routine."""
+    if not isinstance(revision, str) or not revision:
+        return
+    label = revision_label(revision)
+    known = KNOWN_REVISIONS.get(base, ())
+    if known and revision_rank(label) > max(revision_rank(k) for k in known):
+        NEWER_REVISIONS.add((base, label))
+
+
 def keep_best_by_revision(
     by_key: dict[str, dict[str, dict[str, Any]]],
     base: str,
@@ -1196,6 +1344,7 @@ def keep_best_by_revision(
     """
     key = known_revision_key(base, row.get("revision"))
     if key is None:
+        note_newer_revision(base, row.get("revision"))
         return False
     keep_best_row(by_key.setdefault(key, {}), slug, row, score_key)
     return True
@@ -1328,6 +1477,12 @@ def update_scores(
     # every page it was read from: see RunReports.blind.
     delivered: set[str] = set()
     all_read_pages: set[str] = set()
+    # Versioned columns whose version AA did not state this run: nothing is
+    # written to them, nor dropped from them, and the reason is reported once.
+    blocked = aa_blocked_columns(AA_STATED_VERSIONS) if by_slug else {}
+    for reason in sorted(set(blocked.values())):
+        print(f"  warning: {reason}", file=sys.stderr)
+        _fetch_warnings.record("update.py", reason, source="artificialanalysis")
 
     for model in models:
         slug = model.get("name")
@@ -1386,6 +1541,8 @@ def update_scores(
             for page in read_pages:
                 RUN_REPORTS.failed(page)
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
+            if llm_key in blocked:
+                continue
             aa_value = None
             aa_key_used = None
             for aa_key in aa_keys:
@@ -1917,7 +2074,8 @@ def fetch_real_swe_data(
         raise RuntimeError("Unexpected real-swe JSON format: expected a list")
 
     real_swe_to_slug = load_real_swe_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -1927,35 +2085,26 @@ def fetch_real_swe_data(
         slug = real_swe_to_slug.get(real_swe_name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        # The page carries one release at a time and names it in its title;
+        # a release with no column is reported, never filed next door.
+        if not keep_best_by_revision(by_key, "real_swe", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} real-swe row(s) naming no known revision",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_real_swe_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        real_swe_model = by_slug.get(slug)
-        if real_swe_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "real_swe", real_swe_model.get("score"),
-            REAL_SWE_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, REAL_SWE_SOURCE_URL, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_mcp_atlas_cmd(script: Path) -> list[str]:
@@ -2200,6 +2349,57 @@ def update_arena_scores(
     )
 
 
+def build_fetch_arc_prize_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_arc_prize_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """ARC-AGI-1, -2 and -3 off ARC Prize's own board, one column each.
+
+    fetch_arc_prize.py names the column on every row and one mapping serves
+    all three versions: they are one site's boards and label models alike.
+    """
+    cmd = build_fetch_arc_prize_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_arc_prize.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected arc_prize JSON format: expected a list")
+
+    arc_prize_to_slug = load_arc_prize_to_slug_mapping(mapping_path)
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        key = row.get("key")
+        if key not in ARC_PRIZE_KEY_URLS:
+            continue
+        name = row.get("model")
+        if not isinstance(name, str) or not name:
+            continue
+        slug = arc_prize_to_slug.get(name)
+        if not slug:
+            continue
+        # A model listed at several efforts keeps its best run per version.
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
+
+
+def update_arc_prize_scores(
+    doc: dict[str, Any],
+    by_key: dict[str, dict[str, dict[str, Any]]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    return apply_revision_scores(
+        doc, by_key, ARC_PRIZE_KEY_URLS["arc_agi_3"],
+        key_urls=ARC_PRIZE_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
+
+
 def build_fetch_cybergym_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -2259,7 +2459,8 @@ def build_fetch_sec_bench_cmd(script: Path) -> list[str]:
 
 def fetch_sec_bench_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """SEC-bench Pro's snapshots, one column each; every row names its own."""
     cmd = build_fetch_sec_bench_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2272,7 +2473,7 @@ def fetch_sec_bench_data(
         raise RuntimeError("Unexpected sec_bench JSON format: expected a list")
 
     sec_bench_to_slug = load_sec_bench_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -2282,35 +2483,22 @@ def fetch_sec_bench_data(
         slug = sec_bench_to_slug.get(name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        key = row.get("key")
+        if key not in SEC_BENCH_KEY_URLS:
+            continue
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
 
 
 def update_sec_bench_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        row = by_slug.get(slug)
-        if row is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, fetch_sec_bench.KEY, row.get("score"),
-            SEC_BENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, SEC_BENCH_SOURCE_URL,
+        key_urls=SEC_BENCH_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_hle_diamond_cmd(script: Path) -> list[str]:
@@ -2601,7 +2789,8 @@ def build_fetch_agents_last_exam_cmd(script: Path) -> list[str]:
 
 def fetch_agents_last_exam_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """ALE's releases, one column each: v1.0 (the legacy board) and v1.1."""
     cmd = build_fetch_agents_last_exam_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2614,7 +2803,8 @@ def fetch_agents_last_exam_data(
         raise RuntimeError("Unexpected agents-last-exam JSON format: expected a list")
 
     ale_to_slug = load_agents_last_exam_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -2624,37 +2814,28 @@ def fetch_agents_last_exam_data(
         slug = ale_to_slug.get(ale_name)
         if not slug:
             continue
-        # One row per (harness, model, harness variant); best run wins, which
-        # is how the leaderboard ranks a model across its efforts.
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        # One row per (harness, model, harness variant); best run wins within
+        # its release, which is how the leaderboard ranks a model across its
+        # efforts. A release with no column is counted, never filed next door.
+        if not keep_best_by_revision(by_key, "agents_last_exam", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} agents-last-exam row(s) naming no known release",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_agents_last_exam_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        ale_model = by_slug.get(slug)
-        if ale_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "agents_last_exam", ale_model.get("score"),
-            AGENTS_LAST_EXAM_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, AGENTS_LAST_EXAM_SOURCE_URL,
+        key_urls=AGENTS_LAST_EXAM_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_datacurve_cmd(script: Path) -> list[str]:
@@ -3385,6 +3566,36 @@ def update_epoch_scores(
     return matched, updated, changes
 
 
+def report_switches(doc: dict[str, Any], found: dict[str, tuple[dict, dict, dict]]) -> list:
+    """Report every column whose scores moved together this run.
+
+    The net under the sources that state no version (see _switch_detector):
+    a column re-scored in place is printed and recorded as a fetch warning, so
+    it reaches the workflow's warnings and the run summary instead of passing
+    as a routine refresh. Nothing is changed or held back.
+    """
+    shifts = _switch_detector.detect(
+        {name: state[0] for name, state in found.items()},
+        _switch_detector.doc_scores(doc),
+        skip=_switch_detector.derived_keys(doc),
+        sources_before={name: state[2] for name, state in found.items()},
+        sources_after=_switch_detector.doc_scores(doc, "scores_source"),
+    )
+    for shift in shifts:
+        message = shift.describe()
+        print(f"  warning: {message}", file=sys.stderr)
+        if shift.same_source:
+            _fetch_warnings.record("update.py", message, source=f"switch:{shift.key}")
+    for base, label in sorted(NEWER_REVISIONS):
+        message = (
+            f"{base} publishes revision {label}, newer than every llm.json column for it; "
+            "its rows were skipped -- add a column (_revisions.KNOWN_REVISIONS) to read them"
+        )
+        print(f"  warning: {message}", file=sys.stderr)
+        _fetch_warnings.record("update.py", message, source=f"new-version:{base}")
+    return shifts
+
+
 def snapshot_scores(doc: dict[str, Any]) -> dict[str, tuple[dict, dict, dict]]:
     """Each model's scores, dates and sources as the run found them."""
     snapshot: dict[str, tuple[dict, dict, dict]] = {}
@@ -3503,6 +3714,7 @@ def main() -> int:
     swe_bench_pro_v2_path = SWE_BENCH_PRO_V2_SCRIPT
     zerobench_path = ZEROBENCH_SCRIPT
     arena_path = ARENA_SCRIPT
+    arc_prize_path = ARC_PRIZE_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     programbench_path = PROGRAMBENCH_SCRIPT
@@ -3557,6 +3769,9 @@ def main() -> int:
     )
     arena_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-arena-to-artificialanalysis.json"
+    )
+    arc_prize_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-arc-prize-to-artificialanalysis.json"
     )
     bfcl_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-bfcl-to-artificialanalysis.json"
@@ -3697,6 +3912,8 @@ def main() -> int:
         listed.append(build_fetch_zerobench_cmd(zerobench_path))
     if not args.skip_arena:
         listed.append(build_fetch_arena_cmd(arena_path))
+    if not args.skip_arc_prize:
+        listed.append(build_fetch_arc_prize_cmd(arc_prize_path))
     if not args.skip_cybergym:
         listed.append(build_fetch_cybergym_cmd(cybergym_path))
     if not args.skip_sec_bench:
@@ -3930,7 +4147,7 @@ def main() -> int:
         )
         changes.extend(kernelbench_changes)
 
-    real_swe_by_slug: dict[str, dict[str, Any]] = {}
+    real_swe_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     real_swe_matched = 0
     real_swe_updated = 0
     if not args.skip_real_swe:
@@ -4006,7 +4223,7 @@ def main() -> int:
         )
         changes.extend(tbench_changes)
 
-    agents_last_exam_by_slug: dict[str, dict[str, Any]] = {}
+    agents_last_exam_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     agents_last_exam_matched = 0
     agents_last_exam_updated = 0
     if not args.skip_agents_last_exam:
@@ -4173,6 +4390,22 @@ def main() -> int:
         )
         changes.extend(arena_changes)
 
+    # ARC Prize: the ARC-AGI versions' own board, over Epoch's copy of it.
+    arc_prize_by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    arc_prize_matched = 0
+    arc_prize_updated = 0
+    if not args.skip_arc_prize:
+        arc_prize_by_key = source_data(
+            fetch_failures, fetch_arc_prize_data, arc_prize_path, arc_prize_mapping_path
+        )
+        arc_prize_matched, arc_prize_updated, arc_prize_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_arc_prize_scores",
+            update_arc_prize_scores,
+            doc, arc_prize_by_key, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(arc_prize_changes)
+
     # The security boards: cybergym.io's CyberGym and ExploitGym, and the
     # SEC-bench Pro snapshot the vendors report on. First-party each, over the
     # llm-stats boards and model cards that repeat vendors' numbers for them.
@@ -4191,7 +4424,7 @@ def main() -> int:
         )
         changes.extend(cybergym_changes)
 
-    sec_bench_by_slug: dict[str, dict[str, Any]] = {}
+    sec_bench_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     sec_bench_matched = 0
     sec_bench_updated = 0
     if not args.skip_sec_bench:
@@ -4259,6 +4492,7 @@ def main() -> int:
     changes = undo_round_trips(doc, found, changes)
     if not args.fill_source_urls:
         prune_refusal_rates(doc)
+        report_switches(doc, found)
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if aa_ok else []
     if args.write:
         # The derived indexes are a function of the scores just fetched, so
@@ -4309,7 +4543,7 @@ def main() -> int:
     if not args.skip_kernelbench:
         print(f"models returned by kernelbench: {len(kernelbench_by_slug)}")
     if not args.skip_real_swe:
-        print(f"models returned by real-swe: {len(real_swe_by_slug)}")
+        print(f"models returned by real-swe: {revision_model_count(real_swe_by_slug)}" + revision_breakdown(real_swe_by_slug))
     if not args.skip_deepswe:
         print(f"models returned by deepswe: {revision_model_count(deepswe_by_slug)}" + revision_breakdown(deepswe_by_slug))
     if not args.skip_datacurve:
@@ -4319,7 +4553,7 @@ def main() -> int:
     if not args.skip_tbench:
         print(f"models returned by tbench: {revision_model_count(tbench_by_slug)}" + revision_breakdown(tbench_by_slug))
     if not args.skip_agents_last_exam:
-        print(f"models returned by agents-last-exam: {len(agents_last_exam_by_slug)}")
+        print(f"models returned by agents-last-exam: {revision_model_count(agents_last_exam_by_slug)}" + revision_breakdown(agents_last_exam_by_slug))
     if not args.skip_frontiercode:
         print(f"models returned by frontiercode: {revision_model_count(frontiercode_by_slug)}" + revision_breakdown(frontiercode_by_slug))
     if not args.skip_swe_atlas:
@@ -4338,10 +4572,12 @@ def main() -> int:
         print(f"models returned by zerobench: {len(zerobench_by_slug)}")
     if not args.skip_arena:
         print(f"models returned by arena: {revision_model_count(arena_by_key)}" + revision_breakdown(arena_by_key))
+    if not args.skip_arc_prize:
+        print(f"models returned by arc_prize: {revision_model_count(arc_prize_by_key)}" + revision_breakdown(arc_prize_by_key))
     if not args.skip_cybergym:
         print(f"models returned by cybergym: {revision_model_count(cybergym_by_slug)}" + revision_breakdown(cybergym_by_slug))
     if not args.skip_sec_bench:
-        print(f"models returned by sec_bench: {len(sec_bench_by_slug)}")
+        print(f"models returned by sec_bench: {revision_model_count(sec_bench_by_slug)}" + revision_breakdown(sec_bench_by_slug))
     if not args.skip_hle_diamond:
         print(f"models returned by hle_diamond: {len(hle_diamond_by_slug)}")
     if not args.skip_bfcl:
@@ -4413,6 +4649,8 @@ def main() -> int:
         print(f"models matched on zerobench: {zerobench_matched}")
     if not args.skip_arena:
         print(f"models matched on arena: {arena_matched}")
+    if not args.skip_arc_prize:
+        print(f"models matched on arc_prize: {arc_prize_matched}")
     if not args.skip_cybergym:
         print(f"models matched on cybergym: {cybergym_matched}")
     if not args.skip_sec_bench:
@@ -4476,6 +4714,8 @@ def main() -> int:
         print(f"{action} from zerobench: {zerobench_updated}")
     if not args.skip_arena:
         print(f"{action} from arena: {arena_updated}")
+    if not args.skip_arc_prize:
+        print(f"{action} from arc_prize: {arc_prize_updated}")
     if not args.skip_cybergym:
         print(f"{action} from cybergym: {cybergym_updated}")
     if not args.skip_sec_bench:

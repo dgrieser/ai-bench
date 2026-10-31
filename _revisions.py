@@ -48,8 +48,13 @@ _REVISION_NUM_RE = re.compile(r"\d+")
 # Adding a revision here is not enough on its own: llm.json needs the matching
 # "<base>_<major>_<minor>" benchmark entry, which is what revision_key() spells.
 KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
+    # ALE v1.1 (122 tasks) is the board the site opens on; v1.0 (152 public
+    # tasks) stays published as the legacy board, from the endpoint read first.
+    "agents_last_exam": ("1.0", "1.1"),
     "deepswe": ("1.0", "1.1"),
-    "frontiercode": ("1.0", "1.1"),
+    # 2.0 (2026-10-27) rebuilt the suite as 132 tasks scored as one board, so it
+    # has a Main column only.
+    "frontiercode": ("1.0", "1.1", "2.0"),
     # Cognition scores two task sets from the same run and publishes them as
     # two leaderboards: Main, the 100 hardest tasks, and Extended, all 150.
     # Extended's columns are spelled with a base of their own (see
@@ -61,6 +66,10 @@ KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     # FrontierSWE numbered its re-run V2, not 1.1; a bare major fills out to
     # ".0" the same way, so the columns are frontierswe_1_0 and frontierswe_2_0.
     "frontierswe": ("1.0", "2.0"),
+    # Real-SWE 1.1 (25 tasks) replaced 1.0 (10 tasks) on the same page in
+    # October 2026, without keeping 1.0's board; 1.0's column holds the values
+    # read before the switch.
+    "real_swe": ("1.0", "1.1"),
     "swe_marathon": ("1.0", "1.1"),
 }
 

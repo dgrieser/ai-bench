@@ -120,6 +120,7 @@ import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_arena
+import fetch_arc_prize
 import fetch_bfcl
 import fetch_cybergym
 import fetch_datacurve
@@ -201,6 +202,10 @@ CYBERGYM_KEY_URLS = {
 # The snapshot page the column is pinned to, not the site build's data file:
 # the site root is the newer snapshot, a different task set.
 SEC_BENCH_SOURCE_URL = canonical(fetch_sec_bench.URL)
+# One page per tracked snapshot: 260505's own, and the site root for 260617,
+# which has none. The root is listed for that column alone; as a prefix it
+# would also cover the 260505 page, at the same rank.
+SEC_BENCH_KEY_URLS = {key: canonical(fetch_sec_bench.source_url(key)) for key in fetch_sec_bench.KEYS}
 # The announcement post, which is the maintainers' only public board; the chart
 # reads its data from the post's JS chunk, whose name changes every build.
 HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
@@ -209,6 +214,9 @@ HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
 # what a reader opens. Two columns share the Text page (overall and
 # non-English) and two the Agent page (aggregate and tool hallucination).
 ARENA_KEY_URLS = {key: canonical(fetch_arena.board_url(key)) for key in fetch_arena.BOARDS}
+# ARC Prize's one leaderboard page, for all three ARC-AGI versions it ranks;
+# the JSON files it hydrates from are not a page.
+ARC_PRIZE_KEY_URLS = {key: canonical(fetch_arc_prize.board_url(key)) for key in fetch_arc_prize.KEYS}
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 # benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
@@ -236,6 +244,12 @@ TBENCH_KEY_URLS = {
 }
 # The leaderboard page, not the JSON endpoint it hydrates from.
 AGENTS_LAST_EXAM_SOURCE_URL = canonical(fetch_agents_last_exam.LEADERBOARD_URL)
+# One page per release: the legacy v1.0 board's own, and the leaderboard for
+# v1.1. Both sit under the leaderboard prefix, so both rank as its site.
+AGENTS_LAST_EXAM_KEY_URLS = {
+    revision_key("agents_last_exam", label): canonical(fetch_agents_last_exam.board_url(label))
+    for label in ("1.0", "1.1")
+}
 SWE_ATLAS_KEY_URLS = {
     key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
     for track, key in fetch_swe_atlas.TRACKS.items()
@@ -307,8 +321,9 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in set(ARENA_KEY_URLS.values())),
+        *((url, RANK_BENCHMARK_SITE) for url in set(ARC_PRIZE_KEY_URLS.values())),
         *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
-        (SEC_BENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        *((url, RANK_BENCHMARK_SITE) for url in set(SEC_BENCH_KEY_URLS.values())),
         (HLE_DIAMOND_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),

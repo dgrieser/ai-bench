@@ -32,6 +32,7 @@ import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_arena
+import fetch_arc_prize
 import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
@@ -125,6 +126,10 @@ COVERED_BY = [
         f"{fetch_arena.DATASET_URL} (one parquet file per arena)",
         fetch_arena.board_url("arena_text"),
     ),
+    (
+        f"{fetch_arc_prize.EVALUATIONS_URL} and {fetch_arc_prize.MODELS_URL}",
+        fetch_arc_prize.LEADERBOARD_URL,
+    ),
 ]
 
 
@@ -189,7 +194,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
             ("frontiercode_1_0", "frontiercode_1_1", "frontiercode_extended_1_1"),
         ),
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
-        (fetch_real_swe.URL, ("real_swe",)),
+        (fetch_real_swe.URL, ("real_swe_1_1", "real_swe_1_0")),
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
         (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_hard",)),
         (fetch_toolathlon.URL, ("toolathlon",)),
@@ -199,12 +204,15 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
         # One page per Terminal-Bench revision, each covering its own column.
         *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
-        (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
+        (fetch_agents_last_exam.board_url("1.1"), ("agents_last_exam_1_1",)),
+        (fetch_agents_last_exam.board_url("1.0"), ("agents_last_exam_1_0",)),
         # cybergym.io's two boards, one page each; the JSON files they render
         # from are not pages.
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
         # The snapshot the column is pinned to, not the site root (the newer one).
-        (fetch_sec_bench.URL, (fetch_sec_bench.KEY,)),
+        *((fetch_sec_bench.source_url(key), (key,)) for key in fetch_sec_bench.KEYS),
+        # ARC Prize's one leaderboard, ranking all three ARC-AGI versions.
+        (fetch_arc_prize.LEADERBOARD_URL, fetch_arc_prize.KEYS),
         # arena.ai's board pages, which the scores cite; the dataset they are
         # read from is Arena's own publication of them.
         *(

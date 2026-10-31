@@ -49,6 +49,8 @@ PAYLOAD = {
 
 
 def scores(payload=PAYLOAD, **kwargs) -> list[dict]:
+    # The legacy (v1.0) endpoint only: no later release to read.
+    kwargs.setdefault("releases", [])
     with mock.patch.object(ale, "fetch_json", return_value=payload):
         return ale.get_scores(**kwargs)
 
@@ -122,6 +124,37 @@ class TestGetScores(unittest.TestCase):
         broken["avgScore"] = None
         got = scores({"rows": [*PAYLOAD["rows"], broken]})
         self.assertIsNone(next(e for e in got if e["model"] == "gamma")["avg_score"])
+
+
+class TestReleases(unittest.TestCase):
+    """ALE v1.1 is its own endpoint; the legacy endpoint is v1.0."""
+
+    V1_1 = {"rows": [
+        {"split": "v1.1", "harness": "ale_claw", "model": "alpha", "harnessVariant": "high",
+         "passRate": 0.459, "avgScore": 0.77, "passes": 56, "tasks": 122, "runs": 122},
+        {"split": "v1.0", "harness": "x", "model": "alpha", "passRate": 0.9},
+    ]}
+
+    def files(self, url: str):
+        return self.V1_1 if url == ale.RELEASE_URL.format(version="1.1") else PAYLOAD
+
+    def test_each_row_names_its_release_and_page(self) -> None:
+        rows = ale.get_scores(releases=["1.1"], fetch=self.files)
+        latest = [r for r in rows if r["revision"] == "1.1"]
+        self.assertEqual([(r["model"], r["score"]) for r in latest], [("alpha", 45.9)])
+        self.assertEqual(latest[0]["source"], "https://agents-last-exam.org/leaderboard")
+        legacy = {r["revision"] for r in rows} - {"1.1"}
+        self.assertEqual(legacy, {"1.0"})
+        self.assertEqual(ale.board_url("1.0"), "https://agents-last-exam.org/leaderboard/v1")
+
+    def test_the_page_names_the_current_release_and_never_the_legacy_one(self) -> None:
+        page = "<h1>ALE v1.2</h1><a>ALE v1.0 (legacy)</a>"
+        self.assertEqual(ale.current_releases(lambda url: page), ["1.1", "1.2"])
+
+    def test_an_unreadable_page_falls_back_to_the_known_releases(self) -> None:
+        def down(url: str) -> str:
+            raise OSError("unreachable")
+        self.assertEqual(ale.current_releases(down), list(ale.KNOWN_RELEASES))
 
 
 if __name__ == "__main__":

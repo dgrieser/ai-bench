@@ -22,6 +22,13 @@ out of the served HTML. The page renders the same eight rows twice -- an <ol>
 for phones and a <table> for everything else -- and this script reads the table
 inside the `leaderboard` container only, so no model is counted twice.
 
+The page is one release at a time: Real-SWE 1.1 (October 2026, 25 tasks)
+replaced 1.0 (September 2026, 10 tasks) at the same address, and 1.0's board
+was not kept anywhere. So every row names the `revision` the page's title
+states ("Real-SWE 1.1 Benchmark"), update.py files it under that revision's
+column (_revisions.py), and a page naming no revision is refused rather than
+read into whichever column was current last time.
+
 The 95% confidence interval the page says it shows exists only as the geometry
 of the whisker drawn over each bar, so it is reported as `ci_low`/`ci_high`
 when it can be read and left None when it cannot. It is never the score: the
@@ -40,6 +47,7 @@ import urllib.error
 import urllib.request
 
 from _fetch_checks import check_percentages, require_rows
+from _revisions import revision_label
 
 
 URL = "https://realswe.withspecific.com/"
@@ -174,8 +182,30 @@ def _rank(raw: str) -> tuple[int | None, bool]:
     return (int(match.group(2)), bool(match.group(1)))
 
 
+_TITLE_RE = re.compile(r"<title>([^<]*)</title>", re.IGNORECASE)
+_TITLE_REVISION_RE = re.compile(r"\bReal-SWE\s+v?(\d+(?:\.\d+)*)\b", re.IGNORECASE)
+
+
+def page_revision(page_html: str) -> str:
+    """The release the page's title names ("Real-SWE 1.1 Benchmark" -> "1.1").
+
+    Raises when it names none: the page has replaced one release with the next
+    once already, and a board read without its revision would be filed under
+    the old one.
+    """
+    title = _TITLE_RE.search(page_html)
+    found = _TITLE_REVISION_RE.search(html.unescape(title.group(1))) if title else None
+    if found is None:
+        raise ValueError(
+            f"{URL}: the page title names no Real-SWE release -- refusing to file "
+            "its rows under a revision it does not state."
+        )
+    return revision_label(found.group(1))
+
+
 def get_scores() -> list[dict]:
-    """Return a list of dicts: model, harness, score, rank, tied, ci_low, ci_high.
+    """Return a list of dicts: model, harness, score, rank, tied, ci_low,
+    ci_high, revision.
 
     `score` is the resolution rate the board prints -- pass@1 over eight
     independent runs per task, as a percentage. `rank` and `tied` are the
@@ -183,7 +213,9 @@ def get_scores() -> list[dict]:
     published level stay level here.
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
-    rows = parse_rows(select_leaderboard_table(fetch_html()))
+    page = fetch_html()
+    revision = page_revision(page)
+    rows = parse_rows(select_leaderboard_table(page))
 
     scores: list[dict] = []
     for row in rows:
@@ -205,10 +237,11 @@ def get_scores() -> list[dict]:
                 "tied": tied,
                 "ci_low": ci_low,
                 "ci_high": ci_high,
+                "revision": revision,
             }
         )
 
-    print(f"  parsed {len(scores)} Real-SWE row(s)", file=sys.stderr)
+    print(f"  parsed {len(scores)} Real-SWE {revision} row(s)", file=sys.stderr)
     require_rows(scores, URL)
     check_percentages(scores, URL)
     return scores

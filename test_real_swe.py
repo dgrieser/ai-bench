@@ -66,6 +66,7 @@ PHONE_LIST = (
 # A page in the shape the site serves: the board first, then an unrelated table
 # whose rows are tasks rather than models.
 PAGE = (
+    "<html><head><title>Real-SWE 1.1 Benchmark — Specific Labs</title></head>"
     "<div><p>prose</p></div>"
     '<div id="leaderboard"><figure aria-label="Model leaderboard">'
     f"{PHONE_LIST}"
@@ -175,6 +176,25 @@ class TestConfidenceInterval(unittest.TestCase):
         against it. Swapping the two would report a low end as a result."""
         page = PAGE.replace("left:32.1%", "left:0.0%")
         self.assertEqual(by_model(page)["Alpha 2"]["score"], 38.8)
+
+
+class TestRevision(unittest.TestCase):
+    def test_the_title_names_the_release(self) -> None:
+        self.assertEqual(rs.page_revision(PAGE), "1.1")
+        self.assertEqual(
+            rs.page_revision("<title>Real-SWE 2 Benchmark</title>"), "2.0"
+        )
+
+    def test_a_page_naming_no_release_is_refused(self) -> None:
+        # 1.1 replaced 1.0 at the same address once already; a page that stops
+        # saying which release it is must not be filed under the last one.
+        with self.assertRaisesRegex(ValueError, "names no Real-SWE release"):
+            rs.page_revision("<title>Specific Labs</title>")
+
+    def test_every_row_names_the_release(self) -> None:
+        with mock.patch.object(rs, "fetch_html", return_value=PAGE):
+            rows = rs.get_scores()
+        self.assertEqual({r["revision"] for r in rows}, {"1.1"})
 
 
 class TestOutput(unittest.TestCase):

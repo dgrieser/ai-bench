@@ -41,14 +41,24 @@ friends) appear under 1.0 alone.
 Revisions are ordered by the numbers in their key, so a future "v1_2" or "v2"
 sorts ahead of today's "v1_1" without an edit here. --revision pins a single
 one.
+
+FrontierCode 2.0 (2026-10-27, a rebuilt 132-task suite with a single "main"
+subset) is not in that file: the page loads it from a file of its own,
+/data/frontier-code-<version>/data.json, holding one revision block. Those
+files are found where the page finds them -- named in its JavaScript -- and
+each joins the payload under its version's key, so a 2.1 the page starts
+loading is reported (and, until llm.json has a column for it, skipped and
+counted by update.py) instead of going unread.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import urllib.request
+from urllib.parse import urljoin
 
 from _revisions import revision_label, revision_rank
 from _fetch_checks import check_fractions
@@ -57,6 +67,13 @@ from _fetch_checks import check_fractions
 URL = "https://cognition.com/data/frontiercode-leaderboard/data.json"
 # The human-facing leaderboard, stored as the score's source page.
 LEADERBOARD_URL = "https://cognition.com/frontiercode"
+# Revisions published in a file of their own, one block each: 2.0 onwards. The
+# page's JavaScript names the current one; this is the fallback when it cannot
+# be read.
+SPLIT_FILE_URL = "https://cognition.com/data/frontier-code-{version}/data.json"
+KNOWN_SPLIT_VERSIONS = ("2.0",)
+_SPLIT_FILE_RE = re.compile(r"/data/frontier-code-(\d+(?:\.\d+)*)/data\.json")
+_CHUNK_RE = re.compile(r"/_next/static/[^\"'\s]+?\.js")
 
 # --revision value that reports every revision instead of pinning one.
 ALL_REVISIONS = "all"
@@ -89,6 +106,46 @@ def fetch_json(url: str) -> dict:
         payload = json.loads(resp.read().decode("utf-8", errors="replace"))
     if not isinstance(payload, dict):
         raise ValueError(f"Unexpected payload from {url}: expected an object")
+    return payload
+
+
+def fetch_text(url: str) -> str:
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return resp.read().decode("utf-8", errors="replace")
+
+
+def split_file_versions(fetch=fetch_text) -> list[str]:
+    """Versions whose block the leaderboard page loads from a file of its own.
+
+    Read from the page's JavaScript chunks, which is where the file names
+    live, and merged with KNOWN_SPLIT_VERSIONS so a page that cannot be read
+    still yields the revisions already known.
+    """
+    found = set(KNOWN_SPLIT_VERSIONS)
+    try:
+        page = fetch(LEADERBOARD_URL)
+        found.update(_SPLIT_FILE_RE.findall(page))
+        for chunk in sorted(set(_CHUNK_RE.findall(page))):
+            found.update(_SPLIT_FILE_RE.findall(fetch(urljoin(LEADERBOARD_URL, chunk))))
+    except (OSError, ValueError) as exc:
+        print(f"  warning: could not read {LEADERBOARD_URL}'s scripts ({exc}); "
+              f"reading {', '.join(KNOWN_SPLIT_VERSIONS)} only", file=sys.stderr)
+    return sorted(found, key=revision_rank)
+
+
+def load_payload(fetch_payload=None, fetch_page=fetch_text) -> dict:
+    """Every revision block: the shared file's, plus one per split file."""
+    fetch_payload = fetch_payload or fetch_json
+    print(f"Fetching {URL} ...", file=sys.stderr)
+    payload = dict(fetch_payload(URL))
+    for version in split_file_versions(fetch_page):
+        url = SPLIT_FILE_URL.format(version=version)
+        print(f"Fetching {url} ...", file=sys.stderr)
+        block = fetch_payload(url)
+        if not isinstance(block.get("data"), dict):
+            raise ValueError(f"{url} carries no revision block ('data' missing)")
+        payload["v" + version.replace(".", "_")] = block
     return payload
 
 
@@ -218,8 +275,7 @@ def get_scores(
     Rows are ranked within their own (revision, subset) board, since ranking
     across either would compare two different task sets.
     """
-    print(f"Fetching {URL} ...", file=sys.stderr)
-    payload = fetch_json(URL)
+    payload = load_payload()
 
     if revision == ALL_REVISIONS:
         blocks = revisions_newest_first(payload)

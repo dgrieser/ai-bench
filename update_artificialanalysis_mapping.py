@@ -84,7 +84,13 @@ def missing_aa_models(doc: dict[str, Any]) -> list[dict[str, Any]]:
         if not isinstance(name, str) or not name:
             continue
         scores = model.get("scores")
-        aa_score = scores.get("aa_intelligence_index") if isinstance(scores, dict) else None
+        # Any version of the index will do: a model AA scored on v4.3 and not
+        # yet on v5.0 is still a model AA has.
+        aa_score = next(
+            (value for key, value in scores.items()
+             if key.startswith("aa_intelligence_index") and value is not None),
+            None,
+        ) if isinstance(scores, dict) else None
         if aa_score is None:
             models.append(model)
     return models
@@ -227,7 +233,7 @@ def main() -> int:
     interactive = sys.stdin.isatty()
 
     print(f"models in {llm_path}: {len(doc.get('models', []))}")
-    print(f"models missing aa_intelligence_index: {len(missing_models)}")
+    print(f"models missing every aa_intelligence_index version: {len(missing_models)}")
     print(f"models on artificialanalysis.py: {len(aa_slugs)}")
     print(f"existing llm -> AA mappings: {len(mapping)}")
     print()

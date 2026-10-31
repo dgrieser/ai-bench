@@ -79,6 +79,7 @@ import zipfile
 from dataclasses import dataclass
 from typing import Callable
 
+import _fetch_warnings
 from _fetch_checks import check_fractions, check_percentages, require_columns, require_rows
 from _revisions import KNOWN_REVISIONS, known_revision_key, revision_key, subset_base
 
@@ -526,6 +527,34 @@ def read_benchmark(
     return results
 
 
+def report_superseded(archive: zipfile.ZipFile, pages: list[str]) -> list[str]:
+    """Hub files read here that Epoch's own metadata marks as superseded.
+
+    benchmark_metadata.csv names, per file, the benchmark that replaced it
+    (FrontierMath's 2025 private set points at Tiers 1-3 v2). A file read into
+    a column and marked that way is a new version this table has not caught
+    up with; it is reported and recorded, and still read -- the column holds
+    the version it was made for.
+    """
+    files = {BENCHMARKS[page].file for page in pages}
+    try:
+        rows = csv.DictReader(io.StringIO(archive.read("benchmark_metadata.csv").decode("utf-8")))
+    except (KeyError, UnicodeDecodeError):
+        return []
+    found = []
+    for row in rows:
+        successor = (row.get("superseded_by") or "").strip()
+        if row.get("source_file") in files and successor:
+            message = (
+                f"Epoch marks {row['source_file']} ({row.get('benchmark')}) as superseded by "
+                f"{successor}; its column holds the old version"
+            )
+            print(f"  warning: {message}", file=sys.stderr)
+            _fetch_warnings.record("fetch_epoch.py", message, source="new-version:epoch")
+            found.append(row["source_file"])
+    return found
+
+
 def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None = None,
                fetch_page=None, fetch_json=None) -> list[dict]:
     """Return a list of dicts: benchmark, key, revision, model, version,
@@ -539,6 +568,7 @@ def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None =
     """
     archive = archive or fetch_archive()
     models = load_models(archive)
+    report_superseded(archive, pages or list(BENCHMARKS))
     results: list[dict] = []
     for page in pages or list(BENCHMARKS):
         key, revision = resolve_key(page, BENCHMARKS[page], fetch_page)

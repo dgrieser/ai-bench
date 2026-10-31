@@ -289,6 +289,7 @@ class TestOsworldReleases(unittest.TestCase):
     BOARD = osworld_payload([
         osworld_run("Claude Opus 5", "max", "batch tool", 31.43, "v2026.08.08"),
         osworld_run("Claude Opus 5", "max", "batch tool", 44.33, "v2.1"),
+        osworld_run("Claude Opus 5", "max", "batch tool", 47.0, "v2.2"),
         osworld_run("Claude Opus 5", "max", "batch tool", 34.72, "v2026.08.08", scope="offline"),
         osworld_run("MiniMax M3", "enabled", "standard", 4.6, "v2026.06.24"),
         osworld_run("Kimi 2.6", "enabled", "standard", 4.6, "v2026.06.24"),
@@ -313,12 +314,16 @@ class TestOsworldReleases(unittest.TestCase):
             {"glm-5.2_max": "osworld_2_0_2026_08_08", "glm-5.2_high": "osworld_2_0_2026_06_24"},
         )
 
+    def test_a_2_1_row_lands_on_its_own_release(self) -> None:
+        rows = self.read([self.row("glm-5.2_max", "Claude Opus 5 (max)", "max", "batch tool", 0.4433)])
+        self.assertEqual([r["key"] for r in rows], ["osworld_2_1"])
+
     def test_a_row_matching_no_tracked_run_is_left_out(self) -> None:
         rows = self.read([
             self.row("glm-5.2_max", "Claude Opus 5 (max)", "max", "batch tool", 0.3143),
-            # 2.1 has no column; the offline set and the 150-step run are not
+            # 2.2 has no column; the offline set and the 150-step run are not
             # what a dated column holds.
-            self.row("glm-5.2_high", "Claude Opus 5 (max)", "max", "batch tool", 0.4433),
+            self.row("glm-5.2_high", "Claude Opus 5 (max)", "max", "batch tool", 0.47),
             self.row("gpt-5.6-sol_max", "Claude Opus 5 (max)", "max", "batch tool", 0.3472),
             self.row("mystery", "Kimi 2.6 (enabled)", "enabled", "standard", 0.03),
         ])

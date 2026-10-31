@@ -57,6 +57,13 @@ BOARDS: dict[str, dict[str, str]] = {
         "package": "terminal-bench/terminal-bench",
         "name": "4-0-0",
     },
+    # 3.0 sits between 2.1 and 4.0 and was superseded by 4.0, which removed 8
+    # tasks and changed the resource budgets; its board is still published.
+    "terminal_bench_3_0": {
+        "version": "3.0",
+        "package": "terminal-bench/terminal-bench",
+        "name": "3-0-0",
+    },
     "terminal_bench_2_1": {
         "version": "2.1",
         "package": "terminal-bench/terminal-bench-2-1",
