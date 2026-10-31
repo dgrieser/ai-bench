@@ -39,6 +39,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import _fetch_warnings
 from _fetch_checks import check_fractions, require_rows
 import _source_pages
 
@@ -156,7 +157,9 @@ def parse_rows(evaluations: Any, models: Any) -> list[dict]:
             }
         )
     for dataset in sorted(unread):
-        print(f"  warning: {dataset} has no llm.json column; not read", file=sys.stderr)
+        message = f"ARC Prize dataset {dataset} has no llm.json column; not read"
+        print(f"  warning: {message}", file=sys.stderr)
+        _fetch_warnings.record("fetch_arc_prize.py", message, source="new-version:arc_prize")
     return rows
 
 

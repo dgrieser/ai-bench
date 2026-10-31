@@ -1074,6 +1074,41 @@ hoping the labels agree:
 All three feed the [Tooling index](#tooling-index); the weight each carries, and
 why, is in that section's table.
 
+### Detecting silent version switches
+
+A benchmark that re-versions in place does not say so on the rows it serves;
+the same field starts carrying different numbers. Four layers catch it, from
+the precise to the blunt:
+
+1. **Stated versions are checked.** Where a source states the version it
+   serves, the fetcher reads it and files rows by it, refusing a page that
+   states none: the revision-split boards (`_revisions.py`: DeepSWE,
+   FrontierCode, FrontierSWE, SWE-Marathon, Real-SWE, Agents' Last Exam),
+   OSWorld's releases, SEC-bench's snapshots, ARC Prize's datasets,
+   Terminal-Bench's boards, and Artificial Analysis through
+   `update.AA_VERSION_GATES` — a versioned AA column is written only while AA
+   states its version, and frozen with a warning when it states another.
+2. **A version without a column is reported.** A newer revision, release,
+   snapshot or dataset than any column holds is skipped and recorded as a
+   fetch warning (`new-version:<source>`), so it reaches the workflow's
+   warnings summary rather than only its log; so is a hub file Epoch's own
+   metadata marks as superseded.
+3. **Every refresh is screened** (`_switch_detector.py`, called at the end of
+   `update.py`). A column in which at least 5 values and 15% of the column —
+   or 3 values and half of a small board — moved at once, by a median of at
+   least a quarter of the column's own spread, is reported. When the moved
+   values kept their source it is recorded as a warning (`switch:<column>`), a
+   possible re-versioning at that source; when they changed source it is only
+   printed, being a handover inside this table. Nothing is changed or held
+   back: a report is a prompt to look.
+4. **History can be audited** (`./audit_switches.py`): the same check over
+   every day llm.json changed. Replayed over its history it lists 22 shifts
+   since February, every switch named above among them, and 9 of them
+   handovers; the thresholds were set there. Two same-source shifts are still
+   open: τ³-Banking on 2026-08-07, when AA moved it to the upstream v1.0.1
+   dataset and grader and 26 models still hold the value they had before, and
+   SWE Atlas Q&A on 2026-10-22, AA's Coding Agent Index v2.0 re-running it.
+
 ### Benchmarks that publish more than one revision
 
 Thirteen benchmarks in this table have re-run or re-versioned themselves, and in every case the
@@ -1097,7 +1132,7 @@ cannot disagree about which column a row belongs in.
 | **SEC-bench Pro** | `sec_bench_pro` (260505), `sec_bench_pro_260617` | Dated snapshots in one data file: 260505 (183 tasks, V8 and SpiderMonkey, the set vendors report) and 260617 (344, the Linux kernel added, what the site root shows). Each is checked against its own task count; a further snapshot is reported, not read. |
 | **Terminal-Bench** | `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. |
 | **ARC-AGI** | `arc_agi_3`, `arc_agi_2`, `arc_agi_1` | Three benchmarks rather than three runs, on ARC Prize's one board: each version's semi-private set is its own column, read by `fetch_arc_prize.py` from the files the leaderboard hydrates from (with Epoch's copy filling ARC-AGI-2). Provider Adapter runs — the provider's own agent harness, 98.6 for GPT-6 Astra on ARC-AGI-3 against 62.7 in ARC Prize's — are left out, and a new semi-private version is reported. |
-| **AA Intelligence Index**, **AA-Omniscience** | `aa_intelligence_index_5_0`, `_4_3`, `_4_1`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0` | Artificial Analysis re-versions both in place: on 2026-10-27 the index moved to v5.0 (new components) and Omniscience to v1.1 (3,000 questions, from 6,000), and the same columns took the new numbers for the models AA had re-run — 38 index values on v5.0 beside 133 on v4.x — while models AA withdrew fell back to card values. The columns are now split by version, rebuilt from `scores_history` at the switch dates, and `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index's from the API envelope's `intelligence_index_version`, Omniscience's from its evaluation page). A different version, or none, writes nothing to it and is recorded as a fetch warning. |
+| **AA Intelligence Index**, **AA-Omniscience** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR and AA-Briefcase from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the

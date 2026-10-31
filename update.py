@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import _fetch_warnings
+import _switch_detector
 import _history
 import _vram_overrides
 import artificialanalysis
@@ -126,7 +127,7 @@ from _frontiercode_mapping import load_frontiercode_to_slug_mapping
 from _swe_atlas_mapping import load_swe_atlas_to_slug_mapping
 from _evals_report_mapping import load_evals_report_to_slug_mapping
 from _vals_mapping import load_vals_to_slug_mapping
-from _revisions import known_revision_key, subset_base
+from _revisions import KNOWN_REVISIONS, known_revision_key, revision_label, revision_rank, subset_base
 from _swe_marathon_mapping import load_swe_marathon_to_slug_mapping
 from _tbench_mapping import load_tbench_to_slug_mapping
 from _agents_last_exam_mapping import load_agents_last_exam_to_slug_mapping
@@ -767,9 +768,36 @@ AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
     "omniscience": ("1.1", (
         "aa_omniscience_1_1", "aa_omniscience_accuracy_1_1", "aa_omniscience_hallucination_1_1",
     )),
+    # The other evaluations AA versions in their page titles. Each of these
+    # columns switched in place before the gates existed -- AA-LCR to v1.1 on
+    # 2026-09-04, GDPval-AA's re-anchored v2.1 on 2026-09-19 -- re-scoring
+    # nearly the whole column at once, so it stayed one measurement; the next
+    # switch stops at the gate instead.
+    "gdpval": ("2.1", ("gdpval_aa",)),
+    "lcr": ("1.1", ("aa_lcr",)),
+    "briefcase": ("1.1", ("aa_briefcase",)),
 }
-AA_OMNISCIENCE_URL = "https://artificialanalysis.ai/evaluations/omniscience"
-_AA_OMNISCIENCE_VERSION_RE = re.compile(r"AA-Omniscience v(\d+(?:\.\d+)*)")
+# Gates read off an evaluation page's text rather than the API: gate name ->
+# (the page, the pattern its version label follows).
+AA_PAGE_VERSIONS: dict[str, tuple[str, re.Pattern[str]]] = {
+    "omniscience": (
+        "https://artificialanalysis.ai/evaluations/omniscience",
+        re.compile(r"AA-Omniscience v(\d+(?:\.\d+)*)"),
+    ),
+    "gdpval": (
+        "https://artificialanalysis.ai/evaluations/gdpval-aa",
+        re.compile(r"GDPval-AA v(\d+(?:\.\d+)*)"),
+    ),
+    "lcr": (
+        "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning",
+        re.compile(r"AA-LCR v(\d+(?:\.\d+)*)"),
+    ),
+    "briefcase": (
+        "https://artificialanalysis.ai/evaluations/aa-briefcase",
+        re.compile(r"AA-Briefcase v(\d+(?:\.\d+)*)"),
+    ),
+}
+AA_OMNISCIENCE_URL = AA_PAGE_VERSIONS["omniscience"][0]
 # What AA stated this run, filled in as the data is read: gate name -> version.
 AA_STATED_VERSIONS: dict[str, str | None] = {}
 
@@ -784,16 +812,22 @@ def version_label(value: Any) -> str | None:
     return ".".join(numbers if len(numbers) > 1 else [numbers[0], "0"])
 
 
-def aa_omniscience_version(fetch_text=None) -> str | None:
-    """The AA-Omniscience version AA's evaluation page names, the most-cited one."""
+def aa_page_version(gate: str, fetch_text=None) -> str | None:
+    """The version an AA evaluation page names for itself, the most-cited one."""
+    url, pattern = AA_PAGE_VERSIONS[gate]
     fetch_text = fetch_text or artificialanalysis._fetch_rsc_text
-    text = fetch_text(AA_OMNISCIENCE_URL)
+    text = fetch_text(url)
     if not text:
         return None
-    found = _AA_OMNISCIENCE_VERSION_RE.findall(text)
+    found = pattern.findall(text)
     if not found:
         return None
     return version_label(max(set(found), key=found.count))
+
+
+def aa_omniscience_version(fetch_text=None) -> str | None:
+    """The AA-Omniscience version AA's evaluation page names."""
+    return aa_page_version("omniscience", fetch_text)
 
 
 def aa_blocked_columns(stated: dict[str, str | None]) -> dict[str, str]:
@@ -822,11 +856,12 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
     AA_STATED_VERSIONS["intelligence_index"] = version_label(
         payload.get("intelligence_index_version")
     )
-    try:
-        AA_STATED_VERSIONS["omniscience"] = aa_omniscience_version()
-    except Exception as exc:  # a page that cannot be read states nothing
-        print(f"  warning: could not read {AA_OMNISCIENCE_URL}: {exc}", file=sys.stderr)
-        AA_STATED_VERSIONS["omniscience"] = None
+    for gate, (url, _pattern) in AA_PAGE_VERSIONS.items():
+        try:
+            AA_STATED_VERSIONS[gate] = aa_page_version(gate)
+        except Exception as exc:  # a page that cannot be read states nothing
+            print(f"  warning: could not read {url}: {exc}", file=sys.stderr)
+            AA_STATED_VERSIONS[gate] = None
     data = payload.get("data", [])
     by_slug: dict[str, dict[str, Any]] = {}
     for row in data:
@@ -1269,6 +1304,23 @@ def apply_score(
     return 1
 
 
+# Revisions a source published this run that are newer than every revision
+# llm.json has a column for: (base, label). Reported once at the end of the run.
+NEWER_REVISIONS: set[tuple[str, str]] = set()
+
+
+def note_newer_revision(base: str, revision: Any) -> None:
+    """Remember a row's revision if it is newer than every column ``base`` has --
+    a re-run the source has published and this table has not split out yet.
+    An older or sideways one (a subset without a column) is routine."""
+    if not isinstance(revision, str) or not revision:
+        return
+    label = revision_label(revision)
+    known = KNOWN_REVISIONS.get(base, ())
+    if known and revision_rank(label) > max(revision_rank(k) for k in known):
+        NEWER_REVISIONS.add((base, label))
+
+
 def keep_best_by_revision(
     by_key: dict[str, dict[str, dict[str, Any]]],
     base: str,
@@ -1292,6 +1344,7 @@ def keep_best_by_revision(
     """
     key = known_revision_key(base, row.get("revision"))
     if key is None:
+        note_newer_revision(base, row.get("revision"))
         return False
     keep_best_row(by_key.setdefault(key, {}), slug, row, score_key)
     return True
@@ -3513,6 +3566,36 @@ def update_epoch_scores(
     return matched, updated, changes
 
 
+def report_switches(doc: dict[str, Any], found: dict[str, tuple[dict, dict, dict]]) -> list:
+    """Report every column whose scores moved together this run.
+
+    The net under the sources that state no version (see _switch_detector):
+    a column re-scored in place is printed and recorded as a fetch warning, so
+    it reaches the workflow's warnings and the run summary instead of passing
+    as a routine refresh. Nothing is changed or held back.
+    """
+    shifts = _switch_detector.detect(
+        {name: state[0] for name, state in found.items()},
+        _switch_detector.doc_scores(doc),
+        skip=_switch_detector.derived_keys(doc),
+        sources_before={name: state[2] for name, state in found.items()},
+        sources_after=_switch_detector.doc_scores(doc, "scores_source"),
+    )
+    for shift in shifts:
+        message = shift.describe()
+        print(f"  warning: {message}", file=sys.stderr)
+        if shift.same_source:
+            _fetch_warnings.record("update.py", message, source=f"switch:{shift.key}")
+    for base, label in sorted(NEWER_REVISIONS):
+        message = (
+            f"{base} publishes revision {label}, newer than every llm.json column for it; "
+            "its rows were skipped -- add a column (_revisions.KNOWN_REVISIONS) to read them"
+        )
+        print(f"  warning: {message}", file=sys.stderr)
+        _fetch_warnings.record("update.py", message, source=f"new-version:{base}")
+    return shifts
+
+
 def snapshot_scores(doc: dict[str, Any]) -> dict[str, tuple[dict, dict, dict]]:
     """Each model's scores, dates and sources as the run found them."""
     snapshot: dict[str, tuple[dict, dict, dict]] = {}
@@ -4409,6 +4492,7 @@ def main() -> int:
     changes = undo_round_trips(doc, found, changes)
     if not args.fill_source_urls:
         prune_refusal_rates(doc)
+        report_switches(doc, found)
     missing = [slug for slug in slugs if slug not in aa_slug_by_model] if aa_ok else []
     if args.write:
         # The derived indexes are a function of the scores just fetched, so

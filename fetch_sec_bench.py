@@ -43,6 +43,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import _fetch_warnings
 from _fetch_checks import check_percentages, require_rows
 
 
@@ -172,8 +173,9 @@ def get_scores(fetch=fetch_json, snapshots: tuple[str, ...] | None = None) -> li
     print(f"Fetching {DATA_URL} ...", file=sys.stderr)
     payload = fetch(DATA_URL)
     for snapshot_id in unread_snapshots(payload):
-        print(f"  warning: snapshot {snapshot_id} has no llm.json column; not read",
-              file=sys.stderr)
+        message = f"SEC-bench Pro snapshot {snapshot_id} has no llm.json column; not read"
+        print(f"  warning: {message}", file=sys.stderr)
+        _fetch_warnings.record("fetch_sec_bench.py", message, source="new-version:sec_bench")
     rows: list[dict] = []
     for snapshot_id in snapshots or tuple(SNAPSHOTS):
         board = parse_rows(payload, snapshot_id)

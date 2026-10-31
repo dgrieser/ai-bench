@@ -53,6 +53,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import _fetch_warnings
 from _fetch_checks import check_percentages, require_columns, require_rows
 import _source_pages
 
@@ -346,12 +347,15 @@ def parse_v2(payload: Any) -> list[dict[str, Any]]:
         # Not an error: a release is only filed once llm.json has a column
         # for it. Reported with its field size, so a release that has gathered
         # enough models to rank is noticed rather than lost.
-        print(
-            f"fetch_osworld.py: skipped OSWorld 2.0 release {release!r}, which has "
+        message = (
+            f"skipped OSWorld 2.0 release {release!r}, which has "
             f"no llm.json column: {len(models)} model(s) scored "
-            f"({', '.join(sorted(models))})",
-            file=sys.stderr,
+            f"({', '.join(sorted(models))})"
         )
+        print(f"fetch_osworld.py: {message}", file=sys.stderr)
+        # Recorded as well as printed: a new release is the one thing in this
+        # file a person has to act on, and the workflow summary lists these.
+        _fetch_warnings.record("fetch_osworld.py", message, source="new-version:osworld")
     require_rows(rows, OSWORLD_V2_JSON_URL, "official full-set 500-step OSWorld 2.0 rows")
     check_percentages(rows, OSWORLD_V2_JSON_URL, "score")
     order = list(RELEASES.values())

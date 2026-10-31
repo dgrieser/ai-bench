@@ -1084,8 +1084,11 @@ class TestVersionGates(unittest.TestCase):
     def test_the_stated_version_opens_its_columns(self) -> None:
         import update
 
-        blocked = update.aa_blocked_columns({"intelligence_index": "5.0", "omniscience": "1.1"})
-        self.assertEqual(blocked, {})
+        stated = {gate: version for gate, (version, _columns) in update.AA_VERSION_GATES.items()}
+        self.assertEqual(update.aa_blocked_columns(stated), {})
+        # A gate left unstated still closes its own columns, and only those.
+        stated.pop("lcr")
+        self.assertEqual(set(update.aa_blocked_columns(stated)), {"aa_lcr"})
 
     def test_another_or_no_version_closes_them(self) -> None:
         import update
