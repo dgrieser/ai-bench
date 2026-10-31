@@ -204,7 +204,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         # from are not pages.
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
         # The snapshot the column is pinned to, not the site root (the newer one).
-        (fetch_sec_bench.URL, (fetch_sec_bench.KEY,)),
+        *((fetch_sec_bench.source_url(key), (key,)) for key in fetch_sec_bench.KEYS),
         # arena.ai's board pages, which the scores cite; the dataset they are
         # read from is Arena's own publication of them.
         *(

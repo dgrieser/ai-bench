@@ -201,6 +201,10 @@ CYBERGYM_KEY_URLS = {
 # The snapshot page the column is pinned to, not the site build's data file:
 # the site root is the newer snapshot, a different task set.
 SEC_BENCH_SOURCE_URL = canonical(fetch_sec_bench.URL)
+# One page per tracked snapshot: 260505's own, and the site root for 260617,
+# which has none. The root is listed for that column alone; as a prefix it
+# would also cover the 260505 page, at the same rank.
+SEC_BENCH_KEY_URLS = {key: canonical(fetch_sec_bench.source_url(key)) for key in fetch_sec_bench.KEYS}
 # The announcement post, which is the maintainers' only public board; the chart
 # reads its data from the post's JS chunk, whose name changes every build.
 HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
@@ -308,7 +312,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in set(ARENA_KEY_URLS.values())),
         *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
-        (SEC_BENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
+        *((url, RANK_BENCHMARK_SITE) for url in set(SEC_BENCH_KEY_URLS.values())),
         (HLE_DIAMOND_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in SWE_ATLAS_KEY_URLS.values()),
         *((url, RANK_CURATED) for url in EVALS_REPORT_KEY_URLS.values()),

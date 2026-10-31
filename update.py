@@ -70,6 +70,7 @@ from _precedence import (
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
     SEC_BENCH_SOURCE_URL,
+    SEC_BENCH_KEY_URLS,
     HLE_DIAMOND_SOURCE_URL,
     RANK_AA,
     SWE_ATLAS_KEY_URLS,
@@ -2335,7 +2336,8 @@ def build_fetch_sec_bench_cmd(script: Path) -> list[str]:
 
 def fetch_sec_bench_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """SEC-bench Pro's snapshots, one column each; every row names its own."""
     cmd = build_fetch_sec_bench_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2348,7 +2350,7 @@ def fetch_sec_bench_data(
         raise RuntimeError("Unexpected sec_bench JSON format: expected a list")
 
     sec_bench_to_slug = load_sec_bench_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -2358,35 +2360,22 @@ def fetch_sec_bench_data(
         slug = sec_bench_to_slug.get(name)
         if not slug:
             continue
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        key = row.get("key")
+        if key not in SEC_BENCH_KEY_URLS:
+            continue
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
 
 
 def update_sec_bench_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        row = by_slug.get(slug)
-        if row is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, fetch_sec_bench.KEY, row.get("score"),
-            SEC_BENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, SEC_BENCH_SOURCE_URL,
+        key_urls=SEC_BENCH_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_hle_diamond_cmd(script: Path) -> list[str]:
@@ -4267,7 +4256,7 @@ def main() -> int:
         )
         changes.extend(cybergym_changes)
 
-    sec_bench_by_slug: dict[str, dict[str, Any]] = {}
+    sec_bench_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     sec_bench_matched = 0
     sec_bench_updated = 0
     if not args.skip_sec_bench:
@@ -4417,7 +4406,7 @@ def main() -> int:
     if not args.skip_cybergym:
         print(f"models returned by cybergym: {revision_model_count(cybergym_by_slug)}" + revision_breakdown(cybergym_by_slug))
     if not args.skip_sec_bench:
-        print(f"models returned by sec_bench: {len(sec_bench_by_slug)}")
+        print(f"models returned by sec_bench: {revision_model_count(sec_bench_by_slug)}" + revision_breakdown(sec_bench_by_slug))
     if not args.skip_hle_diamond:
         print(f"models returned by hle_diamond: {len(hle_diamond_by_slug)}")
     if not args.skip_bfcl:

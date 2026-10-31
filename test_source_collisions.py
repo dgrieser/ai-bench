@@ -84,7 +84,6 @@ class TestRowFetchers(unittest.TestCase):
         ("bfcl", "score", "fetch_bfcl_data"),
         ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
         ("openrouter", "score", "fetch_openrouter_data"),
-        ("sec_bench", "score", "fetch_sec_bench_data"),
         ("hle_diamond", "score", "fetch_hle_diamond_data"),
     ]
 
@@ -167,6 +166,22 @@ class TestRowFetchers(unittest.TestCase):
                     by_key = update.fetch_cybergym_data(SCRIPT, mapping)
                 self.assertEqual(by_key["cybergym"]["m"]["score"], 79.0)
                 self.assertEqual(by_key["exploitgym"]["m"]["score"], 7.0)
+
+    def test_sec_bench_best_row_wins_within_its_snapshot_in_either_payload_order(self) -> None:
+        # Each snapshot is its own column, so a model's 260617 run never stands
+        # in for its 260505 one however much higher it scores.
+        mapping = write_json({"Model": "m", "Model [high]": "m"})
+        rows = [
+            {"key": "sec_bench_pro", "model": "Model", "score": 30.0},
+            {"key": "sec_bench_pro", "model": "Model [high]", "score": 45.0},
+            {"key": "sec_bench_pro_260617", "model": "Model", "score": 58.4},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_sec_bench_data(SCRIPT, mapping)
+                self.assertEqual(by_key["sec_bench_pro"]["m"]["score"], 45.0)
+                self.assertEqual(by_key["sec_bench_pro_260617"]["m"]["score"], 58.4)
 
     def test_arena_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
         # fetch_arena.py names the column on every row, so a model listed at

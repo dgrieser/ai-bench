@@ -57,7 +57,24 @@ PAYLOAD = {
 class ReadsTheVendorSnapshot(unittest.TestCase):
     def test_overall_headline_of_260505(self):
         rows = sb.get_scores(fetch=lambda url: PAYLOAD)
-        self.assertEqual({r["model"]: r["score"] for r in rows}, {"Kimi K2.5": 2.2, "Opus 4.6": 25.7})
+        self.assertEqual(
+            {r["model"]: r["score"] for r in rows if r["snapshot"] == "260505"},
+            {"Kimi K2.5": 2.2, "Opus 4.6": 25.7},
+        )
+        self.assertEqual({r["key"] for r in rows if r["snapshot"] == "260505"}, {"sec_bench_pro"})
+
+    def test_260617_is_its_own_column(self):
+        rows = [r for r in sb.get_scores(fetch=lambda url: PAYLOAD) if r["snapshot"] == "260617"]
+        self.assertEqual([(r["key"], r["model"], r["score"], r["rank"]) for r in rows],
+                         [("sec_bench_pro_260617", "Kimi K2.5", 2.3, 1)])
+        self.assertEqual(sb.source_url("sec_bench_pro_260617"), "https://sec-bench.github.io/")
+
+    def test_a_snapshot_without_a_column_is_reported_not_read(self):
+        payload = copy.deepcopy(PAYLOAD)
+        payload["snapshots"]["260901"] = copy.deepcopy(payload["snapshots"]["260617"])
+        self.assertEqual(sb.unread_snapshots(payload), ["260901"])
+        rows = sb.get_scores(fetch=lambda url: payload)
+        self.assertNotIn("260901", {r["snapshot"] for r in rows})
 
     def test_the_completed_only_rate_never_lands(self):
         rows = sb.get_scores(fetch=lambda url: PAYLOAD)

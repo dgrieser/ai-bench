@@ -1616,6 +1616,27 @@
         "https://arxiv.org/abs/2605.26548"
       ]
     },
+    "sec_bench_pro_260617": {
+      "name": "SEC-bench Pro 260617",
+      "short_name": "SEC 260617",
+      "category": "Cybersecurity",
+      "description": "The June 2026 snapshot of SEC-bench Pro (260617): the same proof-of-concept task as 260505 — write a PoC for a real vulnerability from a vague report, no crash trace, patch or reference PoC, judged on the vulnerable and the fixed build — over 344 tasks, adding 137 Linux kernel tasks to V8 and SpiderMonkey. It is the snapshot the site root shows. Scores run higher than on 260505 for the same model (GPT-5.5: 58.4 against 46.4), so the two are separate columns. Timeouts count as failures.",
+      "settings": [
+        "Pass@1",
+        "snapshot 260617",
+        "344 tasks",
+        "V8 + SpiderMonkey + Linux"
+      ],
+      "excludes": [
+        "the 260505 snapshot, 183 tasks without Linux",
+        "per-target scores",
+        "the completed-only rate, which leaves timeouts out"
+      ],
+      "urls": [
+        "https://sec-bench.github.io/",
+        "https://github.com/SEC-bench/SEC-bench-Pro"
+      ]
+    },
     "cyberbench_1_1": {
       "name": "CyberBench v1.1",
       "short_name": "CyberB",
@@ -4262,7 +4283,8 @@
         "aa_intelligence_index_4_3": 22.8,
         "aa_omniscience_1_0": -38.9,
         "aa_omniscience_accuracy_1_0": 26.2,
-        "aa_omniscience_hallucination_1_0": 88.1
+        "aa_omniscience_hallucination_1_0": 88.1,
+        "sec_bench_pro_260617": 0.6
       },
       "scores_updated": {
         "openbench_index": null,
@@ -4342,7 +4364,8 @@
         "aa_intelligence_index_4_3": "2026-09-08",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "sec_bench_pro_260617": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -4422,7 +4445,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/minimax-m2-5"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
+        "sec_bench_pro_260617": "https://sec-bench.github.io"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -4594,6 +4618,13 @@
             "date": "2026-09-26",
             "score": 0,
             "source": "https://sec-bench.github.io/260505"
+          }
+        ],
+        "sec_bench_pro_260617": [
+          {
+            "date": "2026-10-31",
+            "score": 0.6,
+            "source": "https://sec-bench.github.io"
           }
         ],
         "aa_omniscience_1_0": [
@@ -56694,7 +56725,8 @@
         "aa_intelligence_index_4_3": 23.5,
         "aa_omniscience_1_0": -7.3,
         "aa_omniscience_accuracy_1_0": 35.2,
-        "aa_omniscience_hallucination_1_0": 65.7
+        "aa_omniscience_hallucination_1_0": 65.7,
+        "sec_bench_pro_260617": 2.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -56777,7 +56809,8 @@
         "aa_intelligence_index_4_3": "2026-09-08",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "sec_bench_pro_260617": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -56860,7 +56893,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/kimi-k2-5"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
+        "sec_bench_pro_260617": "https://sec-bench.github.io"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -57113,6 +57147,13 @@
             "date": "2026-09-26",
             "score": 2.2,
             "source": "https://sec-bench.github.io/260505"
+          }
+        ],
+        "sec_bench_pro_260617": [
+          {
+            "date": "2026-10-31",
+            "score": 2.3,
+            "source": "https://sec-bench.github.io"
           }
         ],
         "aa_omniscience_1_0": [
