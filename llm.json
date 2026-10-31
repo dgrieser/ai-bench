@@ -237,7 +237,7 @@
     },
     "security_index": {
       "name": "OpenBench Security Index",
-      "short_name": "Security",
+      "short_name": "Sec",
       "category": "Composite Index",
       "derived": true,
       "decimals": 0,
@@ -257,7 +257,7 @@
     },
     "aa_intelligence_index_5_0": {
       "name": "AA Intelligence Index v5.0",
-      "short_name": "Index v5.0",
+      "short_name": "Idx v5.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index of overall model capability, v5.0 since 2026-10-27: nine evaluations in four equally weighted categories — Knowledge Work (AA-Briefcase v1.1, AutomationBench-AA, GDP.pdf), Coding (FrontierCode 2.0, Terminal-Bench 4.0), Science (Terminal-Bench-Science 0.1, CritPt v2 Hard subset) and General (AA-Omniscience v1.1, HLE-Diamond). GDPval-AA, SciCode, AA-LCR and HLE left the index with this version. Scored on Artificial Analysis' index scale rather than as a percentage; written only while AA's API states version 5.0.",
       "settings": [
@@ -294,7 +294,7 @@
     },
     "aa_strategy_ops_index": {
       "name": "AA Strategy & Ops Index",
-      "short_name": "StratOps",
+      "short_name": "SOps",
       "category": "Composite Index",
       "description": "Artificial Analysis' Strategy & Ops domain index: AA's composite score for strategy & ops work, published per model beside the Intelligence Index (API field artificial_analysis_strategy_and_ops_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
       "settings": [
@@ -389,7 +389,7 @@
     },
     "aa_intelligence_index_4_3": {
       "name": "AA Intelligence Index v4.3",
-      "short_name": "Index v4.3",
+      "short_name": "Idx v4.3",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.3 (September to October 2026, as read 2026-09-08 to 2026-10-27): AutomationBench-AA replaced τ³-Banking and Terminal-Bench 4.0 replaced 2.1; weights GDPval-AA v2 10%, AA-Briefcase 15%, AutomationBench-AA 5%, Terminal-Bench 4.0 10%, SciCode 10%, AA-LCR 5%, AA-Omniscience 15%, HLE 10%, GDP.pdf 10%, CritPt 10%. Includes the v4.3.1 and v4.3.2 point releases (refreshed judge panels; GDPval-AA v2.1 and AA-Briefcase v1.1 refitted), which moved 56 values on 2026-09-19. Archived: the values this table read while AA served v4.3, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -408,7 +408,7 @@
     },
     "aa_intelligence_index_4_2": {
       "name": "AA Intelligence Index v4.2",
-      "short_name": "Index v4.2",
+      "short_name": "Idx v4.2",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.2 (early September 2026, as read 2026-09-04 to 2026-09-07): AA-Briefcase and GDP.pdf added, GPQA Diamond removed, AA-LCR upgraded to v1.1 and SciCode regraded. Archived: the values this table read while AA served v4.2, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -427,7 +427,7 @@
     },
     "aa_intelligence_index_4_1": {
       "name": "AA Intelligence Index v4.1",
-      "short_name": "Index v4.1",
+      "short_name": "Idx v4.1",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.1 (June to August 2026, as read 2026-06-18 to 2026-09-03): GDPval-AA v2, Terminal-Bench 2.1 in place of Terminal-Bench Hard, τ³-Banking in place of τ²-Bench Telecom, IFBench removed; Agents 34%, Coding 24%, Scientific Reasoning 24%, General 18%. Includes v4.1.1 (τ³-Banking dataset and HLE/AA-LCR/Omniscience grader updates). Archived: the values this table read while AA served v4.1, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -446,7 +446,7 @@
     },
     "aa_intelligence_index_4_0": {
       "name": "AA Intelligence Index v4.0",
-      "short_name": "Index v4.0",
+      "short_name": "Idx v4.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.0 (January to June 2026, as read until 2026-06-17): GDPval-AA, AA-Omniscience and CritPt added, MMLU-Pro, LiveCodeBench and AIME 2025 removed; four categories at 25% each. Archived: the values this table read while AA served v4.0, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -465,7 +465,7 @@
     },
     "aa_coding_index_4_1": {
       "name": "AA Coding Index v4.1",
-      "short_name": "Code v4.1",
+      "short_name": "Code4.1",
       "category": "Composite Index",
       "description": "Artificial Analysis' coding sub-index as it stood under Intelligence Index v4.1 (as read 2026-06-25 until the column was dropped at the end of August): the average of Terminal-Bench 2.1 and SciCode. AA no longer publishes it as a field; archived from llm.json's git history. Not aggregated: its inputs are columns of their own.",
       "settings": [
@@ -485,7 +485,7 @@
     },
     "aa_coding_index_4_0": {
       "name": "AA Coding Index v4.0",
-      "short_name": "Code v4.0",
+      "short_name": "Code4.0",
       "category": "Composite Index",
       "description": "Artificial Analysis' coding sub-index as it stood under Intelligence Index v4.0 (as read until 2026-06-24): the average of Terminal-Bench Hard and SciCode. AA no longer publishes it as a field; archived from llm.json's git history. Not aggregated: its inputs are columns of their own.",
       "settings": [
@@ -691,7 +691,7 @@
     },
     "real_swe_1_1": {
       "name": "Real-SWE 1.1",
-      "short_name": "RealSWE1.1",
+      "short_name": "RSWE1.1",
       "category": "Software Engineering",
       "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
       "settings": [
@@ -711,7 +711,7 @@
     },
     "real_swe_1_0": {
       "name": "Real-SWE 1.0",
-      "short_name": "RealSWE1.0",
+      "short_name": "RSWE1.0",
       "category": "Software Engineering",
       "description": "The first release of Real-SWE (September 2026): 10 tasks from private production codebases licensed from real companies, graded by verifiers built from each repository's own test suite; pass@1 averaged over eight runs per task, each model in its native harness. Replaced by 1.1 on the same page on 2026-10-15 without its board being kept, so this column holds the values read before the switch and receives no new ones.",
       "settings": [
@@ -1332,7 +1332,7 @@
     },
     "vending_bench_2": {
       "name": "Vending-Bench 2",
-      "short_name": "VendBench 2",
+      "short_name": "VenBench2",
       "category": "Agentic Tool Use",
       "decimals": 0,
       "range": [
@@ -1677,7 +1677,7 @@
     },
     "aa_cyber_index": {
       "name": "AA Cyber Index",
-      "short_name": "AA Cyber",
+      "short_name": "Cyber",
       "category": "Cybersecurity",
       "description": "Artificial Analysis' composite of three defensive cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (audit a codebase, find a vulnerability in a described area and patch it), DeepsecBench-AA (find vulnerabilities in real application code, scored by F2) and CyberGym-E2E-AA (find, reproduce and patch real memory-safety bugs in C/C++ projects). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
       "settings": [
@@ -1700,7 +1700,7 @@
     },
     "cwe_bench_aa": {
       "name": "CWE-Bench-AA",
-      "short_name": "CWE-AA",
+      "short_name": "CWE",
       "category": "Cybersecurity",
       "description": "Artificial Analysis' implementation of Collinear AI's CWE-bench: a coding agent audits a real open-source codebase, finds a vulnerability in a described area of concern and patches it without breaking legitimate behaviour. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
       "settings": [
@@ -1720,7 +1720,7 @@
     },
     "deepsec_bench_aa": {
       "name": "DeepsecBench-AA",
-      "short_name": "Deepsec",
+      "short_name": "DeepSec",
       "category": "Cybersecurity",
       "description": "Artificial Analysis' implementation of Vercel's DeepsecBench: an agent reviews real open-source application code and reports the vulnerabilities it finds, scored by F2, which weights recall above precision. A refusal counts as a failed task; the share refused is shown beside each score. One of the three components of the AA Cyber Index.",
       "settings": [
@@ -1830,7 +1830,7 @@
     },
     "sec_bench_pro": {
       "name": "SEC-bench Pro",
-      "short_name": "SEC Pro",
+      "short_name": "SECPro",
       "category": "Cybersecurity",
       "description": "Writing a proof of concept for a real vulnerability in a very large codebase, from a vague report: the agent gets the source tree, an instrumented binary and broad vulnerability categories, and no crash trace, patch or reference PoC. A PoC counts only if it triggers on the vulnerable build, not on the fixed one, and an audited LLM judge confirms it is legitimate. This column is the May 2026 snapshot (260505): 183 tasks in V8 and SpiderMonkey, the one vendors report and the maintainers' board still publishes. Timeouts count as failures.",
       "settings": [
@@ -1853,7 +1853,7 @@
     },
     "sec_bench_pro_260617": {
       "name": "SEC-bench Pro 260617",
-      "short_name": "SEC 260617",
+      "short_name": "SECPro2",
       "category": "Cybersecurity",
       "description": "The June 2026 snapshot of SEC-bench Pro (260617): the same proof-of-concept task as 260505 — write a PoC for a real vulnerability from a vague report, no crash trace, patch or reference PoC, judged on the vulnerable and the fixed build — over 344 tasks, adding 137 Linux kernel tasks to V8 and SpiderMonkey. It is the snapshot the site root shows. Scores run higher than on 260505 for the same model (GPT-5.5: 58.4 against 46.4), so the two are separate columns. Timeouts count as failures.",
       "settings": [
@@ -1914,7 +1914,7 @@
     },
     "aa_omniscience_1_1": {
       "name": "AA-Omniscience v1.1",
-      "short_name": "Omni 1.1",
+      "short_name": "Omni1.1",
       "category": "Reasoning & Knowledge",
       "range": [
         -100,
@@ -1939,7 +1939,7 @@
     },
     "aa_omniscience_1_0": {
       "name": "AA-Omniscience v1",
-      "short_name": "Omni 1.0",
+      "short_name": "Omni1.0",
       "category": "Reasoning & Knowledge",
       "range": [
         -100,
@@ -1965,7 +1965,7 @@
     },
     "aa_omniscience_hallucination_1_1": {
       "name": "AA-Omniscience v1.1 Hallucination Rate",
-      "short_name": "HallRate 1.1",
+      "short_name": "HallR1.1",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
       "settings": [
@@ -1988,7 +1988,7 @@
     },
     "aa_omniscience_hallucination_1_0": {
       "name": "AA-Omniscience v1 Hallucination Rate",
-      "short_name": "HallRate 1.0",
+      "short_name": "HallR1.0",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better. Archived: v1, the 6,000-question set, as read until AA moved to v1.1 on 2026-10-27, kept for the models AA has not re-scored.",
       "settings": [
@@ -2012,7 +2012,7 @@
     },
     "aa_omniscience_accuracy_1_1": {
       "name": "AA-Omniscience v1.1 Accuracy",
-      "short_name": "OmniAcc 1.1",
+      "short_name": "OAcc1.1",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: the plain share of the 3,000 questions (v1.1, since October 2026; down from v1's 6,000) answered correctly, before the Omniscience Index nets confident wrong answers off against it. Read next to the hallucination rate it is the other half of the same run — how much the model knows, against what it does with the rest.",
       "settings": [
@@ -2032,7 +2032,7 @@
     },
     "aa_omniscience_accuracy_1_0": {
       "name": "AA-Omniscience v1 Accuracy",
-      "short_name": "OmniAcc 1.0",
+      "short_name": "OAcc1.0",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: the plain share of the 6,000 questions answered correctly, before the Omniscience Index nets confident wrong answers off against it. Read next to the hallucination rate it is the other half of the same run — how much the model knows, against what it does with the rest. Archived: v1, the 6,000-question set, as read until AA moved to v1.1 on 2026-10-27, kept for the models AA has not re-scored.",
       "settings": [
