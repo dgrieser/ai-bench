@@ -216,7 +216,13 @@ INDEXES: list[IndexDef] = [
             # points between the best model and the fifth, and it ranks the 9
             # models it shares with FrontierSWE 2.0 at 0.97 -- the pair was
             # spending 1.8 on what is close to one ranking of the frontier.
-            ("frontiercode_extended_1_1", 0.8),
+            # FrontierCode 2.0 (2026-10-27) rebuilt the suite as 132 tasks on
+            # one board and retired 1.1, so it takes 1.1 Extended's 0.8. It
+            # scores 20 tracked models against 1.1 Extended's 27; the rest keep
+            # their FrontierCode evidence through REVISION_FALLBACKS, which
+            # carries a 1.1 Extended score onto 2.0's scale (16 models sit on
+            # both) for a model 2.0 has not run.
+            ("frontiercode_2_0", 0.8),
             # Long-horizon execution adds useful coverage, but 20 distinct
             # tasks warrant less influence than the larger frontier boards.
             # 0.75 since 2026-10-03, up from 0.65: 16 scored models where it
@@ -426,7 +432,11 @@ INDEXES: list[IndexDef] = [
             ("bfcl_v4", 0.45),
             # Long-horizon computer work for professional clients, admitted
             # now that 21 tracked models carry it (it was held out at 8).
-            ("agents_last_exam_1_0", 0.35),
+            # ALE v1.1 (122 tasks) is the current board and takes the 0.35. It
+            # scores 12 tracked models against v1.0's 23; the others are
+            # carried onto v1.1's scale by REVISION_FALLBACKS (7 models sit on
+            # both), so none loses ALE evidence.
+            ("agents_last_exam_1_1", 0.35),
             ("terminal_bench_hard", 0.3),
             ("terminal_bench_2_1", 0.2),
             ("tau2_bench_telecom", 0.15),
@@ -533,6 +543,10 @@ INDEXES: list[IndexDef] = [
             # a rank would rank that artefact. Held at the floor; worth 0.35
             # only once binary and partial rows are told apart.
             ("osworld_2_0_vendor", 0.15),
+            # Release 2.1, the bug-fix release the maintainers recommend, a
+            # step over its siblings' floor as the current one; it scores no
+            # tracked model yet, so it is inert until it does.
+            ("osworld_2_1", 0.2),
             # Deliberately not aggregated, though it is the widest multimodal
             # column in llm.json: gdpval_aa scores visual *output* (documents,
             # slides, diagrams) produced in AA's agentic harness, so what it
@@ -623,7 +637,11 @@ INDEXES: list[IndexDef] = [
             # far from its ceiling, but the maintainers' own board is six rows
             # frozen since June, so nearly every value is a lab's claim under a
             # harness it chose.
-            ("sec_bench_pro", 0.6),
+            ("sec_bench_pro", 0.45),
+            # The 260617 snapshot (344 tasks, Linux added) scores two tracked
+            # models against 260505's nine, so it takes a quarter of the
+            # board's 0.6 and the vendor-reported snapshot keeps the rest.
+            ("sec_bench_pro_260617", 0.15),
             # Artificial Analysis' runs of Collinear's CWE-bench (find and
             # patch a vulnerability in a described area of a real codebase)
             # and Vercel's DeepsecBench (find the vulnerabilities in real
@@ -844,14 +862,19 @@ def write_calibration(
 # current revision key -> older revision key it may fall back to
 REVISION_FALLBACKS: dict[str, str] = {
     "deepswe_1_1": "deepswe_1_0",
-    # FrontierCode is aggregated through Extended, so the conversion targets
-    # that column. It crosses a revision and a subset at once (1.0 Main onto
-    # 1.1 Extended), which is one more gap than the others cross, but it is
-    # fitted the same way and on the same kind of overlap.
-    #
-    # frontiercode_1_1 needs no entry of its own now that it is not aggregated;
-    # a fallback only ever fills a hole in a column the index reads.
-    "frontiercode_extended_1_1": "frontiercode_1_0",
+    # FrontierCode is aggregated through 2.0 since 2026-10-30, a rebuilt
+    # suite on one board, and the conversion carries 1.1 Extended -- the board
+    # the index read before, 16 models on both -- onto it. It crosses a
+    # revision and a subset at once, as the 1.0-Main-onto-1.1-Extended entry
+    # it replaces did, and is fitted the same way. 1.0 no longer reaches the
+    # index: a conversion is one step, not a chain, so the four models scored
+    # on 1.0 alone (MiniMax M2.5 and M2.7, Kimi K2.5 and K2.6) lose their
+    # FrontierCode evidence. frontiercode_1_1 (Main) needs no entry; a
+    # fallback only ever fills a hole in a column the index reads.
+    "frontiercode_2_0": "frontiercode_extended_1_1",
+    # ALE: v1.0, the legacy board, onto v1.1.
+    "agents_last_exam_1_1": "agents_last_exam_1_0",
+    # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's
     # scale to carry: its column is a pairwise win rate over a 17-model field,
