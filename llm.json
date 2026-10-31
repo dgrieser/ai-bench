@@ -257,7 +257,7 @@
     },
     "aa_intelligence_index_5_0": {
       "name": "AA Intelligence Index v5.0",
-      "short_name": "Idx v5.0",
+      "short_name": "Idxv5.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index of overall model capability, v5.0 since 2026-10-27: nine evaluations in four equally weighted categories — Knowledge Work (AA-Briefcase v1.1, AutomationBench-AA, GDP.pdf), Coding (FrontierCode 2.0, Terminal-Bench 4.0), Science (Terminal-Bench-Science 0.1, CritPt v2 Hard subset) and General (AA-Omniscience v1.1, HLE-Diamond). GDPval-AA, SciCode, AA-LCR and HLE left the index with this version. Scored on Artificial Analysis' index scale rather than as a percentage; written only while AA's API states version 5.0.",
       "settings": [
@@ -389,7 +389,7 @@
     },
     "aa_intelligence_index_4_3": {
       "name": "AA Intelligence Index v4.3",
-      "short_name": "Idx v4.3",
+      "short_name": "Idxv4.3",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.3 (September to October 2026, as read 2026-09-08 to 2026-10-27): AutomationBench-AA replaced τ³-Banking and Terminal-Bench 4.0 replaced 2.1; weights GDPval-AA v2 10%, AA-Briefcase 15%, AutomationBench-AA 5%, Terminal-Bench 4.0 10%, SciCode 10%, AA-LCR 5%, AA-Omniscience 15%, HLE 10%, GDP.pdf 10%, CritPt 10%. Includes the v4.3.1 and v4.3.2 point releases (refreshed judge panels; GDPval-AA v2.1 and AA-Briefcase v1.1 refitted), which moved 56 values on 2026-09-19. Archived: the values this table read while AA served v4.3, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -408,7 +408,7 @@
     },
     "aa_intelligence_index_4_2": {
       "name": "AA Intelligence Index v4.2",
-      "short_name": "Idx v4.2",
+      "short_name": "Idxv4.2",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.2 (early September 2026, as read 2026-09-04 to 2026-09-07): AA-Briefcase and GDP.pdf added, GPQA Diamond removed, AA-LCR upgraded to v1.1 and SciCode regraded. Archived: the values this table read while AA served v4.2, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -427,7 +427,7 @@
     },
     "aa_intelligence_index_4_1": {
       "name": "AA Intelligence Index v4.1",
-      "short_name": "Idx v4.1",
+      "short_name": "Idxv4.1",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.1 (June to August 2026, as read 2026-06-18 to 2026-09-03): GDPval-AA v2, Terminal-Bench 2.1 in place of Terminal-Bench Hard, τ³-Banking in place of τ²-Bench Telecom, IFBench removed; Agents 34%, Coding 24%, Scientific Reasoning 24%, General 18%. Includes v4.1.1 (τ³-Banking dataset and HLE/AA-LCR/Omniscience grader updates). Archived: the values this table read while AA served v4.1, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -446,7 +446,7 @@
     },
     "aa_intelligence_index_4_0": {
       "name": "AA Intelligence Index v4.0",
-      "short_name": "Idx v4.0",
+      "short_name": "Idxv4.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.0 (January to June 2026, as read until 2026-06-17): GDPval-AA, AA-Omniscience and CritPt added, MMLU-Pro, LiveCodeBench and AIME 2025 removed; four categories at 25% each. Archived: the values this table read while AA served v4.0, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -1965,7 +1965,7 @@
     },
     "aa_omniscience_hallucination_1_1": {
       "name": "AA-Omniscience v1.1 Hallucination Rate",
-      "short_name": "HallR1.1",
+      "short_name": "HalR1.1",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better.",
       "settings": [
@@ -1988,7 +1988,7 @@
     },
     "aa_omniscience_hallucination_1_0": {
       "name": "AA-Omniscience v1 Hallucination Rate",
-      "short_name": "HallR1.0",
+      "short_name": "HalR1.0",
       "category": "Reasoning & Knowledge",
       "description": "Companion metric to AA-Omniscience: of all responses that were not correct, the share that were confident wrong answers rather than partial answers or abstentions — incorrect / (incorrect + partial + not attempted). It measures what a model does when it does not know, so lower is better. Archived: v1, the 6,000-question set, as read until AA moved to v1.1 on 2026-10-27, kept for the models AA has not re-scored.",
       "settings": [
