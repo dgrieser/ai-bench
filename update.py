@@ -315,6 +315,15 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # 2026-10-27, each on new components); the API envelope states which
     # version it serves, and only the matching column is written.
     "aa_intelligence_index_5_0": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # AA's six domain indexes, published per model beside the Intelligence
+    # Index on its own scale. AA states no version for them, so no gate holds
+    # them; a re-versioning shows up in _switch_detector's report instead.
+    "aa_finance_index": (("artificial_analysis_finance_and_accounting_index",), lambda v: v),
+    "aa_strategy_ops_index": (("artificial_analysis_strategy_and_ops_index",), lambda v: v),
+    "aa_legal_index": (("artificial_analysis_legal_index",), lambda v: v),
+    "aa_healthcare_index": (("artificial_analysis_healthcare_and_medical_index",), lambda v: v),
+    "aa_engineering_index": (("artificial_analysis_engineering_index",), lambda v: v),
+    "aa_economics_index": (("artificial_analysis_economics_index",), lambda v: v),
     # Read off the Cyber Index's evaluation page (artificialanalysis.CYBER_INDEX_URL),
     # the only place AA publishes it; 0-100, so it passes through unscaled.
     "aa_cyber_index": (("cyber_index",), to_index),
