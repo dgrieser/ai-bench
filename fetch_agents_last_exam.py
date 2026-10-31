@@ -24,16 +24,27 @@ site sorts by and what model cards quote. ``avgScore`` (partial credit against
 the hidden reference) is carried through for transparency but is not the stored
 score. The "Best-per-task" row the site shows on top is synthesised in the
 browser from the rows below it and is not in this payload; nothing to filter.
+
+Two releases are published side by side. The board the site opens on is ALE
+v1.1 (122 tasks), served from ``/api/demo/leaderboard/v1.1`` as one view whose
+rows are split "v1.1"; the endpoint above is v1.0 (152 public tasks), the
+legacy board at ``/leaderboard/v1``, where the views listed above live. Every
+row names the ``revision`` it came from and update.py files each under its own
+column (_revisions.py). The current release is read off the leaderboard page
+("ALE v1.1"), so a v1.2 the page moves to is fetched and reported rather than
+missed -- and skipped until llm.json has a column for it.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import urllib.request
 
 from _fetch_checks import check_fractions, require_rows
+from _revisions import revision_label
 
 
 URL = "https://agents-last-exam.org/api/demo/leaderboard"
@@ -43,6 +54,35 @@ LEADERBOARD_URL = "https://agents-last-exam.org/leaderboard"
 
 # The site's default view: every public task, license filter off.
 SPLIT = "full/overall"
+
+# The legacy endpoint above is release 1.0; a later release is served from its
+# own path and read whole, being one view.
+LEGACY_REVISION = "1.0"
+RELEASE_URL = URL + "/v{version}"
+KNOWN_RELEASES = ("1.1",)
+_RELEASE_LABEL_RE = re.compile(r"\bALE v(\d+(?:\.\d+)+)\b")
+
+
+def board_url(revision: str) -> str:
+    """The page a score of ``revision`` is credited to: the legacy board's own
+    page for 1.0, the leaderboard for the releases after it."""
+    return f"{LEADERBOARD_URL}/v1" if revision == LEGACY_REVISION else LEADERBOARD_URL
+
+
+def current_releases(fetch_text=None) -> list[str]:
+    """The releases after 1.0 to read: the one the leaderboard page names, plus
+    the ones already known, so an unreadable page still yields them."""
+    found = set(KNOWN_RELEASES)
+    try:
+        fetch_text = fetch_text or (lambda url: urllib.request.urlopen(
+            urllib.request.Request(url, headers={"User-Agent": USER_AGENT}), timeout=60
+        ).read().decode("utf-8", errors="replace"))
+        found.update(_RELEASE_LABEL_RE.findall(fetch_text(LEADERBOARD_URL)))
+    except (OSError, ValueError) as exc:
+        print(f"  warning: could not read {LEADERBOARD_URL} ({exc}); "
+              f"reading {', '.join(KNOWN_RELEASES)} only", file=sys.stderr)
+    found = {revision_label(v) for v in found} - {LEGACY_REVISION}
+    return sorted(found)
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) ai-bench-fetcher/1.0"
 
@@ -71,21 +111,35 @@ def select_split(payload: object, split: str) -> list[dict]:
     return selected
 
 
-def get_scores(split: str = SPLIT) -> list[dict]:
+def get_scores(split: str = SPLIT, releases: list[str] | None = None, fetch=None) -> list[dict]:
     """Return a list of dicts: model, raw, harness, harness_variant, score,
-    avg_score, passes, tasks, runs, rank.
+    avg_score, passes, tasks, runs, revision, source, rank.
 
     ``score`` is Pass Rate as a percentage, the metric the leaderboard sorts by.
-    One entry per (harness, model, variant) row; rank is within this list.
+    One entry per (harness, model, variant) row; rank is within its release.
+    The legacy endpoint gives release 1.0 at ``split``; each later release is
+    its own endpoint, read whole.
     """
-    print(f"Fetching {URL} ...", file=sys.stderr)
-    rows = select_split(fetch_json(), split)
+    fetch = fetch or fetch_json
+    results = board_scores(select_split(fetch(URL), split), URL, LEGACY_REVISION, split)
+    for version in current_releases() if releases is None else releases:
+        url = RELEASE_URL.format(version=version)
+        payload = fetch(url)
+        rows = [r for r in (payload.get("rows") if isinstance(payload, dict) else None) or []
+                if isinstance(r, dict) and r.get("split") == f"v{version}"]
+        results.extend(board_scores(rows, url, revision_label(version), f"v{version}"))
+    return results
+
+
+def board_scores(rows: list[dict], url: str, revision: str, split: str) -> list[dict]:
+    """One release's rows as scores, ranked within the release."""
+    print(f"Fetching {url} ...", file=sys.stderr)
     print(f"  parsed {len(rows)} rows for split {split!r}", file=sys.stderr)
     # passRate and avgScore are 0-1 fractions, multiplied into percentages
     # below; a board that switched to percentages would otherwise be stored
     # a hundred times too large.
-    check_fractions((row.get("passRate") for row in rows), URL, "passRate")
-    check_fractions((row.get("avgScore") for row in rows), URL, "avgScore")
+    check_fractions((row.get("passRate") for row in rows), url, "passRate")
+    check_fractions((row.get("avgScore") for row in rows), url, "avgScore")
 
     results: list[dict] = []
     for row in rows:
@@ -111,11 +165,13 @@ def get_scores(split: str = SPLIT) -> list[dict]:
                 "passes": row.get("passes"),
                 "tasks": row.get("tasks"),
                 "runs": row.get("runs"),
+                "revision": revision,
+                "source": board_url(revision),
             }
         )
 
     # A renamed "model" or "passRate" field drops every row one at a time.
-    require_rows(results, URL, f"scored rows for split {split!r}")
+    require_rows(results, url, f"scored rows for split {split!r}")
 
     results.sort(key=lambda r: -r["score"])
     for i, entry in enumerate(results, 1):

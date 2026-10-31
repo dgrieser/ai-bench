@@ -82,7 +82,6 @@ class TestRowFetchers(unittest.TestCase):
         ("kernelbench", "score", "fetch_kernelbench_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
-        ("agents_last_exam", "score", "fetch_agents_last_exam_data"),
         ("openrouter", "score", "fetch_openrouter_data"),
         ("hle_diamond", "score", "fetch_hle_diamond_data"),
     ]
@@ -104,6 +103,7 @@ class TestRowFetchers(unittest.TestCase):
         ("frontierswe", "fetch_frontierswe_data", "frontierswe", "2.0", {}),
         ("swe_marathon", "fetch_swe_marathon_data", "swe_marathon", "1.1", {}),
         ("real_swe", "fetch_real_swe_data", "real_swe", "1.1", {}),
+        ("agents_last_exam", "fetch_agents_last_exam_data", "agents_last_exam", "1.1", {}),
     ]
 
     def test_best_row_wins_in_either_payload_order(self) -> None:

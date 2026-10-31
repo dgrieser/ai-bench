@@ -244,6 +244,12 @@ TBENCH_KEY_URLS = {
 }
 # The leaderboard page, not the JSON endpoint it hydrates from.
 AGENTS_LAST_EXAM_SOURCE_URL = canonical(fetch_agents_last_exam.LEADERBOARD_URL)
+# One page per release: the legacy v1.0 board's own, and the leaderboard for
+# v1.1. Both sit under the leaderboard prefix, so both rank as its site.
+AGENTS_LAST_EXAM_KEY_URLS = {
+    revision_key("agents_last_exam", label): canonical(fetch_agents_last_exam.board_url(label))
+    for label in ("1.0", "1.1")
+}
 SWE_ATLAS_KEY_URLS = {
     key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
     for track, key in fetch_swe_atlas.TRACKS.items()

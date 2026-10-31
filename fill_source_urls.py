@@ -204,7 +204,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_bfcl.LEADERBOARD_URL, ("bfcl_v4",)),
         # One page per Terminal-Bench revision, each covering its own column.
         *((fetch_tbench.board_url(key), (key,)) for key in fetch_tbench.BOARDS),
-        (fetch_agents_last_exam.LEADERBOARD_URL, ("agents_last_exam",)),
+        (fetch_agents_last_exam.board_url("1.1"), ("agents_last_exam_1_1",)),
+        (fetch_agents_last_exam.board_url("1.0"), ("agents_last_exam_1_0",)),
         # cybergym.io's two boards, one page each; the JSON files they render
         # from are not pages.
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),

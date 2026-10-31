@@ -48,6 +48,9 @@ _REVISION_NUM_RE = re.compile(r"\d+")
 # Adding a revision here is not enough on its own: llm.json needs the matching
 # "<base>_<major>_<minor>" benchmark entry, which is what revision_key() spells.
 KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
+    # ALE v1.1 (122 tasks) is the board the site opens on; v1.0 (152 public
+    # tasks) stays published as the legacy board, from the endpoint read first.
+    "agents_last_exam": ("1.0", "1.1"),
     "deepswe": ("1.0", "1.1"),
     # 2.0 (2026-10-27) rebuilt the suite as 132 tasks scored as one board, so it
     # has a Main column only.

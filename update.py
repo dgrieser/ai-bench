@@ -53,6 +53,7 @@ from _params import fetch_hf_params, normalize_params
 from _precedence import (
     AA_CODING_AGENTS_SOURCE_URL,
     AGENTS_LAST_EXAM_SOURCE_URL,
+    AGENTS_LAST_EXAM_KEY_URLS,
     BFCL_SOURCE_URL,
     CYBERGYM_KEY_URLS,
     DATACURVE_SOURCE_URL,
@@ -2726,7 +2727,8 @@ def build_fetch_agents_last_exam_cmd(script: Path) -> list[str]:
 
 def fetch_agents_last_exam_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """ALE's releases, one column each: v1.0 (the legacy board) and v1.1."""
     cmd = build_fetch_agents_last_exam_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2739,7 +2741,8 @@ def fetch_agents_last_exam_data(
         raise RuntimeError("Unexpected agents-last-exam JSON format: expected a list")
 
     ale_to_slug = load_agents_last_exam_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    unversioned = 0
     for row in payload:
         if not isinstance(row, dict):
             continue
@@ -2749,37 +2752,28 @@ def fetch_agents_last_exam_data(
         slug = ale_to_slug.get(ale_name)
         if not slug:
             continue
-        # One row per (harness, model, harness variant); best run wins, which
-        # is how the leaderboard ranks a model across its efforts.
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        # One row per (harness, model, harness variant); best run wins within
+        # its release, which is how the leaderboard ranks a model across its
+        # efforts. A release with no column is counted, never filed next door.
+        if not keep_best_by_revision(by_key, "agents_last_exam", slug, row):
+            unversioned += 1
+    if unversioned:
+        print(
+            f"  skipped {unversioned} agents-last-exam row(s) naming no known release",
+            file=sys.stderr,
+        )
+    return by_key
 
 
 def update_agents_last_exam_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        ale_model = by_slug.get(slug)
-        if ale_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "agents_last_exam", ale_model.get("score"),
-            AGENTS_LAST_EXAM_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    return apply_revision_scores(
+        doc, by_key, AGENTS_LAST_EXAM_SOURCE_URL,
+        key_urls=AGENTS_LAST_EXAM_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_datacurve_cmd(script: Path) -> list[str]:
@@ -4137,7 +4131,7 @@ def main() -> int:
         )
         changes.extend(tbench_changes)
 
-    agents_last_exam_by_slug: dict[str, dict[str, Any]] = {}
+    agents_last_exam_by_slug: dict[str, dict[str, dict[str, Any]]] = {}
     agents_last_exam_matched = 0
     agents_last_exam_updated = 0
     if not args.skip_agents_last_exam:
@@ -4466,7 +4460,7 @@ def main() -> int:
     if not args.skip_tbench:
         print(f"models returned by tbench: {revision_model_count(tbench_by_slug)}" + revision_breakdown(tbench_by_slug))
     if not args.skip_agents_last_exam:
-        print(f"models returned by agents-last-exam: {len(agents_last_exam_by_slug)}")
+        print(f"models returned by agents-last-exam: {revision_model_count(agents_last_exam_by_slug)}" + revision_breakdown(agents_last_exam_by_slug))
     if not args.skip_frontiercode:
         print(f"models returned by frontiercode: {revision_model_count(frontiercode_by_slug)}" + revision_breakdown(frontiercode_by_slug))
     if not args.skip_swe_atlas:

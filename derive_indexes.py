@@ -426,7 +426,7 @@ INDEXES: list[IndexDef] = [
             ("bfcl_v4", 0.45),
             # Long-horizon computer work for professional clients, admitted
             # now that 21 tracked models carry it (it was held out at 8).
-            ("agents_last_exam", 0.35),
+            ("agents_last_exam_1_0", 0.35),
             ("terminal_bench_hard", 0.3),
             ("terminal_bench_2_1", 0.2),
             ("tau2_bench_telecom", 0.15),
