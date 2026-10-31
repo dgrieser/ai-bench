@@ -281,13 +281,17 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "gdpval_aa": (("gdpval",), to_index),
     # AA-Briefcase reports a composite Elo (GPT-5.5 (medium) = 1000), not a fraction.
     "aa_briefcase": (("briefcase",), to_index),
-    "aa_omniscience": (("omniscience",), to_index),
-    "aa_omniscience_hallucination": (("omniscience_hallucination_rate",), to_percent),
+    # AA-Omniscience is versioned in place (v1.1, 2026-10-27, cut the set from
+    # 6,000 questions to 3,000), so its three columns are the current
+    # version's and are written only while AA's page states it -- see
+    # AA_VERSION_GATES. v1's values sit in the archived *_1_0 columns.
+    "aa_omniscience_1_1": (("omniscience",), to_index),
+    "aa_omniscience_hallucination_1_1": (("omniscience_hallucination_rate",), to_percent),
     # The other half of the same run: correct share before the Omniscience
     # Index nets confident errors off against it. Both halves feed the Trust
     # index, where the accuracy is what stops a model that abstains on
     # everything from topping the hallucination rate.
-    "aa_omniscience_accuracy": (("omniscience_accuracy",), to_percent),
+    "aa_omniscience_accuracy_1_1": (("omniscience_accuracy",), to_percent),
     "aa_lcr": (("lcr",), to_percent),
     # Ai2's IFBench, run independently by AA; the model pages carry it too.
     "ifbench": (("ifbench",), to_percent),
@@ -301,7 +305,10 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     "livecodebench": (("livecodebench",), to_percent),
     "scicode": (("scicode",), to_percent),
     "hle": (("hle",), to_percent),
-    "aa_intelligence_index": (("artificial_analysis_intelligence_index",), lambda v: v),
+    # The index is re-versioned in place as well (v4.3 on 2026-09-07, v5.0 on
+    # 2026-10-27, each on new components); the API envelope states which
+    # version it serves, and only the matching column is written.
+    "aa_intelligence_index_5_0": (("artificial_analysis_intelligence_index",), lambda v: v),
     # Read off the Cyber Index's evaluation page (artificialanalysis.CYBER_INDEX_URL),
     # the only place AA publishes it; 0-100, so it passes through unscaled.
     "aa_cyber_index": (("cyber_index",), to_index),
@@ -724,6 +731,67 @@ def fetch_available_slugs(aa_script: Path) -> set[str]:
     return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
 
 
+# Columns AA re-versions in place, and how this run learns which version AA is
+# serving. Neither record says: on 2026-10-27 AA moved the Intelligence Index to
+# v5.0 and AA-Omniscience to v1.1, the refresh kept writing into the same
+# columns, and each was left holding two versions -- 38 index values on v5.0
+# beside 133 on v4.x, a scale apart. So each versioned column names the
+# version it holds, and is written only while AA states that version: the
+# index's from the API envelope (intelligence_index_version), Omniscience's
+# from its evaluation page. A different version, or none stated, writes
+# nothing to the column and is reported -- a new version needs a column of its
+# own, and the old one is archived as it stands.
+AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
+    # gate name -> (the version the columns hold, the columns)
+    "intelligence_index": ("5.0", ("aa_intelligence_index_5_0",)),
+    "omniscience": ("1.1", (
+        "aa_omniscience_1_1", "aa_omniscience_accuracy_1_1", "aa_omniscience_hallucination_1_1",
+    )),
+}
+AA_OMNISCIENCE_URL = "https://artificialanalysis.ai/evaluations/omniscience"
+_AA_OMNISCIENCE_VERSION_RE = re.compile(r"AA-Omniscience v(\d+(?:\.\d+)*)")
+# What AA stated this run, filled in as the data is read: gate name -> version.
+AA_STATED_VERSIONS: dict[str, str | None] = {}
+
+
+def version_label(value: Any) -> str | None:
+    """4.1 / "4.1" / "v5" / 5 -> "4.1" / "4.1" / "5.0" / "5.0"; None if unstated."""
+    if isinstance(value, bool) or value is None:
+        return None
+    numbers = re.findall(r"\d+", str(value))
+    if not numbers:
+        return None
+    return ".".join(numbers if len(numbers) > 1 else [numbers[0], "0"])
+
+
+def aa_omniscience_version(fetch_text=None) -> str | None:
+    """The AA-Omniscience version AA's evaluation page names, the most-cited one."""
+    fetch_text = fetch_text or artificialanalysis._fetch_rsc_text
+    text = fetch_text(AA_OMNISCIENCE_URL)
+    if not text:
+        return None
+    found = _AA_OMNISCIENCE_VERSION_RE.findall(text)
+    if not found:
+        return None
+    return version_label(max(set(found), key=found.count))
+
+
+def aa_blocked_columns(stated: dict[str, str | None]) -> dict[str, str]:
+    """Columns this run must not write, each with the reason it is held back."""
+    blocked: dict[str, str] = {}
+    for gate, (expected, columns) in AA_VERSION_GATES.items():
+        got = stated.get(gate)
+        if got == expected:
+            continue
+        reason = (
+            f"AA states {gate} version {got}, which llm.json has no column for"
+            if got else f"AA stated no {gate} version this run"
+        ) + f" ({', '.join(columns)} hold{'s' if len(columns) == 1 else ''} {expected}); not written"
+        for column in columns:
+            blocked[column] = reason
+    return blocked
+
+
 def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]]:
     cmd = build_fetch_data_cmd(aa_script, slugs)
     proc = run_fetch(cmd, "artificialanalysis.py -o json")
@@ -731,6 +799,14 @@ def fetch_aa_data(aa_script: Path, slugs: list[str]) -> dict[str, dict[str, Any]
         raise RuntimeError(f"artificialanalysis.py failed ({proc.returncode}): {proc.stderr.strip()}")
 
     payload = json.loads(proc.stdout)
+    AA_STATED_VERSIONS["intelligence_index"] = version_label(
+        payload.get("intelligence_index_version")
+    )
+    try:
+        AA_STATED_VERSIONS["omniscience"] = aa_omniscience_version()
+    except Exception as exc:  # a page that cannot be read states nothing
+        print(f"  warning: could not read {AA_OMNISCIENCE_URL}: {exc}", file=sys.stderr)
+        AA_STATED_VERSIONS["omniscience"] = None
     data = payload.get("data", [])
     by_slug: dict[str, dict[str, Any]] = {}
     for row in data:
@@ -1328,6 +1404,12 @@ def update_scores(
     # every page it was read from: see RunReports.blind.
     delivered: set[str] = set()
     all_read_pages: set[str] = set()
+    # Versioned columns whose version AA did not state this run: nothing is
+    # written to them, nor dropped from them, and the reason is reported once.
+    blocked = aa_blocked_columns(AA_STATED_VERSIONS) if by_slug else {}
+    for reason in sorted(set(blocked.values())):
+        print(f"  warning: {reason}", file=sys.stderr)
+        _fetch_warnings.record("update.py", reason, source="artificialanalysis")
 
     for model in models:
         slug = model.get("name")
@@ -1386,6 +1468,8 @@ def update_scores(
             for page in read_pages:
                 RUN_REPORTS.failed(page)
         for llm_key, (aa_keys, transform) in SCORE_MAPPINGS.items():
+            if llm_key in blocked:
+                continue
             aa_value = None
             aa_key_used = None
             for aa_key in aa_keys:

@@ -453,7 +453,14 @@ INDEXES: list[IndexDef] = [
         key="knowledge_index",
         fallback_source_url="https://github.com/dgrieser/ai-bench#knowledge-index",
         contributing=[
-            ("aa_omniscience", 1.0),
+            # AA-Omniscience moved to v1.1 (3,000 questions, from v1's 6,000) on
+            # 2026-10-27, and AA has re-scored 46 tracked models on it against
+            # v1's 166. Too few to carry the anchor alone, so both versions
+            # share its 1.0 -- v1 for the field, v1.1 for the current
+            # measurement -- and a model on both counts what one did before.
+            # Shift the split toward v1.1 as AA re-scores the field.
+            ("aa_omniscience_1_0", 0.6),
+            ("aa_omniscience_1_1", 0.4),
             ("hle", 0.9),
             ("critpt", 0.6),
             ("mmlu_pro", 0.5),
@@ -541,14 +548,19 @@ INDEXES: list[IndexDef] = [
         key="trust_index",
         fallback_source_url="https://github.com/dgrieser/ai-bench#trust-index",
         contributing=[
-            ("aa_omniscience_hallucination", 1.0),
+            # Split across the two Omniscience versions as in the Knowledge
+            # index: v1 for the 169 models AA scored on it, v1.1 for the 47 it
+            # has re-scored, the anchor's 1.0 between them.
+            ("aa_omniscience_hallucination_1_0", 0.6),
+            ("aa_omniscience_hallucination_1_1", 0.4),
             # The brake on the anchor, and the reason the anchor can carry 1.0.
             # A hallucination rate is incorrect / (incorrect + partial + not
             # attempted), so a model that abstains on everything scores
             # perfectly: without the accuracy of the same run beside it this
             # column would rank a 3B model that answers nothing at the top --
             # see README, "Why the anchor cannot stand alone".
-            ("aa_omniscience_accuracy", 0.6),
+            ("aa_omniscience_accuracy_1_0", 0.35),
+            ("aa_omniscience_accuracy_1_1", 0.25),
             ("aa_lcr", 0.45),
             ("ifbench", 0.3),
             # Added 2026-10-30 (docs/benchmark-candidates-2026-10.md).

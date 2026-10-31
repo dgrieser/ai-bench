@@ -523,7 +523,8 @@ class TestFieldsTheFreeTierDropped(unittest.TestCase):
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
             aa._enrich_structured_metrics([model])
         evals = model["evaluations"]
-        for column in ("tau3_bench_banking", "aa_lcr", "aa_omniscience_accuracy", "aa_omniscience_hallucination"):
+        for column in ("tau3_bench_banking", "aa_lcr", "aa_omniscience_accuracy_1_1",
+                       "aa_omniscience_hallucination_1_1"):
             with self.subTest(column=column):
                 (aa_key, *_), _transform = update.SCORE_MAPPINGS[column]
                 self.assertIsNotNone(evals.get(aa_key))
@@ -1062,6 +1063,68 @@ class TestPageCreator(unittest.TestCase):
         }
         record = {"slug": "gemini-4-argon", "model_creator": {"name": "Google"}}
         self.assertEqual(aa._extract_page_creator(record), {"name": "Google", "url": ""})
+
+class TestVersionGates(unittest.TestCase):
+    """A versioned AA column is written only while AA states its version.
+
+    On 2026-10-27 AA moved the Intelligence Index to v5.0 and AA-Omniscience to
+    v1.1 in place, and the refresh kept filling the old columns: 38 index
+    values on v5.0 sat beside 133 on v4.x.
+    """
+
+    def test_version_labels(self) -> None:
+        import update
+
+        self.assertEqual(update.version_label(4.1), "4.1")
+        self.assertEqual(update.version_label(5), "5.0")
+        self.assertEqual(update.version_label("v5.0"), "5.0")
+        self.assertIsNone(update.version_label(None))
+        self.assertIsNone(update.version_label(True))
+
+    def test_the_stated_version_opens_its_columns(self) -> None:
+        import update
+
+        blocked = update.aa_blocked_columns({"intelligence_index": "5.0", "omniscience": "1.1"})
+        self.assertEqual(blocked, {})
+
+    def test_another_or_no_version_closes_them(self) -> None:
+        import update
+
+        blocked = update.aa_blocked_columns({"intelligence_index": "5.1", "omniscience": None})
+        self.assertIn("aa_intelligence_index_5_0", blocked)
+        self.assertIn("version 5.1", blocked["aa_intelligence_index_5_0"])
+        for column in ("aa_omniscience_1_1", "aa_omniscience_accuracy_1_1",
+                       "aa_omniscience_hallucination_1_1"):
+            self.assertIn("stated no omniscience version", blocked[column])
+
+    def test_every_gated_column_is_one_update_writes(self) -> None:
+        import update
+
+        for _version, columns in update.AA_VERSION_GATES.values():
+            for column in columns:
+                self.assertIn(column, update.SCORE_MAPPINGS)
+
+    def test_the_omniscience_page_names_its_version(self) -> None:
+        import update
+
+        page = '"title":"AA-Omniscience v1.1: Knowledge" ... AA-Omniscience v1.1 ... AA-Omniscience v1'
+        self.assertEqual(update.aa_omniscience_version(lambda url: page), "1.1")
+        self.assertIsNone(update.aa_omniscience_version(lambda url: None))
+
+    def test_a_blocked_column_is_not_written(self) -> None:
+        import update
+
+        doc = {"benchmarks": {}, "models": [{"name": "m", "scores": {}, "scores_updated": {},
+                                             "scores_source": {}}]}
+        by_slug = {"m": {"slug": "m", "evaluations": {
+            "artificial_analysis_intelligence_index": 61.2, "omniscience": 12.0}}}
+        stated = {"intelligence_index": "5.1", "omniscience": "1.1"}
+        with mock.patch.dict(update.AA_STATED_VERSIONS, stated, clear=True), \
+                mock.patch.object(update._fetch_warnings, "record"):
+            update.update_scores(doc, by_slug)
+        scores = doc["models"][0]["scores"]
+        self.assertNotIn("aa_intelligence_index_5_0", scores)
+        self.assertEqual(scores.get("aa_omniscience_1_1"), 12.0)
 
 
 if __name__ == "__main__":
