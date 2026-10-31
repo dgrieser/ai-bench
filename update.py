@@ -47,6 +47,7 @@ import fetch_toolathlon
 import fetch_vals
 import fetch_zerobench
 import fetch_arena
+import fetch_arc_prize
 from _context import format_context_tokens, snap_context_tokens
 from _params import fetch_hf_params, normalize_params
 from _precedence import (
@@ -80,6 +81,7 @@ from _precedence import (
     VALS_KEY_URLS,
     ZEROBENCH_SOURCE_URL,
     ARENA_KEY_URLS,
+    ARC_PRIZE_KEY_URLS,
     is_fetcher_source,
     may_overwrite,
     source_rank,
@@ -105,6 +107,7 @@ from _mcp_atlas_mapping import load_mcp_atlas_to_slug_mapping
 from _swe_bench_pro_v2_mapping import load_swe_bench_pro_v2_to_slug_mapping
 from _zerobench_mapping import load_zerobench_to_slug_mapping
 from _arena_mapping import load_arena_to_slug_mapping
+from _arc_prize_mapping import load_arc_prize_to_slug_mapping
 from _cybergym_mapping import load_cybergym_to_slug_mapping
 from _sec_bench_mapping import load_sec_bench_to_slug_mapping
 from _hle_diamond_mapping import load_hle_diamond_to_slug_mapping
@@ -144,6 +147,7 @@ MCP_ATLAS_SCRIPT = Path(__file__).resolve().with_name("fetch_mcp_atlas.py")
 SWE_BENCH_PRO_V2_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_bench_pro_v2.py")
 ZEROBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_zerobench.py")
 ARENA_SCRIPT = Path(__file__).resolve().with_name("fetch_arena.py")
+ARC_PRIZE_SCRIPT = Path(__file__).resolve().with_name("fetch_arc_prize.py")
 CYBERGYM_SCRIPT = Path(__file__).resolve().with_name("fetch_cybergym.py")
 SEC_BENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_sec_bench.py")
 HLE_DIAMOND_SCRIPT = Path(__file__).resolve().with_name("fetch_hle_diamond.py")
@@ -467,6 +471,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-arena",
         action="store_true",
         help="Skip fetching Arena leaderboard scores from its Hugging Face dataset.",
+    )
+    parser.add_argument(
+        "--skip-arc-prize",
+        action="store_true",
+        help="Skip fetching ARC-AGI-1, -2 and -3 scores from ARC Prize's leaderboard.",
     )
     parser.add_argument(
         "--skip-cybergym",
@@ -2277,6 +2286,57 @@ def update_arena_scores(
     )
 
 
+def build_fetch_arc_prize_cmd(script: Path) -> list[str]:
+    return [sys.executable, str(script), "--format", "json"]
+
+
+def fetch_arc_prize_data(
+    script: Path, mapping_path: Path
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """ARC-AGI-1, -2 and -3 off ARC Prize's own board, one column each.
+
+    fetch_arc_prize.py names the column on every row and one mapping serves
+    all three versions: they are one site's boards and label models alike.
+    """
+    cmd = build_fetch_arc_prize_cmd(script)
+    proc = run_fetch(cmd)
+    if proc.returncode != 0:
+        raise RuntimeError(f"fetch_arc_prize.py failed ({proc.returncode}): {proc.stderr.strip()}")
+
+    payload = json.loads(proc.stdout)
+    if not isinstance(payload, list):
+        raise RuntimeError("Unexpected arc_prize JSON format: expected a list")
+
+    arc_prize_to_slug = load_arc_prize_to_slug_mapping(mapping_path)
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        key = row.get("key")
+        if key not in ARC_PRIZE_KEY_URLS:
+            continue
+        name = row.get("model")
+        if not isinstance(name, str) or not name:
+            continue
+        slug = arc_prize_to_slug.get(name)
+        if not slug:
+            continue
+        # A model listed at several efforts keeps its best run per version.
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
+
+
+def update_arc_prize_scores(
+    doc: dict[str, Any],
+    by_key: dict[str, dict[str, dict[str, Any]]],
+    fill_urls_only: bool = False,
+) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
+    return apply_revision_scores(
+        doc, by_key, ARC_PRIZE_KEY_URLS["arc_agi_3"],
+        key_urls=ARC_PRIZE_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
+
+
 def build_fetch_cybergym_cmd(script: Path) -> list[str]:
     return [sys.executable, str(script), "--format", "json"]
 
@@ -3568,6 +3628,7 @@ def main() -> int:
     swe_bench_pro_v2_path = SWE_BENCH_PRO_V2_SCRIPT
     zerobench_path = ZEROBENCH_SCRIPT
     arena_path = ARENA_SCRIPT
+    arc_prize_path = ARC_PRIZE_SCRIPT
     bfcl_path = BFCL_SCRIPT
     frontierswe_path = FRONTIERSWE_SCRIPT
     programbench_path = PROGRAMBENCH_SCRIPT
@@ -3622,6 +3683,9 @@ def main() -> int:
     )
     arena_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-arena-to-artificialanalysis.json"
+    )
+    arc_prize_mapping_path = Path(__file__).resolve().with_name(
+        "model-name-mapping-arc-prize-to-artificialanalysis.json"
     )
     bfcl_mapping_path = Path(__file__).resolve().with_name(
         "model-name-mapping-bfcl-to-artificialanalysis.json"
@@ -3762,6 +3826,8 @@ def main() -> int:
         listed.append(build_fetch_zerobench_cmd(zerobench_path))
     if not args.skip_arena:
         listed.append(build_fetch_arena_cmd(arena_path))
+    if not args.skip_arc_prize:
+        listed.append(build_fetch_arc_prize_cmd(arc_prize_path))
     if not args.skip_cybergym:
         listed.append(build_fetch_cybergym_cmd(cybergym_path))
     if not args.skip_sec_bench:
@@ -4238,6 +4304,22 @@ def main() -> int:
         )
         changes.extend(arena_changes)
 
+    # ARC Prize: the ARC-AGI versions' own board, over Epoch's copy of it.
+    arc_prize_by_key: dict[str, dict[str, dict[str, Any]]] = {}
+    arc_prize_matched = 0
+    arc_prize_updated = 0
+    if not args.skip_arc_prize:
+        arc_prize_by_key = source_data(
+            fetch_failures, fetch_arc_prize_data, arc_prize_path, arc_prize_mapping_path
+        )
+        arc_prize_matched, arc_prize_updated, arc_prize_changes = source_update(
+            failed_sources, (0, 0, []),
+            "update_arc_prize_scores",
+            update_arc_prize_scores,
+            doc, arc_prize_by_key, fill_urls_only=args.fill_source_urls
+        )
+        changes.extend(arc_prize_changes)
+
     # The security boards: cybergym.io's CyberGym and ExploitGym, and the
     # SEC-bench Pro snapshot the vendors report on. First-party each, over the
     # llm-stats boards and model cards that repeat vendors' numbers for them.
@@ -4403,6 +4485,8 @@ def main() -> int:
         print(f"models returned by zerobench: {len(zerobench_by_slug)}")
     if not args.skip_arena:
         print(f"models returned by arena: {revision_model_count(arena_by_key)}" + revision_breakdown(arena_by_key))
+    if not args.skip_arc_prize:
+        print(f"models returned by arc_prize: {revision_model_count(arc_prize_by_key)}" + revision_breakdown(arc_prize_by_key))
     if not args.skip_cybergym:
         print(f"models returned by cybergym: {revision_model_count(cybergym_by_slug)}" + revision_breakdown(cybergym_by_slug))
     if not args.skip_sec_bench:
@@ -4478,6 +4562,8 @@ def main() -> int:
         print(f"models matched on zerobench: {zerobench_matched}")
     if not args.skip_arena:
         print(f"models matched on arena: {arena_matched}")
+    if not args.skip_arc_prize:
+        print(f"models matched on arc_prize: {arc_prize_matched}")
     if not args.skip_cybergym:
         print(f"models matched on cybergym: {cybergym_matched}")
     if not args.skip_sec_bench:
@@ -4541,6 +4627,8 @@ def main() -> int:
         print(f"{action} from zerobench: {zerobench_updated}")
     if not args.skip_arena:
         print(f"{action} from arena: {arena_updated}")
+    if not args.skip_arc_prize:
+        print(f"{action} from arc_prize: {arc_prize_updated}")
     if not args.skip_cybergym:
         print(f"{action} from cybergym: {cybergym_updated}")
     if not args.skip_sec_bench:

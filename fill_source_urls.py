@@ -32,6 +32,7 @@ import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_bfcl
 import fetch_arena
+import fetch_arc_prize
 import fetch_cybergym
 import fetch_datacurve
 import fetch_deepswe
@@ -125,6 +126,10 @@ COVERED_BY = [
         f"{fetch_arena.DATASET_URL} (one parquet file per arena)",
         fetch_arena.board_url("arena_text"),
     ),
+    (
+        f"{fetch_arc_prize.EVALUATIONS_URL} and {fetch_arc_prize.MODELS_URL}",
+        fetch_arc_prize.LEADERBOARD_URL,
+    ),
 ]
 
 
@@ -205,6 +210,8 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         *((fetch_cybergym.source_url(key), (key,)) for key in fetch_cybergym.KEYS),
         # The snapshot the column is pinned to, not the site root (the newer one).
         *((fetch_sec_bench.source_url(key), (key,)) for key in fetch_sec_bench.KEYS),
+        # ARC Prize's one leaderboard, ranking all three ARC-AGI versions.
+        (fetch_arc_prize.LEADERBOARD_URL, fetch_arc_prize.KEYS),
         # arena.ai's board pages, which the scores cite; the dataset they are
         # read from is Arena's own publication of them.
         *(

@@ -120,6 +120,7 @@ import artificialanalysis
 import fetch_aa_coding_agents
 import fetch_agents_last_exam
 import fetch_arena
+import fetch_arc_prize
 import fetch_bfcl
 import fetch_cybergym
 import fetch_datacurve
@@ -213,6 +214,9 @@ HLE_DIAMOND_SOURCE_URL = canonical(fetch_hle_diamond.URL)
 # what a reader opens. Two columns share the Text page (overall and
 # non-English) and two the Agent page (aggregate and tool hallucination).
 ARENA_KEY_URLS = {key: canonical(fetch_arena.board_url(key)) for key in fetch_arena.BOARDS}
+# ARC Prize's one leaderboard page, for all three ARC-AGI versions it ranks;
+# the JSON files it hydrates from are not a page.
+ARC_PRIZE_KEY_URLS = {key: canonical(fetch_arc_prize.board_url(key)) for key in fetch_arc_prize.KEYS}
 # The leaderboard page, not the CSV it hydrates its table from.
 BFCL_SOURCE_URL = canonical(fetch_bfcl.LEADERBOARD_URL)
 # benchlm.ai's mirror of Datacurve's board, named for the column it feeds;
@@ -311,6 +315,7 @@ def _ranked_prefixes() -> tuple[tuple[str, int], ...]:
         (AGENTS_LAST_EXAM_SOURCE_URL, RANK_BENCHMARK_SITE),
         (ZEROBENCH_SOURCE_URL, RANK_BENCHMARK_SITE),
         *((url, RANK_BENCHMARK_SITE) for url in set(ARENA_KEY_URLS.values())),
+        *((url, RANK_BENCHMARK_SITE) for url in set(ARC_PRIZE_KEY_URLS.values())),
         *((url, RANK_BENCHMARK_SITE) for url in CYBERGYM_KEY_URLS.values()),
         *((url, RANK_BENCHMARK_SITE) for url in set(SEC_BENCH_KEY_URLS.values())),
         (HLE_DIAMOND_SOURCE_URL, RANK_BENCHMARK_SITE),

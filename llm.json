@@ -2079,7 +2079,7 @@
       "name": "ARC-AGI-2",
       "short_name": "ARC-2",
       "category": "Reasoning & Knowledge",
-      "description": "ARC Prize's second abstraction-and-reasoning corpus: novel grid-transformation puzzles that a person solves from two or three examples, built so that memorised knowledge does not help. Scored on the semi-private evaluation set ARC Prize verifies itself. The head of the field is close to the ceiling; its interactive successor, ARC-AGI-3, is the unsaturated one. Read from Epoch AI's copy of the board.",
+      "description": "ARC Prize's second abstraction-and-reasoning corpus: novel grid-transformation puzzles that a person solves from two or three examples, built so that memorised knowledge does not help. Scored on the semi-private evaluation set ARC Prize verifies itself. The head of the field is close to the ceiling; its interactive successor, ARC-AGI-3, is the unsaturated one. Read from ARC Prize's own board, with Epoch AI's copy of it filling the rest.",
       "settings": [
         "accuracy",
         "semi-private set",
@@ -2089,12 +2089,55 @@
       "excludes": [
         "ARC-AGI-1",
         "ARC-AGI-3, the interactive successor",
-        "self-reported public-set scores"
+        "self-reported public-set scores",
+        "Provider Adapter runs, in the provider's own agent harness"
       ],
       "urls": [
         "https://arcprize.org/leaderboard",
         "https://arcprize.org/arc-agi/2/",
         "https://epoch.ai/benchmarks/arc-agi-2"
+      ]
+    },
+    "arc_agi_3": {
+      "name": "ARC-AGI-3",
+      "short_name": "ARC-3",
+      "category": "Reasoning & Knowledge",
+      "description": "ARC Prize's third abstraction-and-reasoning benchmark and the first interactive one: instead of completing a grid from examples, the agent is dropped into novel game-like environments and has to explore, infer the goal and the rules, and act on them. Scored on the semi-private set ARC Prize runs itself, in its own harness, taking each model's best published effort. Far from saturated where ARC-AGI-2 is close to it.",
+      "settings": [
+        "score",
+        "semi-private set",
+        "ARC Prize harness",
+        "best configuration"
+      ],
+      "excludes": [
+        "Provider Adapter runs, in the provider's own agent harness",
+        "ARC-AGI-1 and ARC-AGI-2",
+        "the human panel"
+      ],
+      "urls": [
+        "https://arcprize.org/leaderboard",
+        "https://arcprize.org/arc-agi/3/"
+      ]
+    },
+    "arc_agi_1": {
+      "name": "ARC-AGI-1",
+      "short_name": "ARC-1",
+      "category": "Reasoning & Knowledge",
+      "description": "The original abstraction-and-reasoning corpus: grid-transformation puzzles solved from a few examples. Scored on the semi-private set ARC Prize verifies itself, best published effort per model. Long saturated at the top and superseded by ARC-AGI-2 and -3; kept as a column for the older and smaller models it still separates.",
+      "settings": [
+        "accuracy",
+        "semi-private set",
+        "no tools",
+        "best configuration"
+      ],
+      "excludes": [
+        "ARC-AGI-2 and ARC-AGI-3",
+        "public-eval scores",
+        "Provider Adapter runs"
+      ],
+      "urls": [
+        "https://arcprize.org/leaderboard",
+        "https://arcprize.org/arc-agi/1/"
       ]
     },
     "mmmlu": {
@@ -4329,7 +4372,8 @@
         "aa_omniscience_1_0": -38.9,
         "aa_omniscience_accuracy_1_0": 26.2,
         "aa_omniscience_hallucination_1_0": 88.1,
-        "sec_bench_pro_260617": 0.6
+        "sec_bench_pro_260617": 0.6,
+        "arc_agi_1": 63.7
       },
       "scores_updated": {
         "openbench_index": null,
@@ -4410,7 +4454,8 @@
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "sec_bench_pro_260617": "2026-10-31"
+        "sec_bench_pro_260617": "2026-10-31",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -4491,7 +4536,8 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/minimax-m2-5",
-        "sec_bench_pro_260617": "https://sec-bench.github.io"
+        "sec_bench_pro_260617": "https://sec-bench.github.io",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -4740,6 +4786,13 @@
             "date": "2026-10-30",
             "score": 4.9,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 63.7,
+            "source": "https://arcprize.org/leaderboard"
           }
         ]
       },
@@ -26365,7 +26418,8 @@
         "aa_omniscience_1_0": 4.4,
         "aa_omniscience_accuracy_1_0": 24.3,
         "aa_omniscience_hallucination_1_0": 26.3,
-        "terminal_bench_3_0": 4.6
+        "terminal_bench_3_0": 4.6,
+        "arc_agi_1": 77
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -26454,7 +26508,8 @@
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "terminal_bench_3_0": "2026-10-31"
+        "terminal_bench_3_0": "2026-10-31",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -26543,7 +26598,8 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/glm-5-2",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/glm-5-2",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/glm-5-2",
-        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -27022,6 +27078,13 @@
             "date": "2026-10-30",
             "score": 22.8,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 77,
+            "source": "https://arcprize.org/leaderboard"
           }
         ]
       },
@@ -28815,7 +28878,8 @@
         "aa_intelligence_index_4_3": 6.5,
         "aa_omniscience_1_0": -52.2,
         "aa_omniscience_accuracy_1_0": 15.2,
-        "aa_omniscience_hallucination_1_0": 79.4
+        "aa_omniscience_hallucination_1_0": 79.4,
+        "arc_agi_1": 0.5
       },
       "scores_updated": {
         "openbench_index": null,
@@ -28891,7 +28955,8 @@
         "aa_intelligence_index_4_3": "2026-10-15",
         "aa_omniscience_1_0": "2026-08-09",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -28967,7 +29032,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/llama-4-scout",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/llama-4-scout",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/llama-4-scout",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/llama-4-scout"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/llama-4-scout",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -29175,6 +29241,13 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 0.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-06-25",
@@ -29353,7 +29426,8 @@
         "aa_intelligence_index_4_3": 9.3,
         "aa_omniscience_1_0": -41.9,
         "aa_omniscience_accuracy_1_0": 24.9,
-        "aa_omniscience_hallucination_1_0": 88.9
+        "aa_omniscience_hallucination_1_0": 88.9,
+        "arc_agi_1": 4.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -29430,7 +29504,8 @@
         "aa_intelligence_index_4_3": "2026-10-15",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -29507,7 +29582,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/llama-4-maverick",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/llama-4-maverick",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/llama-4-maverick",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/llama-4-maverick"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/llama-4-maverick",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -29747,6 +29823,13 @@
             "date": "2026-10-30",
             "score": 0,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 4.4,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -35410,7 +35493,8 @@
         "aa_intelligence_index_4_3": 13.1,
         "aa_omniscience_1_0": -27.4,
         "aa_omniscience_accuracy_1_0": 30.5,
-        "aa_omniscience_hallucination_1_0": 83.4
+        "aa_omniscience_hallucination_1_0": 83.4,
+        "arc_agi_1": 21.2
       },
       "scores_updated": {
         "openbench_index": null,
@@ -35487,7 +35571,8 @@
         "aa_intelligence_index_4_3": "2026-09-08",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -35564,7 +35649,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/deepseek-r1",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/deepseek-r1",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/deepseek-r1",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/deepseek-r1"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/deepseek-r1",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -35719,6 +35805,13 @@
             "date": "2026-10-30",
             "score": 1.1,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 21.2,
+            "source": "https://arcprize.org/leaderboard"
           }
         ]
       },
@@ -43760,7 +43853,8 @@
         "aa_intelligence_index_4_3": 12,
         "aa_omniscience_1_0": -44,
         "aa_omniscience_accuracy_1_0": 18.7,
-        "aa_omniscience_hallucination_1_0": 77.2
+        "aa_omniscience_hallucination_1_0": 77.2,
+        "arc_agi_1": 11
       },
       "scores_updated": {
         "openbench_index": null,
@@ -43838,7 +43932,8 @@
         "aa_intelligence_index_4_3": "2026-09-08",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -43916,7 +44011,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -44071,6 +44167,13 @@
             "date": "2026-10-30",
             "score": 1.3,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 11,
+            "source": "https://arcprize.org/leaderboard"
           }
         ]
       },
@@ -54178,7 +54281,8 @@
         "aa_omniscience_accuracy_1_0": 41.6,
         "aa_omniscience_accuracy_1_1": 39.3,
         "aa_omniscience_hallucination_1_0": 67.7,
-        "aa_omniscience_hallucination_1_1": 67.2
+        "aa_omniscience_hallucination_1_1": 67.2,
+        "arc_agi_1": 79.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -54268,7 +54372,8 @@
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -54358,7 +54463,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/inkling",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/inkling",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/inkling",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/inkling"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/inkling",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -54757,6 +54863,13 @@
             "date": "2026-10-30",
             "score": 36.5,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 79.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -56781,7 +56894,8 @@
         "aa_omniscience_1_0": -7.3,
         "aa_omniscience_accuracy_1_0": 35.2,
         "aa_omniscience_hallucination_1_0": 65.7,
-        "sec_bench_pro_260617": 2.3
+        "sec_bench_pro_260617": 2.3,
+        "arc_agi_1": 65.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -56865,7 +56979,8 @@
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "sec_bench_pro_260617": "2026-10-31"
+        "sec_bench_pro_260617": "2026-10-31",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -56949,7 +57064,8 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/kimi-k2-5",
-        "sec_bench_pro_260617": "https://sec-bench.github.io"
+        "sec_bench_pro_260617": "https://sec-bench.github.io",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -57300,6 +57416,13 @@
             "date": "2026-10-30",
             "score": 11.8,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 65.3,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -59011,7 +59134,8 @@
         "aa_intelligence_index_4_3": 43.6,
         "aa_omniscience_1_0": 19.7,
         "aa_omniscience_accuracy_1_0": 47.6,
-        "aa_omniscience_hallucination_1_0": 53.2
+        "aa_omniscience_hallucination_1_0": 53.2,
+        "arc_agi_1": 94.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -59104,7 +59228,8 @@
         "aa_intelligence_index_4_3": "2026-09-19",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -59197,7 +59322,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/kimi-k3",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/kimi-k3",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/kimi-k3",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/kimi-k3"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/kimi-k3",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -59704,6 +59830,13 @@
             "date": "2026-10-30",
             "score": 60.4,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 94.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -61527,7 +61660,8 @@
         "aa_omniscience_accuracy_1_0": 33.2,
         "aa_omniscience_accuracy_1_1": 31.8,
         "aa_omniscience_hallucination_1_0": 63,
-        "aa_omniscience_hallucination_1_1": 60.5
+        "aa_omniscience_hallucination_1_1": 60.5,
+        "arc_agi_1": 84
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -61616,7 +61750,8 @@
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -61705,7 +61840,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/inkling-small",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/inkling-small",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/inkling-small",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/inkling-small"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/inkling-small",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -62042,6 +62178,13 @@
             "date": "2026-10-30",
             "score": 40.1,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 84,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -67057,7 +67200,8 @@
         "aa_omniscience_accuracy_1_0": 15.6,
         "aa_omniscience_accuracy_1_1": 17.3,
         "aa_omniscience_hallucination_1_0": 30.3,
-        "aa_omniscience_hallucination_1_1": 28.6
+        "aa_omniscience_hallucination_1_1": 28.6,
+        "arc_agi_1": 87.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -67146,7 +67290,8 @@
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-08-17",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -67235,7 +67380,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/qwen3-8-27b",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/qwen3-8-27b",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/qwen3-8-27b"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/qwen3-8-27b",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -67580,6 +67726,13 @@
             "date": "2026-10-30",
             "score": 42.4,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 87.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -70593,7 +70746,8 @@
         "aa_omniscience_accuracy_1_0": 27.5,
         "aa_omniscience_accuracy_1_1": 28.2,
         "aa_omniscience_hallucination_1_0": 27.6,
-        "aa_omniscience_hallucination_1_1": 38.3
+        "aa_omniscience_hallucination_1_1": 38.3,
+        "arc_agi_1": 91
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -70687,7 +70841,8 @@
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-08-27",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -70781,7 +70936,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/glm-5-3-flash",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/glm-5-3-flash"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/glm-5-3-flash",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -71194,6 +71350,13 @@
             "date": "2026-10-30",
             "score": 65.8,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 91,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -75343,7 +75506,9 @@
         "aa_intelligence_index_4_3": 39.5,
         "aa_omniscience_1_0": -5.3,
         "aa_omniscience_accuracy_1_0": 46.4,
-        "aa_omniscience_hallucination_1_0": 96.5
+        "aa_omniscience_hallucination_1_0": 96.5,
+        "arc_agi_1": 94.5,
+        "arc_agi_3": 0.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -75435,7 +75600,9 @@
         "aa_intelligence_index_4_3": "2026-09-10",
         "aa_omniscience_1_0": "2026-09-10",
         "aa_omniscience_accuracy_1_0": "2026-09-10",
-        "aa_omniscience_hallucination_1_0": "2026-09-10"
+        "aa_omniscience_hallucination_1_0": "2026-09-10",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -75527,7 +75694,9 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -75936,6 +76105,20 @@
             "date": "2026-10-30",
             "score": 72.9,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.9,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 94.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -76608,7 +76791,8 @@
         "aa_omniscience_accuracy_1_0": 67.2,
         "aa_omniscience_accuracy_1_1": 68.4,
         "aa_omniscience_hallucination_1_0": 72.6,
-        "aa_omniscience_hallucination_1_1": 70
+        "aa_omniscience_hallucination_1_1": 70,
+        "arc_agi_1": 97.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -76704,7 +76888,8 @@
         "aa_omniscience_accuracy_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -76800,7 +76985,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/claude-fable-5-1",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/claude-fable-5-1",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/claude-fable-5-1",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-fable-5-1"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-fable-5-1",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -77333,6 +77519,13 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 97.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-11",
@@ -77557,7 +77750,9 @@
         "aa_omniscience_1_0": -10.3,
         "aa_omniscience_accuracy_1_0": 42.7,
         "aa_omniscience_hallucination_1_0": 92.6,
-        "terminal_bench_3_0": 14.3
+        "terminal_bench_3_0": 14.3,
+        "arc_agi_1": 88,
+        "arc_agi_3": 0.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -77641,7 +77836,9 @@
         "aa_omniscience_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_0": "2026-09-11",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
-        "terminal_bench_3_0": "2026-10-31"
+        "terminal_bench_3_0": "2026-10-31",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -77725,7 +77922,9 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
-        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -78146,6 +78345,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.2,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 88,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-11",
@@ -78374,7 +78587,9 @@
         "aa_omniscience_accuracy_1_1": 42.3,
         "aa_omniscience_hallucination_1_0": 87.9,
         "aa_omniscience_hallucination_1_1": 89.4,
-        "terminal_bench_3_0": 20.8
+        "terminal_bench_3_0": 20.8,
+        "arc_agi_1": 96.5,
+        "arc_agi_3": 0.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -78462,7 +78677,9 @@
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
         "aa_omniscience_hallucination_1_1": "2026-10-28",
-        "terminal_bench_3_0": "2026-10-31"
+        "terminal_bench_3_0": "2026-10-31",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78550,7 +78767,9 @@
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gpt-5-6-terra",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-terra",
         "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-5-6-terra",
-        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -78979,6 +79198,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.8,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 96.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-11",
@@ -79215,7 +79448,9 @@
         "aa_omniscience_1_0": 22,
         "aa_omniscience_accuracy_1_0": 59.4,
         "aa_omniscience_hallucination_1_0": 92.2,
-        "terminal_bench_3_0": 34.6
+        "terminal_bench_3_0": 34.6,
+        "arc_agi_1": 97.5,
+        "arc_agi_3": 7.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -79303,7 +79538,9 @@
         "aa_omniscience_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_0": "2026-09-11",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
-        "terminal_bench_3_0": "2026-10-31"
+        "terminal_bench_3_0": "2026-10-31",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -79391,7 +79628,9 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
-        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -79919,6 +80158,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 7.8,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 97.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-11",
@@ -80176,7 +80429,9 @@
         "aa_omniscience_accuracy_1_0": 62.6,
         "aa_omniscience_accuracy_1_1": 61.6,
         "aa_omniscience_hallucination_1_0": 51.3,
-        "aa_omniscience_hallucination_1_1": 49.8
+        "aa_omniscience_hallucination_1_1": 49.8,
+        "arc_agi_1": 98.5,
+        "arc_agi_3": 62.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -80272,7 +80527,9 @@
         "aa_omniscience_accuracy_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -80368,7 +80625,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-6-astra",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gpt-6-astra",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-6-astra",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-astra"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-astra",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -80895,6 +81154,20 @@
             "date": "2026-10-30",
             "score": 95,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 62.7,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 98.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -85283,7 +85556,8 @@
         "aa_omniscience_accuracy_1_0": 66.2,
         "aa_omniscience_accuracy_1_1": 65.5,
         "aa_omniscience_hallucination_1_0": 58.6,
-        "aa_omniscience_hallucination_1_1": 50.3
+        "aa_omniscience_hallucination_1_1": 50.3,
+        "arc_agi_1": 98.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -85378,7 +85652,8 @@
         "aa_omniscience_accuracy_1_0": "2026-09-25",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-25",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -85473,7 +85748,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/claude-opus-5-5",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/claude-opus-5-5",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/claude-opus-5-5",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-opus-5-5"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-opus-5-5",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -85929,6 +86205,13 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 98.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-22",
@@ -86173,7 +86456,9 @@
         "aa_omniscience_accuracy_1_0": 43.8,
         "aa_omniscience_accuracy_1_1": 39.6,
         "aa_omniscience_hallucination_1_0": 76.7,
-        "aa_omniscience_hallucination_1_1": 79.3
+        "aa_omniscience_hallucination_1_1": 79.3,
+        "arc_agi_1": 86.7,
+        "arc_agi_3": 0.2
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -86267,7 +86552,9 @@
         "aa_omniscience_accuracy_1_0": "2026-09-25",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-25",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -86361,7 +86648,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-6-luna",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gpt-6-luna",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-6-luna",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-luna"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-luna",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -86737,6 +87026,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.2,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 86.7,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-22",
@@ -86970,7 +87273,9 @@
         "aa_intelligence_index_4_3": 47.6,
         "aa_omniscience_1_0": 27.1,
         "aa_omniscience_accuracy_1_0": 54.5,
-        "aa_omniscience_hallucination_1_0": 60.1
+        "aa_omniscience_hallucination_1_0": 60.1,
+        "arc_agi_1": 95.5,
+        "arc_agi_3": 4.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -87060,7 +87365,9 @@
         "aa_intelligence_index_4_3": "2026-10-01",
         "aa_omniscience_1_0": "2026-09-22",
         "aa_omniscience_accuracy_1_0": "2026-09-25",
-        "aa_omniscience_hallucination_1_0": "2026-09-25"
+        "aa_omniscience_hallucination_1_0": "2026-09-25",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -87150,7 +87457,9 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/gpt-6-sol",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/gpt-6-sol",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-6-sol",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-6-sol"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-6-sol",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -87497,6 +87806,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 4.6,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 95.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-09-22",
@@ -87710,7 +88033,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": 83.1,
         "claw_eval": 73.4,
-        "apex_agents": 30.8
+        "apex_agents": 30.8,
+        "arc_agi_2": 76.8
       },
       "scores_updated": {
         "openbench_index": null,
@@ -87781,7 +88105,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "2026-10-08",
         "claw_eval": "2026-10-30",
-        "apex_agents": "2026-10-30"
+        "apex_agents": "2026-10-30",
+        "arc_agi_2": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": null,
@@ -87852,7 +88177,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": "https://huggingface.co/dots-studio/dots3-note-prev/resolve/main/assets/benchmark_appendix_en_multimodal.png",
         "claw_eval": "https://huggingface.co/dots-studio/dots3-note-prev",
-        "apex_agents": "https://huggingface.co/dots-studio/dots3-note-prev"
+        "apex_agents": "https://huggingface.co/dots-studio/dots3-note-prev",
+        "arc_agi_2": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "swe_bench_verified": [
@@ -87916,6 +88242,13 @@
             "date": "2026-10-30",
             "score": 30.8,
             "source": "https://huggingface.co/dots-studio/dots3-note-prev"
+          }
+        ],
+        "arc_agi_2": [
+          {
+            "date": "2026-10-31",
+            "score": 76.8,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -89567,7 +89900,9 @@
         "aa_omniscience_accuracy_1_0": 53.9,
         "aa_omniscience_accuracy_1_1": 51.5,
         "aa_omniscience_hallucination_1_0": 47,
-        "aa_omniscience_hallucination_1_1": 43.3
+        "aa_omniscience_hallucination_1_1": 43.3,
+        "arc_agi_1": 96.5,
+        "arc_agi_3": 24.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -89659,7 +89994,9 @@
         "aa_omniscience_accuracy_1_0": "2026-09-28",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-28",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -89751,7 +90088,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-sonnet-5-5"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -90157,6 +90496,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 24.3,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 96.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "osworld_2_0_vendor": [
           {
             "date": "2026-10-08",
@@ -90368,7 +90721,9 @@
         "aa_omniscience_accuracy_1_0": 62.1,
         "aa_omniscience_accuracy_1_1": 61.8,
         "aa_omniscience_hallucination_1_0": 54.3,
-        "aa_omniscience_hallucination_1_1": 51.9
+        "aa_omniscience_hallucination_1_1": 51.9,
+        "arc_agi_1": 98.5,
+        "arc_agi_3": 52.7
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -90459,7 +90814,9 @@
         "aa_omniscience_accuracy_1_0": "2026-09-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-29",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -90550,7 +90907,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-6-1-sol",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gpt-6-1-sol",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-6-1-sol",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-1-sol"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-6-1-sol",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -90911,6 +91270,20 @@
             "date": "2026-10-30",
             "score": 94.2,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 52.7,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 98.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
@@ -91427,7 +91800,9 @@
         "aa_omniscience_accuracy_1_0": 49.9,
         "aa_omniscience_accuracy_1_1": 48.3,
         "aa_omniscience_hallucination_1_0": 15.1,
-        "aa_omniscience_hallucination_1_1": 4.3
+        "aa_omniscience_hallucination_1_1": 4.3,
+        "arc_agi_1": 98.5,
+        "arc_agi_3": 49.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -91519,7 +91894,9 @@
         "aa_omniscience_accuracy_1_0": "2026-10-01",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-01",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -91611,7 +91988,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gemini-4-argon",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gemini-4-argon",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gemini-4-argon",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gemini-4-argon"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gemini-4-argon",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -91972,6 +92351,20 @@
             "date": "2026-10-30",
             "score": 91.3,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 49.8,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 98.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "osworld_2_0_vendor": [
@@ -94845,7 +95238,9 @@
         "aa_omniscience_accuracy_1_0": 36.4,
         "aa_omniscience_accuracy_1_1": 34.7,
         "aa_omniscience_hallucination_1_0": 40.4,
-        "aa_omniscience_hallucination_1_1": 34.2
+        "aa_omniscience_hallucination_1_1": 34.2,
+        "arc_agi_1": 89,
+        "arc_agi_3": 0.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -94936,7 +95331,9 @@
         "aa_omniscience_accuracy_1_0": "2026-10-08",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-08",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -95027,7 +95424,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/claude-haiku-5-5",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/claude-haiku-5-5",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/claude-haiku-5-5",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-haiku-5-5"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/claude-haiku-5-5",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -95390,6 +95789,20 @@
             "date": "2026-10-30",
             "score": 61.3,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.5,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 89,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "osworld_2_0_vendor": [
@@ -96725,7 +97138,9 @@
         "aa_omniscience_accuracy_1_0": 47.4,
         "aa_omniscience_accuracy_1_1": 42.7,
         "aa_omniscience_hallucination_1_0": 29.3,
-        "aa_omniscience_hallucination_1_1": 20
+        "aa_omniscience_hallucination_1_1": 20,
+        "arc_agi_1": 90.2,
+        "arc_agi_3": 1.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -96820,7 +97235,9 @@
         "aa_omniscience_accuracy_1_0": "2026-10-13",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-13",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -96915,7 +97332,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/grok-4-7",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/grok-4-7",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/grok-4-7",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/grok-4-7"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/grok-4-7",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -97258,6 +97677,20 @@
             "date": "2026-10-30",
             "score": 61.4,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 1.8,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 90.2,
+            "source": "https://arcprize.org/leaderboard"
           }
         ]
       },
@@ -97761,7 +98194,9 @@
         "aa_omniscience_accuracy_1_0": 23.3,
         "aa_omniscience_accuracy_1_1": 21.2,
         "aa_omniscience_hallucination_1_0": 35.8,
-        "aa_omniscience_hallucination_1_1": 30.5
+        "aa_omniscience_hallucination_1_1": 30.5,
+        "arc_agi_1": 22.7,
+        "arc_agi_2": 1.9
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -97844,7 +98279,9 @@
         "aa_omniscience_accuracy_1_0": "2026-10-15",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-15",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_2": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -97927,7 +98364,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_2": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -98123,6 +98562,20 @@
             "score": 30.7,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl"
           }
+        ],
+        "arc_agi_2": [
+          {
+            "date": "2026-10-31",
+            "score": 1.9,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 22.7,
+            "source": "https://arcprize.org/leaderboard"
+          }
         ]
       },
       "aa_variant": {
@@ -98287,7 +98740,9 @@
         "aa_omniscience_accuracy_1_0": 39.3,
         "aa_omniscience_accuracy_1_1": 42,
         "aa_omniscience_hallucination_1_0": 24.1,
-        "aa_omniscience_hallucination_1_1": 28
+        "aa_omniscience_hallucination_1_1": 28,
+        "arc_agi_1": 89,
+        "arc_agi_3": 0.1
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -98372,7 +98827,9 @@
         "aa_omniscience_accuracy_1_0": "2026-10-15",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-15",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31",
+        "arc_agi_3": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -98457,7 +98914,9 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/muse-spark-open",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/muse-spark-open",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/muse-spark-open",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/muse-spark-open"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/muse-spark-open",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
+        "arc_agi_3": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -98696,6 +99155,20 @@
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
         ],
+        "arc_agi_3": [
+          {
+            "date": "2026-10-31",
+            "score": 0.1,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 89,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
         "mmmu_pro": [
           {
             "date": "2026-10-15",
@@ -98894,7 +99367,8 @@
         "aa_omniscience_accuracy_1_0": 33.1,
         "aa_omniscience_accuracy_1_1": 30.7,
         "aa_omniscience_hallucination_1_0": 47.2,
-        "aa_omniscience_hallucination_1_1": 41
+        "aa_omniscience_hallucination_1_1": 41,
+        "arc_agi_1": 74
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -98984,7 +99458,8 @@
         "aa_omniscience_accuracy_1_0": "2026-10-16",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-16",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -99074,7 +99549,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/reflection-beam",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/reflection-beam",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/reflection-beam",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/reflection-beam"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/reflection-beam",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -99357,6 +99833,13 @@
             "score": 23.5,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
           }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 74,
+            "source": "https://arcprize.org/leaderboard"
+          }
         ]
       },
       "aa_variant": {
@@ -99553,7 +100036,8 @@
         "aa_omniscience_accuracy_1_0": 42.9,
         "aa_omniscience_accuracy_1_1": 39.6,
         "aa_omniscience_hallucination_1_0": 66.8,
-        "aa_omniscience_hallucination_1_1": 64.1
+        "aa_omniscience_hallucination_1_1": 64.1,
+        "arc_agi_1": 94.5
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -99645,7 +100129,8 @@
         "aa_omniscience_accuracy_1_0": "2026-10-19",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-10-19",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "arc_agi_1": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -99737,7 +100222,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
+        "arc_agi_1": "https://arcprize.org/leaderboard"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -100047,6 +100533,13 @@
             "date": "2026-10-30",
             "score": 78.1,
             "source": "https://epoch.ai/benchmarks/arc-agi-2"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-10-31",
+            "score": 94.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [

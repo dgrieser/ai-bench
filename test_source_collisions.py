@@ -183,6 +183,20 @@ class TestRowFetchers(unittest.TestCase):
                 self.assertEqual(by_key["sec_bench_pro"]["m"]["score"], 45.0)
                 self.assertEqual(by_key["sec_bench_pro_260617"]["m"]["score"], 58.4)
 
+    def test_arc_prize_best_row_wins_within_its_version_in_either_payload_order(self) -> None:
+        mapping = write_json({"model": "m", "model (05/28)": "m"})
+        rows = [
+            {"key": "arc_agi_3", "model": "model", "score": 0.9},
+            {"key": "arc_agi_3", "model": "model (05/28)", "score": 3.4},
+            {"key": "arc_agi_2", "model": "model", "score": 11.0},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_arc_prize_data(SCRIPT, mapping)
+                self.assertEqual(by_key["arc_agi_3"]["m"]["score"], 3.4)
+                self.assertEqual(by_key["arc_agi_2"]["m"]["score"], 11.0)
+
     def test_arena_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
         # fetch_arena.py names the column on every row, so a model listed at
         # two efforts folds per board, and its rating on one board never
