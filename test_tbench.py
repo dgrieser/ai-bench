@@ -95,8 +95,9 @@ BOARD_2_0 = board(
         row_2_0("Delta", 12.5),
     ],
 )
-BOARDS = {"terminal_bench_4_0": BOARD_4_0, "terminal_bench_2_1": BOARD_2_1,
-          "terminal_bench_2_0": BOARD_2_0}
+BOARD_3_0 = board("terminal_bench_3_0", [row("Alpha", 42.7, agent="mini-SWE-agent")])
+BOARDS = {"terminal_bench_4_0": BOARD_4_0, "terminal_bench_3_0": BOARD_3_0,
+          "terminal_bench_2_1": BOARD_2_1, "terminal_bench_2_0": BOARD_2_0}
 
 
 def served(boards: dict = BOARDS):
@@ -272,7 +273,7 @@ class TestIngest(unittest.TestCase):
         doc = {"benchmarks": {k: {} for k in tb.BOARDS}, "models": [model]}
         by_key = {k: {"alpha": {"score": 50.0 + i}} for i, k in enumerate(tb.BOARDS)}
         matched, updated, _ = update.update_tbench_scores(doc, by_key)
-        self.assertEqual((matched, updated), (1, 3))
+        self.assertEqual((matched, updated), (1, len(tb.BOARDS)))
         for key in tb.BOARDS:
             with self.subTest(key=key):
                 self.assertEqual(model["scores_source"][key], tb.board_url(key))

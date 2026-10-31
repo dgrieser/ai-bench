@@ -876,14 +876,15 @@ class TestEveryScrapedPageIsRanked(unittest.TestCase):
         )
 
     def test_every_tbench_board_ranks_as_the_benchmarks_own_site(self) -> None:
-        for version in ("4.0", "2.1", "2.0"):
+        for version in ("4.0", "3.0", "2.1", "2.0"):
             with self.subTest(version=version):
                 url = f"https://www.tbench.ai/leaderboard/terminal-bench/{version}"
                 self.assertEqual(source_rank(url), RANK_BENCHMARK_SITE)
-        # The host root is not a board, and the 3.0 board feeds no column.
+        # The host root is not a board, and a version with no column ranks as
+        # a hand entry.
         self.assertEqual(source_rank("https://www.tbench.ai"), RANK_HAND_ENTERED)
         self.assertEqual(
-            source_rank("https://www.tbench.ai/leaderboard/terminal-bench/3.0"),
+            source_rank("https://www.tbench.ai/leaderboard/terminal-bench/1.0"),
             RANK_HAND_ENTERED,
         )
 
