@@ -902,6 +902,26 @@
         "https://www.vals.ai/benchmarks/terminal-bench-4"
       ]
     },
+    "terminal_bench_3_0": {
+      "name": "Terminal-Bench 3.0",
+      "short_name": "Term 3.0",
+      "category": "Agentic Tool Use",
+      "description": "The Terminal-Bench release before 4.0: 74 tasks in sandboxed terminal environments, each with its own verifier, scored as the share of tasks resolved. Superseded by 4.0, which removed 8 of its tasks and recalibrated every task's time and resource budget, so the two are separate columns. Rows are a model under the agent its submitter ran — Codex, Claude Code, mini-SWE-agent — taking each model's best.",
+      "settings": [
+        "Resolved %",
+        "74 tasks",
+        "agentic",
+        "superseded"
+      ],
+      "excludes": [
+        "Terminal-Bench 4.0, 2.1 and 2.0",
+        "a bare “Terminal-Bench” naming no version"
+      ],
+      "urls": [
+        "https://www.tbench.ai/leaderboard/terminal-bench/3.0",
+        "https://www.tbench.ai/news/terminal-bench-4-0"
+      ]
+    },
     "terminal_bench_2_1": {
       "name": "Terminal-Bench 2.1",
       "short_name": "Term 2.1",
@@ -26344,7 +26364,8 @@
         "aa_intelligence_index_4_3": 33.7,
         "aa_omniscience_1_0": 4.4,
         "aa_omniscience_accuracy_1_0": 24.3,
-        "aa_omniscience_hallucination_1_0": 26.3
+        "aa_omniscience_hallucination_1_0": 26.3,
+        "terminal_bench_3_0": 4.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -26432,7 +26453,8 @@
         "aa_intelligence_index_4_3": "2026-09-19",
         "aa_omniscience_1_0": "2026-08-07",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
-        "aa_omniscience_hallucination_1_0": "2026-08-07"
+        "aa_omniscience_hallucination_1_0": "2026-08-07",
+        "terminal_bench_3_0": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -26520,7 +26542,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/glm-5-2",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/glm-5-2",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/glm-5-2",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/glm-5-2"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/glm-5-2",
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -26685,6 +26708,13 @@
             "date": "2026-09-17",
             "score": 1,
             "source": "https://artificialanalysis.ai/models/glm-5-2"
+          }
+        ],
+        "terminal_bench_3_0": [
+          {
+            "date": "2026-10-31",
+            "score": 4.6,
+            "source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
           }
         ],
         "terminal_bench_2_1": [
@@ -66053,7 +66083,8 @@
         "aa_omniscience_accuracy_1_0": 33.9,
         "aa_omniscience_accuracy_1_1": 32.3,
         "aa_omniscience_hallucination_1_0": 29.6,
-        "aa_omniscience_hallucination_1_1": 38.9
+        "aa_omniscience_hallucination_1_1": 38.9,
+        "terminal_bench_3_0": 32.4
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -66149,7 +66180,8 @@
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-08-19",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "terminal_bench_3_0": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -66245,7 +66277,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/glm-5-3",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/glm-5-3",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/glm-5-3",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/glm-5-3"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/glm-5-3",
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -66454,6 +66487,13 @@
             "date": "2026-10-03",
             "score": 41.9,
             "source": "https://artificialanalysis.ai/models/glm-5-3"
+          }
+        ],
+        "terminal_bench_3_0": [
+          {
+            "date": "2026-10-31",
+            "score": 32.4,
+            "source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
           }
         ],
         "terminal_bench_2_1": [
@@ -77516,7 +77556,8 @@
         "aa_intelligence_index_4_3": 37.3,
         "aa_omniscience_1_0": -10.3,
         "aa_omniscience_accuracy_1_0": 42.7,
-        "aa_omniscience_hallucination_1_0": 92.6
+        "aa_omniscience_hallucination_1_0": 92.6,
+        "terminal_bench_3_0": 14.3
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -77599,7 +77640,8 @@
         "aa_intelligence_index_4_3": "2026-09-19",
         "aa_omniscience_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_0": "2026-09-11",
-        "aa_omniscience_hallucination_1_0": "2026-09-11"
+        "aa_omniscience_hallucination_1_0": "2026-09-11",
+        "terminal_bench_3_0": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -77682,7 +77724,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/gpt-5-6-luna",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-luna",
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -77804,6 +77847,13 @@
             "date": "2026-10-03",
             "score": 11.6,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-luna"
+          }
+        ],
+        "terminal_bench_3_0": [
+          {
+            "date": "2026-10-31",
+            "score": 14.3,
+            "source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
           }
         ],
         "terminal_bench_2_1": [
@@ -78323,7 +78373,8 @@
         "aa_omniscience_accuracy_1_0": 46.8,
         "aa_omniscience_accuracy_1_1": 42.3,
         "aa_omniscience_hallucination_1_0": 87.9,
-        "aa_omniscience_hallucination_1_1": 89.4
+        "aa_omniscience_hallucination_1_1": 89.4,
+        "terminal_bench_3_0": 20.8
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -78410,7 +78461,8 @@
         "aa_omniscience_accuracy_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_1": "2026-10-28",
         "aa_omniscience_hallucination_1_0": "2026-09-11",
-        "aa_omniscience_hallucination_1_1": "2026-10-28"
+        "aa_omniscience_hallucination_1_1": "2026-10-28",
+        "terminal_bench_3_0": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -78497,7 +78549,8 @@
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-5-6-terra",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gpt-5-6-terra",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-terra",
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-5-6-terra"
+        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gpt-5-6-terra",
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -78613,6 +78666,13 @@
             "date": "2026-09-17",
             "score": 35.4,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-terra"
+          }
+        ],
+        "terminal_bench_3_0": [
+          {
+            "date": "2026-10-31",
+            "score": 20.8,
+            "source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
           }
         ],
         "terminal_bench_2_1": [
@@ -79154,7 +79214,8 @@
         "aa_intelligence_index_4_3": 47,
         "aa_omniscience_1_0": 22,
         "aa_omniscience_accuracy_1_0": 59.4,
-        "aa_omniscience_hallucination_1_0": 92.2
+        "aa_omniscience_hallucination_1_0": 92.2,
+        "terminal_bench_3_0": 34.6
       },
       "scores_updated": {
         "openbench_index": "2026-10-31",
@@ -79241,7 +79302,8 @@
         "aa_intelligence_index_4_3": "2026-09-19",
         "aa_omniscience_1_0": "2026-09-11",
         "aa_omniscience_accuracy_1_0": "2026-09-11",
-        "aa_omniscience_hallucination_1_0": "2026-09-11"
+        "aa_omniscience_hallucination_1_0": "2026-09-11",
+        "terminal_bench_3_0": "2026-10-31"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -79328,7 +79390,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/gpt-5-6-sol",
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
-        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol"
+        "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/gpt-5-6-sol",
+        "terminal_bench_3_0": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -79521,6 +79584,13 @@
             "date": "2026-10-03",
             "score": 39.9,
             "source": "https://artificialanalysis.ai/models/gpt-5-6-sol"
+          }
+        ],
+        "terminal_bench_3_0": [
+          {
+            "date": "2026-10-31",
+            "score": 34.6,
+            "source": "https://www.tbench.ai/leaderboard/terminal-bench/3.0"
           }
         ],
         "terminal_bench_2_1": [
