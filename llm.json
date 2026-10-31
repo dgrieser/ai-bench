@@ -2170,7 +2170,7 @@
       "name": "OSWorld 2.0 2026.08.08",
       "short_name": "OSW 2.0A",
       "category": "Visual Reasoning",
-      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2026.08.08, the first re-release, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 31.4 here and 44.3 on the bug-fix 2.1 — so 2026.06.24 is a separate column and 2.1 gets one once enough models are scored on it. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
+      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2026.08.08, the first re-release, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 31.4 here and 44.3 on the bug-fix 2.1 — so 2026.06.24 and 2.1 are separate columns. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
       "settings": [
         "binary accuracy",
         "full 108-task set",
@@ -2182,6 +2182,31 @@
         "the 82-task offline set",
         "150- and 300-step runs",
         "releases 2026.06.24 and 2.1",
+        "OSWorld and OSWorld-Verified",
+        "vendor-reported scores"
+      ],
+      "urls": [
+        "https://osworld-v2.xlang.ai",
+        "https://arxiv.org/abs/2606.29537",
+        "https://github.com/xlang-ai/OSWorld-V2"
+      ]
+    },
+    "osworld_2_1": {
+      "name": "OSWorld 2.1",
+      "short_name": "OSW 2.1",
+      "category": "Visual Reasoning",
+      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2.1, the bug-fix release the maintainers now recommend, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 44.3 here and 31.4 on 2026.08.08 — so each release is its own column. No tracked model is scored on it yet. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
+      "settings": [
+        "binary accuracy",
+        "full 108-task set",
+        "max 500 steps",
+        "release 2.1"
+      ],
+      "excludes": [
+        "the partial (checkpoint) score",
+        "the 82-task offline set",
+        "150- and 300-step runs",
+        "releases 2026.06.24 and 2026.08.08",
         "OSWorld and OSWorld-Verified",
         "vendor-reported scores"
       ],

@@ -23,10 +23,10 @@ them are one measurement:
     44.3 on 2.1. So a release gets a column of its own, the same rule
     _revisions.py applies to every other re-released board, and a release in
     RELEASES below is the only way a row reaches one: 2026.06.24 feeds
-    osworld_2_0_2026_06_24 and 2026.08.08 feeds osworld_2_0_2026_08_08. 2.1
-    scores a single model and has no column yet; its rows are skipped and
-    reported on stderr with how many models it scores, never folded into a
-    neighbour, so a release that fills up is noticed.
+    osworld_2_0_2026_06_24, 2026.08.08 feeds osworld_2_0_2026_08_08 and 2.1
+    feeds osworld_2_1. A release not listed there is skipped and reported on
+    stderr with how many models it scores, never folded into a neighbour, so
+    the next one is noticed.
   * *Step budget.* Rows are published at 150, 300 and 500 steps; the paper's
     primary metric is at 500, and that is the only budget read.
   * *Dataset scope.* The "offline set" is the 82 tasks runnable without
@@ -106,13 +106,15 @@ V2_DATASET_SCOPE = "full"
 V2_METRIC = "binaryAccuracy"
 
 # Release label, as the payload spells it -> the llm.json column it feeds.
-# 2.1 is deliberately absent until enough models are scored on it to rank (see
-# the module docstring); adding one here needs its column in llm.json too.
+# Adding one here needs its column in llm.json too. 2.1, the bug-fix release
+# the maintainers recommend, scores no tracked model yet; its column fills as
+# the board's runs move onto it.
 # Scores a lab reports for itself never come through here: they are filed
 # under osworld_2_0_vendor, by the llm-stats and Hugging Face fetchers.
 RELEASES: dict[str, str] = {
     "v2026.06.24": "osworld_2_0_2026_06_24",
     "v2026.08.08": "osworld_2_0_2026_08_08",
+    "v2.1": "osworld_2_1",
 }
 
 # The fields a 2.0 row has to carry to be read at all. Without one of them the

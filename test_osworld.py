@@ -43,7 +43,7 @@ def payload(*results: dict, **overrides) -> dict:
     doc = {
         "benchmarkVersion": "OSWorld 2.0",
         "taskVersion": "v2026.06.24",
-        "releaseVersions": ["v2026.06.24", "v2026.08.08", "v2.1"],
+        "releaseVersions": ["v2026.06.24", "v2026.08.08", "v2.1", "v2.2"],
         "defaultResultReleaseVersion": "v2026.06.24",
         "defaultResultDatasetScope": "full",
         "datasetSize": 108,
@@ -86,12 +86,13 @@ class TestV2Filters(unittest.TestCase):
                 result("Alpha", 20.6),
                 result("Alpha", 31.43, releaseVersion="v2026.08.08"),
                 result("Alpha", 44.33, releaseVersion="v2.1"),
-                result("Beta", 45.0, releaseVersion="v2.1"),
+                result("Alpha", 47.0, releaseVersion="v2.2"),
+                result("Beta", 45.0, releaseVersion="v2.2"),
             ))
-        self.assertEqual([r["release"] for r in rows], ["v2026.06.24", "v2026.08.08"])
+        self.assertEqual([r["release"] for r in rows], ["v2026.06.24", "v2026.08.08", "v2.1"])
         report = err.getvalue()
-        self.assertNotIn("v2026.08.08", report)
-        self.assertIn("'v2.1', which has no llm.json column: 2 model(s)", report)
+        self.assertNotIn("v2.1'", report)
+        self.assertIn("'v2.2', which has no llm.json column: 2 model(s)", report)
 
     def test_the_two_tracked_releases_feed_their_dated_columns(self) -> None:
         rows = parse(payload(
