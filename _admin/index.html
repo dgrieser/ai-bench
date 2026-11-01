@@ -4578,6 +4578,34 @@ function benchForm(text, { derived = false, disabled = false, onInput, icon = nu
 
 const sameValue = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
+/* Chrome on Android scrolls a focused field into view as the keyboard opens,
+   and on this page lands somewhere else -- the open card goes off screen and
+   the cards below it come into view. So the page puts it back itself, once the
+   keyboard has finished resizing the viewport (it does so in steps). */
+let keepInView = null;
+let keepTimer = 0;
+function focusInView(field) {
+  if (!field) return;
+  field.focus({ preventScroll: true });
+  field.scrollIntoView({ block: "center" });
+  keepInView = { field, until: Date.now() + 1500 };
+}
+function settleFocused() {
+  clearTimeout(keepTimer);
+  keepTimer = setTimeout(() => {
+    const field = document.activeElement;
+    if (state.tab !== "benchmarks" || !field?.matches?.("#view input, #view textarea")) return;
+    if (field.type === "search" || field.type === "checkbox") return;
+    const box = field.getBoundingClientRect();
+    const top = document.querySelector("header")?.offsetHeight || 0;
+    const bottom = window.visualViewport?.height ?? window.innerHeight;
+    const pinned = keepInView?.field === field && Date.now() < keepInView.until;
+    if (pinned || box.top < top || box.bottom > bottom) field.scrollIntoView({ block: "center" });
+  }, 80);
+}
+window.visualViewport?.addEventListener("resize", settleFocused);
+window.addEventListener("resize", settleFocused);
+
 function renderBenchmarks() {
   const box = el("div", { className: "stack" });
   box.append(el("p", { className: "note-text" },
@@ -4619,11 +4647,17 @@ function renderBenchmarkCard(key, bench) {
   const derived = bench?.derived === true;
   const card = el("details", { className: `card bench-card${existing ? " answered" : ""}` });
   card.open = state.benchOpen.has(key) || Boolean(existing);
+  /* Opened by a tap, the card takes the keyboard straight to its first field
+     and keeps it in view (focusInView). A card opened by a render does not:
+     the toggle event fires for that too, so the tap is what is checked. */
+  let tapped = false;
   card.ontoggle = () => {
     if (card.open) state.benchOpen.add(key);
     else state.benchOpen.delete(key);
+    if (card.open && tapped) focusInView(card.querySelector(".field input, .field textarea"));
+    tapped = false;
   };
-  card.append(el("summary", {}, [
+  card.append(el("summary", { onclick: () => { tapped = true; } }, [
     el("span", { className: "subject" }, bench?.name || key),
     el("div", { className: "chips" }, [
       chip("", key),
@@ -4650,7 +4684,10 @@ function renderBenchmarkCard(key, bench) {
     card.classList.toggle("answered", ok);
     refreshFooter();
   };
-  form = benchForm(text, { derived, onInput: commit, icon: bench?.icon_svg });
+  form = benchForm(text, {
+    derived, icon: bench?.icon_svg,
+    onInput: () => { commit(); state.benchOrderRedraw?.(); },
+  });
   card.append(form.box);
   if (derived) {
     card.append(el("p", { className: "note-text" },
@@ -4667,6 +4704,17 @@ function renderBenchmarkCard(key, bench) {
    benchmark under its category in the order the categories first appear. The
    draft is the record's own `order`; a column llm.json gained since the draft
    was made goes back to where llm.json has it, and one it lost drops out. */
+/* A column as it will read once the drafted edit to it lands, so the order
+   list shows the short name and category being typed, not llm.json's. */
+function benchAsDrafted(key) {
+  const bench = { ...(state.llm?.benchmarks?.[key] || {}) };
+  for (const [field, value] of Object.entries(state.answers.get(BENCH_EDIT_KEY(key))?.fields || {})) {
+    if (value === null) delete bench[field];
+    else bench[field] = value;
+  }
+  return bench;
+}
+
 function benchOrderDraft() {
   const current = Object.keys(state.llm?.benchmarks || {});
   const record = state.answers.get(BENCH_ORDER_KEY);
@@ -4707,7 +4755,6 @@ function movedKeys(order, current) {
 
 function renderBenchmarkOrder() {
   const current = Object.keys(state.llm?.benchmarks || {});
-  const benches = state.llm?.benchmarks || {};
   let order = benchOrderDraft();
   const card = el("details", { className: "card bench-order" });
   card.open = state.benchOpen.has(BENCH_ORDER_KEY) || state.answers.has(BENCH_ORDER_KEY);
@@ -4732,9 +4779,11 @@ function renderBenchmarkOrder() {
     }
     card.classList.toggle("answered", changed);
     const moved = movedKeys(order, current).size;
-    summaryChips.replaceChildren(
+    /* replaceChildren prints a null as the word, so nothing is passed instead. */
+    summaryChips.replaceChildren(...[
       chip("", `${current.length} benchmarks`, { prose: true }),
-      changed ? chip("", `${moved} moved`, { prose: true }) : null);
+      changed ? chip("", `${moved} moved`, { prose: true }) : null,
+    ].filter(Boolean));
     reset.disabled = !changed;
     refreshFooter();
   };
@@ -4749,7 +4798,7 @@ function renderBenchmarkOrder() {
     const moved = movedKeys(order, current);
     let lastCat = null;
     order.forEach((key, i) => {
-      const bench = benches[key] || {};
+      const bench = benchAsDrafted(key);
       const cat = bench.category || "Other";
       if (cat !== lastCat) items.push(el("li", { className: "order-cat", ariaHidden: "true" }, cat));
       lastCat = cat;
@@ -4780,6 +4829,7 @@ function renderBenchmarkOrder() {
       items.push(row);
     });
     list.replaceChildren(...items);
+    if (card.classList.contains("sent")) list.querySelectorAll("button").forEach((b) => { b.disabled = true; });
     if (focusKey) {
       const row = list.querySelector(`[data-key="${CSS.escape(focusKey)}"]`);
       /* The arrow just pressed, or its twin when the row hit an end. */
@@ -4852,6 +4902,8 @@ function renderBenchmarkOrder() {
 
   const reset = el("button", { type: "button", className: "btn ghost tiny" }, "Undo changes");
   reset.onclick = () => { order = [...current]; draw(); commit(); };
+  /* For the benchmark cards below: an edit typed there redraws the labels. */
+  state.benchOrderRedraw = () => { if (current.length) draw(); };
   card.append(list, el("div", { className: "card-foot" }, reset));
   draw();
   commit();
