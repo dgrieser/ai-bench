@@ -4606,6 +4606,26 @@ function settleFocused() {
 window.visualViewport?.addEventListener("resize", settleFocused);
 window.addEventListener("resize", settleFocused);
 
+/* A benchmark card's summary. Tapped open, the card takes the keyboard to its
+   first field, and does it inside the tap: Chrome on Android raises the
+   keyboard for a focus() only within the gesture, and a toggle event comes
+   after it. Tapped while another field has the keyboard, the summary does not
+   take focus on the way (mousedown), or the keyboard would drop between the
+   two fields and focus would be left behind in the old card. */
+const isTyping = () => document.activeElement?.matches?.(
+  "input:not([type=checkbox], [type=radio], [type=button]), textarea, select");
+function openToField(card, kids) {
+  const summary = el("summary", {}, kids);
+  summary.addEventListener("mousedown", (event) => { if (isTyping()) event.preventDefault(); });
+  summary.addEventListener("click", (event) => {
+    if (card.open) return;   // closing: the browser's own toggle
+    event.preventDefault();
+    card.open = true;
+    focusInView(card.querySelector(".field input, .field textarea"));
+  });
+  return summary;
+}
+
 function renderBenchmarks() {
   const box = el("div", { className: "stack" });
   box.append(el("p", { className: "note-text" },
@@ -4647,17 +4667,11 @@ function renderBenchmarkCard(key, bench) {
   const derived = bench?.derived === true;
   const card = el("details", { className: `card bench-card${existing ? " answered" : ""}` });
   card.open = state.benchOpen.has(key) || Boolean(existing);
-  /* Opened by a tap, the card takes the keyboard straight to its first field
-     and keeps it in view (focusInView). A card opened by a render does not:
-     the toggle event fires for that too, so the tap is what is checked. */
-  let tapped = false;
   card.ontoggle = () => {
     if (card.open) state.benchOpen.add(key);
     else state.benchOpen.delete(key);
-    if (card.open && tapped) focusInView(card.querySelector(".field input, .field textarea"));
-    tapped = false;
   };
-  card.append(el("summary", { onclick: () => { tapped = true; } }, [
+  card.append(openToField(card, [
     el("span", { className: "subject" }, bench?.name || key),
     el("div", { className: "chips" }, [
       chip("", key),
