@@ -10,6 +10,11 @@
      belong and lets the ordinary focus scroll do the work. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>OpenBench Admin</title>
+<!-- The site's table header face, for the column preview on the Benchmarks
+     tab: whether a short name fits is a question about this font's widths. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
 <!-- The site's own tab icon, carried as base64 because this directory serves
      nothing but this page and api.php. make_favicons.py fills it in; see the
      note in its docstring. -->
@@ -619,6 +624,39 @@ details.card > summary { cursor: pointer; }
 details.card > summary .chips { margin-top: .3rem; }
 details.card > details { margin-top: .6rem; }
 .card-foot { display: flex; justify-content: flex-end; margin-top: .7rem; }
+
+/* A benchmark column's header cell as the site draws it (index.html: thead th,
+   th.head-right, .th-label, .th-label-text, .benchmark-icon), at the width a
+   benchmark column starts at. Every number here is copied from there, so what
+   is cut off here is cut off there. */
+.th-sim-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: .45rem; }
+.th-sim {
+  box-sizing: border-box;
+  width: 95px;
+  flex: none;
+  padding: 10px 20px 10px 10px;
+  background: var(--surface-2);
+  /* Drawn inside, taking no width: the site's cell has no side borders. */
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  border-radius: 4px;
+  color: var(--muted);
+  font: 700 .65rem/1.5 "JetBrains Mono", var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.th-sim-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+}
+.th-sim-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-sim-icon { width: 12px; height: 12px; object-fit: contain; flex-shrink: 0; }
+.th-sim-verdict { font-size: .8125rem; color: var(--muted); }
+.th-sim-verdict.bad-text { color: var(--bad); }
 
 /* The column order: one row per benchmark, dragged by its handle or nudged
    with the arrows. The handle alone takes the touch, so the list still
@@ -4401,7 +4439,60 @@ const storedScores = (key) => (state.llm?.models || [])
 /* The form, shared by the edit and the add card. `onInput` runs on every
    keystroke without a redraw, so the caret stays where it is; `mark` flags the
    inputs a parse found wrong. */
-function benchForm(text, { derived = false, disabled = false, onInput }) {
+/* The site's benchmark column: initialWidth 95 in index.html, and the most a
+   reader can drag it to (.bench-head's max-width). */
+const TABLE_COL_W = 95;
+const TABLE_COL_MAX = 120;
+
+/* The header cell the table will draw for this column, live: the short name,
+   or the name when there is none, which is what getBenchmarkLabel falls back
+   to. Measured rather than estimated, once the header face has loaded. */
+function columnPreview(text, icon) {
+  const label = el("span", { className: "th-sim-text" });
+  /* The icon takes its 12px whether or not it loads, and the 12px is what
+     matters to the fit. An inline SVG goes in as an image, so nothing in it can
+     run here; a path is the site's own file, read where the data is read. */
+  const src = typeof icon !== "string" || !icon.trim() ? ""
+    : icon.trim().startsWith("<svg")
+      ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(icon.trim())}`
+      : `${dataBase() || ".."}/${icon.trim().replace(/^\/+/, "")}`;
+  const iconNode = src
+    ? el("img", { className: "th-sim-icon", alt: "", src, onerror() { this.style.visibility = "hidden"; } })
+    : null;
+  const cell = el("div", { className: "th-sim", ariaHidden: "true" },
+    el("span", { className: "th-sim-label" }, [iconNode, label]));
+  const verdict = el("span", { className: "th-sim-verdict" });
+  const node = el("div", { className: "th-sim-row" }, [cell, verdict]);
+  let pending = false;
+  const update = () => {
+    const short = String(text.short_name ?? "").trim();
+    const value = short || String(text.name ?? "").trim();
+    label.textContent = value || "\u2014";
+    if (!node.isConnected) {
+      /* Not laid out yet: measure on the first frame it is. */
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(() => { pending = false; if (node.isConnected) update(); });
+      }
+      return;
+    }
+    const over = Math.ceil(label.scrollWidth - label.clientWidth);
+    const source = short ? "" : value ? " (no short name: the table shows the name)" : "";
+    verdict.classList.toggle("bad-text", over > 0);
+    verdict.textContent = !value
+      ? "In the table"
+      : over <= 0
+        ? `Fits the table's ${TABLE_COL_W}px column${source}`
+        : over <= TABLE_COL_MAX - TABLE_COL_W
+          ? `Cut off: ${over}px too wide for the ${TABLE_COL_W}px column; whole only if a reader widens it${source}`
+          : `Cut off: ${over}px too wide, even at the widest the column goes${source}`;
+  };
+  document.fonts?.load('700 10.4px "JetBrains Mono"').then(update, () => {});
+  update();
+  return { node, update };
+}
+
+function benchForm(text, { derived = false, disabled = false, onInput, icon = null }) {
   const box = el("div", {});
   const inputs = {};
   const hints = {};
@@ -4413,9 +4504,14 @@ function benchForm(text, { derived = false, disabled = false, onInput }) {
   const wire = (name, input, read = () => input.value) => {
     inputs[name] = input;
     input.disabled = disabled;
-    input.oninput = () => { text[name] = read(); onInput(); };
+    input.oninput = () => {
+      text[name] = read();
+      onInput();
+      if (name === "short_name" || name === "name") preview.update();
+    };
     return input;
   };
+  const preview = columnPreview(text, icon);
 
   for (const [name, max, placeholder] of BENCH_TEXT) {
     const input = wire(name, el("input", { type: "text", maxLength: max, placeholder, value: text[name] }));
@@ -4426,6 +4522,7 @@ function benchForm(text, { derived = false, disabled = false, onInput }) {
       list = el("datalist", { id: listId }, benchCategories().map((value) => el("option", { value })));
     }
     field(name, list ? el("div", {}, [input, list]) : input);
+    if (name === "short_name") box.lastElementChild.insertBefore(preview.node, hints[name]);
   }
   field("description", wire("description", el("textarea", {
     rows: 4, maxLength: BENCH_DESCRIPTION_MAX, value: text.description,
@@ -4553,7 +4650,7 @@ function renderBenchmarkCard(key, bench) {
     card.classList.toggle("answered", ok);
     refreshFooter();
   };
-  form = benchForm(text, { derived, onInput: commit });
+  form = benchForm(text, { derived, onInput: commit, icon: bench?.icon_svg });
   card.append(form.box);
   if (derived) {
     card.append(el("p", { className: "note-text" },
