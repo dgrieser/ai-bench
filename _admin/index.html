@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- interactive-widget: Chrome on Android otherwise lays the keyboard over the
+     page and pans the visual viewport to the focused field, and with a sticky
+     header and a fixed action bar in play it pans past it -- a field in an
+     open card ends up off screen, with other cards in view, until the keyboard
+     closes. Resizing the layout viewport instead keeps both bars where they
+     belong and lets the ordinary focus scroll do the work. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>OpenBench Admin</title>
 <!-- The site's own tab icon, carried as base64 because this directory serves
      nothing but this page and api.php. make_favicons.py fills it in; see the
@@ -147,7 +153,14 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* A focused field, or anything scrolled into view, lands clear of the
+     sticky header and the fixed action bar rather than underneath them. */
+  scroll-padding-top: calc(var(--header-h, 6.5rem) + .5rem);
+  --bar-h: var(--bar-measured, 9.5rem);
+  scroll-padding-bottom: calc(var(--bar-h) + .5rem);
+}
 
 body {
   background: var(--bg);
@@ -765,6 +778,16 @@ select {
   grid-template-areas: "status status" "opts actions";
   align-items: center;
   gap: .55rem .75rem;
+}
+/* While a phone keyboard is up the bar would sit on top of it and take a
+   third of what is left to see; nothing on it can be used mid-typing anyway. */
+@media (pointer: coarse) {
+  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) {
+    --bar-h: 0px;
+  }
+  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) .bar {
+    display: none;
+  }
 }
 @media (min-width: 34rem) {
   .bar .wrap {
@@ -5107,8 +5130,13 @@ if (!tabList().some(([tab]) => tab === state.tab)) state.tab = "queue";
 window.addEventListener("popstate", () => showTab((location.hash || "#queue").slice(1), { push: false }));
 /* The sticky day headings on the Updates tab sit under the sticky header,
    whose height depends on how the tab strip wraps. */
-const measureHeader = () => document.documentElement.style.setProperty(
-  "--header-h", `${document.querySelector("header").offsetHeight}px`);
+const measureHeader = () => {
+  const root = document.documentElement.style;
+  root.setProperty("--header-h", `${document.querySelector("header").offsetHeight}px`);
+  /* Hidden while a keyboard is up, when the CSS zeroes --bar-h itself. */
+  const bar = document.querySelector(".bar").offsetHeight;
+  if (bar) root.setProperty("--bar-measured", `${bar}px`);
+};
 window.addEventListener("resize", measureHeader);
 measureHeader();
 document.getElementById("reload").onclick = reloadData;
