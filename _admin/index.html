@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- interactive-widget: Chrome on Android otherwise lays the keyboard over the
+     page and pans the visual viewport to the focused field, and with a sticky
+     header and a fixed action bar in play it pans past it -- a field in an
+     open card ends up off screen, with other cards in view, until the keyboard
+     closes. Resizing the layout viewport instead keeps both bars where they
+     belong and lets the ordinary focus scroll do the work. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>OpenBench Admin</title>
+<!-- The site's table header face, for the column preview on the Benchmarks
+     tab: whether a short name fits is a question about this font's widths. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
 <!-- The site's own tab icon, carried as base64 because this directory serves
      nothing but this page and api.php. make_favicons.py fills it in; see the
      note in its docstring. -->
@@ -147,7 +158,14 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* A focused field, or anything scrolled into view, lands clear of the
+     sticky header and the fixed action bar rather than underneath them. */
+  scroll-padding-top: calc(var(--header-h, 6.5rem) + .5rem);
+  --bar-h: var(--bar-measured, 9.5rem);
+  scroll-padding-bottom: calc(var(--bar-h) + .5rem);
+}
 
 body {
   background: var(--bg);
@@ -607,6 +625,105 @@ details.card > summary .chips { margin-top: .3rem; }
 details.card > details { margin-top: .6rem; }
 .card-foot { display: flex; justify-content: flex-end; margin-top: .7rem; }
 
+/* A benchmark column's header cell as the site draws it (index.html: thead th,
+   th.head-right, .th-label, .th-label-text, .benchmark-icon), at the width a
+   benchmark column starts at. Every number here is copied from there, so what
+   is cut off here is cut off there. */
+.th-sim-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: .45rem; }
+.th-sim {
+  box-sizing: border-box;
+  width: 95px;
+  flex: none;
+  padding: 10px 20px 10px 10px;
+  background: var(--surface-2);
+  /* Drawn inside, taking no width: the site's cell has no side borders. */
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  border-radius: 4px;
+  color: var(--muted);
+  font: 700 .65rem/1.5 "JetBrains Mono", var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.th-sim-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+}
+.th-sim-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-sim-icon { width: 12px; height: 12px; object-fit: contain; flex-shrink: 0; }
+.th-sim-verdict { font-size: .8125rem; color: var(--muted); }
+.th-sim-verdict.bad-text { color: var(--bad); }
+
+/* The column order: one row per benchmark, dragged by its handle or nudged
+   with the arrows. The handle alone takes the touch, so the list still
+   scrolls under a thumb anywhere else. */
+.order-list { list-style: none; margin: .7rem 0 0; padding: 0; }
+.order-cat {
+  margin: .7rem 0 .25rem;
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.order-cat:first-child { margin-top: 0; }
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .2rem .25rem .2rem 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+.order-row + .order-row { border-top-color: var(--line); }
+.order-row.moved { background: var(--accent-soft); }
+.order-row.dragging {
+  position: relative;
+  z-index: 2;
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-2);
+}
+.order-handle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--faint);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.card.sent .order-handle { visibility: hidden; }
+.order-row.dragging .order-handle { cursor: grabbing; color: var(--text); }
+.order-name { flex: 1; min-width: 0; line-height: 1.3; }
+/* The label as the site's table header prints it: the short name, in its
+   thead th type (mono, bold, tracked, uppercase). */
+.order-name .label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.order-name .key {
+  display: block;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  overflow-wrap: anywhere;
+}
+.order-pos { flex: none; color: var(--faint); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.order-row .btn.tiny { flex: none; min-width: 2.25rem; padding: 0; }
+
 /* The add card's name field: a list drawn by hand rather than a datalist,
    because a datalist cannot be told to wait for three letters, to match
    anywhere in a slug, or to stop at fifty. */
@@ -765,6 +882,16 @@ select {
   grid-template-areas: "status status" "opts actions";
   align-items: center;
   gap: .55rem .75rem;
+}
+/* While a phone keyboard is up the bar would sit on top of it and take a
+   third of what is left to see; nothing on it can be used mid-typing anyway. */
+@media (pointer: coarse) {
+  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) {
+    --bar-h: 0px;
+  }
+  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) .bar {
+    display: none;
+  }
 }
 @media (min-width: 34rem) {
   .bar .wrap {
@@ -1746,7 +1873,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key);
+  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -1908,7 +2035,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key));
 
 function readSent() {
   try {
@@ -4194,6 +4321,8 @@ function setRename(model, renameKey, slug) {
 
 const BENCH_CREATE_KEY = (key) => `benchmark-create  ${key}`;
 const BENCH_EDIT_KEY = (key) => `benchmark-edit  ${key}`;
+/* One record for the whole order: _answers.BENCHMARK_ORDER. */
+const BENCH_ORDER_KEY = "benchmark-order  columns";
 
 /* _answers.BENCHMARK_KEY_RE: an identifier, since it becomes edit.py's --flag. */
 const BENCH_KEY_RE = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/;
@@ -4310,7 +4439,60 @@ const storedScores = (key) => (state.llm?.models || [])
 /* The form, shared by the edit and the add card. `onInput` runs on every
    keystroke without a redraw, so the caret stays where it is; `mark` flags the
    inputs a parse found wrong. */
-function benchForm(text, { derived = false, disabled = false, onInput }) {
+/* The site's benchmark column: initialWidth 95 in index.html, and the most a
+   reader can drag it to (.bench-head's max-width). */
+const TABLE_COL_W = 95;
+const TABLE_COL_MAX = 120;
+
+/* The header cell the table will draw for this column, live: the short name,
+   or the name when there is none, which is what getBenchmarkLabel falls back
+   to. Measured rather than estimated, once the header face has loaded. */
+function columnPreview(text, icon) {
+  const label = el("span", { className: "th-sim-text" });
+  /* The icon takes its 12px whether or not it loads, and the 12px is what
+     matters to the fit. An inline SVG goes in as an image, so nothing in it can
+     run here; a path is the site's own file, read where the data is read. */
+  const src = typeof icon !== "string" || !icon.trim() ? ""
+    : icon.trim().startsWith("<svg")
+      ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(icon.trim())}`
+      : `${dataBase() || ".."}/${icon.trim().replace(/^\/+/, "")}`;
+  const iconNode = src
+    ? el("img", { className: "th-sim-icon", alt: "", src, onerror() { this.style.visibility = "hidden"; } })
+    : null;
+  const cell = el("div", { className: "th-sim", ariaHidden: "true" },
+    el("span", { className: "th-sim-label" }, [iconNode, label]));
+  const verdict = el("span", { className: "th-sim-verdict" });
+  const node = el("div", { className: "th-sim-row" }, [cell, verdict]);
+  let pending = false;
+  const update = () => {
+    const short = String(text.short_name ?? "").trim();
+    const value = short || String(text.name ?? "").trim();
+    label.textContent = value || "\u2014";
+    if (!node.isConnected) {
+      /* Not laid out yet: measure on the first frame it is. */
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(() => { pending = false; if (node.isConnected) update(); });
+      }
+      return;
+    }
+    const over = Math.ceil(label.scrollWidth - label.clientWidth);
+    const source = short ? "" : value ? " (no short name: the table shows the name)" : "";
+    verdict.classList.toggle("bad-text", over > 0);
+    verdict.textContent = !value
+      ? "In the table"
+      : over <= 0
+        ? `Fits the table's ${TABLE_COL_W}px column${source}`
+        : over <= TABLE_COL_MAX - TABLE_COL_W
+          ? `Cut off: ${over}px too wide for the ${TABLE_COL_W}px column; whole only if a reader widens it${source}`
+          : `Cut off: ${over}px too wide, even at the widest the column goes${source}`;
+  };
+  document.fonts?.load('700 10.4px "JetBrains Mono"').then(update, () => {});
+  update();
+  return { node, update };
+}
+
+function benchForm(text, { derived = false, disabled = false, onInput, icon = null }) {
   const box = el("div", {});
   const inputs = {};
   const hints = {};
@@ -4322,9 +4504,14 @@ function benchForm(text, { derived = false, disabled = false, onInput }) {
   const wire = (name, input, read = () => input.value) => {
     inputs[name] = input;
     input.disabled = disabled;
-    input.oninput = () => { text[name] = read(); onInput(); };
+    input.oninput = () => {
+      text[name] = read();
+      onInput();
+      if (name === "short_name" || name === "name") preview.update();
+    };
     return input;
   };
+  const preview = columnPreview(text, icon);
 
   for (const [name, max, placeholder] of BENCH_TEXT) {
     const input = wire(name, el("input", { type: "text", maxLength: max, placeholder, value: text[name] }));
@@ -4335,6 +4522,7 @@ function benchForm(text, { derived = false, disabled = false, onInput }) {
       list = el("datalist", { id: listId }, benchCategories().map((value) => el("option", { value })));
     }
     field(name, list ? el("div", {}, [input, list]) : input);
+    if (name === "short_name") box.lastElementChild.insertBefore(preview.node, hints[name]);
   }
   field("description", wire("description", el("textarea", {
     rows: 4, maxLength: BENCH_DESCRIPTION_MAX, value: text.description,
@@ -4399,6 +4587,7 @@ function renderBenchmarks() {
     + "starts empty: give it scores on the Models tab, in this batch if you like, "
     + "or map a source's label onto it from the Queue."));
   box.append(renderBenchmarkAdd());
+  box.append(renderBenchmarkOrder());
 
   const search = el("input", {
     type: "search",
@@ -4461,7 +4650,7 @@ function renderBenchmarkCard(key, bench) {
     card.classList.toggle("answered", ok);
     refreshFooter();
   };
-  form = benchForm(text, { derived, onInput: commit });
+  form = benchForm(text, { derived, onInput: commit, icon: bench?.icon_svg });
   card.append(form.box);
   if (derived) {
     card.append(el("p", { className: "note-text" },
@@ -4472,6 +4661,205 @@ function renderBenchmarkCard(key, bench) {
   card.append(el("div", { className: "card-foot" }, reset));
   commit();
   return guard(card, recordKey);
+}
+
+/* The order the columns are listed in -- on the site too, which files each
+   benchmark under its category in the order the categories first appear. The
+   draft is the record's own `order`; a column llm.json gained since the draft
+   was made goes back to where llm.json has it, and one it lost drops out. */
+function benchOrderDraft() {
+  const current = Object.keys(state.llm?.benchmarks || {});
+  const record = state.answers.get(BENCH_ORDER_KEY);
+  if (!record || !Array.isArray(record.order)) return current;
+  const order = record.order.filter((key) => current.includes(key));
+  current.forEach((key, i) => {
+    if (order.includes(key)) return;
+    const before = current.slice(0, i).reverse().find((k) => order.includes(k));
+    order.splice(before ? order.indexOf(before) + 1 : 0, 0, key);
+  });
+  return order;
+}
+
+/* The keys a person actually moved: everything outside the longest run that
+   kept its original relative order. Position alone would mark every row a
+   long move slid past. */
+function movedKeys(order, current) {
+  const rank = new Map(current.map((key, i) => [key, i]));
+  const seq = order.map((key) => rank.get(key));
+  const tails = [];
+  const tailAt = [];
+  const prev = new Array(seq.length).fill(-1);
+  seq.forEach((value, i) => {
+    let lo = 0;
+    let hi = tails.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (tails[mid] < value) lo = mid + 1; else hi = mid;
+    }
+    tails[lo] = value;
+    tailAt[lo] = i;
+    prev[i] = lo ? tailAt[lo - 1] : -1;
+  });
+  const kept = new Set();
+  for (let i = tails.length ? tailAt[tails.length - 1] : -1; i >= 0; i = prev[i]) kept.add(order[i]);
+  return new Set(order.filter((key) => !kept.has(key)));
+}
+
+function renderBenchmarkOrder() {
+  const current = Object.keys(state.llm?.benchmarks || {});
+  const benches = state.llm?.benchmarks || {};
+  let order = benchOrderDraft();
+  const card = el("details", { className: "card bench-order" });
+  card.open = state.benchOpen.has(BENCH_ORDER_KEY) || state.answers.has(BENCH_ORDER_KEY);
+  card.ontoggle = () => {
+    if (card.open) state.benchOpen.add(BENCH_ORDER_KEY);
+    else state.benchOpen.delete(BENCH_ORDER_KEY);
+  };
+  const summaryChips = el("div", { className: "chips" });
+  card.append(el("summary", {}, [el("span", { className: "subject" }, "Column order"), summaryChips]));
+  card.append(el("p", { className: "note-text" },
+    "The order the benchmarks are listed in, here and on the site, which "
+    + "groups them by category in the order each category first appears. Drag "
+    + "a row by its handle, or move it with the arrows."));
+
+  const list = el("ol", { className: "order-list" });
+  const commit = () => {
+    const changed = order.some((key, i) => key !== current[i]);
+    if (changed) {
+      state.answers.set(BENCH_ORDER_KEY, { kind: "benchmark-order", order: [...order], if_previous: current });
+    } else {
+      state.answers.delete(BENCH_ORDER_KEY);
+    }
+    card.classList.toggle("answered", changed);
+    const moved = movedKeys(order, current).size;
+    summaryChips.replaceChildren(
+      chip("", `${current.length} benchmarks`, { prose: true }),
+      changed ? chip("", `${moved} moved`, { prose: true }) : null);
+    reset.disabled = !changed;
+    refreshFooter();
+  };
+  const move = (from, to) => {
+    if (to < 0 || to >= order.length || from === to) return;
+    const [key] = order.splice(from, 1);
+    order.splice(to, 0, key);
+  };
+
+  const draw = (focusKey = null, focusDir = null) => {
+    const items = [];
+    const moved = movedKeys(order, current);
+    let lastCat = null;
+    order.forEach((key, i) => {
+      const bench = benches[key] || {};
+      const cat = bench.category || "Other";
+      if (cat !== lastCat) items.push(el("li", { className: "order-cat", ariaHidden: "true" }, cat));
+      lastCat = cat;
+      const up = el("button", {
+        type: "button", className: "btn ghost tiny", disabled: i === 0,
+        title: "Move up", ariaLabel: `Move ${bench.name || key} up`,
+      }, "\u2191");
+      const down = el("button", {
+        type: "button", className: "btn ghost tiny", disabled: i === order.length - 1,
+        title: "Move down", ariaLabel: `Move ${bench.name || key} down`,
+      }, "\u2193");
+      up.dataset.dir = "up";
+      down.dataset.dir = "down";
+      up.onclick = () => { move(i, i - 1); draw(key, "up"); commit(); };
+      down.onclick = () => { move(i, i + 1); draw(key, "down"); commit(); };
+      const handle = el("span", { className: "order-handle", title: "Drag to move", ariaHidden: "true" }, "\u2261");
+      const row = el("li", { className: `order-row${moved.has(key) ? " moved" : ""}` }, [
+        handle,
+        el("span", { className: "order-name", title: bench.name || key }, [
+          el("span", { className: "label" }, bench.short_name || bench.name || key),
+          el("span", { className: "key" }, key),
+        ]),
+        el("span", { className: "order-pos" }, String(i + 1)),
+        up, down,
+      ]);
+      row.dataset.key = key;
+      handle.addEventListener("pointerdown", (event) => drag(event, row));
+      items.push(row);
+    });
+    list.replaceChildren(...items);
+    if (focusKey) {
+      const row = list.querySelector(`[data-key="${CSS.escape(focusKey)}"]`);
+      /* The arrow just pressed, or its twin when the row hit an end. */
+      const button = row?.querySelector(`[data-dir="${focusDir}"]:not(:disabled)`)
+        || row?.querySelector("button:not(:disabled)");
+      button?.focus({ preventScroll: true });
+      row?.scrollIntoView({ block: "nearest" });
+    }
+  };
+
+  /* A drag moves the row in the DOM as the pointer passes its neighbours'
+     midpoints, and scrolls the page near the top and bottom edges, so a long
+     move on a phone needs no second gesture. The order is read back from the
+     DOM when the pointer lifts. */
+  const drag = (event, row) => {
+    if (card.classList.contains("sent")) return;
+    if (event.button !== undefined && event.button !== 0) return;
+    event.preventDefault();
+    /* Listened for on the window: moving the row in the DOM drops the
+       handle's pointer capture, and with it every later event. */
+    const id = event.pointerId;
+    row.classList.add("dragging");
+    list.querySelectorAll(".order-cat").forEach((cat) => { cat.style.visibility = "hidden"; });
+    let lastY = event.clientY;
+    let frame = 0;
+    const header = document.querySelector("header")?.offsetHeight || 0;
+    const bar = document.querySelector(".bar")?.offsetHeight || 0;
+    const place = () => {
+      const rows = [...list.querySelectorAll(".order-row:not(.dragging)")];
+      const next = rows.find((other) => {
+        const box = other.getBoundingClientRect();
+        return lastY < box.top + box.height / 2;
+      });
+      if (next) {
+        if (row.nextElementSibling !== next) list.insertBefore(row, next);
+      } else if (list.lastElementChild !== row) {
+        list.append(row);
+      }
+    };
+    const tick = () => {
+      const edge = 56;
+      const top = header + edge;
+      const bottom = window.innerHeight - bar - edge;
+      const speed = lastY < top ? -Math.min(18, (top - lastY) / 3)
+        : lastY > bottom ? Math.min(18, (lastY - bottom) / 3) : 0;
+      if (speed) { window.scrollBy(0, speed); place(); }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    const onMove = (e) => {
+      if (e.pointerId !== id) return;
+      e.preventDefault();
+      lastY = e.clientY;
+      place();
+    };
+    const onEnd = (e) => {
+      if (e.pointerId !== id) return;
+      cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onEnd);
+      window.removeEventListener("pointercancel", onEnd);
+      order = [...list.querySelectorAll(".order-row")].map((r) => r.dataset.key);
+      draw();
+      commit();
+    };
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onEnd);
+    window.addEventListener("pointercancel", onEnd);
+  };
+
+  const reset = el("button", { type: "button", className: "btn ghost tiny" }, "Undo changes");
+  reset.onclick = () => { order = [...current]; draw(); commit(); };
+  card.append(list, el("div", { className: "card-foot" }, reset));
+  draw();
+  commit();
+  if (!current.length) {
+    list.replaceChildren(el("p", { className: "empty" }, "llm.json has not been read yet."));
+    return card;
+  }
+  return guard(card, BENCH_ORDER_KEY);
 }
 
 function renderBenchmarkAdd() {
@@ -5107,8 +5495,13 @@ if (!tabList().some(([tab]) => tab === state.tab)) state.tab = "queue";
 window.addEventListener("popstate", () => showTab((location.hash || "#queue").slice(1), { push: false }));
 /* The sticky day headings on the Updates tab sit under the sticky header,
    whose height depends on how the tab strip wraps. */
-const measureHeader = () => document.documentElement.style.setProperty(
-  "--header-h", `${document.querySelector("header").offsetHeight}px`);
+const measureHeader = () => {
+  const root = document.documentElement.style;
+  root.setProperty("--header-h", `${document.querySelector("header").offsetHeight}px`);
+  /* Hidden while a keyboard is up, when the CSS zeroes --bar-h itself. */
+  const bar = document.querySelector(".bar").offsetHeight;
+  if (bar) root.setProperty("--bar-measured", `${bar}px`);
+};
 window.addEventListener("resize", measureHeader);
 measureHeader();
 document.getElementById("reload").onclick = reloadData;
