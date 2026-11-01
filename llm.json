@@ -389,6 +389,29 @@
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
     },
+    "aa_cyber_index": {
+      "name": "AA Cyber Index",
+      "short_name": "Cyber",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' composite of three defensive cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (audit a codebase, find a vulnerability in a described area and patch it), DeepsecBench-AA (find vulnerabilities in real application code, scored by F2) and CyberGym-E2E-AA (find, reproduce and patch real memory-safety bugs in C/C++ projects). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
+      "settings": [
+        "index scale",
+        "refusals scored as failures",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "unmitigated variants AA lists beside a model's standard release"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+      ],
+      "components": [
+        "cwe_bench_aa",
+        "deepsec_bench_aa",
+        "cybergym_e2e_aa"
+      ]
+    },
     "aa_engineering_index": {
       "name": "AA Engineering Index",
       "short_name": "Enginr",
@@ -1675,29 +1698,6 @@
         "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset"
       ]
     },
-    "aa_cyber_index": {
-      "name": "AA Cyber Index",
-      "short_name": "Cyber",
-      "category": "Cybersecurity",
-      "description": "Artificial Analysis' composite of three defensive cybersecurity evaluations it runs itself on every model: CWE-Bench-AA (audit a codebase, find a vulnerability in a described area and patch it), DeepsecBench-AA (find vulnerabilities in real application code, scored by F2) and CyberGym-E2E-AA (find, reproduce and patch real memory-safety bugs in C/C++ projects). A refusal counts as a failure, so the index measures what a model will do as well as what it can: a model that refuses the tasks scores far below its capability (Claude Opus 5.5, GPT-6 Sol and both Qwen3.8 models refuse 98-100% of CyberGym-E2E). Scored 0 to 100 on Artificial Analysis' index scale.",
-      "settings": [
-        "index scale",
-        "refusals scored as failures",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "unmitigated variants AA lists beside a model's standard release"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
-      ],
-      "components": [
-        "cwe_bench_aa",
-        "deepsec_bench_aa",
-        "cybergym_e2e_aa"
-      ]
-    },
     "cwe_bench_aa": {
       "name": "CWE-Bench-AA",
       "short_name": "CWE",
@@ -1874,7 +1874,7 @@
     },
     "cyberbench_1_1": {
       "name": "CyberBench v1.1",
-      "short_name": "CyberB",
+      "short_name": "CyberB1.1",
       "category": "Cybersecurity",
       "description": "Vals AI's own security benchmark: an agent crafts a proof-of-concept input that triggers a real OSS-Fuzz vulnerability, then writes a source patch that fixes it, on a private task set Vals runs every model through on its own harness. The column is the board's headline, which pools the PoC and patch tasks; patching is near its ceiling for every model measured (82-88%), so the spread comes from the PoC half. The one security column no lab self-reports.",
       "settings": [
@@ -1893,7 +1893,7 @@
     },
     "cyberbench_1_0": {
       "name": "CyberBench v1",
-      "short_name": "CyberB1",
+      "short_name": "CyberB1.0",
       "category": "Cybersecurity",
       "description": "The first revision of Vals AI's own security benchmark, superseded by v1.1 and archived: an agent crafts a proof-of-concept input that triggers a real OSS-Fuzz vulnerability, then writes a source patch that fixes it, on a private task set Vals runs every model through on its own harness. The column is the board's headline, which pools the PoC and patch tasks. Its task set differs from v1.1's, so the two are separate columns; v1 is kept for its field of 26 models, most never re-run on v1.1. Several models score 0% on the PoC half, which reads as refusal under Vals' harness rather than failure.",
       "settings": [
