@@ -257,7 +257,7 @@
     },
     "aa_intelligence_index_5_0": {
       "name": "AA Intelligence Index v5.0",
-      "short_name": "Idxv5.0",
+      "short_name": "Idx 5.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index of overall model capability, v5.0 since 2026-10-27: nine evaluations in four equally weighted categories — Knowledge Work (AA-Briefcase v1.1, AutomationBench-AA, GDP.pdf), Coding (FrontierCode 2.0, Terminal-Bench 4.0), Science (Terminal-Bench-Science 0.1, CritPt v2 Hard subset) and General (AA-Omniscience v1.1, HLE-Diamond). GDPval-AA, SciCode, AA-LCR and HLE left the index with this version. Scored on Artificial Analysis' index scale rather than as a percentage; written only while AA's API states version 5.0.",
       "settings": [
@@ -273,123 +273,9 @@
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
     },
-    "aa_finance_index": {
-      "name": "AA Finance & Accounting Index",
-      "short_name": "Fin",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Finance & Accounting domain index: AA's composite score for finance & accounting work, published per model beside the Intelligence Index (API field artificial_analysis_finance_and_accounting_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
-    "aa_strategy_ops_index": {
-      "name": "AA Strategy & Ops Index",
-      "short_name": "SOps",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Strategy & Ops domain index: AA's composite score for strategy & ops work, published per model beside the Intelligence Index (API field artificial_analysis_strategy_and_ops_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
-    "aa_legal_index": {
-      "name": "AA Legal Index",
-      "short_name": "Legal",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Legal domain index: AA's composite score for legal work, published per model beside the Intelligence Index (API field artificial_analysis_legal_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
-    "aa_healthcare_index": {
-      "name": "AA Healthcare & Medical Index",
-      "short_name": "Health",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Healthcare & Medical domain index: AA's composite score for healthcare & medical work, published per model beside the Intelligence Index (API field artificial_analysis_healthcare_and_medical_index) on its index scale. Its components include MLCR-AA, AA's medical long-context reasoning evaluation. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
-    "aa_engineering_index": {
-      "name": "AA Engineering Index",
-      "short_name": "Eng",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Engineering domain index: AA's composite score for engineering work, published per model beside the Intelligence Index (API field artificial_analysis_engineering_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
-    "aa_economics_index": {
-      "name": "AA Economics Index",
-      "short_name": "Econ",
-      "category": "Composite Index",
-      "description": "Artificial Analysis' Economics domain index: AA's composite score for economics work, published per model beside the Intelligence Index (API field artificial_analysis_economics_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
-      "settings": [
-        "index scale",
-        "domain index",
-        "Artificial Analysis"
-      ],
-      "excludes": [
-        "the Intelligence Index",
-        "the other domain indexes"
-      ],
-      "icon_svg": "icons/artificial-analysis.svg",
-      "urls": [
-        "https://artificialanalysis.ai/"
-      ]
-    },
     "aa_intelligence_index_4_3": {
       "name": "AA Intelligence Index v4.3",
-      "short_name": "Idxv4.3",
+      "short_name": "Idx 4.3",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.3 (September to October 2026, as read 2026-09-08 to 2026-10-27): AutomationBench-AA replaced τ³-Banking and Terminal-Bench 4.0 replaced 2.1; weights GDPval-AA v2 10%, AA-Briefcase 15%, AutomationBench-AA 5%, Terminal-Bench 4.0 10%, SciCode 10%, AA-LCR 5%, AA-Omniscience 15%, HLE 10%, GDP.pdf 10%, CritPt 10%. Includes the v4.3.1 and v4.3.2 point releases (refreshed judge panels; GDPval-AA v2.1 and AA-Briefcase v1.1 refitted), which moved 56 values on 2026-09-19. Archived: the values this table read while AA served v4.3, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -408,7 +294,7 @@
     },
     "aa_intelligence_index_4_2": {
       "name": "AA Intelligence Index v4.2",
-      "short_name": "Idxv4.2",
+      "short_name": "Idx 4.2",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.2 (early September 2026, as read 2026-09-04 to 2026-09-07): AA-Briefcase and GDP.pdf added, GPQA Diamond removed, AA-LCR upgraded to v1.1 and SciCode regraded. Archived: the values this table read while AA served v4.2, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -427,7 +313,7 @@
     },
     "aa_intelligence_index_4_1": {
       "name": "AA Intelligence Index v4.1",
-      "short_name": "Idxv4.1",
+      "short_name": "Idx 4.1",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.1 (June to August 2026, as read 2026-06-18 to 2026-09-03): GDPval-AA v2, Terminal-Bench 2.1 in place of Terminal-Bench Hard, τ³-Banking in place of τ²-Bench Telecom, IFBench removed; Agents 34%, Coding 24%, Scientific Reasoning 24%, General 18%. Includes v4.1.1 (τ³-Banking dataset and HLE/AA-LCR/Omniscience grader updates). Archived: the values this table read while AA served v4.1, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -446,7 +332,7 @@
     },
     "aa_intelligence_index_4_0": {
       "name": "AA Intelligence Index v4.0",
-      "short_name": "Idxv4.0",
+      "short_name": "Idx 4.0",
       "category": "Composite Index",
       "description": "Artificial Analysis composite index v4.0 (January to June 2026, as read until 2026-06-17): GDPval-AA, AA-Omniscience and CritPt added, MMLU-Pro, LiveCodeBench and AIME 2025 removed; four categories at 25% each. Archived: the values this table read while AA served v4.0, restored from llm.json's git history; kept for comparison and for the models never scored on a later version.",
       "settings": [
@@ -501,6 +387,586 @@
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+      ]
+    },
+    "aa_engineering_index": {
+      "name": "AA Engineering Index",
+      "short_name": "Enginr",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Engineering domain index: AA's composite score for engineering work, published per model beside the Intelligence Index (API field artificial_analysis_engineering_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "aa_strategy_ops_index": {
+      "name": "AA Strategy & Ops Index",
+      "short_name": "Strat",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Strategy & Ops domain index: AA's composite score for strategy & ops work, published per model beside the Intelligence Index (API field artificial_analysis_strategy_and_ops_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "aa_healthcare_index": {
+      "name": "AA Healthcare & Medical Index",
+      "short_name": "Medical",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Healthcare & Medical domain index: AA's composite score for healthcare & medical work, published per model beside the Intelligence Index (API field artificial_analysis_healthcare_and_medical_index) on its index scale. Its components include MLCR-AA, AA's medical long-context reasoning evaluation. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "aa_legal_index": {
+      "name": "AA Legal Index",
+      "short_name": "Legal",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Legal domain index: AA's composite score for legal work, published per model beside the Intelligence Index (API field artificial_analysis_legal_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "aa_finance_index": {
+      "name": "AA Finance & Accounting Index",
+      "short_name": "FinAcc",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Finance & Accounting domain index: AA's composite score for finance & accounting work, published per model beside the Intelligence Index (API field artificial_analysis_finance_and_accounting_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "aa_economics_index": {
+      "name": "AA Economics Index",
+      "short_name": "Econom",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Economics domain index: AA's composite score for economics work, published per model beside the Intelligence Index (API field artificial_analysis_economics_index) on its index scale. AA documents no version for it; a change of formula would show as a coordinated shift in the column, which the refresh reports.",
+      "settings": [
+        "index scale",
+        "domain index",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the Intelligence Index",
+        "the other domain indexes"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/"
+      ]
+    },
+    "real_swe_1_1": {
+      "name": "Real-SWE 1.1",
+      "short_name": "RSWE1.1",
+      "category": "Software Engineering",
+      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
+      "settings": [
+        "Resolved %",
+        "25 tasks",
+        "pass@1 over 8 runs",
+        "native harness",
+        "private repos"
+      ],
+      "excludes": [
+        "Real-SWE 1.0, a 10-task set",
+        "public SWE-bench-style boards"
+      ],
+      "urls": [
+        "https://realswe.withspecific.com"
+      ]
+    },
+    "real_swe_1_0": {
+      "name": "Real-SWE 1.0",
+      "short_name": "RSWE1.0",
+      "category": "Software Engineering",
+      "description": "The first release of Real-SWE (September 2026): 10 tasks from private production codebases licensed from real companies, graded by verifiers built from each repository's own test suite; pass@1 averaged over eight runs per task, each model in its native harness. Replaced by 1.1 on the same page on 2026-10-15 without its board being kept, so this column holds the values read before the switch and receives no new ones.",
+      "settings": [
+        "Resolved %",
+        "10 tasks",
+        "pass@1 over 8 runs",
+        "native harness",
+        "archived"
+      ],
+      "excludes": [
+        "Real-SWE 1.1, a 25-task set",
+        "public SWE-bench-style boards"
+      ],
+      "urls": [
+        "https://realswe.withspecific.com"
+      ]
+    },
+    "deepswe_1_1": {
+      "name": "DeepSWE 1.1",
+      "short_name": "DSWE1.1",
+      "category": "Software Engineering",
+      "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.1 is the current leaderboard, re-run in September 2026; its numbers are not comparable with 1.0's, which moved some models by more than 50 points.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "best configuration"
+      ],
+      "excludes": [
+        "DeepSWE 1.0, which moved some models by more than 50 points",
+        "a bare “DeepSWE” naming no revision"
+      ],
+      "urls": [
+        "https://deepswe.datacurve.ai/",
+        "https://github.com/datacurve-ai/deep-swe",
+        "https://huggingface.co/datasets/datacurve/deep-swe",
+        "https://benchlm.ai/benchmarks/deepSwe",
+        "https://artificialanalysis.ai/agents/coding-agents"
+      ]
+    },
+    "deepswe_1_0": {
+      "name": "DeepSWE 1.0",
+      "short_name": "DSWE1.0",
+      "category": "Software Engineering",
+      "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.0 is the superseded June 2026 run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "best configuration"
+      ],
+      "excludes": [
+        "DeepSWE 1.1",
+        "a bare “DeepSWE” naming no revision"
+      ],
+      "urls": [
+        "https://deepswe.datacurve.ai/",
+        "https://github.com/datacurve-ai/deep-swe",
+        "https://huggingface.co/datasets/datacurve/deep-swe",
+        "https://benchlm.ai/benchmarks/deepSwe"
+      ]
+    },
+    "frontiercode_2_0": {
+      "name": "FrontierCode 2.0",
+      "short_name": "FCo 2.0",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. One board; not comparable with 1.x.",
+      "settings": [
+        "would-be-merged score",
+        "132 tasks",
+        "internet allowed",
+        "best effort"
+      ],
+      "excludes": [
+        "FrontierCode 1.1 Main and Extended",
+        "FrontierCode 1.0"
+      ],
+      "urls": [
+        "https://cognition.com/frontiercode"
+      ]
+    },
+    "frontiercode_extended_1_1": {
+      "name": "FrontierCode 1.1 Extended",
+      "short_name": "FCo 1.1E",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability, graded on whether the change would be merged: each task is scored against reviewer-defined criteria covering correctness, tests, scope, style and repository conventions, some of them blockers that cap the score on their own. Extended is the full 150-task set; the Main column is the 100 hardest of those same tasks, scored from the same runs, so Extended reads about thirteen points higher and Cognition publishes the two as separate leaderboards that are not to be mixed. Revision 1.1 is the current re-run: it allows fair internet use such as documentation and API references, and zeroes any run its scanner catches opening a solution-bearing page. 1.0's Extended board is published too but is not kept as a column.",
+      "settings": [
+        "would-be-merged score",
+        "Extended board, 150 tasks",
+        "internet allowed"
+      ],
+      "excludes": [
+        "the Main board, the 100 hardest of the same tasks",
+        "1.0's Extended board",
+        "FrontierCode 2.0"
+      ],
+      "urls": [
+        "https://cognition.com/frontiercode",
+        "https://cognition.com/blog/frontier-code-1.1"
+      ]
+    },
+    "frontiercode_1_1": {
+      "name": "FrontierCode 1.1",
+      "short_name": "FCo 1.1",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 re-ran a subset of 1.0's models and was superseded by 2.0 on 2026-10-27; its scores are comparable with neither. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
+      "settings": [
+        "would-be-merged score",
+        "Main board, 100 tasks",
+        "internet allowed"
+      ],
+      "excludes": [
+        "the Extended board, which reads about 13 points higher off the same runs",
+        "FrontierCode 1.0",
+        "FrontierCode 2.0"
+      ],
+      "urls": [
+        "https://cognition.com/frontiercode",
+        "https://cognition.ai/blog/frontier-code",
+        "https://evals.report/benchmarks/frontiercode"
+      ]
+    },
+    "frontiercode_1_0": {
+      "name": "FrontierCode 1.0",
+      "short_name": "FCo 1.0",
+      "category": "Software Engineering",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader scored 46.8%. Revision 1.0 is the superseded run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
+      "settings": [
+        "would-be-merged score",
+        "Main board"
+      ],
+      "excludes": [
+        "FrontierCode 1.1",
+        "any Extended board"
+      ],
+      "urls": [
+        "https://cognition.com/frontiercode",
+        "https://cognition.ai/blog/frontier-code",
+        "https://evals.report/benchmarks/frontiercode"
+      ]
+    },
+    "frontierswe_2_0": {
+      "name": "FrontierSWE 2.0",
+      "short_name": "F-SWE 2.0",
+      "category": "Software Engineering",
+      "description": "Benchmarking software engineering skill at the edge of human ability; 34 hand-crafted tasks run five times each under a 20-hour budget, scored as the mean@5 task score (%). Revision 2.0 is the current board; its scores are not comparable with 1.0's, which ranked a different task set by a pairwise win rate.",
+      "settings": [
+        "mean@5 task score",
+        "34 tasks",
+        "20-hour budget"
+      ],
+      "excludes": [
+        "FrontierSWE 1.0's dominance score",
+        "a bare “FrontierSWE” naming no revision"
+      ],
+      "urls": [
+        "https://www.frontierswe.com"
+      ]
+    },
+    "frontierswe_1_0": {
+      "name": "FrontierSWE 1.0",
+      "short_name": "F-SWE 1.0",
+      "category": "Software Engineering",
+      "description": "Benchmarking software engineering skill at the edge of human ability. Revision 1.0 is the first release, preserved as published at /v1 and the only revision that scored the models retired before the re-run. It ranked 17 tasks by average per-task rank and by dominance -- the win rate against a random opponent on a random task -- and this column stores that dominance as a percentage, the only quantity the board publishes on a higher-is-better 0-100 scale. Kept as a separate column because a win rate is not the 2.0 board's mean@5 task score, and left out of the coding index for the same reason.",
+      "settings": [
+        "dominance",
+        "17 tasks"
+      ],
+      "excludes": [
+        "2.0's mean@5 task score",
+        "1.0's per-task average rank",
+        "a bare “FrontierSWE” naming no revision"
+      ],
+      "urls": [
+        "https://www.frontierswe.com/v1",
+        "https://www.frontierswe.com"
+      ]
+    },
+    "programbench_almost": {
+      "name": "ProgramBench: Almost Resolved",
+      "short_name": "ProgBench",
+      "category": "Software Engineering",
+      "description": "Rebuilding a program from scratch: the agent is handed a reference executable and its documentation and nothing else, and has to implement a codebase whose behaviour matches, graded by hidden behavioural tests against the binary it produces. The 200 tasks run from compact CLI tools up to FFmpeg, SQLite and the PHP interpreter, and published runs use mini-SWE-agent with the internet switched off. This column stores Almost Resolved — at least 95% of a task's behavioural tests passing — because the board's primary metric, Resolved, requires every test to pass and is close to the floor today.",
+      "settings": [
+        "Almost Resolved",
+        "mini-SWE-agent"
+      ],
+      "excludes": [
+        "Resolved, the board's primary metric, which requires every test to pass"
+      ],
+      "urls": [
+        "https://programbench.com/extended/",
+        "https://programbench.com",
+        "https://arxiv.org/abs/2605.03546",
+        "https://github.com/facebookresearch/programbench",
+        "https://www.vals.ai/benchmarks/programbench"
+      ]
+    },
+    "kernelbench_hard": {
+      "name": "KernelBench Hard",
+      "short_name": "KernBench",
+      "category": "Software Engineering",
+      "description": "Agentic GPU kernel engineering on kernelbench.com: a coding agent gets a reference PyTorch module and an unlimited budget to replace it with a faster kernel on real hardware, and every published cell is audited for reward hacking. This column holds the board's Hard deck -- six problems (FP8 GEMM, KDA on CUTLASS, paged attention, top-k bitonic sort, a Sonic MoE SwiGLU, W4A16 GEMM) on the RTX PRO 6000 the site calls canonical -- as the mean fraction of the GPU's roofline the submitted kernels reach, a failed, flagged or missing problem counting as zero. It is an absolute number, the one labs report as KernelBench Hard (operator TFLOPs over theoretical peak, averaged over the questions), not the site's share of the best model. The site borrows Stanford's KernelBench name and problem style but is not affiliated with it.",
+      "settings": [
+        "% of roofline, 6 problems",
+        "RTX PRO 6000",
+        "audited passes only",
+        "harness varies"
+      ],
+      "excludes": [
+        "the Mega and CUDA decks",
+        "the site's share-of-best bars",
+        "the H100 and B200 boards",
+        "Stanford KernelBench levels 1-3"
+      ],
+      "urls": [
+        "https://kernelbench.com/",
+        "https://kernelbench.com/models",
+        "https://scalingintelligence.stanford.edu/KernelBenchLeaderboard/",
+        "https://arxiv.org/abs/2502.10517"
+      ]
+    },
+    "nl2repo": {
+      "name": "NL2Repo",
+      "short_name": "NL2Repo",
+      "category": "Software Engineering",
+      "description": "NL2Repo-Bench: the agent is given a natural-language specification of a whole Python library and an empty workspace, and must build the repository from scratch; the result is scored by the share of the original project's test suite it passes. The only column that measures building a codebase rather than changing one. Lab self-reports, in harnesses that vary from a minimal in-house loop to Claude Code.",
+      "settings": [
+        "test pass rate",
+        "self-reported",
+        "harness varies"
+      ],
+      "excludes": [
+        "repository-editing benchmarks such as SWE-bench"
+      ],
+      "urls": [
+        "https://github.com/multimodal-art-projection/NL2RepoBench",
+        "https://arxiv.org/abs/2512.12730"
+      ]
+    },
+    "vibe_code_bench_1_1": {
+      "name": "Vibe Code Bench 1.1",
+      "short_name": "Vibe 1.1",
+      "category": "Software Engineering",
+      "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1 replaced 1.0 at the same URL, so 1.0's numbers are not comparable and are not kept as a column.",
+      "settings": [
+        "behavioural pass rate",
+        "100 specs",
+        "agentic"
+      ],
+      "excludes": [
+        "Vibe Code Bench 1.0, which was replaced at the same URL"
+      ],
+      "urls": [
+        "https://www.vals.ai/benchmarks/vibe-code",
+        "https://dl.acm.org/doi/10.1145/3786335.3813180",
+        "https://www.alphaxiv.org/abs/2603.04601"
+      ]
+    },
+    "ale_bench": {
+      "name": "ALE-Bench",
+      "short_name": "ALE",
+      "category": "Software Engineering",
+      "decimals": 0,
+      "range": [
+        0,
+        5000
+      ],
+      "description": "Sakana AI and AtCoder's benchmark of long-horizon algorithm engineering: score-based optimisation problems from the AtCoder Heuristic Contests, where there is no single correct answer and a solution is iterated on to push its score up. Each submission is scored against the contest's human field and turned into an AtCoder performance rating, so the column does not saturate the way a pass/fail suite does. Read from Epoch AI's copy of the board.",
+      "settings": [
+        "performance rating",
+        "AHC problems",
+        "agentic",
+        "best configuration"
+      ],
+      "excludes": [
+        "the per-problem rank percentile",
+        "ALE-Bench Lite, a smaller problem set"
+      ],
+      "urls": [
+        "https://sakanaai.github.io/ALE-Bench-Leaderboard/",
+        "https://arxiv.org/abs/2506.09050",
+        "https://epoch.ai/benchmarks/ale-bench"
+      ]
+    },
+    "swe_bench_pro_hard_2_0": {
+      "name": "SWE-Bench Pro V2 Hard",
+      "short_name": "SWEPro2H",
+      "category": "Software Engineering",
+      "description": "The Hard subset of SWE-Bench Pro V2: the 51 of its 642 tasks that proved most challenging across models, run under the same network-locked protocol and published as its own table on Scale's V2 board. It still separates the leaders where the Full set has saturated (the top runs there are within a point of each other). Metric is Pass@1 over the subset.",
+      "settings": [
+        "Pass@1",
+        "Hard subset, 51 tasks",
+        "network-locked",
+        "harness varies"
+      ],
+      "excludes": [
+        "the Full 642-task set",
+        "the original SWE-bench Pro"
+      ],
+      "urls": [
+        "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
+        "https://labs.scale.com/blog/swe-bench-pro-v2",
+        "https://arxiv.org/abs/2610.24206"
+      ]
+    },
+    "swe_bench_pro_2_0": {
+      "name": "SWE-Bench Pro V2",
+      "short_name": "SWEPro2",
+      "category": "Software Engineering",
+      "description": "Scale AI's refreshed public split of SWE-Bench Pro, co-developed with Reflection and released in September 2026: 642 tasks across the same 11 repositories, after 89 of v1's 731 public instances were dropped as invalid, with every instruction, verifier and image rebuilt and 69 instructions that contradicted their tests corrected. The protocol is network-locked -- the agent's sandbox reaches the model endpoint and nothing else -- and each diff is re-graded on a clean image. Scores sit on another scale from v1's: current models run 87-99 here against at most about 62 on Scale's v1 board, so the two are separate columns. Metric is Pass@1 over the full set.",
+      "settings": [
+        "Pass@1",
+        "Full set, 642 tasks",
+        "network-locked",
+        "harness varies"
+      ],
+      "excludes": [
+        "the original SWE-bench Pro and its splits",
+        "the 51-task Hard subset"
+      ],
+      "urls": [
+        "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
+        "https://labs.scale.com/blog/swe-bench-pro-v2",
+        "https://arxiv.org/abs/2610.24206",
+        "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro",
+        "https://github.com/scaleapi/SWE-bench_Pro-os"
+      ]
+    },
+    "swe_bench_pro": {
+      "name": "SWE-bench Pro",
+      "short_name": "SWEPro",
+      "category": "Software Engineering",
+      "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
+      "settings": [
+        "Resolved %",
+        "agentic",
+        "split not recorded"
+      ],
+      "excludes": [
+        "the public-dataset split",
+        "strict grading",
+        "SWE-bench Verified and Multilingual",
+        "SWE-Bench Pro V2, a refreshed split on another scale"
+      ],
+      "urls": [
+        "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro",
+        "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
+      ]
+    },
+    "swe_marathon_1_1": {
+      "name": "SWE-Marathon 1.1",
+      "short_name": "SWE-M 1.1",
+      "category": "Software Engineering",
+      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.1 is the current board: all 20 tasks updated, with tighter verification and closed-internet execution. The site reuses no 1.0 score for the updated tasks, so the two are not comparable.",
+      "settings": [
+        "20 multi-hour tasks",
+        "agentic",
+        "no internet"
+      ],
+      "excludes": [
+        "SWE-Marathon 1.0",
+        "a bare “SWE-Marathon” naming no revision"
+      ],
+      "urls": [
+        "https://www.swe-marathon.org/",
+        "https://arxiv.org/abs/2606.07682"
+      ]
+    },
+    "swe_marathon_1_0": {
+      "name": "SWE-Marathon 1.0",
+      "short_name": "SWE-M 1.0",
+      "category": "Software Engineering",
+      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.0 is the archived board the site keeps beside the current one. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
+      "settings": [
+        "20 multi-hour tasks",
+        "agentic"
+      ],
+      "excludes": [
+        "SWE-Marathon 1.1",
+        "a bare “SWE-Marathon” naming no revision"
+      ],
+      "urls": [
+        "https://www.swe-marathon.org/",
+        "https://arxiv.org/abs/2606.07682"
+      ]
+    },
+    "swe_atlas_rf": {
+      "name": "SWE Atlas: Refactoring",
+      "short_name": "SWE-A RF",
+      "category": "Software Engineering",
+      "description": "Refactoring track of Scale AI's SWE Atlas suite: restructure production code to improve readability and maintainability while preserving behavior; 70 tasks graded by programmatic test validation plus rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
+      "settings": [
+        "Task Resolve Rate",
+        "70 refactoring tasks",
+        "agentic"
+      ],
+      "excludes": [
+        "the Test Writing and Codebase Q&A tracks"
+      ],
+      "urls": [
+        "https://labs.scale.com/leaderboard/sweatlas-refactoring",
+        "https://labs.scale.com/papers/sweatlas",
+        "https://github.com/scaleapi/SWE-Atlas"
+      ]
+    },
+    "swe_atlas_tw": {
+      "name": "SWE Atlas: Test Writing",
+      "short_name": "SWE-A TW",
+      "category": "Software Engineering",
+      "description": "Test Writing track of Scale AI's SWE Atlas suite: write meaningful tests that exercise real functionality and raise coverage; 90 tasks graded by manifest check, mutation testing and rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
+      "settings": [
+        "Task Resolve Rate",
+        "90 test-writing tasks",
+        "agentic"
+      ],
+      "excludes": [
+        "the Refactoring and Codebase Q&A tracks"
+      ],
+      "urls": [
+        "https://labs.scale.com/leaderboard/sweatlas-tw",
+        "https://labs.scale.com/papers/sweatlas",
+        "https://github.com/scaleapi/SWE-Atlas"
+      ]
+    },
+    "swe_atlas_qna": {
+      "name": "SWE Atlas: Codebase Q&A",
+      "short_name": "SWE-A QnA",
+      "category": "Software Engineering",
+      "description": "Codebase Q&A track of Scale AI's SWE Atlas suite: deep code-comprehension tasks such as tracing execution paths, multi-file reasoning and answering technical questions, with no code changes required; 124 tasks across 11 open-source repos in Go, Python, C and TypeScript. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
+      "settings": [
+        "Task Resolve Rate",
+        "124 Q&A tasks",
+        "no code changes"
+      ],
+      "excludes": [
+        "the Refactoring and Test Writing tracks"
+      ],
+      "urls": [
+        "https://labs.scale.com/leaderboard/sweatlas-qna",
+        "https://labs.scale.com/papers/sweatlas",
+        "https://github.com/scaleapi/SWE-Atlas",
+        "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
     "swe_bench_verified": {
@@ -564,472 +1030,6 @@
         "https://www.swebench.com/multilingual.html",
         "https://huggingface.co/datasets/SWE-bench/SWE-bench_Multilingual",
         "https://evals.report/benchmarks/swe-bench-multilingual"
-      ]
-    },
-    "swe_bench_pro": {
-      "name": "SWE-bench Pro",
-      "short_name": "SWEPro",
-      "category": "Software Engineering",
-      "description": "Successor to SWE-bench Verified for realistic software engineering tasks; spans Python, JavaScript, TypeScript, and Go, and is designed to be more contamination-resistant and industry-relevant.",
-      "settings": [
-        "Resolved %",
-        "agentic",
-        "split not recorded"
-      ],
-      "excludes": [
-        "the public-dataset split",
-        "strict grading",
-        "SWE-bench Verified and Multilingual",
-        "SWE-Bench Pro V2, a refreshed split on another scale"
-      ],
-      "urls": [
-        "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro",
-        "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
-      ]
-    },
-    "swe_bench_pro_2_0": {
-      "name": "SWE-Bench Pro V2",
-      "short_name": "SWEPro2",
-      "category": "Software Engineering",
-      "description": "Scale AI's refreshed public split of SWE-Bench Pro, co-developed with Reflection and released in September 2026: 642 tasks across the same 11 repositories, after 89 of v1's 731 public instances were dropped as invalid, with every instruction, verifier and image rebuilt and 69 instructions that contradicted their tests corrected. The protocol is network-locked -- the agent's sandbox reaches the model endpoint and nothing else -- and each diff is re-graded on a clean image. Scores sit on another scale from v1's: current models run 87-99 here against at most about 62 on Scale's v1 board, so the two are separate columns. Metric is Pass@1 over the full set.",
-      "settings": [
-        "Pass@1",
-        "Full set, 642 tasks",
-        "network-locked",
-        "harness varies"
-      ],
-      "excludes": [
-        "the original SWE-bench Pro and its splits",
-        "the 51-task Hard subset"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-        "https://labs.scale.com/blog/swe-bench-pro-v2",
-        "https://arxiv.org/abs/2610.24206",
-        "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro",
-        "https://github.com/scaleapi/SWE-bench_Pro-os"
-      ]
-    },
-    "swe_bench_pro_hard_2_0": {
-      "name": "SWE-Bench Pro V2 Hard",
-      "short_name": "SWEPro2H",
-      "category": "Software Engineering",
-      "description": "The Hard subset of SWE-Bench Pro V2: the 51 of its 642 tasks that proved most challenging across models, run under the same network-locked protocol and published as its own table on Scale's V2 board. It still separates the leaders where the Full set has saturated (the top runs there are within a point of each other). Metric is Pass@1 over the subset.",
-      "settings": [
-        "Pass@1",
-        "Hard subset, 51 tasks",
-        "network-locked",
-        "harness varies"
-      ],
-      "excludes": [
-        "the Full 642-task set",
-        "the original SWE-bench Pro"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-        "https://labs.scale.com/blog/swe-bench-pro-v2",
-        "https://arxiv.org/abs/2610.24206"
-      ]
-    },
-    "swe_atlas_rf": {
-      "name": "SWE Atlas: Refactoring",
-      "short_name": "SWE-A RF",
-      "category": "Software Engineering",
-      "description": "Refactoring track of Scale AI's SWE Atlas suite: restructure production code to improve readability and maintainability while preserving behavior; 70 tasks graded by programmatic test validation plus rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": [
-        "Task Resolve Rate",
-        "70 refactoring tasks",
-        "agentic"
-      ],
-      "excludes": [
-        "the Test Writing and Codebase Q&A tracks"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/sweatlas-refactoring",
-        "https://labs.scale.com/papers/sweatlas",
-        "https://github.com/scaleapi/SWE-Atlas"
-      ]
-    },
-    "swe_atlas_tw": {
-      "name": "SWE Atlas: Test Writing",
-      "short_name": "SWE-A TW",
-      "category": "Software Engineering",
-      "description": "Test Writing track of Scale AI's SWE Atlas suite: write meaningful tests that exercise real functionality and raise coverage; 90 tasks graded by manifest check, mutation testing and rubric assessment. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": [
-        "Task Resolve Rate",
-        "90 test-writing tasks",
-        "agentic"
-      ],
-      "excludes": [
-        "the Refactoring and Codebase Q&A tracks"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/sweatlas-tw",
-        "https://labs.scale.com/papers/sweatlas",
-        "https://github.com/scaleapi/SWE-Atlas"
-      ]
-    },
-    "swe_atlas_qna": {
-      "name": "SWE Atlas: Codebase Q&A",
-      "short_name": "SWE-A QnA",
-      "category": "Software Engineering",
-      "description": "Codebase Q&A track of Scale AI's SWE Atlas suite: deep code-comprehension tasks such as tracing execution paths, multi-file reasoning and answering technical questions, with no code changes required; 124 tasks across 11 open-source repos in Go, Python, C and TypeScript. Metric is Task Resolve Rate (% of tasks passing all rubric items).",
-      "settings": [
-        "Task Resolve Rate",
-        "124 Q&A tasks",
-        "no code changes"
-      ],
-      "excludes": [
-        "the Refactoring and Test Writing tracks"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/sweatlas-qna",
-        "https://labs.scale.com/papers/sweatlas",
-        "https://github.com/scaleapi/SWE-Atlas",
-        "https://artificialanalysis.ai/agents/coding-agents"
-      ]
-    },
-    "real_swe_1_1": {
-      "name": "Real-SWE 1.1",
-      "short_name": "RSWE1.1",
-      "category": "Software Engineering",
-      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
-      "settings": [
-        "Resolved %",
-        "25 tasks",
-        "pass@1 over 8 runs",
-        "native harness",
-        "private repos"
-      ],
-      "excludes": [
-        "Real-SWE 1.0, a 10-task set",
-        "public SWE-bench-style boards"
-      ],
-      "urls": [
-        "https://realswe.withspecific.com"
-      ]
-    },
-    "real_swe_1_0": {
-      "name": "Real-SWE 1.0",
-      "short_name": "RSWE1.0",
-      "category": "Software Engineering",
-      "description": "The first release of Real-SWE (September 2026): 10 tasks from private production codebases licensed from real companies, graded by verifiers built from each repository's own test suite; pass@1 averaged over eight runs per task, each model in its native harness. Replaced by 1.1 on the same page on 2026-10-15 without its board being kept, so this column holds the values read before the switch and receives no new ones.",
-      "settings": [
-        "Resolved %",
-        "10 tasks",
-        "pass@1 over 8 runs",
-        "native harness",
-        "archived"
-      ],
-      "excludes": [
-        "Real-SWE 1.1, a 25-task set",
-        "public SWE-bench-style boards"
-      ],
-      "urls": [
-        "https://realswe.withspecific.com"
-      ]
-    },
-    "deepswe_1_1": {
-      "name": "DeepSWE 1.1",
-      "short_name": "DSWE 1.1",
-      "category": "Software Engineering",
-      "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.1 is the current leaderboard, re-run in September 2026; its numbers are not comparable with 1.0's, which moved some models by more than 50 points.",
-      "settings": [
-        "Resolved %",
-        "agentic",
-        "best configuration"
-      ],
-      "excludes": [
-        "DeepSWE 1.0, which moved some models by more than 50 points",
-        "a bare “DeepSWE” naming no revision"
-      ],
-      "urls": [
-        "https://deepswe.datacurve.ai/",
-        "https://github.com/datacurve-ai/deep-swe",
-        "https://huggingface.co/datasets/datacurve/deep-swe",
-        "https://benchlm.ai/benchmarks/deepSwe",
-        "https://artificialanalysis.ai/agents/coding-agents"
-      ]
-    },
-    "deepswe_1_0": {
-      "name": "DeepSWE 1.0",
-      "short_name": "DSWE 1.0",
-      "category": "Software Engineering",
-      "description": "Benchmark measuring frontier coding agents on original, long-horizon and hand-written software engineering tasks on active open-source repositories; Python, JavaScript, TypeScript, Go and Rust. Revision 1.0 is the superseded June 2026 run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": [
-        "Resolved %",
-        "agentic",
-        "best configuration"
-      ],
-      "excludes": [
-        "DeepSWE 1.1",
-        "a bare “DeepSWE” naming no revision"
-      ],
-      "urls": [
-        "https://deepswe.datacurve.ai/",
-        "https://github.com/datacurve-ai/deep-swe",
-        "https://huggingface.co/datasets/datacurve/deep-swe",
-        "https://benchlm.ai/benchmarks/deepSwe"
-      ]
-    },
-    "frontierswe_2_0": {
-      "name": "FrontierSWE 2.0",
-      "short_name": "F-SWE 2.0",
-      "category": "Software Engineering",
-      "description": "Benchmarking software engineering skill at the edge of human ability; 34 hand-crafted tasks run five times each under a 20-hour budget, scored as the mean@5 task score (%). Revision 2.0 is the current board; its scores are not comparable with 1.0's, which ranked a different task set by a pairwise win rate.",
-      "settings": [
-        "mean@5 task score",
-        "34 tasks",
-        "20-hour budget"
-      ],
-      "excludes": [
-        "FrontierSWE 1.0's dominance score",
-        "a bare “FrontierSWE” naming no revision"
-      ],
-      "urls": [
-        "https://www.frontierswe.com"
-      ]
-    },
-    "frontierswe_1_0": {
-      "name": "FrontierSWE 1.0",
-      "short_name": "F-SWE 1.0",
-      "category": "Software Engineering",
-      "description": "Benchmarking software engineering skill at the edge of human ability. Revision 1.0 is the first release, preserved as published at /v1 and the only revision that scored the models retired before the re-run. It ranked 17 tasks by average per-task rank and by dominance -- the win rate against a random opponent on a random task -- and this column stores that dominance as a percentage, the only quantity the board publishes on a higher-is-better 0-100 scale. Kept as a separate column because a win rate is not the 2.0 board's mean@5 task score, and left out of the coding index for the same reason.",
-      "settings": [
-        "dominance",
-        "17 tasks"
-      ],
-      "excludes": [
-        "2.0's mean@5 task score",
-        "1.0's per-task average rank",
-        "a bare “FrontierSWE” naming no revision"
-      ],
-      "urls": [
-        "https://www.frontierswe.com/v1",
-        "https://www.frontierswe.com"
-      ]
-    },
-    "frontiercode_2_0": {
-      "name": "FrontierCode 2.0",
-      "short_name": "FCo 2.0",
-      "category": "Software Engineering",
-      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. One board; not comparable with 1.x.",
-      "settings": [
-        "would-be-merged score",
-        "132 tasks",
-        "internet allowed",
-        "best effort"
-      ],
-      "excludes": [
-        "FrontierCode 1.1 Main and Extended",
-        "FrontierCode 1.0"
-      ],
-      "urls": [
-        "https://cognition.com/frontiercode"
-      ]
-    },
-    "frontiercode_1_1": {
-      "name": "FrontierCode 1.1",
-      "short_name": "FCo 1.1",
-      "category": "Software Engineering",
-      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 re-ran a subset of 1.0's models and was superseded by 2.0 on 2026-10-27; its scores are comparable with neither. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
-      "settings": [
-        "would-be-merged score",
-        "Main board, 100 tasks",
-        "internet allowed"
-      ],
-      "excludes": [
-        "the Extended board, which reads about 13 points higher off the same runs",
-        "FrontierCode 1.0",
-        "FrontierCode 2.0"
-      ],
-      "urls": [
-        "https://cognition.com/frontiercode",
-        "https://cognition.ai/blog/frontier-code",
-        "https://evals.report/benchmarks/frontiercode"
-      ]
-    },
-    "frontiercode_extended_1_1": {
-      "name": "FrontierCode 1.1 Extended",
-      "short_name": "FCo 1.1E",
-      "category": "Software Engineering",
-      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability, graded on whether the change would be merged: each task is scored against reviewer-defined criteria covering correctness, tests, scope, style and repository conventions, some of them blockers that cap the score on their own. Extended is the full 150-task set; the Main column is the 100 hardest of those same tasks, scored from the same runs, so Extended reads about thirteen points higher and Cognition publishes the two as separate leaderboards that are not to be mixed. Revision 1.1 is the current re-run: it allows fair internet use such as documentation and API references, and zeroes any run its scanner catches opening a solution-bearing page. 1.0's Extended board is published too but is not kept as a column.",
-      "settings": [
-        "would-be-merged score",
-        "Extended board, 150 tasks",
-        "internet allowed"
-      ],
-      "excludes": [
-        "the Main board, the 100 hardest of the same tasks",
-        "1.0's Extended board",
-        "FrontierCode 2.0"
-      ],
-      "urls": [
-        "https://cognition.com/frontiercode",
-        "https://cognition.com/blog/frontier-code-1.1"
-      ]
-    },
-    "frontiercode_1_0": {
-      "name": "FrontierCode 1.0",
-      "short_name": "FCo 1.0",
-      "category": "Software Engineering",
-      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader scored 46.8%. Revision 1.0 is the superseded run, still published beside the current one and the only revision that scored the models retired before the re-run. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": [
-        "would-be-merged score",
-        "Main board"
-      ],
-      "excludes": [
-        "FrontierCode 1.1",
-        "any Extended board"
-      ],
-      "urls": [
-        "https://cognition.com/frontiercode",
-        "https://cognition.ai/blog/frontier-code",
-        "https://evals.report/benchmarks/frontiercode"
-      ]
-    },
-    "swe_marathon_1_1": {
-      "name": "SWE-Marathon 1.1",
-      "short_name": "SWE-M 1.1",
-      "category": "Software Engineering",
-      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.1 is the current board: all 20 tasks updated, with tighter verification and closed-internet execution. The site reuses no 1.0 score for the updated tasks, so the two are not comparable.",
-      "settings": [
-        "20 multi-hour tasks",
-        "agentic",
-        "no internet"
-      ],
-      "excludes": [
-        "SWE-Marathon 1.0",
-        "a bare “SWE-Marathon” naming no revision"
-      ],
-      "urls": [
-        "https://www.swe-marathon.org/",
-        "https://arxiv.org/abs/2606.07682"
-      ]
-    },
-    "swe_marathon_1_0": {
-      "name": "SWE-Marathon 1.0",
-      "short_name": "SWE-M 1.0",
-      "category": "Software Engineering",
-      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.0 is the archived board the site keeps beside the current one. Kept as a separate column because its scores are not comparable with 1.1's, and left out of the coding index for the same reason.",
-      "settings": [
-        "20 multi-hour tasks",
-        "agentic"
-      ],
-      "excludes": [
-        "SWE-Marathon 1.1",
-        "a bare “SWE-Marathon” naming no revision"
-      ],
-      "urls": [
-        "https://www.swe-marathon.org/",
-        "https://arxiv.org/abs/2606.07682"
-      ]
-    },
-    "vibe_code_bench_1_1": {
-      "name": "Vibe Code Bench 1.1",
-      "short_name": "Vibe 1.1",
-      "category": "Software Engineering",
-      "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1 replaced 1.0 at the same URL, so 1.0's numbers are not comparable and are not kept as a column.",
-      "settings": [
-        "behavioural pass rate",
-        "100 specs",
-        "agentic"
-      ],
-      "excludes": [
-        "Vibe Code Bench 1.0, which was replaced at the same URL"
-      ],
-      "urls": [
-        "https://www.vals.ai/benchmarks/vibe-code",
-        "https://dl.acm.org/doi/10.1145/3786335.3813180",
-        "https://www.alphaxiv.org/abs/2603.04601"
-      ]
-    },
-    "programbench_almost": {
-      "name": "ProgramBench: Almost Resolved",
-      "short_name": "ProgBench",
-      "category": "Software Engineering",
-      "description": "Rebuilding a program from scratch: the agent is handed a reference executable and its documentation and nothing else, and has to implement a codebase whose behaviour matches, graded by hidden behavioural tests against the binary it produces. The 200 tasks run from compact CLI tools up to FFmpeg, SQLite and the PHP interpreter, and published runs use mini-SWE-agent with the internet switched off. This column stores Almost Resolved — at least 95% of a task's behavioural tests passing — because the board's primary metric, Resolved, requires every test to pass and is close to the floor today.",
-      "settings": [
-        "Almost Resolved",
-        "mini-SWE-agent"
-      ],
-      "excludes": [
-        "Resolved, the board's primary metric, which requires every test to pass"
-      ],
-      "urls": [
-        "https://programbench.com/extended/",
-        "https://programbench.com",
-        "https://arxiv.org/abs/2605.03546",
-        "https://github.com/facebookresearch/programbench",
-        "https://www.vals.ai/benchmarks/programbench"
-      ]
-    },
-    "kernelbench_hard": {
-      "name": "KernelBench Hard",
-      "short_name": "KernBench",
-      "category": "Software Engineering",
-      "description": "Agentic GPU kernel engineering on kernelbench.com: a coding agent gets a reference PyTorch module and an unlimited budget to replace it with a faster kernel on real hardware, and every published cell is audited for reward hacking. This column holds the board's Hard deck -- six problems (FP8 GEMM, KDA on CUTLASS, paged attention, top-k bitonic sort, a Sonic MoE SwiGLU, W4A16 GEMM) on the RTX PRO 6000 the site calls canonical -- as the mean fraction of the GPU's roofline the submitted kernels reach, a failed, flagged or missing problem counting as zero. It is an absolute number, the one labs report as KernelBench Hard (operator TFLOPs over theoretical peak, averaged over the questions), not the site's share of the best model. The site borrows Stanford's KernelBench name and problem style but is not affiliated with it.",
-      "settings": [
-        "% of roofline, 6 problems",
-        "RTX PRO 6000",
-        "audited passes only",
-        "harness varies"
-      ],
-      "excludes": [
-        "the Mega and CUDA decks",
-        "the site's share-of-best bars",
-        "the H100 and B200 boards",
-        "Stanford KernelBench levels 1-3"
-      ],
-      "urls": [
-        "https://kernelbench.com/",
-        "https://kernelbench.com/models",
-        "https://scalingintelligence.stanford.edu/KernelBenchLeaderboard/",
-        "https://arxiv.org/abs/2502.10517"
-      ]
-    },
-    "ale_bench": {
-      "name": "ALE-Bench",
-      "short_name": "ALE",
-      "category": "Software Engineering",
-      "decimals": 0,
-      "range": [
-        0,
-        5000
-      ],
-      "description": "Sakana AI and AtCoder's benchmark of long-horizon algorithm engineering: score-based optimisation problems from the AtCoder Heuristic Contests, where there is no single correct answer and a solution is iterated on to push its score up. Each submission is scored against the contest's human field and turned into an AtCoder performance rating, so the column does not saturate the way a pass/fail suite does. Read from Epoch AI's copy of the board.",
-      "settings": [
-        "performance rating",
-        "AHC problems",
-        "agentic",
-        "best configuration"
-      ],
-      "excludes": [
-        "the per-problem rank percentile",
-        "ALE-Bench Lite, a smaller problem set"
-      ],
-      "urls": [
-        "https://sakanaai.github.io/ALE-Bench-Leaderboard/",
-        "https://arxiv.org/abs/2506.09050",
-        "https://epoch.ai/benchmarks/ale-bench"
-      ]
-    },
-    "nl2repo": {
-      "name": "NL2Repo",
-      "short_name": "NL2Repo",
-      "category": "Software Engineering",
-      "description": "NL2Repo-Bench: the agent is given a natural-language specification of a whole Python library and an empty workspace, and must build the repository from scratch; the result is scored by the share of the original project's test suite it passes. The only column that measures building a codebase rather than changing one. Lab self-reports, in harnesses that vary from a minimal in-house loop to Claude Code.",
-      "settings": [
-        "test pass rate",
-        "self-reported",
-        "harness varies"
-      ],
-      "excludes": [
-        "repository-editing benchmarks such as SWE-bench"
-      ],
-      "urls": [
-        "https://github.com/multimodal-art-projection/NL2RepoBench",
-        "https://arxiv.org/abs/2512.12730"
       ]
     },
     "livecodebench": {
@@ -1191,25 +1191,46 @@
         "https://arxiv.org/abs/2510.25726"
       ]
     },
-    "tau3_bench_banking": {
-      "name": "τ³-Bench Banking",
-      "short_name": "τ³ Bank",
+    "mcp_atlas": {
+      "name": "MCP-Atlas",
+      "short_name": "MCPAtlas",
       "category": "Agentic Tool Use",
-      "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ adds a knowledge-retrieval layer to the dual-control τ² setup: action tools are hidden in knowledge-base documents, so the agent must search for them and unlock them with meta-tools before calling. Metric is task success rate.",
+      "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks over 40+ real MCP servers exposing 300+ tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard runs the representative 500-task public subset under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task. Metric is pass rate.",
       "settings": [
-        "task success rate",
-        "Banking domain",
-        "Artificial Analysis"
+        "pass rate",
+        "public 500-task subset",
+        "100 tool calls/task"
       ],
       "excludes": [
-        "the τ³ cross-domain aggregate",
-        "τ³'s other domains",
-        "τ²-Bench"
+        "MCPMark and MCP Mark Verified, a different benchmark"
       ],
       "urls": [
-        "https://artificialanalysis.ai/evaluations/tau3-banking",
-        "https://github.com/sierra-research/tau2-bench",
-        "https://arxiv.org/abs/2506.07982"
+        "https://labs.scale.com/leaderboard/mcp_atlas",
+        "https://scale.com/blog/mcp-atlas",
+        "https://github.com/scaleapi/mcp-atlas",
+        "https://evals.report/benchmarks/mcp-atlas"
+      ]
+    },
+    "claw_eval": {
+      "name": "Claw-Eval",
+      "short_name": "ClawEval",
+      "category": "Agentic Tool Use",
+      "description": "A benchmark of real-world agent tasks run in a claw-style agent harness, each over three trials and scored for completion, safety and robustness. The column holds the score on the 161-task General split — core service-orchestration tasks across 24 categories — as the official leaderboard prints it, carried into the models' Hugging Face eval results.",
+      "settings": [
+        "official score",
+        "General split",
+        "161 tasks",
+        "agentic"
+      ],
+      "excludes": [
+        "the Multimodal and Multi-turn splits",
+        "pass@3 and pass^3 figures quoted on their own",
+        "averages over splits"
+      ],
+      "urls": [
+        "https://claw-eval.github.io/",
+        "https://huggingface.co/datasets/claw-eval/Claw-Eval",
+        "https://arxiv.org/abs/2604.06132"
       ]
     },
     "automation_bench_aa": {
@@ -1229,6 +1250,51 @@
       "urls": [
         "https://artificialanalysis.ai/evaluations/automationbench-aa",
         "https://arxiv.org/abs/2604.18934"
+      ]
+    },
+    "vending_bench_2": {
+      "name": "Vending-Bench 2",
+      "short_name": "VenBench2",
+      "category": "Agentic Tool Use",
+      "decimals": 0,
+      "range": [
+        -100000,
+        100000
+      ],
+      "description": "Andon Labs' long-horizon agent benchmark: the model runs a simulated vending-machine business for a full simulated year — ordering stock from suppliers by email, negotiating prices, setting prices and handling refunds — starting from a $500 balance. The score is the money balance the year ends on, averaged over runs, so it measures whether an agent stays coherent over thousands of steps rather than whether it can finish one task. Read from Epoch AI's copy of the board.",
+      "settings": [
+        "final balance ($)",
+        "one simulated year",
+        "agentic"
+      ],
+      "excludes": [
+        "Vending-Bench 1",
+        "Vending-Bench Arena, the multi-agent variant"
+      ],
+      "urls": [
+        "https://andonlabs.com/evals/vending-bench-2",
+        "https://epoch.ai/benchmarks/vending-bench-2"
+      ]
+    },
+    "tau3_bench_banking": {
+      "name": "τ³-Bench Banking",
+      "short_name": "τ³ Bank",
+      "category": "Agentic Tool Use",
+      "description": "Banking domain of τ³-Bench, as run by Artificial Analysis. τ³ adds a knowledge-retrieval layer to the dual-control τ² setup: action tools are hidden in knowledge-base documents, so the agent must search for them and unlock them with meta-tools before calling. Metric is task success rate.",
+      "settings": [
+        "task success rate",
+        "Banking domain",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "the τ³ cross-domain aggregate",
+        "τ³'s other domains",
+        "τ²-Bench"
+      ],
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/tau3-banking",
+        "https://github.com/sierra-research/tau2-bench",
+        "https://arxiv.org/abs/2506.07982"
       ]
     },
     "tau2_bench_telecom": {
@@ -1288,26 +1354,6 @@
         "https://arxiv.org/abs/2506.07982"
       ]
     },
-    "mcp_atlas": {
-      "name": "MCP-Atlas",
-      "short_name": "MCPAtlas",
-      "category": "Agentic Tool Use",
-      "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks over 40+ real MCP servers exposing 300+ tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard runs the representative 500-task public subset under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task. Metric is pass rate.",
-      "settings": [
-        "pass rate",
-        "public 500-task subset",
-        "100 tool calls/task"
-      ],
-      "excludes": [
-        "MCPMark and MCP Mark Verified, a different benchmark"
-      ],
-      "urls": [
-        "https://labs.scale.com/leaderboard/mcp_atlas",
-        "https://scale.com/blog/mcp-atlas",
-        "https://github.com/scaleapi/mcp-atlas",
-        "https://evals.report/benchmarks/mcp-atlas"
-      ]
-    },
     "bfcl_v4": {
       "name": "BFCL v4",
       "short_name": "BFCL v4",
@@ -1328,52 +1374,6 @@
         "https://gorilla.cs.berkeley.edu/blogs/16_bfcl_v4_memory.html",
         "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard",
         "https://evals.report/benchmarks/bfcl"
-      ]
-    },
-    "vending_bench_2": {
-      "name": "Vending-Bench 2",
-      "short_name": "VenBench2",
-      "category": "Agentic Tool Use",
-      "decimals": 0,
-      "range": [
-        -100000,
-        100000
-      ],
-      "description": "Andon Labs' long-horizon agent benchmark: the model runs a simulated vending-machine business for a full simulated year — ordering stock from suppliers by email, negotiating prices, setting prices and handling refunds — starting from a $500 balance. The score is the money balance the year ends on, averaged over runs, so it measures whether an agent stays coherent over thousands of steps rather than whether it can finish one task. Read from Epoch AI's copy of the board.",
-      "settings": [
-        "final balance ($)",
-        "one simulated year",
-        "agentic"
-      ],
-      "excludes": [
-        "Vending-Bench 1",
-        "Vending-Bench Arena, the multi-agent variant"
-      ],
-      "urls": [
-        "https://andonlabs.com/evals/vending-bench-2",
-        "https://epoch.ai/benchmarks/vending-bench-2"
-      ]
-    },
-    "claw_eval": {
-      "name": "Claw-Eval",
-      "short_name": "ClawEval",
-      "category": "Agentic Tool Use",
-      "description": "A benchmark of real-world agent tasks run in a claw-style agent harness, each over three trials and scored for completion, safety and robustness. The column holds the score on the 161-task General split — core service-orchestration tasks across 24 categories — as the official leaderboard prints it, carried into the models' Hugging Face eval results.",
-      "settings": [
-        "official score",
-        "General split",
-        "161 tasks",
-        "agentic"
-      ],
-      "excludes": [
-        "the Multimodal and Multi-turn splits",
-        "pass@3 and pass^3 figures quoted on their own",
-        "averages over splits"
-      ],
-      "urls": [
-        "https://claw-eval.github.io/",
-        "https://huggingface.co/datasets/claw-eval/Claw-Eval",
-        "https://arxiv.org/abs/2604.06132"
       ]
     },
     "ifbench": {
@@ -1446,6 +1446,26 @@
         "https://openai.com/index/gdpval/"
       ]
     },
+    "apex_agents": {
+      "name": "APEX-Agents",
+      "short_name": "APEX",
+      "category": "Real-world Professional Work",
+      "description": "Mercor's AI Productivity Index for agents: long-horizon tasks written by investment bankers, management consultants and corporate lawyers, each carried out inside a simulated work environment of files and applications and graded against an expert rubric. The column is pass@1, the share of tasks whose deliverable passes. Read from Epoch AI's copy of Mercor's board.",
+      "settings": [
+        "pass@1",
+        "Mercor board",
+        "agentic"
+      ],
+      "excludes": [
+        "the rubric mean score, a different metric",
+        "Artificial Analysis' own APEX-Agents-AA run",
+        "APEX v1, the non-agentic index"
+      ],
+      "urls": [
+        "https://www.mercor.com/apex/",
+        "https://epoch.ai/benchmarks/apex-agents"
+      ]
+    },
     "agents_last_exam_1_1": {
       "name": "Agents' Last Exam v1.1",
       "short_name": "ALE 1.1",
@@ -1509,26 +1529,6 @@
       "icon_svg": "icons/artificial-analysis.svg",
       "urls": [
         "https://artificialanalysis.ai/evaluations/aa-briefcase"
-      ]
-    },
-    "apex_agents": {
-      "name": "APEX-Agents",
-      "short_name": "APEX",
-      "category": "Real-world Professional Work",
-      "description": "Mercor's AI Productivity Index for agents: long-horizon tasks written by investment bankers, management consultants and corporate lawyers, each carried out inside a simulated work environment of files and applications and graded against an expert rubric. The column is pass@1, the share of tasks whose deliverable passes. Read from Epoch AI's copy of Mercor's board.",
-      "settings": [
-        "pass@1",
-        "Mercor board",
-        "agentic"
-      ],
-      "excludes": [
-        "the rubric mean score, a different metric",
-        "Artificial Analysis' own APEX-Agents-AA run",
-        "APEX v1, the non-agentic index"
-      ],
-      "urls": [
-        "https://www.mercor.com/apex/",
-        "https://epoch.ai/benchmarks/apex-agents"
       ]
     },
     "browsecomp": {
@@ -1828,6 +1828,27 @@
         "https://epoch.ai/benchmarks/exploitbench"
       ]
     },
+    "sec_bench_pro_260617": {
+      "name": "SEC-bench Pro 260617",
+      "short_name": "SECPro2",
+      "category": "Cybersecurity",
+      "description": "The June 2026 snapshot of SEC-bench Pro (260617): the same proof-of-concept task as 260505 — write a PoC for a real vulnerability from a vague report, no crash trace, patch or reference PoC, judged on the vulnerable and the fixed build — over 344 tasks, adding 137 Linux kernel tasks to V8 and SpiderMonkey. It is the snapshot the site root shows. Scores run higher than on 260505 for the same model (GPT-5.5: 58.4 against 46.4), so the two are separate columns. Timeouts count as failures.",
+      "settings": [
+        "Pass@1",
+        "snapshot 260617",
+        "344 tasks",
+        "V8 + SpiderMonkey + Linux"
+      ],
+      "excludes": [
+        "the 260505 snapshot, 183 tasks without Linux",
+        "per-target scores",
+        "the completed-only rate, which leaves timeouts out"
+      ],
+      "urls": [
+        "https://sec-bench.github.io/",
+        "https://github.com/SEC-bench/SEC-bench-Pro"
+      ]
+    },
     "sec_bench_pro": {
       "name": "SEC-bench Pro",
       "short_name": "SECPro",
@@ -1849,27 +1870,6 @@
         "https://sec-bench.github.io/260505/",
         "https://github.com/SEC-bench/SEC-bench-Pro",
         "https://arxiv.org/abs/2605.26548"
-      ]
-    },
-    "sec_bench_pro_260617": {
-      "name": "SEC-bench Pro 260617",
-      "short_name": "SECPro2",
-      "category": "Cybersecurity",
-      "description": "The June 2026 snapshot of SEC-bench Pro (260617): the same proof-of-concept task as 260505 — write a PoC for a real vulnerability from a vague report, no crash trace, patch or reference PoC, judged on the vulnerable and the fixed build — over 344 tasks, adding 137 Linux kernel tasks to V8 and SpiderMonkey. It is the snapshot the site root shows. Scores run higher than on 260505 for the same model (GPT-5.5: 58.4 against 46.4), so the two are separate columns. Timeouts count as failures.",
-      "settings": [
-        "Pass@1",
-        "snapshot 260617",
-        "344 tasks",
-        "V8 + SpiderMonkey + Linux"
-      ],
-      "excludes": [
-        "the 260505 snapshot, 183 tasks without Linux",
-        "per-target scores",
-        "the completed-only rate, which leaves timeouts out"
-      ],
-      "urls": [
-        "https://sec-bench.github.io/",
-        "https://github.com/SEC-bench/SEC-bench-Pro"
       ]
     },
     "cyberbench_1_1": {
@@ -2105,6 +2105,27 @@
         "https://epoch.ai/benchmarks/critpt"
       ]
     },
+    "aime_2026": {
+      "name": "AIME 2026",
+      "short_name": "AIME26",
+      "category": "Scientific Reasoning",
+      "description": "American Invitational Mathematics Examination, 2026: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
+      "settings": [
+        "Pass@1",
+        "30 problems",
+        "no tools"
+      ],
+      "excludes": [
+        "with-tools runs",
+        "AIME 2024 and 2025",
+        "single-paper splits such as “AIME 2026 I”",
+        "best-of-k runs (pass@k for k > 1)"
+      ],
+      "urls": [
+        "https://maa.org/maa-invitational-competitions/",
+        "https://huggingface.co/datasets/MathArena/aime_2026"
+      ]
+    },
     "aime_2025": {
       "name": "AIME 2025",
       "short_name": "AIME25",
@@ -2127,27 +2148,6 @@
         "https://www.vals.ai/benchmarks/aime"
       ]
     },
-    "aime_2026": {
-      "name": "AIME 2026",
-      "short_name": "AIME26",
-      "category": "Scientific Reasoning",
-      "description": "American Invitational Mathematics Examination, 2026: both papers, 30 questions in total, each a 3-hour exam with integer answers from 0 to 999. Published runs average repeated single attempts rather than taking the best of several, so a mean over k samples is the same measurement as pass@1 and a best-of-k is not.",
-      "settings": [
-        "Pass@1",
-        "30 problems",
-        "no tools"
-      ],
-      "excludes": [
-        "with-tools runs",
-        "AIME 2024 and 2025",
-        "single-paper splits such as “AIME 2026 I”",
-        "best-of-k runs (pass@k for k > 1)"
-      ],
-      "urls": [
-        "https://maa.org/maa-invitational-competitions/",
-        "https://huggingface.co/datasets/MathArena/aime_2026"
-      ]
-    },
     "hmmt_feb_2026": {
       "name": "HMMT February 2026",
       "short_name": "HMMT26",
@@ -2167,26 +2167,6 @@
         "https://huggingface.co/datasets/MathArena/hmmt_feb_2026"
       ]
     },
-    "frontiermath_tiers_1_3": {
-      "name": "FrontierMath Tiers 1-3",
-      "short_name": "FMath",
-      "category": "Scientific Reasoning",
-      "description": "Epoch AI's unpublished, expert-written mathematics problems from undergraduate-hard to research level, each with an automatically checkable answer. The v2 private set, run by Epoch on its own harness with a Python tool for computation, the same for every model; problems are never released, so the column cannot be trained on.",
-      "settings": [
-        "accuracy",
-        "v2 private set",
-        "Epoch AI run"
-      ],
-      "excludes": [
-        "the v1 problem set",
-        "Tier 4, the research-level tier",
-        "self-reported FrontierMath numbers naming no tier"
-      ],
-      "urls": [
-        "https://epoch.ai/benchmarks/frontiermath-tiers-1-3-v2",
-        "https://epoch.ai/frontiermath"
-      ]
-    },
     "frontiermath_tier_4": {
       "name": "FrontierMath Tier 4",
       "short_name": "FMathT4",
@@ -2204,6 +2184,26 @@
       ],
       "urls": [
         "https://epoch.ai/benchmarks/frontiermath-tier-4-v2",
+        "https://epoch.ai/frontiermath"
+      ]
+    },
+    "frontiermath_tiers_1_3": {
+      "name": "FrontierMath Tiers 1-3",
+      "short_name": "FMath",
+      "category": "Scientific Reasoning",
+      "description": "Epoch AI's unpublished, expert-written mathematics problems from undergraduate-hard to research level, each with an automatically checkable answer. The v2 private set, run by Epoch on its own harness with a Python tool for computation, the same for every model; problems are never released, so the column cannot be trained on.",
+      "settings": [
+        "accuracy",
+        "v2 private set",
+        "Epoch AI run"
+      ],
+      "excludes": [
+        "the v1 problem set",
+        "Tier 4, the research-level tier",
+        "self-reported FrontierMath numbers naming no tier"
+      ],
+      "urls": [
+        "https://epoch.ai/benchmarks/frontiermath-tiers-1-3-v2",
         "https://epoch.ai/frontiermath"
       ]
     },
@@ -2227,26 +2227,6 @@
         "https://epoch.ai/benchmarks/gpqa-diamond"
       ]
     },
-    "hle": {
-      "name": "Humanity's Last Exam",
-      "short_name": "HLE",
-      "category": "Reasoning & Knowledge",
-      "description": "Humanity's Last Exam, run without tools: 2,500 expert-level questions across mathematics, the humanities and the natural sciences, written to resist internet retrieval. This column is the no-tools variant only. Tool use changes the answer rather than sharpening it -- across the models whose publisher states both, search and a code interpreter are worth a median +11.5 points and up to +27 -- so with-tools and search-agent runs are rejected rather than blended in here. Most values are Artificial Analysis' own run of the 2,158-question text-only subset, pass@1, and track AA's current implementation of it.",
-      "settings": [
-        "Pass@1",
-        "text-only subset",
-        "no tools"
-      ],
-      "excludes": [
-        "with-tools and search-agent runs, worth a median +11.5 points and up to +27",
-        "HLE-Verified, a different question set"
-      ],
-      "urls": [
-        "https://lastexam.ai/",
-        "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
-        "https://epoch.ai/benchmarks/hle"
-      ]
-    },
     "hle_diamond": {
       "name": "Humanity's Last Exam Diamond",
       "short_name": "HLE-D",
@@ -2268,26 +2248,45 @@
         "https://huggingface.co/datasets/cais/hle-diamond"
       ]
     },
-    "mmlu_pro": {
-      "name": "MMLU-Pro",
-      "short_name": "MMLUPro",
+    "hle": {
+      "name": "Humanity's Last Exam",
+      "short_name": "HLE",
       "category": "Reasoning & Knowledge",
-      "description": "TIGER-Lab's reasoning-focused rebuild of MMLU: around 12,000 questions across 14 disciplines with ten answer options instead of four, after the trivial and mislabelled items MMLU had accumulated were filtered out. The extra distractors and the chain-of-thought scoring shift it from recall toward reasoning. Metric is accuracy.",
+      "description": "Humanity's Last Exam, run without tools: 2,500 expert-level questions across mathematics, the humanities and the natural sciences, written to resist internet retrieval. This column is the no-tools variant only. Tool use changes the answer rather than sharpening it -- across the models whose publisher states both, search and a code interpreter are worth a median +11.5 points and up to +27 -- so with-tools and search-agent runs are rejected rather than blended in here. Most values are Artificial Analysis' own run of the 2,158-question text-only subset, pass@1, and track AA's current implementation of it.",
       "settings": [
-        "accuracy",
-        "10 options",
+        "Pass@1",
+        "text-only subset",
         "no tools"
       ],
       "excludes": [
-        "MMLU",
-        "MMLU-ProX and KMMLU-Pro, a multilingual extension and a Korean one"
+        "with-tools and search-agent runs, worth a median +11.5 points and up to +27",
+        "HLE-Verified, a different question set"
       ],
       "urls": [
-        "https://huggingface.co/spaces/TIGER-Lab/MMLU-Pro",
-        "https://arxiv.org/abs/2406.01574",
-        "https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro",
-        "https://evals.report/benchmarks/mmlu-pro",
-        "https://www.vals.ai/benchmarks/mmlu_pro"
+        "https://lastexam.ai/",
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
+        "https://epoch.ai/benchmarks/hle"
+      ]
+    },
+    "arc_agi_3": {
+      "name": "ARC-AGI-3",
+      "short_name": "ARC-3",
+      "category": "Reasoning & Knowledge",
+      "description": "ARC Prize's third abstraction-and-reasoning benchmark and the first interactive one: instead of completing a grid from examples, the agent is dropped into novel game-like environments and has to explore, infer the goal and the rules, and act on them. Scored on the semi-private set ARC Prize runs itself, in its own harness, taking each model's best published effort. Far from saturated where ARC-AGI-2 is close to it.",
+      "settings": [
+        "score",
+        "semi-private set",
+        "ARC Prize harness",
+        "best configuration"
+      ],
+      "excludes": [
+        "Provider Adapter runs, in the provider's own agent harness",
+        "ARC-AGI-1 and ARC-AGI-2",
+        "the human panel"
+      ],
+      "urls": [
+        "https://arcprize.org/leaderboard",
+        "https://arcprize.org/arc-agi/3/"
       ]
     },
     "arc_agi_2": {
@@ -2313,27 +2312,6 @@
         "https://epoch.ai/benchmarks/arc-agi-2"
       ]
     },
-    "arc_agi_3": {
-      "name": "ARC-AGI-3",
-      "short_name": "ARC-3",
-      "category": "Reasoning & Knowledge",
-      "description": "ARC Prize's third abstraction-and-reasoning benchmark and the first interactive one: instead of completing a grid from examples, the agent is dropped into novel game-like environments and has to explore, infer the goal and the rules, and act on them. Scored on the semi-private set ARC Prize runs itself, in its own harness, taking each model's best published effort. Far from saturated where ARC-AGI-2 is close to it.",
-      "settings": [
-        "score",
-        "semi-private set",
-        "ARC Prize harness",
-        "best configuration"
-      ],
-      "excludes": [
-        "Provider Adapter runs, in the provider's own agent harness",
-        "ARC-AGI-1 and ARC-AGI-2",
-        "the human panel"
-      ],
-      "urls": [
-        "https://arcprize.org/leaderboard",
-        "https://arcprize.org/arc-agi/3/"
-      ]
-    },
     "arc_agi_1": {
       "name": "ARC-AGI-1",
       "short_name": "ARC-1",
@@ -2353,6 +2331,28 @@
       "urls": [
         "https://arcprize.org/leaderboard",
         "https://arcprize.org/arc-agi/1/"
+      ]
+    },
+    "mmlu_pro": {
+      "name": "MMLU-Pro",
+      "short_name": "MMLUPro",
+      "category": "Reasoning & Knowledge",
+      "description": "TIGER-Lab's reasoning-focused rebuild of MMLU: around 12,000 questions across 14 disciplines with ten answer options instead of four, after the trivial and mislabelled items MMLU had accumulated were filtered out. The extra distractors and the chain-of-thought scoring shift it from recall toward reasoning. Metric is accuracy.",
+      "settings": [
+        "accuracy",
+        "10 options",
+        "no tools"
+      ],
+      "excludes": [
+        "MMLU",
+        "MMLU-ProX and KMMLU-Pro, a multilingual extension and a Korean one"
+      ],
+      "urls": [
+        "https://huggingface.co/spaces/TIGER-Lab/MMLU-Pro",
+        "https://arxiv.org/abs/2406.01574",
+        "https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro",
+        "https://evals.report/benchmarks/mmlu-pro",
+        "https://www.vals.ai/benchmarks/mmlu_pro"
       ]
     },
     "mmmlu": {
@@ -2398,25 +2398,51 @@
         "https://huggingface.co/datasets/MMMU/MMMU_Pro"
       ]
     },
-    "osworld_verified": {
-      "name": "OSWorld-Verified",
-      "short_name": "OSW V",
+    "zerobench": {
+      "name": "ZeroBench",
+      "short_name": "ZeroBench",
       "category": "Visual Reasoning",
-      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment, scored by task success rate. The benchmark's own board is read first, on its Foundation E2E GUI setup at max 100 steps; a model it has not run carries the OSWorld-Verified score its lab reports (model card, launch post, or an aggregator republishing one), whose step budget and harness are the lab's own.",
+      "description": "Deliberately \"impossible\" visual reasoning benchmark: 100 hand-crafted, multi-step questions over natural and synthetic images, scored as accuracy on the main set. Built for headroom — open-weight models sit in the low tens of percent, and the 334 subquestions are a separate score series this column does not mix in.",
       "settings": [
-        "task success rate",
-        "Foundation E2E GUI",
-        "max 100 steps",
-        "else vendor-reported"
+        "Pass@1",
+        "100 main questions",
+        "no tools"
       ],
       "excludes": [
-        "OSWorld before verification, and OSWorld 2.0"
+        "the 334 subquestions, which score three to four times higher",
+        "pass@5 runs",
+        "with-tools runs"
       ],
       "urls": [
-        "https://os-world.github.io",
-        "https://arxiv.org/abs/2404.07972",
-        "https://evals.report/benchmarks/osworld",
-        "https://epoch.ai/benchmarks/os-world"
+        "https://zerobench.github.io",
+        "https://arxiv.org/abs/2502.09696",
+        "https://huggingface.co/datasets/jonathan-roberts1/zerobench",
+        "https://evals.report/benchmarks/zerobench"
+      ]
+    },
+    "osworld_2_1": {
+      "name": "OSWorld 2.1",
+      "short_name": "OSW 2.1",
+      "category": "Visual Reasoning",
+      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2.1, the bug-fix release the maintainers now recommend, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 44.3 here and 31.4 on 2026.08.08 — so each release is its own column. No tracked model is scored on it yet. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
+      "settings": [
+        "binary accuracy",
+        "full 108-task set",
+        "max 500 steps",
+        "release 2.1"
+      ],
+      "excludes": [
+        "the partial (checkpoint) score",
+        "the 82-task offline set",
+        "150- and 300-step runs",
+        "releases 2026.06.24 and 2026.08.08",
+        "OSWorld and OSWorld-Verified",
+        "vendor-reported scores"
+      ],
+      "urls": [
+        "https://osworld-v2.xlang.ai",
+        "https://arxiv.org/abs/2606.29537",
+        "https://github.com/xlang-ai/OSWorld-V2"
       ]
     },
     "osworld_2_0_2026_06_24": {
@@ -2469,31 +2495,6 @@
         "https://github.com/xlang-ai/OSWorld-V2"
       ]
     },
-    "osworld_2_1": {
-      "name": "OSWorld 2.1",
-      "short_name": "OSW 2.1",
-      "category": "Visual Reasoning",
-      "description": "Long-horizon computer use: 108 end-to-end workflows across seven professional domains — research, creative production, engineering, business and finance, administration, healthcare, personal services — run in a desktop VM against 31 self-hosted websites and stateful user data, each taking a skilled human a median of about 1.6 hours. Tasks hinge on cross-source reasoning, hidden state the instruction never states, messages that change the task mid-run and questions the agent has to put to a simulated user. Scored by binary accuracy — the share of tasks fully completed, the authors' primary metric — on the full set at a 500-step budget, taking the best of a model's published reasoning-effort and tool settings. This column is release 2.1, the bug-fix release the maintainers now recommend, as run on the benchmark's own board. It re-pins task files, assets and mocked websites, and scores do not carry across releases — Claude Opus 5 at max effort reads 44.3 here and 31.4 on 2026.08.08 — so each release is its own column. No tracked model is scored on it yet. Scores labs report themselves are filed under OSWorld 2.0 Vendor.",
-      "settings": [
-        "binary accuracy",
-        "full 108-task set",
-        "max 500 steps",
-        "release 2.1"
-      ],
-      "excludes": [
-        "the partial (checkpoint) score",
-        "the 82-task offline set",
-        "150- and 300-step runs",
-        "releases 2026.06.24 and 2026.08.08",
-        "OSWorld and OSWorld-Verified",
-        "vendor-reported scores"
-      ],
-      "urls": [
-        "https://osworld-v2.xlang.ai",
-        "https://arxiv.org/abs/2606.29537",
-        "https://github.com/xlang-ai/OSWorld-V2"
-      ]
-    },
     "osworld_2_0_vendor": {
       "name": "OSWorld 2.0 Vendor",
       "short_name": "OSW 2.0V",
@@ -2514,26 +2515,25 @@
         "https://osworld-v2.xlang.ai"
       ]
     },
-    "zerobench": {
-      "name": "ZeroBench",
-      "short_name": "ZeroBench",
+    "osworld_verified": {
+      "name": "OSWorld-Verified",
+      "short_name": "OSW V",
       "category": "Visual Reasoning",
-      "description": "Deliberately \"impossible\" visual reasoning benchmark: 100 hand-crafted, multi-step questions over natural and synthetic images, scored as accuracy on the main set. Built for headroom — open-weight models sit in the low tens of percent, and the 334 subquestions are a separate score series this column does not mix in.",
+      "description": "Benchmark measuring GUI agents' ability to complete real computer tasks in a sandboxed Ubuntu environment, scored by task success rate. The benchmark's own board is read first, on its Foundation E2E GUI setup at max 100 steps; a model it has not run carries the OSWorld-Verified score its lab reports (model card, launch post, or an aggregator republishing one), whose step budget and harness are the lab's own.",
       "settings": [
-        "Pass@1",
-        "100 main questions",
-        "no tools"
+        "task success rate",
+        "Foundation E2E GUI",
+        "max 100 steps",
+        "else vendor-reported"
       ],
       "excludes": [
-        "the 334 subquestions, which score three to four times higher",
-        "pass@5 runs",
-        "with-tools runs"
+        "OSWorld before verification, and OSWorld 2.0"
       ],
       "urls": [
-        "https://zerobench.github.io",
-        "https://arxiv.org/abs/2502.09696",
-        "https://huggingface.co/datasets/jonathan-roberts1/zerobench",
-        "https://evals.report/benchmarks/zerobench"
+        "https://os-world.github.io",
+        "https://arxiv.org/abs/2404.07972",
+        "https://evals.report/benchmarks/osworld",
+        "https://epoch.ai/benchmarks/os-world"
       ]
     },
     "mathvista_mini": {
