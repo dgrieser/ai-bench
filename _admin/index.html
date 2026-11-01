@@ -665,6 +665,17 @@ details.card > details { margin-top: .6rem; }
 .card.sent .order-handle { visibility: hidden; }
 .order-row.dragging .order-handle { cursor: grabbing; color: var(--text); }
 .order-name { flex: 1; min-width: 0; line-height: 1.3; }
+/* The label as the site's table header prints it: the short name, in its
+   thead th type (mono, bold, tracked, uppercase). */
+.order-name .label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
 .order-name .key {
   display: block;
   color: var(--faint);
@@ -4660,7 +4671,10 @@ function renderBenchmarkOrder() {
       const handle = el("span", { className: "order-handle", title: "Drag to move", ariaHidden: "true" }, "\u2261");
       const row = el("li", { className: `order-row${moved.has(key) ? " moved" : ""}` }, [
         handle,
-        el("span", { className: "order-name" }, [bench.short_name || bench.name || key, el("span", { className: "key" }, key)]),
+        el("span", { className: "order-name", title: bench.name || key }, [
+          el("span", { className: "label" }, bench.short_name || bench.name || key),
+          el("span", { className: "key" }, key),
+        ]),
         el("span", { className: "order-pos" }, String(i + 1)),
         up, down,
       ]);
