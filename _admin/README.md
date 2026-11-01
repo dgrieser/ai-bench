@@ -360,6 +360,17 @@ tells you why.
   column is offered there as soon as the form is complete — and so can a
   mapping onto it from the Queue; `answer.py` applies the columns first.
 
+  **Column order** lists every column in `llm.json`'s order, which is the order
+  the site lists them in (grouped by category, in the order each category first
+  appears). Drag a row by its handle — the page scrolls near the edges, so a
+  long move on a phone is one gesture — or nudge it with the arrows. It sends
+  one `benchmark-order` record: the whole new `order` and, as `if_previous`,
+  the order the page was showing, so a column added or moved since makes it
+  stale rather than a silent clobber. It must name every column exactly once;
+  only the `benchmarks` object is rewritten. `answer.py` applies it before any
+  create in the same batch, so a new column lands after its anchor in the new
+  order.
+
   `answer.py` holds both records to the rules `test_benchmark_settings.py`
   holds the file to (a tag is at most 30 characters and no sentence, an empty
   `excludes` is removed rather than stored), and refuses a `range` that a score

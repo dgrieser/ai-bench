@@ -32,6 +32,7 @@ from _answers import (
     AA_IGNORE,
     BENCHMARK_CREATE,
     BENCHMARK_EDIT,
+    BENCHMARK_ORDER,
     MAPPING,
     MODEL_ADD,
     MODEL_CREATE,
@@ -1412,6 +1413,61 @@ class TestBenchmarks(AnswersTestCase):
                                side_effect=lambda a, _p: order.append(a.index) or []):
             _answers.apply(answers, llm_path=self.llm)
         self.assertEqual(order, [2, 1, 0])
+
+    CURRENT_ORDER = ["swe_bench_verified", "hle", "coding_index"]
+
+    def reorder(self, order, previous=None) -> dict:
+        return {
+            "kind": BENCHMARK_ORDER,
+            "order": order,
+            "if_previous": self.CURRENT_ORDER if previous is None else previous,
+        }
+
+    def test_a_reorder_rewrites_only_the_order(self) -> None:
+        before = json.loads(self.llm.read_text(encoding="utf-8"))
+        order = ["coding_index", "swe_bench_verified", "hle"]
+        answer = self.accepted(self.reorder(order))
+        _answers.apply([answer], llm_path=self.llm)
+        written = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual(list(written["benchmarks"]), order)
+        self.assertEqual(written["benchmarks"], before["benchmarks"])
+        self.assertEqual(written["models"], before["models"])
+
+    def test_a_reorder_is_a_permutation_of_the_current_columns(self) -> None:
+        self.refused(self.reorder(["hle", "swe_bench_verified"]), "exactly once")
+        self.refused(self.reorder(["hle", "swe_bench_verified", "coding_index", "nope"]), "exactly once")
+        self.refused(self.reorder(["hle", "hle", "coding_index"]), "twice")
+        self.refused(self.reorder("hle"), "list of benchmark keys")
+        self.refused(self.reorder(self.CURRENT_ORDER), "nothing to change")
+
+    def test_a_reorder_against_a_stale_order_is_refused(self) -> None:
+        self.refused(
+            self.reorder(["hle", "swe_bench_verified", "coding_index"],
+                         previous=["hle", "swe_bench_verified", "coding_index"]),
+            "stale",
+        )
+        record = self.reorder(["hle", "swe_bench_verified", "coding_index"])
+        del record["if_previous"]
+        self.refused(record, "if_previous")
+
+    def test_one_reorder_per_batch(self) -> None:
+        records = [self.reorder(["hle", "swe_bench_verified", "coding_index"]),
+                   self.reorder(["coding_index", "hle", "swe_bench_verified"])]
+        _, failures = _answers.validate(records, llm_path=self.llm, queue=self.queue, universes=UNIVERSES)
+        self.assertEqual([f.index for f in failures], [1])
+
+    def test_a_reorder_runs_before_a_create_in_the_same_batch(self) -> None:
+        records = [self.create(after="hle"), self.edit(name="Humanity's Last Exam"),
+                   self.reorder(["hle", "coding_index", "swe_bench_verified"])]
+        answers, failures = _answers.validate(records, llm_path=self.llm, queue=self.queue, universes=UNIVERSES)
+        self.assertEqual(failures, [])
+        _answers.apply(answers, llm_path=self.llm)
+        written = json.loads(self.llm.read_text(encoding="utf-8"))
+        self.assertEqual(
+            list(written["benchmarks"]),
+            ["hle", "new_bench_1_0", "coding_index", "swe_bench_verified"],
+        )
+        self.assertEqual(written["benchmarks"]["hle"]["name"], "Humanity's Last Exam")
 
     def test_a_create_lands_after_its_category_with_a_null_score_everywhere(self) -> None:
         doc = json.loads(json.dumps(LLM_DOC))

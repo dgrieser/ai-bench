@@ -620,6 +620,61 @@ details.card > summary .chips { margin-top: .3rem; }
 details.card > details { margin-top: .6rem; }
 .card-foot { display: flex; justify-content: flex-end; margin-top: .7rem; }
 
+/* The column order: one row per benchmark, dragged by its handle or nudged
+   with the arrows. The handle alone takes the touch, so the list still
+   scrolls under a thumb anywhere else. */
+.order-list { list-style: none; margin: .7rem 0 0; padding: 0; }
+.order-cat {
+  margin: .7rem 0 .25rem;
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.order-cat:first-child { margin-top: 0; }
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .2rem .25rem .2rem 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+.order-row + .order-row { border-top-color: var(--line); }
+.order-row.moved { background: var(--accent-soft); }
+.order-row.dragging {
+  position: relative;
+  z-index: 2;
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-2);
+}
+.order-handle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--faint);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.card.sent .order-handle { visibility: hidden; }
+.order-row.dragging .order-handle { cursor: grabbing; color: var(--text); }
+.order-name { flex: 1; min-width: 0; line-height: 1.3; }
+.order-name .key {
+  display: block;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  overflow-wrap: anywhere;
+}
+.order-pos { flex: none; color: var(--faint); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.order-row .btn.tiny { flex: none; min-width: 2.25rem; padding: 0; }
+
 /* The add card's name field: a list drawn by hand rather than a datalist,
    because a datalist cannot be told to wait for three letters, to match
    anywhere in a slug, or to stop at fifty. */
@@ -1769,7 +1824,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key);
+  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -1931,7 +1986,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit)) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key));
 
 function readSent() {
   try {
@@ -4217,6 +4272,8 @@ function setRename(model, renameKey, slug) {
 
 const BENCH_CREATE_KEY = (key) => `benchmark-create  ${key}`;
 const BENCH_EDIT_KEY = (key) => `benchmark-edit  ${key}`;
+/* One record for the whole order: _answers.BENCHMARK_ORDER. */
+const BENCH_ORDER_KEY = "benchmark-order  columns";
 
 /* _answers.BENCHMARK_KEY_RE: an identifier, since it becomes edit.py's --flag. */
 const BENCH_KEY_RE = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/;
@@ -4422,6 +4479,7 @@ function renderBenchmarks() {
     + "starts empty: give it scores on the Models tab, in this batch if you like, "
     + "or map a source's label onto it from the Queue."));
   box.append(renderBenchmarkAdd());
+  box.append(renderBenchmarkOrder());
 
   const search = el("input", {
     type: "search",
@@ -4495,6 +4553,202 @@ function renderBenchmarkCard(key, bench) {
   card.append(el("div", { className: "card-foot" }, reset));
   commit();
   return guard(card, recordKey);
+}
+
+/* The order the columns are listed in -- on the site too, which files each
+   benchmark under its category in the order the categories first appear. The
+   draft is the record's own `order`; a column llm.json gained since the draft
+   was made goes back to where llm.json has it, and one it lost drops out. */
+function benchOrderDraft() {
+  const current = Object.keys(state.llm?.benchmarks || {});
+  const record = state.answers.get(BENCH_ORDER_KEY);
+  if (!record || !Array.isArray(record.order)) return current;
+  const order = record.order.filter((key) => current.includes(key));
+  current.forEach((key, i) => {
+    if (order.includes(key)) return;
+    const before = current.slice(0, i).reverse().find((k) => order.includes(k));
+    order.splice(before ? order.indexOf(before) + 1 : 0, 0, key);
+  });
+  return order;
+}
+
+/* The keys a person actually moved: everything outside the longest run that
+   kept its original relative order. Position alone would mark every row a
+   long move slid past. */
+function movedKeys(order, current) {
+  const rank = new Map(current.map((key, i) => [key, i]));
+  const seq = order.map((key) => rank.get(key));
+  const tails = [];
+  const tailAt = [];
+  const prev = new Array(seq.length).fill(-1);
+  seq.forEach((value, i) => {
+    let lo = 0;
+    let hi = tails.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (tails[mid] < value) lo = mid + 1; else hi = mid;
+    }
+    tails[lo] = value;
+    tailAt[lo] = i;
+    prev[i] = lo ? tailAt[lo - 1] : -1;
+  });
+  const kept = new Set();
+  for (let i = tails.length ? tailAt[tails.length - 1] : -1; i >= 0; i = prev[i]) kept.add(order[i]);
+  return new Set(order.filter((key) => !kept.has(key)));
+}
+
+function renderBenchmarkOrder() {
+  const current = Object.keys(state.llm?.benchmarks || {});
+  const benches = state.llm?.benchmarks || {};
+  let order = benchOrderDraft();
+  const card = el("details", { className: "card bench-order" });
+  card.open = state.benchOpen.has(BENCH_ORDER_KEY) || state.answers.has(BENCH_ORDER_KEY);
+  card.ontoggle = () => {
+    if (card.open) state.benchOpen.add(BENCH_ORDER_KEY);
+    else state.benchOpen.delete(BENCH_ORDER_KEY);
+  };
+  const summaryChips = el("div", { className: "chips" });
+  card.append(el("summary", {}, [el("span", { className: "subject" }, "Column order"), summaryChips]));
+  card.append(el("p", { className: "note-text" },
+    "The order the benchmarks are listed in, here and on the site, which "
+    + "groups them by category in the order each category first appears. Drag "
+    + "a row by its handle, or move it with the arrows."));
+
+  const list = el("ol", { className: "order-list" });
+  const commit = () => {
+    const changed = order.some((key, i) => key !== current[i]);
+    if (changed) {
+      state.answers.set(BENCH_ORDER_KEY, { kind: "benchmark-order", order: [...order], if_previous: current });
+    } else {
+      state.answers.delete(BENCH_ORDER_KEY);
+    }
+    card.classList.toggle("answered", changed);
+    const moved = movedKeys(order, current).size;
+    summaryChips.replaceChildren(
+      chip("", `${current.length} benchmarks`, { prose: true }),
+      changed ? chip("", `${moved} moved`, { prose: true }) : null);
+    reset.disabled = !changed;
+    refreshFooter();
+  };
+  const move = (from, to) => {
+    if (to < 0 || to >= order.length || from === to) return;
+    const [key] = order.splice(from, 1);
+    order.splice(to, 0, key);
+  };
+
+  const draw = (focusKey = null, focusDir = null) => {
+    const items = [];
+    const moved = movedKeys(order, current);
+    let lastCat = null;
+    order.forEach((key, i) => {
+      const bench = benches[key] || {};
+      const cat = bench.category || "Other";
+      if (cat !== lastCat) items.push(el("li", { className: "order-cat", ariaHidden: "true" }, cat));
+      lastCat = cat;
+      const up = el("button", {
+        type: "button", className: "btn ghost tiny", disabled: i === 0,
+        title: "Move up", ariaLabel: `Move ${bench.name || key} up`,
+      }, "\u2191");
+      const down = el("button", {
+        type: "button", className: "btn ghost tiny", disabled: i === order.length - 1,
+        title: "Move down", ariaLabel: `Move ${bench.name || key} down`,
+      }, "\u2193");
+      up.dataset.dir = "up";
+      down.dataset.dir = "down";
+      up.onclick = () => { move(i, i - 1); draw(key, "up"); commit(); };
+      down.onclick = () => { move(i, i + 1); draw(key, "down"); commit(); };
+      const handle = el("span", { className: "order-handle", title: "Drag to move", ariaHidden: "true" }, "\u2261");
+      const row = el("li", { className: `order-row${moved.has(key) ? " moved" : ""}` }, [
+        handle,
+        el("span", { className: "order-name" }, [bench.short_name || bench.name || key, el("span", { className: "key" }, key)]),
+        el("span", { className: "order-pos" }, String(i + 1)),
+        up, down,
+      ]);
+      row.dataset.key = key;
+      handle.addEventListener("pointerdown", (event) => drag(event, row));
+      items.push(row);
+    });
+    list.replaceChildren(...items);
+    if (focusKey) {
+      const row = list.querySelector(`[data-key="${CSS.escape(focusKey)}"]`);
+      /* The arrow just pressed, or its twin when the row hit an end. */
+      const button = row?.querySelector(`[data-dir="${focusDir}"]:not(:disabled)`)
+        || row?.querySelector("button:not(:disabled)");
+      button?.focus({ preventScroll: true });
+      row?.scrollIntoView({ block: "nearest" });
+    }
+  };
+
+  /* A drag moves the row in the DOM as the pointer passes its neighbours'
+     midpoints, and scrolls the page near the top and bottom edges, so a long
+     move on a phone needs no second gesture. The order is read back from the
+     DOM when the pointer lifts. */
+  const drag = (event, row) => {
+    if (card.classList.contains("sent")) return;
+    if (event.button !== undefined && event.button !== 0) return;
+    event.preventDefault();
+    /* Listened for on the window: moving the row in the DOM drops the
+       handle's pointer capture, and with it every later event. */
+    const id = event.pointerId;
+    row.classList.add("dragging");
+    list.querySelectorAll(".order-cat").forEach((cat) => { cat.style.visibility = "hidden"; });
+    let lastY = event.clientY;
+    let frame = 0;
+    const header = document.querySelector("header")?.offsetHeight || 0;
+    const bar = document.querySelector(".bar")?.offsetHeight || 0;
+    const place = () => {
+      const rows = [...list.querySelectorAll(".order-row:not(.dragging)")];
+      const next = rows.find((other) => {
+        const box = other.getBoundingClientRect();
+        return lastY < box.top + box.height / 2;
+      });
+      if (next) {
+        if (row.nextElementSibling !== next) list.insertBefore(row, next);
+      } else if (list.lastElementChild !== row) {
+        list.append(row);
+      }
+    };
+    const tick = () => {
+      const edge = 56;
+      const top = header + edge;
+      const bottom = window.innerHeight - bar - edge;
+      const speed = lastY < top ? -Math.min(18, (top - lastY) / 3)
+        : lastY > bottom ? Math.min(18, (lastY - bottom) / 3) : 0;
+      if (speed) { window.scrollBy(0, speed); place(); }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    const onMove = (e) => {
+      if (e.pointerId !== id) return;
+      e.preventDefault();
+      lastY = e.clientY;
+      place();
+    };
+    const onEnd = (e) => {
+      if (e.pointerId !== id) return;
+      cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onEnd);
+      window.removeEventListener("pointercancel", onEnd);
+      order = [...list.querySelectorAll(".order-row")].map((r) => r.dataset.key);
+      draw();
+      commit();
+    };
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onEnd);
+    window.addEventListener("pointercancel", onEnd);
+  };
+
+  const reset = el("button", { type: "button", className: "btn ghost tiny" }, "Undo changes");
+  reset.onclick = () => { order = [...current]; draw(); commit(); };
+  card.append(list, el("div", { className: "card-foot" }, reset));
+  draw();
+  commit();
+  if (!current.length) {
+    list.replaceChildren(el("p", { className: "empty" }, "llm.json has not been read yet."));
+    return card;
+  }
+  return guard(card, BENCH_ORDER_KEY);
 }
 
 function renderBenchmarkAdd() {

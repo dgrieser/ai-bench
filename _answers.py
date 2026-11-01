@@ -100,6 +100,11 @@ REFERENCE_REMOVE = "reference-remove"
 # Models tab, or by a mapping onto it, until a scraper is written for it.
 BENCHMARK_CREATE = "benchmark-create"
 BENCHMARK_EDIT = "benchmark-edit"
+# The order of the columns: llm.json's `benchmarks` keys, which is the order
+# the site lists them in. One record carries the whole new order, and the
+# order the page saw, so a column added or moved since is a stale record, not
+# a silent clobber.
+BENCHMARK_ORDER = "benchmark-order"
 KINDS = frozenset(
     {
         MAPPING,
@@ -115,10 +120,11 @@ KINDS = frozenset(
         REFERENCE_REMOVE,
         BENCHMARK_CREATE,
         BENCHMARK_EDIT,
+        BENCHMARK_ORDER,
     }
 )
 
-BENCHMARK_KINDS = frozenset({BENCHMARK_CREATE, BENCHMARK_EDIT})
+BENCHMARK_KINDS = frozenset({BENCHMARK_CREATE, BENCHMARK_EDIT, BENCHMARK_ORDER})
 
 # The kinds that act on one entry in llm.json. A batch may touch each entry
 # once: the records are applied in order and rolled back together, so an edit
@@ -237,6 +243,8 @@ class Answer:
             return f"create benchmark {self.subject!r}{placed}"
         if self.kind == BENCHMARK_EDIT:
             return f"edit benchmark {self.subject!r}: {', '.join(sorted(self.fields))}"
+        if self.kind == BENCHMARK_ORDER:
+            return f"reorder benchmarks ({len(self.value)} columns)"
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -626,6 +634,8 @@ def _validate_one(
         return _validate_benchmark_create(index, record, doc or {})
     if kind == BENCHMARK_EDIT:
         return _validate_benchmark_edit(index, record, doc or {})
+    if kind == BENCHMARK_ORDER:
+        return _validate_benchmark_order(index, record, doc or {})
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -1293,6 +1303,42 @@ def _validate_benchmark_edit(index: int, record: dict[str, Any], doc: dict[str, 
     return Answer(index=index, kind=BENCHMARK_EDIT, subject=key, fields=changed)
 
 
+# The subject of a benchmark-order record: not a column key (a key is an
+# identifier, this is not one), so the one-column-one-record check below keeps
+# it apart from the creates and edits, and two order records collide.
+BENCHMARK_ORDER_SUBJECT = "<column order>"
+
+
+def _validate_benchmark_order(index: int, record: dict[str, Any], doc: dict[str, Any]) -> Answer:
+    """A new order for every existing column: a permutation, nothing added.
+
+    `if_previous` is the order the sender was looking at. A refresh that added a
+    column, or another reorder, makes it stale -- the record is refused rather
+    than putting columns where nobody put them.
+    """
+    current = list(doc.get("benchmarks") or {})
+    order = record.get("order")
+    if not isinstance(order, list) or not all(isinstance(k, str) for k in order):
+        raise AnswerError("'order' must be a list of benchmark keys")
+    if "if_previous" not in record:
+        raise AnswerError("'if_previous' is required: send the order the page was showing")
+    if record["if_previous"] != current:
+        raise AnswerError("stale: the columns of llm.json changed since; re-read and reorder again")
+    if len(set(order)) != len(order):
+        raise AnswerError("'order' names a benchmark twice")
+    missing = [k for k in current if k not in order]
+    unknown = [k for k in order if k not in current]
+    if missing or unknown:
+        raise AnswerError(
+            "'order' must name every benchmark exactly once"
+            + (f"; missing {missing[:3]!r}" if missing else "")
+            + (f"; unknown {unknown[:3]!r}" if unknown else "")
+        )
+    if order == current:
+        raise AnswerError("nothing to change: the order is the one llm.json already has")
+    return Answer(index=index, kind=BENCHMARK_ORDER, subject=BENCHMARK_ORDER_SUBJECT, value=list(order))
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -1406,6 +1452,9 @@ def apply(answers: Sequence[Answer], *, llm_path: Path = DEFAULT_LLM_JSON) -> li
         answers,
         key=lambda answer: (
             answer.kind not in BENCHMARK_KINDS,
+            # The reorder first of all: it is a permutation of the columns the
+            # file holds, so it has to run before a create adds one.
+            answer.kind != BENCHMARK_ORDER,
             answer.kind not in (MODEL_CREATE, MODEL_ADD),
         ),
     )
@@ -1472,6 +1521,9 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
 
     if answer.kind == BENCHMARK_EDIT:
         return _edit_benchmark(answer, llm_path)
+
+    if answer.kind == BENCHMARK_ORDER:
+        return _order_benchmarks(answer, llm_path)
 
     return _apply_edit(answer, llm_path)
 
@@ -1546,6 +1598,23 @@ def _create_benchmark(answer: Answer, llm_path: Path) -> list[str]:
     _write_llm(doc, llm_path)
     placed = f"after {previous!r}" if previous else "first"
     return [f"{llm_path.name}: created benchmark {answer.subject!r} ({placed})"]
+
+
+def _order_benchmarks(answer: Answer, llm_path: Path) -> list[str]:
+    """Rewrite the benchmarks object in the new order, nothing else.
+
+    Applied before any create in the same batch (see apply), so the permutation
+    still covers every key, and a column created alongside lands after the
+    anchor it names in the new order.
+    """
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    benchmarks = doc.get("benchmarks")
+    if not isinstance(benchmarks, dict) or sorted(benchmarks) != sorted(answer.value):
+        raise AnswerError("the columns of llm.json changed; re-read and reorder again")
+    moved = sum(1 for a, b in zip(benchmarks, answer.value) if a != b)
+    doc["benchmarks"] = {key: benchmarks[key] for key in answer.value}
+    _write_llm(doc, llm_path)
+    return [f"{llm_path.name}: reordered the benchmarks ({moved} position(s) changed)"]
 
 
 def _edit_benchmark(answer: Answer, llm_path: Path) -> list[str]:
