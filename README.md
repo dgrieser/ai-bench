@@ -131,8 +131,8 @@ an entry with nothing before it really is a score arriving.
 
 Top-level **`index_rankings`** is the record of places on the derived
 indexes (the OpenBench Index and its Coding, Tooling, Knowledge, Vision, Trust
-and Security indexes), which `llm.html` prints as the **Ranking Changes**
-panel under Recently Added. `scores_history` leaves those columns out because
+and Security indexes), which `llm.html` prints as the **Index Ranking Changes**
+section right after Recently Added (`#ranking-changes`). `scores_history` leaves those columns out because
 their values move whenever anything in the table moves; a model's *place* on
 one is what a reader wants to follow. It holds `since` (the first day
 recorded), `ranks` (index key → model → place, as of the last refresh; ties
@@ -555,7 +555,7 @@ current address.
 ./backfill_history.py llm.json
 ./backfill_history.py llm.json -w
 
-# Rebuild index_rankings (the Ranking Changes panel) by replaying the last
+# Rebuild index_rankings (the Index Ranking Changes section) by replaying the last
 # --days days of llm.json's first-parent revisions through _rankings.sync()
 # (dry-run; -w to persist). A shallow clone needs the history fetched first.
 ./backfill_rankings.py llm.json --days 31

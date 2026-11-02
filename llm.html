@@ -2204,6 +2204,13 @@
        from one place to another, or dropped out. Lines flow into as many
        columns as the width allows, since a busy day moves dozens of models
        and each line is short. */
+    /* Its own section after Recently Added, not a continuation of it: a
+       heavier rule above, so the two timelines read as two panels. */
+    .rank-panel {
+      border-top: 2px solid var(--line);
+      margin-top: 18px;
+    }
+
     .rank-filter {
       display: flex;
       flex-wrap: wrap;
@@ -7734,8 +7741,8 @@
           </button>
         `;
         return `
-          <section class="recent-panel" aria-label="Ranking changes on the derived indexes">
-            <h2>Ranking Changes</h2>
+          <section class="recent-panel rank-panel" id="ranking-changes" aria-label="Index ranking changes">
+            <h2>Index Ranking Changes</h2>
             ${lead}
             ${filter}
             ${items.length ? `<ol class="recent-days">${items.slice(0, RANK_OPEN_DAYS).join("")}</ol>` : ""}
