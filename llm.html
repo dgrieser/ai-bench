@@ -2198,6 +2198,134 @@
       padding-top: 8px;
     }
 
+    /* Ranking Changes: the same timeline as Recently Added, read off
+       index_rankings instead of scores_history. Under each day, one block per
+       index, and under that one line per model -- entered at a place, moved
+       from one place to another, or dropped out. Lines flow into as many
+       columns as the width allows, since a busy day moves dozens of models
+       and each line is short. */
+    /* Its own section after Recently Added, not a continuation of it: a
+       heavier rule above, so the two timelines read as two panels. */
+    .rank-panel {
+      border-top: 2px solid var(--line);
+      margin-top: 18px;
+    }
+
+    .rank-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+
+    .rank-filter button {
+      width: auto;
+      min-height: 0;
+      padding: 3px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+
+    .rank-filter button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .rank-filter button[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .rank-index {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .rank-index-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 10px;
+    }
+
+    .rank-index-name {
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .rank-lines {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 2px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rank-line {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      min-width: 0;
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+
+    /* Direction as a shape, like the score chips' arrows: the page's colours
+       are spoken for, so up and down are told apart by the glyph alone. */
+    .rank-mark {
+      flex: none;
+      width: 1.1em;
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-align: center;
+    }
+
+    .rank-line.is-entered .rank-mark {
+      color: var(--fresh-ink);
+    }
+
+    .rank-line .recent-model {
+      font-size: 0.76rem;
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    .rank-line.is-left .recent-model {
+      color: var(--muted);
+    }
+
+    .rank-places {
+      flex: none;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .rank-places b {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .rank-index .recent-more > .rank-lines {
+      padding-top: 2px;
+    }
+
+    .rank-earlier {
+      margin-top: 8px;
+    }
+
     .detail-history-lead {
       margin: 0 0 14px;
       max-width: 82ch;
@@ -5220,6 +5348,10 @@
         // llm.json records; not an address, because it is a way of reading one
         // panel rather than a different view of the index.
         history: { showAll: false },
+        // The Ranking Changes panel: the same window as Recently Added, kept
+        // separately so widening one does not flood the other, and the index
+        // the reader narrowed it to ("" for all of them).
+        rankings: { showAll: false, index: "" },
         radar: {
           axes: [],
           pickerOpen: false
@@ -6973,6 +7105,7 @@
             </table>
           </div>
           ${renderRecentPanel()}
+          ${renderRankingPanel()}
           ${renderBenchmarkDirectory()}
           ${renderCreditsDirectory()}
           ${renderSourcesDirectory()}
@@ -6996,6 +7129,31 @@
             }
           });
         }
+
+        // The Ranking Changes panel's two controls -- its window and the index
+        // it is narrowed to -- rebuild the table the same way, and for the same
+        // reason, as the Recently Added toggle above.
+        const rerenderAround = (selector, change) => {
+          const control = ui.content.querySelector(selector);
+          const anchor = control ? control.getBoundingClientRect().top : 0;
+          change();
+          renderTable();
+          const moved = ui.content.querySelector(selector);
+          if (moved) {
+            window.scrollBy(0, moved.getBoundingClientRect().top - anchor);
+          }
+        };
+        const rankToggle = ui.content.querySelector("[data-rank-toggle]");
+        if (rankToggle) {
+          rankToggle.addEventListener("click", () => rerenderAround("[data-rank-toggle]", () => {
+            state.rankings.showAll = !state.rankings.showAll;
+          }));
+        }
+        ui.content.querySelectorAll("[data-rank-index]").forEach((button) => {
+          button.addEventListener("click", () => rerenderAround(".rank-filter", () => {
+            state.rankings.index = button.dataset.rankIndex || "";
+          }));
+        });
 
         ui.content.querySelectorAll("th[data-sort-key]").forEach((th) => {
           th.addEventListener("click", () => {
@@ -7410,6 +7568,185 @@
             <h2>${showAll ? "Score History" : "Recently Added"}</h2>
             ${lead}
             ${items ? `<ol class="recent-days">${items}</ol>` : ""}
+            ${toggle}
+          </section>
+        `;
+      }
+
+      // How many of one index's lines a day lists before the rest fold away.
+      const RANK_PREVIEW = 6;
+
+      // How many days are drawn open; the rest of the window folds behind one
+      // disclosure, since a refit can move a hundred places in a day.
+      const RANK_OPEN_DAYS = 5;
+
+      // index_rankings.changes, read the way _rankings.py writes it: from null
+      // is a model entering the index, to null a model leaving it, both set a
+      // move. The kind is derived here rather than stored, like a score's.
+      function rankingChanges() {
+        const stored = state.data?.index_rankings?.changes;
+        if (!Array.isArray(stored)) {
+          return [];
+        }
+        const place = (value) => (Number.isInteger(value) && value > 0 ? value : null);
+        return stored
+          .filter((entry) => entry && typeof entry === "object" && entry.date && entry.index && entry.model)
+          .map((entry) => {
+            const from = place(entry.from);
+            const to = place(entry.to);
+            const kind = from === null ? "entered" : (to === null ? "left" : (to < from ? "up" : "down"));
+            return { date: String(entry.date), index: String(entry.index), model: String(entry.model), from, to, of: place(entry.of), kind };
+          })
+          .filter((entry) => entry.from !== null || entry.to !== null);
+      }
+
+      // The derived indexes the record covers, in column order: the panel's
+      // filter offers exactly these.
+      function rankingIndexKeys() {
+        const benchmarks = state.data?.benchmarks || {};
+        return Object.keys(benchmarks).filter((key) => isDerivedBenchmark(key));
+      }
+
+      function inRankingWindow(date) {
+        const age = daysSince(date);
+        if (age === null || age < 0) {
+          return false;
+        }
+        return state.rankings.showAll || age < HISTORY_DAYS;
+      }
+
+      // One line: what happened to one model on one index on one day.
+      function renderRankLine(change, model) {
+        const of = change.of ? ` of ${change.of}` : "";
+        const name = model
+          ? withReferenceLock(model, `<a class="recent-model${isReferenceModel(model) ? " model-reference" : ""}" href="#model/${escapeAttr(modelSlug(model.name))}"${tipAttrs(modelTipFields(model))}>${escapeHtml(model.name)}</a>`)
+          : `<span class="recent-model">${escapeHtml(change.model)}</span>`;
+        let mark = "";
+        let places = "";
+        let label = "";
+        if (change.kind === "entered") {
+          mark = "&#9733;";
+          places = `entered at <b>#${change.to}</b>${of}`;
+          label = `entered at place ${change.to}${of}`;
+        } else if (change.kind === "left") {
+          mark = "&times;";
+          places = `dropped out, was <b>#${change.from}</b>`;
+          label = `dropped out of the index, was place ${change.from}`;
+        } else {
+          mark = change.kind === "up" ? "&#9650;" : "&#9660;";
+          places = `#${change.from} &rarr; <b>#${change.to}</b>${of}`;
+          label = `moved ${change.kind} from place ${change.from} to ${change.to}${of}`;
+        }
+        return `
+          <li class="rank-line is-${change.kind}">
+            <span class="rank-mark" role="img" aria-label="${escapeAttr(label)}">${mark}</span>
+            ${name}
+            <span class="rank-places">${places}</span>
+          </li>
+        `;
+      }
+
+      function renderRankingPanel() {
+        const record = state.data?.index_rankings;
+        if (!record || typeof record !== "object") {
+          return "";
+        }
+        const keys = rankingIndexKeys();
+        const order = new Map(keys.map((key, position) => [key, position]));
+        const selected = keys.includes(state.rankings.index) ? state.rankings.index : "";
+        // The table's own row objects, which carry what a name's slip reads
+        // (the creator, the reference flag); a name the file no longer holds
+        // at all is told apart from one the filters are hiding.
+        const known = new Set((state.data.models || []).map((model) => model?.name));
+        const byName = new Map(state.filteredModels.map((model) => [model.name, model]));
+        // Same rows as the table: a model the filters hide is hidden here too,
+        // and so is a closed reference row until the reader asks for those. A
+        // model no longer in the file at all has nothing to filter on, so what
+        // it did before it went is still listed, under its plain name.
+        const changes = rankingChanges().filter((change) => {
+          if (!order.has(change.index) || (selected && change.index !== selected) || !inRankingWindow(change.date)) {
+            return false;
+          }
+          return byName.has(change.model) || !known.has(change.model);
+        });
+
+        const byDay = new Map();
+        changes.forEach((change) => {
+          if (!byDay.has(change.date)) byDay.set(change.date, new Map());
+          const day = byDay.get(change.date);
+          if (!day.has(change.index)) day.set(change.index, []);
+          day.get(change.index).push(change);
+        });
+        // Arrivals first -- they are what reorders the rest -- then moves by
+        // where the model landed, then departures by where it was.
+        const weight = { entered: 0, up: 1, down: 1, left: 2 };
+        const days = [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1));
+
+        const items = days.map(([date, indexes]) => {
+          const age = daysSince(date) ?? 0;
+          const fresh = Math.max(0, (NEW_DAYS - age) / NEW_DAYS).toFixed(3);
+          const blocks = [...indexes.entries()]
+            .sort((a, b) => order.get(a[0]) - order.get(b[0]))
+            .map(([key, list]) => {
+              list.sort((a, b) => weight[a.kind] - weight[b.kind]
+                || (a.to ?? a.from) - (b.to ?? b.from)
+                || a.model.localeCompare(b.model));
+              const counts = ["entered", "up", "down", "left"].map((kind) => [kind, list.filter((c) => c.kind === kind).length]);
+              const words = { entered: "entered", up: "up", down: "down", left: "dropped out" };
+              const note = counts.filter(([, n]) => n).map(([kind, n]) => `${n} ${words[kind]}`).join(", ");
+              const lines = list.map((change) => renderRankLine(change, byName.get(change.model)));
+              const head = lines.slice(0, RANK_PREVIEW).join("");
+              const tail = lines.slice(RANK_PREVIEW);
+              const more = tail.length
+                ? `<details class="recent-more"><summary>${tail.length} more</summary><ul class="rank-lines">${tail.join("")}</ul></details>`
+                : "";
+              return `
+                <div class="rank-index">
+                  <div class="rank-index-head">
+                    <span class="rank-index-name">${escapeHtml(getBenchmarkFullName(key))}</span>
+                    <span class="recent-note">${escapeHtml(note)}</span>
+                  </div>
+                  <ul class="rank-lines">${head}</ul>
+                  ${more}
+                </div>
+              `;
+            }).join("");
+          return `
+            <li class="recent-day" style="--fresh:${fresh}">
+              <div class="recent-date">
+                <span class="recent-date-day">${escapeHtml(date)}</span>
+                <span class="recent-date-age">${escapeHtml(describeAge(age))}</span>
+              </div>
+              <div class="recent-entries">${blocks}</div>
+            </li>
+          `;
+        });
+
+        const since = typeof record.since === "string" ? record.since : "";
+        const filter = keys.length > 1
+          ? `<div class="rank-filter" role="group" aria-label="Index">
+              ${["", ...keys].map((key) => `<button type="button" data-rank-index="${escapeAttr(key)}" aria-pressed="${key === selected ? "true" : "false"}">${escapeHtml(key ? getBenchmarkFullName(key) : "All indexes")}</button>`).join("")}
+            </div>`
+          : "";
+        const lead = `
+          <p class="recent-lead">
+            Places on the derived indexes, counted over every ranked model, closed reference rows included${since ? `, recorded since ${escapeHtml(since)}` : ""}.
+            A move is listed when a model overtakes another or is overtaken; being pushed down a place by a newcomer is the newcomer's entry, not a move.
+            ${items.length ? "" : ` Nothing has changed ${state.rankings.showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.`}
+          </p>
+        `;
+        const toggle = `
+          <button type="button" class="recent-window" data-rank-toggle aria-pressed="${state.rankings.showAll ? "true" : "false"}">
+            ${state.rankings.showAll ? `Show the last ${HISTORY_DAYS} days` : "Show all ranking history"}
+          </button>
+        `;
+        return `
+          <section class="recent-panel rank-panel" id="ranking-changes" aria-label="Index ranking changes">
+            <h2>Index Ranking Changes</h2>
+            ${lead}
+            ${filter}
+            ${items.length ? `<ol class="recent-days">${items.slice(0, RANK_OPEN_DAYS).join("")}</ol>` : ""}
+            ${items.length > RANK_OPEN_DAYS ? `<details class="recent-more rank-earlier"><summary>${items.length - RANK_OPEN_DAYS} earlier ${items.length - RANK_OPEN_DAYS === 1 ? "day" : "days"}</summary><ol class="recent-days">${items.slice(RANK_OPEN_DAYS).join("")}</ol></details>` : ""}
             ${toggle}
           </section>
         `;

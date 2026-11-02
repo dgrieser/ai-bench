@@ -217,6 +217,12 @@ jobs:
       # llm.json against the same rules, so a file edited by hand is caught
       # here rather than on the site.
       #
+      # test_rankings.py does the same for index_rankings: the record of
+      # every place a model took, gained or lost on the derived indexes is
+      # kept only in llm.json, by the same refresh that rewrites the columns
+      # it is diffed from, so a writer that stops recording loses those moves
+      # for good.
+      #
       # test_remap.py is the other side of test_propose.py's ground truth: that
       # one refuses a proposal contradicting a mapping, this one refuses a
       # mapping contradicting a model already in the index, and names the model
@@ -279,6 +285,7 @@ jobs:
             ./test_reference.py
             ./test_hle_no_tools.py
             ./test_history.py
+            ./test_rankings.py
             ./test_remap.py
             ./test_artificialanalysis_api.py
             ./test_refresh_cost.py

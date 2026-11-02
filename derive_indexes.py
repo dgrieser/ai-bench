@@ -120,6 +120,7 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 import _history
+import _rankings
 from _reference import apply_reference_flags
 from _precedence import RANK_CURATED, source_rank
 from _scores import score_step, stamp_score_updated
@@ -1998,6 +1999,10 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
                 doc, OPENBENCH_INDEX, compute_composite(models)
             )
         )
+    # Every index is final now, so this is where a place on one can be said to
+    # have moved -- for every caller at once (update.py, edit.py, prune.py,
+    # the admin answers), the same way _history.sync() serves the scores.
+    _rankings.sync(doc)
     return changes
 
 
@@ -2327,7 +2332,15 @@ def main() -> int:
         print_composite(values, args.top)
     report("all indexes", started_all)
 
-    if not all_changes and not restamped and not recovered:
+    # The ranking record follows the columns it describes: a refit that moved
+    # a model's place (a recalibration, a hand-edited file) is news the same
+    # way a refresh's is. Counted before the "up to date" check, since a file
+    # that has never carried the record is worth writing for it alone.
+    ranked_before = json.dumps(doc.get(_rankings.ROOT_FIELD), sort_keys=True)
+    ranking_changes = _rankings.sync(doc)
+    ranking_stale = json.dumps(doc.get(_rankings.ROOT_FIELD), sort_keys=True) != ranked_before
+
+    if not all_changes and not restamped and not recovered and not ranking_stale:
         print("The derived indexes are up to date. Nothing to do.")
         return 0
 
@@ -2339,6 +2352,8 @@ def main() -> int:
         print(f"\n{restamped} source URL(s) restamped")
     if recovered:
         print(f"\n{recovered} model(s) with a changed index_coverage record")
+    if ranking_changes:
+        print(f"\n{ranking_changes} ranking change(s) recorded in {_rankings.ROOT_FIELD}")
 
     if not args.write:
         print("\ndry-run only, pass --write to persist changes")
