@@ -4,198 +4,168 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "mistral-large-4",
-          "reason": "exact to Mistral Large 4 Preview, most components match"
+          "option": "gemma-3-27b",
+          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         },
         {
           "confidence": "weak",
-          "option": "mistral-large-4-medium",
-          "reason": "exact to Mistral Large 4 Preview, most components match"
+          "option": "qwen3-5-27b",
+          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         },
         {
           "confidence": "weak",
-          "option": "mistral-large-3",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "qwen3-6-27b",
+          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         },
         {
           "confidence": "weak",
-          "option": "mistral-small-4",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "qwen3-8-27b",
+          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         },
         {
           "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "the same name without its first 2 word(s): exact to 4-preview, substring match"
+          "option": "bonsai-2-27b",
+          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         }
       ],
       "context": {
-        "known": 304,
+        "known": 355,
         "mapped": {
-          "mistral-large-3": [
-            "Mistral Large 3"
+          "gemma-3-27b": [
+            "gemma-3-27b-it"
           ],
-          "mistral-large-4": [
-            "Mistral Large 4"
+          "qwen3-5-27b": [
+            "qwen3.5-27b"
           ],
-          "mistral-small-4": [
-            "Mistral Small 4"
+          "qwen3-6-27b": [
+            "qwen3.6-27b"
+          ],
+          "qwen3-8-27b": [
+            "qwen3.8-27b"
           ]
         },
-        "siblings": [
-          {
-            "mapped_to": [
-              "mistral-large-4"
-            ],
-            "name": "Mistral Large 4"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "Mistral Large"
-          },
-          {
-            "mapped_to": [
-              "mistral-large-3"
-            ],
-            "name": "Mistral Large 3"
-          },
-          {
-            "mapped_to": [
-              "mistral-small-4"
-            ],
-            "name": "Mistral Small 4"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Mistral Large 2 (Jul 2024)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Mistral Large 2 (Nov 2024)"
-          }
-        ]
+        "siblings": []
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Epoch AI model 'Mistral Large 4 Preview' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://epoch.ai/benchmarks",
-      "subject": "Mistral Large 4 Preview",
+      "question": "Which llm.json model is llm-stats id 'lfm3-1.7b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/lfm3-1.7b",
+      "subject": "lfm3-1.7b",
       "universe": "models"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "glm-5-3",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "ling-3-0-flash-vl",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "nemotron-3-5-super-vl",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4.5",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "qwq-32b",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "qwen3-5-2b",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4-5-air",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "gemma-3-12b",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         }
       ],
       "context": {
-        "known": 411,
+        "known": 355,
         "mapped": {
-          "glm-4-5-air": [
-            "z-ai/glm-4.5-air"
+          "gemma-3-12b": [
+            "gemma-3-12b-it"
           ],
-          "glm-4.5": [
-            "z-ai/glm-4.5"
+          "nemotron-3-5-super-vl": [
+            "nemotron-3.5-super-vl-120b-a12b"
           ],
-          "glm-5-2": [
-            "z-ai/glm-5.2"
+          "qwen3-5-2b": [
+            "qwen3.5-2b"
           ],
-          "glm-5-3": [
-            "z-ai/glm-5.3"
-          ],
-          "glm-5-3-flash": [
-            "z-ai/glm-5.3-flash"
+          "qwq-32b": [
+            "qwq-32b"
           ]
         },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "z-ai/glm-5.3-flashx"
-          },
-          {
-            "mapped_to": [
-              "glm-5-3"
-            ],
-            "name": "z-ai/glm-5.3"
-          },
-          {
-            "mapped_to": [
-              "glm-5-3-flash"
-            ],
-            "name": "z-ai/glm-5.3-flash"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "z-ai/glm-5.3-prime"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "z-ai/glm-5"
-          },
-          {
-            "mapped_to": [
-              "glm-4.5"
-            ],
-            "name": "z-ai/glm-4.5"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "z-ai/glm-5.1"
-          },
-          {
-            "mapped_to": [
-              "glm-5-2"
-            ],
-            "name": "z-ai/glm-5.2"
-          }
-        ]
+        "siblings": []
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'z-ai/glm-5.3-flashx-legal' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Which llm.json model is llm-stats id 'lfm3-vl-2b'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/lfm3-vl-2b",
+      "subject": "lfm3-vl-2b",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "longcat-2-0",
+          "reason": "exact to longcat-2.5, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'longcat-2.5'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/longcat-2.5",
+      "subject": "longcat-2.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash",
+          "reason": "exact to minimax m3p1 flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Bench Pro V2 model 'minimax m3p1 flash' to llm.json model",
+      "route": "update_swe_bench_pro_v2_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/z-ai/glm-5.3-flashx-legal",
-      "subject": "z-ai/glm-5.3-flashx-legal",
+      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
+      "subject": "minimax m3p1 flash",
       "universe": "models"
     }
   ]
