@@ -435,6 +435,19 @@ main { padding-block: 1rem; }
   font-size: .875rem;
 }
 
+/* What the source already lists near a queued name: information only, so it
+   stays folded until asked for. */
+.q-context { margin-top: .5rem; font-size: .8125rem; color: var(--muted); }
+.q-context > summary { cursor: pointer; width: fit-content; }
+.q-context h4 { margin: .55rem 0 .2rem; font-size: .75rem; font-weight: 500; color: var(--faint); }
+.q-context ul { list-style: none; margin: 0; padding-left: .75rem; border-left: 2px solid var(--line); }
+.q-context li { display: flex; flex-wrap: wrap; gap: 0 .45rem; padding: .12rem 0; min-width: 0; }
+.q-context li .mono { color: var(--text); overflow-wrap: anywhere; min-width: 0; }
+.q-context li .arrow { color: var(--faint); }
+.q-context li .target { overflow-wrap: anywhere; min-width: 0; }
+.q-context li .target.cand { color: var(--accent); }
+.q-context li .target.sentinel, .q-context li .target.none { color: var(--faint); }
+
 /* --------------------------------------------------------------- options */
 
 /* One per line on a phone, two up once there is room. Equal height, so the
@@ -3070,6 +3083,63 @@ function openCreate(question) {
   });
 }
 
+/* pending.json's `context` (pending_prompts.source_context): the source's
+   other names that look like this one, each with what it is mapped to today,
+   and the source names each candidate already answers. Folded: it is there to
+   explain a choice -- "Mistral Large 4" already mapped, so this "Preview" is
+   the old listing -- not to be a choice itself. */
+function renderQuestionContext(question) {
+  const ctx = question.context;
+  if (!ctx) return null;
+  const siblings = ctx.siblings || [];
+  const mapped = Object.entries(ctx.mapped || {});
+  if (!siblings.length && !mapped.length) return null;
+  const candidates = new Set((question.candidates || []).map((c) => c.option));
+  const source = sourceOf(question);
+  const target = (value) => el("span", {
+    className: "target mono" + (/^__.*__$/.test(value) ? " sentinel" : candidates.has(value) ? " cand" : ""),
+  }, value);
+  const targets = (values) => values.length
+    ? values.flatMap((v, i) => (i ? [", ", target(v)] : [target(v)]))
+    : [el("span", { className: "target none" }, "not mapped")];
+
+  const parts = [];
+  const summary = [];
+  if (siblings.length) {
+    summary.push(`${siblings.length} similar name${siblings.length === 1 ? "" : "s"}`);
+    parts.push(el("h4", {}, `Similar names ${source} lists`
+      + (ctx.known ? ` (of ${ctx.known} it has listed)` : "")));
+    parts.push(el("ul", {}, siblings.map((s) => el("li", {}, [
+      el("span", { className: "mono" }, s.name),
+      el("span", { className: "arrow" }, "→"),
+      el("span", {}, targets(s.mapped_to || [])),
+    ]))));
+  }
+  const free = [...candidates].filter((c) => !(ctx.mapped || {})[c]);
+  if (mapped.length || candidates.size) {
+    summary.push(`${mapped.length} candidate${mapped.length === 1 ? "" : "s"} already mapped`);
+    parts.push(el("h4", {}, `Candidates already fed from ${source}`));
+    parts.push(el("ul", {}, [
+      ...mapped.map(([option, names]) => el("li", {}, [
+        target(option),
+        el("span", { className: "arrow" }, "←"),
+        el("span", {}, names.flatMap((n, i) => {
+          const name = el("span", { className: "mono" }, n);
+          return i ? [", ", name] : [name];
+        })),
+      ])),
+      ...(free.length ? [el("li", {}, [
+        el("span", { className: "target none" }, `no ${source} name yet: `),
+        el("span", {}, free.flatMap((c, i) => (i ? [", ", target(c)] : [target(c)]))),
+      ])] : []),
+    ]));
+  }
+  return el("details", { className: "q-context" }, [
+    el("summary", {}, `Context: ${summary.join(", ")}`),
+    ...parts,
+  ]);
+}
+
 function renderQuestion(question) {
   const chosen = answerOf(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
@@ -3094,6 +3164,8 @@ function renderQuestion(question) {
   }
   card.append(chips);
   if (question.note) card.append(el("div", { className: "note-text" }, question.note));
+  const context = renderQuestionContext(question);
+  if (context) card.append(context);
 
   const options = el("div", { className: "options" });
   for (const candidate of question.candidates || []) {

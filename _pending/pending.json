@@ -28,6 +28,58 @@
           "reason": "the same name without its first 2 word(s): exact to 4-preview, substring match"
         }
       ],
+      "context": {
+        "known": 304,
+        "mapped": {
+          "mistral-large-3": [
+            "Mistral Large 3"
+          ],
+          "mistral-large-4": [
+            "Mistral Large 4"
+          ],
+          "mistral-small-4": [
+            "Mistral Small 4"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "mistral-large-4"
+            ],
+            "name": "Mistral Large 4"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "Mistral Large"
+          },
+          {
+            "mapped_to": [
+              "mistral-large-3"
+            ],
+            "name": "Mistral Large 3"
+          },
+          {
+            "mapped_to": [
+              "mistral-small-4"
+            ],
+            "name": "Mistral Small 4"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Mistral Large 2 (Jul 2024)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Mistral Large 2 (Nov 2024)"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
@@ -66,6 +118,76 @@
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
+      "context": {
+        "known": 411,
+        "mapped": {
+          "glm-4-5-air": [
+            "z-ai/glm-4.5-air"
+          ],
+          "glm-4.5": [
+            "z-ai/glm-4.5"
+          ],
+          "glm-5-2": [
+            "z-ai/glm-5.2"
+          ],
+          "glm-5-3": [
+            "z-ai/glm-5.3"
+          ],
+          "glm-5-3-flash": [
+            "z-ai/glm-5.3-flash"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "z-ai/glm-5.3-flashx"
+          },
+          {
+            "mapped_to": [
+              "glm-5-3"
+            ],
+            "name": "z-ai/glm-5.3"
+          },
+          {
+            "mapped_to": [
+              "glm-5-3-flash"
+            ],
+            "name": "z-ai/glm-5.3-flash"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "z-ai/glm-5.3-prime"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "z-ai/glm-5"
+          },
+          {
+            "mapped_to": [
+              "glm-4.5"
+            ],
+            "name": "z-ai/glm-4.5"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "z-ai/glm-5.1"
+          },
+          {
+            "mapped_to": [
+              "glm-5-2"
+            ],
+            "name": "z-ai/glm-5.2"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
