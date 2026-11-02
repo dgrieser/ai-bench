@@ -129,6 +129,32 @@ score was last written and not necessarily the day it arrived — the site label
 those **first recorded** rather than calling them additions. From that day on,
 an entry with nothing before it really is a score arriving.
 
+Top-level **`index_rankings`** is the record of places on the derived
+indexes (the OpenBench Index and its Coding, Tooling, Knowledge, Vision, Trust
+and Security indexes), which `llm.html` prints as the **Ranking Changes**
+panel under Recently Added. `scores_history` leaves those columns out because
+their values move whenever anything in the table moves; a model's *place* on
+one is what a reader wants to follow. It holds `since` (the first day
+recorded), `ranks` (index key → model → place, as of the last refresh; ties
+share a place, and closed reference rows are counted, since they are in the
+field the index is fitted over) and `changes`, one `{ date, index, model,
+from, to, of }` per model per index per day: `from: null` is a model
+entering the index, `to: null` one dropping out of it, both set a move, and
+`of` the size of the ranked field. A move is a change of *order* -- the model
+overtook something or was overtaken -- so a newcomer landing at #1 is one
+entry, not two hundred models each pushed down a place. Two changes on one day
+fold into one, and a pair that cancels leaves nothing. `_rankings.py` holds
+the rules and `test_rankings.py` pins them. `_rankings.sync()` runs every
+time the indexes are recomputed -- inside `derive_indexes.refresh()`, which
+`update.py` (every fetcher refresh), `edit.py`, `prune.py` and the admin
+answers all go through, and on `./derive_indexes.py -w`, which the nightly
+calibration runs -- and `rename.py` carries a rename through the record so it
+does not read as a model leaving and another entering. Changes are kept for
+60 days (`KEEP_DAYS`). `./backfill_rankings.py -w [--days N]` rebuilds the
+record by replaying every first-parent revision of `llm.json` from the last N
+days (default 31) through that same `sync()`; in a shallow clone, fetch that
+much history first (`git fetch --shallow-since=<date> origin main`).
+
 Top-level **`credits`** is the attribution a source's licence asks for, one
 entry per credited publisher: `name`, `work`, `url`, `license`, `license_url`
 and the `citation` in the publisher's own words. `llm.html` prints it as a
@@ -528,6 +554,12 @@ current address.
 # history from the revisions git still holds.
 ./backfill_history.py llm.json
 ./backfill_history.py llm.json -w
+
+# Rebuild index_rankings (the Ranking Changes panel) by replaying the last
+# --days days of llm.json's first-parent revisions through _rankings.sync()
+# (dry-run; -w to persist). A shallow clone needs the history fetched first.
+./backfill_rankings.py llm.json --days 31
+./backfill_rankings.py llm.json --days 31 -w
 ```
 
 ### Utilities

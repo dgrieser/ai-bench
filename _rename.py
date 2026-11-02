@@ -39,6 +39,7 @@ from pathlib import Path
 from typing import Any
 
 import _new_models
+import _rankings
 import propose
 from _artificialanalysis_mapping import (
     AA_MODEL_IGNORES,
@@ -179,6 +180,10 @@ def rename(old: str, new: str, llm_path: Path = DEFAULT_LLM_JSON) -> list[str]:
     for model in doc["models"]:
         if isinstance(model, dict) and model.get("name") == old:
             model["name"] = new
+    # The ranking record names models too; carried over so the next index
+    # refresh does not read the rename as one model leaving and another
+    # entering every index it is on.
+    _rankings.rename(doc, old, new)
     llm_path.write_text(json.dumps(doc, **JSON_DUMP_KWARGS) + "\n", encoding="utf-8")
     log.append(f"{llm_path.name}: {old!r} -> {new!r}")
 
