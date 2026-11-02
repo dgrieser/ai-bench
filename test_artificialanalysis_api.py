@@ -413,6 +413,7 @@ MODEL_PAGE = (
     '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
     '"frontierCode":0.521731,"frontierCode20":0.464359595959596,'
     '"terminalBenchScience":0.59047619047619,'
+    '"critpt":0.317,"critptAgentic":0.777,"critptAgenticHard":0.61,'
     '"scicode":0.563657407407407,"lcr":0.743333333333333,'
     '"hle":0.548656163113994,"gpqa":0.912121212121212}}'
 )
@@ -474,6 +475,20 @@ class TestFrontierCodeAndTerminalBenchScienceOnTheModelPages(unittest.TestCase):
             aa._enrich_structured_metrics([model])
         self.assertAlmostEqual(model["evaluations"]["frontiercode_2_0"], 0.464359595959596)
         self.assertAlmostEqual(model["evaluations"]["terminalbench_science"], 0.59047619047619)
+
+
+class TestCritPtV2HardOnTheModelPages(unittest.TestCase):
+    """Three CritPt fields sit side by side; only the hard v2 one feeds it."""
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_the_hard_subset_is_read_not_the_full_set(self) -> None:
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["critpt_agentic_hard"], 0.61)
+        self.assertAlmostEqual(metrics["critpt"], 0.317)
+        self.assertNotIn(0.777, metrics.values())
+        self.assertIn("critpt_agentic_hard", aa._PAGE_EVALS)
 
 
 class TestHleAndGpqaOnTheModelPages(unittest.TestCase):

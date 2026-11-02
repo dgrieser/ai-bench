@@ -2126,6 +2126,32 @@
         "https://artificialanalysis.ai/evaluations/critpt",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
         "https://epoch.ai/benchmarks/critpt"
+      ],
+      "excludes": [
+        "CritPt v2 (code execution, revised set)"
+      ]
+    },
+    "critpt_hard_2_0": {
+      "name": "CritPt v2 Hard",
+      "short_name": "CritPt2H",
+      "category": "Scientific Reasoning",
+      "description": "CritPt v2, the authors' revision of the research-level physics benchmark (underspecified statements, errors and typos corrected), on its hard subset: 40 of the 70 composite research challenges. Models work with a code-execution tool in an offline Linux sandbox; answers (Python functions, symbolic expressions, numbers) go to the official grading server, scored as pass@1 challenge accuracy over five repeats. Artificial Analysis runs it as a component of its Intelligence Index v5.0. Not comparable with v1, which is the full set with no tools.",
+      "settings": [
+        "pass@1",
+        "40 challenges",
+        "hard subset",
+        "code execution",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "CritPt v1",
+        "CritPt v2 full set (70 challenges)"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/critpt-v2?critpt-subset=hard",
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking#critpt-v2",
+        "https://critpt.com/"
       ]
     },
     "aime_2026": {

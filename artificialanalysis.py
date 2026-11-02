@@ -649,6 +649,11 @@ _PAGE_FLOAT_FIELDS = [
     # Terminal-Bench-Science's does not, so update.py gates it on the version
     # its evaluation page states.
     ("frontierCode20", "frontiercode_2_0"),
+    # CritPt v2's hard subset (40 of the 70 challenges, with a code-execution
+    # tool), the Intelligence Index v5.0 component. "critptAgentic" beside it
+    # is the full 70 and is not read; the bare "critpt" is v1. The field names
+    # no version, so update.py gates it on the evaluation page's title.
+    ("critptAgenticHard", "critpt_agentic_hard"),
     ("terminalBenchScience", "terminalbench_science"),
     ("ifbench", "ifbench"),
     # HLE and GPQA Diamond are on every page too. The free API tier returns
@@ -1088,6 +1093,7 @@ _PAGE_EVALS = [
     "it_bench_sre",
     "briefcase",
     "critpt",
+    "critpt_agentic_hard",
     "apex_agents",
     "harvey_lab",
     "automation_bench_partial_score",
@@ -1328,6 +1334,7 @@ def _print_table(models, output):
         ("IT-Bench SRE", lambda m: _extract_metric(m, "it_bench_sre")),
         ("Briefcase", lambda m: _extract_metric(m, "briefcase")),
         ("Crit-Pt", lambda m: _extract_metric(m, "critpt")),
+        ("CritPt v2 Hard", lambda m: _extract_metric(m, "critpt_agentic_hard")),
         ("Apex Agents", lambda m: _extract_metric(m, "apex_agents")),
         ("Openness", lambda m: _extract_metric(m, "openness_index")),
         ("Out Speed p05", lambda m: _extract_metric(m, "output_speed_p05")),
@@ -1356,6 +1363,7 @@ def _print_table(models, output):
         "GDPval",
         "IT-Bench SRE",
         "Crit-Pt",
+        "CritPt v2 Hard",
         "Apex Agents",
         "CWE-Bench-AA",
         "DeepsecBench-AA",

@@ -141,6 +141,7 @@ class TestAaPageGates(unittest.TestCase):
                 " 0.1.0 task ... Terminal-Bench-Science v0.1.0 ... Terminal-Bench-Science"
                 " 0.1.0 ... Terminal-Bench-Science 0.1: Score"
             ),
+            "critpt": "CritPt v2 Benchmark ... As with CritPt v1 ... CritPt v2 methodology",
         }
         for gate, text in pages.items():
             with self.subTest(gate=gate):

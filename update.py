@@ -316,6 +316,10 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # Ai2's IFBench, run independently by AA; the model pages carry it too.
     "ifbench": (("ifbench",), to_percent),
     "critpt": (("critpt",), to_percent),
+    # CritPt v2's hard subset: 40 of the 70 challenges, five repeats, with a
+    # code-execution tool -- a different run from the v1 column above, which
+    # is the full set with no tools. Gated on the version the page states.
+    "critpt_hard_2_0": (("critpt_agentic_hard",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     # AA runs MMLU-Pro itself; the field is API-only, and the HF cards and
     # evals.report carry the same benchmark for models AA has not run.
@@ -795,6 +799,7 @@ AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
     # The page field is a bare "terminalBenchScience", so a 0.2 re-run would
     # arrive under the same name; the evaluation page's title says which.
     "terminal_bench_science": ("0.1", ("terminal_bench_science_0_1",)),
+    "critpt": ("2.0", ("critpt_hard_2_0",)),
 }
 # Gates read off an evaluation page's text rather than the API: gate name ->
 # (the page, the pattern its version label follows).
@@ -820,6 +825,12 @@ AA_PAGE_VERSIONS: dict[str, tuple[str, re.Pattern[str]]] = {
     "terminal_bench_science": (
         "https://artificialanalysis.ai/evaluations/terminal-bench-science",
         re.compile(r"Terminal-Bench-Science v?(\d+\.\d+)(?![.\d])"),
+    ),
+    # "CritPt v2" in the title; the one "CritPt v1" in the background text is
+    # outvoted by the most-cited rule.
+    "critpt": (
+        "https://artificialanalysis.ai/evaluations/critpt-v2",
+        re.compile(r"CritPt v(\d+(?:\.\d+)*)"),
     ),
 }
 AA_OMNISCIENCE_URL = AA_PAGE_VERSIONS["omniscience"][0]
