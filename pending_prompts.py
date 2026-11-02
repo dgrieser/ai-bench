@@ -32,6 +32,9 @@ import propose
 # added: grade() returns a total order, so a fixed cut is stable.
 MAX_CANDIDATES = 5
 
+# How many of the source's other names the admin page lists under a question.
+MAX_SIBLINGS = 8
+
 KIND_LABELS = {
     "new-model": "new model",
     "new-closed-model": "new closed model (reference)",
@@ -146,6 +149,12 @@ def render_json(
                 for m in graded[:MAX_CANDIDATES]
             ]
             previous = _answers_current_value(route, subject)
+            context = source_context(
+                route, subject, propose.match_subject(entry, route),
+                [c["option"] for c in candidates],
+            )
+        else:
+            context = None
         questions.append(
             {
                 "route": route_name,
@@ -175,6 +184,10 @@ def render_json(
             # the asking script knew: an older report has none, and the page
             # falls back to the source's leaderboard.
             questions[-1]["source_url"] = entry["source_url"]
+        if context:
+            # What the source already says about names like this one, for the
+            # admin page's collapsed "context" section. Information only.
+            questions[-1]["context"] = context
         if ruled_out:
             # How many are ruled out already, so the page can say the ones it
             # shows are what is left. Only when there are any: every other
@@ -186,6 +199,68 @@ def render_json(
     return (
         json.dumps({"questions": questions}, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
     )
+
+
+def source_context(
+    route, subject: str, match_name: str, options: list[str]
+) -> dict[str, Any] | None:
+    """What this source's mapping file already says near `subject`.
+
+    Two lists, both read from the file the answer will land in:
+
+    * siblings -- other names the source lists (or has listed) that resemble
+      this one, each with what it is mapped to today. That is where a renamed
+      or graduated model shows up: "Mistral Large 4 Preview" next to an
+      already-mapped "Mistral Large 4".
+    * mapped -- for each candidate, the source names already mapped to it, so a
+      candidate that already has this source's score is visible before a second
+      name is pointed at it.
+
+    None when the file cannot be read or neither list has anything in it.
+    """
+    try:
+        raw = json.loads(_answers_mapping_path(route).read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 - context is a nicety, never a failure
+        return None
+    if not isinstance(raw, dict):
+        return None
+    import _answers
+
+    values = {
+        str(name): _answers.as_list(value) or []
+        for name, value in raw.items()
+        if name != subject
+    }
+    siblings = []
+    names = list(values)
+    lookup = {name: name for name in names}
+    if match_name != subject:
+        # Spheron/Vals: match on the model segment, as the candidates were.
+        lookup = {name.rsplit("/", 1)[-1]: name for name in names}
+    for match in _matching.suggest(match_name, list(lookup)):
+        # "Without its first N words" pairs anything ending in the same
+        # number ("Grok 4" for "Mistral Large 4 Preview"): noise here.
+        if match.reason.startswith("the same name without its first"):
+            continue
+        name = lookup[match.option]
+        siblings.append({"name": name, "mapped_to": values[name]})
+        if len(siblings) >= MAX_SIBLINGS:
+            break
+    wanted = set(options)
+    mapped: dict[str, list[str]] = {}
+    for name in sorted(values):
+        for target in values[name]:
+            if target in wanted:
+                mapped.setdefault(target, []).append(name)
+    if not siblings and not mapped:
+        return None
+    return {"siblings": siblings, "mapped": mapped, "known": len(raw)}
+
+
+def _answers_mapping_path(route) -> Path:
+    import _answers
+
+    return _answers.mapping_path(route)
 
 
 def benchmark_aliases(llm_path: Path) -> dict[str, list[str]]:

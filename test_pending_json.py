@@ -71,6 +71,11 @@ class PendingJsonTestCase(unittest.TestCase):
         current = mock.patch.object(pending_prompts, "_answers_current_value", return_value=None)
         current.start()
         self.addCleanup(current.stop)
+        # Nor about the source's other names: no mapping file, no context.
+        self.mapping = self.tmp / "mapping.json"
+        path = mock.patch.object(pending_prompts, "_answers_mapping_path", return_value=self.mapping)
+        path.start()
+        self.addCleanup(path.stop)
 
     def render(self, entries) -> str:
         return pending_prompts.render_json(entries, self.llm, skip_aa=True)
@@ -184,6 +189,41 @@ class TestContent(PendingJsonTestCase):
         question = self.questions([orphan])[0]
         self.assertEqual(question["route"], "update_unrouted_mapping.py")
         self.assertEqual(question["subject"], "GLM-5.3")
+
+
+class TestContext(PendingJsonTestCase):
+    """The source's other names, for the admin page's folded context section."""
+
+    def write_mapping(self, doc: dict) -> None:
+        self.mapping.write_text(json.dumps(doc), encoding="utf-8")
+
+    def test_no_mapping_file_means_no_context(self) -> None:
+        self.assertNotIn("context", self.questions([ENTRIES[0]])[0])
+
+    def test_similar_names_carry_what_they_are_mapped_to(self) -> None:
+        self.write_mapping({
+            "GLM-5.3 Preview": "__unmappable__",
+            "GLM-5.2": "glm-5-2",
+            "Devstral 2": "devstral-2",
+            "GLM-5.3": None,
+        })
+        context = self.questions([ENTRIES[0]])[0]["context"]
+        names = {s["name"]: s["mapped_to"] for s in context["siblings"]}
+        self.assertEqual(names.get("GLM-5.3 Preview"), ["__unmappable__"])
+        self.assertEqual(names.get("GLM-5.2"), ["glm-5-2"])
+        self.assertNotIn("GLM-5.3", names, "the subject itself is not its own sibling")
+        self.assertNotIn("Devstral 2", names)
+        self.assertEqual(context["known"], 4)
+
+    def test_candidates_already_fed_by_the_source_are_named(self) -> None:
+        """A rename: the candidate already has this source's score under another name."""
+        self.write_mapping({"GLM 5.3 (renamed)": "glm-5-3", "Other": "devstral-2"})
+        context = self.questions([ENTRIES[0]])[0]["context"]
+        self.assertEqual(context["mapped"], {"glm-5-3": ["GLM 5.3 (renamed)"]})
+
+    def test_context_is_deterministic(self) -> None:
+        self.write_mapping({"GLM-5.2": "glm-5-2", "GLM-5.3 Air": "glm-5-3"})
+        self.assertEqual(self.render(ENTRIES), self.render(list(reversed(ENTRIES))))
 
 
 class TestCarryOver(PendingJsonTestCase):
