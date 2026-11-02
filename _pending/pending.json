@@ -1,3 +1,65 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-28 - Google",
+      "question": "Carry newly released closed model 'gemini-4-carbon-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gemini-4-carbon-medium",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-17 - DeepSeek - https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "question": "Add newly released model 'deepseek-v4-1-flash-1017-high' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "subject": "deepseek-v4-1-flash-1017-high",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to DeepSeek V4.1 Flash 1017, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to DeepSeek V4.1 Flash 1017, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'DeepSeek V4.1 Flash 1017' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "DeepSeek V4.1 Flash 1017",
+      "universe": "models"
+    }
+  ]
 }
