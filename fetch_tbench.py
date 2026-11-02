@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Fetch Terminal-Bench 4.0, 2.1 and 2.0 scores from https://www.tbench.ai/
+Fetch Terminal-Bench 4.0, 3.0, 2.1 and 2.0 and Terminal-Bench-Science 0.1
+scores from https://www.tbench.ai/
 
 tbench.ai renders only the current board on the server; every other version
 is a client-side switch (``/leaderboard/terminal-bench/2.0`` redirects to
@@ -28,6 +29,15 @@ at once (``model_display`` "Multiple"). Only verified single-model rows are
 read -- an unverified harness claim is not the benchmark's own measurement, and
 an ensemble has no one model to credit. The 4.0 and 2.1 boards carry no such
 flag; every row there is a run with a Harbor Hub job behind it.
+
+Terminal-Bench-Science is a sibling benchmark on the same hub rather than a
+revision of Terminal-Bench: 70 research-workflow tasks written by practising
+scientists across five domains, scored the same way (share of tasks resolved,
+here over three trials per task). tbench.ai's /leaderboard/terminal-bench-science
+redirects to the hub's ``v0-1-eval`` board of the ``terminal-bench-science``
+package, and that board is read here under its own column. Its rows are a
+model under its vendor's agent (Codex, Claude Code, Grok Build) or
+mini-SWE-agent, like 4.0's.
 """
 
 from __future__ import annotations
@@ -50,7 +60,8 @@ URL = "https://ofhuhcpkvzjlejydnvyd.supabase.co/functions/v1/leaderboard-read"
 # whole tbench.ai host.
 PAGE_URL = "https://www.tbench.ai/leaderboard/terminal-bench/{version}"
 
-# llm.json column -> the board that feeds it.
+# llm.json column -> the board that feeds it. A board on another benchmark's
+# page names that page in "page"; the rest are PAGE_URL at their version.
 BOARDS: dict[str, dict[str, str]] = {
     "terminal_bench_4_0": {
         "version": "4.0",
@@ -73,6 +84,14 @@ BOARDS: dict[str, dict[str, str]] = {
         "version": "2.0",
         "package": "terminal-bench/terminal-bench-2",
         "name": "2-0",
+    },
+    # Terminal-Bench-Science 0.1 (70 tasks, 3 trials each). A benchmark of its
+    # own, not a Terminal-Bench revision, so its column carries its own base.
+    "terminal_bench_science_0_1": {
+        "version": "0.1",
+        "package": "terminal-bench-science/terminal-bench-science",
+        "name": "v0-1-eval",
+        "page": "https://www.tbench.ai/leaderboard/terminal-bench-science/0.1",
     },
 }
 
@@ -102,7 +121,8 @@ LEADERBOARD_URL = PAGE_URL.format(version=BOARDS["terminal_bench_4_0"]["version"
 
 def board_url(key: str) -> str:
     """The leaderboard page a score in column ``key`` is credited to."""
-    return PAGE_URL.format(version=BOARDS[key]["version"])
+    spec = BOARDS[key]
+    return spec.get("page") or PAGE_URL.format(version=spec["version"])
 
 
 HEADERS = {

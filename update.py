@@ -271,10 +271,23 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # two disagree by a few points because they are different harnesses over the
     # same task set. Since 2026-10-03 AA's own run outranks the Coding Agent
     # Index (_precedence.RANK_AA), so the model-page value lands wherever both
-    # report. The second spelling is the one the v2 API would use if it
-    # ever carries the field; the pages spell it the first way.
-    "terminal_bench_4_0": (("terminalbench_4_0", "terminal_bench_4_0"), to_percent),
+    # report. The pages' value lands under the first spelling; the v2 API
+    # sends "terminalbench_v4_0", the third, and the two agree.
+    "terminal_bench_4_0": (("terminalbench_4_0", "terminal_bench_4_0", "terminalbench_v4_0"), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
+    # Terminal-Bench-Science 0.1, AA's own run (mini-SWE-agent, pass@1 over
+    # three repeats) beside tbench.ai's board, which runs each model under its
+    # vendor's agent. Same arrangement as Terminal-Bench 4.0: one column, AA's
+    # single harness outranking the board (_precedence.RANK_AA). The page field
+    # names no version, so AA_VERSION_GATES holds it to 0.1.
+    "terminal_bench_science_0_1": (("terminalbench_science",), to_percent),
+    # FrontierCode 2.0, AA's implementation of Cognition's 132-task suite. It
+    # lands in the column Cognition's own board feeds, which it outranks, the
+    # way AA's Terminal-Bench 4.0 run outranks tbench.ai's: within a couple of
+    # points for most models (Opus 5.5 46.4 vs 45.5, GPT-6 Astra 42.4 vs 42.8),
+    # further apart for a few. The field spells its revision
+    # ("frontierCode20"), so no gate is needed; AA's 1.1 field is not read.
+    "frontiercode_2_0": (("frontiercode_2_0",), to_percent),
     # AA reports the τ³ Banking domain under the version-less key "tau_banking".
     "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
@@ -541,7 +554,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-tbench",
         action="store_true",
-        help="Skip fetching Terminal-Bench 4.0, 2.1 and 2.0 scores from tbench.ai.",
+        help=(
+            "Skip fetching Terminal-Bench 4.0, 3.0, 2.1 and 2.0 and "
+            "Terminal-Bench-Science 0.1 scores from tbench.ai."
+        ),
     )
     parser.add_argument(
         "--skip-agents-last-exam",
@@ -776,6 +792,9 @@ AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
     "gdpval": ("2.1", ("gdpval_aa",)),
     "lcr": ("1.1", ("aa_lcr",)),
     "briefcase": ("1.1", ("aa_briefcase",)),
+    # The page field is a bare "terminalBenchScience", so a 0.2 re-run would
+    # arrive under the same name; the evaluation page's title says which.
+    "terminal_bench_science": ("0.1", ("terminal_bench_science_0_1",)),
 }
 # Gates read off an evaluation page's text rather than the API: gate name ->
 # (the page, the pattern its version label follows).
@@ -795,6 +814,12 @@ AA_PAGE_VERSIONS: dict[str, tuple[str, re.Pattern[str]]] = {
     "briefcase": (
         "https://artificialanalysis.ai/evaluations/aa-briefcase",
         re.compile(r"AA-Briefcase v(\d+(?:\.\d+)*)"),
+    ),
+    # "Terminal-Bench-Science 0.1" in the title; the methodology also cites
+    # the task release ("0.1.0"), which the lookahead keeps out of the count.
+    "terminal_bench_science": (
+        "https://artificialanalysis.ai/evaluations/terminal-bench-science",
+        re.compile(r"Terminal-Bench-Science v?(\d+\.\d+)(?![.\d])"),
     ),
 }
 AA_OMNISCIENCE_URL = AA_PAGE_VERSIONS["omniscience"][0]

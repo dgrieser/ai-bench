@@ -411,6 +411,8 @@ MODEL_PAGE = (
     '"itBenchSre":null,"tau2":null,"tauBanking":0.612371134020619,'
     '"terminalbenchHard":null,'
     '"terminalBench21":0.891385767790262,"terminalBench40":0.48989898989899,'
+    '"frontierCode":0.521731,"frontierCode20":0.464359595959596,'
+    '"terminalBenchScience":0.59047619047619,'
     '"scicode":0.563657407407407,"lcr":0.743333333333333,'
     '"hle":0.548656163113994,"gpqa":0.912121212121212}}'
 )
@@ -448,6 +450,30 @@ class TestTerminalBenchOnTheModelPages(unittest.TestCase):
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
             aa._enrich_structured_metrics([model])
         self.assertAlmostEqual(model["evaluations"]["terminalbench_4_0"], 0.48989898989899)
+
+
+class TestFrontierCodeAndTerminalBenchScienceOnTheModelPages(unittest.TestCase):
+    """AA's own FrontierCode 2.0 and Terminal-Bench-Science runs, page-only."""
+
+    def metrics(self) -> dict:
+        return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
+
+    def test_both_are_read_under_the_names_the_page_uses(self) -> None:
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["frontiercode_2_0"], 0.464359595959596)
+        self.assertAlmostEqual(metrics["terminalbench_science"], 0.59047619047619)
+
+    def test_the_1_1_field_is_not_read_as_2_0(self) -> None:
+        # "frontierCode" (AA's 1.1 Main run) sits right before "frontierCode20";
+        # a prefix match would read one for the other.
+        self.assertNotIn(0.521731, self.metrics().values())
+
+    def test_both_reach_the_evaluations_block(self) -> None:
+        model = {"slug": "claude-opus-5"}
+        with mock.patch.object(aa, "_fetch_page_metrics", return_value=self.metrics()):
+            aa._enrich_structured_metrics([model])
+        self.assertAlmostEqual(model["evaluations"]["frontiercode_2_0"], 0.464359595959596)
+        self.assertAlmostEqual(model["evaluations"]["terminalbench_science"], 0.59047619047619)
 
 
 class TestHleAndGpqaOnTheModelPages(unittest.TestCase):

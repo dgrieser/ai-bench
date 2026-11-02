@@ -45,7 +45,7 @@ Agent, LegalBench, Harvey's legal agent benchmark, MedQA, the tax and mortgage
 evals), the indexes it composes from them (the Vals Index, the Multimodal
 Index, the Time Horizon Index), and academic boards no column tracks (MATH 500,
 MGSM, IOI, SRE Bench, SkillsBench, Code Migration, ProofBench,
-SAGE, Terminal-Bench Science, VoiceCodeBench). All of them are deliberately
+SAGE, VoiceCodeBench). All of them are deliberately
 absent: a board is ingested when llm.json has a column for it, and adding an
 entry to BENCHMARKS is all it takes to ingest one whose column arrives later.
 One is worth naming because it reads like an ingested board and is not:
@@ -104,6 +104,11 @@ BENCHMARKS: dict[str, str] = {
     "terminal-bench-4": "terminal_bench_4_0",
     "terminal-bench-2-1": "terminal_bench_2_1",
     "terminal-bench-2": "terminal_bench_2_0",
+    # Terminal-Bench-Science, the research-workflow sibling of Terminal-Bench
+    # (70 tasks across five scientific domains). tbench.ai's own board
+    # (fetch_tbench.py) and AA's model pages both outrank this one. The slug
+    # names no revision, so VERSIONS pins it.
+    "terminal-bench-science": "terminal_bench_science_0_1",
     # Vals' own implementation of LiveCodeBench, run over the same field as the
     # rest of its academic boards.
     "lcb": "livecodebench",
@@ -173,6 +178,7 @@ VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber", "cyber-v1
 # pin here.
 VERSIONS: dict[str, str] = {
     "terminal-bench-4": "4.0",
+    "terminal-bench-science": "0.1",
     "vibe-code": "1.1",
     "cyber": "1.1",
 }

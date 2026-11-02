@@ -465,7 +465,7 @@ current address.
 ./fetch_frontiercode.py                 # every revision and subset, each row labelled
 ./fetch_frontiercode.py --revision 1.0  # or pin one revision
 ./fetch_frontiercode.py --subset extended   # or one task subset (main, extended)
-./fetch_tbench.py                       # Terminal-Bench 4.0, 2.1 and 2.0, from the benchmark's own boards
+./fetch_tbench.py                       # Terminal-Bench 4.0, 3.0, 2.1 and 2.0 and Terminal-Bench-Science 0.1, from the benchmarks' own boards
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
@@ -849,7 +849,14 @@ whether or not the agent ingest ran, and in either order. Where the pages report
 nothing, the agent run fills the column. Missing results never erase
 stored scores.
 
-tbench.ai's 4.0, 2.1 and 2.0 boards each rank 2 for their own column. The 2.1
+tbench.ai's 4.0, 3.0, 2.1 and 2.0 boards each rank 2 for their own column, as
+does its Terminal-Bench-Science 0.1 board for `terminal_bench_science_0_1` —
+a sibling benchmark on the same Harbor Hub (70 research-workflow tasks written
+by working scientists), not a Terminal-Bench revision. AA runs Science too,
+under mini-SWE-agent where the board runs vendor agents, so as on 4.0 AA's
+number lands wherever both report and the board (then Vals AI, rank 3) fills
+the rest; AA's page field names no version, so `AA_VERSION_GATES` holds it to
+the 0.1 its evaluation page states. The 2.1
 board ranks every agent together (Codex, Claude Code, Cursor CLI, Gemini CLI,
 Terminus 2), while the `terminal_bench_2_1` column is the Terminus-2 run, so
 only Terminus 2 rows feed it (`fetch_tbench.REQUIRED_AGENT`); a model the board
@@ -963,7 +970,7 @@ Agent, LegalBench, Harvey's legal agent benchmark, MedQA, the tax and mortgage
 evals), the indexes it composes from them (the Vals Index, the Multimodal Index,
 the Time Horizon Index) and the academic and agentic boards no column tracks
 (MATH 500, MGSM, IOI, CyberBench, SRE Bench, SkillsBench, Code Migration,
-ProofBench, SAGE, Terminal-Bench Science, VoiceCodeBench) are all deliberately
+ProofBench, SAGE, VoiceCodeBench) are all deliberately
 absent: a board is ingested when `llm.json` has a column for it, and a column
 arriving later is one row in `fetch_vals.BENCHMARKS` away. One board is worth
 naming because it reads like an ingested one and is not: `vcb-1-100`, "Vibe Code
@@ -1094,7 +1101,9 @@ hoping the labels agree:
   version (`Terminal-Bench 4.0`, `harborframework/terminal-bench-4.0
   (terminalbench_4)`, `Terminal Bench 2.1 (Terminus-2)`, …) and leaves a bare
   `Terminal-Bench` and `TerminalBench<sub>(acc)</sub>` unmapped; labels naming
-  3.0 feed `terminal_bench_3_0`, the superseded board's own column. llm-stats' `terminal_bench` column is unmapped for the same reason
+  3.0 feed `terminal_bench_3_0`, the superseded board's own column, and
+  `harborframework/terminal-bench-science (terminalbenchscience_0_1)` feeds
+  `terminal_bench_science_0_1`, a different benchmark. llm-stats' `terminal_bench` column is unmapped for the same reason
   and one more: its field tops out at Claude Sonnet 4.5, so whatever series it
   is, it is not the current one.
 - **Agents' Last Exam is one tier of several, in two releases.** The stored
@@ -1154,7 +1163,7 @@ cannot disagree about which column a row belongs in.
 | Benchmark | Columns | What changed between them |
 | --- | --- | --- |
 | **DeepSWE** | `deepswe_1_1`, `deepswe_1_0` | Datacurve serves one JSON artifact per revision and toggles between them. The re-run moved DeepSeek V4 Pro from 7.5 to 62.8, and 1.0 is the only revision that ever scored the dozen models retired before it. |
-| **FrontierCode** | `frontiercode_2_0`, `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | 2.0 (2026-10-27) rebuilt the suite as 132 tasks on one board, with no Main/Extended split, and is served from a file of its own (`/data/frontier-code-2.0/data.json`) that `fetch_frontiercode.py` finds where the page does, in its JavaScript — so a 2.1 is reported, not missed. Before it, Cognition's shared payload carried a block per revision, the later one covering only the models it re-ran: GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
+| **FrontierCode** | `frontiercode_2_0`, `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | 2.0 (2026-10-27) rebuilt the suite as 132 tasks on one board, with no Main/Extended split, and is served from a file of its own (`/data/frontier-code-2.0/data.json`) that `fetch_frontiercode.py` finds where the page does, in its JavaScript — so a 2.1 is reported, not missed. Artificial Analysis runs 2.0 too, on its own implementation, and its model pages' `frontierCode20` lands in `frontiercode_2_0` above Cognition's number (AA outranks the board, as on Terminal-Bench 4.0): the two agree within a point for most of the head (Opus 5.5 46.4 vs 45.5, GPT-6 Astra 42.4 vs 42.8) and differ by up to nine for a few (DeepSeek V4.1 Flash 1017 28.5 vs 19.3). AA's 1.1 field (`frontierCode`, the 100-task Main set) is not read: 1.1 is archived as Cognition published it. Before it, Cognition's shared payload carried a block per revision, the later one covering only the models it re-ran: GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
 | **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
 | **SWE-Bench Pro** | `swe_bench_pro_2_0`, `swe_bench_pro_hard_2_0`, and the unversioned `swe_bench_pro` | Scale's V2 (2026-09-22, co-developed with Reflection) is a refreshed public split, not a re-run: 642 of v1's 731 public tasks, the other 89 dropped as invalid, every instruction, verifier and image rebuilt, and a network-locked protocol in which the sandbox reaches the model endpoint and nothing else. The scales do not meet: V2's board runs 87-99 for current models where Scale's v1 public board tops out at 61.5, so a V2 number filed under `swe_bench_pro` would lead that column by ten points (Flint's 89.7 briefly did). `fetch_swe_bench_pro_v2.py` reads Scale's V2 board, whose page carries the Full set and a 51-task Hard subset as two variant tables; each gets a column, Hard spelled with a subset base as FrontierCode's Extended is. `swe_bench_pro` stays what it was: lab self-reports of the original benchmark with the split not recorded, and its `excludes` now names V2. Only a label that says V2 reaches the new columns (`SWE-bench Pro v2`, `SWE-Bench Pro V2 Hard`, …), the rule BFCL v4 and Toolathlon-Verified already follow. Hard is in the coding index at 0.35 and Full is not — see [why](#why-swe-bench-pro-v2-hard-enters-at-035). |
@@ -1162,9 +1171,9 @@ cannot disagree about which column a row belongs in.
 | **Real-SWE** | `real_swe_1_1`, `real_swe_1_0` | 1.1 (October 2026, 25 tasks in five languages) replaced 1.0 (10 tasks) on the same page on 2026-10-15 without keeping 1.0's board, and for two weeks the fetcher wrote 1.1 numbers into the 1.0 column. The page's title names the release, so `fetch_real_swe.py` reads it there and refuses a page naming none; 1.0's column is the values read before the switch. |
 | **Agents' Last Exam** | `agents_last_exam_1_1`, `agents_last_exam_1_0` | The site opens on v1.1 (122 tasks), served from `/api/demo/leaderboard/v1.1`; the endpoint the fetcher had always read is v1.0 (152 public tasks), now the legacy board at `/leaderboard/v1`. Both are read; the page's "ALE v1.1" label names the current release, so a v1.2 is fetched and reported. |
 | **SEC-bench Pro** | `sec_bench_pro` (260505), `sec_bench_pro_260617` | Dated snapshots in one data file: 260505 (183 tasks, V8 and SpiderMonkey, the set vendors report) and 260617 (344, the Linux kernel added, what the site root shows). Each is checked against its own task count; a further snapshot is reported, not read. |
-| **Terminal-Bench** | `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. |
+| **Terminal-Bench** | `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. Terminal-Bench-Science (`terminal_bench_science_0_1`) is a separate benchmark on the same API and keeps its version in its column name for the same reason; Vals' board for it (`terminal-bench-science`) names no version in its slug, so `fetch_vals.VERSIONS` pins it to 0.1. |
 | **ARC-AGI** | `arc_agi_3`, `arc_agi_2`, `arc_agi_1` | Three benchmarks rather than three runs, on ARC Prize's one board: each version's semi-private set is its own column, read by `fetch_arc_prize.py` from the files the leaderboard hydrates from (with Epoch's copy filling ARC-AGI-2). Provider Adapter runs — the provider's own agent harness, 98.6 for GPT-6 Astra on ARC-AGI-3 against 62.7 in ARC Prize's — are left out, and a new semi-private version is reported. |
-| **AA Intelligence Index**, **AA-Omniscience** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR and AA-Briefcase from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). |
+| **AA Intelligence Index**, **AA-Omniscience** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR, AA-Briefcase and Terminal-Bench-Science from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the

@@ -613,7 +613,7 @@
       "name": "FrontierCode 2.0",
       "short_name": "FCo 2.0",
       "category": "Software Engineering",
-      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. One board; not comparable with 1.x.",
+      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. Cognition's board and Artificial Analysis' own implementation, which outranks it where both report; not comparable with 1.x.",
       "settings": [
         "would-be-merged score",
         "132 tasks",
@@ -625,7 +625,8 @@
         "FrontierCode 1.0"
       ],
       "urls": [
-        "https://cognition.com/frontiercode"
+        "https://cognition.com/frontiercode",
+        "https://artificialanalysis.ai/evaluations/frontiercode-2-0"
       ]
     },
     "frontiercode_extended_1_1": {
@@ -1193,6 +1194,28 @@
       ],
       "urls": [
         "https://www.tbench.ai/"
+      ]
+    },
+    "terminal_bench_science_0_1": {
+      "name": "Terminal-Bench-Science 0.1",
+      "short_name": "TB-Sci",
+      "category": "Agentic Tool Use",
+      "description": "Research workflows in a terminal: 70 tasks authored and reviewed by practising scientists across the life, physical, earth, mathematical and engineering sciences, each with its own verifier. Scored as the share of tasks resolved, pass@1 averaged over three trials per task. A sibling of Terminal-Bench on the same Harbor framework, not a revision of it. Artificial Analysis runs every model under mini-SWE-agent; tbench.ai's own board and Vals AI's run each model under the agent its submitter chose (Codex, Claude Code, …), so the Artificial Analysis run lands wherever it reports.",
+      "settings": [
+        "Resolved %",
+        "70 tasks",
+        "3 trials",
+        "agentic"
+      ],
+      "excludes": [
+        "Terminal-Bench 4.0, 3.0, 2.1 and 2.0",
+        "per-domain pass rates"
+      ],
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/terminal-bench-science",
+        "https://www.tbench.ai/leaderboard/terminal-bench-science/0.1",
+        "https://www.vals.ai/benchmarks/terminal-bench-science",
+        "https://github.com/harbor-framework/terminal-bench-science"
       ]
     },
     "toolathlon": {

@@ -643,6 +643,13 @@ _PAGE_FLOAT_FIELDS = [
     ("terminalBench40", "terminalbench_4_0"),
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
+    # AA's own runs of two outside boards, both on every model page since
+    # 2026-10. FrontierCode's field names its revision (frontierCode20; the
+    # bare "frontierCode" beside it is AA's 1.1 Main run and is not read).
+    # Terminal-Bench-Science's does not, so update.py gates it on the version
+    # its evaluation page states.
+    ("frontierCode20", "frontiercode_2_0"),
+    ("terminalBenchScience", "terminalbench_science"),
     ("ifbench", "ifbench"),
     # HLE and GPQA Diamond are on every page too. The free API tier returns
     # neither, so without these a row that switches to another AA run has no
@@ -1091,6 +1098,8 @@ _PAGE_EVALS = [
     "terminalbench_4_0",
     "terminalbench_v2_1",
     "terminalbench_hard",
+    "frontiercode_2_0",
+    "terminalbench_science",
     "ifbench",
     "hle",
     "gpqa",
@@ -1301,8 +1310,10 @@ def _print_table(models, output):
         ("DeepsecBench-AA", lambda m: _extract_cyber_metric(m, "deepsec_bench")),
         ("CyberGym-E2E-AA", lambda m: _extract_cyber_metric(m, "cybergym_e2e")),
         ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
-        ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0"], "terminalbench_4_0")),
+        ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0", "terminalbench_v4_0"], "terminalbench_4_0")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
+        ("Terminal-Bench-Science", lambda m: _extract_metric(m, "terminalbench_science")),
+        ("FrontierCode 2.0", lambda m: _extract_metric(m, "frontiercode_2_0")),
         ("tau^2 Bench Telecom", lambda m: _extract_eval_or_page(m, ["tau2"], "tau2")),
         ("tau^3 Bench Banking", lambda m: _extract_eval_or_page(m, ["tau_banking"], "tau_banking")),
         ("AA-LCR", lambda m: _extract_eval_or_page(m, ["lcr"], "lcr")),
@@ -1330,6 +1341,8 @@ def _print_table(models, output):
     percent_cols = {
         "Terminal-Bench 4.0",
         "Terminal-Bench v2.1",
+        "Terminal-Bench-Science",
+        "FrontierCode 2.0",
         "tau^2 Bench Telecom",
         "tau^3 Bench Banking",
         "AA-LCR",
