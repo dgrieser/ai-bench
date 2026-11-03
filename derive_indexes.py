@@ -223,7 +223,17 @@ INDEXES: list[IndexDef] = [
             # their FrontierCode evidence through REVISION_FALLBACKS, which
             # carries a 1.1 Extended score onto 2.0's scale (16 models sit on
             # both) for a model 2.0 has not run.
-            ("frontiercode_2_0", 0.8),
+            #
+            # 1.0 since 2026-11-03, level with Real-SWE: Artificial Analysis
+            # now runs 2.0 itself (its model pages outrank Cognition's board),
+            # which took the column from 20 scored models to 48, 44 of them
+            # AA-run, an independent second run that agrees with Cognition's
+            # within about a point at the head (Opus 5.5 46.4 vs 45.5). 0.95
+            # with the index. Not above the top rung: its head is still 5.8
+            # points, and it ranks FrontierSWE 2.0's models at 0.93. With
+            # 2.0 this wide, only 6 models still reach it through the 1.1
+            # Extended fallback.
+            ("frontiercode_2_0", 1.0),
             # Long-horizon execution adds useful coverage, but 20 distinct
             # tasks warrant less influence than the larger frontier boards.
             # 0.75 since 2026-10-03, up from 0.65: 16 scored models where it
@@ -473,7 +483,23 @@ INDEXES: list[IndexDef] = [
             ("aa_omniscience_1_0", 0.6),
             ("aa_omniscience_1_1", 0.4),
             ("hle", 0.9),
-            ("critpt", 0.6),
+            # CritPt v2's hard subset (40 of 70 research-physics challenges,
+            # code-execution tool, official grading server), since 2026-11-03.
+            # A component of AA's Intelligence Index v5.0 and the knowledge
+            # column AA keeps running: 46 models, a 9.5-point head, 0.95 with
+            # this index, HLE and both FrontierMath columns against 0.91 with
+            # Coding -- the tool is how the physics is worked, not what is
+            # measured. The full 70-challenge set (critpt_2_0) is the same runs
+            # scored over more tasks (0.99 Spearman), on 26 models with an
+            # 83-point top, so it takes no slot of its own.
+            ("critpt_hard_2_0", 0.7),
+            # CritPt v1 (no tools), which AA no longer runs: 0.3 since
+            # 2026-11-03, from 0.6, kept as frozen coverage for the 123 models
+            # it scored that v2 has not -- the way Terminal-Bench 2.1 sits
+            # beside 4.0. Not converted onto v2's scale: the two differ in
+            # tool access as well as revision, so a fitted factor would be
+            # fitting one regime to the other.
+            ("critpt", 0.3),
             ("mmlu_pro", 0.5),
             ("aime_2025", 0.4),
             ("gpqa_diamond", 0.3),

@@ -145,7 +145,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE 1.1 (1), DeepSWE 1.1 (0.35), FrontierSWE 2.0 (0.9), FrontierCode 2.0 (0.8), SWE-Marathon 1.1 (0.5), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), SWE-Bench Pro V2 Hard (0.35), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), KernelBench Hard (0.4), SWE-bench Verified (0.1), ALE-Bench (0.4), NL2Repo (0.25).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE 1.1 (1), DeepSWE 1.1 (0.35), FrontierSWE 2.0 (0.9), FrontierCode 2.0 (1), SWE-Marathon 1.1 (0.5), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), SWE-Bench Pro V2 Hard (0.35), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), KernelBench Hard (0.4), SWE-bench Verified (0.1), ALE-Bench (0.4), NL2Repo (0.25).",
       "settings": [
         "derived",
         "index scale"
@@ -185,7 +185,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience v1 (0.6), AA-Omniscience v1.1 (0.4), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3), Humanity's Last Exam Diamond (0.3), FrontierMath Tier 4 (0.6), FrontierMath Tiers 1-3 (0.4), HMMT February 2026 (0.3).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience v1 (0.6), AA-Omniscience v1.1 (0.4), Humanity's Last Exam (0.9), CritPt v2 Hard (0.7), CritPt (0.3), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3), Humanity's Last Exam Diamond (0.3), FrontierMath Tier 4 (0.6), FrontierMath Tiers 1-3 (0.4), HMMT February 2026 (0.3).",
       "settings": [
         "derived",
         "index scale"
