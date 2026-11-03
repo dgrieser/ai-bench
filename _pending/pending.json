@@ -280,6 +280,30 @@
       "universe": "models"
     },
     {
+      "candidates": [],
+      "context": {
+        "known": 412,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "stealth/space-bunny-alpha"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'stealth/crouton-alpha' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/stealth/crouton-alpha",
+      "subject": "stealth/crouton-alpha",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
