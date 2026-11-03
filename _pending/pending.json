@@ -15,285 +15,138 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to deepseek-deepseek-v4-1-flash-1017, all components match"
         },
         {
           "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to deepseek-deepseek-v4-1-flash-1017, most components match"
         },
         {
           "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "arena_agent",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "aa_intelligence_index_4_0",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
+          "option": "deepseek-v4-pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 41,
+        "mapped": {
+          "deepseek-v4-pro": [
+            "deepseek-v4-pro"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "deepseek-v4-pro"
+            ],
+            "name": "deepseek-v4-pro"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'deepseek-deepseek-v4-1-flash-1017' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://agents-last-exam.org/leaderboard",
+      "subject": "deepseek-deepseek-v4-1-flash-1017",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ifbench",
+          "reason": "the first 1 word(s) of the label"
         }
       ],
       "context": {
         "known": 1367,
         "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
+          "ifbench": [
+            "IF Bench",
+            "IFBench",
+            "Instruction following IFBench"
           ]
         },
-        "siblings": []
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "IFBench (prompt)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "IFBench (loose-prompt)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "IFBench (prompt loose)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "IFBench (prompt-loose)"
+          }
+        ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Gen-Verse/Science-Last-Exam (composite-score)' to llm.json benchmark",
+      "question": "Map HF label 'allenai/IFBench_test (prompt_level_loose)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
-      "subject": "Gen-Verse/Science-Last-Exam (composite-score)",
+      "source_url": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
+      "subject": "allenai/IFBench_test (prompt_level_loose)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "arena_agent",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_intelligence_index_4_0",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
+          "option": "cwe_bench_aa",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 1367,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
-          ]
-        },
-        "siblings": []
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "collinear-ai/yc-bench (medium)"
+          }
+        ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Gen-Verse/Science-Last-Exam (experiment-observation-pass-rate)' to llm.json benchmark",
+      "question": "Map HF label 'collinear-ai/cwe-bench (resolve_rate)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
-      "subject": "Gen-Verse/Science-Last-Exam (experiment-observation-pass-rate)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "arena_agent",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_intelligence_index_4_0",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        }
-      ],
-      "context": {
-        "known": 1367,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Gen-Verse/Science-Last-Exam (protocol-planning-mean-score)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
-      "subject": "Gen-Verse/Science-Last-Exam (protocol-planning-mean-score)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "arena_agent",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_intelligence_index_4_0",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        }
-      ],
-      "context": {
-        "known": 1367,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Gen-Verse/Science-Last-Exam (scientific-computing-full-credit-rate)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
-      "subject": "Gen-Verse/Science-Last-Exam (scientific-computing-full-credit-rate)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 3 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "arena_agent",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_intelligence_index_4_0",
-          "reason": "the first 1 word(s) of the label: exact to gen, substring match"
-        }
-      ],
-      "context": {
-        "known": 1367,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Gen-Verse/Science-Last-Exam (scientific-software-operation-full-credit-rate)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
-      "subject": "Gen-Verse/Science-Last-Exam (scientific-software-operation-full-credit-rate)",
+      "source_url": "https://huggingface.co/zai-org/GLM-5.3",
+      "subject": "collinear-ai/cwe-bench (resolve_rate)",
       "universe": "benchmarks"
     },
     {
