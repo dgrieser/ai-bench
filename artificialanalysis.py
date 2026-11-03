@@ -647,10 +647,11 @@ _PAGE_FLOAT_FIELDS = [
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     # AA's own runs of two outside boards, both on every model page since
-    # 2026-10. FrontierCode's field names its revision (frontierCode20; the
-    # bare "frontierCode" beside it is AA's 1.1 Main run and is not read).
-    # Terminal-Bench-Science's does not, so update.py gates it on the version
-    # its evaluation page states.
+    # 2026-10. FrontierCode 2.0's field names its revision (frontierCode20);
+    # the bare "frontierCode" beside it is AA's 1.1 run on the 100-task Main
+    # set, and like Terminal-Bench-Science's it names no version, so update.py
+    # gates both on the version their evaluation pages state.
+    ("frontierCode", "frontiercode_1_1"),
     ("frontierCode20", "frontiercode_2_0"),
     # CritPt v2's hard subset (40 of the 70 challenges, with a code-execution
     # tool), the Intelligence Index v5.0 component. The bare "critpt" is v1.
@@ -1122,6 +1123,7 @@ _PAGE_EVALS = [
     "terminalbench_4_0",
     "terminalbench_v2_1",
     "terminalbench_hard",
+    "frontiercode_1_1",
     "frontiercode_2_0",
     "terminalbench_science",
     "ifbench",
@@ -1340,6 +1342,7 @@ def _print_table(models, output):
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
         ("Terminal-Bench-Science", lambda m: _extract_metric(m, "terminalbench_science")),
         ("FrontierCode 2.0", lambda m: _extract_metric(m, "frontiercode_2_0")),
+        ("FrontierCode 1.1", lambda m: _extract_metric(m, "frontiercode_1_1")),
         ("tau^2 Bench Telecom", lambda m: _extract_eval_or_page(m, ["tau2"], "tau2")),
         ("tau^3 Bench Banking", lambda m: _extract_eval_or_page(m, ["tau_banking"], "tau_banking")),
         ("AA-LCR", lambda m: _extract_eval_or_page(m, ["lcr"], "lcr")),
@@ -1371,6 +1374,7 @@ def _print_table(models, output):
         "Terminal-Bench v2.1",
         "Terminal-Bench-Science",
         "FrontierCode 2.0",
+        "FrontierCode 1.1",
         "tau^2 Bench Telecom",
         "tau^3 Bench Banking",
         "AA-LCR",

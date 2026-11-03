@@ -464,10 +464,13 @@ class TestFrontierCodeAndTerminalBenchScienceOnTheModelPages(unittest.TestCase):
         self.assertAlmostEqual(metrics["frontiercode_2_0"], 0.464359595959596)
         self.assertAlmostEqual(metrics["terminalbench_science"], 0.59047619047619)
 
-    def test_the_1_1_field_is_not_read_as_2_0(self) -> None:
+    def test_the_1_1_and_2_0_fields_stay_apart(self) -> None:
         # "frontierCode" (AA's 1.1 Main run) sits right before "frontierCode20";
         # a prefix match would read one for the other.
-        self.assertNotIn(0.521731, self.metrics().values())
+        metrics = self.metrics()
+        self.assertAlmostEqual(metrics["frontiercode_1_1"], 0.521731)
+        self.assertAlmostEqual(metrics["frontiercode_2_0"], 0.464359595959596)
+        self.assertIn("frontiercode_1_1", aa._PAGE_EVALS)
 
     def test_both_reach_the_evaluations_block(self) -> None:
         model = {"slug": "claude-opus-5"}

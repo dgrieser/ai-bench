@@ -142,6 +142,12 @@ class TestAaPageGates(unittest.TestCase):
                 " 0.1.0 ... Terminal-Bench-Science 0.1: Score"
             ),
             "critpt": "CritPt v2 Benchmark ... As with CritPt v1 ... CritPt v2 methodology",
+            # Navigation lists the other revision more often than not; only the
+            # page's own title counts.
+            "frontiercode": (
+                "FrontierCode 2.0 Benchmark ... FrontierCode 2.0 Benchmark ... "
+                "FrontierCode 1.1 Benchmark | Artificial Analysis"
+            ),
         }
         for gate, text in pages.items():
             with self.subTest(gate=gate):

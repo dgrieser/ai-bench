@@ -286,8 +286,13 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # way AA's Terminal-Bench 4.0 run outranks tbench.ai's: within a couple of
     # points for most models (Opus 5.5 46.4 vs 45.5, GPT-6 Astra 42.4 vs 42.8),
     # further apart for a few. The field spells its revision
-    # ("frontierCode20"), so no gate is needed; AA's 1.1 field is not read.
+    # ("frontierCode20"), so no gate is needed.
     "frontiercode_2_0": (("frontiercode_2_0",), to_percent),
+    # FrontierCode 1.1 the same way: AA's run on the 100-task Main set, which
+    # is what frontiercode_1_1 holds (Extended has a column of its own and AA
+    # does not run it). The field is a bare "frontierCode", so it is gated on
+    # the "FrontierCode 1.1" AA's evaluation page names in its title.
+    "frontiercode_1_1": (("frontiercode_1_1",), to_percent),
     # AA reports the τ³ Banking domain under the version-less key "tau_banking".
     "tau3_bench_banking": (("tau_banking",), to_percent),
     "tau2_bench_telecom": (("tau2",), to_percent),
@@ -804,6 +809,7 @@ AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
     # arrive under the same name; the evaluation page's title says which.
     "terminal_bench_science": ("0.1", ("terminal_bench_science_0_1",)),
     "critpt": ("2.0", ("critpt_2_0", "critpt_hard_2_0")),
+    "frontiercode": ("1.1", ("frontiercode_1_1",)),
 }
 # Gates read off an evaluation page's text rather than the API: gate name ->
 # (the page, the pattern its version label follows).
@@ -835,6 +841,11 @@ AA_PAGE_VERSIONS: dict[str, tuple[str, re.Pattern[str]]] = {
     "critpt": (
         "https://artificialanalysis.ai/evaluations/critpt-v2",
         re.compile(r"CritPt v(\d+(?:\.\d+)*)"),
+    ),
+    # The page's own title only: its navigation names FrontierCode 2.0 too.
+    "frontiercode": (
+        "https://artificialanalysis.ai/evaluations/frontiercode",
+        re.compile(r"FrontierCode (\d+\.\d+) Benchmark \| Artificial Analysis"),
     ),
 }
 AA_OMNISCIENCE_URL = AA_PAGE_VERSIONS["omniscience"][0]
