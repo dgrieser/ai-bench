@@ -478,17 +478,27 @@ class TestFrontierCodeAndTerminalBenchScienceOnTheModelPages(unittest.TestCase):
 
 
 class TestCritPtV2HardOnTheModelPages(unittest.TestCase):
-    """Three CritPt fields sit side by side; only the hard v2 one feeds it."""
+    """Three CritPt fields sit side by side, each feeding its own column."""
 
     def metrics(self) -> dict:
         return aa._parse_metrics_block(aa._normalize_page_text(MODEL_PAGE), "claude-opus-5")
 
-    def test_the_hard_subset_is_read_not_the_full_set(self) -> None:
+    def test_each_field_lands_under_its_own_key(self) -> None:
+        # "critptAgentic" is a prefix of "critptAgenticHard"; neither may be
+        # read for the other.
         metrics = self.metrics()
         self.assertAlmostEqual(metrics["critpt_agentic_hard"], 0.61)
         self.assertAlmostEqual(metrics["critpt"], 0.317)
-        self.assertNotIn(0.777, metrics.values())
+        self.assertNotIn("critpt_agentic", metrics)
         self.assertIn("critpt_agentic_hard", aa._PAGE_EVALS)
+
+    def test_the_full_set_comes_off_the_evaluation_page(self) -> None:
+        page = '"initialModels":[{"slug":"claude-opus-5","critptAgentic":0.777,"critptAgenticHard":0.61}]'
+        by_slug = aa._parse_eval_page_models(page, aa._CRITPT_V2_FIELDS)
+        self.assertEqual(by_slug, {"claude-opus-5": {"critpt_agentic": 0.777}})
+        with mock.patch.object(aa, "_fetch_eval_page_models", return_value=by_slug) as fetch:
+            self.assertAlmostEqual(aa._extract_critpt_v2_metric({"slug": "claude-opus-5"}, "critpt_agentic"), 0.777)
+        self.assertEqual(fetch.call_args.args[0], aa.CRITPT_V2_URL)
 
 
 class TestHleAndGpqaOnTheModelPages(unittest.TestCase):

@@ -316,9 +316,10 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # Ai2's IFBench, run independently by AA; the model pages carry it too.
     "ifbench": (("ifbench",), to_percent),
     "critpt": (("critpt",), to_percent),
-    # CritPt v2's hard subset: 40 of the 70 challenges, five repeats, with a
-    # code-execution tool -- a different run from the v1 column above, which
-    # is the full set with no tools. Gated on the version the page states.
+    # CritPt v2, with a code-execution tool: the full 70 challenges and the
+    # 40-challenge hard subset, each its own column and each a different run
+    # from the v1 column above (no tools). Gated on the version the page states.
+    "critpt_2_0": (("critpt_agentic",), to_percent),
     "critpt_hard_2_0": (("critpt_agentic_hard",), to_percent),
     "aime_2025": (("aime_25",), to_percent),
     # AA runs MMLU-Pro itself; the field is API-only, and the HF cards and
@@ -356,8 +357,11 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
 # are credited to that page, the one a reader can check them on, rather than to
 # the model page the rest of the record came from.
 AA_EVAL_PAGE_SOURCES: dict[str, str] = {
-    key: canonical(artificialanalysis.CYBER_INDEX_URL)
-    for key in ("aa_cyber_index", "cwe_bench_aa", "deepsec_bench_aa", "cybergym_e2e_aa")
+    **{
+        key: canonical(artificialanalysis.CYBER_INDEX_URL)
+        for key in ("aa_cyber_index", "cwe_bench_aa", "deepsec_bench_aa", "cybergym_e2e_aa")
+    },
+    "critpt_2_0": canonical(artificialanalysis.CRITPT_V2_URL),
 }
 
 # Columns whose AA run scores a refusal as a failure, and the AA field holding
@@ -799,7 +803,7 @@ AA_VERSION_GATES: dict[str, tuple[str, tuple[str, ...]]] = {
     # The page field is a bare "terminalBenchScience", so a 0.2 re-run would
     # arrive under the same name; the evaluation page's title says which.
     "terminal_bench_science": ("0.1", ("terminal_bench_science_0_1",)),
-    "critpt": ("2.0", ("critpt_hard_2_0",)),
+    "critpt": ("2.0", ("critpt_2_0", "critpt_hard_2_0")),
 }
 # Gates read off an evaluation page's text rather than the API: gate name ->
 # (the page, the pattern its version label follows).

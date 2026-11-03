@@ -44,6 +44,9 @@ MODEL_PAGE_URL = "https://artificialanalysis.ai/models/{}"
 # the one place AA publishes them, as the "initialModels" list it renders its
 # charts from. One read serves every model, joined on the AA slug.
 CYBER_INDEX_URL = "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index"
+# CritPt v2's evaluation page: the only place AA publishes the full-set score
+# (the model pages carry the hard subset alone).
+CRITPT_V2_URL = "https://artificialanalysis.ai/evaluations/critpt-v2"
 # One update-all run reads the list three times in three processes:
 # update_artificialanalysis_mapping.py and update.py each ask for the slugs,
 # then update.py asks for the records. Paged, that is 3 x 4 requests against a
@@ -650,9 +653,10 @@ _PAGE_FLOAT_FIELDS = [
     # its evaluation page states.
     ("frontierCode20", "frontiercode_2_0"),
     # CritPt v2's hard subset (40 of the 70 challenges, with a code-execution
-    # tool), the Intelligence Index v5.0 component. "critptAgentic" beside it
-    # is the full 70 and is not read; the bare "critpt" is v1. The field names
-    # no version, so update.py gates it on the evaluation page's title.
+    # tool), the Intelligence Index v5.0 component. The bare "critpt" is v1.
+    # The full-set "critptAgentic" is not on the model pages; it is read off
+    # CRITPT_V2_URL instead. Neither names a version, so update.py gates both
+    # on the evaluation page's title.
     ("critptAgenticHard", "critpt_agentic_hard"),
     ("terminalBenchScience", "terminalbench_science"),
     ("ifbench", "ifbench"),
@@ -884,6 +888,20 @@ def _fetch_eval_page_models(url: str, fields) -> dict:
             print(f"< no per-model values read from {url}", file=sys.stderr)
         _EVAL_PAGE_CACHE[url] = parsed or None
     return _EVAL_PAGE_CACHE[url]
+
+
+# CritPt v2's full 70-challenge set, which AA lists on its evaluation page for
+# the models it charts there (28 on 2026-11-03) and on no model page.
+_CRITPT_V2_FIELDS = [("critptAgentic", "critpt_agentic")]
+_CRITPT_V2_KEYS = [key for _page_key, key in _CRITPT_V2_FIELDS]
+
+
+def _extract_critpt_v2_metric(m: dict, key: str):
+    val = _extract_eval_any(m, [key])
+    if val is not None:
+        return val
+    by_slug = _fetch_eval_page_models(CRITPT_V2_URL, _CRITPT_V2_FIELDS) or {}
+    return (by_slug.get(m.get("slug", "")) or {}).get(key)
 
 
 def _extract_cyber_metric(m: dict, key: str):
@@ -1166,6 +1184,8 @@ def _enrich_structured_metrics(models):
         evals["mmmu_pro"] = _extract_mmmu_pro(m)
         for key in _CYBER_INDEX_KEYS:
             evals[key] = _extract_cyber_metric(m, key)
+        for key in _CRITPT_V2_KEYS:
+            evals[key] = _extract_critpt_v2_metric(m, key)
 
         page_metrics = _fetch_page_metrics(m.get("slug", ""))
         for key in _PAGE_EVALS:
@@ -1334,6 +1354,7 @@ def _print_table(models, output):
         ("IT-Bench SRE", lambda m: _extract_metric(m, "it_bench_sre")),
         ("Briefcase", lambda m: _extract_metric(m, "briefcase")),
         ("Crit-Pt", lambda m: _extract_metric(m, "critpt")),
+        ("CritPt v2", lambda m: _extract_critpt_v2_metric(m, "critpt_agentic")),
         ("CritPt v2 Hard", lambda m: _extract_metric(m, "critpt_agentic_hard")),
         ("Apex Agents", lambda m: _extract_metric(m, "apex_agents")),
         ("Openness", lambda m: _extract_metric(m, "openness_index")),
@@ -1363,6 +1384,7 @@ def _print_table(models, output):
         "GDPval",
         "IT-Bench SRE",
         "Crit-Pt",
+        "CritPt v2",
         "CritPt v2 Hard",
         "Apex Agents",
         "CWE-Bench-AA",
