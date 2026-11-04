@@ -1,9 +1,4 @@
 {"entries": [
-{"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-3-5-sonnet-20241022", "value": "__unmappable__"},
-{"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-3-7-sonnet-20250219", "value": "__unmappable__"},
-{"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-3-haiku-20240307", "value": "__unmappable__"},
-{"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-3-opus-20240229", "value": "__unmappable__"},
-{"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-3-sonnet-20240229", "value": "__unmappable__"},
 {"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-fable-5", "value": "__unmappable__"},
 {"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-haiku-4-5-20251001", "value": "__unmappable__"},
 {"at": "2026-06-29T08:20:19Z", "by": "hand", "commit": "db303db", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-mythos-preview", "value": "__unmappable__"},
@@ -3998,5 +3993,10 @@
 {"at": "2026-11-04T21:30:35Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41916384983", "subject": "SWE-bench Pro v1.0", "value": "swe_bench_pro"},
 {"at": "2026-11-04T21:30:35Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41916384983", "subject": "SWE-bench Pro v2.0 Hard", "value": "swe_bench_pro_hard_2_0"},
 {"at": "2026-11-04T21:30:35Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41916384983", "subject": "SciCode (Inspect AI)", "value": "__unmappable__"},
-{"at": "2026-11-04T21:30:35Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41916384983", "subject": "SuperGPQA (MC acc)", "value": "__unmappable__"}
+{"at": "2026-11-04T21:30:35Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41916384983", "subject": "SuperGPQA (MC acc)", "value": "__unmappable__"},
+{"at": "2026-11-04T21:42:40Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41918251445", "subject": "Terminal-Bench 2.1 (Terminus 2)", "value": "terminal_bench_2_1"},
+{"at": "2026-11-04T21:42:40Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41918251445", "subject": "Terminal-Bench 2.1 (self-reported)", "value": "terminal_bench_2_1"},
+{"at": "2026-11-04T21:42:40Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41918251445", "subject": "WinoGrande (acc)", "value": "__unmappable__"},
+{"at": "2026-11-04T21:42:40Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41918251445", "subject": "τ³-bench banking", "value": "tau3_bench_banking"},
+{"at": "2026-11-04T21:42:40Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41918251445", "subject": "ricursiveAI/Ripple-65B-Preview", "value": "ripple-65b-preview"}
 ]}
