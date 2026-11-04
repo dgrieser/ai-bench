@@ -1,3 +1,38 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "exact to hy4, substring match"
+        }
+      ],
+      "context": {
+        "known": 213,
+        "mapped": {
+          "hy4-preview": [
+            "tencent/hy4-preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "tencent/hy4-preview"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'tencent/hy4' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "tencent/hy4",
+      "universe": "models"
+    }
+  ]
 }
