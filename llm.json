@@ -112819,9 +112819,9 @@
       "params": "2.8T-A104B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 6061,
+        "int8": 3030,
+        "int4": 1515
       },
       "creator": {
         "name": "Moonshot AI",
@@ -113602,6 +113602,11 @@
         "cwe_bench_aa": 0.0,
         "deepsec_bench_aa": 0.0,
         "cybergym_e2e_aa": 0.0
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/moonshotai/Kimi-K3.1-Pro/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/moonshotai/Kimi-K3.1-Pro/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/moonshotai/Kimi-K3.1-Pro/"
       }
     },
     {
