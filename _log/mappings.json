@@ -1,13 +1,4 @@
 {"entries": [
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMLU (ES)", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU (validation)", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU-PRO (10 choice)", "value": "mmmu_pro"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU-PRO (Vision Only)", "value": "mmmu_pro"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU_VAL", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MRCR", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MSEarthMCQ", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MTBench", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MatBench", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "Math & Science", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MathVerse (Text Dominant)", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MathVerse (Vision Dominant)", "value": "__unmappable__"},
@@ -3998,5 +3989,14 @@
 {"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "DeepSeek V4 Pro", "value": "deepseek-v4-pro"},
 {"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "DeepSeek V4.1 Flash", "value": "deepseek-v4-1-flash"},
 {"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "Kimi K3", "value": "kimi-k3"},
-{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": "mistral-large-4", "route": "update_vals_mapping.py", "subject": "mistralai/mistral-large-4", "value": "__unmappable__"}
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": "mistral-large-4", "route": "update_vals_mapping.py", "subject": "mistralai/mistral-large-4", "value": "__unmappable__"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "allenai/IFBench_test (prompt_level_loose)", "value": "__unmappable__"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "collinear-ai/cwe-bench (resolve_rate)", "value": "__unmappable__"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_agents_last_exam_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "deepseek-deepseek-v4-1-flash-1017", "value": "deepseek-v4-1-flash-1017"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "lfm3-1.7b", "value": "lfm3-1-7b"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "lfm3-vl-2b", "value": "lfm3-vl-2b"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_llmstats_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "longcat-2.5", "value": "longcat-2-5"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "stealth/crouton-alpha", "value": "__unmappable__"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "tencent/hy4", "value": "hy4-preview"},
+{"at": "2026-11-04T07:38:56Z", "by": "admin", "previous": null, "route": "update_swe_bench_pro_v2_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41793466349", "subject": "minimax m3p1 flash", "value": "minimax-m3-1-flash"}
 ]}
