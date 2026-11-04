@@ -96,8 +96,13 @@ BOARD_2_0 = board(
     ],
 )
 BOARD_3_0 = board("terminal_bench_3_0", [row("Alpha", 42.7, agent="mini-SWE-agent")])
+BOARD_SCIENCE = board(
+    "terminal_bench_science_0_1",
+    [row("Alpha", 68.1, agent="Codex"), row("Bravo", 12.4, agent="mini-SWE-agent")],
+)
 BOARDS = {"terminal_bench_4_0": BOARD_4_0, "terminal_bench_3_0": BOARD_3_0,
-          "terminal_bench_2_1": BOARD_2_1, "terminal_bench_2_0": BOARD_2_0}
+          "terminal_bench_2_1": BOARD_2_1, "terminal_bench_2_0": BOARD_2_0,
+          "terminal_bench_science_0_1": BOARD_SCIENCE}
 
 
 def served(boards: dict = BOARDS):
@@ -129,6 +134,22 @@ class TestBoards(unittest.TestCase):
         )
         self.assertEqual(tb.LEADERBOARD_URL, tb.board_url("terminal_bench_4_0"))
         self.assertEqual(len({tb.board_url(k) for k in tb.BOARDS}), len(tb.BOARDS))
+
+    def test_terminal_bench_science_has_a_page_of_its_own(self):
+        # A sibling benchmark, not a Terminal-Bench revision: crediting it to
+        # /leaderboard/terminal-bench/0.1 would name a board that does not exist.
+        self.assertEqual(
+            tb.board_url("terminal_bench_science_0_1"),
+            "https://www.tbench.ai/leaderboard/terminal-bench-science/0.1",
+        )
+        self.assertEqual(
+            tb.BOARDS["terminal_bench_science_0_1"]["package"],
+            "terminal-bench-science/terminal-bench-science",
+        )
+
+    def test_terminal_bench_science_rows_land_in_its_column(self):
+        got = on("terminal_bench_science_0_1", scores(keys=["terminal_bench_science_0_1"]))
+        self.assertEqual([(e["model"], e["score"]) for e in got], [("Alpha", 68.1), ("Bravo", 12.4)])
 
     def test_every_board_is_read_by_default(self):
         self.assertEqual({e["benchmark"] for e in scores()}, set(tb.BOARDS))

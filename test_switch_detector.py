@@ -134,6 +134,20 @@ class TestAaPageGates(unittest.TestCase):
             "gdpval": "GDPval-AA v2.1 Benchmark",
             "lcr": "AA-LCR v1.1: Long Context Reasoning",
             "briefcase": "AA-Briefcase v1.1: Agentic Knowledge Work",
+            # The methodology cites the task release, 0.1.0, more often than
+            # the title cites the benchmark version; only the latter counts.
+            "terminal_bench_science": (
+                "Terminal-Bench-Science 0.1 Benchmark. Each Terminal-Bench-Science"
+                " 0.1.0 task ... Terminal-Bench-Science v0.1.0 ... Terminal-Bench-Science"
+                " 0.1.0 ... Terminal-Bench-Science 0.1: Score"
+            ),
+            "critpt": "CritPt v2 Benchmark ... As with CritPt v1 ... CritPt v2 methodology",
+            # Navigation lists the other revision more often than not; only the
+            # page's own title counts.
+            "frontiercode": (
+                "FrontierCode 2.0 Benchmark ... FrontierCode 2.0 Benchmark ... "
+                "FrontierCode 1.1 Benchmark | Artificial Analysis"
+            ),
         }
         for gate, text in pages.items():
             with self.subTest(gate=gate):

@@ -34,6 +34,7 @@ LLM_HTML = Path(__file__).resolve().parent / "llm.html"
 NAMING_SURFACES = {
     "populateFilters",          # the table's own model filter
     "renderRecentModelName",    # the "what's new" panel
+    "renderRankLine",           # the Index Ranking Changes panel
     "renderRow",                # a table row
     "renderDetailHead",         # a model's own page
     "radarLegend",              # who is who on the comparison chart

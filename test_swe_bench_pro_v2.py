@@ -168,9 +168,14 @@ class Ingest(unittest.TestCase):
 
 class Columns(unittest.TestCase):
     def test_both_columns_exist_beside_v1(self):
+        # Side by side with v1, in whichever order the admin page's column
+        # ordering last set -- the order is an editorial choice made there,
+        # not something this test should pin.
         keys = list(json.loads(LLM_JSON.read_text())["benchmarks"])
-        i = keys.index("swe_bench_pro")
-        self.assertEqual(keys[i + 1 : i + 3], list(v2.VARIANTS.values()))
+        family = {"swe_bench_pro", *v2.VARIANTS.values()}
+        self.assertTrue(family <= set(keys))
+        positions = sorted(keys.index(k) for k in family)
+        self.assertEqual(positions, list(range(positions[0], positions[0] + len(family))))
 
     def test_v1_excludes_v2(self):
         excludes = json.loads(LLM_JSON.read_text())["benchmarks"]["swe_bench_pro"]["excludes"]

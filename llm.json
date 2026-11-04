@@ -145,7 +145,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE 1.1 (1), DeepSWE 1.1 (0.35), FrontierSWE 2.0 (0.9), FrontierCode 2.0 (0.8), SWE-Marathon 1.1 (0.5), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), SWE-Bench Pro V2 Hard (0.35), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), KernelBench Hard (0.4), SWE-bench Verified (0.1), ALE-Bench (0.4), NL2Repo (0.25).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: Real-SWE 1.1 (1), DeepSWE 1.1 (0.35), FrontierSWE 2.0 (0.9), FrontierCode 2.0 (1), SWE-Marathon 1.1 (0.5), Terminal-Bench 4.0 (0.85), Terminal-Bench 2.1 (0.25), Vibe Code Bench 1.1 (0.5), SWE-bench Pro (0.3), SWE-Bench Pro V2 Hard (0.35), LiveCodeBench (0.25), SciCode (0.35), SWE-bench Multilingual (0.3), SWE Atlas: Codebase Q&A (0.55), SWE Atlas: Refactoring (0.6), SWE Atlas: Test Writing (0.4), ProgramBench: Almost Resolved (0.9), KernelBench Hard (0.4), SWE-bench Verified (0.1), ALE-Bench (0.4), NL2Repo (0.25).",
       "settings": [
         "derived",
         "index scale"
@@ -185,7 +185,7 @@
         0,
         100000
       ],
-      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience v1 (0.6), AA-Omniscience v1.1 (0.4), Humanity's Last Exam (0.9), CritPt (0.6), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3), Humanity's Last Exam Diamond (0.3), FrontierMath Tier 4 (0.6), FrontierMath Tiers 1-3 (0.4), HMMT February 2026 (0.3).",
+      "description": "Weighted Bradley–Terry fit with coverage shrinkage; index = expected win rate against ranked models × 100,000. Weights: AA-Omniscience v1 (0.6), AA-Omniscience v1.1 (0.4), Humanity's Last Exam (0.9), CritPt v2 Hard (0.7), CritPt (0.3), MMLU-Pro (0.5), AIME 2025 (0.4), GPQA Diamond (0.3), Humanity's Last Exam Diamond (0.3), FrontierMath Tier 4 (0.6), FrontierMath Tiers 1-3 (0.4), HMMT February 2026 (0.3).",
       "settings": [
         "derived",
         "index scale"
@@ -613,7 +613,7 @@
       "name": "FrontierCode 2.0",
       "short_name": "FCo 2.0",
       "category": "Software Engineering",
-      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. One board; not comparable with 1.x.",
+      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. Cognition's board and Artificial Analysis' own implementation, which outranks it where both report; not comparable with 1.x.",
       "settings": [
         "would-be-merged score",
         "132 tasks",
@@ -625,7 +625,8 @@
         "FrontierCode 1.0"
       ],
       "urls": [
-        "https://cognition.com/frontiercode"
+        "https://cognition.com/frontiercode",
+        "https://artificialanalysis.ai/evaluations/frontiercode-2-0"
       ]
     },
     "frontiercode_extended_1_1": {
@@ -652,7 +653,7 @@
       "name": "FrontierCode 1.1",
       "short_name": "FCo 1.1",
       "category": "Software Engineering",
-      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 re-ran a subset of 1.0's models and was superseded by 2.0 on 2026-10-27; its scores are comparable with neither. This is the Main board, the 100 hardest of the benchmark's 150 tasks. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
+      "description": "Cognition's benchmark of exceptionally hard, hand-crafted software engineering tasks at the frontier of model capability; contamination-resistant and unsaturated -- this board's leader sits at 53.5%. Revision 1.1 re-ran a subset of 1.0's models and was superseded by 2.0 on 2026-10-27; its scores are comparable with neither. This is the Main board, the 100 hardest of the benchmark's 150 tasks; Artificial Analysis' own run of it outranks Cognition's number where both report. The coding index aggregates the Extended board instead: the two are one set of runs scored twice and rank the same field almost identically, so counting both would spend two slots on one measurement, and Extended is the larger sample.",
       "settings": [
         "would-be-merged score",
         "Main board, 100 tasks",
@@ -666,7 +667,8 @@
       "urls": [
         "https://cognition.com/frontiercode",
         "https://cognition.ai/blog/frontier-code",
-        "https://evals.report/benchmarks/frontiercode"
+        "https://evals.report/benchmarks/frontiercode",
+        "https://artificialanalysis.ai/evaluations/frontiercode"
       ]
     },
     "frontiercode_1_0": {
@@ -1193,6 +1195,28 @@
       ],
       "urls": [
         "https://www.tbench.ai/"
+      ]
+    },
+    "terminal_bench_science_0_1": {
+      "name": "Terminal-Bench-Science 0.1",
+      "short_name": "TB-Sci",
+      "category": "Agentic Tool Use",
+      "description": "Research workflows in a terminal: 70 tasks authored and reviewed by practising scientists across the life, physical, earth, mathematical and engineering sciences, each with its own verifier. Scored as the share of tasks resolved, pass@1 averaged over three trials per task. A sibling of Terminal-Bench on the same Harbor framework, not a revision of it. Artificial Analysis runs every model under mini-SWE-agent; tbench.ai's own board and Vals AI's run each model under the agent its submitter chose (Codex, Claude Code, …), so the Artificial Analysis run lands wherever it reports.",
+      "settings": [
+        "Resolved %",
+        "70 tasks",
+        "3 trials",
+        "agentic"
+      ],
+      "excludes": [
+        "Terminal-Bench 4.0, 3.0, 2.1 and 2.0",
+        "per-domain pass rates"
+      ],
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/terminal-bench-science",
+        "https://www.tbench.ai/leaderboard/terminal-bench-science/0.1",
+        "https://www.vals.ai/benchmarks/terminal-bench-science",
+        "https://github.com/harbor-framework/terminal-bench-science"
       ]
     },
     "toolathlon": {
@@ -2103,6 +2127,55 @@
         "https://artificialanalysis.ai/evaluations/critpt",
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
         "https://epoch.ai/benchmarks/critpt"
+      ],
+      "excludes": [
+        "CritPt v2 (code execution, revised set)"
+      ]
+    },
+    "critpt_2_0": {
+      "name": "CritPt v2",
+      "short_name": "CritPt2",
+      "category": "Scientific Reasoning",
+      "description": "CritPt v2, the authors' revision of the research-level physics benchmark (underspecified statements, errors and typos corrected), on the full set of 70 composite research challenges. Models work with a code-execution tool in an offline Linux sandbox; answers (Python functions, symbolic expressions, numbers) go to the official grading server, scored as pass@1 challenge accuracy. Artificial Analysis runs it and publishes the score on its evaluation page only, for the models charted there; critpt.com's leaderboard shows the same numbers. Not comparable with v1, which is the full set with no tools, nor with the 40-challenge hard subset.",
+      "settings": [
+        "pass@1",
+        "70 challenges",
+        "full set",
+        "code execution",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "CritPt v1",
+        "CritPt v2 hard subset (40 challenges)"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/critpt-v2",
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking#critpt-v2",
+        "https://critpt.com/"
+      ]
+    },
+    "critpt_hard_2_0": {
+      "name": "CritPt v2 Hard",
+      "short_name": "CritPt2H",
+      "category": "Scientific Reasoning",
+      "description": "CritPt v2, the authors' revision of the research-level physics benchmark (underspecified statements, errors and typos corrected), on its hard subset: 40 of the 70 composite research challenges. Models work with a code-execution tool in an offline Linux sandbox; answers (Python functions, symbolic expressions, numbers) go to the official grading server, scored as pass@1 challenge accuracy over five repeats. Artificial Analysis runs it as a component of its Intelligence Index v5.0. Not comparable with v1, which is the full set with no tools, nor with v2's full 70-challenge set.",
+      "settings": [
+        "pass@1",
+        "40 challenges",
+        "hard subset",
+        "code execution",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "CritPt v1",
+        "CritPt v2 full set (70 challenges)"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/evaluations/critpt-v2?critpt-subset=hard",
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking#critpt-v2",
+        "https://critpt.com/"
       ]
     },
     "aime_2026": {
@@ -102086,8 +102159,8 @@
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "frontiercode_1_1": 39.4,
-        "frontiercode_extended_1_1": 53.2,
+        "frontiercode_1_1": null,
+        "frontiercode_extended_1_1": null,
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
@@ -102183,8 +102256,8 @@
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "frontiercode_1_1": "2026-10-14",
-        "frontiercode_extended_1_1": "2026-10-14",
+        "frontiercode_1_1": "2026-11-03",
+        "frontiercode_extended_1_1": "2026-11-03",
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
@@ -102280,8 +102353,8 @@
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "frontiercode_1_1": "https://epoch.ai/benchmarks/frontiercode",
-        "frontiercode_extended_1_1": "https://cognition.com/frontiercode",
+        "frontiercode_1_1": null,
+        "frontiercode_extended_1_1": null,
         "frontiercode_1_0": null,
         "swe_marathon_1_1": null,
         "swe_marathon_1_0": null,
@@ -102452,6 +102525,11 @@
             "date": "2026-10-14",
             "score": 53.2,
             "source": "https://cognition.com/frontiercode"
+          },
+          {
+            "date": "2026-11-03",
+            "score": null,
+            "source": null
           }
         ],
         "frontiercode_1_1": [
@@ -102459,6 +102537,11 @@
             "date": "2026-10-14",
             "score": 39.4,
             "source": "https://epoch.ai/benchmarks/frontiercode"
+          },
+          {
+            "date": "2026-11-03",
+            "score": null,
+            "source": null
           }
         ],
         "vibe_code_bench_1_1": [
