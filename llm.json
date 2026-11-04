@@ -112923,7 +112923,8 @@
         "terminal_bench_science_0_1": 34.3,
         "frontiercode_2_0": 25.5,
         "critpt_2_0": 70.6,
-        "critpt_hard_2_0": 49.5
+        "critpt_hard_2_0": 49.5,
+        "agents_last_exam_1_0": 43.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-04",
@@ -113021,7 +113022,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
-        "critpt_hard_2_0": "2026-11-04"
+        "critpt_hard_2_0": "2026-11-04",
+        "agents_last_exam_1_0": "2026-11-04"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -113040,7 +113042,7 @@
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
         "swe_atlas_qna": null,
-        "deepswe_1_1": "https://www.kimi.ai/blog/kimi-k3-1-pro",
+        "deepswe_1_1": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
@@ -113090,7 +113092,7 @@
         "osworld_2_0_vendor": null,
         "zerobench": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": "https://www.kimi.ai/blog/kimi-k3-1-pro",
+        "charxiv_reasoning": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
         "aa_cyber_index": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "cwe_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "deepsec_bench_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
@@ -113119,7 +113121,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/kimi-k3-1-pro",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/kimi-k3-1-pro",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
+        "critpt_hard_2_0": "https://artificialanalysis.ai/models/kimi-k3-1-pro",
+        "agents_last_exam_1_0": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -113206,7 +113209,7 @@
           {
             "date": "2026-10-23",
             "score": 75.5,
-            "source": "https://www.kimi.ai/blog/kimi-k3-1-pro"
+            "source": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
           }
         ],
         "frontiercode_2_0": [
@@ -113303,6 +113306,13 @@
             "date": "2026-10-31",
             "score": 43.4,
             "source": "https://agents-last-exam.org/leaderboard"
+          }
+        ],
+        "agents_last_exam_1_0": [
+          {
+            "date": "2026-11-04",
+            "score": 43.2,
+            "source": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
           }
         ],
         "aa_briefcase": [
@@ -113492,7 +113502,7 @@
           {
             "date": "2026-10-23",
             "score": 89,
-            "source": "https://www.kimi.ai/blog/kimi-k3-1-pro"
+            "source": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
           }
         ]
       },
@@ -117069,9 +117079,9 @@
       "params": "2B",
       "context": "128k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 4.2,
+        "int8": 2.1,
+        "int4": 1.0
       },
       "creator": {
         "name": "Liquid AI",
@@ -117484,6 +117494,11 @@
             "charxiv_reasoning"
           ]
         }
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-VL-2B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-VL-2B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-VL-2B/"
       }
     },
     {
@@ -117493,9 +117508,9 @@
       "params": "1.7B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 3.8,
+        "int8": 1.9,
+        "int4": 0.9
       },
       "creator": {
         "name": "Liquid AI",
@@ -118026,6 +118041,11 @@
             "ifbench"
           ]
         }
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-1.7B/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-1.7B/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-1.7B/"
       }
     }
   ],
