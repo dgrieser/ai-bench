@@ -1,156 +1,3443 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "longcat-2-0",
+          "reason": "exact to longcat-2-5, most components match"
+        }
+      ],
       "default": null,
       "if_previous": null,
-      "note": "released 2026-10-28 - Google",
-      "question": "Carry newly released closed model 'gemini-4-carbon-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-carbon-low",
-      "universe": null
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'longcat-2-5'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "longcat-2-5",
+      "universe": "aa-slugs"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "deepseek-v4-1-flash-1017",
-          "reason": "exact to deepseek-deepseek-v4-1-flash-1017, all components match"
+          "option": "aa_omniscience_1_1",
+          "reason": "exact to AA-Omniscience (public), most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to deepseek-deepseek-v4-1-flash-1017, most components match"
+          "option": "aa_omniscience_1_0",
+          "reason": "exact to AA-Omniscience (public), most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "aa_omniscience_accuracy_1_1",
+          "reason": "exact to AA-Omniscience (public), most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "aa_omniscience_hallucination_1_1",
+          "reason": "exact to AA-Omniscience (public), most components match"
         },
         {
           "confidence": "weak",
-          "option": "deepseek-v4-pro",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "aa_omniscience_accuracy_1_0",
+          "reason": "exact to AA-Omniscience (public), most components match"
         }
       ],
       "context": {
-        "known": 41,
+        "known": 1369,
         "mapped": {
-          "deepseek-v4-pro": [
-            "deepseek-v4-pro"
+          "aa_omniscience_1_0": [
+            "AA Omniscience (index)",
+            "AA-Omni-Public Index",
+            "AA-Omni. Index",
+            "AA-Omniscience",
+            "AA-Omniscience Index",
+            "AA-Omniscience Index (public set)"
+          ],
+          "aa_omniscience_accuracy_1_0": [
+            "AA-Omni. Accuracy",
+            "AA-Omniscience (accuracy)",
+            "AA-Omniscience Accuracy",
+            "AA-Omniscience Accuracy (public set)",
+            "AA-Omniscience Accuracy Factual accuracy"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "deepseek-v4-pro"
+              "aa_omniscience_1_0"
             ],
-            "name": "deepseek-v4-pro"
+            "name": "AA-Omniscience Index (public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy (public set)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience Index"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA Omniscience (index)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience (accuracy)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Agents' Last Exam model 'deepseek-deepseek-v4-1-flash-1017' to llm.json model",
-      "route": "update_agents_last_exam_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://agents-last-exam.org/leaderboard",
-      "subject": "deepseek-deepseek-v4-1-flash-1017",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ifbench",
-          "reason": "the first 1 word(s) of the label"
-        }
-      ],
-      "context": {
-        "known": 1367,
-        "mapped": {
-          "ifbench": [
-            "IF Bench",
-            "IFBench",
-            "Instruction following IFBench"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "IFBench (prompt)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "IFBench (loose-prompt)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "IFBench (prompt loose)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "IFBench (prompt-loose)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'allenai/IFBench_test (prompt_level_loose)' to llm.json benchmark",
+      "question": "Map HF label 'AA-Omniscience (public)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/stepfun-ai/Step-3.5-Flash",
-      "subject": "allenai/IFBench_test (prompt_level_loose)",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "AA-Omniscience (public)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "cwe_bench_aa",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "aa_omniscience_accuracy_1_1",
+          "reason": "exact to AA-Omniscience accuracy (public), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy_1_0",
+          "reason": "exact to AA-Omniscience accuracy (public), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_1",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 1367,
+        "known": 1369,
+        "mapped": {
+          "aa_omniscience_1_0": [
+            "AA Omniscience (index)",
+            "AA-Omni-Public Index",
+            "AA-Omni. Index",
+            "AA-Omniscience",
+            "AA-Omniscience Index",
+            "AA-Omniscience Index (public set)"
+          ],
+          "aa_omniscience_accuracy_1_0": [
+            "AA-Omni. Accuracy",
+            "AA-Omniscience (accuracy)",
+            "AA-Omniscience Accuracy",
+            "AA-Omniscience Accuracy (public set)",
+            "AA-Omniscience Accuracy Factual accuracy"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy (public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience (accuracy)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy Factual accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience Index (public set)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omni. Accuracy"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omniscience accuracy (public)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "AA-Omniscience accuracy (public)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy_1_1",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "aa_omniscience_1_0": [
+            "AA Omniscience (index)",
+            "AA-Omni-Public Index",
+            "AA-Omni. Index",
+            "AA-Omniscience",
+            "AA-Omniscience Index",
+            "AA-Omniscience Index (public set)"
+          ],
+          "aa_omniscience_hallucination_1_0": [
+            "AA-Omni. Non-Halluc.",
+            "AA-Omniscience Non-Hallucination Rate"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_hallucination_1_0"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Non-hallucination rate"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA-Omniscience Index"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_1_0"
+            ],
+            "name": "AA Omniscience (index)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience (accuracy)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AA-Omniscience non-hallucination (public)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "AA-Omniscience non-hallucination (public)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpqa_diamond",
+          "reason": "the same name without its first 1 word(s): exact to qa, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "simpleqa_verified",
+          "reason": "the same name without its first 1 word(s): exact to qa, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "gpqa_diamond": [
+            "GPQA (no tools)",
+            "GPQA Diamond",
+            "GPQA Diamond (AA)",
+            "GPQA Diamond (EN)",
+            "GPQA Diamond (Pass@1)",
+            "GPQA Diamond (no tools)",
+            "GPQA Diamond Graduate-level science QA",
+            "GPQA-D",
+            "GPQA-Diamond",
+            "GPQA-Diamond (Mean@16)",
+            "GPQA-Diamond (Pass@1)",
+            "GPQA-Diamond(avg@16)",
+            "GPQA-diamond",
+            "GPQA-diamond (acc)",
+            "GPQA_Diamond",
+            "Idavidrein/gpqa (diamond)",
+            "Idavidrein/gpqa (gpqa_diamond)",
+            "Scientific reasoning GPQA Diamond"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ActivityNet-QA (test)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ActivityNet-QA (test)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "automation_bench_aa",
+          "reason": "the same name without the parenthetical: exact to AutomationBench, substring match, as 'AutomationBench-AA'"
+        }
+      ],
+      "context": {
+        "known": 1369,
         "mapped": {},
         "siblings": [
           {
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "collinear-ai/yc-bench (medium)"
+            "name": "AutomationBench Public"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench (Public)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Automation Bench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench-AA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench v1.0.6"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AutomationBench (v1.0.6)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'collinear-ai/cwe-bench (resolve_rate)' to llm.json benchmark",
+      "question": "Map HF label 'AutomationBench (public)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/zai-org/GLM-5.3",
-      "subject": "collinear-ai/cwe-bench (resolve_rate)",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "AutomationBench (public)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "bfcl_v4",
+          "reason": "exact to BFCL V4, exact match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "bfcl_v4": [
+            "BFCL (v4)",
+            "BFCL v4",
+            "BFCL v4 (overall)",
+            "BFCL v4 Function calling",
+            "BFCL-V4",
+            "BFCLv4"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "bfcl_v4"
+            ],
+            "name": "BFCL v4"
+          },
+          {
+            "mapped_to": [
+              "bfcl_v4"
+            ],
+            "name": "BFCL-V4"
+          },
+          {
+            "mapped_to": [
+              "bfcl_v4"
+            ],
+            "name": "BFCL (v4)"
+          },
+          {
+            "mapped_to": [
+              "bfcl_v4"
+            ],
+            "name": "BFCLv4"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BFCL v4 (live)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BFCL v4 (memory)"
+          },
+          {
+            "mapped_to": [
+              "bfcl_v4"
+            ],
+            "name": "BFCL v4 (overall)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BFCL v4 (multi-turn)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BFCL V4' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "BFCL V4",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "browsecomp",
+          "reason": "the first 1 word(s) of the label"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "browsecomp": [
+            "Browse-Comp",
+            "BrowseComp",
+            "BrowseComp (Pass@1)",
+            "BrowseComp Web browsing",
+            "BrowseComp with Search",
+            "Browsecomp"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BrowseComp+ (OpenClaw)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "open-agent-leaderboard/results (browsecomp_plus)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BrowseComp-Plus (OpenClaw subset)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "BrowseComp-Plus (OpenClaw subset)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CV-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "CV-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "charxiv_reasoning",
+          "reason": "the same name without the parenthetical, as 'CharXiv'"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "charxiv_reasoning": [
+            "CharXiv (RQ)",
+            "CharXiv (reasoning)",
+            "CharXiv RQ",
+            "CharXiv(RQ)",
+            "Charxiv Reasoning",
+            "Scientific chart analysis CharXiv (RQ)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CharXiv (descriptive)"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv RQ"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv(RQ)"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv (RQ)"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "Charxiv Reasoning"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv (reasoning)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CharXiv (RQ) (w/ python)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Charxiv RQ (original / with python)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CharXiv (descriptive, val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "CharXiv (descriptive, val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "charxiv_reasoning",
+          "reason": "exact to CharXiv (reasoning, val), most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "charxiv_reasoning": [
+            "CharXiv (RQ)",
+            "CharXiv (reasoning)",
+            "CharXiv RQ",
+            "CharXiv(RQ)",
+            "Charxiv Reasoning",
+            "Scientific chart analysis CharXiv (RQ)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "Charxiv Reasoning"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv (reasoning)"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv RQ"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv(RQ)"
+          },
+          {
+            "mapped_to": [
+              "charxiv_reasoning"
+            ],
+            "name": "CharXiv (RQ)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CharXiv (descriptive)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CharXiv (RQ) (w/ python)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Charxiv RQ (original / with python)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CharXiv (reasoning, val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "CharXiv (reasoning, val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ChartQA_TEST"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ChartQA (test)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ChartQA (test)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claw_eval",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "claw_eval": [
+            "claw-eval/Claw-Eval (general)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval average (EN)"
+          },
+          {
+            "mapped_to": [
+              "claw_eval"
+            ],
+            "name": "claw-eval/Claw-Eval (general)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval Avg"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-eval Avg"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "claw-eval/Claw-Eval (multimodal)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval Pass^3"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval pass^3"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Claw-Eval General (EN), average' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "Claw-Eval General (EN), average",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claw_eval",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "claw_eval": [
+            "claw-eval/Claw-Eval (general)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "claw_eval"
+            ],
+            "name": "claw-eval/Claw-Eval (general)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval average (EN)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval Avg"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-eval Avg"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "claw-eval/Claw-Eval (multimodal)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval Pass^3"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claw-Eval pass^3"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Claw-Eval General (EN), pass^3' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "Claw-Eval General (EN), pass^3",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CountBenchQA' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "CountBenchQA",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "DocVQA (LLM-Judge)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DocVQA (val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "DocVQA (val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Document, OCR & Chart' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Document, OCR & Chart",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "DynaMath"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DynaMath (average accuracy)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "DynaMath (average accuracy)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "EmbSpatialBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'EmbSpatial-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "EmbSpatial-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "charxiv_reasoning",
+          "reason": "the same name without its first 1 word(s): exact to reasoning, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "charxiv_reasoning": [
+            "CharXiv (RQ)",
+            "CharXiv (reasoning)",
+            "CharXiv RQ",
+            "CharXiv(RQ)",
+            "Charxiv Reasoning",
+            "Scientific chart analysis CharXiv (RQ)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Embodied intelligence ERQA"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Embodied reasoning' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Embodied reasoning",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GUI understanding' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "GUI understanding",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HR-Bench (4K)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "HR-Bench (4K)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HR-Bench (8K)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "HR-Bench (8K)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without the parenthetical, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam_1_0",
+          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam_1_1",
+          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name spelled without punctuation: drop suffix to a variant, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "agents_last_exam_1_0": [
+            "Agent's Last Exam (Pass@1)",
+            "Agents' Last Exam",
+            "Agents’ Last Exam",
+            "Frontier agentic tasks Agents' Last Exam",
+            "agents-last-exam/agents-last-exam (overall-pass-rate)"
+          ],
+          "hle": [
+            "HLE",
+            "HLE (Pass@1)",
+            "HLE (Text-only)",
+            "HLE (no tools)",
+            "HLE (text only)",
+            "HLE (text)",
+            "HLE (text-only, no tools)",
+            "HLE (w/o tools)",
+            "HLE (without tools)",
+            "HLE *(no tools)",
+            "HLE Text (AA)",
+            "HLE no tools",
+            "HLE w/o tools",
+            "Humanity's Last Exam",
+            "Humanity's Last Exam (EN)",
+            "Humanity's Last Exam (HLE)",
+            "Humanity's Last Exam (Pass@1)",
+            "Humanity’s Last Exam",
+            "Multidisciplinary reasoning HLE",
+            "cais/hle",
+            "cais/hle (default)",
+            "cais/hle (no tools)",
+            "cais/hle (none)"
+          ],
+          "hle_diamond": [
+            "HLE Diamond",
+            "HLE-Diamond",
+            "HLE-Diamond (no tools)",
+            "HLE-Diamond (w/o tools)",
+            "Humanity's Last Exam Diamond",
+            "Humanity's Last Exam: Diamond",
+            "cais/hle-diamond",
+            "cais/hle-diamond (no tools)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humanity's Last Exam (without tools) Expert-level reasoning"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humanity's Last Exam (DE)"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (EN)"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (HLE)"
+          },
+          {
+            "mapped_to": [
+              "hle_diamond"
+            ],
+            "name": "Humanity's Last Exam Diamond"
+          },
+          {
+            "mapped_to": [
+              "hle_diamond"
+            ],
+            "name": "Humanity's Last Exam: Diamond"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (Pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Humanity's Last Exam (no tools)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "Humanity's Last Exam (no tools)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hle",
+          "reason": "the same name without the parenthetical, as \"Humanity's Last Exam\""
+        },
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam_1_0",
+          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "agents_last_exam_1_1",
+          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name spelled without punctuation: drop suffix to a variant, most components match, as \"Humanity's Last Exam Diamond\""
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "agents_last_exam_1_0": [
+            "Agent's Last Exam (Pass@1)",
+            "Agents' Last Exam",
+            "Agents’ Last Exam",
+            "Frontier agentic tasks Agents' Last Exam",
+            "agents-last-exam/agents-last-exam (overall-pass-rate)"
+          ],
+          "hle": [
+            "HLE",
+            "HLE (Pass@1)",
+            "HLE (Text-only)",
+            "HLE (no tools)",
+            "HLE (text only)",
+            "HLE (text)",
+            "HLE (text-only, no tools)",
+            "HLE (w/o tools)",
+            "HLE (without tools)",
+            "HLE *(no tools)",
+            "HLE Text (AA)",
+            "HLE no tools",
+            "HLE w/o tools",
+            "Humanity's Last Exam",
+            "Humanity's Last Exam (EN)",
+            "Humanity's Last Exam (HLE)",
+            "Humanity's Last Exam (Pass@1)",
+            "Humanity’s Last Exam",
+            "Multidisciplinary reasoning HLE",
+            "cais/hle",
+            "cais/hle (default)",
+            "cais/hle (no tools)",
+            "cais/hle (none)"
+          ],
+          "hle_diamond": [
+            "HLE Diamond",
+            "HLE-Diamond",
+            "HLE-Diamond (no tools)",
+            "HLE-Diamond (w/o tools)",
+            "Humanity's Last Exam Diamond",
+            "Humanity's Last Exam: Diamond",
+            "cais/hle-diamond",
+            "cais/hle-diamond (no tools)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humanity's Last Exam (without tools) Expert-level reasoning"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humanity's Last Exam (DE)"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (EN)"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (HLE)"
+          },
+          {
+            "mapped_to": [
+              "hle_diamond"
+            ],
+            "name": "Humanity's Last Exam Diamond"
+          },
+          {
+            "mapped_to": [
+              "hle_diamond"
+            ],
+            "name": "Humanity's Last Exam: Diamond"
+          },
+          {
+            "mapped_to": [
+              "hle"
+            ],
+            "name": "Humanity's Last Exam (Pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Humanity's Last Exam (with tools)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "Humanity's Last Exam (with tools)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'InfographicVQA (val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "InfographicVQA (val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "livecodebench",
+          "reason": "the first 1 word(s) of the label"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "livecodebench": [
+            "Competitive coding LiveCodeBench v6",
+            "LCB v6",
+            "Live Code Bench v6",
+            "Live-Code-Bench-V6",
+            "LiveCodeBench (Mean@4)",
+            "LiveCodeBench (Pass@1)",
+            "LiveCodeBench (pass@1)",
+            "LiveCodeBench (v1–v6 cumul)",
+            "LiveCodeBench (v6 2025-08–2025-05)",
+            "LiveCodeBench (v6)",
+            "LiveCodeBench v6",
+            "LiveCodeBench v6 (02/2025-05/2025)",
+            "LiveCodeBench v6 (25.02-25.05)",
+            "LiveCodeBench v6 (Feb–May)",
+            "LiveCodeBench v6 Competitive coding",
+            "LiveCodeBench-V6",
+            "LiveCodeBench-v6",
+            "LiveCodeBenchV6",
+            "LiveCodeBenchv6"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'LiveCodeBench Pro 25Q2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "LiveCodeBench Pro 25Q2",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mathvista_mini",
+          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tier_4",
+          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tiers_1_3",
+          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "mathvista_mini": [
+            "MathVista",
+            "MathVista (mini)",
+            "MathVista mini",
+            "MathVista_MINI",
+            "Mathvista(mini)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH-Vision"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MathVision"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Math"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "math"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CMATH"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CMath"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH500"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MATH-Vision (full)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MATH-Vision (full)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MLVU (M-Avg)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MLVU"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MLVU (dev, M-Avg)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MLVU (dev, M-Avg)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hmmt_feb_2026",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "hmmt_feb_2026": [
+            "HMMT 2026 (Feb)",
+            "HMMT 2026 Feb (Pass@1)",
+            "HMMT Feb 2026",
+            "HMMT Feb 2026 Competition mathematics",
+            "HMMT Feb 26",
+            "HMMT Feb. 2026",
+            "HMMT2602",
+            "MathArena/hmmt_feb_2026"
+          ],
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ],
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ],
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MM-IFEval' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MM-IFEval",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hmmt_feb_2026",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "hmmt_feb_2026": [
+            "HMMT 2026 (Feb)",
+            "HMMT 2026 Feb (Pass@1)",
+            "HMMT Feb 2026",
+            "HMMT Feb 2026 Competition mathematics",
+            "HMMT Feb 26",
+            "HMMT Feb. 2026",
+            "HMMT2602",
+            "MathArena/hmmt_feb_2026"
+          ],
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ],
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ],
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MM-ToolSandbox (partial credit)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MM-ToolSandbox (partial credit)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hmmt_feb_2026",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "hmmt_feb_2026": [
+            "HMMT 2026 (Feb)",
+            "HMMT 2026 Feb (Pass@1)",
+            "HMMT Feb 2026",
+            "HMMT Feb 2026 Competition mathematics",
+            "HMMT Feb 26",
+            "HMMT Feb. 2026",
+            "HMMT2602",
+            "MathArena/hmmt_feb_2026"
+          ],
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ],
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ],
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MM-Vet (v1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MM-Vet (v1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMBench EN-DEV-v1.1"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMBench (dev EN v1.1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MMBench (dev EN v1.1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "recorded",
+          "option": "hmmt_feb_2026",
+          "reason": "offered by the prompt"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video MME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME (w sub.)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video-MME (w. sub)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME (w/o sub.)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MME-Benchmarks/Video-MME-v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MME' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MME",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMB' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MMMB",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the same name without the parenthetical: exact to MMMU, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU_VAL"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU (validation)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU Pro"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU-Pro"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMMMU"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU-Pro (EM)"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU/MMMU_Pro"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMU (val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MMMU (val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMVU"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMVU (val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MMVU (val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "charxiv_reasoning",
+          "reason": "the same name without its first 2 word(s): exact to reasoning, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mathvista_mini",
+          "reason": "the first 1 word(s) of the label: exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tier_4",
+          "reason": "the first 1 word(s) of the label: exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tiers_1_3",
+          "reason": "the first 1 word(s) of the label: exact to math, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "charxiv_reasoning": [
+            "CharXiv (RQ)",
+            "CharXiv (reasoning)",
+            "CharXiv RQ",
+            "CharXiv(RQ)",
+            "Charxiv Reasoning",
+            "Scientific chart analysis CharXiv (RQ)"
+          ],
+          "mathvista_mini": [
+            "MathVista",
+            "MathVista (mini)",
+            "MathVista mini",
+            "MathVista_MINI",
+            "Mathvista(mini)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Math Reasoning"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Math & logical reasoning' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Math & logical reasoning",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MindCube (tinybench)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MindCube (tinybench)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MotionBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MotionBench (dev)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MotionBench (dev)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MuirBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "MuirBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multilingual",
+          "reason": "the first 1 word(s) of the label: exact to multilingual, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "swe_bench_multilingual": [
+            "Multilingual software engineering SWE-bench Multilingual",
+            "SWE Bench Multilingual",
+            "SWE Multilingual (Resolved)",
+            "SWE-Bench Multiligual",
+            "SWE-Bench Multilingual",
+            "SWE-bench Multilingual",
+            "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Multilingual MMBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Multilingual MMBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OCRBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OCRBenchV2 (EN)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OCRBench v1' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "OCRBench v1",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OCRBenchV2 (EN)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OCR Bench v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OCRBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OCRBench v2 (En)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "OCRBench v2 (En)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OpenEQA (episodic memory, video)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "OpenEQA (episodic memory, video)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'POPE' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "POPE",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "PerceptionBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Real-world perception RealWorldQA"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Perception' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Perception",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Point-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Point-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the same name without its first 1 word(s): exact to m, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "cybergym",
+          "reason": "the same name without its first 1 word(s): exact to m, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the same name without its first 1 word(s): exact to m, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the same name without its first 1 word(s): exact to m, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aime_2025",
+          "reason": "the same name without its first 1 word(s): exact to m, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "aime_2025": [
+            "AIME 2025",
+            "AIME 2025 (EN)",
+            "AIME 2025 (Pass@1)",
+            "AIME 2025 Competition mathematics",
+            "AIME 25",
+            "AIME-25",
+            "AIME2025",
+            "AIME25",
+            "AIME25 (Avg@32)",
+            "AIME25 (Mean@32)",
+            "AIME25 (avg@10)",
+            "AIME25 (no tools)",
+            "AIME25(avg@32)"
+          ],
+          "cybergym": [
+            "CyberGym",
+            "CyberGym (Pass@1)",
+            "Cybergym"
+          ],
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ],
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RefCOCO-M' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "RefCOCO-M",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "RefCOCO avg"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "RefCOCO(avg)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "RefCOCO-avg (Acc@0.5)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RefCOCO-avg' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "RefCOCO-avg",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "RefSpatialBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RefSpatial-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "RefSpatial-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RoboSpatial-Home' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "RoboSpatial-Home",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SAT (val + test)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "SAT (val + test)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SEED-Bench (image)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "SEED-Bench (image)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multilingual",
+          "reason": "exact to SWE-bench Multilingual (OpenCode), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "swe_bench_multilingual": [
+            "Multilingual software engineering SWE-bench Multilingual",
+            "SWE Bench Multilingual",
+            "SWE Multilingual (Resolved)",
+            "SWE-Bench Multiligual",
+            "SWE-Bench Multilingual",
+            "SWE-bench Multilingual",
+            "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)"
+          ],
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ],
+          "swe_bench_pro": [
+            "Agentic coding SWE-bench Pro",
+            "SWE Bench Pro",
+            "SWE Pro (Resolved)",
+            "SWE-Bench Pro",
+            "SWE-bench Pro",
+            "ScaleAI/SWE-bench_Pro"
+          ],
+          "swe_bench_pro_2_0": [
+            "SWE Bench Pro V2",
+            "SWE-Bench Pro V2",
+            "SWE-Bench Pro v2",
+            "SWE-bench Pro V2",
+            "SWE-bench Pro v2"
+          ],
+          "swe_bench_verified": [
+            "SWE Bench Verified",
+            "SWE Bench Verified (SWE-Agent Harness)",
+            "SWE Verified",
+            "SWE Verified (Resolved)",
+            "SWE-Bench Verified",
+            "SWE-Bench Verified (OpenCode)",
+            "SWE-Bench Verified (OpenHands)",
+            "SWE-Bench-Verified (acc)",
+            "SWE-bench Verified",
+            "SWE-bench Verified Software engineering",
+            "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)",
+            "SWEBench Verified"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SWE-Bench (OpenCode)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_multilingual"
+            ],
+            "name": "SWE Bench Multilingual"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_multilingual"
+            ],
+            "name": "SWE-Bench Multilingual"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_multilingual"
+            ],
+            "name": "SWE-bench Multilingual"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-Bench Verified (OpenCode)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SWE-Bench Multilingual (OpenHands)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_multilingual"
+            ],
+            "name": "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_multilingual"
+            ],
+            "name": "Multilingual software engineering SWE-bench Multilingual"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-bench Multilingual (OpenCode)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "SWE-bench Multilingual (OpenCode)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "exact to SWE-bench Verified (OpenCode), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multilingual",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "swe_bench_multilingual": [
+            "Multilingual software engineering SWE-bench Multilingual",
+            "SWE Bench Multilingual",
+            "SWE Multilingual (Resolved)",
+            "SWE-Bench Multiligual",
+            "SWE-Bench Multilingual",
+            "SWE-bench Multilingual",
+            "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)"
+          ],
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ],
+          "swe_bench_pro": [
+            "Agentic coding SWE-bench Pro",
+            "SWE Bench Pro",
+            "SWE Pro (Resolved)",
+            "SWE-Bench Pro",
+            "SWE-bench Pro",
+            "ScaleAI/SWE-bench_Pro"
+          ],
+          "swe_bench_pro_2_0": [
+            "SWE Bench Pro V2",
+            "SWE-Bench Pro V2",
+            "SWE-Bench Pro v2",
+            "SWE-bench Pro V2",
+            "SWE-bench Pro v2"
+          ],
+          "swe_bench_verified": [
+            "SWE Bench Verified",
+            "SWE Bench Verified (SWE-Agent Harness)",
+            "SWE Verified",
+            "SWE Verified (Resolved)",
+            "SWE-Bench Verified",
+            "SWE-Bench Verified (OpenCode)",
+            "SWE-Bench Verified (OpenHands)",
+            "SWE-Bench-Verified (acc)",
+            "SWE-bench Verified",
+            "SWE-bench Verified Software engineering",
+            "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)",
+            "SWEBench Verified"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-Bench Verified (OpenCode)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE Bench Verified"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-Bench Verified"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-bench Verified"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SWE-Bench (OpenCode)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-Bench-Verified (acc)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-Bench Verified (OpenHands)"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_verified"
+            ],
+            "name": "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-bench Verified (OpenCode)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "SWE-bench Verified (OpenCode)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ScreenSpot Pro"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "likaixin/ScreenSpot-Pro (overall)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ScreenSpot-Pro' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ScreenSpot-Pro",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ScreenSpot_v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ScreenSpot-v2 Desktop' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ScreenSpot-v2 Desktop",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ScreenSpot_v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ScreenSpot-v2 Mobile' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ScreenSpot-v2 Mobile",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "arena_webdev",
+          "reason": "the same name without its first 2 word(s): exact to web, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ScreenSpot_v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ScreenSpot-v2 Web' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ScreenSpot-v2 Web",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "exact to Terminal-Bench 2.1 (OpenCode), most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_science_0_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_3_0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "terminal_bench_2_0": [
+            "Terminal Bench 2",
+            "Terminal Bench 2.0",
+            "Terminal Bench 2.0 (Acc)",
+            "Terminal Bench Core 2.0",
+            "Terminal-Bench 2.0",
+            "Terminal-Bench 2.0 (Terminus-2)",
+            "TerminalBench(acc)",
+            "harborframework/terminal-bench-2.0 (terminalbench_2)"
+          ],
+          "terminal_bench_2_1": [
+            "Agentic terminal coding Terminal Bench 2.1 (Terminus)",
+            "Terminal Bench 2.1",
+            "Terminal Bench 2.1 (Terminus-2)",
+            "Terminal Bench v2.1",
+            "Terminal-Bench 2.1",
+            "Terminal-Bench 2.1 (Pass@1)",
+            "Terminal-Bench 2.1 (Terminus-2)",
+            "Terminal-Bench 2.1 Agentic terminal use",
+            "Terminal-Bench v2.1",
+            "TerminalBench 2.1",
+            "TerminalBench 2.1 (with terminus2)",
+            "harborframework/terminal-bench-2.1"
+          ],
+          "terminal_bench_3_0": [
+            "Terminal Bench 3.0",
+            "Terminal-Bench 3.0 (Pass@1)",
+            "harborframework/terminal-bench (terminalbench_3)"
+          ],
+          "terminal_bench_hard": [
+            "Terminal Bench (hard subset)",
+            "Terminal Bench Hard",
+            "Terminal-Bench Hard"
+          ],
+          "terminal_bench_science_0_1": [
+            "harborframework/terminal-bench-science (terminalbenchscience_0_1)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal Bench 2.1"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal Bench 2.1 (Terminus-2)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (Terminus-2)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "harborframework/terminal-bench-2.1"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Terminal-Bench 2.1 (Claude Code)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Terminal Bench 2.1 (best harness)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Terminal-Bench 2.1 (OpenCode)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "Terminal-Bench 2.1 (OpenCode)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'TextVQA (val)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "TextVQA (val)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "bfcl_v4",
+          "reason": "the first 1 word(s) of the label: exact to v, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claw_eval",
+          "reason": "the first 1 word(s) of the label: exact to v, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gdpval_aa",
+          "reason": "the first 1 word(s) of the label: exact to v, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "arena_webdev",
+          "reason": "the first 1 word(s) of the label: exact to v, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "livecodebench",
+          "reason": "the first 1 word(s) of the label: exact to v, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "bfcl_v4": [
+            "BFCL (v4)",
+            "BFCL v4",
+            "BFCL v4 (overall)",
+            "BFCL v4 Function calling",
+            "BFCL-V4",
+            "BFCLv4"
+          ],
+          "claw_eval": [
+            "claw-eval/Claw-Eval (general)"
+          ],
+          "gdpval_aa": [
+            "GDPVal-AA Real-world professional tasks (Elo)",
+            "GDPVal-AA v2",
+            "GDPval-AA 2.1",
+            "GDPval-AA v2",
+            "GDPval-AA v2 (Elo)",
+            "GDPval-AA-V2",
+            "GDPval-AA-V2 (Elo)"
+          ],
+          "livecodebench": [
+            "Competitive coding LiveCodeBench v6",
+            "LCB v6",
+            "Live Code Bench v6",
+            "Live-Code-Bench-V6",
+            "LiveCodeBench (Mean@4)",
+            "LiveCodeBench (Pass@1)",
+            "LiveCodeBench (pass@1)",
+            "LiveCodeBench (v1–v6 cumul)",
+            "LiveCodeBench (v6 2025-08–2025-05)",
+            "LiveCodeBench (v6)",
+            "LiveCodeBench v6",
+            "LiveCodeBench v6 (02/2025-05/2025)",
+            "LiveCodeBench v6 (25.02-25.05)",
+            "LiveCodeBench v6 (Feb–May)",
+            "LiveCodeBench v6 Competitive coding",
+            "LiveCodeBench-V6",
+            "LiveCodeBench-v6",
+            "LiveCodeBenchV6",
+            "LiveCodeBenchv6"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'V*Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "V*Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'VSI-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "VSI-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video MME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video Q/A"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMMMU"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongVideoBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME (w sub.)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video + Audio Q/A"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video-MME (w. sub)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Video' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Video",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video MME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video-MME (w. sub)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MME-Benchmarks/Video-MME-v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Video-MME (v1, no subtitles)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Video-MME (v1, no subtitles)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1369,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video MME"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Video-MME (w. sub)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MME-Benchmarks/Video-MME-v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMME"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Video-MME (v1, subtitles)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Video-MME (v1, subtitles)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "the same name without its first 1 word(s): exact to mmmu, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VideoMMMU"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Video-MMMU' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Video-MMMU",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Visual grounding' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Visual grounding",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mathvista_mini",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tier_4",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tiers_1_3",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_0",
+          "reason": "the first 1 word(s) of the label: exact to we, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_1",
+          "reason": "the first 1 word(s) of the label: exact to we, substring match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "deepswe_1_1": [
+            "Agentic coding DeepSWE 1.1",
+            "DeepSWE (v1.1)",
+            "DeepSWE v1.1",
+            "DeepSWE v1.1 (Resolved)"
+          ],
+          "mathvista_mini": [
+            "MathVista",
+            "MathVista (mini)",
+            "MathVista mini",
+            "MathVista_MINI",
+            "Mathvista(mini)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "We-Math"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'We-Math (testmini, strict)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "We-Math (testmini, strict)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Where2Place' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "Where2Place",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ZoomBench (full + crop average)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+      "subject": "ZoomBench (full + crop average)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_4_0",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1369,
+        "mapped": {
+          "terminal_bench_4_0": [
+            "Terminal Bench 4",
+            "Terminal Bench 4.0",
+            "Terminal Bench Core 4.0",
+            "Terminal-Bench 4",
+            "Terminal-Bench 4.0",
+            "Terminal-Bench 4.0 (Pass@1)",
+            "TerminalBench 4.0",
+            "harborframework/terminal-bench (terminalbench_4)",
+            "harborframework/terminal-bench-4.0 (terminalbench_4)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "Terminal Bench 4"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "Terminal-Bench 4"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "Terminal Bench 4.0"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "Terminal-Bench 4.0"
+          },
+          {
+            "mapped_to": [
+              "tau2_bench_retail"
+            ],
+            "name": "τ²-Bench-Retail (Mean@4)"
+          },
+          {
+            "mapped_to": [
+              "tau2_bench_retail"
+            ],
+            "name": "τ²-Bench (retail) (avg@4)"
+          },
+          {
+            "mapped_to": [
+              "tau2_bench_airline"
+            ],
+            "name": "τ²-Bench-Airline (Mean@4)"
+          },
+          {
+            "mapped_to": [
+              "tau2_bench_telecom"
+            ],
+            "name": "τ²-Bench-Telecom (Mean@4)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'τ³-bench (4 domains), average' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+      "subject": "τ³-bench (4 domains), average",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "lfm3-1-7b",
+          "reason": "exact to LFM3-1.7B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm3-vl-2b",
+          "reason": "drop size to a variant, substring match"
+        },
         {
           "confidence": "weak",
           "option": "gemma-3-27b",
@@ -165,48 +3452,45 @@
           "confidence": "weak",
           "option": "qwen3-6-27b",
           "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-8-27b",
-          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "bonsai-2-27b",
-          "reason": "the same name without its first 2 word(s): exact to 7b, substring match"
         }
       ],
       "context": {
-        "known": 355,
+        "known": 221,
         "mapped": {
           "gemma-3-27b": [
-            "gemma-3-27b-it"
+            "google/gemma-3-27b-it"
           ],
           "qwen3-5-27b": [
-            "qwen3.5-27b"
+            "Qwen/Qwen3.5-27B"
           ],
           "qwen3-6-27b": [
-            "qwen3.6-27b"
-          ],
-          "qwen3-8-27b": [
-            "qwen3.8-27b"
+            "Qwen/Qwen3.6-27B"
           ]
         },
         "siblings": []
       },
-      "default": null,
+      "default": "lfm3-1-7b",
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'lfm3-1.7b'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/lfm3-1.7b",
-      "subject": "lfm3-1.7b",
+      "question": "Map Spheron path 'LiquidAI/LFM3-1.7B' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-1.7B/",
+      "subject": "LiquidAI/LFM3-1.7B",
       "universe": "models"
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "lfm3-vl-2b",
+          "reason": "exact to LFM3-VL-2B, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lfm3-1-7b",
+          "reason": "significant components to a variant, substring match"
+        },
         {
           "confidence": "weak",
           "option": "ling-3-0-flash-vl",
@@ -221,194 +3505,31 @@
           "confidence": "weak",
           "option": "qwq-32b",
           "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-5-2b",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemma-3-12b",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         }
       ],
       "context": {
-        "known": 355,
+        "known": 221,
         "mapped": {
-          "gemma-3-12b": [
-            "gemma-3-12b-it"
+          "ling-3-0-flash-vl": [
+            "inclusionAI/Ling-3.0-flash-VL"
           ],
           "nemotron-3-5-super-vl": [
-            "nemotron-3.5-super-vl-120b-a12b"
-          ],
-          "qwen3-5-2b": [
-            "qwen3.5-2b"
+            "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16"
           ],
           "qwq-32b": [
-            "qwq-32b"
+            "Qwen/QwQ-32B"
           ]
         },
         "siblings": []
       },
-      "default": null,
+      "default": "lfm3-vl-2b",
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'lfm3-vl-2b'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/lfm3-vl-2b",
-      "subject": "lfm3-vl-2b",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "longcat-2-0",
-          "reason": "exact to longcat-2.5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which llm.json model is llm-stats id 'longcat-2.5'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/longcat-2.5",
-      "subject": "longcat-2.5",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 412,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "stealth/space-bunny-alpha"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'stealth/crouton-alpha' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map Spheron path 'LiquidAI/LFM3-VL-2B' to llm.json model",
+      "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/stealth/crouton-alpha",
-      "subject": "stealth/crouton-alpha",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "the same name without the vendor prefix: exact to hy4, substring match"
-        }
-      ],
-      "context": {
-        "known": 412,
-        "mapped": {
-          "hy4-preview": [
-            "tencent/hy4-preview"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "hy4-preview"
-            ],
-            "name": "tencent/hy4-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "tencent/hy3"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "tencent/hy-mt2-7b"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "tencent/hy-mt2-1.8b"
-          },
-          {
-            "mapped_to": [
-              "hy3"
-            ],
-            "name": "tencent/hy3-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "tencent/hy-mt2-30b-a3b"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "tencent/hunyuan-a13b-instruct"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'tencent/hy4' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/tencent/hy4",
-      "subject": "tencent/hy4",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash",
-          "reason": "exact to minimax m3p1 flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "reka-flash-3",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-4-7-flash",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mimo-v2-flash",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'minimax m3p1 flash' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "minimax m3p1 flash",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/LiquidAI/LFM3-VL-2B/",
+      "subject": "LiquidAI/LFM3-VL-2B",
       "universe": "models"
     }
   ]
