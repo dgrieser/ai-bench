@@ -2,1019 +2,8 @@
   "questions": [
     {
       "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'InfographicVQA (val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "InfographicVQA (val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "livecodebench",
-          "reason": "the first 1 word(s) of the label"
-        }
-      ],
       "context": {
-        "known": 1393,
-        "mapped": {
-          "livecodebench": [
-            "Competitive coding LiveCodeBench v6",
-            "LCB v6",
-            "Live Code Bench v6",
-            "Live-Code-Bench-V6",
-            "LiveCodeBench (Mean@4)",
-            "LiveCodeBench (Pass@1)",
-            "LiveCodeBench (pass@1)",
-            "LiveCodeBench (v1–v6 cumul)",
-            "LiveCodeBench (v6 2025-08–2025-05)",
-            "LiveCodeBench (v6)",
-            "LiveCodeBench v6",
-            "LiveCodeBench v6 (02/2025-05/2025)",
-            "LiveCodeBench v6 (25.02-25.05)",
-            "LiveCodeBench v6 (Feb–May)",
-            "LiveCodeBench v6 Competitive coding",
-            "LiveCodeBench-V6",
-            "LiveCodeBench-v6",
-            "LiveCodeBenchV6",
-            "LiveCodeBenchv6"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'LiveCodeBench Pro 25Q2' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "LiveCodeBench Pro 25Q2",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mathvista_mini",
-          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "frontiermath_tier_4",
-          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "frontiermath_tiers_1_3",
-          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, substring match"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "mathvista_mini": [
-            "MathVista",
-            "MathVista (mini)",
-            "MathVista mini",
-            "MathVista_MINI",
-            "Mathvista(mini)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MATH-Vision"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MathVision"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MATH"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Math"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "math"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CMATH"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CMath"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MATH500"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MATH-Vision (full)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MATH-Vision (full)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MLVU (M-Avg)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MLVU"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MLVU (dev, M-Avg)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MLVU (dev, M-Avg)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mmmlu",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmlu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmmu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hmmt_feb_2026",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multimodal",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "hmmt_feb_2026": [
-            "HMMT 2026 (Feb)",
-            "HMMT 2026 Feb (Pass@1)",
-            "HMMT Feb 2026",
-            "HMMT Feb 2026 Competition mathematics",
-            "HMMT Feb 26",
-            "HMMT Feb. 2026",
-            "HMMT2602",
-            "MathArena/hmmt_feb_2026"
-          ],
-          "mmlu_pro": [
-            "MMLU Pro",
-            "MMLU-Pro",
-            "MMLU-Pro (acc)",
-            "MMLU-Pro CoT (EN)",
-            "MMLU-Pro(acc)",
-            "MMLUPro",
-            "TIGER-Lab/MMLU-Pro"
-          ],
-          "mmmlu": [
-            "MMMLU",
-            "MMMLU (EM)"
-          ],
-          "mmmu_pro": [
-            "MMMU Pro",
-            "MMMU Pro (Standard 10)",
-            "MMMU-PRO (10 choice)",
-            "MMMU-Pro",
-            "MMMU/MMMU_Pro",
-            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
-          ],
-          "swe_bench_multimodal": [
-            "Multimodal software engineering SWE-MM",
-            "SWE-MM"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MM-IFEval' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MM-IFEval",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mmmlu",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmlu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmmu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hmmt_feb_2026",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multimodal",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "hmmt_feb_2026": [
-            "HMMT 2026 (Feb)",
-            "HMMT 2026 Feb (Pass@1)",
-            "HMMT Feb 2026",
-            "HMMT Feb 2026 Competition mathematics",
-            "HMMT Feb 26",
-            "HMMT Feb. 2026",
-            "HMMT2602",
-            "MathArena/hmmt_feb_2026"
-          ],
-          "mmlu_pro": [
-            "MMLU Pro",
-            "MMLU-Pro",
-            "MMLU-Pro (acc)",
-            "MMLU-Pro CoT (EN)",
-            "MMLU-Pro(acc)",
-            "MMLUPro",
-            "TIGER-Lab/MMLU-Pro"
-          ],
-          "mmmlu": [
-            "MMMLU",
-            "MMMLU (EM)"
-          ],
-          "mmmu_pro": [
-            "MMMU Pro",
-            "MMMU Pro (Standard 10)",
-            "MMMU-PRO (10 choice)",
-            "MMMU-Pro",
-            "MMMU/MMMU_Pro",
-            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
-          ],
-          "swe_bench_multimodal": [
-            "Multimodal software engineering SWE-MM",
-            "SWE-MM"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MM-ToolSandbox (partial credit)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MM-ToolSandbox (partial credit)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mmmlu",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmlu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmmu_pro",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hmmt_feb_2026",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multimodal",
-          "reason": "the first 1 word(s) of the label: exact to mm, substring match, as 'SWE-MM'"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "hmmt_feb_2026": [
-            "HMMT 2026 (Feb)",
-            "HMMT 2026 Feb (Pass@1)",
-            "HMMT Feb 2026",
-            "HMMT Feb 2026 Competition mathematics",
-            "HMMT Feb 26",
-            "HMMT Feb. 2026",
-            "HMMT2602",
-            "MathArena/hmmt_feb_2026"
-          ],
-          "mmlu_pro": [
-            "MMLU Pro",
-            "MMLU-Pro",
-            "MMLU-Pro (acc)",
-            "MMLU-Pro CoT (EN)",
-            "MMLU-Pro(acc)",
-            "MMLUPro",
-            "TIGER-Lab/MMLU-Pro"
-          ],
-          "mmmlu": [
-            "MMMLU",
-            "MMMLU (EM)"
-          ],
-          "mmmu_pro": [
-            "MMMU Pro",
-            "MMMU Pro (Standard 10)",
-            "MMMU-PRO (10 choice)",
-            "MMMU-Pro",
-            "MMMU/MMMU_Pro",
-            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
-          ],
-          "swe_bench_multimodal": [
-            "Multimodal software engineering SWE-MM",
-            "SWE-MM"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MM-Vet (v1)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MM-Vet (v1)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMBench EN-DEV-v1.1"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MMBench (dev EN v1.1)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MMBench (dev EN v1.1)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "recorded",
-          "option": "hmmt_feb_2026",
-          "reason": "offered by the prompt"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "VideoMME"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Video MME"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "VideoMME (w sub.)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Video-MME (w. sub)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "VideoMME (w/o sub.)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MME-Benchmarks/Video-MME-v2"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MME' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MME",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MMMB' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MMMB",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mmmu_pro",
-          "reason": "the same name without the parenthetical: exact to MMMU, substring match"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "mmmu_pro": [
-            "MMMU Pro",
-            "MMMU Pro (Standard 10)",
-            "MMMU-PRO (10 choice)",
-            "MMMU-Pro",
-            "MMMU/MMMU_Pro",
-            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMMU_VAL"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMMU (validation)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMMU"
-          },
-          {
-            "mapped_to": [
-              "mmmu_pro"
-            ],
-            "name": "MMMU Pro"
-          },
-          {
-            "mapped_to": [
-              "mmmu_pro"
-            ],
-            "name": "MMMU-Pro"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "VideoMMMU"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMMU-Pro (EM)"
-          },
-          {
-            "mapped_to": [
-              "mmmu_pro"
-            ],
-            "name": "MMMU/MMMU_Pro"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MMMU (val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MMMU (val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MMVU"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MMVU (val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MMVU (val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "charxiv_reasoning",
-          "reason": "the same name without its first 2 word(s): exact to reasoning, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mathvista_mini",
-          "reason": "the first 1 word(s) of the label: exact to math, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "frontiermath_tier_4",
-          "reason": "the first 1 word(s) of the label: exact to math, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "frontiermath_tiers_1_3",
-          "reason": "the first 1 word(s) of the label: exact to math, substring match"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "charxiv_reasoning": [
-            "CharXiv (RQ)",
-            "CharXiv (reasoning)",
-            "CharXiv (reasoning, val)",
-            "CharXiv RQ",
-            "CharXiv(RQ)",
-            "Charxiv Reasoning",
-            "Scientific chart analysis CharXiv (RQ)"
-          ],
-          "mathvista_mini": [
-            "MathVista",
-            "MathVista (mini)",
-            "MathVista mini",
-            "MathVista_MINI",
-            "Mathvista(mini)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Math Reasoning"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Math & logical reasoning' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Math & logical reasoning",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MindCube (tinybench)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MindCube (tinybench)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MotionBench"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MotionBench (dev)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MotionBench (dev)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'MuirBench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "MuirBench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multilingual",
-          "reason": "the first 1 word(s) of the label: exact to multilingual, substring match"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "swe_bench_multilingual": [
-            "Multilingual software engineering SWE-bench Multilingual",
-            "SWE Bench Multilingual",
-            "SWE Multilingual (Resolved)",
-            "SWE-Bench Multiligual",
-            "SWE-Bench Multilingual",
-            "SWE-bench Multilingual",
-            "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Multilingual MMBench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Multilingual MMBench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "OCRBench"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "OCRBenchV2 (EN)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'OCRBench v1' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "OCRBench v1",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "OCRBenchV2 (EN)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "OCR Bench v2"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "OCRBench"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'OCRBench v2 (En)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "OCRBench v2 (En)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'OpenEQA (episodic memory, video)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "OpenEQA (episodic memory, video)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'POPE' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "POPE",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "PerceptionBench"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Real-world perception RealWorldQA"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Perception' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Perception",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Point-Bench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Point-Bench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mmmlu",
-          "reason": "the same name without its first 1 word(s): exact to m, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "cybergym",
-          "reason": "the same name without its first 1 word(s): exact to m, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmlu_pro",
-          "reason": "the same name without its first 1 word(s): exact to m, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "mmmu_pro",
-          "reason": "the same name without its first 1 word(s): exact to m, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aime_2025",
-          "reason": "the same name without its first 1 word(s): exact to m, substring match"
-        }
-      ],
-      "context": {
-        "known": 1393,
-        "mapped": {
-          "aime_2025": [
-            "AIME 2025",
-            "AIME 2025 (EN)",
-            "AIME 2025 (Pass@1)",
-            "AIME 2025 Competition mathematics",
-            "AIME 25",
-            "AIME-25",
-            "AIME2025",
-            "AIME25",
-            "AIME25 (Avg@32)",
-            "AIME25 (Mean@32)",
-            "AIME25 (avg@10)",
-            "AIME25 (no tools)",
-            "AIME25(avg@32)"
-          ],
-          "cybergym": [
-            "CyberGym",
-            "CyberGym (Pass@1)",
-            "Cybergym"
-          ],
-          "mmlu_pro": [
-            "MMLU Pro",
-            "MMLU-Pro",
-            "MMLU-Pro (acc)",
-            "MMLU-Pro CoT (EN)",
-            "MMLU-Pro(acc)",
-            "MMLUPro",
-            "TIGER-Lab/MMLU-Pro"
-          ],
-          "mmmlu": [
-            "MMMLU",
-            "MMMLU (EM)"
-          ],
-          "mmmu_pro": [
-            "MMMU Pro",
-            "MMMU Pro (Standard 10)",
-            "MMMU-PRO (10 choice)",
-            "MMMU-Pro",
-            "MMMU/MMMU_Pro",
-            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'RefCOCO-M' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "RefCOCO-M",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "RefCOCO avg"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "RefCOCO(avg)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "RefCOCO-avg (Acc@0.5)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'RefCOCO-avg' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "RefCOCO-avg",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1100,7 +89,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "swe_bench_multilingual": [
             "Multilingual software engineering SWE-bench Multilingual",
@@ -1235,7 +224,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "swe_bench_multilingual": [
             "Multilingual software engineering SWE-bench Multilingual",
@@ -1344,7 +333,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1374,7 +363,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1398,7 +387,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1428,7 +417,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1478,7 +467,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "terminal_bench_2_0": [
             "Terminal Bench 2",
@@ -1620,7 +609,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "bfcl_v4": [
             "BFCL (v4)",
@@ -1700,7 +689,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1766,7 +755,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1808,7 +797,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {},
         "siblings": [
           {
@@ -1856,7 +845,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "mmmu_pro": [
             "MMMU Pro",
@@ -1927,7 +916,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "deepswe_1_1": [
             "Agentic coding DeepSWE 1.1",
@@ -1995,7 +984,7 @@
         }
       ],
       "context": {
-        "known": 1393,
+        "known": 1418,
         "mapped": {
           "terminal_bench_4_0": [
             "Terminal Bench 4",
