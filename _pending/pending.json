@@ -307,6 +307,76 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "the same name without the vendor prefix: exact to hy4, substring match"
+        }
+      ],
+      "context": {
+        "known": 412,
+        "mapped": {
+          "hy4-preview": [
+            "tencent/hy4-preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "tencent/hy4-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "tencent/hy3"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "tencent/hy-mt2-7b"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "tencent/hy-mt2-1.8b"
+          },
+          {
+            "mapped_to": [
+              "hy3"
+            ],
+            "name": "tencent/hy3-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "tencent/hy-mt2-30b-a3b"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "tencent/hunyuan-a13b-instruct"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'tencent/hy4' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/tencent/hy4",
+      "subject": "tencent/hy4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "minimax-m3-1-flash",
           "reason": "exact to minimax m3p1 flash, most components match"
         },

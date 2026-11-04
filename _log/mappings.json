@@ -1,10 +1,4 @@
 {"entries": [
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MBPP+<sub>(pass@1)</sub>", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMLU-Pro<sub>(acc)</sub>", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMLU-Redux<sub>(acc)</sub>", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMLU-stem", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMLU<sub>(acc)</sub>", "value": "__unmappable__"},
-{"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMLUPro", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMLU (ES)", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU (validation)", "value": "__unmappable__"},
 {"at": "2026-06-25T09:17:06Z", "by": "hand", "commit": "ab16e4d", "previous": null, "route": "update_huggingface_mapping.py", "subject": "MMMU-PRO (10 choice)", "value": "mmmu_pro"},
@@ -3998,5 +3992,11 @@
 {"at": "2026-10-31T21:47:33Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41245109999", "subject": "tiny-recursion-model", "value": "__unmappable__"},
 {"at": "2026-11-02T14:22:21Z", "by": "admin", "previous": null, "route": "update_frontiercode_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41461140501", "subject": "DeepSeek V4.1 Flash 1017", "value": "deepseek-v4-1-flash-1017"},
 {"at": "2026-11-02T21:35:38Z", "by": "admin", "previous": null, "route": "update_epoch_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41529399434", "subject": "Mistral Large 4 Preview", "value": "__unmappable__"},
-{"at": "2026-11-02T21:35:38Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41529399434", "subject": "z-ai/glm-5.3-flashx-legal", "value": "__unmappable__"}
+{"at": "2026-11-02T21:35:38Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/41529399434", "subject": "z-ai/glm-5.3-flashx-legal", "value": "__unmappable__"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": "__unmappable__", "route": "update_huggingface_mapping.py", "subject": "harborframework/terminal-bench-science (terminalbenchscience_0_1)", "value": "terminal_bench_science_0_1"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": "mistral-large-4", "route": "update_frontiercode_mapping.py", "subject": "Mistral Large 4 (Preview)", "value": "__unmappable__"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "DeepSeek V4 Pro", "value": "deepseek-v4-pro"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "DeepSeek V4.1 Flash", "value": "deepseek-v4-1-flash"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": null, "route": "update_tbench_mapping.py", "subject": "Kimi K3", "value": "kimi-k3"},
+{"at": "2026-11-04T06:10:25Z", "by": "hand", "commit": "1a703d9", "previous": "mistral-large-4", "route": "update_vals_mapping.py", "subject": "mistralai/mistral-large-4", "value": "__unmappable__"}
 ]}
