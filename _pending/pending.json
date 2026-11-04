@@ -1,1372 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "longcat-2-0",
-          "reason": "exact to longcat-2-5, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'longcat-2-5'?",
-      "route": "update_artificialanalysis_mapping.py",
-      "route_kind": "aa-mapping",
-      "subject": "longcat-2-5",
-      "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_1",
-          "reason": "exact to AA-Omniscience (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_0",
-          "reason": "exact to AA-Omniscience (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_accuracy_1_1",
-          "reason": "exact to AA-Omniscience (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "exact to AA-Omniscience (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_accuracy_1_0",
-          "reason": "exact to AA-Omniscience (public), most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "aa_omniscience_1_0": [
-            "AA Omniscience (index)",
-            "AA-Omni-Public Index",
-            "AA-Omni. Index",
-            "AA-Omniscience",
-            "AA-Omniscience Index",
-            "AA-Omniscience Index (public set)"
-          ],
-          "aa_omniscience_accuracy_1_0": [
-            "AA-Omni. Accuracy",
-            "AA-Omniscience (accuracy)",
-            "AA-Omniscience Accuracy",
-            "AA-Omniscience Accuracy (public set)",
-            "AA-Omniscience Accuracy Factual accuracy"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience Index (public set)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy (public set)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience Index"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA Omniscience (index)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience (accuracy)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'AA-Omniscience (public)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "AA-Omniscience (public)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_accuracy_1_1",
-          "reason": "exact to AA-Omniscience accuracy (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_accuracy_1_0",
-          "reason": "exact to AA-Omniscience accuracy (public), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_1",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_0",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "aa_omniscience_1_0": [
-            "AA Omniscience (index)",
-            "AA-Omni-Public Index",
-            "AA-Omni. Index",
-            "AA-Omniscience",
-            "AA-Omniscience Index",
-            "AA-Omniscience Index (public set)"
-          ],
-          "aa_omniscience_accuracy_1_0": [
-            "AA-Omni. Accuracy",
-            "AA-Omniscience (accuracy)",
-            "AA-Omniscience Accuracy",
-            "AA-Omniscience Accuracy (public set)",
-            "AA-Omniscience Accuracy Factual accuracy"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy (public set)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience (accuracy)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy Factual accuracy"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience Index (public set)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omni. Accuracy"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'AA-Omniscience accuracy (public)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "AA-Omniscience accuracy (public)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_0",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_1",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_1_0",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_accuracy_1_1",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "aa_omniscience_1_0": [
-            "AA Omniscience (index)",
-            "AA-Omni-Public Index",
-            "AA-Omni. Index",
-            "AA-Omniscience",
-            "AA-Omniscience Index",
-            "AA-Omniscience Index (public set)"
-          ],
-          "aa_omniscience_hallucination_1_0": [
-            "AA-Omni. Non-Halluc.",
-            "AA-Omniscience Non-Hallucination Rate"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_hallucination_1_0"
-            ],
-            "name": "AA-Omniscience Non-Hallucination Rate"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AA-Omniscience Non-Hallucination Non-hallucination rate"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA-Omniscience Index"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_1_0"
-            ],
-            "name": "AA Omniscience (index)"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience Accuracy"
-          },
-          {
-            "mapped_to": [
-              "aa_omniscience_accuracy_1_0"
-            ],
-            "name": "AA-Omniscience (accuracy)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'AA-Omniscience non-hallucination (public)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "AA-Omniscience non-hallucination (public)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "gpqa_diamond",
-          "reason": "the same name without its first 1 word(s): exact to qa, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "simpleqa_verified",
-          "reason": "the same name without its first 1 word(s): exact to qa, substring match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "gpqa_diamond": [
-            "GPQA (no tools)",
-            "GPQA Diamond",
-            "GPQA Diamond (AA)",
-            "GPQA Diamond (EN)",
-            "GPQA Diamond (Pass@1)",
-            "GPQA Diamond (no tools)",
-            "GPQA Diamond Graduate-level science QA",
-            "GPQA-D",
-            "GPQA-Diamond",
-            "GPQA-Diamond (Mean@16)",
-            "GPQA-Diamond (Pass@1)",
-            "GPQA-Diamond(avg@16)",
-            "GPQA-diamond",
-            "GPQA-diamond (acc)",
-            "GPQA_Diamond",
-            "Idavidrein/gpqa (diamond)",
-            "Idavidrein/gpqa (gpqa_diamond)",
-            "Scientific reasoning GPQA Diamond"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'ActivityNet-QA (test)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "ActivityNet-QA (test)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "automation_bench_aa",
-          "reason": "the same name without the parenthetical: exact to AutomationBench, substring match, as 'AutomationBench-AA'"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench Public"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench (Public)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Automation Bench"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench-AA"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench v1.0.6"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench (Pass@1)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "AutomationBench (v1.0.6)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'AutomationBench (public)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "AutomationBench (public)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "bfcl_v4",
-          "reason": "exact to BFCL V4, exact match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "bfcl_v4": [
-            "BFCL (v4)",
-            "BFCL v4",
-            "BFCL v4 (overall)",
-            "BFCL v4 Function calling",
-            "BFCL-V4",
-            "BFCLv4"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "bfcl_v4"
-            ],
-            "name": "BFCL v4"
-          },
-          {
-            "mapped_to": [
-              "bfcl_v4"
-            ],
-            "name": "BFCL-V4"
-          },
-          {
-            "mapped_to": [
-              "bfcl_v4"
-            ],
-            "name": "BFCL (v4)"
-          },
-          {
-            "mapped_to": [
-              "bfcl_v4"
-            ],
-            "name": "BFCLv4"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "BFCL v4 (live)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "BFCL v4 (memory)"
-          },
-          {
-            "mapped_to": [
-              "bfcl_v4"
-            ],
-            "name": "BFCL v4 (overall)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "BFCL v4 (multi-turn)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'BFCL V4' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "BFCL V4",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "browsecomp",
-          "reason": "the first 1 word(s) of the label"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "browsecomp": [
-            "Browse-Comp",
-            "BrowseComp",
-            "BrowseComp (Pass@1)",
-            "BrowseComp Web browsing",
-            "BrowseComp with Search",
-            "Browsecomp"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "BrowseComp+ (OpenClaw)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "open-agent-leaderboard/results (browsecomp_plus)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'BrowseComp-Plus (OpenClaw subset)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "BrowseComp-Plus (OpenClaw subset)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'CV-Bench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "CV-Bench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "charxiv_reasoning",
-          "reason": "the same name without the parenthetical, as 'CharXiv'"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "charxiv_reasoning": [
-            "CharXiv (RQ)",
-            "CharXiv (reasoning)",
-            "CharXiv RQ",
-            "CharXiv(RQ)",
-            "Charxiv Reasoning",
-            "Scientific chart analysis CharXiv (RQ)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CharXiv (descriptive)"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv RQ"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv(RQ)"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv (RQ)"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "Charxiv Reasoning"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv (reasoning)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CharXiv (RQ) (w/ python)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Charxiv RQ (original / with python)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'CharXiv (descriptive, val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "CharXiv (descriptive, val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "charxiv_reasoning",
-          "reason": "exact to CharXiv (reasoning, val), most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "charxiv_reasoning": [
-            "CharXiv (RQ)",
-            "CharXiv (reasoning)",
-            "CharXiv RQ",
-            "CharXiv(RQ)",
-            "Charxiv Reasoning",
-            "Scientific chart analysis CharXiv (RQ)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "Charxiv Reasoning"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv (reasoning)"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv RQ"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv(RQ)"
-          },
-          {
-            "mapped_to": [
-              "charxiv_reasoning"
-            ],
-            "name": "CharXiv (RQ)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CharXiv (descriptive)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "CharXiv (RQ) (w/ python)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Charxiv RQ (original / with python)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'CharXiv (reasoning, val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "CharXiv (reasoning, val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1369,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "ChartQA_TEST"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'ChartQA (test)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "ChartQA (test)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claw_eval",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "claw_eval": [
-            "claw-eval/Claw-Eval (general)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval average (EN)"
-          },
-          {
-            "mapped_to": [
-              "claw_eval"
-            ],
-            "name": "claw-eval/Claw-Eval (general)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval Avg"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-eval Avg"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "claw-eval/Claw-Eval (multimodal)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval Pass^3"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval pass^3"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Claw-Eval General (EN), average' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "Claw-Eval General (EN), average",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claw_eval",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "claw_eval": [
-            "claw-eval/Claw-Eval (general)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "claw_eval"
-            ],
-            "name": "claw-eval/Claw-Eval (general)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval average (EN)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval Avg"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-eval Avg"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "claw-eval/Claw-Eval (multimodal)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval Pass^3"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Claw-Eval pass^3"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Claw-Eval General (EN), pass^3' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "Claw-Eval General (EN), pass^3",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'CountBenchQA' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "CountBenchQA",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1369,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "DocVQA (LLM-Judge)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'DocVQA (val)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "DocVQA (val)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Document, OCR & Chart' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Document, OCR & Chart",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1369,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "DynaMath"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'DynaMath (average accuracy)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "DynaMath (average accuracy)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1369,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "EmbSpatialBench"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'EmbSpatial-Bench' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "EmbSpatial-Bench",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "charxiv_reasoning",
-          "reason": "the same name without its first 1 word(s): exact to reasoning, substring match"
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "charxiv_reasoning": [
-            "CharXiv (RQ)",
-            "CharXiv (reasoning)",
-            "CharXiv RQ",
-            "CharXiv(RQ)",
-            "Charxiv Reasoning",
-            "Scientific chart analysis CharXiv (RQ)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Embodied intelligence ERQA"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Embodied reasoning' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "Embodied reasoning",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'GUI understanding' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "GUI understanding",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'HR-Bench (4K)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "HR-Bench (4K)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'HR-Bench (8K)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-      "subject": "HR-Bench (8K)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hle",
-          "reason": "the same name without the parenthetical, as \"Humanity's Last Exam\""
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hle_diamond",
-          "reason": "the same name spelled without punctuation: drop suffix to a variant, most components match, as \"Humanity's Last Exam Diamond\""
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "hle": [
-            "HLE",
-            "HLE (Pass@1)",
-            "HLE (Text-only)",
-            "HLE (no tools)",
-            "HLE (text only)",
-            "HLE (text)",
-            "HLE (text-only, no tools)",
-            "HLE (w/o tools)",
-            "HLE (without tools)",
-            "HLE *(no tools)",
-            "HLE Text (AA)",
-            "HLE no tools",
-            "HLE w/o tools",
-            "Humanity's Last Exam",
-            "Humanity's Last Exam (EN)",
-            "Humanity's Last Exam (HLE)",
-            "Humanity's Last Exam (Pass@1)",
-            "Humanity’s Last Exam",
-            "Multidisciplinary reasoning HLE",
-            "cais/hle",
-            "cais/hle (default)",
-            "cais/hle (no tools)",
-            "cais/hle (none)"
-          ],
-          "hle_diamond": [
-            "HLE Diamond",
-            "HLE-Diamond",
-            "HLE-Diamond (no tools)",
-            "HLE-Diamond (w/o tools)",
-            "Humanity's Last Exam Diamond",
-            "Humanity's Last Exam: Diamond",
-            "cais/hle-diamond",
-            "cais/hle-diamond (no tools)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Humanity's Last Exam (without tools) Expert-level reasoning"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Humanity's Last Exam (DE)"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (EN)"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (HLE)"
-          },
-          {
-            "mapped_to": [
-              "hle_diamond"
-            ],
-            "name": "Humanity's Last Exam Diamond"
-          },
-          {
-            "mapped_to": [
-              "hle_diamond"
-            ],
-            "name": "Humanity's Last Exam: Diamond"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (Pass@1)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Humanity's Last Exam (no tools)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "Humanity's Last Exam (no tools)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "hle",
-          "reason": "the same name without the parenthetical, as \"Humanity's Last Exam\""
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 1 word(s): exact to last-exam, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "hle_diamond",
-          "reason": "the same name spelled without punctuation: drop suffix to a variant, most components match, as \"Humanity's Last Exam Diamond\""
-        }
-      ],
-      "context": {
-        "known": 1369,
-        "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
-          ],
-          "hle": [
-            "HLE",
-            "HLE (Pass@1)",
-            "HLE (Text-only)",
-            "HLE (no tools)",
-            "HLE (text only)",
-            "HLE (text)",
-            "HLE (text-only, no tools)",
-            "HLE (w/o tools)",
-            "HLE (without tools)",
-            "HLE *(no tools)",
-            "HLE Text (AA)",
-            "HLE no tools",
-            "HLE w/o tools",
-            "Humanity's Last Exam",
-            "Humanity's Last Exam (EN)",
-            "Humanity's Last Exam (HLE)",
-            "Humanity's Last Exam (Pass@1)",
-            "Humanity’s Last Exam",
-            "Multidisciplinary reasoning HLE",
-            "cais/hle",
-            "cais/hle (default)",
-            "cais/hle (no tools)",
-            "cais/hle (none)"
-          ],
-          "hle_diamond": [
-            "HLE Diamond",
-            "HLE-Diamond",
-            "HLE-Diamond (no tools)",
-            "HLE-Diamond (w/o tools)",
-            "Humanity's Last Exam Diamond",
-            "Humanity's Last Exam: Diamond",
-            "cais/hle-diamond",
-            "cais/hle-diamond (no tools)"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Humanity's Last Exam (without tools) Expert-level reasoning"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Humanity's Last Exam (DE)"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (EN)"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (HLE)"
-          },
-          {
-            "mapped_to": [
-              "hle_diamond"
-            ],
-            "name": "Humanity's Last Exam Diamond"
-          },
-          {
-            "mapped_to": [
-              "hle_diamond"
-            ],
-            "name": "Humanity's Last Exam: Diamond"
-          },
-          {
-            "mapped_to": [
-              "hle"
-            ],
-            "name": "Humanity's Last Exam (Pass@1)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Humanity's Last Exam (with tools)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
-      "subject": "Humanity's Last Exam (with tools)",
-      "universe": "benchmarks"
-    },
-    {
       "candidates": [],
       "default": null,
       "if_previous": null,
@@ -1387,7 +21,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "livecodebench": [
             "Competitive coding LiveCodeBench v6",
@@ -1442,7 +76,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "mathvista_mini": [
             "MathVista",
@@ -1516,7 +150,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -1572,7 +206,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "hmmt_feb_2026": [
             "HMMT 2026 (Feb)",
@@ -1651,7 +285,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "hmmt_feb_2026": [
             "HMMT 2026 (Feb)",
@@ -1730,7 +364,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "hmmt_feb_2026": [
             "HMMT 2026 (Feb)",
@@ -1783,7 +417,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -1813,7 +447,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -1885,7 +519,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "mmmu_pro": [
             "MMMU Pro",
@@ -1960,7 +594,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2005,11 +639,12 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "charxiv_reasoning": [
             "CharXiv (RQ)",
             "CharXiv (reasoning)",
+            "CharXiv (reasoning, val)",
             "CharXiv RQ",
             "CharXiv(RQ)",
             "Charxiv Reasoning",
@@ -2057,7 +692,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2099,7 +734,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "swe_bench_multilingual": [
             "Multilingual software engineering SWE-bench Multilingual",
@@ -2126,7 +761,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2156,7 +791,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2216,7 +851,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2284,7 +919,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "aime_2025": [
             "AIME 2025",
@@ -2343,7 +978,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2379,7 +1014,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2465,7 +1100,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "swe_bench_multilingual": [
             "Multilingual software engineering SWE-bench Multilingual",
@@ -2600,7 +1235,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "swe_bench_multilingual": [
             "Multilingual software engineering SWE-bench Multilingual",
@@ -2709,7 +1344,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2739,7 +1374,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2763,7 +1398,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2793,7 +1428,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -2843,7 +1478,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "terminal_bench_2_0": [
             "Terminal Bench 2",
@@ -2985,10 +1620,11 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "bfcl_v4": [
             "BFCL (v4)",
+            "BFCL V4",
             "BFCL v4",
             "BFCL v4 (overall)",
             "BFCL v4 Function calling",
@@ -2996,6 +1632,7 @@
             "BFCLv4"
           ],
           "claw_eval": [
+            "Claw-Eval General (EN), average",
             "claw-eval/Claw-Eval (general)"
           ],
           "gdpval_aa": [
@@ -3029,7 +1666,14 @@
             "LiveCodeBenchv6"
           ]
         },
-        "siblings": []
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CV-Bench"
+          }
+        ]
       },
       "default": null,
       "if_previous": null,
@@ -3056,7 +1700,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -3122,7 +1766,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -3164,7 +1808,7 @@
     {
       "candidates": [],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {},
         "siblings": [
           {
@@ -3212,7 +1856,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "mmmu_pro": [
             "MMMU Pro",
@@ -3283,7 +1927,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "deepswe_1_1": [
             "Agentic coding DeepSWE 1.1",
@@ -3351,7 +1995,7 @@
         }
       ],
       "context": {
-        "known": 1369,
+        "known": 1393,
         "mapped": {
           "terminal_bench_4_0": [
             "Terminal Bench 4",
