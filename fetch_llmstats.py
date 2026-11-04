@@ -211,6 +211,10 @@ SCORE_EXCLUSIONS: dict[tuple[str, str], str] = {
         "Atria tech report (arXiv 2609.15818, Appendix B): 'BrowseComp "
         "additionally uses the discard-all context-management strategy'"
     ),
+    ("browsecomp", "kimi-k3-1-pro"): (
+        "Kimi K3.1 Pro launch blog (kimi.ai/blog/kimi-k3-1-pro) footnote: "
+        "BrowseComp run with a context-compaction strategy triggered at 200K tokens"
+    ),
 }
 
 
