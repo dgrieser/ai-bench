@@ -3,184 +3,1409 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "muse-spark-open",
-          "reason": "exact to Muse Spark Open, exact match"
+          "confidence": "weak",
+          "option": "ifbench",
+          "reason": "the same name without its first 1 word(s): exact to en, substring match"
         },
         {
           "confidence": "weak",
-          "option": "solar-open2-250b",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
+          "option": "ale_bench",
+          "reason": "the same name without its first 1 word(s): exact to en, substring match"
         },
         {
           "confidence": "weak",
-          "option": "solar-open-100b-reasoning",
-          "reason": "the same name without its first 2 word(s): exact to open, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map FrontierCode model 'Muse Spark Open' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://cognition.com/frontiercode",
-      "subject": "Muse Spark Open",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "mimo-v2-flash",
-          "reason": "the same name without its first 1 word(s): exact to 2-flash, substring match"
+          "option": "zerobench",
+          "reason": "the same name without its first 1 word(s): exact to en, substring match"
         },
         {
           "confidence": "weak",
-          "option": "ling-flash-2-0",
-          "reason": "the same name without its first 1 word(s): exact to 2-flash, all components match"
+          "option": "arena_text",
+          "reason": "the same name without its first 1 word(s): exact to en, substring match"
         },
         {
           "confidence": "weak",
-          "option": "ring-flash-2-0",
-          "reason": "the same name without its first 1 word(s): exact to 2-flash, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "reka-flash-3",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-4-7-flash",
-          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+          "option": "itbench_aa",
+          "reason": "the same name without its first 1 word(s): exact to en, substring match"
         }
       ],
       "context": {
-        "known": 59,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "SWE-2"
-          }
-        ]
+        "known": 1472,
+        "mapped": {
+          "ifbench": [
+            "IF Bench",
+            "IFBench",
+            "Instruction following IFBench"
+          ],
+          "zerobench": [
+            "ZEROBench",
+            "ZeroBench"
+          ]
+        },
+        "siblings": []
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map FrontierCode model 'SWE-2 Flash' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://cognition.com/frontiercode",
-      "subject": "SWE-2 Flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "context": {
-        "known": 1466,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "PostTrain Bench v1.1"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'PostTrain Bench v1.2' to llm.json benchmark",
+      "question": "Map HF label 'AGIEval-En (acc)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "PostTrain Bench v1.2",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "AGIEval-En (acc)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "swe_marathon_1_1",
-          "reason": "exact to SWE Marathon v1.1, most components match"
+          "option": "arc_agi_1",
+          "reason": "the first 1 word(s) of the label: exact to arc, substring match"
         },
         {
           "confidence": "weak",
-          "option": "swe_marathon_1_0",
-          "reason": "exact to SWE Marathon v1.1, most components match"
+          "option": "arc_agi_2",
+          "reason": "the first 1 word(s) of the label: exact to arc, substring match"
         },
         {
           "confidence": "weak",
-          "option": "real_swe_1_1",
-          "reason": "drop short code to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "real_swe_1_0",
-          "reason": "drop short code to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepswe_1_0",
-          "reason": "the first 1 word(s) of the label: exact to swe, substring match"
+          "option": "arc_agi_3",
+          "reason": "the first 1 word(s) of the label: exact to arc, substring match"
         }
       ],
       "context": {
-        "known": 1466,
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "ARC-Challenge"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ARC-Challenge (MC acc)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "ARC-Challenge (MC acc)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BBH (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "BBH (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BigCodeBench (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BigCodeBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BigCodeBench (pass@1, n=5, T=0.8)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "BigCodeBench (pass@1, n=5, T=0.8)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "the first 1 word(s) of the label: exact to c, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "critpt",
+          "reason": "the first 1 word(s) of the label: exact to c, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "bfcl_v4",
+          "reason": "the first 1 word(s) of the label: exact to c, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ifbench",
+          "reason": "the first 1 word(s) of the label: exact to c, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "scicode",
+          "reason": "the first 1 word(s) of the label: exact to c, substring match"
+        }
+      ],
+      "context": {
+        "known": 1472,
         "mapped": {
-          "swe_marathon_1_1": [
-            "SWE-Marathon (v1.1)",
-            "SWE-Marathon v1.1"
+          "aa_lcr": [
+            "AA LCR",
+            "AA-LCR",
+            "AA-LCR Long-context reasoning",
+            "AA-LCR v1.1",
+            "AA.LCR"
+          ],
+          "bfcl_v4": [
+            "BFCL (v4)",
+            "BFCL V4",
+            "BFCL v4",
+            "BFCL v4 (overall)",
+            "BFCL v4 Function calling",
+            "BFCL-V4",
+            "BFCLv4"
+          ],
+          "critpt": [
+            "CritPt",
+            "CritPt (no tools)",
+            "CritPt Frontier physics reasoning"
+          ],
+          "ifbench": [
+            "IF Bench",
+            "IFBench",
+            "Instruction following IFBench"
+          ],
+          "scicode": [
+            "SciCode",
+            "SciCode (wbg)",
+            "SciCode Scientific coding",
+            "Scicode"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "swe_marathon_1_1"
+              "__unmappable__"
             ],
-            "name": "SWE-Marathon v1.1"
-          },
-          {
-            "mapped_to": [
-              "swe_marathon_1_1"
-            ],
-            "name": "SWE-Marathon (v1.1)"
+            "name": "C-Eval"
           },
           {
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "SWE-Marathon"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "SWE-Bench (Pass@1)"
+            "name": "C-Eval (EM)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'SWE Marathon v1.1' to llm.json benchmark",
+      "question": "Map HF label 'C-Eval (MC acc)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "SWE Marathon v1.1",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "C-Eval (MC acc)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "exact",
-          "option": "terminal_bench_science_0_1",
-          "reason": "exact to Terminal-Bench-Science 0.1, exact match"
+          "option": "deepswe_1_1",
+          "reason": "exact to DeepSWE 1.1, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepswe_1_0",
+          "reason": "exact to DeepSWE 1.1, all components match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "deepswe_1_1": [
+            "Agentic coding DeepSWE 1.1",
+            "DeepSWE (v1.1)",
+            "DeepSWE v1.1",
+            "DeepSWE v1.1 (Resolved)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "deepswe_1_1"
+            ],
+            "name": "Agentic coding DeepSWE 1.1"
+          },
+          {
+            "mapped_to": [
+              "deepswe_1_1"
+            ],
+            "name": "DeepSWE v1.1"
+          },
+          {
+            "mapped_to": [
+              "deepswe_1_1"
+            ],
+            "name": "DeepSWE (v1.1)"
+          },
+          {
+            "mapped_to": [
+              "deepswe_1_1"
+            ],
+            "name": "DeepSWE v1.1 (Resolved)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'DeepSWE 1.1' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "DeepSWE 1.1",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "FORTRESS (adversarial)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'FORTRESS Adversarial' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "FORTRESS Adversarial",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "FORTRESS (benign)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'FORTRESS Benign' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "FORTRESS Benign",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpqa_diamond",
+          "reason": "the first 1 word(s) of the label, as 'GPQA'"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "gpqa_diamond": [
+            "GPQA (no tools)",
+            "GPQA Diamond",
+            "GPQA Diamond (AA)",
+            "GPQA Diamond (EN)",
+            "GPQA Diamond (Pass@1)",
+            "GPQA Diamond (no tools)",
+            "GPQA Diamond Graduate-level science QA",
+            "GPQA-D",
+            "GPQA-Diamond",
+            "GPQA-Diamond (Mean@16)",
+            "GPQA-Diamond (Pass@1)",
+            "GPQA-Diamond(avg@16)",
+            "GPQA-diamond",
+            "GPQA-diamond (acc)",
+            "GPQA_Diamond",
+            "Idavidrein/gpqa (diamond)",
+            "Idavidrein/gpqa (gpqa_diamond)",
+            "Scientific reasoning GPQA Diamond"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Idavidrein/gpqa (main)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GPQA main (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "GPQA main (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpqa_diamond",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hle_diamond",
+          "reason": "the same name without its first 1 word(s): exact to diamond, substring match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "gpqa_diamond": [
+            "GPQA (no tools)",
+            "GPQA Diamond",
+            "GPQA Diamond (AA)",
+            "GPQA Diamond (EN)",
+            "GPQA Diamond (Pass@1)",
+            "GPQA Diamond (no tools)",
+            "GPQA Diamond Graduate-level science QA",
+            "GPQA-D",
+            "GPQA-Diamond",
+            "GPQA-Diamond (Mean@16)",
+            "GPQA-Diamond (Pass@1)",
+            "GPQA-Diamond(avg@16)",
+            "GPQA-diamond",
+            "GPQA-diamond (acc)",
+            "GPQA_Diamond",
+            "Idavidrein/gpqa (diamond)",
+            "Idavidrein/gpqa (gpqa_diamond)",
+            "Scientific reasoning GPQA Diamond"
+          ],
+          "hle_diamond": [
+            "HLE Diamond",
+            "HLE-Diamond",
+            "HLE-Diamond (no tools)",
+            "HLE-Diamond (w/o tools)",
+            "Humanity's Last Exam Diamond",
+            "Humanity's Last Exam: Diamond",
+            "cais/hle-diamond",
+            "cais/hle-diamond (no tools)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA Diamond"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA-Diamond"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA-diamond"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA_Diamond"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA Diamond (AA)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GPQA Diamond (DE)"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA Diamond (EN)"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA-diamond (acc)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GPQA-Diamond (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "GPQA-Diamond (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GSM1K (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "GSM1K (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GSM8K (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GSM8K"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GSM8k"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "openai/gsm8k"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GSM8K, MATH-500, AIME25, AIME26"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GSM8K (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "GSM8K (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HellaSwag"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HellaSwag (EM)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HellaSwag (acc_norm)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "HellaSwag (acc_norm)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humaneval+ (pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEvalPlus"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MultiPL-E HumanEval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+ Code generation"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+, MBPP+, LiveCodeBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HumanEval (pass@1, n=20, T=0.2)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "HumanEval (pass@1, n=20, T=0.2)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mathvista_mini",
+          "reason": "the same name without the parenthetical: exact to MATH, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tier_4",
+          "reason": "the same name without the parenthetical: exact to MATH, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tiers_1_3",
+          "reason": "the same name without the parenthetical: exact to MATH, substring match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "mathvista_mini": [
+            "MathVista",
+            "MathVista (mini)",
+            "MathVista mini",
+            "MathVista_MINI",
+            "Mathvista(mini)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Math"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "math"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CMATH"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CMath"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MATH500"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Math500"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MATH (flex EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "MATH (flex EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP+ (pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MBPP Sanitized (pass@1, n=32, T=0.2)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "MBPP Sanitized (pass@1, n=32, T=0.2)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MGSM (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MGSM"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MGSM MATH"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MGSM (CoT EM, 11-lang avg)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "MGSM (CoT EM, 11-lang avg)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the same name without the parenthetical: exact to MMLU, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the same name without the parenthetical: exact to MMLU, substring match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU(acc)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU (acc)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro(acc)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro (acc)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU-Redux (acc)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CMMLU"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "KMMLU"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMLU (MC acc)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "MMLU (MC acc)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the first 1 word(s) of the label: exact to mmlu, substring match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMMLU",
+            "MMMLU (EM)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU-Pro (EM)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro CoT (EN)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU Pro"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro(acc)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "MMLU-Pro (acc)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMLU-ProX CoT (DE)"
+          },
+          {
+            "mapped_to": [
+              "mmlu_pro"
+            ],
+            "name": "TIGER-Lab/MMLU-Pro"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMLU-Pro (CoT EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "MMLU-Pro (CoT EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OpenBookQA (acc_norm)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "OpenBookQA (acc_norm)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "PIQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Global PIQA"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'PIQA (acc_norm)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "PIQA (acc_norm)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_2_0",
+          "reason": "exact to SWE-bench Pro v1.0, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_hard_2_0",
+          "reason": "exact to SWE-bench Pro v1.0, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ],
+          "swe_bench_pro": [
+            "Agentic coding SWE-bench Pro",
+            "SWE Bench Pro",
+            "SWE Pro (Resolved)",
+            "SWE-Bench Pro",
+            "SWE-bench Pro",
+            "ScaleAI/SWE-bench_Pro"
+          ],
+          "swe_bench_pro_2_0": [
+            "SWE Bench Pro V2",
+            "SWE-Bench Pro V2",
+            "SWE-Bench Pro v2",
+            "SWE-bench Pro V2",
+            "SWE-bench Pro v2"
+          ],
+          "swe_bench_pro_hard_2_0": [
+            "SWE-Bench Pro V2 HARD",
+            "SWE-Bench Pro V2 Hard",
+            "SWE-bench Pro v2 Hard"
+          ],
+          "swe_bench_verified": [
+            "SWE Bench Verified",
+            "SWE Bench Verified (SWE-Agent Harness)",
+            "SWE Verified",
+            "SWE Verified (Resolved)",
+            "SWE-Bench Verified",
+            "SWE-Bench Verified (OpenCode)",
+            "SWE-Bench Verified (OpenHands)",
+            "SWE-Bench-Verified (acc)",
+            "SWE-bench Verified",
+            "SWE-bench Verified (OpenCode)",
+            "SWE-bench Verified Software engineering",
+            "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)",
+            "SWEBench Verified"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "swe_bench_pro"
+            ],
+            "name": "SWE Bench Pro"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro"
+            ],
+            "name": "SWE-Bench Pro"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro"
+            ],
+            "name": "SWE-bench Pro"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE Bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-Bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-Bench Pro v2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-bench Pro v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-bench Pro v1.0' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "SWE-bench Pro v1.0",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_hard_2_0",
+          "reason": "exact to SWE-bench Pro v2.0 Hard, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_verified",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "swe_bench_multimodal",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "swe_bench_multimodal": [
+            "Multimodal software engineering SWE-MM",
+            "SWE-MM"
+          ],
+          "swe_bench_pro": [
+            "Agentic coding SWE-bench Pro",
+            "SWE Bench Pro",
+            "SWE Pro (Resolved)",
+            "SWE-Bench Pro",
+            "SWE-bench Pro",
+            "ScaleAI/SWE-bench_Pro"
+          ],
+          "swe_bench_pro_2_0": [
+            "SWE Bench Pro V2",
+            "SWE-Bench Pro V2",
+            "SWE-Bench Pro v2",
+            "SWE-bench Pro V2",
+            "SWE-bench Pro v2"
+          ],
+          "swe_bench_pro_hard_2_0": [
+            "SWE-Bench Pro V2 HARD",
+            "SWE-Bench Pro V2 Hard",
+            "SWE-bench Pro v2 Hard"
+          ],
+          "swe_bench_verified": [
+            "SWE Bench Verified",
+            "SWE Bench Verified (SWE-Agent Harness)",
+            "SWE Verified",
+            "SWE Verified (Resolved)",
+            "SWE-Bench Verified",
+            "SWE-Bench Verified (OpenCode)",
+            "SWE-Bench Verified (OpenHands)",
+            "SWE-Bench-Verified (acc)",
+            "SWE-bench Verified",
+            "SWE-bench Verified (OpenCode)",
+            "SWE-bench Verified Software engineering",
+            "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)",
+            "SWEBench Verified"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "swe_bench_pro_hard_2_0"
+            ],
+            "name": "SWE-Bench Pro V2 HARD"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_hard_2_0"
+            ],
+            "name": "SWE-Bench Pro V2 Hard"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_hard_2_0"
+            ],
+            "name": "SWE-bench Pro v2 Hard"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE Bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-Bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-Bench Pro v2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-bench Pro V2"
+          },
+          {
+            "mapped_to": [
+              "swe_bench_pro_2_0"
+            ],
+            "name": "SWE-bench Pro v2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SWE-bench Pro v2.0 Hard' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "SWE-bench Pro v2.0 Hard",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "scicode",
+          "reason": "the same name without the parenthetical"
+        }
+      ],
+      "context": {
+        "known": 1472,
+        "mapped": {
+          "scicode": [
+            "SciCode",
+            "SciCode (wbg)",
+            "SciCode Scientific coding",
+            "Scicode"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "scicode"
+            ],
+            "name": "SciCode"
+          },
+          {
+            "mapped_to": [
+              "scicode"
+            ],
+            "name": "Scicode"
+          },
+          {
+            "mapped_to": [
+              "scicode"
+            ],
+            "name": "SciCode (wbg)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SciCode (subtask)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SciCode (sub/main)"
+          },
+          {
+            "mapped_to": [
+              "scicode"
+            ],
+            "name": "SciCode Scientific coding"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SciCode (Inspect AI)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "SciCode (Inspect AI)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SuperGPQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SuperGPQA (EM)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SuperGPQA (MC acc)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "SuperGPQA (MC acc)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "exact to Terminal-Bench 2.1 (Terminus 2), most components match"
         },
         {
           "confidence": "weak",
@@ -189,22 +1414,22 @@
         },
         {
           "confidence": "weak",
-          "option": "terminal_bench_3_0",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "terminal_bench_4_0",
+          "option": "terminal_bench_science_0_1",
           "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
           "option": "terminal_bench_hard",
           "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_3_0",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 1466,
+        "known": 1472,
         "mapped": {
           "terminal_bench_2_0": [
             "Terminal Bench 2",
@@ -216,21 +1441,25 @@
             "TerminalBench(acc)",
             "harborframework/terminal-bench-2.0 (terminalbench_2)"
           ],
+          "terminal_bench_2_1": [
+            "Agentic terminal coding Terminal Bench 2.1 (Terminus)",
+            "Terminal Bench 2.1",
+            "Terminal Bench 2.1 (Terminus-2)",
+            "Terminal Bench v2.1",
+            "Terminal-Bench 2.1",
+            "Terminal-Bench 2.1 (OpenCode)",
+            "Terminal-Bench 2.1 (Pass@1)",
+            "Terminal-Bench 2.1 (Terminus-2)",
+            "Terminal-Bench 2.1 Agentic terminal use",
+            "Terminal-Bench v2.1",
+            "TerminalBench 2.1",
+            "TerminalBench 2.1 (with terminus2)",
+            "harborframework/terminal-bench-2.1"
+          ],
           "terminal_bench_3_0": [
             "Terminal Bench 3.0",
             "Terminal-Bench 3.0 (Pass@1)",
             "harborframework/terminal-bench (terminalbench_3)"
-          ],
-          "terminal_bench_4_0": [
-            "Terminal Bench 4",
-            "Terminal Bench 4.0",
-            "Terminal Bench Core 4.0",
-            "Terminal-Bench 4",
-            "Terminal-Bench 4.0",
-            "Terminal-Bench 4.0 (Pass@1)",
-            "TerminalBench 4.0",
-            "harborframework/terminal-bench (terminalbench_4)",
-            "harborframework/terminal-bench-4.0 (terminalbench_4)"
           ],
           "terminal_bench_hard": [
             "Terminal Bench (hard subset)",
@@ -238,84 +1467,140 @@
             "Terminal-Bench Hard"
           ],
           "terminal_bench_science_0_1": [
+            "Terminal-Bench-Science 0.1",
             "harborframework/terminal-bench-science (terminalbenchscience_0_1)"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "terminal_bench_science_0_1"
+              "terminal_bench_2_1"
             ],
-            "name": "harborframework/terminal-bench-science (terminalbenchscience_0_1)"
+            "name": "Terminal Bench 2.1 (Terminus-2)"
           },
           {
             "mapped_to": [
-              "terminal_bench_3_0"
+              "terminal_bench_2_1"
             ],
-            "name": "Terminal-Bench 3.0 (Pass@1)"
+            "name": "Terminal-Bench 2.1 (Terminus-2)"
           },
           {
             "mapped_to": [
-              "terminal_bench_4_0"
+              "terminal_bench_2_1"
             ],
-            "name": "Terminal-Bench 4.0 (Pass@1)"
+            "name": "Agentic terminal coding Terminal Bench 2.1 (Terminus)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal Bench 2.1"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (OpenCode)"
           },
           {
             "mapped_to": [
               "terminal_bench_2_0"
             ],
-            "name": "Terminal Bench 2.0"
-          },
-          {
-            "mapped_to": [
-              "terminal_bench_3_0"
-            ],
-            "name": "Terminal Bench 3.0"
-          },
-          {
-            "mapped_to": [
-              "terminal_bench_4_0"
-            ],
-            "name": "Terminal Bench 4.0"
-          },
-          {
-            "mapped_to": [
-              "terminal_bench_2_0"
-            ],
-            "name": "Terminal-Bench 2.0"
-          },
-          {
-            "mapped_to": [
-              "terminal_bench_4_0"
-            ],
-            "name": "Terminal-Bench 4.0"
+            "name": "Terminal-Bench 2.0 (Terminus-2)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'Terminal-Bench-Science 0.1' to llm.json benchmark",
+      "question": "Map HF label 'Terminal-Bench 2.1 (Terminus 2)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "Terminal-Bench-Science 0.1",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "Terminal-Bench 2.1 (Terminus 2)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "zerobench",
-          "reason": "the first 1 word(s) of the label"
+          "option": "terminal_bench_2_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_science_0_1",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_3_0",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 1466,
+        "known": 1472,
         "mapped": {
-          "zerobench": [
-            "ZEROBench",
-            "ZeroBench"
+          "terminal_bench_2_0": [
+            "Terminal Bench 2",
+            "Terminal Bench 2.0",
+            "Terminal Bench 2.0 (Acc)",
+            "Terminal Bench Core 2.0",
+            "Terminal-Bench 2.0",
+            "Terminal-Bench 2.0 (Terminus-2)",
+            "TerminalBench(acc)",
+            "harborframework/terminal-bench-2.0 (terminalbench_2)"
+          ],
+          "terminal_bench_2_1": [
+            "Agentic terminal coding Terminal Bench 2.1 (Terminus)",
+            "Terminal Bench 2.1",
+            "Terminal Bench 2.1 (Terminus-2)",
+            "Terminal Bench v2.1",
+            "Terminal-Bench 2.1",
+            "Terminal-Bench 2.1 (OpenCode)",
+            "Terminal-Bench 2.1 (Pass@1)",
+            "Terminal-Bench 2.1 (Terminus-2)",
+            "Terminal-Bench 2.1 Agentic terminal use",
+            "Terminal-Bench v2.1",
+            "TerminalBench 2.1",
+            "TerminalBench 2.1 (with terminus2)",
+            "harborframework/terminal-bench-2.1"
+          ],
+          "terminal_bench_3_0": [
+            "Terminal Bench 3.0",
+            "Terminal-Bench 3.0 (Pass@1)",
+            "harborframework/terminal-bench (terminalbench_3)"
+          ],
+          "terminal_bench_hard": [
+            "Terminal Bench (hard subset)",
+            "Terminal Bench Hard",
+            "Terminal-Bench Hard"
+          ],
+          "terminal_bench_science_0_1": [
+            "Terminal-Bench-Science 0.1",
+            "harborframework/terminal-bench-science (terminalbenchscience_0_1)"
           ]
         },
         "siblings": [
@@ -323,136 +1608,201 @@
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "ZeroBench-main w/ tools (Pass@5)"
+            "name": "Terminal Bench 2.1 (Best Reported Harness)"
           },
           {
             "mapped_to": [
-              "__unmappable__"
+              "terminal_bench_2_1"
             ],
-            "name": "ZeroBench-main (w/tools)"
+            "name": "Terminal Bench 2.1"
           },
           {
             "mapped_to": [
-              "__unmappable__"
+              "terminal_bench_2_1"
             ],
-            "name": "ZeroBench (Pass@5)"
+            "name": "Terminal-Bench 2.1"
           },
           {
             "mapped_to": [
-              "__unmappable__"
+              "terminal_bench_2_1"
             ],
-            "name": "ZeroBench (pass@5)"
+            "name": "Terminal-Bench 2.1 (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (OpenCode)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal Bench 2.1 (Terminus-2)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "Terminal-Bench 2.1 (Terminus-2)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "harborframework/terminal-bench-2.1"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'ZeroBench_main (avg@5 / pass@5)' to llm.json benchmark",
+      "question": "Map HF label 'Terminal-Bench 2.1 (self-reported)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "ZeroBench_main (avg@5 / pass@5)",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "zerobench",
-          "reason": "the first 1 word(s) of the label"
-        }
-      ],
-      "context": {
-        "known": 1466,
-        "mapped": {
-          "zerobench": [
-            "ZEROBench",
-            "ZeroBench"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "ZeroBench-main w/ tools (Pass@5)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "ZeroBench-main (w/tools)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "ZeroBench (w/ tools)"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'ZeroBench_main w/ python (pass@5)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "ZeroBench_main w/ python (pass@5)",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "Terminal-Bench 2.1 (self-reported)",
       "universe": "benchmarks"
     },
     {
       "candidates": [],
+      "context": {
+        "known": 1472,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "WinoGrande"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "WinoGrande (EM)"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'xdev-bench-hard (Internal)' to llm.json benchmark",
+      "question": "Map HF label 'WinoGrande (acc)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
-      "subject": "xdev-bench-hard (Internal)",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "WinoGrande (acc)",
       "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "step-5-preview",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "atria-dawn-preview",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
+          "option": "tau3_bench_banking",
+          "reason": "the same name spelled without punctuation, as 'τ³-Bench Banking'"
         }
       ],
       "context": {
-        "known": 414,
+        "known": 1472,
         "mapped": {
-          "hy4-preview": [
-            "tencent/hy4",
-            "tencent/hy4-preview"
-          ],
-          "step-5-preview": [
-            "stepfun/step-5-preview"
+          "tau3_bench_banking": [
+            "Tau 3 Banking",
+            "Tau3-Bench",
+            "Tau3-Bench (Banking)",
+            "TauBench V3 Banking",
+            "tau3-Banking Agentic tool use",
+            "τ³ (banking)",
+            "τ³-Banking",
+            "τ³-Bench Banking",
+            "τ³-Bench* (Banking)",
+            "τ³-bench (Banking)",
+            "𝛕3-Banking"
           ]
         },
-        "siblings": []
+        "siblings": [
+          {
+            "mapped_to": [
+              "tau3_bench_banking"
+            ],
+            "name": "τ³-Bench Banking"
+          },
+          {
+            "mapped_to": [
+              "tau3_bench_banking"
+            ],
+            "name": "τ³-bench (Banking)"
+          },
+          {
+            "mapped_to": [
+              "tau3_bench_banking"
+            ],
+            "name": "τ³-Bench* (Banking)"
+          },
+          {
+            "mapped_to": [
+              "tau3_bench_banking"
+            ],
+            "name": "Tau3-Bench (Banking)"
+          }
+        ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'ricursiveai/ripple-65b-preview' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'τ³-bench banking' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/ricursiveai/ripple-65b-preview",
-      "subject": "ricursiveai/ripple-65b-preview",
+      "source_url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+      "subject": "τ³-bench banking",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "ripple-65b-preview",
+          "reason": "exact to Ripple-65B-Preview, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-5-preview",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "atria-dawn-preview",
+          "reason": "the same name without its first 1 word(s): drop size to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 223,
+        "mapped": {
+          "atria-dawn-preview": [
+            "internlm/Atria-Dawn-Previe",
+            "internlm/Atria-Dawn-Preview"
+          ],
+          "hy4-preview": [
+            "tencent/Hy4-preview"
+          ],
+          "step-5-preview": [
+            "SHSLab/Step-5-Preview-BF16"
+          ]
+        },
+        "siblings": []
+      },
+      "default": "ripple-65b-preview",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'ricursiveAI/Ripple-65B-Preview' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/ricursiveAI/Ripple-65B-Preview/",
+      "subject": "ricursiveAI/Ripple-65B-Preview",
       "universe": "models"
     }
   ]
