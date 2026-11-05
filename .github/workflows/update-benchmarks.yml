@@ -261,7 +261,7 @@ jobs:
       # the run stays green over it; too narrow, and one dead scraper reds
       # every scheduled run again.
       #
-      # test_preview_cleanup.py guards the Previews tab: which preview entries
+      # test_preview_cleanup.py guards the Cleanup tab's released previews: which preview entries
       # read as released, what each score and mapping is suggested to do, and
       # a cleanup record applied whole -- or refused whole when the files moved
       # since the page read them.
@@ -410,7 +410,7 @@ jobs:
           # Counted from the applier's own result, never from the input: the
           # input must not reach a script even inside quotes.
           count=$(jq '.applied | length' "$RUNNER_TEMP/answers.json")
-          # The Previews tab's report, re-read from what the batch just wrote,
+          # The Cleanup tab's preview report, re-read from what the batch just wrote,
           # so a cleanup or a check-off leaves the page in this same push rather
           # than at the end of the refresh. Reads only; a failure costs the
           # report, never the answers.
@@ -566,7 +566,7 @@ jobs:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
         run: ./artificialanalysis.py --publish-models _aa/models.json
 
-      # The Previews tab: preview entries whose model looks released, with the
+      # The Cleanup tab: preview entries whose model looks released, with the
       # decisions a cleanup needs (see _preview_cleanup.py). Read off llm.json,
       # the mapping files, the queue and the AA list above -- all files this
       # run just wrote -- so it costs no request. Not gated on the refresh: it

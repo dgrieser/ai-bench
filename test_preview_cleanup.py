@@ -98,18 +98,21 @@ def only_case(report: dict) -> dict:
 class TestNames(unittest.TestCase):
     def test_the_word_preview_in_any_spelling_a_source_uses(self) -> None:
         for text in ("hy4-preview", "Hy4 preview", "Mistral Large 4 (Preview)",
-                     "tencent/Hy4-Preview", "preview-model", "internlm/Atria-Dawn-Previe"):
+                     "tencent/Hy4-Preview", "preview-model", "internlm/Atria-Dawn-Previe",
+                     "dots3-note-prev", "Model Prev"):
             self.assertTrue(cleanup.is_preview(text), text)
 
-    def test_not_inside_a_longer_word_or_a_short_cut(self) -> None:
-        """'dots3-note-prev' is a real slug; 'prev' alone is too short to mean it."""
-        for text in ("hy4", "previously", "dots3-note-prev", "", None):
+    def test_not_inside_a_longer_word(self) -> None:
+        for text in ("hy4", "previously", "prevent-7b", "", None):
             self.assertFalse(cleanup.is_preview(text), text)
 
     def test_stripping_the_word(self) -> None:
         self.assertEqual(cleanup.strip_slug("hy4-preview"), "hy4")
         self.assertEqual(cleanup.strip_slug("preview-hy4"), "hy4")
         self.assertEqual(cleanup.strip_slug("step-5-preview-flash"), "step-5-flash")
+        self.assertEqual(cleanup.strip_slug("dots3-note-prev"), "dots3-note")
+        self.assertEqual(cleanup.strip_url("https://huggingface.co/d/dots3-note-prev"),
+                         "https://huggingface.co/d/dots3-note")
         self.assertEqual(cleanup.strip_url(HF_PREVIEW), HF_RELEASE)
         self.assertEqual(cleanup.strip_url("https://huggingface.co/x/Step-5-Preview-BF16"),
                          "https://huggingface.co/x/Step-5-BF16")

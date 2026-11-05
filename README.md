@@ -599,7 +599,7 @@ current address.
 ./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json
 
 # Preview entries whose model looks released, and what cleaning each up means
-#   --publish writes _pending/previews.json, the admin page's Previews tab
+#   --publish writes _pending/previews.json, the admin page's Cleanup tab
 ./preview_cleanup.py
 ./preview_cleanup.py --publish
 
@@ -776,7 +776,7 @@ key in its config. See [A hand-added model meets Artificial
 Analysis](#a-hand-added-model-meets-artificial-analysis) for which of those a
 given model needs.
 
-Its **Previews** tab is for the day a preview is released: `hy4-preview` once
+Its **Cleanup** tab is, first of all, for the day a preview is released: `hy4-preview` once
 Tencent ships Hy4. The release's boards are mapped onto the preview entry, but
 which number then wins is each source's rung in `_precedence.py`, not which is
 newer, so the preview card's numbers outlive the release card's (both are

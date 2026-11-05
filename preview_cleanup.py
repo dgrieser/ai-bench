@@ -6,7 +6,7 @@
   ./preview_cleanup.py --publish       write it to _pending/previews.json
 
 Reads only. The cleanup itself is a `preview-cleanup` record, sent from the
-admin page's Previews tab or by hand:
+admin page's Cleanup tab or by hand:
 
   echo '[{"kind": "preview-cleanup", "name": "hy4-preview", "rename": "hy4",
           "fields": {"url": "https://huggingface.co/tencent/Hy4"},

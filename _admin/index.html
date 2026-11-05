@@ -846,7 +846,7 @@ select {
 .model-scores .score-row.changed > label { color: var(--good); }
 .model-scores .score-row .btn[disabled] { visibility: hidden; }
 
-/* The Previews tab: a score or mapping row's Keep / Re-credit / Clear, as
+/* The Cleanup tab's released previews: a score or mapping row's Keep / Re-credit / Clear, as
    one segmented control rather than three cards -- a released model has
    forty scores, and forty stacks of options would be a long scroll on a
    phone. */
@@ -868,6 +868,7 @@ select {
 }
 .preview-score .score-past a { color: var(--muted); }
 .era-preview { color: var(--warn); }
+.section-title { font-size: 1rem; font-weight: 600; margin: .25rem 0 0; }
 
 /* --------------------------------------------------------------- buttons */
 
@@ -1401,7 +1402,7 @@ const state = {
   benchSearch: "",
   benchOpen: new Set(),
   benchDraft: null,
-  /* The Previews tab: _pending/previews.json as published by the last run
+  /* The Cleanup tab's released previews: _pending/previews.json as published by the last run
      (see _preview_cleanup.py), and which of its cards are unfolded. */
   previews: { cases: null, done: [], error: "" },
   previewOpen: new Set(),
@@ -2819,7 +2820,7 @@ function render() {
     state.tab === "queue" ? renderQueue()
       : state.tab === "updates" ? renderUpdates()
       : state.tab === "new" ? renderNew()
-      : state.tab === "previews" ? renderPreviews()
+      : state.tab === "cleanup" ? renderCleanup()
         : state.tab === "models" ? renderModels()
           : state.tab === "benchmarks" ? renderBenchmarks()
           : state.tab === "reference" ? renderReference()
@@ -2891,7 +2892,7 @@ function staleQueueNote() {
 const tabList = (mappingCount = null, newCount = null) => [
   ["queue", "Queue", mappingCount],
   ["new", "New models", newCount],
-  ["previews", "Previews", state.previews.cases?.filter((c) => c.evidence?.length).length || null],
+  ["cleanup", "Cleanup", state.previews.cases?.filter((c) => c.evidence?.length).length || null],
   ["updates", "Updates", null],
   ["models", "Models", null],
   ["benchmarks", "Benchmarks", null],
@@ -3852,6 +3853,14 @@ function syncPreview(c) {
   const [record] = previewRecord(c, workFor(c));
   if (record) state.answers.set(key, record);
   else state.answers.delete(key);
+}
+
+/* The Cleanup tab: maintenance the pipeline cannot finish on its own, one
+   section per kind. Released previews is the first. */
+function renderCleanup() {
+  const box = el("div", { className: "stack" });
+  box.append(el("h2", { className: "section-title" }, "Released previews"), renderPreviews());
+  return box;
 }
 
 function renderPreviews() {

@@ -278,7 +278,8 @@ tells you why.
   the browser straight to the Hub's public API (it answers any origin, no
   token), so `api.php` is not involved. The Models tab's url field does the
   same.
-- **Previews** — preview entries whose model has since been released, and
+- **Cleanup** — maintenance the pipeline cannot finish by itself. Its first
+  section, **Released previews**, lists preview entries whose model has since been released, and
   everything cleaning one up takes. The usual way a release lands here is that
   its boards are mapped onto the existing preview entry (`tencent/hy4` onto
   `hy4-preview`), so the entry keeps the preview's scores until the release is
@@ -292,7 +293,8 @@ tells you why.
   the entry hands `keep_best_row` two rows, so the stored number may be either.
 
   `_preview_cleanup.py` finds them -- a name or URL with the word *preview* in
-  it, any spelling a source uses, down to Spheron's truncated `-Previe` -- and
+  it, any spelling a source uses, down to `-prev` and Spheron's truncated
+  `-Previe` (a false positive costs one *Check it off*) -- and
   the workflow publishes the report to `_pending/previews.json` on every run,
   and again right after a batch of answers. A card is listed as released on
   evidence it prints: Artificial Analysis naming the mapped slug without

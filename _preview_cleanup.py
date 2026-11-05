@@ -66,13 +66,16 @@ DONE_FILE = HERE / "preview-cleanup-done.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
 # "preview" as a word of its own: "-preview", " Preview", "(Preview)",
-# "Hy4-preview", "preview-" -- not inside a longer word. A source that cuts
-# names short counts too: Spheron lists "internlm/Atria-Dawn-Previe", which is
-# the preview, not evidence of a release.
-PREVIEW_RE = re.compile(r"(?<![a-z])previ(?:ew?)?(?![a-z])", re.IGNORECASE)
+# "Hy4-preview", "preview-" -- not inside a longer word. The short spellings
+# count too: "-prev" is a preview often enough (dots3-note-prev), and a source
+# that cuts names short lists "internlm/Atria-Dawn-Previe". A false positive
+# costs one "Check it off" on the Cleanup tab; a miss is a preview nobody
+# cleans up.
+_WORD = r"prev(?:i(?:ew?)?)?"
+PREVIEW_RE = re.compile(rf"(?<![a-z]){_WORD}(?![a-z])", re.IGNORECASE)
 # The same word with the separator in front of it, which is what has to go when
 # it is taken out of a URL path: "Hy4-preview" -> "Hy4".
-_URL_PREVIEW_RE = re.compile(r"[-_.]preview(?=$|[-_./?#])|(?<=/)preview[-_.]", re.IGNORECASE)
+_URL_PREVIEW_RE = re.compile(rf"[-_.]{_WORD}(?=$|[-_./?#])|(?<=/){_WORD}[-_.]", re.IGNORECASE)
 
 # What each score decision may be. Keep is the absence of one.
 CLEAR = "clear"
@@ -121,7 +124,7 @@ def is_preview(text: Any) -> bool:
 
 def strip_slug(name: str) -> str:
     """The slug without its `preview` word: hy4-preview -> hy4."""
-    parts = [p for p in re.split(r"-", name) if p.lower() != "preview"]
+    parts = [p for p in re.split(r"-", name) if not PREVIEW_RE.fullmatch(p)]
     return "-".join(p for p in parts if p)
 
 
