@@ -278,6 +278,72 @@ tells you why.
   the browser straight to the Hub's public API (it answers any origin, no
   token), so `api.php` is not involved. The Models tab's url field does the
   same.
+- **Previews** — preview entries whose model has since been released, and
+  everything cleaning one up takes. The usual way a release lands here is that
+  its boards are mapped onto the existing preview entry (`tencent/hy4` onto
+  `hy4-preview`), so the entry keeps the preview's scores until the release is
+  measured. What nothing does by itself is the rest: the name and the model
+  card URL still say *preview*, and whether a release's number replaces a
+  preview's is decided by the source's rung in `_precedence.py`, not by which
+  is newer. Two cases in particular never resolve: a **fill-only** source (the
+  Hugging Face cards, llm-stats) never replaces a number credited to another of
+  its own pages, so the preview card's SWE-bench Pro beats the release card's
+  for good; and a board that maps *both* its preview and its release row onto
+  the entry hands `keep_best_row` two rows, so the stored number may be either.
+
+  `_preview_cleanup.py` finds them -- a name or URL with the word *preview* in
+  it, any spelling a source uses, down to Spheron's truncated `-Previe` -- and
+  the workflow publishes the report to `_pending/previews.json` on every run,
+  and again right after a batch of answers. A card is listed as released on
+  evidence it prints: Artificial Analysis naming the mapped slug without
+  *preview* (its release date is then the line between preview and release
+  scores), a board mapping a name without it, a queued name offering the
+  entry. The rest are folded under *no sign of a release yet*.
+
+  Each card holds every decision, pre-set to a suggestion:
+
+  | | choices | suggested |
+  | --- | --- | --- |
+  | **rename** | keep, the name without *preview*, the AA slug it is mapped to, any slug | the first free one; a name already taken is shown, greyed |
+  | **url** | any URL; a Hugging Face repo is checked against the Hub as typed | the URL without *preview* |
+  | **each score** | *keep*, *re-credit* to the release's page, *clear* | re-credit a preview-card / preview-page number from a fill-only source, keep the rest |
+  | **each mapping onto the entry** | *keep*, *park* (`__unmappable__`) | park a preview name the same file also maps the release beside |
+  | **queued names** offering the entry | map it onto the entry | -- |
+
+  A score row says what it was read off (*preview*: credited to a preview page
+  or read before the release date; *preview or release*: its board maps both;
+  *release*), which rung its source is on, and what that means for the release
+  replacing it. The release's own scores are folded away: nothing to do.
+  *Re-credit* keeps the number and its date and changes only the page, so the
+  release's page, read later, counts as the score's own and may replace it;
+  `_history.py` corrects the history entry in place, since the number did not
+  change. A score credited to the model's own card follows the url field. A
+  mapping only the preview is listed under is kept by default: parking it
+  would freeze the score, and the Queue asks about the release's name when
+  that board lists it.
+
+  **Clean up with these decisions** puts one `preview-cleanup` record in the
+  batch, and every later change to the card rewrites it. `answer.py` applies it
+  whole: parks first, then the score and URL changes, then the rename (which
+  carries every mapping, the AA mapping and the history with it), and records
+  the result in `preview-cleanup-done.json`, so a cleanup that kept the name is
+  not offered again. It is applied after every mapping in the same batch, so a
+  queued name mapped onto the preview entry from the card is carried by the
+  rename. Each decision names what it expects to find -- a score's value, a
+  mapping pointing at the entry -- and a batch built against an older read is
+  refused rather than applied to something else.
+
+  **Check it off** is for a misdetection, or a case already cleaned up by hand:
+  a `preview-cleanup` record with `"action": "dismiss"`, which writes only
+  `preview-cleanup-done.json`. Checked-off and cleaned-up cases are listed at
+  the foot of the tab, each with **Bring it back** (`"action": "restore"`).
+  From a terminal:
+
+  ```sh
+  ./preview_cleanup.py                       # the report, readable
+  echo '[{"kind": "preview-cleanup", "name": "step-5-preview", "action": "dismiss"}]' \
+    | ./answer.py --stdin --no-queue-check -w
+  ```
 - **Models** — every model in `llm.json`, each folded to its name, creator, date
   added and how many of the non-derived columns it has a score for. Sort by
   *least scored first* (the default; ties go to the newest) or *last added
