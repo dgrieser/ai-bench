@@ -1,32 +1,81 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-10-12 - Meta",
-      "question": "Carry newly released closed model 'muse-wonder-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "muse-wonder-high",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "hy4-preview",
-          "reason": "exact to Hy4, substring match"
+          "option": "kimi-k2-7-code",
+          "reason": "the same name without its first 2 word(s): exact to code, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "north-mini-code",
+          "reason": "the same name without its first 2 word(s): exact to code, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-coder-next",
+          "reason": "the same name without its first 2 word(s): exact to code, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-coder-30b-a3b-instruct",
+          "reason": "the same name without its first 2 word(s): exact to code, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-coder-480b-a35b-instruct",
+          "reason": "the same name without its first 2 word(s): exact to code, substring match"
         }
       ],
+      "context": {
+        "known": 416,
+        "mapped": {
+          "kimi-k2-7-code": [
+            "moonshotai/kimi-k2.7-code"
+          ],
+          "north-mini-code": [
+            "cohere/north-mini-code"
+          ],
+          "qwen3-coder-30b-a3b-instruct": [
+            "qwen/qwen3-coder-30b-a3b-instruct"
+          ],
+          "qwen3-coder-480b-a35b-instruct": [
+            "qwen/qwen3-coder"
+          ],
+          "qwen3-coder-next": [
+            "qwen/qwen3-coder-next"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "openrouter/auto"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "openrouter/auto-beta"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "openrouter/pareto-code"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Agents' Last Exam model 'Hy4' to llm.json model",
-      "route": "update_agents_last_exam_mapping.py",
+      "question": "Map OpenRouter model 'openrouter/auto-code' to llm.json model",
+      "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://agents-last-exam.org/leaderboard",
-      "subject": "Hy4",
+      "source_url": "https://openrouter.ai/openrouter/auto-code",
+      "subject": "openrouter/auto-code",
       "universe": "models"
     }
   ]
