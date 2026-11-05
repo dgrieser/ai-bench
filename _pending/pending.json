@@ -4,6 +4,216 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash-1019",
+          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+        }
+      ],
+      "context": {
+        "known": 416,
+        "mapped": {
+          "deepseek-v4-1-flash": [
+            "deepseek/deepseek-v4.1-flash"
+          ],
+          "deepseek-v4-1-flash-1017": [
+            "deepseek/deepseek-v4.1-flash-1017"
+          ],
+          "ling-3-1-flash": [
+            "inclusionai/ling-3.1-flash"
+          ],
+          "minimax-m3-1-flash": [
+            "minimax/minimax-m3.1-flash"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-flash-lite"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-image"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-lite-image"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-flash-lite-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-image-preview"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-pro-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-nano-banana-2.1"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-pro-preview-customtools"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-omni-1.1-flash' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/google/gemini-omni-1.1-flash",
+      "subject": "google/gemini-omni-1.1-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash-1019",
+          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
+        }
+      ],
+      "context": {
+        "known": 416,
+        "mapped": {
+          "deepseek-v4-1-flash": [
+            "deepseek/deepseek-v4.1-flash"
+          ],
+          "deepseek-v4-1-flash-1017": [
+            "deepseek/deepseek-v4.1-flash-1017"
+          ],
+          "ling-3-1-flash": [
+            "inclusionai/ling-3.1-flash"
+          ],
+          "minimax-m3-1-flash": [
+            "minimax/minimax-m3.1-flash"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-nano-banana-2.1"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-flash-lite"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-image"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-pro-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-lite-image"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.1-flash-lite-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-flash-image-preview"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "google/gemini-3.1-pro-preview-customtools"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-omni-1.2-flash' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/google/gemini-omni-1.2-flash",
+      "subject": "google/gemini-omni-1.2-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "kimi-k2-7-code",
           "reason": "the same name without its first 2 word(s): exact to code, substring match"
         },
