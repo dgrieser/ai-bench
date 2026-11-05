@@ -1,3 +1,102 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "kimi-k3-1-pro",
+          "reason": "exact to Kimi K3.1 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 61,
+        "mapped": {
+          "kimi-k3": [
+            "Kimi K3"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "kimi-k3"
+            ],
+            "name": "Kimi K3"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Kimi K3.1 Pro' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "Kimi K3.1 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 argon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 argon, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'gemini 4 argon' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
+      "subject": "gemini 4 argon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "exact to opus 5.5, substring match"
+        }
+      ],
+      "context": {
+        "known": 36,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "claude opus 5"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "claude opus 4 5"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'opus 5.5' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
+      "subject": "opus 5.5",
+      "universe": "models"
+    }
+  ]
 }
