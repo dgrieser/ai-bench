@@ -22894,7 +22894,7 @@
     {
       "name": "hy3",
       "date_added": "2026-04-26",
-      "url": "https://huggingface.co/tencent/Hy3-preview",
+      "url": "https://huggingface.co/tencent/Hy3",
       "params": "295B-A21B",
       "context": "256k",
       "creator": {
@@ -22979,11 +22979,11 @@
         "aa_omniscience_1_0": -18.5,
         "aa_omniscience_accuracy_1_0": 32,
         "aa_omniscience_hallucination_1_0": 74.1,
-        "aa_intelligence_index_4_0": 41.9,
+        "aa_intelligence_index_4_0": null,
         "aa_intelligence_index_4_1": 42.2,
         "aa_intelligence_index_4_2": 32.4,
         "aa_intelligence_index_4_3": 25.3,
-        "aa_coding_index_4_0": 36.5,
+        "aa_coding_index_4_0": null,
         "aa_coding_index_4_1": 58.8
       },
       "scores_updated": {
@@ -23064,11 +23064,11 @@
         "aa_omniscience_1_0": "2026-08-01",
         "aa_omniscience_accuracy_1_0": "2026-08-29",
         "aa_omniscience_hallucination_1_0": "2026-08-07",
-        "aa_intelligence_index_4_0": "2026-04-28",
+        "aa_intelligence_index_4_0": "2026-11-05",
         "aa_intelligence_index_4_1": "2026-08-07",
         "aa_intelligence_index_4_2": "2026-09-07",
         "aa_intelligence_index_4_3": "2026-09-19",
-        "aa_coding_index_4_0": "2026-04-28",
+        "aa_coding_index_4_0": "2026-11-05",
         "aa_coding_index_4_1": "2026-07-14"
       },
       "scores_source": {
@@ -23079,7 +23079,7 @@
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
         "security_index": null,
-        "swe_bench_verified": "https://huggingface.co/tencent/Hy3-preview",
+        "swe_bench_verified": "https://huggingface.co/tencent/Hy3",
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "swe_bench_pro": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
@@ -23100,11 +23100,11 @@
         "vibe_code_bench_1_1": null,
         "programbench_almost": null,
         "kernelbench_hard": null,
-        "livecodebench": "https://huggingface.co/tencent/Hy3-preview",
+        "livecodebench": "https://huggingface.co/tencent/Hy3",
         "scicode": "https://artificialanalysis.ai/models/hy3",
         "terminal_bench_4_0": "https://artificialanalysis.ai/models/hy3",
         "terminal_bench_2_1": "https://artificialanalysis.ai/models/hy3",
-        "terminal_bench_2_0": "https://huggingface.co/tencent/Hy3-preview",
+        "terminal_bench_2_0": "https://huggingface.co/tencent/Hy3",
         "terminal_bench_hard": "https://artificialanalysis.ai/models/hy3",
         "toolathlon": "https://toolathlon.xyz/docs/leaderboard",
         "tau3_bench_banking": "https://artificialanalysis.ai/models/hy3",
@@ -23129,7 +23129,7 @@
         "gpqa_diamond": "https://artificialanalysis.ai/models/hy3",
         "hle": "https://artificialanalysis.ai/models/hy3",
         "hle_diamond": null,
-        "mmlu_pro": "https://huggingface.co/tencent/Hy3-preview",
+        "mmlu_pro": "https://huggingface.co/tencent/Hy3",
         "mmmu_pro": null,
         "osworld_verified": null,
         "osworld_2_0_2026_06_24": null,
@@ -23140,7 +23140,7 @@
         "charxiv_reasoning": null,
         "apex_agents": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "nl2repo": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
-        "mmmlu": "https://huggingface.co/tencent/Hy3-preview",
+        "mmmlu": "https://huggingface.co/tencent/Hy3",
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "arena_webdev": "https://arena.ai/leaderboard/webdev",
@@ -23149,11 +23149,11 @@
         "aa_omniscience_1_0": "https://artificialanalysis.ai/models/hy3",
         "aa_omniscience_accuracy_1_0": "https://artificialanalysis.ai/models/hy3",
         "aa_omniscience_hallucination_1_0": "https://artificialanalysis.ai/models/hy3",
-        "aa_intelligence_index_4_0": "https://artificialanalysis.ai/models/hy3",
+        "aa_intelligence_index_4_0": null,
         "aa_intelligence_index_4_1": "https://artificialanalysis.ai/models/hy3",
         "aa_intelligence_index_4_2": "https://artificialanalysis.ai/models/hy3",
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/hy3",
-        "aa_coding_index_4_0": "https://artificialanalysis.ai/models/hy3",
+        "aa_coding_index_4_0": null,
         "aa_coding_index_4_1": "https://artificialanalysis.ai/models/hy3"
       },
       "scores_history": {
@@ -23203,6 +23203,11 @@
             "date": "2026-04-28",
             "score": 41.9,
             "source": "https://artificialanalysis.ai/models/hy3"
+          },
+          {
+            "date": "2026-11-05",
+            "score": null,
+            "source": null
           }
         ],
         "aa_coding_index_4_1": [
@@ -23217,6 +23222,11 @@
             "date": "2026-04-28",
             "score": 36.5,
             "source": "https://artificialanalysis.ai/models/hy3"
+          },
+          {
+            "date": "2026-11-05",
+            "score": null,
+            "source": null
           }
         ],
         "nl2repo": [
@@ -23237,7 +23247,7 @@
           {
             "date": "2026-04-28",
             "score": 74.4,
-            "source": "https://huggingface.co/tencent/Hy3-preview"
+            "source": "https://huggingface.co/tencent/Hy3"
           }
         ],
         "swe_bench_multilingual": [
@@ -23261,7 +23271,7 @@
           {
             "date": "2026-09-20",
             "score": 34.9,
-            "source": "https://huggingface.co/tencent/Hy3-preview"
+            "source": "https://huggingface.co/tencent/Hy3"
           }
         ],
         "scicode": [
@@ -23289,7 +23299,7 @@
           {
             "date": "2026-04-28",
             "score": 54.4,
-            "source": "https://huggingface.co/tencent/Hy3-preview"
+            "source": "https://huggingface.co/tencent/Hy3"
           }
         ],
         "terminal_bench_hard": [
@@ -23495,14 +23505,14 @@
           {
             "date": "2026-09-20",
             "score": 65.8,
-            "source": "https://huggingface.co/tencent/Hy3-preview"
+            "source": "https://huggingface.co/tencent/Hy3"
           }
         ],
         "mmmlu": [
           {
             "date": "2026-10-30",
             "score": 80.2,
-            "source": "https://huggingface.co/tencent/Hy3-preview"
+            "source": "https://huggingface.co/tencent/Hy3"
           }
         ]
       },
