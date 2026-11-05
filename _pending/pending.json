@@ -1,38 +1,3 @@
 {
-  "questions": [
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "hy3",
-          "reason": "exact to Hy3, exact match"
-        }
-      ],
-      "context": {
-        "known": 224,
-        "mapped": {
-          "hy3": [
-            "tencent/Hy3-preview"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "hy3"
-            ],
-            "name": "tencent/Hy3-preview"
-          }
-        ]
-      },
-      "default": "hy3",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'tencent/Hy3' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/tencent/Hy3/",
-      "subject": "tencent/Hy3",
-      "universe": "models"
-    }
-  ]
+  "questions": []
 }
