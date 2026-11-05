@@ -132,6 +132,17 @@ def result_record(answer: _answers.Answer) -> dict:
     Taken from the validated Answer, never from the input: the log credits a
     mapping to the admin page only when this batch really asked for it.
     """
+    if answer.kind == _answers.PREVIEW_CLEANUP:
+        # A cleanup is a rename and a set of parked mappings in one record;
+        # the log needs both halves, or the parks read as automatic writes.
+        plan = answer.value
+        return {
+            "kind": answer.kind,
+            "route": None,
+            "subject": answer.subject,
+            "value": plan.rename,
+            "parks": [[route, subject] for route, _kind, subject in plan.parks],
+        }
     return {
         "kind": answer.kind,
         "route": answer.route,

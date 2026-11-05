@@ -54,6 +54,7 @@ from typing import Any, Iterable
 
 import _answers
 import propose
+from _openness import UNMAPPABLE
 
 HERE = Path(__file__).resolve().parent
 LOG_PATH = HERE / "_log" / "mappings.json"
@@ -189,6 +190,17 @@ class Batch:
                 values[key] = _norm(record.get("value"))
             elif kind == _answers.MODEL_RENAME and record.get("value"):
                 renames[subject] = str(record["value"])
+            elif kind == _answers.PREVIEW_CLEANUP:
+                # A preview cleanup parks mappings and may rename: the parks
+                # were asked for on the page, and the rename's knock-on writes
+                # follow from it like any other rename's.
+                if record.get("value"):
+                    renames[subject] = str(record["value"])
+                for park in record.get("parks") or []:
+                    if isinstance(park, list) and len(park) == 2:
+                        key = (str(park[0]), str(park[1]))
+                        mappings.add(key)
+                        values[key] = _norm(UNMAPPABLE)
             elif kind in (_answers.MODEL_ADD, _answers.MODEL_CREATE, _answers.REFERENCE_ADD):
                 added.add(subject)
         return cls(frozenset(mappings), values, renames, frozenset(added))

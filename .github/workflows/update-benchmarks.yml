@@ -261,6 +261,11 @@ jobs:
       # the run stays green over it; too narrow, and one dead scraper reds
       # every scheduled run again.
       #
+      # test_preview_cleanup.py guards the Cleanup tab's released previews: which preview entries
+      # read as released, what each score and mapping is suggested to do, and
+      # a cleanup record applied whole -- or refused whole when the files moved
+      # since the page read them.
+      #
       # Run through a loop rather than one line each so every suite is timed.
       # `bash -e` still stops at the first red one: the loop body is not a
       # tested condition, so a non-zero exit ends the step exactly as it did
@@ -295,6 +300,7 @@ jobs:
             ./test_rejections.py
             ./test_suggest.py
             ./test_source_pages.py
+            ./test_preview_cleanup.py
           )
           # EPOCHREALTIME is microseconds with the locale's decimal point in
           # the middle; both separators are stripped so the arithmetic below
@@ -404,6 +410,12 @@ jobs:
           # Counted from the applier's own result, never from the input: the
           # input must not reach a script even inside quotes.
           count=$(jq '.applied | length' "$RUNNER_TEMP/answers.json")
+          # The Cleanup tab's preview report, re-read from what the batch just wrote,
+          # so a cleanup or a check-off leaves the page in this same push rather
+          # than at the end of the refresh. Reads only; a failure costs the
+          # report, never the answers.
+          ./preview_cleanup.py --publish \
+            || echo "::warning title=Preview report::could not republish _pending/previews.json"
           # Which mapping changes the batch asked for and which followed from it
           # -- read off answer.py's validated result, never off the input.
           ./mapping_log.py record --by auto --batch "$RUNNER_TEMP/answers.json" --run "$RUN_URL" -w \
@@ -553,6 +565,17 @@ jobs:
         env:
           ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
         run: ./artificialanalysis.py --publish-models _aa/models.json
+
+      # The Cleanup tab: preview entries whose model looks released, with the
+      # decisions a cleanup needs (see _preview_cleanup.py). Read off llm.json,
+      # the mapping files, the queue and the AA list above -- all files this
+      # run just wrote -- so it costs no request. Not gated on the refresh: it
+      # describes the files as they are, and a stale report would offer
+      # decisions about scores that have since moved (answer.py would refuse
+      # them as stale, but the page should not offer them in the first place).
+      - name: Publish the preview cleanup report
+        continue-on-error: true
+        run: ./preview_cleanup.py --publish
 
       - name: Commit and push
         if: ${{ !inputs.dry_run }}

@@ -598,6 +598,11 @@ current address.
 ./pending_prompts.py pending-prompts.jsonl --format markdown
 ./pending_prompts.py pending-prompts.jsonl --format json --out _pending/pending.json
 
+# Preview entries whose model looks released, and what cleaning each up means
+#   --publish writes _pending/previews.json, the admin page's Cleanup tab
+./preview_cleanup.py
+./preview_cleanup.py --publish
+
 # Check for newly added/dismissed models
 #   [y] add it, [n] never ask again, [q] stop asking. Every run first carries
 #   out whatever check_new-decisions.json already says -- see below.
@@ -770,6 +775,17 @@ suggestions come from AA's model list, which `api.php` fetches with an optional
 key in its config. See [A hand-added model meets Artificial
 Analysis](#a-hand-added-model-meets-artificial-analysis) for which of those a
 given model needs.
+
+Its **Cleanup** tab is, first of all, for the day a preview is released: `hy4-preview` once
+Tencent ships Hy4. The release's boards are mapped onto the preview entry, but
+which number then wins is each source's rung in `_precedence.py`, not which is
+newer, so the preview card's numbers outlive the release card's (both are
+fill-only), and a board mapping both rows reads either. `_preview_cleanup.py`
+lists every such entry, with the evidence it was released, and the tab turns
+each into one `preview-cleanup` record: a rename, the new URL, keep / re-credit /
+clear per score, and which preview mappings to park. A case that is not one is
+checked off into `preview-cleanup-done.json`. See
+[the admin README](_admin/README.md) for each decision.
 
 The cards it has dispatched stay disabled until that run is no longer in flight.
 The queue is only republished when the run pushes, so a question just answered

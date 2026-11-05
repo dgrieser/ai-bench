@@ -846,6 +846,30 @@ select {
 .model-scores .score-row.changed > label { color: var(--good); }
 .model-scores .score-row .btn[disabled] { visibility: hidden; }
 
+/* The Cleanup tab's released previews: a score or mapping row's Keep / Re-credit / Clear, as
+   one segmented control rather than three cards -- a released model has
+   forty scores, and forty stacks of options would be a long scroll on a
+   phone. */
+.seg { display: inline-flex; gap: .25rem; flex-wrap: wrap; justify-content: flex-end; }
+.seg .btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+.decision-row + .decision-row {
+  padding-top: .6rem;
+  border-top: 1px solid var(--line);
+}
+/* One column on a phone: the chips, the reason and the choice each get the
+   width, rather than three squeezed into one line. */
+@media (max-width: 29.99rem) {
+  .decision-row { grid-template-columns: minmax(0, 1fr); }
+  .decision-row .seg { justify-content: flex-start; }
+}
+.preview-score .score-past a { color: var(--muted); }
+.era-preview { color: var(--warn); }
+.section-title { font-size: 1rem; font-weight: 600; margin: .25rem 0 0; }
+
 /* --------------------------------------------------------------- buttons */
 
 .btn {
@@ -1378,6 +1402,10 @@ const state = {
   benchSearch: "",
   benchOpen: new Set(),
   benchDraft: null,
+  /* The Cleanup tab's released previews: _pending/previews.json as published by the last run
+     (see _preview_cleanup.py), and which of its cards are unfolded. */
+  previews: { cases: null, done: [], error: "" },
+  previewOpen: new Set(),
   error: "",
   ok: "",
 };
@@ -1886,7 +1914,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key);
+  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-cleanup) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -2048,7 +2076,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename)|reference-(add|remove)|benchmark-(create|edit|order)) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-cleanup) /.test(key));
 
 function readSent() {
   try {
@@ -2435,10 +2463,11 @@ async function loadData() {
   const base = dataBase();
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-  const [queue, llm, reference] = await Promise.allSettled([
+  const [queue, llm, reference, previews] = await Promise.allSettled([
     json(`${base}/_pending/pending.json`),
     json(`${base}/llm.json`),
     json(`${base}/reference-models.json`),
+    json(`${base}/_pending/previews.json`),
   ]);
 
   if (queue.status === "fulfilled") {
@@ -2474,6 +2503,26 @@ async function loadData() {
       ? "the file is not a JSON array of slugs"
       : reference.reason.message;
     state.reference = { slugs: null, error: String(why) };
+  }
+
+  /* Its own error too: one tab, and a repository before the first run that
+     publishes it simply has no report yet. */
+  if (previews.status === "fulfilled" && Array.isArray(previews.value?.cases)) {
+    state.previews = {
+      cases: previews.value.cases.filter((c) => c && typeof c.name === "string"),
+      done: Array.isArray(previews.value.done) ? previews.value.done.filter((d) => d && typeof d.name === "string") : [],
+      error: "",
+    };
+    /* A fresh report may say something new about a case; a working copy
+       nobody put in the batch is rebuilt from it. */
+    for (const name of [...previewWork.keys()]) {
+      if (!state.answers.has(PREVIEW_KEY(name))) previewWork.delete(name);
+    }
+  } else {
+    state.previews = {
+      cases: null, done: [],
+      error: previews.status === "fulfilled" ? "the file has no cases list" : String(previews.reason.message),
+    };
   }
 
   render();
@@ -2771,6 +2820,7 @@ function render() {
     state.tab === "queue" ? renderQueue()
       : state.tab === "updates" ? renderUpdates()
       : state.tab === "new" ? renderNew()
+      : state.tab === "cleanup" ? renderCleanup()
         : state.tab === "models" ? renderModels()
           : state.tab === "benchmarks" ? renderBenchmarks()
           : state.tab === "reference" ? renderReference()
@@ -2842,6 +2892,7 @@ function staleQueueNote() {
 const tabList = (mappingCount = null, newCount = null) => [
   ["queue", "Queue", mappingCount],
   ["new", "New models", newCount],
+  ["cleanup", "Cleanup", state.previews.cases?.filter((c) => c.evidence?.length).length || null],
   ["updates", "Updates", null],
   ["models", "Models", null],
   ["benchmarks", "Benchmarks", null],
@@ -3691,6 +3742,524 @@ const answerKeys = (prefix) => [...state.answers.keys()].filter((key) => key.sta
 const referenceRemaining = () => (state.reference.slugs?.length || 0)
   - answerKeys("reference-remove  ").length
   + answerKeys("reference-add  ").length;
+
+/* ------------------------------------------------------------- previews */
+
+/* A preview entry whose model has been released: hy4-preview once Tencent
+   ships Hy4. The release's boards get mapped onto the preview entry, which
+   keeps its scores -- but whether a release's number then replaces a
+   preview's is decided by each source's rung in _precedence.py, not by which
+   is newer, so the entry is left half-cleaned until somebody sorts it out by
+   hand. _preview_cleanup.py finds these and publishes _pending/previews.json;
+   this tab turns each case into one `preview-cleanup` record carrying every
+   decision: rename, URL, each score, each mapping. Or checks it off. */
+
+const PREVIEW_KEY = (name) => `preview-cleanup  ${name}`;
+
+/* The working copy of each card's decisions, by model name. Not the record:
+   a card is a page of choices, and only "Clean up" puts one in the batch.
+   Once it is in, every change rewrites the record. */
+const previewWork = new Map();
+
+const ERA_LABELS = {
+  preview: ["preview", "now"],
+  either: ["preview or release", "now"],
+  release: ["release", ""],
+  unknown: ["unclear", ""],
+};
+
+function previewDefaults(c, { fresh = false } = {}) {
+  const sent = fresh ? null : state.answers.get(PREVIEW_KEY(c.name));
+  if (sent?.action === "apply") {
+    return {
+      rename: sent.rename ?? null,
+      renameCustom: sent.rename && !(c.renames || []).some((r) => r.name === sent.rename) ? sent.rename : "",
+      url: sent.fields?.url ?? c.url ?? "",
+      scores: Object.fromEntries(Object.entries(sent.scores || {})
+        .map(([key, d]) => [key, { do: d.do, url: d.url || "" }])),
+      parks: new Set((sent.park || []).map((p) => `${p.route}\t${p.route_kind || "*"}\t${p.subject}`)),
+    };
+  }
+  const free = (c.renames || []).find((r) => !r.taken);
+  return {
+    rename: free ? free.name : null,
+    renameCustom: "",
+    url: c.new_url || c.url || "",
+    scores: Object.fromEntries((c.scores || []).filter((s) => s.suggest !== "keep")
+      .map((s) => [s.key, { do: s.suggest, url: s.recredit_to || "" }])),
+    parks: new Set((c.mappings || []).filter((m) => m.suggest === "park")
+      .map((m) => `${m.route}\t${m.route_kind}\t${m.subject}`)),
+  };
+}
+
+const workFor = (c) => {
+  if (!previewWork.has(c.name)) previewWork.set(c.name, previewDefaults(c));
+  return previewWork.get(c.name);
+};
+
+/* The page a re-credited score points at. A score credited to the model's own
+   card follows the URL field, so changing the URL above moves those too --
+   unless one was typed by hand. */
+const recreditUrl = (c, row, work) => {
+  const typed = work.scores[row.key]?.url;
+  if (row.follows_url && (!typed || typed === (row.recredit_to || ""))) return work.url;
+  return typed ?? row.recredit_to ?? "";
+};
+
+/* What would be sent, and whether it can be: [record, problem]. */
+function previewRecord(c, work) {
+  const names = new Set(models());
+  const rename = work.rename === "__custom__" ? work.renameCustom.trim() : work.rename;
+  if (rename) {
+    if (!SLUG_RE.test(rename)) return [null, `${rename} is not a slug`];
+    if (rename !== c.name && names.has(rename)) return [null, `${rename} is already a model`];
+  }
+  const record = { kind: "preview-cleanup", name: c.name, action: "apply" };
+  if (rename && rename !== c.name) record.rename = rename;
+  const url = String(work.url || "").trim();
+  if (url && url !== (c.url || "")) {
+    if (badUrl(url)) return [null, "the url is not one"];
+    record.fields = { url };
+  }
+  const scores = {};
+  for (const row of c.scores || []) {
+    const decision = work.scores[row.key];
+    if (!decision || decision.do === "keep") continue;
+    if (decision.do === "clear") scores[row.key] = { do: "clear", was: row.value };
+    else {
+      const target = recreditUrl(c, row, work).trim();
+      if (!/^https?:\/\/\S+$/i.test(target)) return [null, `re-credit ${row.key}: name the release's page`];
+      if (target === row.source) return [null, `${row.key} is already credited to ${target}`];
+      scores[row.key] = { do: "recredit", url: target, was: row.value };
+    }
+  }
+  if (Object.keys(scores).length) record.scores = scores;
+  const park = [...work.parks].map((k) => {
+    const [route, route_kind, subject] = k.split("\t");
+    return { route, route_kind, subject };
+  });
+  if (park.length) record.park = park;
+  if (!record.rename && !record.fields && !record.scores && !record.park) {
+    return [null, "nothing chosen: pick something to change, or check the case off"];
+  }
+  return [record, ""];
+}
+
+/* Keeps the record in step with the card while it is in the batch. */
+function syncPreview(c) {
+  const key = PREVIEW_KEY(c.name);
+  const current = state.answers.get(key);
+  if (current?.action !== "apply") return;
+  const [record] = previewRecord(c, workFor(c));
+  if (record) state.answers.set(key, record);
+  else state.answers.delete(key);
+}
+
+/* The Cleanup tab: maintenance the pipeline cannot finish on its own, one
+   section per kind. Released previews is the first. */
+function renderCleanup() {
+  const box = el("div", { className: "stack" });
+  box.append(el("h2", { className: "section-title" }, "Released previews"), renderPreviews());
+  return box;
+}
+
+function renderPreviews() {
+  const report = state.previews;
+  const box = el("div", { className: "stack" });
+  if (report.cases === null) {
+    box.append(el("p", { className: "empty" }, !report.error
+      ? "The preview report has not been read yet."
+      : report.error.includes("404")
+        ? "No preview report yet. It appears after the next run publishes _pending/previews.json."
+        : `Could not read the preview report (${report.error}).`));
+    return box;
+  }
+  box.append(el("p", { className: "note-text" },
+    "Preview entries whose model looks released. Each card is every decision a cleanup "
+    + "needs: the name, the URL, what happens to each score the preview left behind, and "
+    + "which preview mappings to park so only the release is read. One record per model, "
+    + "applied all at once. A case that is not a release, or was cleaned up by hand, can be "
+    + "checked off; it is not listed again."));
+
+  const released = report.cases.filter((c) => c.evidence?.length);
+  const quiet = report.cases.filter((c) => !c.evidence?.length);
+  if (!released.length) {
+    box.append(el("p", { className: "empty" }, "No preview entry shows a sign of a release."));
+  }
+  box.append(...released.map(renderPreviewCard));
+  if (quiet.length) {
+    const more = el("details", { className: "q-context" },
+      el("summary", {}, `${quiet.length} preview entr${quiet.length === 1 ? "y" : "ies"} with no sign of a release yet`));
+    more.append(el("div", { className: "stack" }, quiet.map(renderPreviewCard)));
+    more.open = quiet.some((c) => state.answers.has(PREVIEW_KEY(c.name)) || state.previewOpen.has(c.name));
+    box.append(more);
+  }
+  if (report.done?.length) box.append(renderPreviewDone(report.done));
+  return box;
+}
+
+function renderPreviewCard(c) {
+  const key = PREVIEW_KEY(c.name);
+  const record = state.answers.get(key);
+  const card = el("details", { className: `card model-card${record ? " answered" : ""}` });
+  const previewScores = (c.scores || []).filter((s) => s.era === "preview" || s.era === "either");
+  const parks = (c.mappings || []).filter((m) => m.preview);
+  card.append(el("summary", {}, [
+    el("span", { className: "subject" }, c.name),
+    el("div", { className: "chips" }, [
+      c.creator ? chip("", c.creator, { prose: true }) : null,
+      c.released ? chip("released", c.released, { className: "now" })
+        : c.evidence?.length ? chip("", "looks released", { prose: true, className: "now" })
+          : chip("", "no sign of a release", { prose: true }),
+      chip("preview scores", `${previewScores.length} / ${(c.scores || []).length}`),
+      parks.length ? chip("preview mappings", String(parks.length)) : null,
+      c.queue?.length ? chip("queued", String(c.queue.length)) : null,
+      record?.action === "dismiss" ? chip("", "checked off on the next run", { prose: true, className: "now" })
+        : record ? chip("", "cleaned up on the next run", { prose: true, className: "now" }) : null,
+    ]),
+  ]));
+  let built = false;
+  const build = () => {
+    if (built) return;
+    built = true;
+    fillPreviewCard(card, c);
+  };
+  card.open = state.previewOpen.has(c.name) || Boolean(record);
+  card.ontoggle = () => {
+    if (card.open) { state.previewOpen.add(c.name); build(); }
+    else state.previewOpen.delete(c.name);
+  };
+  const locked = isSent(key) || isApplied(key);
+  if (card.open || locked) build();
+  return guard(card, key);
+}
+
+function fillPreviewCard(card, c) {
+  const key = PREVIEW_KEY(c.name);
+  const work = workFor(c);
+  const record = state.answers.get(key);
+  const dismissing = record?.action === "dismiss";
+
+  if (c.evidence?.length) {
+    card.append(el("div", { className: "q-context" }, [
+      el("h4", {}, "Why it looks released"),
+      el("ul", {}, c.evidence.map((e) => el("li", {}, el("span", {}, e.text)))),
+    ]));
+  }
+
+  if (dismissing) {
+    card.append(
+      el("p", { className: "note-text" },
+        `${c.name} is checked off on the next run: nothing in llm.json or a mapping file changes, `
+        + "and the case is not listed again. Bring it back from the list at the foot of this tab."),
+      el("div", { className: "options" }, option("Keep it listed", "take the check-off out of the batch", {
+        pressed: false, onclick: () => { state.answers.delete(key); render(); },
+      })),
+    );
+    return;
+  }
+
+  const problem = el("p", { className: "note-text bad-text" });
+  const commit = () => {
+    const [built, why] = previewRecord(c, work);
+    problem.textContent = state.answers.has(key) && !built ? `Not in the batch: ${why}` : "";
+    syncPreview(c);
+    card.classList.toggle("answered", state.answers.has(key));
+    refreshFooter();
+  };
+
+  /* -- the name */
+  const renameBox = el("div", { className: "provenance" });
+  renameBox.append(el("div", { className: "field" }, el("label", {}, "rename")));
+  const custom = el("input", {
+    type: "text", placeholder: "another slug", value: work.renameCustom,
+    autocapitalize: "off", spellcheck: false,
+  });
+  const renameOptions = el("div", { className: "options" });
+  const drawRename = () => {
+    renameOptions.replaceChildren(
+      option("Keep the name", c.name, {
+        pressed: work.rename === null,
+        onclick: () => { work.rename = null; drawRename(); commit(); },
+      }),
+      ...(c.renames || []).map((r) => {
+        const button = option(r.name, r.taken ? `${r.why} -- already a model, merge by hand` : r.why, {
+          pressed: work.rename === r.name,
+          className: r.taken ? "decline" : "",
+          onclick: () => { if (r.taken) return; work.rename = r.name; drawRename(); commit(); },
+        });
+        button.disabled = r.taken;
+        return button;
+      }),
+      option("Another name", "type it below", {
+        pressed: work.rename === "__custom__",
+        onclick: () => { work.rename = "__custom__"; drawRename(); commit(); custom.focus(); },
+      }),
+    );
+    custom.hidden = work.rename !== "__custom__";
+  };
+  custom.oninput = () => {
+    work.renameCustom = custom.value;
+    custom.classList.toggle("unknown", Boolean(custom.value.trim()) && !SLUG_RE.test(custom.value.trim()));
+    commit();
+  };
+  drawRename();
+  renameBox.append(renameOptions, el("div", { className: "field" }, custom),
+    el("p", { className: "note-text" },
+      "A rename moves the slug through llm.json, every mapping file and the AA mapping at "
+      + "once, and keeps every score and its history."));
+  card.append(renameBox);
+
+  /* -- the URL */
+  const urlBox = el("div", { className: "provenance" });
+  const urlInput = el("input", { type: "url", inputMode: "url", value: work.url, placeholder: "https://huggingface.co/..." });
+  const urlNote = el("p", { className: "note-text" });
+  const checkUrl = debounceHf(urlNote);
+  urlInput.oninput = () => {
+    work.url = urlInput.value.trim();
+    urlInput.classList.toggle("unknown", badUrl(work.url));
+    drawScores();
+    checkUrl(work.url, c.url);
+    commit();
+  };
+  urlBox.append(el("div", { className: "field" }, [el("label", {}, "url"), urlInput]), urlNote);
+  if (c.url) urlBox.append(el("p", { className: "note-text" }, `Now: ${c.url}`));
+  card.append(urlBox);
+  checkUrl(work.url, c.url);
+
+  /* -- the scores, preview ones first */
+  const order = { preview: 0, either: 1, unknown: 2, release: 3 };
+  const rows = [...(c.scores || [])].sort((a, b) => order[a.era] - order[b.era] || a.key.localeCompare(b.key));
+  const scoreBox = el("div", { className: "provenance" });
+  const scoreList = el("div", {});
+  const releaseList = el("details", { className: "q-context" });
+  const setAll = (pick) => {
+    for (const row of rows) {
+      if (row.era === "release") continue;
+      const choice = pick(row);
+      if (choice === "keep") delete work.scores[row.key];
+      else work.scores[row.key] = { do: choice, url: work.scores[row.key]?.url ?? row.recredit_to ?? "" };
+    }
+    drawScores();
+    commit();
+  };
+  const drawScores = () => {
+    const later = rows.filter((r) => r.era === "release");
+    scoreList.replaceChildren(...rows.filter((r) => r.era !== "release").map((row) => scoreDecision(c, row, work, () => { drawScores(); commit(); })));
+    releaseList.replaceChildren(
+      el("summary", {}, `${later.length} score${later.length === 1 ? "" : "s"} read from the release -- nothing to do`),
+      ...later.map((row) => scoreDecision(c, row, work, () => { drawScores(); commit(); })),
+    );
+    releaseList.hidden = !later.length;
+  };
+  scoreBox.append(
+    el("div", { className: "field" }, el("label", {}, "scores")),
+    el("p", { className: "note-text" },
+      "Keep a preview number until the release is measured, re-credit it to the release's page "
+      + "so a fill-only source (a model card, llm-stats) may replace it, or clear it. The stored "
+      + "number's date stays; a re-credit rewrites the page its history entry names."),
+    el("div", { className: "card-foot", style: "gap:.4rem;flex-wrap:wrap;justify-content:flex-start" }, [
+      el("button", { type: "button", className: "btn ghost tiny", onclick: () => {
+        const defaults = previewDefaults(c, { fresh: true });
+        setAll((row) => defaults.scores[row.key]?.do || "keep");
+      } }, "Suggested"),
+      el("button", { type: "button", className: "btn ghost tiny", onclick: () => setAll(() => "keep") }, "Keep all"),
+      el("button", { type: "button", className: "btn ghost tiny", onclick: () => setAll((row) => (row.era === "preview" ? "clear" : "keep")) }, "Clear every preview score"),
+    ]),
+    scoreList, releaseList,
+  );
+  drawScores();
+  card.append(scoreBox);
+
+  /* -- the mappings */
+  if (c.mappings?.length) {
+    const mapBox = el("div", { className: "provenance" });
+    mapBox.append(el("div", { className: "field" }, el("label", {}, "mappings onto this entry")),
+      el("p", { className: "note-text" },
+        "Parking writes __unmappable__: the source's row stops being read, and the name is not "
+        + "asked about again. Park a preview row once the release is mapped from the same source."));
+    for (const m of c.mappings) {
+      const id = `${m.route}\t${m.route_kind}\t${m.subject}`;
+      const row = el("div", { className: "score-row decision-row" });
+      const choices = el("div", { className: "seg" });
+      const draw = () => {
+        choices.replaceChildren(...[["keep", "Keep"], ["park", "Park"]].map(([value, label]) => {
+          const button = el("button", { type: "button", className: "btn ghost tiny", onclick: () => {
+            if (value === "park") work.parks.add(id); else work.parks.delete(id);
+            draw(); commit();
+          } }, label);
+          button.setAttribute("aria-pressed", String(work.parks.has(id) === (value === "park")));
+          return button;
+        }));
+      };
+      draw();
+      row.append(
+        el("label", {}, [`${m.source}: `, el("span", { className: m.preview ? "era-preview" : "" }, m.subject)]),
+        el("span", { className: "note-text", style: "margin:0" }, m.why),
+        choices,
+      );
+      mapBox.append(row);
+    }
+    card.append(mapBox);
+  }
+
+  /* -- questions waiting that offer this entry */
+  if (c.queue?.length) {
+    const qBox = el("div", { className: "provenance" });
+    qBox.append(el("div", { className: "field" }, el("label", {}, "waiting on the Queue")),
+      el("p", { className: "note-text" },
+        `Names a board lists that the matcher offered ${c.name} for. Mapping one here is the same `
+        + "answer as on the Queue tab; it is written before the rename, which carries it along."));
+    const asked = new Map(state.questions.map((q) => [`${q.route}\t${q.subject}`, q]));
+    for (const entry of c.queue) {
+      const question = asked.get(`${entry.route}\t${entry.subject}`);
+      const answered = question && answerOf(question)?.answer === c.name;
+      const button = option(`${sourceOf(entry)}: ${entry.subject}`,
+        !question ? "no longer on the queue" : answered ? `mapped onto ${c.name}` : `map it onto ${c.name}`, {
+          pressed: Boolean(answered),
+          onclick: () => {
+            if (!question) return;
+            setAnswer(question, answered ? null : mappingRecord(question, c.name));
+          },
+        });
+      button.disabled = !question;
+      qBox.append(el("div", { className: "options" }, button));
+    }
+    card.append(qBox);
+  }
+
+  /* -- the decision */
+  const inBatch = state.answers.get(key)?.action === "apply";
+  card.append(problem, el("div", { className: "options" }, [
+    option(inBatch ? "In the batch" : "Clean up with these decisions",
+      inBatch ? "every change above updates it; tap to take it out" : "one record: rename, url, scores and mappings together", {
+        pressed: inBatch,
+        onclick: () => {
+          if (state.answers.get(key)?.action === "apply") { state.answers.delete(key); render(); return; }
+          const [built, why] = previewRecord(c, work);
+          if (!built) { problem.textContent = why; return; }
+          state.answers.set(key, built);
+          render();
+        },
+      }),
+    option("Check it off", "not a release, or already cleaned up by hand: stop listing it", {
+      pressed: false,
+      className: "decline",
+      onclick: () => { state.answers.set(key, { kind: "preview-cleanup", name: c.name, action: "dismiss" }); render(); },
+    }),
+  ]));
+  commit();
+}
+
+/* One score's row: what it is, why it reads as the preview's, and the choice. */
+function scoreDecision(c, row, work, onChange) {
+  const decision = work.scores[row.key]?.do || "keep";
+  const bench = state.llm?.benchmarks?.[row.key];
+  const [eraLabel, eraClass] = ERA_LABELS[row.era] || [row.era, ""];
+  const box = el("div", { className: "score-row decision-row preview-score" });
+  const choices = el("div", { className: "seg" });
+  for (const [value, label] of [["keep", "Keep"], ["recredit", "Re-credit"], ["clear", "Clear"]]) {
+    const button = el("button", { type: "button", className: "btn ghost tiny", onclick: () => {
+      if (value === "keep") delete work.scores[row.key];
+      else work.scores[row.key] = { do: value, url: work.scores[row.key]?.url ?? row.recredit_to ?? "" };
+      onChange();
+    } }, label);
+    button.setAttribute("aria-pressed", String(decision === value));
+    choices.append(button);
+  }
+  let host = "";
+  try { host = row.source ? new URL(row.source).host : ""; } catch { host = row.source || ""; }
+  box.append(
+    el("label", { title: row.key }, [bench?.name || row.key, " ", el("b", {}, String(row.value))]),
+    el("div", { className: "chips", style: "margin:0" }, [
+      chip("", eraLabel, { prose: true, className: eraClass }),
+      chip("", row.rank_label, { prose: true }),
+    ]),
+    choices,
+    el("div", { className: "score-past" }, [
+      el("span", {}, row.date || "no date"),
+      row.source ? el("a", { href: row.source, target: "_blank", rel: "noopener noreferrer", title: row.source }, host) : el("span", {}, "no page"),
+      el("span", {}, row.why),
+    ]),
+  );
+  if (row.note) box.append(el("div", { className: "score-past" }, el("span", {}, row.note)));
+  if (decision === "recredit") {
+    const input = el("input", { type: "url", inputMode: "url", value: recreditUrl(c, row, work), placeholder: "the release's page" });
+    input.oninput = () => {
+      work.scores[row.key] = { do: "recredit", url: input.value.trim() };
+      input.classList.toggle("unknown", !/^https?:\/\/\S+$/i.test(input.value.trim()));
+      syncPreview(c);
+      refreshFooter();
+    };
+    box.append(el("div", { className: "field", style: "grid-column:1/-1;margin:0" }, input));
+  }
+  return box;
+}
+
+/* Whether the URL is a Hugging Face repo that exists, asked of the Hub's
+   public API (any origin, no token) a moment after typing stops. */
+function debounceHf(note) {
+  let timer = 0;
+  let asked = "";
+  return (url, current) => {
+    clearTimeout(timer);
+    const match = /^https:\/\/huggingface\.co\/([^/?#]+\/[^/?#]+)\/?$/.exec(String(url || "").trim());
+    if (!match) { note.textContent = ""; return; }
+    if (url === current) { note.textContent = "unchanged"; note.className = "note-text"; return; }
+    timer = setTimeout(async () => {
+      asked = url;
+      note.textContent = "checking Hugging Face...";
+      note.className = "note-text";
+      try {
+        const response = await fetch(`${HF_API}/${match[1]}`);
+        if (asked !== url) return;
+        if (response.ok) {
+          note.textContent = `${match[1]} exists on Hugging Face`;
+          note.className = "note-text good-text";
+        } else {
+          note.textContent = response.status === 401 || response.status === 404
+            ? `${match[1]} is not a public Hugging Face repo (HTTP ${response.status}) -- check the name`
+            : `Hugging Face answered HTTP ${response.status}`;
+          note.className = "note-text bad-text";
+        }
+      } catch {
+        if (asked === url) { note.textContent = "could not reach Hugging Face to check"; note.className = "note-text"; }
+      }
+    }, 500);
+  };
+}
+
+/* The cases checked off or cleaned up: a misclick is one tap from undone. */
+function renderPreviewDone(done) {
+  const box = el("details", { className: "q-context" },
+    el("summary", {}, `${done.length} checked off or cleaned up`));
+  const list = el("div", { className: "stack" });
+  for (const entry of done) {
+    const key = PREVIEW_KEY(entry.name);
+    const restoring = state.answers.get(key)?.action === "restore";
+    const card = el("div", { className: `card${restoring ? " answered" : ""}` }, [
+      el("div", { className: "subject" }, entry.name),
+      el("div", { className: "chips" }, [
+        chip("", entry.how || "checked off", { prose: true }),
+        entry.date ? chip("on", entry.date) : null,
+        entry.was ? chip("was", entry.was) : null,
+      ]),
+      el("div", { className: "options" }, option(restoring ? "Listed again on the next run" : "Bring it back",
+        restoring ? "tap to take it out of the batch" : "list it again if it still looks like a preview", {
+          pressed: restoring,
+          onclick: () => {
+            if (restoring) state.answers.delete(key);
+            else state.answers.set(key, { kind: "preview-cleanup", name: entry.name, action: "restore" });
+            render();
+          },
+        })),
+    ]);
+    list.append(guard(card, key));
+  }
+  box.append(list);
+  box.open = done.some((entry) => state.answers.has(PREVIEW_KEY(entry.name)));
+  return box;
+}
 
 function renderReference() {
   ensureAaSlugs();
@@ -5589,6 +6158,9 @@ async function send() {
     state.newModels = state.newModels.filter((d) => !keys.includes(d.key));
     if (keys.some((key) => key.startsWith("reference-add  "))) state.referenceDraft = "";
     if (state.benchDraft?.record && keys.includes(state.benchDraft.record)) state.benchDraft = null;
+    for (const name of [...previewWork.keys()]) {
+      if (keys.includes(PREVIEW_KEY(name))) previewWork.delete(name);
+    }
     /* Before the run list is refreshed, so nothing can settle the batch before
        it is even recorded. */
     /* `queued` is read off the queue as it stands now, because settling cannot:
@@ -5653,6 +6225,7 @@ document.getElementById("clear").onclick = () => {
   state.newModels = [];
   state.referenceDraft = "";
   state.benchDraft = null;
+  previewWork.clear();
   render();
 };
 load();

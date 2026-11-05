@@ -42,6 +42,7 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 import _new_models
+import _preview_cleanup
 import _prompts
 import _reference
 import _rejections
@@ -51,6 +52,7 @@ import edit
 import propose
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _scores import editable_benchmarks
+from fill_source_urls import canonical
 
 HERE = Path(__file__).resolve().parent
 ADD_SCRIPT = HERE / "add.py"
@@ -105,6 +107,18 @@ BENCHMARK_EDIT = "benchmark-edit"
 # order the page saw, so a column added or moved since is a stale record, not
 # a silent clobber.
 BENCHMARK_ORDER = "benchmark-order"
+# A preview entry whose model has been released (see _preview_cleanup.py): one
+# record carries every decision about it -- the rename, the new URL, what
+# happens to each preview score, which preview mappings are parked -- or, with
+# "action": "dismiss", checks the case off as not one, and "restore" undoes
+# that. One record rather than a rename, an edit and a handful of mappings
+# because it is one decision, and because applying half of it is exactly the
+# mess it exists to clean up.
+PREVIEW_CLEANUP = "preview-cleanup"
+PREVIEW_ACTIONS = ("apply", "dismiss", "restore")
+# Enough for every mapping a model is likely to have; a bound, because each
+# one is a file write.
+MAX_PARKS = 40
 KINDS = frozenset(
     {
         MAPPING,
@@ -121,6 +135,7 @@ KINDS = frozenset(
         BENCHMARK_CREATE,
         BENCHMARK_EDIT,
         BENCHMARK_ORDER,
+        PREVIEW_CLEANUP,
     }
 )
 
@@ -245,6 +260,8 @@ class Answer:
             return f"edit benchmark {self.subject!r}: {', '.join(sorted(self.fields))}"
         if self.kind == BENCHMARK_ORDER:
             return f"reorder benchmarks ({len(self.value)} columns)"
+        if self.kind == PREVIEW_CLEANUP:
+            return self.value.describe()
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -479,9 +496,12 @@ def validate(
     # other end.
     touched: dict[str, str] = {}
     for answer in answers:
-        if answer.kind not in MODEL_KINDS:
+        cleanup = answer.kind == PREVIEW_CLEANUP and answer.value.action == "apply"
+        if answer.kind not in MODEL_KINDS and not cleanup:
             continue
         names = [answer.subject] + ([answer.value] if answer.kind == MODEL_RENAME else [])
+        if cleanup and answer.value.rename:
+            names.append(answer.value.rename)
         for name in names:
             if name in touched and answer.index not in reported:
                 failures.append(
@@ -636,6 +656,8 @@ def _validate_one(
         return _validate_benchmark_edit(index, record, doc or {})
     if kind == BENCHMARK_ORDER:
         return _validate_benchmark_order(index, record, doc or {})
+    if kind == PREVIEW_CLEANUP:
+        return _validate_preview_cleanup(index, record, model_names, benchmarks, doc or {})
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -1339,6 +1361,126 @@ def _validate_benchmark_order(index: int, record: dict[str, Any], doc: dict[str,
     return Answer(index=index, kind=BENCHMARK_ORDER, subject=BENCHMARK_ORDER_SUBJECT, value=list(order))
 
 
+def _validate_preview_cleanup(
+    index: int,
+    record: dict[str, Any],
+    model_names: set[str],
+    benchmarks: dict[str, Any],
+    doc: dict[str, Any],
+) -> Answer:
+    """One preview entry's cleanup, every part checked against the files now.
+
+    The page builds this from _pending/previews.json, which a run published
+    earlier; the files may have moved since. So every decision carries what it
+    expects to find -- the score's value (`was`), the mapping pointing at the
+    model -- and is refused as stale rather than applied to something else.
+    """
+    name = _subject_of(record, "name")
+    action = record.get("action", "apply")
+    if action not in PREVIEW_ACTIONS:
+        raise AnswerError(f"'action' must be one of: {', '.join(PREVIEW_ACTIONS)}")
+    done = _preview_cleanup.load_done()
+
+    def answer(plan: _preview_cleanup.Plan) -> Answer:
+        return Answer(index=index, kind=PREVIEW_CLEANUP, subject=name, value=plan)
+
+    extra = sorted(k for k in ("rename", "fields", "scores", "park") if record.get(k))
+    if action == "restore":
+        if extra:
+            raise AnswerError(f"a restore carries nothing else (got {', '.join(extra)})")
+        if name not in done:
+            raise AnswerError(f"{name!r} was never checked off")
+        return answer(_preview_cleanup.Plan(name=name, action=action))
+    if name not in model_names:
+        raise AnswerError(f"{name!r} is not a model in llm.json")
+    if action == "dismiss":
+        if extra:
+            raise AnswerError(
+                f"checking a case off changes nothing else (got {', '.join(extra)}); "
+                "send the decisions with action 'apply'"
+            )
+        if name in done:
+            raise AnswerError(f"{name!r} is already checked off")
+        return answer(_preview_cleanup.Plan(name=name, action=action))
+
+    model = next(m for m in doc.get("models", []) if isinstance(m, dict) and m.get("name") == name)
+
+    rename = record.get("rename")
+    if rename is not None:
+        rename = _model_slug({"name": rename})
+        if rename == name:
+            raise AnswerError(f"{name!r} is already its name")
+        if rename in model_names:
+            raise AnswerError(f"{rename!r} is already a model in llm.json; merge them by hand")
+
+    fields = _metadata_fields(record)
+
+    raw_scores = record.get("scores") or {}
+    if not isinstance(raw_scores, dict):
+        raise AnswerError("'scores' must be an object of benchmark -> decision")
+    stored = model.get("scores") or {}
+    sources = model.get("scores_source") or {}
+    scores: dict[str, dict[str, Any]] = {}
+    for key, decision in raw_scores.items():
+        if key not in benchmarks:
+            raise AnswerError(f"{key!r} is not a benchmark a score can be written to")
+        if not isinstance(decision, dict) or decision.get("do") not in _preview_cleanup.SCORE_ACTIONS:
+            raise AnswerError(
+                f"the decision for {key!r} must be {{\"do\": \"clear\"}} or "
+                f"{{\"do\": \"recredit\", \"url\": ...}}"
+            )
+        current = stored.get(key)
+        if current is None:
+            raise AnswerError(f"{name!r} has no {key!r} score to clean up")
+        if "was" in decision and decision["was"] != current:
+            raise AnswerError(
+                f"{key!r} is {current} now, not {decision['was']}: the page read an "
+                "older llm.json. Reload and decide again"
+            )
+        if decision["do"] == _preview_cleanup.RECREDIT:
+            url = decision.get("url")
+            if not isinstance(url, str) or not re.match(r"https?://\S+$", url.strip()):
+                raise AnswerError(f"re-crediting {key!r} needs the release's page as an http(s) URL")
+            if sources.get(key) and canonical(url.strip()) == canonical(sources[key]):
+                raise AnswerError(f"{key!r} is already credited to {url}")
+            scores[key] = {"do": decision["do"], "url": url.strip()}
+        else:
+            scores[key] = {"do": decision["do"]}
+
+    raw_parks = record.get("park") or []
+    if not isinstance(raw_parks, list):
+        raise AnswerError("'park' must be a list of {route, route_kind, subject}")
+    if len(raw_parks) > MAX_PARKS:
+        raise AnswerError(f"at most {MAX_PARKS} mappings may be parked in one record")
+    parks: list[tuple[str, str, str]] = []
+    for entry in raw_parks:
+        if not isinstance(entry, dict):
+            raise AnswerError("each 'park' entry must be an object")
+        route_name = entry.get("route")
+        kind = entry.get("route_kind") or "*"
+        route = resolve_route(route_name, kind)
+        if route.universe != propose.MODELS:
+            raise AnswerError(f"{route_name} maps benchmark labels, not models")
+        subject = _subject_of(entry)
+        if current_value(route, subject) != [name]:
+            raise AnswerError(
+                f"{route_name}: {subject!r} no longer points at {name!r}; reload and decide again"
+            )
+        parks.append((route_name, kind, subject))
+    if len(set(parks)) != len(parks):
+        raise AnswerError("a mapping is parked twice")
+
+    if not (rename or fields or scores or parks):
+        raise AnswerError(
+            "nothing to clean up: send a rename, a field, a score or a mapping -- or "
+            "check the case off with action 'dismiss'"
+        )
+    return answer(_preview_cleanup.Plan(
+        name=name, action=action, rename=rename, fields=dict(fields),
+        scores=scores, parks=tuple(parks),
+    ))
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -1411,6 +1553,10 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
             # a failure part way through is precisely the half-renamed model
             # nothing else in the repository can detect.
             paths.update(_rename.touched_paths(llm_path))
+        elif answer.kind == PREVIEW_CLEANUP:
+            paths.update(_preview_cleanup.touched_paths(answer.value))
+            if answer.value.rename:
+                paths.update(_rename.touched_paths(llm_path))
     return sorted(paths)
 
 
@@ -1456,6 +1602,10 @@ def apply(answers: Sequence[Answer], *, llm_path: Path = DEFAULT_LLM_JSON) -> li
             # file holds, so it has to run before a create adds one.
             answer.kind != BENCHMARK_ORDER,
             answer.kind not in (MODEL_CREATE, MODEL_ADD),
+            # A cleanup last: a mapping onto the preview entry sent in the same
+            # batch names the old slug, and has to be in its file before the
+            # rename carries every mapping over to the new one.
+            answer.kind == PREVIEW_CLEANUP,
         ),
     )
     try:
@@ -1524,6 +1674,12 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
 
     if answer.kind == BENCHMARK_ORDER:
         return _order_benchmarks(answer, llm_path)
+
+    if answer.kind == PREVIEW_CLEANUP:
+        try:
+            return _preview_cleanup.carry_out(answer.value, llm_path)
+        except _preview_cleanup.CleanupError as exc:
+            raise AnswerError(str(exc)) from None
 
     return _apply_edit(answer, llm_path)
 
