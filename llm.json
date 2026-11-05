@@ -2674,8 +2674,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 28043,
-        "coding_index": 19215,
+        "openbench_index": 28042,
+        "coding_index": 19214,
         "tooling_index": 31070,
         "knowledge_index": 19873,
         "vision_index": null,
@@ -3243,8 +3243,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 24294,
-        "coding_index": 18468,
+        "openbench_index": 24293,
+        "coding_index": 18467,
         "tooling_index": 29994,
         "knowledge_index": 14468,
         "vision_index": 11265,
@@ -4796,7 +4796,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 29040,
+        "coding_index": 29035,
         "tooling_index": null,
         "knowledge_index": 51386,
         "vision_index": null,
@@ -5855,8 +5855,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 25680,
-        "coding_index": 20358,
+        "openbench_index": 25679,
+        "coding_index": 20357,
         "tooling_index": 25611,
         "knowledge_index": 31822,
         "vision_index": null,
@@ -7579,8 +7579,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 46518,
-        "coding_index": 30531,
+        "openbench_index": 46512,
+        "coding_index": 30512,
         "tooling_index": 44324,
         "knowledge_index": 65519,
         "vision_index": 62532,
@@ -12407,7 +12407,7 @@
       "context": "1m",
       "scores": {
         "openbench_index": 35819,
-        "coding_index": 19591,
+        "coding_index": 19589,
         "tooling_index": 30462,
         "knowledge_index": 54748,
         "vision_index": null,
@@ -13539,8 +13539,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 26578,
-        "coding_index": 21786,
+        "openbench_index": 26577,
+        "coding_index": 21784,
         "tooling_index": 22458,
         "knowledge_index": 35607,
         "vision_index": null,
@@ -14135,8 +14135,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 32112,
-        "coding_index": 19847,
+        "openbench_index": 32111,
+        "coding_index": 19846,
         "tooling_index": 26743,
         "knowledge_index": 48870,
         "vision_index": null,
@@ -15405,8 +15405,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 31562,
-        "coding_index": 17753,
+        "openbench_index": 31561,
+        "coding_index": 17752,
         "tooling_index": 24049,
         "knowledge_index": 40858,
         "vision_index": 25810,
@@ -16147,7 +16147,7 @@
       },
       "scores": {
         "openbench_index": 48722,
-        "coding_index": 29648,
+        "coding_index": 29647,
         "tooling_index": 41105,
         "knowledge_index": 64149,
         "vision_index": null,
@@ -18236,7 +18236,7 @@
       },
       "scores": {
         "openbench_index": 40301,
-        "coding_index": 23857,
+        "coding_index": 23856,
         "tooling_index": 41722,
         "knowledge_index": 54884,
         "vision_index": 43736,
@@ -20681,7 +20681,7 @@
       },
       "scores": {
         "openbench_index": 41640,
-        "coding_index": 23314,
+        "coding_index": 23313,
         "tooling_index": 39080,
         "knowledge_index": 56875,
         "vision_index": 50350,
@@ -21998,8 +21998,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 65915,
-        "coding_index": 62144,
+        "openbench_index": 65914,
+        "coding_index": 62141,
         "tooling_index": 72981,
         "knowledge_index": 77566,
         "vision_index": null,
@@ -22902,14 +22902,14 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 53509,
-        "coding_index": 36833,
+        "openbench_index": 53575,
+        "coding_index": 37053,
         "tooling_index": 60298,
         "knowledge_index": 62756,
         "vision_index": null,
         "trust_index": 59826,
         "security_index": null,
-        "swe_bench_verified": 74.4,
+        "swe_bench_verified": 78,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": 75.8,
         "swe_bench_pro": 57.9,
@@ -22994,7 +22994,7 @@
         "vision_index": null,
         "trust_index": "2026-11-05",
         "security_index": null,
-        "swe_bench_verified": "2026-04-28",
+        "swe_bench_verified": "2026-11-05",
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": "2026-10-08",
         "swe_bench_pro": "2026-07-16",
@@ -23247,6 +23247,11 @@
           {
             "date": "2026-04-28",
             "score": 74.4,
+            "source": "https://huggingface.co/tencent/Hy3"
+          },
+          {
+            "date": "2026-11-05",
+            "score": 78,
             "source": "https://huggingface.co/tencent/Hy3"
           }
         ],
@@ -25040,7 +25045,7 @@
       },
       "scores": {
         "openbench_index": 38960,
-        "coding_index": 25401,
+        "coding_index": 25400,
         "tooling_index": 41145,
         "knowledge_index": 38957,
         "vision_index": 30962,
@@ -27380,8 +27385,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 43979,
-        "coding_index": 25934,
+        "openbench_index": 43978,
+        "coding_index": 25933,
         "tooling_index": 36418,
         "knowledge_index": 58709,
         "vision_index": 29472,
@@ -29809,8 +29814,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 70260,
-        "coding_index": 57530,
+        "openbench_index": 70259,
+        "coding_index": 57527,
         "tooling_index": 71864,
         "knowledge_index": 83643,
         "vision_index": null,
@@ -30765,8 +30770,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 65533,
-        "coding_index": 58406,
+        "openbench_index": 65529,
+        "coding_index": 58392,
         "tooling_index": 62692,
         "knowledge_index": 78592,
         "vision_index": 70977,
@@ -33192,7 +33197,7 @@
       "context": "1m",
       "scores": {
         "openbench_index": 23264,
-        "coding_index": 16398,
+        "coding_index": 16397,
         "tooling_index": 13372,
         "knowledge_index": 24754,
         "vision_index": 20586,
@@ -40941,8 +40946,8 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 35339,
-        "coding_index": 22345,
+        "openbench_index": 35338,
+        "coding_index": 22343,
         "tooling_index": 39547,
         "knowledge_index": 48371,
         "vision_index": null,
@@ -52047,8 +52052,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 26783,
-        "coding_index": 17750,
+        "openbench_index": 26782,
+        "coding_index": 17748,
         "tooling_index": 24541,
         "knowledge_index": 26091,
         "vision_index": 24386,
@@ -57070,7 +57075,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 19740,
+        "coding_index": 19737,
         "tooling_index": 37243,
         "knowledge_index": null,
         "vision_index": null,
@@ -57422,7 +57427,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 38589,
+        "coding_index": 38555,
         "tooling_index": 48211,
         "knowledge_index": null,
         "vision_index": null,
@@ -57774,7 +57779,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 52540,
+        "coding_index": 52537,
         "tooling_index": 57257,
         "knowledge_index": null,
         "vision_index": null,
@@ -58125,8 +58130,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 53566,
-        "coding_index": 33619,
+        "openbench_index": 53565,
+        "coding_index": 33616,
         "tooling_index": 46720,
         "knowledge_index": 74037,
         "vision_index": null,
@@ -59461,8 +59466,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 56695,
-        "coding_index": 40179,
+        "openbench_index": 56690,
+        "coding_index": 40163,
         "tooling_index": 57108,
         "knowledge_index": 74918,
         "vision_index": 44878,
@@ -60443,8 +60448,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 69286,
-        "coding_index": 66243,
+        "openbench_index": 69285,
+        "coding_index": 66240,
         "tooling_index": 75476,
         "knowledge_index": 81091,
         "vision_index": null,
@@ -61506,7 +61511,7 @@
       },
       "scores": {
         "openbench_index": 43164,
-        "coding_index": 26281,
+        "coding_index": 26280,
         "tooling_index": 38568,
         "knowledge_index": 63440,
         "vision_index": null,
@@ -62446,8 +62451,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 49629,
-        "coding_index": 33722,
+        "openbench_index": 49628,
+        "coding_index": 33717,
         "tooling_index": 42904,
         "knowledge_index": 70303,
         "vision_index": 54128,
@@ -63254,8 +63259,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 61420,
-        "coding_index": 44483,
+        "openbench_index": 61415,
+        "coding_index": 44466,
         "tooling_index": 58790,
         "knowledge_index": 81299,
         "vision_index": 71462,
@@ -64117,8 +64122,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 60269,
-        "coding_index": 50549,
+        "openbench_index": 60268,
+        "coding_index": 50546,
         "tooling_index": 63149,
         "knowledge_index": 73485,
         "vision_index": null,
@@ -64788,8 +64793,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 82427,
-        "coding_index": 78105,
+        "openbench_index": 82426,
+        "coding_index": 78104,
         "tooling_index": 83553,
         "knowledge_index": 89976,
         "vision_index": 86013,
@@ -66234,7 +66239,7 @@
       },
       "scores": {
         "openbench_index": 48221,
-        "coding_index": 30096,
+        "coding_index": 30095,
         "tooling_index": 46838,
         "knowledge_index": 65065,
         "vision_index": 57380,
@@ -66865,7 +66870,7 @@
       },
       "scores": {
         "openbench_index": 54230,
-        "coding_index": 33040,
+        "coding_index": 33039,
         "tooling_index": 49662,
         "knowledge_index": 75020,
         "vision_index": 67977,
@@ -67537,7 +67542,7 @@
       },
       "scores": {
         "openbench_index": 56550,
-        "coding_index": 41903,
+        "coding_index": 41901,
         "tooling_index": 58084,
         "knowledge_index": 72986,
         "vision_index": 45307,
@@ -68859,7 +68864,7 @@
       },
       "scores": {
         "openbench_index": 76974,
-        "coding_index": 66369,
+        "coding_index": 66367,
         "tooling_index": 82128,
         "knowledge_index": 88330,
         "vision_index": 90716,
@@ -71268,8 +71273,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 49956,
-        "coding_index": 33790,
+        "openbench_index": 49950,
+        "coding_index": 33771,
         "tooling_index": 52679,
         "knowledge_index": 56206,
         "vision_index": 51373,
@@ -72033,8 +72038,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 38900,
-        "coding_index": 21362,
+        "openbench_index": 38899,
+        "coding_index": 21360,
         "tooling_index": 35902,
         "knowledge_index": 46934,
         "vision_index": null,
@@ -72755,8 +72760,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 82480,
-        "coding_index": 78598,
+        "openbench_index": 82479,
+        "coding_index": 78596,
         "tooling_index": 87956,
         "knowledge_index": 86639,
         "vision_index": null,
@@ -73895,8 +73900,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 66145,
-        "coding_index": 53120,
+        "openbench_index": 66144,
+        "coding_index": 53117,
         "tooling_index": 72455,
         "knowledge_index": 69987,
         "vision_index": 71568,
@@ -77131,7 +77136,7 @@
       },
       "scores": {
         "openbench_index": 62277,
-        "coding_index": 49231,
+        "coding_index": 49229,
         "tooling_index": 76453,
         "knowledge_index": 72180,
         "vision_index": 52545,
@@ -77687,7 +77692,7 @@
       },
       "scores": {
         "openbench_index": 76787,
-        "coding_index": 61406,
+        "coding_index": 61404,
         "tooling_index": 89266,
         "knowledge_index": 80934,
         "vision_index": null,
@@ -78666,8 +78671,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 69608,
-        "coding_index": 58141,
+        "openbench_index": 69607,
+        "coding_index": 58140,
         "tooling_index": 80642,
         "knowledge_index": 74293,
         "vision_index": 79448,
@@ -79408,7 +79413,7 @@
       },
       "scores": {
         "openbench_index": 29898,
-        "coding_index": 16199,
+        "coding_index": 16198,
         "tooling_index": 20353,
         "knowledge_index": 32731,
         "vision_index": null,
@@ -80055,8 +80060,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 33774,
-        "coding_index": 16037,
+        "openbench_index": 33773,
+        "coding_index": 16036,
         "tooling_index": 29102,
         "knowledge_index": 39886,
         "vision_index": null,
@@ -81379,8 +81384,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 77702,
-        "coding_index": 75825,
+        "openbench_index": 77701,
+        "coding_index": 75824,
         "tooling_index": 87024,
         "knowledge_index": 88041,
         "vision_index": null,
@@ -82087,8 +82092,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 63176,
-        "coding_index": 45113,
+        "openbench_index": 63175,
+        "coding_index": 45111,
         "tooling_index": 66590,
         "knowledge_index": 72026,
         "vision_index": null,
@@ -82782,7 +82787,7 @@
       },
       "scores": {
         "openbench_index": 35700,
-        "coding_index": 16742,
+        "coding_index": 16741,
         "tooling_index": 35796,
         "knowledge_index": 40730,
         "vision_index": null,
@@ -83344,7 +83349,7 @@
       },
       "scores": {
         "openbench_index": 75480,
-        "coding_index": 78327,
+        "coding_index": 78326,
         "tooling_index": 82781,
         "knowledge_index": 80149,
         "vision_index": 64991,
@@ -85750,8 +85755,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 67707,
-        "coding_index": 65233,
+        "openbench_index": 67706,
+        "coding_index": 65231,
         "tooling_index": 71725,
         "knowledge_index": 81871,
         "vision_index": 73041,
@@ -86733,7 +86738,7 @@
       },
       "scores": {
         "openbench_index": 78562,
-        "coding_index": 75236,
+        "coding_index": 75235,
         "tooling_index": 85413,
         "knowledge_index": 88195,
         "vision_index": 84541,
@@ -87728,7 +87733,7 @@
       },
       "scores": {
         "openbench_index": 82032,
-        "coding_index": 77410,
+        "coding_index": 77409,
         "tooling_index": 88625,
         "knowledge_index": 95365,
         "vision_index": 91159,
@@ -91064,7 +91069,7 @@
       },
       "scores": {
         "openbench_index": 37266,
-        "coding_index": 18139,
+        "coding_index": 18138,
         "tooling_index": 42726,
         "knowledge_index": 43446,
         "vision_index": null,
@@ -91611,7 +91616,7 @@
       },
       "scores": {
         "openbench_index": 47743,
-        "coding_index": 29224,
+        "coding_index": 29223,
         "tooling_index": 57692,
         "knowledge_index": 51875,
         "vision_index": null,
@@ -92160,7 +92165,7 @@
       },
       "scores": {
         "openbench_index": 49692,
-        "coding_index": 27302,
+        "coding_index": 27301,
         "tooling_index": 52308,
         "knowledge_index": 62082,
         "vision_index": null,
@@ -93536,7 +93541,7 @@
       },
       "scores": {
         "openbench_index": 71966,
-        "coding_index": 69969,
+        "coding_index": 69968,
         "tooling_index": 81175,
         "knowledge_index": 74724,
         "vision_index": 52308,
@@ -95451,7 +95456,7 @@
       },
       "scores": {
         "openbench_index": 72947,
-        "coding_index": 66172,
+        "coding_index": 66170,
         "tooling_index": 73445,
         "knowledge_index": 85373,
         "vision_index": 78436,
@@ -96421,7 +96426,7 @@
       },
       "scores": {
         "openbench_index": 85834,
-        "coding_index": 84390,
+        "coding_index": 84389,
         "tooling_index": 87168,
         "knowledge_index": 95491,
         "vision_index": 91731,
@@ -97719,7 +97724,7 @@
       },
       "scores": {
         "openbench_index": 72204,
-        "coding_index": 66739,
+        "coding_index": 66738,
         "tooling_index": 82304,
         "knowledge_index": 84802,
         "vision_index": 76158,
@@ -102441,8 +102446,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 75483,
-        "coding_index": 65479,
+        "openbench_index": 75482,
+        "coding_index": 65478,
         "tooling_index": 83510,
         "knowledge_index": 81273,
         "vision_index": null,
@@ -102934,7 +102939,7 @@
       },
       "scores": {
         "openbench_index": 78006,
-        "coding_index": 65495,
+        "coding_index": 65493,
         "tooling_index": 85675,
         "knowledge_index": 88577,
         "vision_index": 62047,
@@ -104462,7 +104467,7 @@
       },
       "scores": {
         "openbench_index": 71843,
-        "coding_index": 64237,
+        "coding_index": 64236,
         "tooling_index": 75810,
         "knowledge_index": 78892,
         "vision_index": 62047,
@@ -105382,7 +105387,7 @@
       },
       "scores": {
         "openbench_index": 79041,
-        "coding_index": 81069,
+        "coding_index": 81068,
         "tooling_index": 77348,
         "knowledge_index": 89620,
         "vision_index": null,
@@ -107698,8 +107703,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 84210,
-        "coding_index": 81984,
+        "openbench_index": 84209,
+        "coding_index": 81983,
         "tooling_index": 84056,
         "knowledge_index": 86724,
         "vision_index": null,
@@ -108906,8 +108911,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 49888,
-        "coding_index": 29891,
+        "openbench_index": 49887,
+        "coding_index": 29890,
         "tooling_index": 46324,
         "knowledge_index": 73394,
         "vision_index": null,
@@ -109594,8 +109599,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 74125,
-        "coding_index": 59285,
+        "openbench_index": 74124,
+        "coding_index": 59282,
         "tooling_index": 74526,
         "knowledge_index": 87327,
         "vision_index": 86768,
@@ -110338,7 +110343,7 @@
       },
       "scores": {
         "openbench_index": 65303,
-        "coding_index": 50293,
+        "coding_index": 50290,
         "tooling_index": 70559,
         "knowledge_index": 80309,
         "vision_index": null,
@@ -113318,7 +113323,7 @@
       },
       "scores": {
         "openbench_index": 72878,
-        "coding_index": 56476,
+        "coding_index": 56474,
         "tooling_index": 83371,
         "knowledge_index": 85693,
         "vision_index": null,
@@ -114914,7 +114919,7 @@
       },
       "scores": {
         "openbench_index": 85161,
-        "coding_index": 79777,
+        "coding_index": 79776,
         "tooling_index": 87200,
         "knowledge_index": 95833,
         "vision_index": 94150,
@@ -116103,7 +116108,7 @@
       },
       "scores": {
         "openbench_index": 69557,
-        "coding_index": 57527,
+        "coding_index": 57525,
         "tooling_index": 76904,
         "knowledge_index": 72414,
         "vision_index": null,
@@ -119837,8 +119842,8 @@
         "inkling": 46,
         "inkling-small": 47,
         "mimo-v2-5-pro": 48,
-        "nvidia-nemotron-3-ultra-550b-a55b": 49,
-        "hy3": 50,
+        "hy3": 49,
+        "nvidia-nemotron-3-ultra-550b-a55b": 50,
         "muse-glimmer": 51,
         "nemotron-3-5-super-vl": 52,
         "k2-horizon-mova-36b-a4b": 53,
@@ -120606,6 +120611,14 @@
         "index": "openbench_index",
         "model": "hy3",
         "from": 48,
+        "to": 49,
+        "of": 82
+      },
+      {
+        "date": "2026-11-05",
+        "index": "openbench_index",
+        "model": "nvidia-nemotron-3-ultra-550b-a55b",
+        "from": 49,
         "to": 50,
         "of": 82
       },

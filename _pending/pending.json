@@ -3,289 +3,35 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash-1019",
-          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash-1017",
-          "reason": "the same name without its first 3 word(s): exact to 1-1-flash, all components match"
+          "confidence": "exact",
+          "option": "hy3",
+          "reason": "exact to Hy3, exact match"
         }
       ],
       "context": {
-        "known": 416,
+        "known": 224,
         "mapped": {
-          "deepseek-v4-1-flash": [
-            "deepseek/deepseek-v4.1-flash"
-          ],
-          "deepseek-v4-1-flash-1017": [
-            "deepseek/deepseek-v4.1-flash-1017"
-          ],
-          "ling-3-1-flash": [
-            "inclusionai/ling-3.1-flash"
-          ],
-          "minimax-m3-1-flash": [
-            "minimax/minimax-m3.1-flash"
+          "hy3": [
+            "tencent/Hy3-preview"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "__closed_weights__"
+              "hy3"
             ],
-            "name": "google/gemini-3.1-flash-lite"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-image"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-lite-image"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "google/gemini-3.1-flash-lite-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-image-preview"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "google/gemini-3.1-pro-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-nano-banana-2.1"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-pro-preview-customtools"
+            "name": "tencent/Hy3-preview"
           }
         ]
       },
-      "default": null,
+      "default": "hy3",
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'google/gemini-omni-1.1-flash' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map Spheron path 'tencent/Hy3' to llm.json model",
+      "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/google/gemini-omni-1.1-flash",
-      "subject": "google/gemini-omni-1.1-flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m3-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash-1019",
-          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash-1017",
-          "reason": "the same name without its first 3 word(s): exact to 1-2-flash, most components match"
-        }
-      ],
-      "context": {
-        "known": 416,
-        "mapped": {
-          "deepseek-v4-1-flash": [
-            "deepseek/deepseek-v4.1-flash"
-          ],
-          "deepseek-v4-1-flash-1017": [
-            "deepseek/deepseek-v4.1-flash-1017"
-          ],
-          "ling-3-1-flash": [
-            "inclusionai/ling-3.1-flash"
-          ],
-          "minimax-m3-1-flash": [
-            "minimax/minimax-m3.1-flash"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-nano-banana-2.1"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "google/gemini-3.1-flash-lite"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-image"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "google/gemini-3.1-pro-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-lite-image"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "google/gemini-3.1-flash-lite-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-flash-image-preview"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "google/gemini-3.1-pro-preview-customtools"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'google/gemini-omni-1.2-flash' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/google/gemini-omni-1.2-flash",
-      "subject": "google/gemini-omni-1.2-flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "kimi-k2-7-code",
-          "reason": "the same name without its first 2 word(s): exact to code, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "north-mini-code",
-          "reason": "the same name without its first 2 word(s): exact to code, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-coder-next",
-          "reason": "the same name without its first 2 word(s): exact to code, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-coder-30b-a3b-instruct",
-          "reason": "the same name without its first 2 word(s): exact to code, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-coder-480b-a35b-instruct",
-          "reason": "the same name without its first 2 word(s): exact to code, substring match"
-        }
-      ],
-      "context": {
-        "known": 416,
-        "mapped": {
-          "kimi-k2-7-code": [
-            "moonshotai/kimi-k2.7-code"
-          ],
-          "north-mini-code": [
-            "cohere/north-mini-code"
-          ],
-          "qwen3-coder-30b-a3b-instruct": [
-            "qwen/qwen3-coder-30b-a3b-instruct"
-          ],
-          "qwen3-coder-480b-a35b-instruct": [
-            "qwen/qwen3-coder"
-          ],
-          "qwen3-coder-next": [
-            "qwen/qwen3-coder-next"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "openrouter/auto"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "openrouter/auto-beta"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "openrouter/pareto-code"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map OpenRouter model 'openrouter/auto-code' to llm.json model",
-      "route": "update_openrouter_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/openrouter/auto-code",
-      "subject": "openrouter/auto-code",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/tencent/Hy3/",
+      "subject": "tencent/Hy3",
       "universe": "models"
     }
   ]
