@@ -1,6 +1,184 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-10-12 - Meta",
+      "question": "Carry newly released closed model 'muse-wonder-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "muse-wonder-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-03 - Tencent",
+      "question": "Carry newly released closed model 'tencent-hy4' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "tencent-hy4",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "exact to hy4, substring match"
+        }
+      ],
+      "context": {
+        "known": 433,
+        "mapped": {
+          "hy4-preview": [
+            "hy4 preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "hy4 preview"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'hy4' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/agent",
+      "subject": "hy4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "tencent-hy4",
+          "reason": "drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "o1-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hy3-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "QwQ-32B-Preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-max-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'hy4-preview'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4-preview",
+      "subject": "hy4-preview",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without the vendor prefix: exact to ling-3.0-tiny, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-vl",
+          "reason": "the same name without the vendor prefix: exact to ling-3.0-tiny, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash-fin",
+          "reason": "the same name without the vendor prefix: exact to ling-3.0-tiny, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-mini-2-0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 415,
+        "mapped": {
+          "ling-3-0-flash": [
+            "inclusionai/ling-3.0-flash"
+          ],
+          "ling-3-0-flash-fin": [
+            "inclusionai/ling-3.0-flash-fin"
+          ],
+          "ling-3-0-flash-vl": [
+            "inclusionai/ling-3.0-flash-vl"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "ling-3-0-flash"
+            ],
+            "name": "inclusionai/ling-3.0-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-vl"
+            ],
+            "name": "inclusionai/ling-3.0-flash-vl"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-fin"
+            ],
+            "name": "inclusionai/ling-3.0-flash-fin"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "inclusionai/ling-3.0-flash-sante"
+          },
+          {
+            "mapped_to": [
+              "ling-3-1-flash"
+            ],
+            "name": "inclusionai/ling-3.1-flash"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'inclusionai/ling-3.0-tiny' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/inclusionai/ling-3.0-tiny",
+      "subject": "inclusionai/ling-3.0-tiny",
+      "universe": "models"
+    },
+    {
       "candidates": [
         {
           "confidence": "weak",
