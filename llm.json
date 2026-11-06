@@ -119967,8 +119967,8 @@
         "hle_diamond": null,
         "hle": 44.1,
         "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
+        "arc_agi_2": 81.7,
+        "arc_agi_1": 96.5,
         "mmlu_pro": null,
         "mmmlu": null,
         "mmmu_pro": 81.6,
@@ -120090,8 +120090,8 @@
         "hle_diamond": null,
         "hle": "2026-11-06",
         "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
+        "arc_agi_2": "2026-11-06",
+        "arc_agi_1": "2026-11-06",
         "mmlu_pro": null,
         "mmmlu": null,
         "mmmu_pro": "2026-11-06",
@@ -120213,8 +120213,8 @@
         "hle_diamond": null,
         "hle": "https://artificialanalysis.ai/models/inkling-2-small",
         "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
+        "arc_agi_2": "https://arcprize.org/leaderboard",
+        "arc_agi_1": "https://arcprize.org/leaderboard",
         "mmlu_pro": null,
         "mmmlu": null,
         "mmmu_pro": "https://artificialanalysis.ai/models/inkling-2-small",
@@ -120422,6 +120422,20 @@
             "date": "2026-11-06",
             "score": 44.1,
             "source": "https://artificialanalysis.ai/models/inkling-2-small"
+          }
+        ],
+        "arc_agi_2": [
+          {
+            "date": "2026-11-06",
+            "score": 81.7,
+            "source": "https://arcprize.org/leaderboard"
+          }
+        ],
+        "arc_agi_1": [
+          {
+            "date": "2026-11-06",
+            "score": 96.5,
+            "source": "https://arcprize.org/leaderboard"
           }
         ],
         "mmmu_pro": [
