@@ -1,6 +1,17 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-05 - Thinking Machines",
+      "question": "Carry newly released closed model 'inkling-2-small' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "inkling-2-small",
+      "universe": null
+    },
+    {
       "candidates": [
         {
           "confidence": "exact",
@@ -66,6 +77,63 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to inkling small 2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to small-2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwq-32b",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 36,
+        "mapped": {
+          "glm-5-2": [
+            "glm 5.2"
+          ],
+          "inkling-small": [
+            "inkling small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "inkling small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map MCP-Atlas model 'inkling small 2' to llm.json model",
+      "route": "update_mcp_atlas_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
+      "subject": "inkling small 2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
           "option": "claude-opus-5-5",
           "reason": "exact to opus 5.5, substring match"
         }
@@ -96,6 +164,104 @@
       "route_kind": "mapping",
       "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
       "subject": "opus 5.5",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to inkling small 2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to small-2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwq-32b",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Bench Pro V2 model 'inkling small 2' to llm.json model",
+      "route": "update_swe_bench_pro_v2_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
+      "subject": "inkling small 2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to inkling-2-small, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to 2-small, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwq-32b",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 214,
+        "mapped": {
+          "devstral-small-2": [
+            "mistralai/labs-devstral-small-2512"
+          ],
+          "glm-5-2": [
+            "zai/glm-5.2"
+          ],
+          "inkling-small": [
+            "thinkingmachines/inkling-small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "thinkingmachines/inkling-small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'thinkingmachines/inkling-2-small' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "thinkingmachines/inkling-2-small",
       "universe": "models"
     }
   ]
