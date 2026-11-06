@@ -3402,6 +3402,13 @@ const referenceRecord = (question) => {
   return { kind: "reference-add", name: question.subject };
 };
 
+/* A closed release added as an open-weight model anyway: the explicit
+   override answer.py asks for, so a plain model-add can never do it. */
+const openRecord = (question) => {
+  state.answers.delete(REFERENCE_ADD_KEY(question.subject));
+  return { kind: "model-add", name: question.subject, open_weights: true };
+};
+
 /* The bulk bar for closed releases: same as the open one, but "add" means
    carrying them as reference models. */
 function renderNewClosedBulk(questions) {
@@ -3430,10 +3437,12 @@ function renderNewClosedBulk(questions) {
 }
 
 /* A closed release. llm.json carries closed models only as reference models,
-   so "Add it" is not offered: the yes is a reference-add, which puts the slug
-   on reference-models.json and creates the entry behind it -- what the
-   Reference tab's "Carry more models" sends. "Ignore it" dismisses the slug
-   exactly as it does for an open model. */
+   so the usual yes is a reference-add, which puts the slug on
+   reference-models.json and creates the entry behind it -- what the Reference
+   tab's "Carry more models" sends. "Add as open model" is for AA being early
+   rather than right (weights announced, not yet published): a model-add with
+   the open_weights override. "Ignore it" dismisses the slug exactly as it does
+   for an open model. */
 function renderNewClosedQuestion(question) {
   const chosen = answerOf(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
@@ -3443,12 +3452,21 @@ function renderNewClosedQuestion(question) {
   card.append(chips);
 
   const carrying = chosen?.kind === "reference-add";
+  const adding = chosen?.kind === "model-add";
   const ignoring = chosen?.kind === "new-model";
   card.append(el("div", { className: "options" }, [
     option("Add as reference", "carries it beside the open models; scores land on the next refresh", {
       pressed: carrying,
       className: "exact",
       onclick: () => setAnswer(question, carrying ? null : referenceRecord(question)),
+    }),
+    /* AA says closed until the weights are on Hugging Face, so a release
+       announced as open is offered here for its first days. This overrules
+       that verdict: the record says so itself, and answer.py refuses a plain
+       model-add for a closed release. */
+    option("Add as open model", "AA calls it closed, but its weights are coming: add it like any open release", {
+      pressed: adding,
+      onclick: () => setAnswer(question, adding ? null : openRecord(question)),
     }),
     option("Ignore it", "never offer this slug again", {
       pressed: ignoring,

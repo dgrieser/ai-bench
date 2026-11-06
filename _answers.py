@@ -909,10 +909,23 @@ def _validate_model_add(
     # one from whatever name it is handed, prefilling what Artificial Analysis
     # knows and leaving the rest blank, so a junk slug lands as a junk model.
     _require_queued(queue, require_queue, NEW_MODEL_ROUTE, NEW_MODEL, subject, NEW_MODEL_ROUTE)
+    # A closed verdict is often only "the weights are not out yet": a lab
+    # announces an open release and ships the weights days later, and AA labels
+    # it closed until then. So the person may overrule it -- but only by saying
+    # so in the record, never by a plain model-add that happens to name one.
+    override = record.get("open_weights")
+    if override not in (None, True):
+        raise AnswerError("'open_weights' may only be true: it overrules a closed verdict")
     if (NEW_MODEL_ROUTE, NEW_CLOSED_MODEL, subject) in queue:
+        if override is not True:
+            raise AnswerError(
+                f"{subject!r} is a closed-weights release; carry it as a reference model "
+                f"(a {REFERENCE_ADD!r} record), ignore it, or add it as open with "
+                "'open_weights': true if its weights are coming"
+            )
+    elif override is not None:
         raise AnswerError(
-            f"{subject!r} is a closed-weights release; carry it as a reference model "
-            f"(a {REFERENCE_ADD!r} record) or ignore it"
+            f"'open_weights' overrules a closed verdict, and {subject!r} was not offered as closed"
         )
     return Answer(index=index, kind=MODEL_ADD, subject=subject)
 

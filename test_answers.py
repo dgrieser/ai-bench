@@ -336,6 +336,34 @@ class TestNewModels(AnswersTestCase):
         self.assertEqual(answers, [])
         self.assertIn("reference", failures[0].message)
 
+    def test_a_closed_release_can_be_added_as_open_when_said_so(self) -> None:
+        """AA calls a release closed until its weights ship; the person may
+        overrule that, but only explicitly."""
+        queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
+        answers, failures = _answers.validate(
+            [{"kind": MODEL_ADD, "name": "closed-slug", "open_weights": True}],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=queue,
+        )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual(answers[0].kind, MODEL_ADD)
+
+    def test_the_open_weights_override_is_only_for_closed_releases(self) -> None:
+        self.refused(
+            {"kind": MODEL_ADD, "name": "fresh-slug", "open_weights": True},
+            "not offered as closed",
+        )
+        queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
+        answers, failures = _answers.validate(
+            [{"kind": MODEL_ADD, "name": "closed-slug", "open_weights": False}],
+            llm_path=self.llm,
+            universes=UNIVERSES,
+            queue=queue,
+        )
+        self.assertEqual(answers, [])
+        self.assertIn("may only be true", failures[0].message)
+
     def test_a_closed_release_can_be_ignored(self) -> None:
         queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
         answers, failures = _answers.validate(
