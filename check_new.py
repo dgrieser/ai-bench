@@ -129,9 +129,11 @@ def add_model(slug: str, json_file: str) -> bool:
 
 
 def prompt_choice(model: dict) -> str:
-    """Return 'add', 'skip', 'quit' or 'defer' for one candidate.
+    """Return 'add', 'open', 'skip', 'quit' or 'defer' for one candidate.
 
-    For a closed release 'add' means carrying it as a reference model.
+    For a closed release 'add' means carrying it as a reference model, and
+    'open' adds it as an open-weight model anyway -- AA labels a release closed
+    until its weights are published, even when they are announced.
     """
     slug = model["slug"]
     closed = model.get("_closed", False)
@@ -160,7 +162,10 @@ def prompt_choice(model: dict) -> str:
         return "defer"
 
     if closed:
-        ask = f"Closed '{slug}': carry as reference?  [r] reference  [n] never ask again  [q] quit: "
+        ask = (
+            f"Closed '{slug}': carry as reference?  [r] reference  "
+            "[o] add as open (weights coming)  [n] never ask again  [q] quit: "
+        )
         yes = ("r", "ref", "reference")
     else:
         ask = f"Add '{slug}'?  [y] add  [n] never ask again  [q] quit: "
@@ -172,6 +177,8 @@ def prompt_choice(model: dict) -> str:
             return "quit"
         if ans in yes:
             return "add"
+        if closed and ans in ("o", "open"):
+            return "open"
         if ans in ("n", "no"):
             return "skip"
         if ans in ("q", "quit"):
@@ -279,7 +286,7 @@ def main() -> int:
             dismiss(slug)
             dismissed += 1
             continue
-        if m.get("_closed"):
+        if m.get("_closed") and choice != "open":
             if add_reference(slug, args.json_file):
                 referenced += 1
             else:
