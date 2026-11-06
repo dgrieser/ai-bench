@@ -48,6 +48,14 @@ test_rankings.py:
   meant. A second change on a day already carrying one is folded into it --
   ``from`` stays the day's first place, ``to`` becomes its last -- and a pair
   that cancels out (entered and left, or #4 -> #5 -> #4) leaves nothing.
+* **The open field is recorded beside the whole one.** The site hides the
+  closed reference rows by default, and a place counted over a field the
+  reader cannot see is a place they cannot check. So every change to an open
+  model also carries ``open``: ``{"from", "to", "of"}`` counted over the open
+  models only (ties kept, as above), and ``"quiet": true`` when, among the open
+  models, nothing changed order -- the model only overtook, or was overtaken
+  by, a reference row. A change to a reference model carries no ``open``.
+  Which models are reference rows is read off their ``"reference"`` flag.
 * **An index the previous ranking did not carry starts silently.** A column
   that is new to the file would otherwise report every model as entering it.
 * **Kept for ``KEEP_DAYS`` days.** The panel on the site reads the recent
@@ -68,7 +76,7 @@ from typing import Any
 FIELD = "rankings"
 ROOT_FIELD = "index_rankings"
 
-# How long a recorded change is kept. The site's panel shows the last month by
+# How long a recorded change is kept. The site's panel shows the last 3 days by
 # default and the rest behind its "show all" toggle. A month of changes is about
 # 600 kB of llm.json (pretty-printed), so the record is kept short rather than
 # letting it outgrow the table it describes.
@@ -173,8 +181,39 @@ def _fold(
             if merged["from"] == merged["to"]:
                 # Entered and left, or moved and moved back: nobody saw it.
                 return log[:position] + log[position + 1:]
+            was_open = entry.get("open")
+            now_open = change.get("open")
+            if isinstance(was_open, dict) and isinstance(now_open, dict):
+                merged["open"] = _open_entry(
+                    was_open.get("from"),
+                    now_open.get("to"),
+                    now_open.get("of"),
+                    bool(was_open.get("quiet")) and bool(now_open.get("quiet")),
+                )
             return log[:position] + [merged] + log[position + 1:]
     return [*log, change]
+
+
+def _open_entry(
+    was: int | None, now: int | None, of: int | None, quiet: bool
+) -> dict[str, Any]:
+    """The ``open`` part of a change. A model whose open place ends the day
+    where it started has nothing to report among the open models."""
+    entry: dict[str, Any] = {"from": was, "to": now, "of": of}
+    if quiet or was == now:
+        entry["quiet"] = True
+    return entry
+
+
+def reference_names(doc: dict[str, Any]) -> set[str]:
+    """The models llm.json flags ``"reference": true``."""
+    return {
+        model["name"]
+        for model in doc.get("models") or []
+        if isinstance(model, dict)
+        and isinstance(model.get("name"), str)
+        and model.get("reference") is True
+    }
 
 
 def _state(doc: dict[str, Any]) -> dict[str, Any]:
@@ -203,15 +242,24 @@ def _place(doc: dict[str, Any], value: dict[str, Any]) -> None:
         doc[ROOT_FIELD] = value
 
 
-def sync(doc: dict[str, Any], today: str | None = None) -> int:
+def sync(
+    doc: dict[str, Any],
+    today: str | None = None,
+    reference: set[str] | None = None,
+) -> int:
     """Record how the index rankings moved since the last sync, and store the
     new ranking. Returns the number of changes recorded (before folding).
 
     `today` overrides the date changes are filed under, which is what lets
     backfill_rankings.py replay llm.json's git revisions through this same
     function.
+
+    `reference` overrides which models are closed reference rows (default:
+    the ones the doc flags); the backfill passes the current set, since an
+    old revision may predate the flag.
     """
     now = today or date.today().isoformat()
+    closed = reference_names(doc) if reference is None else set(reference)
     state = _state(doc)
     stored = state.get("ranks") if isinstance(state.get("ranks"), dict) else {}
     after = current(doc)
@@ -228,18 +276,28 @@ def sync(doc: dict[str, Any], today: str | None = None) -> int:
             for name, rank in before.items()
             if isinstance(name, str) and isinstance(rank, int) and not isinstance(rank, bool)
         }
+        open_before = {name: rank for name, rank in before.items() if name not in closed}
+        open_after = {name: rank for name, rank in placed.items() if name not in closed}
+        open_was = _relative(before, set(open_before))
+        open_now = _relative(placed, set(open_after))
+        open_moved = {name for name, _, _ in diff(open_before, open_after)}
         for name, was, now_rank in diff(before, placed):
-            log = _fold(
-                log,
-                {
-                    "date": now,
-                    "index": key,
-                    "model": name,
-                    "from": was,
-                    "to": now_rank,
-                    "of": len(placed) if now_rank is not None else len(before),
-                },
-            )
+            change: dict[str, Any] = {
+                "date": now,
+                "index": key,
+                "model": name,
+                "from": was,
+                "to": now_rank,
+                "of": len(placed) if now_rank is not None else len(before),
+            }
+            if name not in closed:
+                change["open"] = _open_entry(
+                    open_was.get(name),
+                    open_now.get(name),
+                    len(open_now) if now_rank is not None else len(open_was),
+                    name not in open_moved,
+                )
+            log = _fold(log, change)
             recorded += 1
         # A change already filed today says where the model ended the day, so
         # a later shift that changed nobody's order (a newcomer landing above
@@ -256,6 +314,13 @@ def sync(doc: dict[str, Any], today: str | None = None) -> int:
                 entry = {**entry, "to": placed[entry["model"]], "of": len(placed)}
                 if entry["to"] == entry.get("from"):
                     continue
+                if isinstance(entry.get("open"), dict) and entry["model"] in open_now:
+                    entry["open"] = _open_entry(
+                        entry["open"].get("from"),
+                        open_now[entry["model"]],
+                        len(open_now),
+                        bool(entry["open"].get("quiet")),
+                    )
             refreshed.append(entry)
         log = refreshed
 

@@ -182,6 +182,48 @@ class WriterTest(unittest.TestCase):
         self.assertEqual(doc[_rankings.ROOT_FIELD]["ranks"], _rankings.current(doc))
 
 
+class OpenFieldTest(unittest.TestCase):
+    """The places counted without the closed reference rows, which the site
+    shows while those rows are hidden."""
+
+    def doc(self, **values: dict) -> dict:
+        doc = doc_with(**values)
+        for model in doc["models"]:
+            if model["name"].startswith("ref"):
+                model["reference"] = True
+        return doc
+
+    def test_open_places_skip_reference_rows(self):
+        doc = self.doc(ref={"coding_index": 20}, a={"coding_index": 9}, b={"coding_index": 5})
+        _rankings.sync(doc, today=DAY1)
+        set_scores(doc, b={"coding_index": 10}, c={"coding_index": 1})
+        _rankings.sync(doc, today=DAY2)
+        by_model = {e["model"]: e for e in _rankings.changes(doc)}
+        self.assertEqual((by_model["b"]["from"], by_model["b"]["to"]), (3, 2))
+        self.assertEqual(by_model["b"]["open"], {"from": 2, "to": 1, "of": 3})
+        self.assertEqual(by_model["c"]["open"], {"from": None, "to": 3, "of": 3})
+
+    def test_overtaking_only_a_reference_row_is_quiet(self):
+        doc = self.doc(ref={"coding_index": 9}, a={"coding_index": 5}, b={"coding_index": 1})
+        _rankings.sync(doc, today=DAY1)
+        set_scores(doc, a={"coding_index": 10})
+        _rankings.sync(doc, today=DAY2)
+        by_model = {e["model"]: e for e in _rankings.changes(doc)}
+        self.assertEqual((by_model["a"]["from"], by_model["a"]["to"]), (2, 1))
+        self.assertTrue(by_model["a"]["open"]["quiet"])
+        self.assertNotIn("open", by_model["ref"])
+        self.assertNotIn("b", by_model)
+
+    def test_reference_override(self):
+        doc = doc_with(x={"coding_index": 9}, a={"coding_index": 5})
+        _rankings.sync(doc, today=DAY1, reference={"x"})
+        set_scores(doc, a={"coding_index": 10})
+        _rankings.sync(doc, today=DAY2, reference={"x"})
+        by_model = {e["model"]: e for e in _rankings.changes(doc)}
+        self.assertNotIn("open", by_model["x"])
+        self.assertTrue(by_model["a"]["open"]["quiet"])
+
+
 class ShippedTest(unittest.TestCase):
     def test_llm_json_record_is_valid(self):
         doc = json.loads((Path(__file__).resolve().parent / "llm.json").read_text(encoding="utf-8"))
