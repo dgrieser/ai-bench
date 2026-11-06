@@ -1,17 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-05 - Thinking Machines",
-      "question": "Carry newly released closed model 'inkling-2-small' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "inkling-2-small",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "exact",
@@ -77,6 +66,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to inkling small 2, all components match"
+        },
+        {
+          "confidence": "weak",
           "option": "inkling-small",
           "reason": "exact to inkling small 2, most components match"
         },
@@ -93,11 +87,6 @@
         {
           "confidence": "weak",
           "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwq-32b",
           "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         }
       ],
@@ -170,6 +159,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to inkling small 2, all components match"
+        },
+        {
+          "confidence": "weak",
           "option": "inkling-small",
           "reason": "exact to inkling small 2, most components match"
         },
@@ -187,11 +181,6 @@
           "confidence": "weak",
           "option": "glm-5-2",
           "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwq-32b",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
         }
       ],
       "default": null,
@@ -206,6 +195,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling-2-small",
+          "reason": "exact to inkling-2-small, exact match"
+        },
         {
           "confidence": "weak",
           "option": "inkling-small",
@@ -224,11 +218,6 @@
         {
           "confidence": "weak",
           "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwq-32b",
           "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
         }
       ],
