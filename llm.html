@@ -1946,6 +1946,44 @@
       font-family: var(--font-mono);
     }
 
+    /* The panel's heading is the fold's handle: a chevron in front of it
+       says it opens and closes. */
+    .panel-fold > summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+      cursor: pointer;
+      color: var(--subtle);
+    }
+
+    .panel-fold > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .panel-fold > summary::before {
+      content: "▾";
+      font-size: 0.75rem;
+      transition: transform 150ms ease;
+    }
+
+    .panel-fold:not([open]) > summary::before {
+      transform: rotate(-90deg);
+    }
+
+    .panel-fold > summary:hover,
+    .panel-fold > summary:hover h2 {
+      color: var(--accent);
+    }
+
+    .panel-fold > summary h2 {
+      margin: 0;
+    }
+
+    .panel-fold[open] > summary {
+      margin-bottom: 8px;
+    }
+
     .recent-lead {
       margin: 0 0 18px;
       max-width: 82ch;
@@ -2185,8 +2223,10 @@
       font-size: 0.7rem;
     }
 
-    .recent-more[open] > summary::before {
-      content: "▾";
+    /* Once opened, the tail simply continues the list: the link that opened
+       it has nothing left to say, so it goes. */
+    .recent-more[open] > summary {
+      display: none;
     }
 
     .recent-more > summary:hover {
@@ -5343,15 +5383,15 @@
         modelsBySlug: new Map(),
         // Where the table was scrolled when a detail page took over.
         tableScroll: 0,
-        // The Recently Added panel's window. It opens on the last
+        // The Recently Added panel's window (and whether it is folded away). It opens on the last
         // HISTORY_DAYS days and "Show all history" widens it to everything
         // llm.json records; not an address, because it is a way of reading one
         // panel rather than a different view of the index.
-        history: { showAll: false },
+        history: { showAll: false, collapsed: panelCollapsed("recent") },
         // The Ranking Changes panel: the same window as Recently Added, kept
         // separately so widening one does not flood the other, and the index
         // the reader narrowed it to ("" for all of them).
-        rankings: { showAll: false, index: "" },
+        rankings: { showAll: false, index: "", collapsed: panelCollapsed("rankings") },
         radar: {
           axes: [],
           pickerOpen: false
@@ -7143,6 +7183,18 @@
             window.scrollBy(0, moved.getBoundingClientRect().top - anchor);
           }
         };
+        ui.content.querySelectorAll("[data-panel-fold]").forEach((fold) => {
+          fold.addEventListener("toggle", () => {
+            const collapsed = !fold.open;
+            const panel = fold.dataset.panelFold;
+            const slot = panel === "rankings" ? state.rankings : state.history;
+            if (slot.collapsed !== collapsed) {
+              slot.collapsed = collapsed;
+              rememberPanelCollapsed(panel, collapsed);
+            }
+          });
+        });
+
         const rankToggle = ui.content.querySelector("[data-rank-toggle]");
         if (rankToggle) {
           rankToggle.addEventListener("click", () => rerenderAround("[data-rank-toggle]", () => {
@@ -7271,6 +7323,39 @@
           stickyHeadFrame = 0;
           syncStickyHead();
         });
+      }
+
+      /* ── Foldable panels ──
+         Recently Added and Ranking Changes fold away under their own heading.
+         The panel is rebuilt from a string on every filter change, so whether
+         it is folded lives in state (and in localStorage, so it stays folded
+         across visits) rather than in the element. */
+      function panelCollapsed(panel) {
+        try {
+          return localStorage.getItem(`panel-collapsed:${panel}`) === "1";
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function rememberPanelCollapsed(panel, collapsed) {
+        try {
+          if (collapsed) {
+            localStorage.setItem(`panel-collapsed:${panel}`, "1");
+          } else {
+            localStorage.removeItem(`panel-collapsed:${panel}`);
+          }
+        } catch (err) { /* not worth failing over */ }
+      }
+
+      // The panel's heading as the summary of a <details> holding the rest.
+      function renderPanelFold(panel, collapsed, title, body) {
+        return `
+          <details class="panel-fold" data-panel-fold="${escapeAttr(panel)}"${collapsed ? "" : " open"}>
+            <summary><h2>${title}</h2></summary>
+            ${body}
+          </details>
+        `;
       }
 
       /* ── Recently added ──────────────────────────────
@@ -7565,10 +7650,11 @@
 
         return `
           <section class="recent-panel" aria-label="Recently added and updated scores">
-            <h2>${showAll ? "Score History" : "Recently Added"}</h2>
-            ${lead}
-            ${items ? `<ol class="recent-days">${items}</ol>` : ""}
-            ${toggle}
+            ${renderPanelFold("recent", state.history.collapsed, showAll ? "Score History" : "Recently Added", `
+              ${lead}
+              ${items ? `<ol class="recent-days">${items}</ol>` : ""}
+              ${toggle}
+            `)}
           </section>
         `;
       }
@@ -7595,9 +7681,32 @@
             const from = place(entry.from);
             const to = place(entry.to);
             const kind = from === null ? "entered" : (to === null ? "left" : (to < from ? "up" : "down"));
-            return { date: String(entry.date), index: String(entry.index), model: String(entry.model), from, to, of: place(entry.of), kind };
+            // The same change counted over the open models only, which is the
+            // field the table shows while the closed reference rows are
+            // hidden. "quiet" marks a move that only passed reference rows.
+            const open = entry.open && typeof entry.open === "object"
+              ? { from: place(entry.open.from), to: place(entry.open.to), of: place(entry.open.of), quiet: entry.open.quiet === true }
+              : null;
+            return { date: String(entry.date), index: String(entry.index), model: String(entry.model), from, to, of: place(entry.of), kind, open };
           })
           .filter((entry) => entry.from !== null || entry.to !== null);
+      }
+
+      // A change as the reader's field sees it: as recorded while the closed
+      // reference rows are on screen, re-counted over the open models while
+      // they are hidden. A move that only passed reference rows is no move in
+      // the open field, and is dropped (null). A change recorded before the
+      // open places were kept falls back to the whole field.
+      function rankingChangeInField(change) {
+        if (state.filters.includeReference || !change.open) {
+          return change;
+        }
+        const { from, to, of, quiet } = change.open;
+        if (quiet || (from === null && to === null)) {
+          return null;
+        }
+        const kind = from === null ? "entered" : (to === null ? "left" : (to < from ? "up" : "down"));
+        return { ...change, from, to, of, kind };
       }
 
       // The derived indexes the record covers, in column order: the panel's
@@ -7668,7 +7777,7 @@
             return false;
           }
           return byName.has(change.model) || !known.has(change.model);
-        });
+        }).map(rankingChangeInField).filter(Boolean);
 
         const byDay = new Map();
         changes.forEach((change) => {
@@ -7730,7 +7839,7 @@
           : "";
         const lead = `
           <p class="recent-lead">
-            Places on the derived indexes, counted over every ranked model, closed reference rows included${since ? `, recorded since ${escapeHtml(since)}` : ""}.
+            Places on the derived indexes, counted over ${state.filters.includeReference ? "every ranked model, closed reference rows included" : "the open models only, as the table shows them; switch on the closed frontier models to count them in"}${since ? `, recorded since ${escapeHtml(since)}` : ""}.
             A move is listed when a model overtakes another or is overtaken; being pushed down a place by a newcomer is the newcomer's entry, not a move.
             ${items.length ? "" : ` Nothing has changed ${state.rankings.showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.`}
           </p>
@@ -7742,12 +7851,13 @@
         `;
         return `
           <section class="recent-panel rank-panel" id="ranking-changes" aria-label="Index ranking changes">
-            <h2>Index Ranking Changes</h2>
-            ${lead}
-            ${filter}
-            ${items.length ? `<ol class="recent-days">${items.slice(0, RANK_OPEN_DAYS).join("")}</ol>` : ""}
-            ${items.length > RANK_OPEN_DAYS ? `<details class="recent-more rank-earlier"><summary>${items.length - RANK_OPEN_DAYS} earlier ${items.length - RANK_OPEN_DAYS === 1 ? "day" : "days"}</summary><ol class="recent-days">${items.slice(RANK_OPEN_DAYS).join("")}</ol></details>` : ""}
-            ${toggle}
+            ${renderPanelFold("rankings", state.rankings.collapsed, "Index Ranking Changes", `
+              ${lead}
+              ${filter}
+              ${items.length ? `<ol class="recent-days">${items.slice(0, RANK_OPEN_DAYS).join("")}</ol>` : ""}
+              ${items.length > RANK_OPEN_DAYS ? `<details class="recent-more rank-earlier"><summary>${items.length - RANK_OPEN_DAYS} earlier ${items.length - RANK_OPEN_DAYS === 1 ? "day" : "days"}</summary><ol class="recent-days">${items.slice(RANK_OPEN_DAYS).join("")}</ol></details>` : ""}
+              ${toggle}
+            `)}
           </section>
         `;
       }
@@ -8160,11 +8270,11 @@
         return (NEW_DAYS - age) / NEW_DAYS;
       }
 
-      // How far back the Recently Added panel looks, against NEW_DAYS for
-      // what the table marks in red. A month is long enough to see a score
-      // land and be measured again, which is the thing a single stamp could
-      // never show; "Show all history" opens the rest.
-      const HISTORY_DAYS = 30;
+      // How far back the Recently Added and Ranking Changes panels look:
+      // today and the two days before it. Anything older is one click away
+      // behind "Show all history", so the default view stays short enough to
+      // read on a phone.
+      const HISTORY_DAYS = 3;
 
       // One score's recorded past, oldest first: every entry of
       // scores_history with the kind of change it was and, for an update, the

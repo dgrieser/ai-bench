@@ -87,6 +87,10 @@ def replay(path: Path, head: dict[str, Any], since: str) -> dict[str, Any]:
     """The index_rankings record a sync on every revision from `since` on
     would have built, ending at `head`."""
     carried: dict[str, Any] | None = None
+    # Which rows are closed reference models, as the file says today: an old
+    # revision may predate the flag, and the open-field places are read
+    # against the field the site shows now.
+    closed = _rankings.reference_names(head)
     revs = revisions(path, since)
     if not revs:
         raise SystemExit(
@@ -100,19 +104,19 @@ def replay(path: Path, head: dict[str, Any], since: str) -> dict[str, Any]:
         if carried is None:
             # The baseline: its ranking is the starting point, not news.
             doc.pop(_rankings.ROOT_FIELD, None)
-            _rankings.sync(doc, today=max(when, since))
+            _rankings.sync(doc, today=max(when, since), reference=closed)
             carried = doc[_rankings.ROOT_FIELD]
             carried["since"] = since
             carried["changes"] = []
             continue
         doc[_rankings.ROOT_FIELD] = carried
-        recorded = _rankings.sync(doc, today=when)
+        recorded = _rankings.sync(doc, today=when, reference=closed)
         carried = doc[_rankings.ROOT_FIELD]
         if recorded:
             print(f"  {when} {commit[:8]}: {recorded} change(s)")
 
     head[_rankings.ROOT_FIELD] = carried
-    _rankings.sync(head)
+    _rankings.sync(head, reference=closed)
     return head[_rankings.ROOT_FIELD]
 
 
