@@ -1,257 +1,64 @@
 {
   "questions": [
     {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "kimi-k3-1-pro",
-          "reason": "exact to Kimi K3.1 Pro, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "kimi-k3",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 61,
-        "mapped": {
-          "kimi-k3": [
-            "Kimi K3"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "kimi-k3"
-            ],
-            "name": "Kimi K3"
-          }
-        ]
-      },
+      "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map FrontierCode model 'Kimi K3.1 Pro' to llm.json model",
-      "route": "update_frontiercode_mapping.py",
+      "question": "Map HF label 'MBZUAI/longshot-bench (core_perception)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://cognition.com/frontiercode",
-      "subject": "Kimi K3.1 Pro",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+      "subject": "MBZUAI/longshot-bench (core_perception)",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gemini-4-argon",
-          "reason": "exact to gemini 4 argon, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-carbon",
-          "reason": "exact to gemini 4 argon, most components match"
-        }
-      ],
+      "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map MCP-Atlas model 'gemini 4 argon' to llm.json model",
-      "route": "update_mcp_atlas_mapping.py",
+      "question": "Map HF label 'MBZUAI/longshot-bench (information)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
-      "subject": "gemini 4 argon",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+      "subject": "MBZUAI/longshot-bench (information)",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "inkling-2-small",
-          "reason": "exact to inkling small 2, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "inkling-small",
-          "reason": "exact to inkling small 2, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "devstral-small-2",
-          "reason": "the same name without its first 1 word(s): exact to small-2, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "a-x-k2",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        }
-      ],
-      "context": {
-        "known": 36,
-        "mapped": {
-          "glm-5-2": [
-            "glm 5.2"
-          ],
-          "inkling-small": [
-            "inkling small"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "inkling-small"
-            ],
-            "name": "inkling small"
-          }
-        ]
-      },
+      "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map MCP-Atlas model 'inkling small 2' to llm.json model",
-      "route": "update_mcp_atlas_mapping.py",
+      "question": "Map HF label 'MBZUAI/longshot-bench (multimodal)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
-      "subject": "inkling small 2",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+      "subject": "MBZUAI/longshot-bench (multimodal)",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "exact to opus 5.5, substring match"
-        }
-      ],
-      "context": {
-        "known": 36,
-        "mapped": {},
-        "siblings": [
-          {
-            "mapped_to": [
-              "claude-opus-5"
-            ],
-            "name": "claude opus 5"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "claude opus 4 5"
-          }
-        ]
-      },
+      "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map MCP-Atlas model 'opus 5.5' to llm.json model",
-      "route": "update_mcp_atlas_mapping.py",
+      "question": "Map HF label 'MBZUAI/longshot-bench (overall)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/mcp_atlas",
-      "subject": "opus 5.5",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+      "subject": "MBZUAI/longshot-bench (overall)",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "inkling-2-small",
-          "reason": "exact to inkling small 2, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "inkling-small",
-          "reason": "exact to inkling small 2, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "devstral-small-2",
-          "reason": "the same name without its first 1 word(s): exact to small-2, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "a-x-k2",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
-        }
-      ],
+      "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map SWE-Bench Pro V2 model 'inkling small 2' to llm.json model",
-      "route": "update_swe_bench_pro_v2_mapping.py",
+      "question": "Map HF label 'MBZUAI/longshot-bench (reasoning)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2",
-      "subject": "inkling small 2",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "inkling-2-small",
-          "reason": "exact to inkling-2-small, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "inkling-small",
-          "reason": "exact to inkling-2-small, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "devstral-small-2",
-          "reason": "the same name without its first 1 word(s): exact to 2-small, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "a-x-k2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
-        }
-      ],
-      "context": {
-        "known": 214,
-        "mapped": {
-          "devstral-small-2": [
-            "mistralai/labs-devstral-small-2512"
-          ],
-          "glm-5-2": [
-            "zai/glm-5.2"
-          ],
-          "inkling-small": [
-            "thinkingmachines/inkling-small"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "inkling-small"
-            ],
-            "name": "thinkingmachines/inkling-small"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'thinkingmachines/inkling-2-small' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
-      "subject": "thinkingmachines/inkling-2-small",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
+      "subject": "MBZUAI/longshot-bench (reasoning)",
+      "universe": "benchmarks"
     }
   ]
 }
