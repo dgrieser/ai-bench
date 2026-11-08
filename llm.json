@@ -120452,7 +120452,7 @@
         "browsecomp": null,
         "arena_text": null,
         "arena_text_non_english": null,
-        "arena_webdev": null,
+        "arena_webdev": 1648,
         "arena_agent": null,
         "arena_agent_tool_hallucination": null,
         "cwe_bench_aa": null,
@@ -120575,7 +120575,7 @@
         "browsecomp": null,
         "arena_text": null,
         "arena_text_non_english": null,
-        "arena_webdev": null,
+        "arena_webdev": "2026-11-08",
         "arena_agent": null,
         "arena_agent_tool_hallucination": null,
         "cwe_bench_aa": null,
@@ -120698,7 +120698,7 @@
         "browsecomp": null,
         "arena_text": null,
         "arena_text_non_english": null,
-        "arena_webdev": null,
+        "arena_webdev": "https://arena.ai/leaderboard/webdev",
         "arena_agent": null,
         "arena_agent_tool_hallucination": null,
         "cwe_bench_aa": null,
@@ -120884,6 +120884,13 @@
             "date": "2026-11-06",
             "score": 1525,
             "source": "https://artificialanalysis.ai/models/inkling-2-small"
+          }
+        ],
+        "arena_webdev": [
+          {
+            "date": "2026-11-08",
+            "score": 1648,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "cyberbench_1_1": [
