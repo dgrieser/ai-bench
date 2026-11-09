@@ -1,95 +1,13 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-07 - Sapiens AI",
-      "question": "Carry newly released closed model 'agnes-2-5-pro-theta' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "agnes-2-5-pro-theta",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Anthropic",
-      "question": "Carry newly released closed model 'claude-fable-5-2' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "claude-fable-5-2",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Anthropic",
-      "question": "Carry newly released closed model 'claude-fable-5-2-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "claude-fable-5-2-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Anthropic",
-      "question": "Carry newly released closed model 'claude-fable-5-2-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "claude-fable-5-2-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Anthropic",
-      "question": "Carry newly released closed model 'claude-fable-5-2-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "claude-fable-5-2-medium",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Anthropic",
-      "question": "Carry newly released closed model 'claude-fable-5-2-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "claude-fable-5-2-xhigh",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Meta",
-      "question": "Carry newly released closed model 'muse-ember' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "muse-ember",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-09 - Meta",
-      "question": "Carry newly released closed model 'muse-ember-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "muse-ember-xhigh",
-      "universe": null
-    },
-    {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-ember",
+          "reason": "exact to muse ember, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
@@ -102,6 +20,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to claude fable 5.2, exact match"
+        },
         {
           "confidence": "weak",
           "option": "claude-fable-5-1",
@@ -120,11 +43,6 @@
         {
           "confidence": "weak",
           "option": "claude-sonnet-5-5",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-mythos-5-1",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
@@ -246,6 +164,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to Claude Fable 5.2, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "claude-fable-5-1",
           "reason": "exact to Claude Fable 5.2, most components match"
@@ -264,10 +187,170 @@
           "confidence": "weak",
           "option": "claude-sonnet-5-5",
           "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 305,
+        "mapped": {
+          "claude-fable-5-1": [
+            "Claude Fable 5.1"
+          ],
+          "claude-haiku-5-5": [
+            "Claude Haiku 5.5"
+          ],
+          "claude-opus-5-5": [
+            "Claude Opus 5.5"
+          ],
+          "claude-sonnet-5-5": [
+            "Claude Sonnet 5.5"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "Claude Fable 5"
+          },
+          {
+            "mapped_to": [
+              "claude-fable-5-1"
+            ],
+            "name": "Claude Fable 5.1"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "Claude Opus 5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5-5"
+            ],
+            "name": "Claude Opus 5.5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5"
+            ],
+            "name": "Claude Sonnet 5"
+          },
+          {
+            "mapped_to": [
+              "claude-haiku-5-5"
+            ],
+            "name": "Claude Haiku 5.5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5-5"
+            ],
+            "name": "Claude Sonnet 5.5"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "Claude Opus 4.5"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Claude Fable 5.2' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Claude Fable 5.2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling 2 Small, exact match"
         },
         {
           "confidence": "weak",
-          "option": "claude-mythos-5-1",
+          "option": "inkling-small",
+          "reason": "exact to Inkling 2 Small, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to 2-small, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 305,
+        "mapped": {
+          "devstral-small-2": [
+            "Devstral Small 2"
+          ],
+          "glm-5-2": [
+            "GLM-5.2"
+          ],
+          "inkling-small": [
+            "Inkling-Small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "Inkling-Small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Inkling 2 Small' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Inkling 2 Small",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to Claude Fable 5.2, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Fable 5.2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
@@ -346,6 +429,204 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to Claude Fable 5.2, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Fable 5.2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 36,
+        "mapped": {
+          "claude-fable-5-1": [
+            "Claude Fable 5.1"
+          ],
+          "claude-haiku-5-5": [
+            "Claude Haiku 5.5"
+          ],
+          "claude-opus-5-5": [
+            "Claude Opus 5.5"
+          ],
+          "claude-sonnet-5-5": [
+            "Claude Sonnet 5.5"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Claude Fable 5"
+          },
+          {
+            "mapped_to": [
+              "claude-fable-5-1"
+            ],
+            "name": "Claude Fable 5.1"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "Claude Opus 5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5-5"
+            ],
+            "name": "Claude Opus 5.5"
+          },
+          {
+            "mapped_to": [
+              "claude-haiku-5-5"
+            ],
+            "name": "Claude Haiku 5.5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5-5"
+            ],
+            "name": "Claude Sonnet 5.5"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Claude Fable 5.2' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.frontierswe.com/",
+      "subject": "Claude Fable 5.2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to claude-fable-5-2, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-fable-5-2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 359,
+        "mapped": {
+          "claude-fable-5-1": [
+            "claude-fable-5-1"
+          ],
+          "claude-haiku-5-5": [
+            "claude-haiku-5-5"
+          ],
+          "claude-opus-5-5": [
+            "claude-opus-5-5"
+          ],
+          "claude-sonnet-5-5": [
+            "claude-sonnet-5-5"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "claude-fable-5"
+          },
+          {
+            "mapped_to": [
+              "claude-fable-5-1"
+            ],
+            "name": "claude-fable-5-1"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "claude-opus-5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5-5"
+            ],
+            "name": "claude-opus-5-5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5"
+            ],
+            "name": "claude-sonnet-5"
+          },
+          {
+            "mapped_to": [
+              "claude-haiku-5-5"
+            ],
+            "name": "claude-haiku-5-5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5-5"
+            ],
+            "name": "claude-sonnet-5-5"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "claude-opus-4-5-20251101"
+          }
+        ]
+      },
+      "default": "claude-fable-5-2",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'claude-fable-5-2'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/claude-fable-5-2",
+      "subject": "claude-fable-5-2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "inkling-2-small",
           "reason": "exact to inkling 2 small, exact match"
         },
@@ -412,6 +693,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "claude-fable-5-2",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "claude-fable-5-1",
           "reason": "the same name without the vendor prefix: exact to claude-fable-5.2, most components match"
         },
@@ -428,11 +714,6 @@
         {
           "confidence": "weak",
           "option": "claude-sonnet-5-5",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-mythos-5-1",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
@@ -514,7 +795,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "muse-ember",
+          "reason": "the same name without the vendor prefix"
+        }
+      ],
       "context": {
         "known": 420,
         "mapped": {},
@@ -636,6 +923,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to claude-fable-5-2, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "claude-fable-5-1",
           "reason": "exact to claude-fable-5-2, most components match"
@@ -653,11 +945,6 @@
         {
           "confidence": "weak",
           "option": "claude-sonnet-5-5",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-mythos-5-1",
           "reason": "drop suffix to a variant, most components match"
         }
       ],
@@ -739,7 +1026,13 @@
       "universe": "models"
     },
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-ember",
+          "reason": "exact to muse-ember, exact match"
+        }
+      ],
       "default": null,
       "if_previous": null,
       "note": null,
