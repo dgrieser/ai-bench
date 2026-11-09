@@ -3793,6 +3793,7 @@ function previewDefaults(c, { fresh = false } = {}) {
       rename: sent.rename ?? null,
       renameCustom: sent.rename && !(c.renames || []).some((r) => r.name === sent.rename) ? sent.rename : "",
       url: sent.fields?.url ?? c.url ?? "",
+      urlTyped: !c.url || !previewUrlOffered(c, sent.fields?.url ?? c.url ?? ""),
       scores: Object.fromEntries(Object.entries(sent.scores || {})
         .map(([key, d]) => [key, { do: d.do, url: d.url || "" }])),
       parks: new Set((sent.park || []).map((p) => `${p.route}\t${p.route_kind || "*"}\t${p.subject}`)),
@@ -3803,11 +3804,60 @@ function previewDefaults(c, { fresh = false } = {}) {
     rename: free ? free.name : null,
     renameCustom: "",
     url: c.new_url || c.url || "",
+    urlTyped: !c.url,
     scores: Object.fromEntries((c.scores || []).filter((s) => s.suggest !== "keep")
       .map((s) => [s.key, { do: s.suggest, url: s.recredit_to || "" }])),
     parks: new Set((c.mappings || []).filter((m) => m.suggest === "park")
       .map((m) => `${m.route}\t${m.route_kind}\t${m.subject}`)),
   };
+}
+
+/* The URLs the card offers as one tap each, before any lookup: the one it has
+   now, the same without its preview word, and any repo of the same owner on
+   Hugging Face. Anything else was typed. */
+const hfRepoOf = (url) => /^https?:\/\/(?:www\.)?huggingface\.co\/([^/?#]+)\/([^/?#]+)\/?$/i.exec(String(url || "").trim());
+const previewUrlOffered = (c, url) => {
+  const value = String(url || "").trim();
+  if (!value || value === (c.url || "") || value === (c.new_url || "")) return true;
+  const owner = hfRepoOf(c.url)?.[1];
+  return Boolean(owner) && hfRepoOf(value)?.[1].toLowerCase() === owner.toLowerCase();
+};
+
+/* The names a released repo might go by, to search the owner's repos with: the
+   slugs the card would rename to, the name and the repo, each without its
+   preview word. "tencent" and "hy4" -> tencent/Hy4, tencent/Hy4-Instruct... */
+const PREVIEW_WORD = /(^|[-_.\s])prev(?:i(?:ew?)?)?(?=$|[-_.\s])/gi;
+const unpreview = (text) => String(text || "").replace(PREVIEW_WORD, "").replace(/^[-_.\s]+|[-_.\s]+$/g, "");
+const previewTerms = (c) => {
+  const terms = new Map();
+  const add = (text) => {
+    const term = unpreview(text);
+    if (term.length >= 2 && !terms.has(term.toLowerCase())) terms.set(term.toLowerCase(), term);
+  };
+  for (const r of c.renames || []) add(r.name);
+  add(c.name);
+  add(hfRepoOf(c.url)?.[2]);
+  return [...terms.values()];
+};
+
+/* The owner's repos that match one of those names, originals first. Searched
+   as "owner/name", which the Hub matches against the whole repo id. */
+async function previewUrlCandidates(c) {
+  const repo = hfRepoOf(c.url);
+  if (!repo) return [];
+  const owner = repo[1].toLowerCase();
+  const now = `${repo[1]}/${repo[2]}`.toLowerCase();
+  const found = [];
+  for (const term of previewTerms(c)) {
+    let ids = [];
+    try { ids = await hfSearch(`${repo[1]}/${term}`); } catch { continue; }
+    for (const id of ids) {
+      const lower = id.toLowerCase();
+      if (!lower.startsWith(`${owner}/`) || lower === now || HF_DERIVATIVE.test(id)) continue;
+      if (!found.some((f) => f.toLowerCase() === lower)) found.push(id);
+    }
+  }
+  return found.slice(0, 8);
 }
 
 const workFor = (c) => {
@@ -4028,11 +4078,55 @@ function fillPreviewCard(card, c) {
       + "once, and keeps every score and its history."));
   card.append(renameBox);
 
-  /* -- the URL */
+  /* -- the URL: one tap for what Hugging Face has, or typed (and searched) */
   const urlBox = el("div", { className: "provenance" });
-  const urlInput = el("input", { type: "url", inputMode: "url", value: work.url, placeholder: "https://huggingface.co/..." });
+  urlBox.append(el("div", { className: "field" }, el("label", {}, "url")));
+  const urlInput = noAuto(el("input", { type: "url", inputMode: "url", value: work.url, enterKeyHint: "done" }));
+  const urlCombo = hfUrlBox(urlInput);
+  const urlOptions = el("div", { className: "options" });
+  const urlSearch = el("p", { className: "note-text" });
   const urlNote = el("p", { className: "note-text" });
   const checkUrl = debounceHf(urlNote);
+  let found = null;   // the owner's repos, once the Hub has answered
+  const setUrl = (url) => {
+    work.url = url;
+    urlInput.value = url;
+    urlInput.classList.toggle("unknown", badUrl(url));
+    drawScores();
+    checkUrl(url, c.url);
+    commit();
+  };
+  const drawUrl = () => {
+    const choices = [];
+    const seen = new Set();
+    const offer = (url, why) => {
+      if (!url || seen.has(url.toLowerCase())) return;
+      seen.add(url.toLowerCase());
+      choices.push([url, why]);
+    };
+    if (c.url) offer(c.url, "keep the URL it has now");
+    if (c.new_url) {
+      const id = hfRepoOf(c.new_url);
+      const there = !id || !found ? null
+        : found.some((f) => f.toLowerCase() === `${id[1]}/${id[2]}`.toLowerCase());
+      offer(c.new_url, "the URL without 'preview'"
+        + (there ? hfDetail(`${id[1]}/${id[2]}`).replace(/^ /, " · ") : found && id ? " -- not found on Hugging Face" : ""));
+    }
+    for (const id of found || []) offer(HF_BASE + id, `on Hugging Face${hfDetail(id).replace(/^ /, " · ")}`);
+    if (!work.urlTyped && work.url) offer(work.url, "picked earlier");
+    urlOptions.replaceChildren(
+      ...choices.map(([url, why]) => option(url.replace(HF_BASE, ""), why, {
+        pressed: !work.urlTyped && work.url === url,
+        onclick: () => { work.urlTyped = false; setUrl(url); drawUrl(); },
+      })),
+      option("Another URL", "type it below, or a name to search Hugging Face", {
+        pressed: work.urlTyped,
+        onclick: () => { work.urlTyped = true; drawUrl(); urlInput.focus(); },
+      }),
+    );
+    urlInput.disabled = !work.urlTyped;
+    urlInput.placeholder = work.urlTyped ? "https://huggingface.co/... or a name to search" : "no URL";
+  };
   urlInput.oninput = () => {
     work.url = urlInput.value.trim();
     urlInput.classList.toggle("unknown", badUrl(work.url));
@@ -4040,7 +4134,19 @@ function fillPreviewCard(card, c) {
     checkUrl(work.url, c.url);
     commit();
   };
-  urlBox.append(el("div", { className: "field" }, [el("label", {}, "url"), urlInput]), urlNote);
+  const owner = hfRepoOf(c.url)?.[1];
+  if (owner) {
+    urlSearch.textContent = `searching Hugging Face for ${owner}'s repos...`;
+    previewUrlCandidates(c).then((ids) => {
+      found = ids;
+      urlSearch.textContent = ids.length
+        ? `${owner}'s repos named like ${previewTerms(c).join(", ")}, quants and fine-tunes left out.`
+        : `No other repo of ${owner} is named like ${previewTerms(c).join(", ")}.`;
+      if (card.isConnected) drawUrl();
+    });
+  }
+  drawUrl();
+  urlBox.append(urlOptions, urlSearch, el("div", { className: "field" }, urlCombo), urlNote);
   if (c.url) urlBox.append(el("p", { className: "note-text" }, `Now: ${c.url}`));
   card.append(urlBox);
   checkUrl(work.url, c.url);
