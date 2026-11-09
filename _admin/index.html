@@ -1708,7 +1708,7 @@ function comboBox(input, values, {
    by likes, and anything that reads like a derivative after them. */
 const HF_API = "https://huggingface.co/api/models";
 const HF_BASE = "https://huggingface.co/";
-const HF_DERIVATIVE = /gguf|awq|gptq|fp8|fp4|int[48]\b|w[48]a\d+|\dbits?\b|bnb|exl\d|mlx|onnx|abliterat|uncensor|heretic|lora|quant/i;
+const HF_DERIVATIVE = /gguf|awq|gptq|fp8|fp4|int[48]|w[48]a\d+|\dbits?\b|bnb|exl\d|mlx|onnx|abliterat|censor|heretic|lora|quant|q\d_k|\bud-q|distill|\bream\b|\breap\b/i;
 const HF_REPO_RE = /^[A-Za-z0-9][\w.-]*\/[\w.-]+$/;
 const hfCache = new Map();   // query -> [repo id, ...], ranked
 const hfMeta = new Map();    // repo id -> { likes, downloads, pipeline_tag }
@@ -1776,9 +1776,175 @@ function hfUrlBox(input) {
   return box;
 }
 
-/* The control for one metadata field: the input, plus what helps fill it. */
-const fieldControl = (field, input) => (field === "url"
-  ? [hfUrlBox(input)]
+/* "https://huggingface.co/tencent/Hy4" -> [.., "tencent", "Hy4"], or null. */
+const hfRepoOf = (url) => /^https?:\/\/(?:www\.)?huggingface\.co\/([^/?#]+)\/([^/?#]+)\/?$/i.exec(String(url || "").trim());
+
+/* The repos a model slug most likely names, originals only, at most six. A
+   slug is rarely spelled like its repo -- glm-5-1 is GLM-5.1,
+   deepseek-v3-2-reasoning is DeepSeek-V3.2 -- so each prefix of the slug is
+   searched, with "5-1" also read as "5.1", longest first, until one finds
+   something. The Hub's search is fuzzy ("glm-5-1" answers GLM-5.3), so a repo
+   counts only when its name, read with dots as dashes, holds the prefix.
+
+   When a repo is named exactly like the slug or that prefix, only the repos of
+   its owners are kept: re-uploads, not every fine-tune that borrowed the name.
+   Ranked: the exact name, then `owner`'s (the owner of the model's page, when
+   it names one), then names starting with the prefix or holding more of the
+   slug's other words; the Hub's likes break ties.
+   null: the Hub could not be asked at all. */
+async function hfSlugCandidates(slug, owner = "") {
+  const parts = String(slug || "").toLowerCase().split("-").filter(Boolean);
+  if (!parts.length) return [];
+  let tried = 0;
+  let failed = 0;
+  for (let n = parts.length; n >= Math.min(2, parts.length); n -= 1) {
+    const prefix = parts.slice(0, n).join("-");
+    if (prefix.length < 3) break;
+    const hits = [];
+    const named = (id) => id.split("/")[1].toLowerCase().replace(/[._\s]+/g, "-");
+    for (const term of new Set([prefix, prefix.replace(/(\d)-(?=\d)/g, "$1.")])) {
+      tried += 1;
+      let ids;
+      try { ids = await hfSearch(term); } catch { failed += 1; continue; }
+      for (const id of ids) {
+        if (HF_DERIVATIVE.test(id) || hits.includes(id) || !named(id).includes(prefix)) continue;
+        hits.push(id);
+      }
+    }
+    if (!hits.length) continue;
+    const rest = parts.slice(n);
+    const whole = parts.join("-");
+    const lowerOwner = owner.toLowerCase();
+    const exact = (id) => named(id) === whole || named(id) === prefix;
+    const score = (id) => (named(id) === whole ? 1000 : exact(id) ? 500 : 0)
+      + (lowerOwner && id.toLowerCase().startsWith(`${lowerOwner}/`) ? 100 : 0)
+      + rest.filter((word) => named(id).includes(word)).length;
+    const likes = (id) => hfMeta.get(id)?.likes || 0;
+    /* A repo named exactly like the slug is the answer, give or take a
+       re-upload: then only those and their owners' other repos are offered,
+       not every fine-tune that borrowed the name. */
+    const owners = new Set(hits.filter(exact).map((id) => id.split("/")[0]));
+    const kept = owners.size ? hits.filter((id) => owners.has(id.split("/")[0])) : hits;
+    return kept.map((id) => [id, score(id) + (named(id).startsWith(prefix) ? 10 : 0)])
+      .sort((a, b) => b[1] - a[1] || likes(b[0]) - likes(a[0])).slice(0, 6).map(([id]) => id);
+  }
+  return tried && failed === tried ? null : [];
+}
+
+/* A model's page as a list of choices -- what it has now (or nothing), and the
+   repos the Hub has for it -- with "Another URL" opening the field below for
+   anything else, searched as it is typed (hfUrlBox). While a choice is picked
+   the field is greyed out and shows it.
+
+   The field stays the answer: picking writes the URL in and fires the input's
+   own oninput, the same road as typing. Options:
+     fixed(found)  [url, why] offered first; found is the Hub's answer or null
+     search()      async -> { ids, note } or null for nothing to search;
+                   ids null when the Hub could not be reached
+     typed         whether the field starts open
+     onUser()      a choice was made by hand (a tap on any option)
+     onFound(ids)  the Hub answered, before the options are redrawn
+     locked        nothing may change: the options are shown, inert */
+function hfUrlPicker(input, {
+  fixed = () => [], search = null, typed = false, onUser = () => {}, onTyped = () => {},
+  onFound = null, locked = false,
+} = {}) {
+  noAuto(input);
+  const combo = hfUrlBox(input);
+  const options = el("div", { className: "options" });
+  const note = el("p", { className: "note-text" });
+  let found = null;
+  let asked = 0;
+  let typing = typed;
+  const choose = (url) => {
+    input.value = url;
+    input.oninput?.();
+  };
+  const draw = () => {
+    const choices = [];
+    const seen = new Set();
+    const offer = (url, why) => {
+      if (seen.has(url.toLowerCase())) return;
+      seen.add(url.toLowerCase());
+      choices.push([url, why]);
+    };
+    for (const [url, why] of fixed(found)) offer(url, why);
+    for (const id of found || []) offer(HF_BASE + id, `on Hugging Face${hfDetail(id).replace(/^ /, " · ")}`);
+    const value = input.value.trim();
+    if (!typing) offer(value, "picked earlier");
+    options.replaceChildren(
+      ...choices.map(([url, why]) => {
+        const button = option(url ? url.replace(HF_BASE, "") : "No URL", why, {
+          pressed: !typing && value === url,
+          onclick: () => {
+            if (locked) return;
+            typing = false;
+            onUser();
+            onTyped(false);
+            choose(url);
+            draw();
+          },
+        });
+        button.disabled = locked;
+        return button;
+      }),
+      (() => {
+        const button = option("Another URL", "type it below, or a name to search Hugging Face", {
+          pressed: typing,
+          onclick: () => {
+            if (locked) return;
+            typing = true;
+            onUser();
+            onTyped(true);
+            draw();
+            input.focus();
+          },
+        });
+        button.disabled = locked;
+        return button;
+      })(),
+    );
+    input.disabled = locked || !typing;
+    input.placeholder = typing ? "https://huggingface.co/... or a name to search" : "no URL";
+  };
+  const refresh = () => {
+    const pending = search?.();
+    const ask = ++asked;
+    if (!pending) { found = null; note.textContent = ""; draw(); return; }
+    note.textContent = "searching Hugging Face...";
+    pending.then((answer) => {
+      if (ask !== asked) return;
+      found = answer?.ids || null;
+      note.textContent = answer?.note || "";
+      onFound?.(found);
+      draw();
+    });
+  };
+  draw();
+  const node = el("div", { className: "url-picker" }, [options, note, el("div", { className: "field" }, combo)]);
+  return { node, refresh, draw };
+}
+
+/* The url picker for a model card: its slug searched on the Hub, the owner of
+   the page it has (or of its creator's page) first. */
+const modelUrlSearch = (slug, ...pages) => () => {
+  const name = String(slug() || "").trim();
+  if (!SLUG_RE.test(name)) return null;
+  const owner = pages.map((page) => hfRepoOf(page())?.[1]
+    || /^https?:\/\/(?:www\.)?huggingface\.co\/([^/?#]+)\/?$/i.exec(String(page() || "").trim())?.[1])
+    .find(Boolean) || "";
+  return hfSlugCandidates(name, owner).then((ids) => ({
+    ids,
+    note: ids === null ? "could not reach Hugging Face to look for its repo"
+      : ids.length ? `Repos on Hugging Face named like ${name}, quants and fine-tunes left out.`
+        : `Nothing on Hugging Face is named like ${name}.`,
+  }));
+};
+
+/* The control for one metadata field: the input, plus what helps fill it. The
+   url field is a picker when the card gives one. */
+const fieldControl = (field, input, picker = null) => (field === "url"
+  ? [picker ? picker.node : hfUrlBox(input)]
   : [input, suggestList(field, input)]);
 
 /* A field that holds a slug or a URL. A phone keyboard capitalises the first
@@ -3666,13 +3832,31 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
         inputs.creator.value = creator;
         inputs.creator.oninput();
       }
+      lookUp();
     },
   });
+  /* The url picker asks the Hub about the name a moment after typing stops,
+     and again when the field is left changed. */
+  let lookTimer = 0;
+  let looked = draft.name.trim();
+  const lookUp = () => {
+    clearTimeout(lookTimer);
+    const name = draft.name.trim();
+    if (name === looked) return;
+    looked = name;
+    urlPicker?.refresh();
+  };
+  nameInput.addEventListener("input", () => {
+    clearTimeout(lookTimer);
+    lookTimer = setTimeout(lookUp, 700);
+  });
+  nameInput.addEventListener("change", lookUp);
   card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameBox]), status);
 
   /* Held so the creator field can reach the creator url field below it: the
      handler runs long after the loop, by which time both are in here. */
   const inputs = {};
+  let urlPicker = null;
   const fillCreatorUrl = creatorUrlFiller(inputs, "");
   /* Only the name is needed; the rest folds away on a phone, where six empty
      fields per card is a lot of scrolling for what add.py fills from AA. */
@@ -3692,9 +3876,16 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
       if (field === "creator") fillCreatorUrl(value);
       commit();
     };
+    if (field === "url") {
+      urlPicker = hfUrlPicker(input, {
+        fixed: () => [["", "leave it blank: filled from Artificial Analysis when it knows the name"]],
+        search: modelUrlSearch(() => draft.name, () => draft.fields.creator_url),
+      });
+    }
     more.append(el("div", { className: "field" },
-      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input)]));
+      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input, field === "url" ? urlPicker : null)]));
   }
+  urlPicker?.refresh();
   more.append(el("p", { className: "note-text" },
     "Anything left blank is filled from Artificial Analysis when it knows the "
     + "name, and stays empty when it does not. Scores land on the next refresh; "
@@ -3793,6 +3984,8 @@ function previewDefaults(c, { fresh = false } = {}) {
       rename: sent.rename ?? null,
       renameCustom: sent.rename && !(c.renames || []).some((r) => r.name === sent.rename) ? sent.rename : "",
       url: sent.fields?.url ?? c.url ?? "",
+      urlTyped: !c.url || !previewUrlOffered(c, sent.fields?.url ?? c.url ?? ""),
+      urlAuto: false,
       scores: Object.fromEntries(Object.entries(sent.scores || {})
         .map(([key, d]) => [key, { do: d.do, url: d.url || "" }])),
       parks: new Set((sent.park || []).map((p) => `${p.route}\t${p.route_kind || "*"}\t${p.subject}`)),
@@ -3803,11 +3996,64 @@ function previewDefaults(c, { fresh = false } = {}) {
     rename: free ? free.name : null,
     renameCustom: "",
     url: c.new_url || c.url || "",
+    urlTyped: !c.url,
+    /* The URL without its preview word is only a guess until the Hub says
+       the repo is there; when it is not, the card goes back to the URL it has. */
+    urlAuto: Boolean(c.new_url),
     scores: Object.fromEntries((c.scores || []).filter((s) => s.suggest !== "keep")
       .map((s) => [s.key, { do: s.suggest, url: s.recredit_to || "" }])),
     parks: new Set((c.mappings || []).filter((m) => m.suggest === "park")
       .map((m) => `${m.route}\t${m.route_kind}\t${m.subject}`)),
   };
+}
+
+/* The URLs the card offers as one tap each, before any lookup: the one it has
+   now, the same without its preview word, and any repo of the same owner on
+   Hugging Face. Anything else was typed. */
+const previewUrlOffered = (c, url) => {
+  const value = String(url || "").trim();
+  if (!value || value === (c.url || "") || value === (c.new_url || "")) return true;
+  const owner = hfRepoOf(c.url)?.[1];
+  return Boolean(owner) && hfRepoOf(value)?.[1].toLowerCase() === owner.toLowerCase();
+};
+
+/* The names a released repo might go by, to search the owner's repos with: the
+   slugs the card would rename to, the name and the repo, each without its
+   preview word. "tencent" and "hy4" -> tencent/Hy4, tencent/Hy4-Instruct... */
+const PREVIEW_WORD = /(^|[-_.\s])prev(?:i(?:ew?)?)?(?=$|[-_.\s])/gi;
+const unpreview = (text) => String(text || "").replace(PREVIEW_WORD, "").replace(/^[-_.\s]+|[-_.\s]+$/g, "");
+const previewTerms = (c) => {
+  const terms = new Map();
+  const add = (text) => {
+    const term = unpreview(text);
+    if (term.length >= 2 && !terms.has(term.toLowerCase())) terms.set(term.toLowerCase(), term);
+  };
+  for (const r of c.renames || []) add(r.name);
+  add(c.name);
+  add(hfRepoOf(c.url)?.[2]);
+  return [...terms.values()];
+};
+
+/* The owner's repos that match one of those names, originals first. Searched
+   as "owner/name", which the Hub matches against the whole repo id. */
+async function previewUrlCandidates(c) {
+  const repo = hfRepoOf(c.url);
+  if (!repo) return [];
+  const owner = repo[1].toLowerCase();
+  const now = `${repo[1]}/${repo[2]}`.toLowerCase();
+  const found = [];
+  let answered = false;
+  for (const term of previewTerms(c)) {
+    let ids = [];
+    try { ids = await hfSearch(`${repo[1]}/${term}`); } catch { continue; }
+    answered = true;
+    for (const id of ids) {
+      const lower = id.toLowerCase();
+      if (!lower.startsWith(`${owner}/`) || lower === now || HF_DERIVATIVE.test(id)) continue;
+      if (!found.some((f) => f.toLowerCase() === lower)) found.push(id);
+    }
+  }
+  return answered ? found.slice(0, 8) : null;
 }
 
 const workFor = (c) => {
@@ -4028,9 +4274,10 @@ function fillPreviewCard(card, c) {
       + "once, and keeps every score and its history."));
   card.append(renameBox);
 
-  /* -- the URL */
+  /* -- the URL: one tap for what Hugging Face has, or typed (and searched) */
   const urlBox = el("div", { className: "provenance" });
-  const urlInput = el("input", { type: "url", inputMode: "url", value: work.url, placeholder: "https://huggingface.co/..." });
+  urlBox.append(el("div", { className: "field" }, el("label", {}, "url")));
+  const urlInput = el("input", { type: "url", inputMode: "url", value: work.url, enterKeyHint: "done" });
   const urlNote = el("p", { className: "note-text" });
   const checkUrl = debounceHf(urlNote);
   urlInput.oninput = () => {
@@ -4040,10 +4287,40 @@ function fillPreviewCard(card, c) {
     checkUrl(work.url, c.url);
     commit();
   };
-  urlBox.append(el("div", { className: "field" }, [el("label", {}, "url"), urlInput]), urlNote);
+  const newId = hfRepoOf(c.new_url);
+  const hasNew = (found) => Boolean(found && newId)
+    && found.some((f) => f.toLowerCase() === `${newId[1]}/${newId[2]}`.toLowerCase());
+  const owner = hfRepoOf(c.url)?.[1];
+  const picker = hfUrlPicker(urlInput, {
+    typed: work.urlTyped,
+    onTyped: (typed) => { work.urlTyped = typed; },
+    onUser: () => { work.urlAuto = false; },
+    fixed: (found) => [
+      ...(c.url ? [[c.url, "keep the URL it has now"]] : []),
+      ...(c.new_url ? [[c.new_url, "the URL without 'preview'"
+        + (hasNew(found) ? hfDetail(`${newId[1]}/${newId[2]}`).replace(/^ /, " · ")
+          : found && newId ? " -- not found on Hugging Face" : "")]] : []),
+    ],
+    search: owner ? () => previewUrlCandidates(c).then((ids) => ({
+      ids,
+      note: ids === null ? "could not reach Hugging Face to look for the release"
+        : ids.length ? `${owner}'s repos named like ${previewTerms(c).join(", ")}, quants and fine-tunes left out.`
+          : `No other repo of ${owner} is named like ${previewTerms(c).join(", ")}.`,
+    })) : null,
+    onFound: (found) => {
+      if (!work.urlAuto) return;
+      work.urlAuto = false;
+      if (found && !hasNew(found) && !work.urlTyped && work.url === c.new_url && c.url) {
+        urlInput.value = c.url;
+        urlInput.oninput();
+      }
+    },
+  });
+  urlBox.append(picker.node, urlNote);
   if (c.url) urlBox.append(el("p", { className: "note-text" }, `Now: ${c.url}`));
   card.append(urlBox);
   checkUrl(work.url, c.url);
+  picker.refresh();
 
   /* -- the scores, preview ones first */
   const order = { preview: 0, either: 1, unknown: 2, release: 3 };
@@ -4767,8 +5044,14 @@ function fillModelCard(card, model, { key, rename, existing, columns }) {
       if (field === "creator") fillCreatorUrl(value);
       commit();
     };
+    const picker = field !== "url" ? null : hfUrlPicker(input, {
+      fixed: () => [[current, current ? "keep the URL it has now" : "leave it empty"]],
+      search: modelUrlSearch(() => model.name, () => current, () => readField(model, "creator_url")),
+      locked: Boolean(rename),
+    });
     fields.append(el("div", { className: "field" },
-      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input)]));
+      [el("label", {}, field.replace(/_/g, " ")), ...fieldControl(field, input, picker)]));
+    picker?.refresh();
   }
   card.append(fields);
 
