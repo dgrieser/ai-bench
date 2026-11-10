@@ -4,6 +4,45 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 carbon, most components match"
+        }
+      ],
+      "context": {
+        "known": 142,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini 4 argon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini 4 argon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ARC Prize model 'gemini 4 carbon' to llm.json model",
+      "route": "update_arc_prize_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arcprize.org/leaderboard",
+      "subject": "gemini 4 carbon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "muse-ember",
           "reason": "exact to muse ember, exact match"
         }
@@ -34,6 +73,239 @@
       "route_kind": "aa-mapping",
       "subject": "nex-n2-6",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ernie-4-5-300b-a47b",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-5-preview",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 424,
+        "mapped": {
+          "claude-opus-5-5": [
+            "anthropic/claude-opus-5.5"
+          ],
+          "glm-5-3-flash": [
+            "z-ai/glm-5.3-flash"
+          ],
+          "step-3-5-flash": [
+            "stepfun/step-3.5-flash"
+          ],
+          "step-5-preview": [
+            "stepfun/step-5-preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "baidu/ernie-4.5-vl-424b-a47b"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'baidu/ernie-5.5-flash-preview' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
+      "subject": "baidu/ernie-5.5-flash-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-labs-dory-1-0",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        }
+      ],
+      "context": {
+        "known": 424,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "baidu/ernie-4.5-vl-424b-a47b"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'baidu/ernie-light-dt-1.0-intl' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/baidu/ernie-light-dt-1.0-intl",
+      "subject": "baidu/ernie-light-dt-1.0-intl",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "the same name without the vendor prefix: exact to gemini-4-carbon, most components match"
+        }
+      ],
+      "context": {
+        "known": 424,
+        "mapped": {
+          "gemini-4-argon": [
+            "google/gemini-4-argon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "google/gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "~google/gemini-pro-latest"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "~google/gemini-flash-latest"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-2.5-pro"
+          },
+          {
+            "mapped_to": [
+              "gemma-4-31b"
+            ],
+            "name": "google/gemma-4-31b-it"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-2.5-flash"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.5-flash"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.6-flash"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-4-carbon' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/google/gemini-4-carbon",
+      "subject": "google/gemini-4-carbon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Carbon, most components match"
+        }
+      ],
+      "context": {
+        "known": 32,
+        "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Gemini 4 Carbon' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.swe-marathon.org/",
+      "subject": "Gemini 4 Carbon",
+      "universe": "models"
     }
   ]
 }

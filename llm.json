@@ -85552,7 +85552,7 @@
         "openbench_index": 89426,
         "coding_index": 92278,
         "tooling_index": 91084,
-        "knowledge_index": 96420,
+        "knowledge_index": 96418,
         "vision_index": null,
         "trust_index": 79817,
         "security_index": 43297,
@@ -88675,10 +88675,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 81022,
+        "openbench_index": 81020,
         "coding_index": 75646,
         "tooling_index": 87513,
-        "knowledge_index": 94887,
+        "knowledge_index": 94877,
         "vision_index": 91226,
         "trust_index": 71363,
         "security_index": 86220,
@@ -89702,7 +89702,7 @@
         "openbench_index": 90885,
         "coding_index": 94227,
         "tooling_index": 91149,
-        "knowledge_index": 98654,
+        "knowledge_index": 98650,
         "vision_index": 98484,
         "trust_index": 81898,
         "security_index": 47434,
@@ -95485,7 +95485,7 @@
         "openbench_index": 91593,
         "coding_index": 96245,
         "tooling_index": 92377,
-        "knowledge_index": 97913,
+        "knowledge_index": 97910,
         "vision_index": 98970,
         "trust_index": 81278,
         "security_index": 59894,
@@ -97582,10 +97582,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 85483,
+        "openbench_index": 85482,
         "coding_index": 84642,
         "tooling_index": 86401,
-        "knowledge_index": 95016,
+        "knowledge_index": 95015,
         "vision_index": 91802,
         "trust_index": 79669,
         "security_index": 88814,
@@ -100574,7 +100574,7 @@
         "openbench_index": 91084,
         "coding_index": 92993,
         "tooling_index": 95763,
-        "knowledge_index": 95349,
+        "knowledge_index": 95348,
         "vision_index": null,
         "trust_index": 80618,
         "security_index": 46836,
@@ -101571,10 +101571,10 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 88076,
+        "openbench_index": 88074,
         "coding_index": 89045,
         "tooling_index": 87097,
-        "knowledge_index": 98216,
+        "knowledge_index": 98204,
         "vision_index": 95338,
         "trust_index": 82003,
         "security_index": 12336,
@@ -102834,7 +102834,7 @@
         "openbench_index": 91017,
         "coding_index": 87385,
         "tooling_index": 93751,
-        "knowledge_index": 95846,
+        "knowledge_index": 95845,
         "vision_index": null,
         "trust_index": 89197,
         "security_index": 90699,
@@ -107735,7 +107735,7 @@
         "openbench_index": 87434,
         "coding_index": 87638,
         "tooling_index": 90173,
-        "knowledge_index": 92883,
+        "knowledge_index": 92882,
         "vision_index": null,
         "trust_index": 80632,
         "security_index": 97395,
@@ -109218,7 +109218,7 @@
         "openbench_index": 83505,
         "coding_index": 81440,
         "tooling_index": 83059,
-        "knowledge_index": 85804,
+        "knowledge_index": 85803,
         "vision_index": null,
         "trust_index": 85139,
         "security_index": 58664,
@@ -115515,10 +115515,10 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 89480,
+        "openbench_index": 89479,
         "coding_index": 85734,
         "tooling_index": 96273,
-        "knowledge_index": 92507,
+        "knowledge_index": 92497,
         "vision_index": 93474,
         "trust_index": 84009,
         "security_index": 70290,
@@ -118425,10 +118425,10 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 91696,
+        "openbench_index": 91697,
         "coding_index": 90368,
         "tooling_index": 97793,
-        "knowledge_index": 98330,
+        "knowledge_index": 98336,
         "vision_index": null,
         "trust_index": 81993,
         "security_index": 97477,
@@ -118516,7 +118516,8 @@
         "terminal_bench_science_0_1": 64.8,
         "critpt_2_0": 82.3,
         "critpt_hard_2_0": 69,
-        "apex_agents": 84.2
+        "apex_agents": 84.2,
+        "aa_healthcare_index": 56.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-10",
@@ -118610,7 +118611,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "apex_agents": "2026-11-09"
+        "apex_agents": "2026-11-09",
+        "aa_healthcare_index": "2026-11-10"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -118704,7 +118706,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gemini-4-carbon",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gemini-4-carbon",
-        "apex_agents": "https://epoch.ai/benchmarks/apex-agents"
+        "apex_agents": "https://epoch.ai/benchmarks/apex-agents",
+        "aa_healthcare_index": "https://artificialanalysis.ai/models/gemini-4-carbon"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -118735,6 +118738,13 @@
           {
             "date": "2026-10-31",
             "score": 60.9,
+            "source": "https://artificialanalysis.ai/models/gemini-4-carbon"
+          }
+        ],
+        "aa_healthcare_index": [
+          {
+            "date": "2026-11-10",
+            "score": 56.8,
             "source": "https://artificialanalysis.ai/models/gemini-4-carbon"
           }
         ],
@@ -122268,10 +122278,10 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 92606,
+        "openbench_index": 92612,
         "coding_index": 98295,
         "tooling_index": 93623,
-        "knowledge_index": 99721,
+        "knowledge_index": 99760,
         "vision_index": null,
         "trust_index": 80290,
         "security_index": null,
@@ -122372,7 +122382,7 @@
         "hmmt_feb_2026": null,
         "frontiermath_tier_4": 100,
         "frontiermath_tiers_1_3": 95.1,
-        "gpqa_diamond": 93.9,
+        "gpqa_diamond": 95,
         "hle_diamond": null,
         "hle": 74.3,
         "arc_agi_3": 81.2,
@@ -122495,7 +122505,7 @@
         "hmmt_feb_2026": null,
         "frontiermath_tier_4": "2026-11-09",
         "frontiermath_tiers_1_3": "2026-11-09",
-        "gpqa_diamond": "2026-11-09",
+        "gpqa_diamond": "2026-11-10",
         "hle_diamond": null,
         "hle": "2026-11-09",
         "arc_agi_3": "2026-11-09",
@@ -122618,7 +122628,7 @@
         "hmmt_feb_2026": null,
         "frontiermath_tier_4": "https://epoch.ai/benchmarks/frontiermath-tier-4-v2",
         "frontiermath_tiers_1_3": "https://epoch.ai/benchmarks/frontiermath-tiers-1-3-v2",
-        "gpqa_diamond": "https://epoch.ai/benchmarks/gpqa-diamond",
+        "gpqa_diamond": "https://openrouter.ai/anthropic/claude-fable-5.2",
         "hle_diamond": null,
         "hle": "https://artificialanalysis.ai/models/claude-fable-5-2",
         "arc_agi_3": "https://arcprize.org/leaderboard",
@@ -122859,6 +122869,11 @@
             "date": "2026-11-09",
             "score": 93.9,
             "source": "https://epoch.ai/benchmarks/gpqa-diamond"
+          },
+          {
+            "date": "2026-11-10",
+            "score": 95,
+            "source": "https://openrouter.ai/anthropic/claude-fable-5.2"
           }
         ],
         "hle": [

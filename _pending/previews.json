@@ -1782,7 +1782,16 @@
           "follows_url": false
         }
       ],
-      "queue": []
+      "queue": [
+        {
+          "route": "update_openrouter_mapping.py",
+          "route_kind": "mapping",
+          "subject": "baidu/ernie-5.5-flash-preview",
+          "if_previous": null,
+          "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
+          "preview": true
+        }
+      ]
     }
   ],
   "done": [
