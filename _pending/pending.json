@@ -1,3 +1,114 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling 2 Small, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to Inkling 2 Small, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to 2-small, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 63,
+        "mapped": {
+          "glm-5-2": [
+            "GLM 5.2"
+          ],
+          "inkling-small": [
+            "Inkling Small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "Inkling Small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Inkling 2 Small' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "Inkling 2 Small",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-mini",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 423,
+        "mapped": {
+          "nex-n2-5-mini": [
+            "nex-agi/nex-n2.5-mini"
+          ],
+          "nex-n2-5-pro": [
+            "nex-agi/nex-n2.5-pro"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "nex-n2-5-pro"
+            ],
+            "name": "nex-agi/nex-n2.5-pro"
+          },
+          {
+            "mapped_to": [
+              "nex-n2-5-mini"
+            ],
+            "name": "nex-agi/nex-n2.5-mini"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'nex-agi/nex-n2.6' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/nex-agi/nex-n2.6",
+      "subject": "nex-agi/nex-n2.6",
+      "universe": "models"
+    }
+  ]
 }
