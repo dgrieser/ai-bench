@@ -120,21 +120,23 @@ _API_EVAL_ALIASES = {
     "gdpval_aa_normalized": "gdpval_normalized",
 }
 
-# Pro's performance block carries the speed spread the model pages report as
-# "outputSpeedVariance" / "timeToFirstChunkVariance". Same numbers, so they land
-# under the same keys and the page fetch is left to fill the gaps.
-_API_PERFORMANCE_ALIASES = {
-    "percentile_05_output_tokens_per_second": "output_speed_p05",
-    "quartile_25_output_tokens_per_second": "output_speed_q25",
-    "median_output_tokens_per_second": "output_speed_median",
-    "quartile_75_output_tokens_per_second": "output_speed_q75",
-    "percentile_95_output_tokens_per_second": "output_speed_p95",
-    "percentile_05_time_to_first_token_seconds": "ttft_p05",
-    "quartile_25_time_to_first_token_seconds": "ttft_q25",
-    "median_time_to_first_token_seconds": "ttft_median",
-    "quartile_75_time_to_first_token_seconds": "ttft_q75",
-    "percentile_95_time_to_first_token_seconds": "ttft_p95",
+# Performance v3 (https://artificialanalysis.ai/methodology/performance-benchmarking)
+# replaces the old ``performance`` block, which returns nothing but nulls from
+# 2026-12-10 (https://artificialanalysis.ai/data-api/docs#deprecations). v3 is
+# a different measurement -- end-to-end speed averaged over the 1k/10k/100k and
+# multi-turn agentic workloads across a trailing 5-day window, where the old
+# block was the 10k workload's median over 72 hours -- so its numbers land under
+# their own keys rather than the old ones, and nothing mixes the two. It carries
+# no percentiles; the p05..p95 spread the old block and the model pages used to
+# publish is gone from both. The free tier carries the three headline means,
+# Pro adds the time per Intelligence Index task.
+_API_PERFORMANCE_V3_ALIASES = {
+    "mean_output_tokens_per_second": "output_speed",
+    "mean_time_to_first_token_seconds": "ttft",
+    "mean_time_to_first_answer_token_seconds": "ttfat",
+    "time_per_task_seconds": "time_per_task",
 }
+PERFORMANCE_KEYS = tuple(_API_PERFORMANCE_V3_ALIASES.values())
 
 
 def _normalize_model(m: dict) -> dict:
@@ -148,9 +150,11 @@ def _normalize_model(m: dict) -> dict:
             if evals.get(internal) is None:
                 evals[internal] = value
 
-    performance = m.get("performance")
+    # The deprecated ``performance`` block is not read: until 2026-12-10 it
+    # holds the old methodology's numbers, after that only nulls.
+    performance = m.get("performance_v3")
     if isinstance(performance, dict):
-        for api_name, internal in _API_PERFORMANCE_ALIASES.items():
+        for api_name, internal in _API_PERFORMANCE_V3_ALIASES.items():
             value = performance.get(api_name)
             if value is not None and m.get(internal) is None:
                 m[internal] = value
@@ -706,20 +710,6 @@ _PAGE_OBJECT_FIELDS = {
         ("transparencyPostTrainingData", "openness_transparency_post_training_data", int),
         ("transparencyPreTrainingData", "openness_transparency_pre_training_data", int),
     ],
-    "outputSpeedVariance": [
-        ("p05", "output_speed_p05", float),
-        ("q25", "output_speed_q25", float),
-        ("median", "output_speed_median", float),
-        ("q75", "output_speed_q75", float),
-        ("p95", "output_speed_p95", float),
-    ],
-    "timeToFirstChunkVariance": [
-        ("p05", "ttft_p05", float),
-        ("q25", "ttft_q25", float),
-        ("median", "ttft_median", float),
-        ("q75", "ttft_q75", float),
-        ("p95", "ttft_p95", float),
-    ],
 }
 
 
@@ -1142,16 +1132,6 @@ _PAGE_META_KEYS = [
     "openness_transparency_methodology",
     "openness_transparency_post_training_data",
     "openness_transparency_pre_training_data",
-    "output_speed_p05",
-    "output_speed_q25",
-    "output_speed_median",
-    "output_speed_q75",
-    "output_speed_p95",
-    "ttft_p05",
-    "ttft_q25",
-    "ttft_median",
-    "ttft_q75",
-    "ttft_p95",
 ]
 
 
@@ -1361,10 +1341,12 @@ def _print_table(models, output):
         ("CritPt v2 Hard", lambda m: _extract_metric(m, "critpt_agentic_hard")),
         ("Apex Agents", lambda m: _extract_metric(m, "apex_agents")),
         ("Openness", lambda m: _extract_metric(m, "openness_index")),
-        ("Out Speed p05", lambda m: _extract_metric(m, "output_speed_p05")),
-        ("Out Speed p95", lambda m: _extract_metric(m, "output_speed_p95")),
-        ("TTFT p05", lambda m: _extract_metric(m, "ttft_p05")),
-        ("TTFT p95", lambda m: _extract_metric(m, "ttft_p95")),
+        # Performance v3 is API-only (the pages no longer carry a speed
+        # block this script can read), so these never cost a page fetch.
+        ("Out Speed", lambda m: m.get("output_speed")),
+        ("TTFT", lambda m: m.get("ttft")),
+        ("TTFAT", lambda m: m.get("ttfat")),
+        ("Time/Task", lambda m: m.get("time_per_task")),
     ]
 
     headers = _format_headers([c[0] for c in columns], output)
