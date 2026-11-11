@@ -300,12 +300,21 @@ PRO_MODEL = {
         "gdpval_aa_normalized": 0.09,
         "mmmu_pro": None,
     },
+    # Deprecated: null from 2026-12-10, and never read.
     "performance": {
         "percentile_05_output_tokens_per_second": 74.74,
         "median_output_tokens_per_second": 296.47,
         "percentile_95_output_tokens_per_second": 858.3,
         "percentile_05_time_to_first_token_seconds": 0.28,
         "percentile_95_time_to_first_token_seconds": 16.22,
+    },
+    "performance_v3": {
+        "mean_output_tokens_per_second": 262.1,
+        "time_per_task_seconds": 41.7,
+        "mean_time_to_first_token_seconds": 0.61,
+        "mean_time_to_first_answer_token_seconds": 9.84,
+        "workloads": {"10k": {"mean_time_to_first_token_seconds": 0.55}},
+        "bucket_date": "2026-11-09",
     },
     "context_window_tokens": 131072,
     "parameters": {"total": 21, "active": 4},
@@ -348,11 +357,37 @@ class TestNormalization(unittest.TestCase):
         self.assertEqual(evals["aa_omniscience_non_hallucination_rate"], 0.06)
         self.assertNotIn("omniscience_hallucination_rate", evals)
 
-    def test_the_speed_spread_lands_under_the_page_keys(self) -> None:
+    def test_performance_v3_lands_under_its_own_keys(self) -> None:
         model = self.normalized()
-        self.assertEqual(model["output_speed_p05"], 74.74)
-        self.assertEqual(model["output_speed_median"], 296.47)
-        self.assertEqual(model["ttft_p95"], 16.22)
+        self.assertEqual(model["output_speed"], 262.1)
+        self.assertEqual(model["ttft"], 0.61)
+        self.assertEqual(model["ttfat"], 9.84)
+        self.assertEqual(model["time_per_task"], 41.7)
+
+    def test_the_deprecated_performance_block_is_not_read(self) -> None:
+        # It goes null on 2026-12-10, and until then measures something else.
+        model = self.normalized()
+        for retired in ("output_speed_p05", "output_speed_median", "ttft_p95"):
+            self.assertNotIn(retired, model)
+        legacy_only = dict(PRO_MODEL, performance_v3=None)
+        model = aa._normalize_model(dict(legacy_only, evaluations={}))
+        for key in aa.PERFORMANCE_KEYS:
+            self.assertNotIn(key, model)
+
+    def test_a_free_performance_v3_block_fills_the_headline_means(self) -> None:
+        free = {
+            "slug": "a",
+            "performance_v3": {
+                "mean_output_tokens_per_second": 80.0,
+                "mean_time_to_first_token_seconds": 1.5,
+                "mean_time_to_first_answer_token_seconds": None,
+            },
+        }
+        model = aa._normalize_model(free)
+        self.assertEqual(model["output_speed"], 80.0)
+        self.assertEqual(model["ttft"], 1.5)
+        self.assertNotIn("ttfat", model)
+        self.assertNotIn("time_per_task", model)
 
     def test_a_free_record_is_left_as_it_arrives(self) -> None:
         free = {"slug": "a", "evaluations": {"artificial_analysis_intelligence_index": 24.5}}
@@ -391,7 +426,7 @@ class TestFieldsThePagesUsedToCarry(unittest.TestCase):
     def test_a_metric_the_api_sent_is_read_without_a_page_fetch(self) -> None:
         model = aa._normalize_model(dict(PRO_MODEL, evaluations=dict(PRO_MODEL["evaluations"])))
         self.assertEqual(aa._extract_metric(model, "agentic_index"), 27.6)
-        self.assertEqual(aa._extract_metric(model, "output_speed_p05"), 74.74)
+        self.assertEqual(aa._extract_metric(model, "output_speed"), 262.1)
 
 
 # A model page's metrics block, in the shape and the field order the live
@@ -402,7 +437,6 @@ MODEL_PAGE = (
     '"name":"Claude Opus 5 (Adaptive Reasoning, Max Effort)",'
     '"shortName":"Claude Opus 5 (max)","effort":{"slug":"max","label":"max"},'
     '"microevalsEnabled":true,"intelligenceIndex":50.7001865797629,'
-    '"intelligenceIndexIsEstimated":false,'
     '"capabilities":{"financeAndAccounting":54.879570063518685,'
     '"legal":57.291863099419025,"engineering":54.014034523937966},'
     '"omniscience":37.5,"omniscienceAccuracy":0.6015,'
@@ -932,7 +966,6 @@ class TestPageFallback(unittest.TestCase):
             "params": "21B-A4B",
             "omniscience": -1.0,
             "briefcase": 1000.0,
-            "ttft_p05": 0.28,
         }
         with mock.patch.object(aa, "_fetch_page_metrics", return_value=page_metrics):
             aa._enrich_structured_metrics([model])
@@ -940,7 +973,6 @@ class TestPageFallback(unittest.TestCase):
         self.assertEqual(model["evaluations"]["briefcase"], 1000.0)
         self.assertEqual(model["context"], "128k")
         self.assertEqual(model["params"], "21B-A4B")
-        self.assertEqual(model["ttft_p05"], 0.28)
 
 
 class TestPageFetchRetry(unittest.TestCase):

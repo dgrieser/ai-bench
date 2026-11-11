@@ -4025,7 +4025,22 @@ way in:
 | `gdpval_aa_elo` / `gdpval_aa_normalized` | `gdpval` / `gdpval_normalized` |
 | `artificial_analysis_agentic_index` | `agentic_index` |
 | `artificial_analysis_openness_index` | `openness_index` |
-| `performance.percentile_05_output_tokens_per_second` (and the rest of the spread) | `output_speed_p05`, `…_q25`, `…_median`, `…_q75`, `…_p95`, `ttft_*` |
+| `performance_v3.mean_output_tokens_per_second` / `mean_time_to_first_token_seconds` / `mean_time_to_first_answer_token_seconds` / `time_per_task_seconds` (Pro only) | `output_speed` / `ttft` / `ttfat` / `time_per_task` |
+
+**Speed comes from `performance_v3` alone.** AA's
+[deprecation](https://artificialanalysis.ai/data-api/docs#deprecations) turns
+every field of the old `performance` block to `null` on 2026-12-10, and the
+[v3 methodology](https://artificialanalysis.ai/methodology/performance-benchmarking)
+measures something else — end-to-end speed averaged over the 1k/10k/100k and
+multi-turn agentic workloads across five days, not the 10k median over 72
+hours — so the old block is not read even while it still answers, and its
+numbers would not be comparable if it were. v3 publishes means, no
+percentiles, and the model pages dropped their `outputSpeedVariance` /
+`timeToFirstChunkVariance` spread at the same time, so the table's `Out Speed
+p05/p95` and `TTFT p05/p95` columns are now `Out Speed`, `TTFT`, `TTFAT` (time to
+first answer token) and `Time/Task`, filled from the API record and never from a
+page. This script never sent `prompt_type`, which AA ignores from the same
+date.
 
 **The model pages are still read, and still fill the gaps.** Pro carries the
 open-weights flag, the context window, the parameter counts, the Hugging Face
@@ -4072,7 +4087,7 @@ a new evaluation like Terminal-Bench 4.0 announces itself.
 **On the free tier the pages carry nearly everything.** Since AA's
 September 2026 change to the free tier, its `evaluations` block holds three
 composite indices — Intelligence, Coding and Agentic — and nothing else, and its
-`performance` block the medians only; there is no licensing, parameter,
+`performance_v3` block the three headline means only; there is no licensing, parameter,
 context-window or Hugging Face field on the record at all. τ²-Bench Telecom
 (`tau2`), τ³-Bench Banking (`tauBanking`) and AA-LCR (`lcr`) used to come off the
 API record alone, so the cut would have left their columns unfed; they are
