@@ -3,19 +3,54 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "muse-ember",
-          "reason": "exact to muse ember, exact match"
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
         }
       ],
+      "context": {
+        "known": 437,
+        "mapped": {
+          "glm-4-7-flash": [
+            "glm-4.7-flash"
+          ],
+          "glm-5-3-flash": [
+            "glm-5.3-flash"
+          ],
+          "mimo-v2-flash": [
+            "mimo-v2-flash"
+          ]
+        },
+        "siblings": []
+      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Arena model 'muse ember' to llm.json model",
+      "question": "Map Arena model 'u2 flash' to llm.json model",
       "route": "update_arena_mapping.py",
       "route_kind": "mapping",
       "source_url": "https://arena.ai/leaderboard/webdev",
-      "subject": "muse ember",
+      "subject": "u2 flash",
       "universe": "models"
     },
     {
@@ -34,6 +69,193 @@
       "route_kind": "aa-mapping",
       "subject": "nex-n2-6",
       "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ernie-4-5-300b-a47b",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-5-preview",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 425,
+        "mapped": {
+          "claude-opus-5-5": [
+            "anthropic/claude-opus-5.5"
+          ],
+          "glm-5-3-flash": [
+            "z-ai/glm-5.3-flash"
+          ],
+          "step-3-5-flash": [
+            "stepfun/step-3.5-flash"
+          ],
+          "step-5-preview": [
+            "stepfun/step-5-preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "baidu/ernie-4.5-vl-424b-a47b"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'baidu/ernie-5.5-flash-preview' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
+      "subject": "baidu/ernie-5.5-flash-preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nemotron-labs-dory-1-0",
+          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
+        }
+      ],
+      "context": {
+        "known": 425,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "baidu/ernie-4.5-vl-424b-a47b"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'baidu/ernie-light-dt-1.0-intl' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/baidu/ernie-light-dt-1.0-intl",
+      "subject": "baidu/ernie-light-dt-1.0-intl",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hyperclova-x-seed-think-32b",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'kt/midm-k-3.0-pro' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/kt/midm-k-3.0-pro",
+      "subject": "kt/midm-k-3.0-pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'motif-technologies/motif-3' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/motif-technologies/motif-3",
+      "subject": "motif-technologies/motif-3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling",
+          "reason": "exact to Inkling, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to Inkling, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling, substring match"
+        }
+      ],
+      "context": {
+        "known": 51,
+        "mapped": {
+          "inkling-small": [
+            "Inkling Small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "Inkling Small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Inkling' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "Inkling",
+      "universe": "models"
     }
   ]
 }

@@ -422,8 +422,8 @@
         },
         {
           "key": "arena_webdev",
-          "value": 1631,
-          "date": "2026-11-10",
+          "value": 1632,
+          "date": "2026-11-11",
           "source": "https://arena.ai/leaderboard/webdev",
           "rank": 2,
           "rank_label": "the benchmark's own board",
@@ -685,6 +685,66 @@
           "route": "update_agents_last_exam_mapping.py",
           "era": "release",
           "why": "read 2026-11-05, on or after the release on 2026-11-03",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "aa_cyber_index",
+          "value": 58,
+          "date": "2026-11-11",
+          "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+          "rank": 0,
+          "rank_label": "Artificial Analysis",
+          "route": "update_artificialanalysis_mapping.py",
+          "era": "release",
+          "why": "read 2026-11-11, on or after the release on 2026-11-03",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "cwe_bench_aa",
+          "value": 75.8,
+          "date": "2026-11-11",
+          "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+          "rank": 0,
+          "rank_label": "Artificial Analysis",
+          "route": "update_artificialanalysis_mapping.py",
+          "era": "release",
+          "why": "read 2026-11-11, on or after the release on 2026-11-03",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "deepsec_bench_aa",
+          "value": 25.6,
+          "date": "2026-11-11",
+          "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+          "rank": 0,
+          "rank_label": "Artificial Analysis",
+          "route": "update_artificialanalysis_mapping.py",
+          "era": "release",
+          "why": "read 2026-11-11, on or after the release on 2026-11-03",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "cybergym_e2e_aa",
+          "value": 72.5,
+          "date": "2026-11-11",
+          "source": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
+          "rank": 0,
+          "rank_label": "Artificial Analysis",
+          "route": "update_artificialanalysis_mapping.py",
+          "era": "release",
+          "why": "read 2026-11-11, on or after the release on 2026-11-03",
           "suggest": "keep",
           "note": null,
           "recredit_to": null,
@@ -1468,8 +1528,8 @@
         },
         {
           "key": "arena_webdev",
-          "value": 1572,
-          "date": "2026-11-07",
+          "value": 1573,
+          "date": "2026-11-11",
           "source": "https://arena.ai/leaderboard/webdev",
           "rank": 2,
           "rank_label": "the benchmark's own board",
@@ -1782,7 +1842,16 @@
           "follows_url": false
         }
       ],
-      "queue": []
+      "queue": [
+        {
+          "route": "update_openrouter_mapping.py",
+          "route_kind": "mapping",
+          "subject": "baidu/ernie-5.5-flash-preview",
+          "if_previous": null,
+          "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
+          "preview": true
+        }
+      ]
     }
   ],
   "done": [
