@@ -437,7 +437,6 @@ MODEL_PAGE = (
     '"name":"Claude Opus 5 (Adaptive Reasoning, Max Effort)",'
     '"shortName":"Claude Opus 5 (max)","effort":{"slug":"max","label":"max"},'
     '"microevalsEnabled":true,"intelligenceIndex":50.7001865797629,'
-    '"intelligenceIndexIsEstimated":false,'
     '"capabilities":{"financeAndAccounting":54.879570063518685,'
     '"legal":57.291863099419025,"engineering":54.014034523937966},'
     '"omniscience":37.5,"omniscienceAccuracy":0.6015,'

@@ -404,11 +404,62 @@ class TestMappingFolding(unittest.TestCase):
     #: slug -> why more than one Vals path legitimately names it.
     ALLOWED_DOUBLE: dict[str, str] = {}
 
+    VALS_ROUTE = "update_vals_mapping.py"
+
+    @classmethod
+    def preview_cleanup_covers(
+        cls, slug: str, paths: list[str], report: dict, done: dict
+    ) -> bool:
+        """Whether the Cleanup tab already owns this double.
+
+        A preview whose release appears on Vals is folded here by design for a
+        while: the release's path gets mapped onto the preview's row, and the
+        preview's own path stays until someone works the case on the admin
+        page's Cleanup tab (``_preview_cleanup``). Failing in that window only
+        repeats what the queue already says, so the double passes while
+
+          * the published report (``_pending/previews.json``) lists an open
+            case for the row whose Vals mappings name every folded path --
+            the case that will park the extra one; or
+          * ``preview-cleanup-done.json`` records the row as handled, under
+            the name it ended with or the one it had (``was``).
+
+        A double the queue does not name -- a different row, or a Vals path
+        the case does not list -- still fails.
+        """
+        if slug in done or any(
+            isinstance(rec, dict) and rec.get("was") == slug for rec in done.values()
+        ):
+            return True
+        for case in report.get("cases", []):
+            if case.get("name") != slug:
+                continue
+            listed = {
+                m.get("subject")
+                for m in case.get("mappings", [])
+                if m.get("route") == cls.VALS_ROUTE
+            }
+            if set(paths) <= listed:
+                return True
+        return False
+
+    @staticmethod
+    def _read(path: Path) -> dict:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        return data if isinstance(data, dict) else {}
+
     def test_no_two_paths_map_to_one_model(self) -> None:
-        path = Path(__file__).resolve().with_name(
-            "model-name-mapping-vals-to-artificialanalysis.json"
+        here = Path(__file__).resolve().parent
+        mapping = json.loads(
+            (here / "model-name-mapping-vals-to-artificialanalysis.json").read_text(
+                encoding="utf-8"
+            )
         )
-        mapping = json.loads(path.read_text(encoding="utf-8"))
+        report = self._read(here / "_pending" / "previews.json")
+        done = self._read(here / "preview-cleanup-done.json")
         by_slug: dict[str, list[str]] = {}
         for vals_path, slug in mapping.items():
             if slug in SENTINELS:
@@ -417,7 +468,9 @@ class TestMappingFolding(unittest.TestCase):
         folded = {
             slug: sorted(paths)
             for slug, paths in by_slug.items()
-            if len(paths) > 1 and slug not in self.ALLOWED_DOUBLE
+            if len(paths) > 1
+            and slug not in self.ALLOWED_DOUBLE
+            and not self.preview_cleanup_covers(slug, paths, report, done)
         }
         self.assertEqual(
             folded,
@@ -425,6 +478,51 @@ class TestMappingFolding(unittest.TestCase):
             "two Vals paths write to one llm.json row; park the one that names "
             "another model, or record it in ALLOWED_DOUBLE with its reason",
         )
+
+    def test_an_open_cleanup_case_covers_its_own_double(self) -> None:
+        report = {
+            "cases": [
+                {
+                    "name": "hy4-preview",
+                    "mappings": [
+                        {"route": "update_vals_mapping.py", "subject": "tencent/hy4"},
+                        {"route": "update_vals_mapping.py", "subject": "tencent/hy4-preview"},
+                        {"route": "update_arena_mapping.py", "subject": "hy4"},
+                    ],
+                }
+            ]
+        }
+        paths = ["tencent/hy4", "tencent/hy4-preview"]
+        self.assertTrue(self.preview_cleanup_covers("hy4-preview", paths, report, {}))
+
+    def test_a_cleanup_case_does_not_cover_what_it_does_not_name(self) -> None:
+        report = {
+            "cases": [
+                {
+                    "name": "hy4-preview",
+                    "mappings": [
+                        {"route": "update_vals_mapping.py", "subject": "tencent/hy4"},
+                        # The preview path only on another board: not Vals'.
+                        {"route": "update_arena_mapping.py", "subject": "tencent/hy4-preview"},
+                    ],
+                }
+            ]
+        }
+        paths = ["tencent/hy4", "tencent/hy4-preview"]
+        self.assertFalse(self.preview_cleanup_covers("hy4-preview", paths, report, {}))
+        # Nor a different row that happens to fold the same way.
+        self.assertFalse(self.preview_cleanup_covers("other-model", paths, report, {}))
+
+    def test_a_handled_cleanup_covers_its_double(self) -> None:
+        paths = ["a/x", "a/x-preview"]
+        done = {
+            "x": {"date": "2026-11-05", "how": "cleaned up", "was": "x-preview"},
+            "y-preview": {"date": "2026-11-05", "how": "checked off"},
+        }
+        self.assertTrue(self.preview_cleanup_covers("x", paths, {}, done))
+        self.assertTrue(self.preview_cleanup_covers("x-preview", paths, {}, done))
+        self.assertTrue(self.preview_cleanup_covers("y-preview", paths, {}, done))
+        self.assertFalse(self.preview_cleanup_covers("z", paths, {}, done))
 
     def test_every_mapped_slug_is_a_model_llm_json_carries(self) -> None:
         """A mapping onto a renamed or dropped model writes nowhere, silently."""

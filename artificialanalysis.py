@@ -637,7 +637,6 @@ def _parse_creator(text: str, expected_name: str = "", slug: str = ""):
 _PAGE_FLOAT_FIELDS = [
     ("omniscience", "omniscience"),
     ("gdpval", "gdpval"),
-    ("gdpvalNormalized", "gdpval_normalized"),
     ("itBenchSre", "it_bench_sre"),
     ("critpt", "critpt"),
     ("apexAgents", "apex_agents"),
@@ -693,7 +692,6 @@ _PAGE_FLOAT_FIELDS = [
 
 _PAGE_BOOL_FIELDS = [
     ("microevalsEnabled", "microevals_enabled"),
-    ("intelligenceIndexIsEstimated", "intelligence_index_is_estimated"),
 ]
 
 _PAGE_OBJECT_FIELDS = {
@@ -1098,7 +1096,6 @@ _PAGE_EVALS = [
     "omniscience_accuracy",
     "omniscience_hallucination_rate",
     "gdpval",
-    "gdpval_normalized",
     "it_bench_sre",
     "briefcase",
     "critpt",
@@ -1126,7 +1123,6 @@ _PAGE_EVALS = [
 
 _PAGE_META_KEYS = [
     "microevals_enabled",
-    "intelligence_index_is_estimated",
     "openness_index",
     "openness_model_availability",
     "openness_transparency_methodology",
@@ -1333,7 +1329,11 @@ def _print_table(models, output):
         ("IFBench", lambda m: _extract_eval_or_page(m, ["ifbench"], "ifbench")),
         ("AIME 2025", lambda m: _extract_eval_or_page(m, ["aime_25"], "aime_25")),
         ("MMMU Pro", _extract_mmmu_pro),
-        ("GDPval", lambda m: _extract_metric(m, "gdpval_normalized")),
+        # The Elo, not AA's 0..1 normalization of it: the pages dropped
+        # gdpvalNormalized and the free tier never sent it, so only a Pro key
+        # could fill a normalized column. The Elo is on every page and in Pro,
+        # and it is what update.py writes to llm.json's gdpval_aa.
+        ("GDPval Elo", lambda m: _extract_metric(m, "gdpval")),
         ("IT-Bench SRE", lambda m: _extract_metric(m, "it_bench_sre")),
         ("Briefcase", lambda m: _extract_metric(m, "briefcase")),
         ("Crit-Pt", lambda m: _extract_metric(m, "critpt")),
@@ -1367,7 +1367,6 @@ def _print_table(models, output):
         "IFBench",
         "AIME 2025",
         "MMMU Pro",
-        "GDPval",
         "IT-Bench SRE",
         "Crit-Pt",
         "CritPt v2",
