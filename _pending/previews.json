@@ -12,10 +12,6 @@
         {
           "kind": "mapping",
           "text": "spheron lists it as 'baidu/ERNIE-5.5-Flash-Base'"
-        },
-        {
-          "kind": "queue",
-          "text": "spheron asks about 'baidu/ERNIE-5.5-Flash-Base', with this entry as a candidate"
         }
       ],
       "renames": [
@@ -62,16 +58,7 @@
           "follows_url": true
         }
       ],
-      "queue": [
-        {
-          "route": "update_spheron_mapping.py",
-          "route_kind": "mapping",
-          "subject": "baidu/ERNIE-5.5-Flash-Base",
-          "if_previous": null,
-          "source_url": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
-          "preview": false
-        }
-      ]
+      "queue": []
     },
     {
       "name": "hy4-preview",

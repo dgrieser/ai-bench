@@ -124347,9 +124347,9 @@
       "params": "280B-A40B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 624,
+        "int8": 312,
+        "int4": 156
       },
       "creator": {
         "name": "Baidu",
@@ -124732,6 +124732,11 @@
             "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base"
           }
         ]
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/"
       }
     },
     {
@@ -124741,9 +124746,9 @@
       "params": "314B-A13.2B",
       "context": "256k",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 686,
+        "int8": 343,
+        "int4": 172
       },
       "creator": {
         "name": "Motif Technologies",
@@ -125271,6 +125276,11 @@
             "ifbench"
           ]
         }
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/Motif-Technologies/Motif-3/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/Motif-Technologies/Motif-3/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/Motif-Technologies/Motif-3/"
       }
     }
   ],
