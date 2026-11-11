@@ -73,6 +73,24 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "muse-ember",
+          "reason": "exact to Muse Ember, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Muse Ember' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Muse Ember",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "ernie-4-5-300b-a47b",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
