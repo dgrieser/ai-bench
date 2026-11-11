@@ -1,6 +1,66 @@
 {
   "cases": [
     {
+      "name": "ernie-5-5-flash-preview",
+      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "new_url": null,
+      "creator": "Baidu",
+      "date_added": "2026-11-11",
+      "reference": false,
+      "released": null,
+      "evidence": [
+        {
+          "kind": "queue",
+          "text": "spheron asks about 'baidu/ERNIE-5.5-Flash-Base', with this entry as a candidate"
+        }
+      ],
+      "renames": [
+        {
+          "name": "ernie-5-5-flash",
+          "why": "the name without 'preview'",
+          "taken": false
+        }
+      ],
+      "mappings": [
+        {
+          "route": "update_openrouter_mapping.py",
+          "route_kind": "*",
+          "source": "openrouter",
+          "subject": "baidu/ernie-5.5-flash-preview",
+          "preview": true,
+          "suggest": "keep",
+          "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
+        }
+      ],
+      "scores": [
+        {
+          "key": "livecodebench",
+          "value": 40.1,
+          "date": "2026-11-11",
+          "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+          "rank": 8,
+          "rank_label": "a model card (fill-only)",
+          "route": null,
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": true
+        }
+      ],
+      "queue": [
+        {
+          "route": "update_spheron_mapping.py",
+          "route_kind": "mapping",
+          "subject": "baidu/ERNIE-5.5-Flash-Base",
+          "if_previous": null,
+          "source_url": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
+          "preview": false
+        }
+      ]
+    },
+    {
       "name": "hy4-preview",
       "url": "https://huggingface.co/tencent/Hy4-preview",
       "new_url": "https://huggingface.co/tencent/Hy4",
@@ -751,36 +811,6 @@
           "follows_url": false
         }
       ],
-      "queue": []
-    },
-    {
-      "name": "ernie-5-5-flash-preview",
-      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
-      "new_url": null,
-      "creator": "Baidu",
-      "date_added": "2026-11-11",
-      "reference": false,
-      "released": null,
-      "evidence": [],
-      "renames": [
-        {
-          "name": "ernie-5-5-flash",
-          "why": "the name without 'preview'",
-          "taken": false
-        }
-      ],
-      "mappings": [
-        {
-          "route": "update_openrouter_mapping.py",
-          "route_kind": "*",
-          "source": "openrouter",
-          "subject": "baidu/ernie-5.5-flash-preview",
-          "preview": true,
-          "suggest": "keep",
-          "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
-        }
-      ],
-      "scores": [],
       "queue": []
     },
     {
@@ -1872,16 +1902,7 @@
           "follows_url": false
         }
       ],
-      "queue": [
-        {
-          "route": "update_openrouter_mapping.py",
-          "route_kind": "mapping",
-          "subject": "baidu/ernie-5.5-flash-preview",
-          "if_previous": null,
-          "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
-          "preview": true
-        }
-      ]
+      "queue": []
     }
   ],
   "done": [

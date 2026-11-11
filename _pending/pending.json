@@ -4,132 +4,56 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "reka-flash-3",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "ernie-5-0-thinking-preview",
+          "reason": "exact to ernie-5-5-flash-preview, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4-7-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "ernie-4-5-300b-a47b",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "gemini-2-5-flash-preview-09-2025",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, all components match"
         },
         {
           "confidence": "weak",
-          "option": "mimo-v2-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "gemini-2-5-flash-lite-preview-09-2025",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, all components match"
         },
         {
           "confidence": "weak",
-          "option": "ling-3-0-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
-        }
-      ],
-      "context": {
-        "known": 437,
-        "mapped": {
-          "glm-4-7-flash": [
-            "glm-4.7-flash"
-          ],
-          "glm-5-3-flash": [
-            "glm-5.3-flash"
-          ],
-          "mimo-v2-flash": [
-            "mimo-v2-flash"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Arena model 'u2 flash' to llm.json model",
-      "route": "update_arena_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://arena.ai/leaderboard/webdev",
-      "subject": "u2 flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "nex-n2-pro",
-          "reason": "exact to nex-n2-6, most components match"
+          "option": "gemini-2-5-flash-preview-09-2025-reasoning",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, all components match"
         }
       ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'nex-n2-6'?",
+      "question": "Which Artificial Analysis slug is llm.json model 'ernie-5-5-flash-preview'?",
       "route": "update_artificialanalysis_mapping.py",
       "route_kind": "aa-mapping",
-      "subject": "nex-n2-6",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "ernie-5-5-flash-preview",
       "universe": "aa-slugs"
     },
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "muse-ember",
-          "reason": "exact to Muse Ember, exact match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Epoch AI model 'Muse Ember' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://epoch.ai/benchmarks",
-      "subject": "Muse Ember",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "weak",
-          "option": "ernie-4-5-300b-a47b",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "step-5-preview",
-          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "step-3-5-flash",
-          "reason": "the same name without its first 2 word(s): exact to 5-5-flash-preview, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+          "option": "apex_agents",
+          "reason": "the first 1 word(s) of the label, as 'APEX'"
         }
       ],
       "context": {
-        "known": 425,
+        "known": 1506,
         "mapped": {
-          "claude-opus-5-5": [
-            "anthropic/claude-opus-5.5"
-          ],
-          "glm-5-3-flash": [
-            "z-ai/glm-5.3-flash"
-          ],
-          "step-3-5-flash": [
-            "stepfun/step-3.5-flash"
-          ],
-          "step-5-preview": [
-            "stepfun/step-5-preview"
+          "apex_agents": [
+            "APEX-Agents",
+            "Apex-Agents",
+            "Apex-Agents (pass@1) Long-horizon professional workflows",
+            "mercor/apex-agents"
           ]
         },
         "siblings": [
@@ -137,142 +61,1175 @@
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "baidu/ernie-4.5-vl-424b-a47b"
+            "name": "Apex-shortlist"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Apex Shortlist (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Apex-Shortlist (no tools)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Apex-Shortlist (with tools)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'baidu/ernie-5.5-flash-preview' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'Apex-Shortlist' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/baidu/ernie-5.5-flash-preview",
-      "subject": "baidu/ernie-5.5-flash-preview",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Motif-Technologies/Motif-3",
+      "subject": "Apex-Shortlist",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-397b",
-          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "exaone-4-0-1-2b",
-          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nemotron-labs-dory-1-0",
-          "reason": "the same name without its first 3 word(s): exact to 1-0-intl, most components match"
-        }
-      ],
+      "candidates": [],
       "context": {
-        "known": 425,
+        "known": 1506,
         "mapped": {},
         "siblings": [
           {
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "baidu/ernie-4.5-vl-424b-a47b"
+            "name": "BBH (CoT EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'baidu/ernie-light-dt-1.0-intl' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'BBH (EM, CoT)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/baidu/ernie-light-dt-1.0-intl",
-      "subject": "baidu/ernie-light-dt-1.0-intl",
-      "universe": "models"
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "BBH (EM, CoT)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH (CoT EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BBH"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'BBH (EM, direct)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "BBH (EM, direct)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chinese-simpleQA"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ChineseSimpleQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "ChineseSimpleQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "FullStackBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "FullStackBench en"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "FullStackBench zh"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'FullStackBench (Pass@1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "FullStackBench (Pass@1)",
+      "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "hyperclova-x-seed-think-32b",
-          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+          "option": "gdpval_aa",
+          "reason": "drop short code to a variant, substring match"
         }
       ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "gdpval_aa": [
+            "GDPVal-AA Real-world professional tasks (Elo)",
+            "GDPVal-AA v2",
+            "GDPval-AA 2.1",
+            "GDPval-AA v2",
+            "GDPval-AA v2 (Elo)",
+            "GDPval-AA v2.1 (Elo-score)",
+            "GDPval-AA-V2",
+            "GDPval-AA-V2 (Elo)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPVal-AA v2"
+          },
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPval-AA v2"
+          },
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPval-AA-V2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GDPval-AA v2 (ELO)"
+          },
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPval-AA v2 (Elo)"
+          },
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPval-AA-V2 (Elo)"
+          },
+          {
+            "mapped_to": [
+              "gdpval_aa"
+            ],
+            "name": "GDPval-AA v2.1 (Elo-score)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GDPVal"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'kt/midm-k-3.0-pro' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'GDPVal v2' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/kt/midm-k-3.0-pro",
-      "subject": "kt/midm-k-3.0-pro",
-      "universe": "models"
+      "source_url": "https://huggingface.co/Motif-Technologies/Motif-3",
+      "subject": "GDPVal v2",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpqa_diamond",
+          "reason": "the same name without the parenthetical, as 'GPQA'"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "gpqa_diamond": [
+            "GPQA (no tools)",
+            "GPQA Diamond",
+            "GPQA Diamond (AA)",
+            "GPQA Diamond (EN)",
+            "GPQA Diamond (Pass@1)",
+            "GPQA Diamond (no tools)",
+            "GPQA Diamond Graduate-level science QA",
+            "GPQA-D",
+            "GPQA-Diamond",
+            "GPQA-Diamond (Mean@16)",
+            "GPQA-Diamond (Pass@1)",
+            "GPQA-Diamond(avg@16)",
+            "GPQA-diamond",
+            "GPQA-diamond (acc)",
+            "GPQA_Diamond",
+            "Idavidrein/gpqa (diamond)",
+            "Idavidrein/gpqa (gpqa_diamond)",
+            "Scientific reasoning GPQA Diamond"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SuperGPQA (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GPQA main (CoT EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GPQA-Diamond (CoT EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "GPQA"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA-D"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SuperGPQA"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA Diamond"
+          },
+          {
+            "mapped_to": [
+              "gpqa_diamond"
+            ],
+            "name": "GPQA-Diamond"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'GPQA (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "GPQA (EM)",
+      "universe": "benchmarks"
     },
     {
       "candidates": [],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'motif-technologies/motif-3' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'HELMET-ICL (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/motif-technologies/motif-3",
-      "subject": "motif-technologies/motif-3",
-      "universe": "models"
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "HELMET-ICL (EM)",
+      "universe": "benchmarks"
     },
     {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "inkling",
-          "reason": "exact to Inkling, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "inkling-small",
-          "reason": "exact to Inkling, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "inkling-2-small",
-          "reason": "exact to Inkling, substring match"
-        }
-      ],
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HELMET-RAG (SubEM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "HELMET-RAG (SubEM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HELMET-Rerank (NDCG@10)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "HELMET-Rerank (NDCG@10)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HotpotQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "HotpotQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
       "context": {
-        "known": 51,
-        "mapped": {
-          "inkling-small": [
-            "Inkling Small"
-          ]
-        },
+        "known": 1506,
+        "mapped": {},
         "siblings": [
           {
             "mapped_to": [
-              "inkling-small"
+              "__unmappable__"
             ],
-            "name": "Inkling Small"
+            "name": "HumanEval (Pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Humaneval+ (pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval (pass@1, n=20, T=0.2)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEvalPlus"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MultiPL-E HumanEval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+ Code generation"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Terminal-Bench model 'Inkling' to llm.json model",
-      "route": "update_tbench_mapping.py",
+      "question": "Map HF label 'HumanEval+ (Pass@1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
-      "subject": "Inkling",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "HumanEval+ (Pass@1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "INCLUDE"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'INCLUDE-lite (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "INCLUDE-lite (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "itbench_aa",
+          "reason": "the same name spelled without punctuation, as 'ITBench'"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitbench",
+          "reason": "exact to ITBench, substring match"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "exploitbench": [
+            "ExploitBench"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "exploitbench"
+            ],
+            "name": "ExploitBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'ITBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Motif-Technologies/Motif-3",
+      "subject": "ITBench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'InfiniteBench (Avg)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "InfiniteBench (Avg)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongBench-V2 (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongBench V2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongBench v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongBench-v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Longbench v2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Longbench v2 (≤ 1M)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Ko-LongBench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LongBench v1"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'LongBench-v2 (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "LongBench-v2 (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP+ (pass@1)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP Sanitized (pass@1, n=32, T=0.2)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP+"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP-plus"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MultiPL-E MBPP"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBPP+ Code generation"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HumanEval+, MBPP+, LiveCodeBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MBPP+ (Pass@1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "MBPP+ (Pass@1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the same name without the parenthetical: drop descriptor suffix to a variant, exact match"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "mmmlu": [
+            "MMLU (MC acc)",
+            "MMMLU",
+            "MMMLU (EM)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "mmmlu"
+            ],
+            "name": "MMMLU (EM)"
+          },
+          {
+            "mapped_to": [
+              "mmmlu"
+            ],
+            "name": "MMMLU"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMLU (ES)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMLU-lite (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "MMMLU-lite (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MathBench-CN (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "MathBench-CN (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy_1_0",
+          "reason": "exact to OmniScience — Accuracy, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_accuracy_1_1",
+          "reason": "exact to OmniScience — Accuracy, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_0",
+          "reason": "the first 1 word(s) of the label: exact to omniscience, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_1",
+          "reason": "the first 1 word(s) of the label: exact to omniscience, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_0",
+          "reason": "the first 1 word(s) of the label: exact to omniscience, substring match"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "aa_omniscience_1_0": [
+            "AA Omniscience (index)",
+            "AA-Omni-Public Index",
+            "AA-Omni. Index",
+            "AA-Omniscience",
+            "AA-Omniscience (public)",
+            "AA-Omniscience Index",
+            "AA-Omniscience Index (public set)"
+          ],
+          "aa_omniscience_accuracy_1_0": [
+            "AA-Omni. Accuracy",
+            "AA-Omniscience (accuracy)",
+            "AA-Omniscience Accuracy",
+            "AA-Omniscience Accuracy (public set)",
+            "AA-Omniscience Accuracy Factual accuracy",
+            "AA-Omniscience accuracy (public)"
+          ],
+          "aa_omniscience_hallucination_1_0": [
+            "AA-Omni. Non-Halluc.",
+            "AA-Omniscience Non-Hallucination Rate",
+            "AA-Omniscience non-hallucination (public)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OmniScience Accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience (accuracy)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience accuracy (public)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy (public set)"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_accuracy_1_0"
+            ],
+            "name": "AA-Omniscience Accuracy Factual accuracy"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OmniScience — Accuracy' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Motif-Technologies/Motif-3",
+      "subject": "OmniScience — Accuracy",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_1",
+          "reason": "exact to OmniScience — Non-Hallucination, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_hallucination_1_0",
+          "reason": "exact to OmniScience — Non-Hallucination, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "arena_agent_tool_hallucination",
+          "reason": "the same name without its first 2 word(s): exact to hallucination, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_0",
+          "reason": "the first 1 word(s) of the label: exact to omniscience, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_omniscience_1_1",
+          "reason": "the first 1 word(s) of the label: exact to omniscience, substring match"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {
+          "aa_omniscience_1_0": [
+            "AA Omniscience (index)",
+            "AA-Omni-Public Index",
+            "AA-Omni. Index",
+            "AA-Omniscience",
+            "AA-Omniscience (public)",
+            "AA-Omniscience Index",
+            "AA-Omniscience Index (public set)"
+          ],
+          "aa_omniscience_hallucination_1_0": [
+            "AA-Omni. Non-Halluc.",
+            "AA-Omniscience Non-Hallucination Rate",
+            "AA-Omniscience non-hallucination (public)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "OmniScience Non-Hallucination"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_hallucination_1_0"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate"
+          },
+          {
+            "mapped_to": [
+              "aa_omniscience_hallucination_1_0"
+            ],
+            "name": "AA-Omniscience non-hallucination (public)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Non-hallucination rate"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OmniScience — Non-Hallucination' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Motif-Technologies/Motif-3",
+      "subject": "OmniScience — Non-Hallucination",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "PIQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Global PIQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "PIQA (acc_norm)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'PIQA (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "PIQA (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "PopQA"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'PopQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "PopQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'PreciseWikiQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "PreciseWikiQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RepoBench (EM)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "RepoBench (EM)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'RepoQA (Pass@1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "RepoQA (Pass@1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "simpleqa_verified",
+          "reason": "the same name without the parenthetical: exact to SimpleQA, substring match"
+        }
+      ],
+      "context": {
+        "known": 1506,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SimpleQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CSimpleQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "C-SimpleQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chinese-simpleQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SimpleQA (Correct)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SimpleQA Verified"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SimpleQA-Verified (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chinese-SimpleQA (Pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'SimpleQA (LLM-Judge)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "SimpleQA (LLM-Judge)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "motif-3",
+          "reason": "exact to Motif-3, exact match"
+        }
+      ],
+      "default": "motif-3",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'Motif-Technologies/Motif-3' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/Motif-Technologies/Motif-3/",
+      "subject": "Motif-Technologies/Motif-3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ernie-5-5-flash-preview",
+          "reason": "exact to ERNIE-5.5-Flash-Base, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ernie-4-5-300b-a47b",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-base, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-base, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 225,
+        "mapped": {
+          "ernie-4-5-300b-a47b": [
+            "baidu/ERNIE-4.5-300B-A47B-PT"
+          ],
+          "glm-5-3-flash": [
+            "zai-org/GLM-5.3-Flash"
+          ],
+          "step-3-5-flash": [
+            "stepfun-ai/Step-3.5-Flash"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "ernie-4-5-21b-a3b"
+            ],
+            "name": "baidu/ERNIE-4.5-21B-A3B-PT"
+          },
+          {
+            "mapped_to": [
+              "ernie-4-5-300b-a47b"
+            ],
+            "name": "baidu/ERNIE-4.5-300B-A47B-PT"
+          },
+          {
+            "mapped_to": [
+              "ernie-4-5-21b-a3b-thinking"
+            ],
+            "name": "baidu/ERNIE-4.5-21B-A3B-Thinking"
+          }
+        ]
+      },
+      "default": "ernie-5-5-flash-preview",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'baidu/ERNIE-5.5-Flash-Base' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
+      "subject": "baidu/ERNIE-5.5-Flash-Base",
       "universe": "models"
     }
   ]
