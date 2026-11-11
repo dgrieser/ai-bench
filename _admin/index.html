@@ -1065,6 +1065,34 @@ ul.runs time {
 .pill.running .dot { animation: pulse 1.4s ease-in-out infinite; }
 .pill.warned { background: var(--warn-soft); color: var(--warn); margin-left: .5rem; vertical-align: .1em; }
 
+/* ------------------------------------------------------------------ tests */
+
+.test-card { padding: 0; }
+.test-card > summary { cursor: pointer; padding: .8rem 1rem; list-style: none; min-width: 0; }
+.test-card > summary::-webkit-details-marker { display: none; }
+.test-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; min-width: 0; }
+.test-id { font-size: .875rem; overflow-wrap: anywhere; min-width: 0; color: var(--text); }
+.test-message { margin-top: .35rem; font-size: .8125rem; color: var(--bad); overflow-wrap: anywhere; }
+.test-body { padding: 0 1rem 1rem; display: grid; gap: .75rem; min-width: 0; }
+.test-body .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+.test-kind { color: var(--muted); font-size: .8125rem; }
+.test-label { font-size: .75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .25rem; }
+.test-doc { white-space: pre-wrap; font-size: .875rem; line-height: 1.5; }
+.test-block pre {
+  margin: 0;
+  padding: .6rem .75rem;
+  max-height: 24rem;
+  overflow: auto;
+  background: var(--surface-2);
+  border-radius: 6px;
+  font-size: .75rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+.runs-bar p a { color: var(--accent); }
+.test-meta { margin-top: 1rem; color: var(--faint); font-size: .8125rem; }
+.test-meta a { color: inherit; }
+
 /* A run's fetcher warnings: under its row, across every column. */
 .run-warnings { grid-column: 1 / -1; font-size: .8125rem; color: var(--muted); }
 .run-warnings summary { cursor: pointer; color: var(--warn); width: fit-content; }
@@ -1406,6 +1434,11 @@ const state = {
      (see _preview_cleanup.py), and which of its cards are unfolded. */
   previews: { cases: null, done: [], error: "" },
   previewOpen: new Set(),
+  /* The Tests tab: _tests/report.json as the daily full-tests.yml run last
+     wrote it (see run_tests.py), which failure cards are unfolded, and that
+     workflow's recent runs -- read from GitHub's public API once, when the tab
+     is opened, since the report is only rewritten when it changes. */
+  tests: { report: null, error: "", open: new Set(), runs: null, runsError: "", runsAsked: false },
   error: "",
   ok: "",
 };
@@ -2629,11 +2662,12 @@ async function loadData() {
   const base = dataBase();
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-  const [queue, llm, reference, previews] = await Promise.allSettled([
+  const [queue, llm, reference, previews, tests] = await Promise.allSettled([
     json(`${base}/_pending/pending.json`),
     json(`${base}/llm.json`),
     json(`${base}/reference-models.json`),
     json(`${base}/_pending/previews.json`),
+    json(`${base}/_tests/report.json`),
   ]);
 
   if (queue.status === "fulfilled") {
@@ -2689,6 +2723,18 @@ async function loadData() {
       cases: null, done: [],
       error: previews.status === "fulfilled" ? "the file has no cases list" : String(previews.reason.message),
     };
+  }
+
+  /* Its own error as well: one tab, and no report exists before the first
+     daily full test run. */
+  if (tests.status === "fulfilled" && Array.isArray(tests.value?.failures)) {
+    state.tests.report = tests.value;
+    state.tests.error = "";
+  } else {
+    state.tests.report = null;
+    state.tests.error = tests.status === "fulfilled"
+      ? "the file has no failures list"
+      : String(tests.reason.message);
   }
 
   render();
@@ -2990,6 +3036,7 @@ function render() {
         : state.tab === "models" ? renderModels()
           : state.tab === "benchmarks" ? renderBenchmarks()
           : state.tab === "reference" ? renderReference()
+            : state.tab === "tests" ? renderTests()
             : renderRuns()
   );
 
@@ -3064,6 +3111,7 @@ const tabList = (mappingCount = null, newCount = null) => [
   ["benchmarks", "Benchmarks", null],
   ["reference", "Reference", state.reference.slugs?.length ?? null],
   ["runs", "Runs", null],
+  ["tests", "Tests", state.tests.report?.failures?.length || null],
 ];
 
 /* The tab lives in the URL, so a reload lands where it was and a phone's back
@@ -6339,6 +6387,168 @@ function renderRuns() {
         ]);
       }))
       : el("p", { className: "empty" }, "No runs to show."),
+  ]);
+}
+
+/* ------------------------------------------------------------------ tests */
+
+const TESTS_WORKFLOW = "full-tests.yml";
+
+/* The daily run's own record, beside the report: the report is rewritten only
+   when what it says changes, so its date is when the failures last changed,
+   not when the tests last ran. GitHub's public API, no token, like
+   resolveSha() -- one request, when the tab is first opened. */
+async function ensureTestRuns() {
+  if (!state.repo || state.tests.runsAsked) return;
+  state.tests.runsAsked = true;
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${state.repo}/actions/workflows/${TESTS_WORKFLOW}/runs?per_page=5`,
+      { cache: "no-store", headers: { Accept: "application/vnd.github+json" } },
+    );
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const body = await response.json();
+    state.tests.runs = (body.workflow_runs || []).map((run) => ({
+      id: run.id,
+      name: `${run.display_title || run.name} #${run.run_number}`,
+      status: run.status,
+      conclusion: run.conclusion,
+      created_at: run.created_at,
+      url: run.html_url,
+    }));
+    state.tests.runsError = "";
+  } catch (error) {
+    state.tests.runs = null;
+    state.tests.runsError = String(error.message);
+  }
+  if (state.tab === "tests") render();
+}
+
+const TEST_KINDS = {
+  failure: "an assertion failed",
+  error: "the test raised",
+  "unexpected-success": "expected to fail, but passed",
+  import: "the file could not be imported; none of its tests ran",
+  timeout: "the file did not finish; none of its results were kept",
+  crash: "the process exited before reporting; none of its results were kept",
+};
+
+/* A link to the line on GitHub, at the commit the report was made from. */
+function testSourceUrl(report, failure) {
+  if (!state.repo) return null;
+  const at = report.commit || state.sha || state.ref || "main";
+  return `https://github.com/${state.repo}/blob/${at}/${encodeURIComponent(failure.file)}`
+    + (failure.line ? `#L${failure.line}` : "");
+}
+
+function testBlock(label, text) {
+  if (!text || !String(text).trim()) return null;
+  return el("div", { className: "test-block" }, [
+    el("div", { className: "test-label" }, label),
+    el("pre", {}, text),
+  ]);
+}
+
+function renderTestFailure(report, failure) {
+  const key = `${failure.file} ${failure.test}`;
+  const since = failure.since ? new Date(failure.since) : null;
+  const url = testSourceUrl(report, failure);
+  const card = el("details", { className: "card test-card" });
+  card.open = state.tests.open.has(key);
+  card.ontoggle = () => {
+    if (card.open) state.tests.open.add(key);
+    else state.tests.open.delete(key);
+  };
+  card.append(
+    el("summary", {}, [
+      el("div", { className: "test-head" }, [
+        el("span", { className: "pill failure" }, [el("span", { className: "dot" }), failure.kind]),
+        el("span", { className: "test-id mono" }, failure.test),
+      ]),
+      el("div", { className: "test-message mono" }, lastLine(failure.message) || TEST_KINDS[failure.kind] || ""),
+    ]),
+    el("div", { className: "test-body" }, [
+      el("div", { className: "chips" }, [
+        chip("File", failure.line ? `${failure.file}:${failure.line}` : failure.file),
+        since ? chip("Failing since", since.toLocaleDateString()) : null,
+        failure.since_commit ? chip("First seen at", failure.since_commit.slice(0, 7)) : null,
+        failure.duration_s != null ? chip("Took", `${failure.duration_s}s`) : null,
+      ]),
+      el("p", { className: "test-kind" }, TEST_KINDS[failure.kind] || failure.kind),
+      failure.doc ? el("div", { className: "test-block" }, [
+        el("div", { className: "test-label" }, "What the test guards"),
+        el("p", { className: "test-doc" }, failure.doc),
+      ]) : null,
+      testBlock("Message", failure.message),
+      testBlock("Traceback", failure.traceback),
+      testBlock("Stdout", failure.stdout),
+      testBlock("Stderr", failure.stderr),
+      el("div", { className: "toolbar" }, [
+        url ? el("a", { className: "btn ghost tiny", href: url, target: "_blank", rel: "noopener noreferrer" }, "Source ↗") : null,
+        report.run_url ? el("a", { className: "btn ghost tiny", href: report.run_url, target: "_blank", rel: "noopener noreferrer" }, "Run log ↗") : null,
+      ]),
+    ]),
+  );
+  return card;
+}
+
+function renderTestRuns() {
+  const runs = state.tests.runs;
+  const workflowUrl = state.repo
+    ? `https://github.com/${state.repo}/actions/workflows/${TESTS_WORKFLOW}` : null;
+  const intro = el("p", {}, [
+    "Every test_*.py, once a day (full-tests.yml). The refresh runs only the few that "
+      + "guard what it writes; this runs the rest too. Only failures are listed. ",
+    workflowUrl ? el("a", { href: workflowUrl, target: "_blank", rel: "noreferrer" },
+      "Run it now on GitHub ↗") : null,
+  ]);
+  return el("div", {}, [
+    el("div", { className: "runs-bar" }, [intro]),
+    state.tests.runsError
+      ? el("p", { className: "note busy" }, `The workflow's runs could not be read (${state.tests.runsError}); `
+        + "the report below may be older than the last run.")
+      : null,
+    runs && runs.length ? el("ul", { className: "runs" }, runs.slice(0, 3).map((run) => {
+      const shade = run.status !== "completed" ? "running" : (run.conclusion || "");
+      return el("li", {}, [
+        el("span", { className: `pill ${shade}` }, [el("span", { className: "dot" }), runLabel(run)]),
+        el("a", { href: run.url, target: "_blank", rel: "noreferrer" }, run.name),
+        el("time", { dateTime: run.created_at }, new Date(run.created_at).toLocaleString()),
+      ]);
+    })) : null,
+  ]);
+}
+
+function renderTests() {
+  ensureTestRuns();
+  const report = state.tests.report;
+  if (!report) {
+    return el("div", {}, [
+      renderTestRuns(),
+      el("p", { className: "empty" }, state.tests.error.includes("404")
+        ? "No test report yet. It appears after the first daily full test run."
+        : `Could not read _tests/report.json (${state.tests.error}).`),
+    ]);
+  }
+  const t = report.totals || {};
+  const when = report.checked_at ? new Date(report.checked_at).toLocaleString() : "an unknown time";
+  const failures = report.failures;
+  return el("div", {}, [
+    renderTestRuns(),
+    el("div", { className: `note ${failures.length ? "bad" : "good"}` }, el("span", {}, failures.length
+      ? `${t.failed} of ${t.tests} tests failing in ${t.files} files`
+        + (t.files_broken ? `, ${t.files_broken} file${t.files_broken === 1 ? "" : "s"} not run at all` : "")
+        + `, as of ${when}.`
+      : `All ${t.tests} tests in ${t.files} files passed (${t.skipped || 0} skipped), as of ${when}.`)),
+    failures.length ? el("div", { className: "stack" }, failures.map((f) => renderTestFailure(report, f))) : null,
+    el("p", { className: "test-meta" }, [
+      `Python ${report.python || "?"}, ${report.duration_s ?? "?"}s`,
+      report.commit && state.repo ? [", at ", el("a", {
+        href: `https://github.com/${state.repo}/commit/${report.commit}`,
+        target: "_blank", rel: "noreferrer",
+      }, report.commit.slice(0, 7))] : null,
+      ". The report is rewritten only when what it says changes.",
+    ].flat()),
   ]);
 }
 

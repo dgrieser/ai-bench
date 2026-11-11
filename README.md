@@ -578,6 +578,13 @@ current address.
 ./derive_indexes.py --calibrate
 ./derive_indexes.py --calibrate --write && ./derive_indexes.py -w
 
+# Run every test_*.py, each file in its own process, and list what failed
+# (traceback, captured output, the test's docstring). The daily "full tests"
+# workflow runs it with --report _tests/report.json, which the admin page's
+# Tests tab shows; the refresh itself runs only a few suites to stay quick.
+./run_tests.py
+./run_tests.py test_vals.py test_epoch.py
+
 # Fill in missing source URLs for benchmark records
 ./fill_source_urls.py llm.json
 

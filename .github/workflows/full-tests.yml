@@ -1,0 +1,89 @@
+name: full tests
+
+# Once a day, every test_*.py -- not just the handful update-benchmarks.yml runs
+# before it writes. Those have to stay quick, so most suites (every fetcher's
+# parser, every mapping's checks against llm.json) only ran when someone ran
+# them by hand, and a test broken by a refresh could sit unnoticed for weeks.
+#
+# Failures land in _tests/report.json, which the admin page's Tests tab reads.
+# Passing tests are only counted. The report is committed only when what it
+# says changes (see run_tests.py), so a day where everything passes again, or
+# fails the same way, adds no commit. A red run is the alert; the report is the
+# detail.
+#
+# No `push` trigger, for the same reason update-benchmarks.yml has none: the
+# commit below is pushed with the deploy key, which does trigger workflow
+# events.
+
+on:
+  schedule:
+    # 04:29 UTC: after the nightly calibration (03:41), whose llm.json several
+    # suites check, and clear of the three-hourly refreshes (17 past).
+    - cron: "29 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Not the update-benchmarks group: this run only reads until its last step, and
+# a third workflow in that group could cancel a refresh waiting its turn. Its
+# one commit touches only _tests/, so it rebases cleanly onto anything a
+# refresh pushed meanwhile.
+concurrency:
+  group: full-tests
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      # The deploy key is what the main ruleset lets push; see the checkout
+      # step in update-benchmarks.yml.
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.PUSH_SSH_KEY }}
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      # Its status is the run's, but only after the report is committed: a
+      # failing suite is exactly the report worth having.
+      - name: Run every test
+        id: tests
+        continue-on-error: true
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: ./run_tests.py --report _tests/report.json --summary "$GITHUB_STEP_SUMMARY" --run-url "$RUN_URL"
+
+      - name: Commit and push the report
+        run: |
+          if [ -z "$(git status --porcelain -- _tests)" ]; then
+            echo "Test report unchanged." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _tests/report.json
+          git commit -m "chore(tests): daily full test report"
+          # A refresh may push while this runs; the rebase cannot conflict, since
+          # nothing else writes _tests/.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            sleep $((attempt * 10))
+          done
+          exit 1
+
+      - name: Fail if a test failed
+        if: ${{ steps.tests.outcome != 'success' }}
+        run: |
+          echo "::error title=Full tests::some tests failed; see the summary or the admin page's Tests tab"
+          exit 1
