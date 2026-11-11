@@ -754,6 +754,36 @@
       "queue": []
     },
     {
+      "name": "ernie-5-5-flash-preview",
+      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "new_url": null,
+      "creator": "Baidu",
+      "date_added": "2026-11-11",
+      "reference": false,
+      "released": null,
+      "evidence": [],
+      "renames": [
+        {
+          "name": "ernie-5-5-flash",
+          "why": "the name without 'preview'",
+          "taken": false
+        }
+      ],
+      "mappings": [
+        {
+          "route": "update_openrouter_mapping.py",
+          "route_kind": "*",
+          "source": "openrouter",
+          "subject": "baidu/ernie-5.5-flash-preview",
+          "preview": true,
+          "suggest": "keep",
+          "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
+        }
+      ],
+      "scores": [],
+      "queue": []
+    },
+    {
       "name": "ripple-65b-preview",
       "url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
       "new_url": "https://huggingface.co/ricursiveAI/Ripple-65B",
