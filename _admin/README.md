@@ -695,6 +695,24 @@ shorter than 100 models, leaving the last good one in place. Before the first
 refresh publishes it the page says so and points at `./rename.py`, the same way
 it does for the queue.
 
+## The Tests tab
+
+The refresh runs only the suites that guard what it writes; the rest used to
+run only when someone ran them. `full-tests.yml` runs every `test_*.py` once a
+day (04:29 UTC, after the calibration) via `./run_tests.py`, and commits
+`_tests/report.json` -- only when what it says changes, so a quiet day adds no
+commit. The tab reads that file like the others, and the workflow's last runs
+from GitHub's public API (no token), since the report's date is when the
+failures last changed, not when the tests last ran.
+
+Only failures are listed, each with everything the run knew: the test's id and
+`file:line` (linked at the commit it ran on), its docstring, the exception, the
+traceback, what it printed on stdout and stderr, and the date it first failed,
+carried over while it keeps failing. A file that could not be imported, hung
+past the timeout or exited mid-run is one failure for the whole file. The run
+goes red as well, so GitHub's own notification is the alert. api.php's token
+cannot dispatch this workflow; the tab links to it on GitHub for a run by hand.
+
 ## When the page is down
 
 The queue is not lost with it. `_pending/pending.json` is published on every
