@@ -1,3 +1,121 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to Claude Fable 5.2, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Claude Fable 5.2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 18,
+        "mapped": {
+          "claude-fable-5-1": [
+            "Claude Fable 5.1"
+          ],
+          "claude-opus-5-5": [
+            "Claude Opus 5.5"
+          ],
+          "claude-sonnet-5-5": [
+            "Claude Sonnet 5.5"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "claude-fable-5-1"
+            ],
+            "name": "Claude Fable 5.1"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "Claude Opus 5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5-5"
+            ],
+            "name": "Claude Opus 5.5"
+          },
+          {
+            "mapped_to": [
+              "claude-sonnet-5-5"
+            ],
+            "name": "Claude Sonnet 5.5"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'Claude Fable 5.2' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
+      "subject": "Claude Fable 5.2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Carbon, most components match"
+        }
+      ],
+      "context": {
+        "known": 18,
+        "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'Gemini 4 Carbon' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
+      "subject": "Gemini 4 Carbon",
+      "universe": "models"
+    }
+  ]
 }
