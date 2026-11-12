@@ -52,6 +52,21 @@
       ],
       "scores": [
         {
+          "key": "nl2repo",
+          "value": 64.8,
+          "date": "2026-11-12",
+          "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+          "rank": 5,
+          "rank_label": "llm-stats (fill-only)",
+          "route": "update_llmstats_mapping.py",
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
           "key": "livecodebench",
           "value": 40.1,
           "date": "2026-11-11",
@@ -65,18 +80,69 @@
           "note": null,
           "recredit_to": null,
           "follows_url": true
+        },
+        {
+          "key": "mcp_atlas",
+          "value": 84.6,
+          "date": "2026-11-12",
+          "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+          "rank": 5,
+          "rank_label": "llm-stats (fill-only)",
+          "route": "update_llmstats_mapping.py",
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "apex_agents",
+          "value": 64.2,
+          "date": "2026-11-12",
+          "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+          "rank": 5,
+          "rank_label": "llm-stats (fill-only)",
+          "route": "update_llmstats_mapping.py",
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "browsecomp",
+          "value": 87.4,
+          "date": "2026-11-12",
+          "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+          "rank": 5,
+          "rank_label": "llm-stats (fill-only)",
+          "route": "update_llmstats_mapping.py",
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
+        },
+        {
+          "key": "hle",
+          "value": 46.4,
+          "date": "2026-11-12",
+          "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+          "rank": 5,
+          "rank_label": "llm-stats (fill-only)",
+          "route": "update_llmstats_mapping.py",
+          "era": "unknown",
+          "why": "no release date to compare against",
+          "suggest": "keep",
+          "note": null,
+          "recredit_to": null,
+          "follows_url": false
         }
       ],
-      "queue": [
-        {
-          "route": "update_llmstats_mapping.py",
-          "route_kind": "llmstats-model",
-          "subject": "ernie-5.5-flash-preview",
-          "if_previous": null,
-          "source_url": "https://llm-stats.com/models/ernie-5.5-flash-preview",
-          "preview": true
-        }
-      ]
+      "queue": []
     },
     {
       "name": "hy4-preview",
@@ -1935,16 +2001,7 @@
           "follows_url": false
         }
       ],
-      "queue": [
-        {
-          "route": "update_llmstats_mapping.py",
-          "route_kind": "llmstats-model",
-          "subject": "ernie-5.5-flash-preview",
-          "if_previous": null,
-          "source_url": "https://llm-stats.com/models/ernie-5.5-flash-preview",
-          "preview": true
-        }
-      ]
+      "queue": []
     }
   ],
   "done": [
