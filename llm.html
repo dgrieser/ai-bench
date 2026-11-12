@@ -51,6 +51,14 @@
          padlock leads the name wherever one is shown, and the rows are hidden
          until asked for. */
       --reference-ink: #0f766e;
+      /* Ranking moves: a climb in a deep lime, which is none of the inks above
+         (blue links, red "new", gold sort, teal reference) and reads as "up"
+         at a glance; a fall stays grey, since being overtaken is the quieter
+         half of the same swap. The arrow and the signed count carry it too. */
+      --rise-ink: #3f6212;
+      --rise-wash: rgba(101, 163, 13, 0.14);
+      --fall-ink: var(--muted);
+      --fall-wash: rgba(107, 107, 107, 0.12);
       /* Comparison series: a neon ramp -- cyan, magenta, lime, amber, violet --
          spread roughly evenly around the wheel so no two sit next to each
          other. A true neon is a light source, and this paper is white, so the
@@ -2286,76 +2294,150 @@
     .rank-index {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       min-width: 0;
+    }
+
+    .rank-index + .rank-index,
+    .rank-index + .recent-more + .rank-index {
+      margin-top: 6px;
     }
 
     .rank-index-head {
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
-      gap: 4px 10px;
+      gap: 2px 10px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--line-soft);
     }
 
     .rank-index-name {
       color: var(--text);
-      font-size: 0.8rem;
+      font-size: 0.84rem;
       font-weight: 700;
+    }
+
+    .rank-tally {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 2px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .rank-tally .is-up { color: var(--rise-ink); }
+    .rank-tally .is-down { color: var(--fall-ink); }
+    .rank-tally .is-entered { color: var(--fresh-ink); }
+    .rank-tally .is-left { color: var(--subtle); }
+
+    .rank-field {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
     }
 
     .rank-lines {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-      gap: 2px 18px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+      gap: 0 28px;
       margin: 0;
       padding: 0;
       list-style: none;
     }
 
+    /* Three fixed columns -- the move, the name, the new place -- so the eye
+       runs down the badges for direction and down the right edge for places,
+       however long the names are. A long name gives way with an ellipsis. */
     .rank-line {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
+      display: grid;
+      grid-template-columns: 3.4em minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
       min-width: 0;
-      font-size: 0.76rem;
+      padding: 3px 0;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .rank-delta {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 3.1em;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
       line-height: 1.5;
+      white-space: nowrap;
     }
 
-    /* Direction as a shape, like the score chips' arrows: the page's colours
-       are spoken for, so up and down are told apart by the glyph alone. */
-    .rank-mark {
-      flex: none;
-      width: 1.1em;
-      color: var(--muted);
-      font-size: 0.7rem;
-      text-align: center;
+    .rank-line.is-up .rank-delta {
+      background: var(--rise-wash);
+      color: var(--rise-ink);
     }
 
-    .rank-line.is-entered .rank-mark {
+    .rank-line.is-down .rank-delta {
+      background: var(--fall-wash);
+      color: var(--fall-ink);
+    }
+
+    .rank-line.is-entered .rank-delta {
+      background: var(--fresh-glow);
       color: var(--fresh-ink);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+    }
+
+    .rank-line.is-left .rank-delta {
+      border: 1px solid var(--line);
+      color: var(--subtle);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
     }
 
     .rank-line .recent-model {
-      font-size: 0.76rem;
+      font-size: 0.82rem;
       font-weight: 600;
       min-width: 0;
     }
 
     .rank-line.is-left .recent-model {
       color: var(--muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--subtle);
     }
 
     .rank-places {
-      flex: none;
-      color: var(--muted);
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      color: var(--subtle);
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
+    .rank-places > span {
+      min-width: 6ch;
+      text-align: right;
+    }
+
     .rank-places b {
+      min-width: 4ch;
       color: var(--text);
+      font-size: 0.8rem;
       font-weight: 700;
+      text-align: right;
     }
 
     .rank-index .recent-more > .rank-lines {
@@ -4666,6 +4748,10 @@
       /* Teal-700 is as good as black on this paper; the reference ink lightens
          with the rest of the palette, same as the red above it. */
       --reference-ink: #2dd4bf;
+      --rise-ink: #a3e635;
+      --rise-wash: rgba(163, 230, 53, 0.13);
+      --fall-ink: #b3b0aa;
+      --fall-wash: rgba(154, 151, 147, 0.14);
       /* The same five hues at full neon on near-black paper, which is the
          ground they were picked for -- every one clears 5.5:1 against
          --surface. Hue order is what carries across the themes: a series keeps
@@ -4883,6 +4969,26 @@
       .recent-panel {
         padding-left: 16px;
         padding-right: 16px;
+      }
+
+      /* One swipeable row of short index names rather than four rows of
+         long ones above the list they filter. */
+      .rank-filter {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 0 16px 2px;
+        scrollbar-width: none;
+      }
+
+      .rank-filter::-webkit-scrollbar {
+        display: none;
+      }
+
+      .rank-filter button {
+        flex: none;
+        padding: 5px 12px;
       }
 
       /* Too narrow for a date gutter: the day becomes a heading over its own
@@ -7730,29 +7836,38 @@
         const name = model
           ? withReferenceLock(model, `<a class="recent-model${isReferenceModel(model) ? " model-reference" : ""}" href="#model/${escapeAttr(modelSlug(model.name))}"${tipAttrs(modelTipFields(model))}>${escapeHtml(model.name)}</a>`)
           : `<span class="recent-model">${escapeHtml(change.model)}</span>`;
-        let mark = "";
+        let delta = "";
         let places = "";
         let label = "";
         if (change.kind === "entered") {
-          mark = "&#9733;";
-          places = `entered at <b>#${change.to}</b>${of}`;
+          delta = "NEW";
+          places = `<b>#${change.to}</b>`;
           label = `entered at place ${change.to}${of}`;
         } else if (change.kind === "left") {
-          mark = "&times;";
-          places = `dropped out, was <b>#${change.from}</b>`;
+          delta = "OUT";
+          places = `<span>was</span><b>#${change.from}</b>`;
           label = `dropped out of the index, was place ${change.from}`;
         } else {
-          mark = change.kind === "up" ? "&#9650;" : "&#9660;";
-          places = `#${change.from} &rarr; <b>#${change.to}</b>${of}`;
-          label = `moved ${change.kind} from place ${change.from} to ${change.to}${of}`;
+          const by = Math.abs(change.from - change.to);
+          delta = `${change.kind === "up" ? "&#9650;" : "&#9660;"}${by}`;
+          places = `<span>#${change.from} &rarr;</span><b>#${change.to}</b>`;
+          label = `moved ${change.kind} ${by} ${by === 1 ? "place" : "places"}, from ${change.from} to ${change.to}${of}`;
         }
         return `
           <li class="rank-line is-${change.kind}">
-            <span class="rank-mark" role="img" aria-label="${escapeAttr(label)}">${mark}</span>
+            <span class="rank-delta" role="img" aria-label="${escapeAttr(label)}" title="${escapeAttr(label)}">${delta}</span>
             ${name}
-            <span class="rank-places">${places}</span>
+            <span class="rank-places" aria-hidden="true">${places}</span>
           </li>
         `;
+      }
+
+      // An index's name without the site's own prefix, for the filter chips:
+      // "OpenBench Coding Index" -> "Coding". The headline index keeps its name.
+      function shortIndexName(key) {
+        const full = getBenchmarkFullName(key);
+        const short = full.replace(/^OpenBench\s+/i, "").replace(/\s+Index$/i, "");
+        return short && !/^index$/i.test(short) ? short : full;
       }
 
       function renderRankingPanel() {
@@ -7800,9 +7915,13 @@
               list.sort((a, b) => weight[a.kind] - weight[b.kind]
                 || (a.to ?? a.from) - (b.to ?? b.from)
                 || a.model.localeCompare(b.model));
-              const counts = ["entered", "up", "down", "left"].map((kind) => [kind, list.filter((c) => c.kind === kind).length]);
+              const counts = ["up", "down", "entered", "left"].map((kind) => [kind, list.filter((c) => c.kind === kind).length]);
               const words = { entered: "entered", up: "up", down: "down", left: "dropped out" };
+              const glyphs = { entered: "&#9733;", up: "&#9650;", down: "&#9660;", left: "&times;" };
               const note = counts.filter(([, n]) => n).map(([kind, n]) => `${n} ${words[kind]}`).join(", ");
+              const tally = counts.filter(([, n]) => n)
+                .map(([kind, n]) => `<span class="is-${kind}">${glyphs[kind]}${n}</span>`).join("");
+              const field = Math.max(0, ...list.map((c) => c.of || 0));
               const lines = list.map((change) => renderRankLine(change, byName.get(change.model)));
               const head = lines.slice(0, RANK_PREVIEW).join("");
               const tail = lines.slice(RANK_PREVIEW);
@@ -7813,7 +7932,8 @@
                 <div class="rank-index">
                   <div class="rank-index-head">
                     <span class="rank-index-name">${escapeHtml(getBenchmarkFullName(key))}</span>
-                    <span class="recent-note">${escapeHtml(note)}</span>
+                    <span class="rank-tally" role="img" aria-label="${escapeAttr(note)}" title="${escapeAttr(note)}">${tally}</span>
+                    ${field ? `<span class="rank-field">of ${field}</span>` : ""}
                   </div>
                   <ul class="rank-lines">${head}</ul>
                   ${more}
@@ -7834,7 +7954,7 @@
         const since = typeof record.since === "string" ? record.since : "";
         const filter = keys.length > 1
           ? `<div class="rank-filter" role="group" aria-label="Index">
-              ${["", ...keys].map((key) => `<button type="button" data-rank-index="${escapeAttr(key)}" aria-pressed="${key === selected ? "true" : "false"}">${escapeHtml(key ? getBenchmarkFullName(key) : "All indexes")}</button>`).join("")}
+              ${["", ...keys].map((key) => `<button type="button" data-rank-index="${escapeAttr(key)}"${key ? ` title="${escapeAttr(getBenchmarkFullName(key))}"` : ""} aria-pressed="${key === selected ? "true" : "false"}">${escapeHtml(key ? shortIndexName(key) : "All")}</button>`).join("")}
             </div>`
           : "";
         const lead = `
