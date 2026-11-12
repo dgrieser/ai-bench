@@ -1,3 +1,465 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-12 - Google",
+      "question": "Carry newly released closed model 'gemini-4-hydrogen' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gemini-4-hydrogen",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-12 - Google",
+      "question": "Carry newly released closed model 'gemini-4-hydrogen-high' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gemini-4-hydrogen-high",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-12 - Google",
+      "question": "Carry newly released closed model 'gemini-4-hydrogen-low' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gemini-4-hydrogen-low",
+      "universe": null
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-12 - Google",
+      "question": "Carry newly released closed model 'gemini-4-hydrogen-medium' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "gemini-4-hydrogen-medium",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 64,
+        "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ],
+          "gemini-4-carbon": [
+            "Gemini 4 Carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "Gemini 4 Carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'Gemini 4 Hydrogen' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "Gemini 4 Hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 37,
+        "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ],
+          "gemini-4-carbon": [
+            "Gemini 4 Carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "Gemini 4 Carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Gemini 4 Hydrogen' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.frontierswe.com/",
+      "subject": "Gemini 4 Hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_4_0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_hard",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_2_1",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "terminal_bench_3_0",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1533,
+        "mapped": {
+          "terminal_bench_2_0": [
+            "Terminal Bench 2",
+            "Terminal Bench 2.0",
+            "Terminal Bench 2.0 (Acc)",
+            "Terminal Bench Core 2.0",
+            "Terminal-Bench 2.0",
+            "Terminal-Bench 2.0 (Terminus-2)",
+            "TerminalBench(acc)",
+            "harborframework/terminal-bench-2.0 (terminalbench_2)"
+          ],
+          "terminal_bench_2_1": [
+            "Agentic terminal coding Terminal Bench 2.1 (Terminus)",
+            "Terminal Bench 2.1",
+            "Terminal Bench 2.1 (Terminus-2)",
+            "Terminal Bench v2.1",
+            "Terminal-Bench 2.1",
+            "Terminal-Bench 2.1 (OpenCode)",
+            "Terminal-Bench 2.1 (Pass@1)",
+            "Terminal-Bench 2.1 (Terminus 2)",
+            "Terminal-Bench 2.1 (Terminus-2)",
+            "Terminal-Bench 2.1 (self-reported)",
+            "Terminal-Bench 2.1 Agentic terminal use",
+            "Terminal-Bench v2.1",
+            "TerminalBench 2.1",
+            "TerminalBench 2.1 (with terminus2)",
+            "harborframework/terminal-bench-2.1"
+          ],
+          "terminal_bench_3_0": [
+            "Terminal Bench 3.0",
+            "Terminal-Bench 3.0 (Pass@1)",
+            "harborframework/terminal-bench (terminalbench_3)"
+          ],
+          "terminal_bench_4_0": [
+            "Terminal Bench 4",
+            "Terminal Bench 4.0",
+            "Terminal Bench Core 4.0",
+            "Terminal-Bench 4",
+            "Terminal-Bench 4.0",
+            "Terminal-Bench 4.0 (Pass@1)",
+            "TerminalBench 4.0",
+            "harborframework/terminal-bench (terminalbench_4)",
+            "harborframework/terminal-bench-4.0 (terminalbench_4)"
+          ],
+          "terminal_bench_hard": [
+            "Terminal Bench (hard subset)",
+            "Terminal Bench Hard",
+            "Terminal-Bench Hard"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "harborframework/terminal-bench (terminalbench_4)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "harborframework/terminal-bench-4.0 (terminalbench_4)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_3_0"
+            ],
+            "name": "harborframework/terminal-bench (terminalbench_3)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_0"
+            ],
+            "name": "harborframework/terminal-bench-2.0 (terminalbench_2)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "harborframework/terminal-bench-3.0 (terminalbench_3)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_2_1"
+            ],
+            "name": "harborframework/terminal-bench-2.1"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_science_0_1"
+            ],
+            "name": "harborframework/terminal-bench-science (terminalbenchscience_0_1)"
+          },
+          {
+            "mapped_to": [
+              "terminal_bench_4_0"
+            ],
+            "name": "Terminal-Bench 4.0 (Pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'harborframework/terminal-bench (terminalbench_4_1)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/zai-org/GLM-5.3",
+      "subject": "harborframework/terminal-bench (terminalbench_4_1)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "the same name without the vendor prefix: exact to gemini-4-hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "the same name without the vendor prefix: exact to gemini-4-hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 429,
+        "mapped": {
+          "gemini-4-argon": [
+            "google/gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "google/gemini-4-carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "google/gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "google/gemini-4-carbon"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "~google/gemini-pro-latest"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "~google/gemini-flash-latest"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-2.5-pro"
+          },
+          {
+            "mapped_to": [
+              "gemma-4-31b"
+            ],
+            "name": "google/gemma-4-31b-it"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-2.5-flash"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "google/gemini-3.5-flash"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'google/gemini-4-hydrogen' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/google/gemini-4-hydrogen",
+      "subject": "google/gemini-4-hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 34,
+        "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ],
+          "gemini-4-carbon": [
+            "Gemini 4 Carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "Gemini 4 Carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map SWE-Marathon model 'Gemini 4 Hydrogen' to llm.json model",
+      "route": "update_swe_marathon_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.swe-marathon.org/",
+      "subject": "Gemini 4 Hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini-4-hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini-4-hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 217,
+        "mapped": {
+          "gemini-4-argon": [
+            "google/gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "google/gemini-4-carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "google/gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "google/gemini-4-carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'google/gemini-4-hydrogen' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "google/gemini-4-hydrogen",
+      "universe": "models"
+    }
+  ]
 }
