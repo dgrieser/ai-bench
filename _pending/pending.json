@@ -4,117 +4,138 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "claude-fable-5-2",
-          "reason": "exact to Claude Fable 5.2, exact match"
+          "option": "ernie-5-5-flash-preview",
+          "reason": "exact to ernie-5.5-flash-preview, exact match"
         },
         {
           "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to Claude Fable 5.2, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
+          "option": "ernie-4-5-300b-a47b",
           "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "claude-haiku-5-5",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "step-5-preview",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, most components match"
         },
         {
           "confidence": "weak",
-          "option": "claude-sonnet-5-5",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-3-5-flash",
+          "reason": "the same name without its first 1 word(s): exact to 5-5-flash-preview, most components match"
         }
       ],
       "context": {
-        "known": 18,
+        "known": 360,
         "mapped": {
-          "claude-fable-5-1": [
-            "Claude Fable 5.1"
+          "ernie-4-5-300b-a47b": [
+            "ernie-4.5"
           ],
-          "claude-opus-5-5": [
-            "Claude Opus 5.5"
+          "glm-5-3-flash": [
+            "glm-5.3-flash"
           ],
-          "claude-sonnet-5-5": [
-            "Claude Sonnet 5.5"
+          "step-3-5-flash": [
+            "step-3.5-flash"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "claude-fable-5-1"
+              "ernie-4-5-300b-a47b"
             ],
-            "name": "Claude Fable 5.1"
+            "name": "ernie-4.5"
           },
           {
             "mapped_to": [
-              "claude-opus-5"
+              "__unmappable__"
             ],
-            "name": "Claude Opus 5"
-          },
-          {
-            "mapped_to": [
-              "claude-opus-5-5"
-            ],
-            "name": "Claude Opus 5.5"
-          },
-          {
-            "mapped_to": [
-              "claude-sonnet-5-5"
-            ],
-            "name": "Claude Sonnet 5.5"
+            "name": "ernie-5.0"
           }
         ]
       },
-      "default": null,
+      "default": "ernie-5-5-flash-preview",
       "if_previous": null,
       "note": null,
-      "question": "Map HLE-Diamond model 'Claude Fable 5.2' to llm.json model",
-      "route": "update_hle_diamond_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://lastexam.ai/blog/hle-diamond",
-      "subject": "Claude Fable 5.2",
+      "question": "Which llm.json model is llm-stats id 'ernie-5.5-flash-preview'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/ernie-5.5-flash-preview",
+      "subject": "ernie-5.5-flash-preview",
       "universe": "models"
     },
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "gemini-4-carbon",
-          "reason": "exact to Gemini 4 Carbon, exact match"
-        },
-        {
           "confidence": "weak",
-          "option": "gemini-4-argon",
-          "reason": "exact to Gemini 4 Carbon, most components match"
+          "option": "muse-ember",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 18,
-        "mapped": {
-          "gemini-4-argon": [
-            "Gemini 4 Argon"
-          ]
-        },
+        "known": 360,
+        "mapped": {},
         "siblings": [
           {
             "mapped_to": [
-              "gemini-4-argon"
+              "muse-wonder"
             ],
-            "name": "Gemini 4 Argon"
+            "name": "muse-wonder-1.0"
+          },
+          {
+            "mapped_to": [
+              "muse-wonder-full"
+            ],
+            "name": "muse-wonder-full-1.0"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "muse-spark-1.1"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HLE-Diamond model 'Gemini 4 Carbon' to llm.json model",
-      "route": "update_hle_diamond_mapping.py",
+      "question": "Which llm.json model is llm-stats id 'muse-ember-1.0'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/muse-ember-1.0",
+      "subject": "muse-ember-1.0",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Real-SWE model 'Inkling 1' to llm.json model",
+      "route": "update_real_swe_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://lastexam.ai/blog/hle-diamond",
-      "subject": "Gemini 4 Carbon",
+      "source_url": "https://realswe.withspecific.com/",
+      "subject": "Inkling 1",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling 2, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Real-SWE model 'Inkling 2' to llm.json model",
+      "route": "update_real_swe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://realswe.withspecific.com/",
+      "subject": "Inkling 2",
       "universe": "models"
     }
   ]
