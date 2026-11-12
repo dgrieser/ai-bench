@@ -4043,10 +4043,10 @@ function previewDefaults(c, { fresh = false } = {}) {
   return {
     rename: free ? free.name : null,
     renameCustom: "",
-    url: c.new_url || c.url || "",
+    url: c.url || "",
     urlTyped: !c.url,
-    /* The URL without its preview word is only a guess until the Hub says
-       the repo is there; when it is not, the card goes back to the URL it has. */
+    /* The URL without its preview word is only a guess: the card keeps the URL
+       it has and moves to that one only once the Hub says the repo is there. */
     urlAuto: Boolean(c.new_url),
     scores: Object.fromEntries((c.scores || []).filter((s) => s.suggest !== "keep")
       .map((s) => [s.key, { do: s.suggest, url: s.recredit_to || "" }])),
@@ -4345,9 +4345,9 @@ function fillPreviewCard(card, c) {
     onUser: () => { work.urlAuto = false; },
     fixed: (found) => [
       ...(c.url ? [[c.url, "keep the URL it has now"]] : []),
-      ...(c.new_url ? [[c.new_url, "the URL without 'preview'"
-        + (hasNew(found) ? hfDetail(`${newId[1]}/${newId[2]}`).replace(/^ /, " · ")
-          : found && newId ? " -- not found on Hugging Face" : "")]] : []),
+      /* only once the Hub lists it: a guessed URL that does not resolve is no choice */
+      ...(c.new_url && hasNew(found) ? [[c.new_url, "the URL without 'preview'"
+        + hfDetail(`${newId[1]}/${newId[2]}`).replace(/^ /, " · ")]] : []),
     ],
     search: owner ? () => previewUrlCandidates(c).then((ids) => ({
       ids,
@@ -4358,8 +4358,8 @@ function fillPreviewCard(card, c) {
     onFound: (found) => {
       if (!work.urlAuto) return;
       work.urlAuto = false;
-      if (found && !hasNew(found) && !work.urlTyped && work.url === c.new_url && c.url) {
-        urlInput.value = c.url;
+      if (hasNew(found) && !work.urlTyped && work.url === c.url) {
+        urlInput.value = c.new_url;
         urlInput.oninput();
       }
     },
