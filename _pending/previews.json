@@ -23,6 +23,15 @@
       ],
       "mappings": [
         {
+          "route": "update_llmstats_mapping.py",
+          "route_kind": "llmstats-model",
+          "source": "llmstats",
+          "subject": "ernie-5.5-flash-preview",
+          "preview": true,
+          "suggest": "keep",
+          "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
+        },
+        {
           "route": "update_openrouter_mapping.py",
           "route_kind": "*",
           "source": "openrouter",
