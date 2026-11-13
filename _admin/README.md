@@ -520,17 +520,20 @@ The tab icon is the site's, inlined as base64 between this page's
 directory but `index.html` and `api.php`, and the host has no copy of the icon
 set to link to. `make_favicons.py` writes it — do not edit that block by hand.
 
-Answers batch up and go in one dispatch, so a sitting is one commit — up to 50
-of them. The action bar starts naming that cap at 40 ("40 of 50 ready to send —
-room for 10 more", in amber) so it is known while there is still a choice about
-what belongs in this sitting; past 50 it turns red, says how many to un-answer,
-and greys out **Send**, because `api.php` and `answer.py` would both refuse the
-batch anyway — and 50 is their number (`_answers.MAX_RECORDS`), not the page's.
-The reason for it is the concurrency group described below: a sitting that
-needed two runs would evict its own second run. The other ceiling is size:
-`api.php` refuses a request body over 60 000 bytes (a workflow_dispatch input
-tops out near 64 KB), which is why there is a cap at all rather than none --
-fifty ordinary mapping answers come to a fraction of that.
+Answers batch up and go in one dispatch, so a sitting is one commit. What caps
+a batch is its size, not its count: the answers travel as one `workflow_dispatch`
+input, which GitHub caps near 64 KB, so a batch may weigh at most 60 000 bytes
+as compact JSON (`_answers.MAX_ANSWER_BYTES`). A mapping answer is a couple of
+hundred bytes, so that is a few hundred of them; a benchmark-add carrying its
+full description can be a few thousand. The page measures the batch as it is
+built, the same bytes it will send. From three quarters full the action bar
+names the room left ("12 answers ready to send, 46 KB of 60 KB — room for 14 KB
+more", in amber) so it is known while there is still a choice about what belongs
+in this sitting; past the cap it turns red and greys out **Send**, because
+`api.php` and `answer.py` would both refuse the batch anyway — and the number is
+theirs, not the page's. Keep a sitting to one batch: the workflow's concurrency
+group holds one run and one queued, so a sitting split over two runs back to
+back with a third behind it would evict its own successor.
 
 A few things worth knowing:
 

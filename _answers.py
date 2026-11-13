@@ -170,10 +170,24 @@ NEW_MODEL_ROUTE = "check_new.py"
 # refused for it -- that would make a closed model an open-weight row.
 NEW_CLOSED_MODEL = "new-closed-model"
 
-# Enough to answer a sitting so far, small enough that a batch cannot evict its
-# own successor from the workflow's concurrency group (one run may be running
-# and one queued; a third cancels the queued one).
-MAX_RECORDS = 50
+# What one batch may weigh: the UTF-8 size of the records as the `answers`
+# workflow input carries them -- compact JSON, slashes and non-ASCII left
+# unescaped, which is how api.php's json_encode and the page's JSON.stringify
+# both spell it. GitHub caps a workflow_dispatch input near 64 KB; this leaves
+# headroom under that. It is a size rather than a count because a count was
+# only ever standing in for one: fifty mapping answers are a few KB, while a
+# handful of benchmark-adds with full descriptions can fill a batch. One batch
+# is one dispatch whatever it holds, so the workflow's concurrency group (one
+# run running, one queued) is served by sending a sitting as one batch, not by
+# how many records it has.
+MAX_ANSWER_BYTES = 60000
+
+
+def answers_size(records: object) -> int:
+    """Bytes ``records`` take up as the workflow's `answers` input."""
+    return len(
+        json.dumps(records, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    )
 
 # Read off edit.py rather than restated: it is the script that has a flag per
 # field, so a list here could drift into asking for one that does not exist.
@@ -436,8 +450,11 @@ def validate(
         return [], [Failure(0, "expected a JSON array of records")]
     if not records:
         return [], [Failure(0, "no records to apply")]
-    if len(records) > MAX_RECORDS:
-        return [], [Failure(0, f"{len(records)} records; at most {MAX_RECORDS} per batch")]
+    size = answers_size(records)
+    if size > MAX_ANSWER_BYTES:
+        return [], [Failure(
+            0, f"{size} bytes of answers; at most {MAX_ANSWER_BYTES} per batch"
+        )]
 
     if universes is None:
         universes = propose.build_universes(llm_path, skip_aa=not needs_aa_slugs(records))
