@@ -5,6 +5,59 @@
         {
           "confidence": "exact",
           "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini 4 hydrogen, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 438,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini 4 argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini 4 carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini 4 argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini 4 carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'gemini 4 hydrogen' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "subject": "gemini 4 hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
           "reason": "exact to Gemini 4 Hydrogen, exact match"
         },
         {
