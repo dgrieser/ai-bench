@@ -43,8 +43,12 @@ const REF      = 'main';           // never taken from the client: see the workf
 // which test_fetch_warnings.py holds this to. Anything else a run annotates -- a
 // deprecated action, a runner notice -- is not a fetcher and stays off the page.
 const WARNING_TITLE = 'Fetcher failed';
-const MAX_RECORDS = 25;
-const MAX_BYTES   = 60000;         // workflow_dispatch caps an input near 64 KB
+// What the `answers` input may weigh once encoded: _answers.MAX_ANSWER_BYTES,
+// which the page restates and answer.py enforces. workflow_dispatch caps an
+// input near 64 KB. MAX_BODY bounds the request as read, before decoding --
+// the batch plus its few flags -- so it sits a little above.
+const MAX_ANSWER_BYTES = 60000;
+const MAX_BODY         = 64000;
 const GUARD_HEADER = 'HTTP_X_AI_BENCH_ADMIN';
 
 function fail(int $status, string $message): never
@@ -333,7 +337,7 @@ if (empty($_SERVER[GUARD_HEADER])) {
 }
 
 $raw = file_get_contents('php://input') ?: '';
-if (strlen($raw) > MAX_BYTES) {
+if (strlen($raw) > MAX_BODY) {
     fail(413, 'That batch is too large; send it in smaller pieces.');
 }
 $request = json_decode($raw, true);
@@ -369,8 +373,9 @@ if ($refresh) {
     }
     // Enforced here as well as in the page, because the page is not the
     // boundary -- and again in answer.py, which is the one that actually counts.
-    if (count($answers) > MAX_RECORDS) {
-        fail(400, 'At most ' . MAX_RECORDS . ' answers per batch.');
+    $size = strlen(json_encode($answers, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    if ($size > MAX_ANSWER_BYTES) {
+        fail(413, "That batch is $size bytes; at most " . MAX_ANSWER_BYTES . ' per batch.');
     }
 }
 

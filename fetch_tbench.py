@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Fetch Terminal-Bench 4.0, 3.0, 2.1 and 2.0 and Terminal-Bench-Science 0.1
+Fetch Terminal-Bench 4.1, 4.0, 3.0, 2.1 and 2.0 and Terminal-Bench-Science 0.1
 scores from https://www.tbench.ai/
 
 tbench.ai renders only the current board on the server; every other version
 is a client-side switch (``/leaderboard/terminal-bench/2.0`` redirects to
-``/?version=2.0``, whose server payload is the same 4.0 board). What the
+``/?version=2.0``, whose server payload is the current 4.1 board). What the
 version picker calls instead is the Harbor Hub's public ``leaderboard-read``
 function, one POST per board, naming the dataset package and the leaderboard:
 
@@ -28,7 +28,14 @@ about half are ``"verified": false`` self-reports, and a few run several models
 at once (``model_display`` "Multiple"). Only verified single-model rows are
 read -- an unverified harness claim is not the benchmark's own measurement, and
 an ensemble has no one model to credit. The 4.0 and 2.1 boards carry no such
-flag; every row there is a run with a Harbor Hub job behind it.
+flag; every row there is a run with a Harbor Hub job behind it, and neither
+do 4.1's.
+
+4.1 (2026-11-03) is a verifier release over 4.0's 66 tasks: nothing the agent
+sees changed, and the maintainers re-graded every 4.0 trial with the hardened
+verifiers -- about 1.2% of rewards flipped, every agent stayed inside its 4.0
+95% interval. It gets a column of its own all the same, because a re-grade is
+still a different measurement and new submissions now land on 4.1 only.
 
 Terminal-Bench-Science is a sibling benchmark on the same hub rather than a
 revision of Terminal-Bench: 70 research-workflow tasks written by practising
@@ -63,6 +70,12 @@ PAGE_URL = "https://www.tbench.ai/leaderboard/terminal-bench/{version}"
 # llm.json column -> the board that feeds it. A board on another benchmark's
 # page names that page in "page"; the rest are PAGE_URL at their version.
 BOARDS: dict[str, dict[str, str]] = {
+    # 4.1: 4.0's tasks under hardened verifiers, the 4.0 trials re-graded.
+    "terminal_bench_4_1": {
+        "version": "4.1",
+        "package": "terminal-bench/terminal-bench",
+        "name": "4-1-0",
+    },
     "terminal_bench_4_0": {
         "version": "4.0",
         "package": "terminal-bench/terminal-bench",

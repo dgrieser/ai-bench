@@ -852,30 +852,45 @@ class TestReferenceModels(AnswersTestCase):
 
 
 class TestBatches(AnswersTestCase):
-    def test_a_batch_is_capped(self) -> None:
-        records = [self.mapping(subject=f"m{i}") for i in range(_answers.MAX_RECORDS + 1)]
+    def test_a_batch_is_capped_by_size(self) -> None:
+        """The workflow input is capped in bytes, so the batch is, not by count."""
+        big = "x" * 1000
+        n = _answers.MAX_ANSWER_BYTES // 1000 + 1
+        records = [self.mapping(subject=f"m{i}") | {"note": big} for i in range(n)]
+        self.assertGreater(_answers.answers_size(records), _answers.MAX_ANSWER_BYTES)
         answers, failures = _answers.validate(
             records, llm_path=self.llm, universes=UNIVERSES, queue=self.queue
         )
         self.assertEqual(answers, [])
-        self.assertIn("at most", failures[0].message)
+        self.assertIn("bytes", failures[0].message)
+
+    def test_many_small_answers_fit(self) -> None:
+        """A count cap used to stop a sitting at 25; size alone does not."""
+        records = [self.mapping(subject=f"model-number-{i}") for i in range(100)]
+        self.assertLess(_answers.answers_size(records), _answers.MAX_ANSWER_BYTES)
+
+    def test_size_counts_utf8_bytes_of_compact_json(self) -> None:
+        """The page measures with TextEncoder over JSON.stringify and api.php with
+        strlen over json_encode(UNESCAPED_SLASHES|UNESCAPED_UNICODE); all three
+        must agree on the same bytes."""
+        self.assertEqual(_answers.answers_size([{"a": "b/c"}]), len('[{"a":"b/c"}]'))
+        self.assertEqual(_answers.answers_size(["ä"]), len('["ä"]'.encode("utf-8")))
 
     def test_the_cap_the_admin_page_shows_is_the_one_that_is_enforced(self) -> None:
         """Three files carry the number, and only this one decides it.
 
-        The page greys out Send past the cap and says how many to un-answer, so
-        a page holding a bigger number than the endpoint would offer a batch
-        that cannot be dispatched -- and a smaller one would refuse a sitting
-        that was fine.
+        The page greys out Send past the cap and says how much is over, so a
+        page holding a bigger number than the endpoint would offer a batch that
+        cannot be dispatched -- and a smaller one would refuse a sitting that
+        was fine.
         """
-        for path, pattern in (
-            (_answers.HERE / "_admin" / "api.php", r"const MAX_RECORDS = (\d+);"),
-            (_answers.HERE / "_admin" / "index.html", r"const MAX_RECORDS = (\d+);"),
-        ):
+        for path in (_answers.HERE / "_admin" / "api.php", _answers.HERE / "_admin" / "index.html"):
             with self.subTest(path.name):
-                found = re.search(pattern, path.read_text(encoding="utf-8"))
-                self.assertIsNotNone(found, f"{path.name}: no MAX_RECORDS to check")
-                self.assertEqual(int(found.group(1)), _answers.MAX_RECORDS)
+                found = re.search(
+                    r"const MAX_ANSWER_BYTES\s*=\s*(\d+);", path.read_text(encoding="utf-8")
+                )
+                self.assertIsNotNone(found, f"{path.name}: no MAX_ANSWER_BYTES to check")
+                self.assertEqual(int(found.group(1)), _answers.MAX_ANSWER_BYTES)
 
     def test_one_model_may_only_be_touched_once(self) -> None:
         """Records apply in order and roll back together, so an edit sent with a

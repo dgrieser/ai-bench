@@ -1458,18 +1458,23 @@ const ALL_KNOWN = "__all_known__";
 const NEW_CLOSED_KIND = "new-closed-model";
 const isClosedNew = (question) => question.route_kind === NEW_CLOSED_KIND;
 
-/* What one dispatch may carry: _answers.MAX_RECORDS, which api.php restates and
-   answer.py enforces. The reason is the workflow's concurrency group -- one run
-   may be running and one queued, so a sitting that needed a second run would
-   evict its own successor. Repeated here only so the page can say so while the
-   answers are being picked rather than at the end, when the choice of which 25
-   to send has already been made; both of those still refuse an oversized batch,
-   which is the check that counts. */
-const MAX_RECORDS = 25;
+/* What one dispatch may weigh: _answers.MAX_ANSWER_BYTES, the UTF-8 size of
+   the answers as the workflow input carries them -- compact JSON, which is
+   what JSON.stringify writes and what api.php re-encodes to the same bytes.
+   GitHub caps a workflow_dispatch input near 64 KB. Measured here so the page
+   can say how full the batch is while answers are being picked, rather than at
+   the end; api.php and answer.py both refuse an oversized batch anyway, and
+   theirs is the check that counts. */
+const MAX_ANSWER_BYTES = 60000;
 
-/* Where the footer stops just counting and starts naming the cap. Ten short of
-   it, so there is still room to decide what belongs in this sitting. */
-const CAP_NOTICE_AT = MAX_RECORDS - 10;
+/* Where the footer stops just counting and starts naming the room left: three
+   quarters full, so there is still a choice about what belongs in this
+   sitting. */
+const CAP_NOTICE_AT = Math.round(MAX_ANSWER_BYTES * 0.75);
+
+const ENCODER = new TextEncoder();
+const batchBytes = (answers) => ENCODER.encode(JSON.stringify(answers)).length;
+const kb = (bytes) => `${(bytes / 1000).toFixed(bytes < 10000 ? 1 : 0)} KB`;
 
 /* Today where the person is, not in UTC: an evening in Berlin is already
    tomorrow by toISOString(), and this date is what the site prints as a
@@ -2950,36 +2955,40 @@ function setAnswer(question, record, rerender = true) {
 /* The count, and from CAP_NOTICE_AT on, how much room is left in the batch.
    Named before it runs out rather than after: past the cap the only way out is
    to un-answer cards, and the further in that is discovered the more of the
-   sitting has to be undone. */
+   sitting has to be undone. The room is in bytes, because that is what the
+   workflow input is capped on -- a mapping answer is a couple of hundred, a
+   benchmark-add with its description can be a few thousand. */
 function refreshFooter() {
   const pending = state.answers.size;
-  const room = MAX_RECORDS - pending;
+  const bytes = pending ? batchBytes([...state.answers.values()]) : 0;
+  const room = MAX_ANSWER_BYTES - bytes;
   const count = document.getElementById("count");
+  const answers = `${pending} answer${pending === 1 ? "" : "s"}`;
   const text = !pending
     ? "Nothing to send yet"
     : room < 0
-      ? `${pending} answers -- ${-room} over the ${MAX_RECORDS} a batch holds; `
-        + `un-answer ${-room} to send`
-      : room === 0
-        ? `${MAX_RECORDS} of ${MAX_RECORDS} ready to send -- a batch is full`
-        : pending >= CAP_NOTICE_AT
-          ? `${pending} of ${MAX_RECORDS} ready to send -- room for ${room} more`
-          : `${pending} answer${pending === 1 ? "" : "s"} ready to send`;
+      ? `${answers}, ${kb(bytes)} -- ${kb(-room)} over the ${kb(MAX_ANSWER_BYTES)} `
+        + "a batch holds; un-answer some to send"
+      : bytes >= CAP_NOTICE_AT
+        ? `${answers} ready to send, ${kb(bytes)} of ${kb(MAX_ANSWER_BYTES)} -- `
+          + `room for ${kb(room)} more`
+        : `${answers} ready to send`;
   /* The count, and under it what Send will do with them -- the choice beside
      it is three words, and the cost of each is worth reading before sending. */
   count.replaceChildren(text,
     pending ? el("span", { id: "mode-hint" }, `Send ${MODE_HINTS[state.mode]}`) : "");
+  count.title = pending ? `${bytes} of ${MAX_ANSWER_BYTES} bytes` : "";
   renderMode();
   saveDraft();
-  count.classList.toggle("ready", pending > 0 && pending < CAP_NOTICE_AT);
-  count.classList.toggle("near", pending >= CAP_NOTICE_AT && room >= 0);
+  count.classList.toggle("ready", pending > 0 && bytes < CAP_NOTICE_AT);
+  count.classList.toggle("near", bytes >= CAP_NOTICE_AT && room >= 0);
   count.classList.toggle("over", room < 0);
   const send = document.getElementById("send");
-  /* Disabled rather than left to fail on the endpoint: the 400 comes back after
+  /* Disabled rather than left to fail on the endpoint: the 413 comes back after
      the batch has been typed out in full, and says nothing about which answers
      to drop. */
   send.disabled = pending === 0 || room < 0;
-  send.title = room < 0 ? `At most ${MAX_RECORDS} answers per batch.` : "";
+  send.title = room < 0 ? `At most ${kb(MAX_ANSWER_BYTES)} of answers per batch.` : "";
   document.getElementById("clear").disabled = pending === 0;
 }
 
