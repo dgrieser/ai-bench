@@ -1,51 +1,12 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-12 - Google",
-      "question": "Carry newly released closed model 'gemini-4-hydrogen' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-hydrogen",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-12 - Google",
-      "question": "Carry newly released closed model 'gemini-4-hydrogen-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-hydrogen-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-12 - Google",
-      "question": "Carry newly released closed model 'gemini-4-hydrogen-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-hydrogen-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-12 - Google",
-      "question": "Carry newly released closed model 'gemini-4-hydrogen-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-hydrogen-medium",
-      "universe": null
-    },
-    {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to Gemini 4 Hydrogen, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
@@ -94,6 +55,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to Gemini 4 Hydrogen, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
@@ -285,6 +251,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "gemini-4-hydrogen",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "gemini-4-argon",
           "reason": "the same name without the vendor prefix: exact to gemini-4-hydrogen, most components match"
         },
@@ -368,6 +339,65 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling 2 Small, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to Inkling 2 Small, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to 2-small, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 27,
+        "mapped": {
+          "inkling-2-small": [
+            "Inkling 2"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-2-small"
+            ],
+            "name": "Inkling 2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Real-SWE model 'Inkling 2 Small' to llm.json model",
+      "route": "update_real_swe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://realswe.withspecific.com/",
+      "subject": "Inkling 2 Small",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to Gemini 4 Hydrogen, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gemini-4-argon",
           "reason": "exact to Gemini 4 Hydrogen, most components match"
@@ -415,6 +445,233 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-pro",
+          "reason": "exact to DeepSeek V4 Pro 0813, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 52,
+        "mapped": {
+          "deepseek-v4-1-flash": [
+            "DeepSeek V4.1 Flash"
+          ],
+          "deepseek-v4-1-flash-1017": [
+            "DeepSeek V4.1 Flash 1017"
+          ],
+          "deepseek-v4-pro": [
+            "DeepSeek V4 Pro"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "deepseek-v4-pro"
+            ],
+            "name": "DeepSeek V4 Pro"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-1-flash"
+            ],
+            "name": "DeepSeek V4.1 Flash"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-1-flash-1017"
+            ],
+            "name": "DeepSeek V4.1 Flash 1017"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'DeepSeek V4 Pro 0813' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "DeepSeek V4 Pro 0813",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy4-preview",
+          "reason": "exact to Hy4, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Hy4' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "Hy4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to MiMo V2.6 Flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "exact to MiMo V2.6 Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to MiMo V2.6 Flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'MiMo V2.6 Flash' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "MiMo V2.6 Flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "mimo-v2-6-pro",
+          "reason": "exact to MiMo V2.6 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-pro",
+          "reason": "exact to MiMo V2.6 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-6-flash",
+          "reason": "exact to MiMo V2.6 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'MiMo V2.6 Pro' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "MiMo V2.6 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "minimax-m3",
+          "reason": "exact to MiniMax M3, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3-1-flash",
+          "reason": "exact to MiniMax M3, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "drop short code to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "drop short code to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 52,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MiniMax M2"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MiniMax M2.1"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'MiniMax M3' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "MiniMax M3",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini-4-hydrogen, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",

@@ -172,6 +172,10 @@
         {
           "kind": "mapping",
           "text": "vals lists it as 'tencent/hy4'"
+        },
+        {
+          "kind": "queue",
+          "text": "tbench asks about 'Hy4', with this entry as a candidate"
         }
       ],
       "renames": [
@@ -910,7 +914,16 @@
           "follows_url": false
         }
       ],
-      "queue": []
+      "queue": [
+        {
+          "route": "update_tbench_mapping.py",
+          "route_kind": "mapping",
+          "subject": "Hy4",
+          "if_previous": null,
+          "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+          "preview": false
+        }
+      ]
     },
     {
       "name": "ripple-65b-preview",
