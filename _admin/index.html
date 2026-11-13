@@ -1462,10 +1462,10 @@ const isClosedNew = (question) => question.route_kind === NEW_CLOSED_KIND;
    answer.py enforces. The reason is the workflow's concurrency group -- one run
    may be running and one queued, so a sitting that needed a second run would
    evict its own successor. Repeated here only so the page can say so while the
-   answers are being picked rather than at the end, when the choice of which 25
+   answers are being picked rather than at the end, when the choice of which 50
    to send has already been made; both of those still refuse an oversized batch,
    which is the check that counts. */
-const MAX_RECORDS = 25;
+const MAX_RECORDS = 50;
 
 /* Where the footer stops just counting and starts naming the cap. Ten short of
    it, so there is still room to decide what belongs in this sitting. */

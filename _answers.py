@@ -173,7 +173,7 @@ NEW_CLOSED_MODEL = "new-closed-model"
 # Enough to answer a sitting so far, small enough that a batch cannot evict its
 # own successor from the workflow's concurrency group (one run may be running
 # and one queued; a third cancels the queued one).
-MAX_RECORDS = 25
+MAX_RECORDS = 50
 
 # Read off edit.py rather than restated: it is the script that has a flag per
 # field, so a list here could drift into asking for one that does not exist.

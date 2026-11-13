@@ -43,7 +43,7 @@ const REF      = 'main';           // never taken from the client: see the workf
 // which test_fetch_warnings.py holds this to. Anything else a run annotates -- a
 // deprecated action, a runner notice -- is not a fetcher and stays off the page.
 const WARNING_TITLE = 'Fetcher failed';
-const MAX_RECORDS = 25;
+const MAX_RECORDS = 50;
 const MAX_BYTES   = 60000;         // workflow_dispatch caps an input near 64 KB
 const GUARD_HEADER = 'HTTP_X_AI_BENCH_ADMIN';
 
