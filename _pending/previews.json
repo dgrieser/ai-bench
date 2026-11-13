@@ -171,6 +171,10 @@
         },
         {
           "kind": "mapping",
+          "text": "tbench lists it as 'Hy4'"
+        },
+        {
+          "kind": "mapping",
           "text": "vals lists it as 'tencent/hy4'"
         },
         {
@@ -262,6 +266,15 @@
           "preview": true,
           "suggest": "keep",
           "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
+        },
+        {
+          "route": "update_tbench_mapping.py",
+          "route_kind": "*",
+          "source": "tbench",
+          "subject": "Hy4",
+          "preview": false,
+          "suggest": "keep",
+          "why": "names the release"
         },
         {
           "route": "update_vals_mapping.py",
