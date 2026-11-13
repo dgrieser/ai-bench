@@ -1,6 +1,4 @@
 {"entries": [
-{"at": "2026-07-01T06:45:11Z", "by": "hand", "commit": "48a5a06", "previous": null, "route": "update_llmstats_mapping.py", "subject": "claude-sonnet-5", "value": "__unmappable__"},
-{"at": "2026-07-02T13:18:25Z", "by": "hand", "commit": "280c0ec", "previous": null, "route": "update_rebench_mapping.py", "subject": "DeepSeek-V4 Flash", "value": "deepseek-v4-flash"},
 {"at": "2026-07-02T13:18:25Z", "by": "hand", "commit": "280c0ec", "previous": null, "route": "update_rebench_mapping.py", "subject": "DeepSeek-V4 Pro", "value": "__unmappable__"},
 {"at": "2026-07-02T13:18:25Z", "by": "hand", "commit": "280c0ec", "previous": null, "route": "update_rebench_mapping.py", "subject": "GLM-5.2", "value": "glm-5-2"},
 {"at": "2026-07-02T13:18:25Z", "by": "hand", "commit": "280c0ec", "previous": null, "route": "update_rebench_mapping.py", "subject": "MiMo V2.5 Pro", "value": "__unmappable__"},
@@ -3998,5 +3996,7 @@
 {"at": "2026-11-13T22:27:02Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43519058516", "subject": "llamaindex/ParseBench-2 (overall)", "value": "__unmappable__"},
 {"at": "2026-11-13T22:27:02Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43519058516", "subject": "llamaindex/ParseBench-2 (tables)", "value": "__unmappable__"},
 {"at": "2026-11-13T22:27:02Z", "by": "admin", "previous": null, "route": "update_huggingface_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43519058516", "subject": "llamaindex/ParseBench-2 (text)", "value": "__unmappable__"},
-{"at": "2026-11-13T22:27:02Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43519058516", "subject": "inclusionai/ling-3.2-flash", "value": "ling-3-2-flash"}
+{"at": "2026-11-13T22:27:02Z", "by": "admin", "previous": null, "route": "update_openrouter_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43519058516", "subject": "inclusionai/ling-3.2-flash", "value": "ling-3-2-flash"},
+{"at": "2026-11-13T23:54:58Z", "by": "admin", "previous": null, "route": "update_spheron_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43530343217", "subject": "inclusionAI/Ling-3.2-flash", "value": "ling-3-2-flash"},
+{"at": "2026-11-13T23:54:58Z", "by": "admin", "previous": null, "route": "update_tbench_mapping.py", "run": "https://github.com/dgrieser/ai-bench/actions/runs/43530343217", "subject": "Gemini 4 Hydrogen", "value": "gemini-4-hydrogen"}
 ]}
