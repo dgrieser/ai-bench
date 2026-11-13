@@ -3,166 +3,45 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "ling-2-6-flash",
-          "reason": "exact to ling-3-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-0-flash",
-          "reason": "exact to ling-3-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "exact to ling-3-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-flash-2-0",
-          "reason": "exact to ling-3-2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-0-flash-vl",
-          "reason": "exact to ling-3-2-flash, most components match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'ling-3-2-flash'?",
-      "route": "update_artificialanalysis_mapping.py",
-      "route_kind": "aa-mapping",
-      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-flash",
-      "subject": "ling-3-2-flash",
-      "universe": "aa-slugs"
-    },
-    {
-      "candidates": [
-        {
           "confidence": "exact",
-          "option": "ling-3-2-flash",
-          "reason": "exact to Ling-3.2-flash, exact match"
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Argon, exact match"
         },
         {
           "confidence": "weak",
-          "option": "ling-3-0-flash",
-          "reason": "exact to Ling-3.2-flash, most components match"
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Argon, most components match"
         },
         {
           "confidence": "weak",
-          "option": "ling-3-1-flash",
-          "reason": "exact to Ling-3.2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-flash-2-0",
-          "reason": "exact to Ling-3.2-flash, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-3-0-flash-vl",
-          "reason": "exact to Ling-3.2-flash, most components match"
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to Gemini 4 Argon, most components match"
         }
       ],
       "context": {
-        "known": 227,
+        "known": 61,
         "mapped": {
-          "ling-3-0-flash": [
-            "inclusionAI/Ling-3.0-flash"
-          ],
-          "ling-3-0-flash-vl": [
-            "inclusionAI/Ling-3.0-flash-VL"
-          ],
-          "ling-3-1-flash": [
-            "inclusionAI/Ling-3.1-flash"
-          ],
-          "ling-flash-2-0": [
-            "inclusionAI/Ling-flash-2.0"
+          "gemini-4-hydrogen": [
+            "Gemini 4 Hydrogen"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "ling-3-0-flash"
+              "gemini-4-hydrogen"
             ],
-            "name": "inclusionAI/Ling-3.0-flash"
-          },
-          {
-            "mapped_to": [
-              "ling-3-1-flash"
-            ],
-            "name": "inclusionAI/Ling-3.1-flash"
-          },
-          {
-            "mapped_to": [
-              "ling-flash-2-0"
-            ],
-            "name": "inclusionAI/Ling-flash-2.0"
-          },
-          {
-            "mapped_to": [
-              "ling-3-0-flash-vl"
-            ],
-            "name": "inclusionAI/Ling-3.0-flash-VL"
-          },
-          {
-            "mapped_to": [
-              "ling-3-0-flash-fin"
-            ],
-            "name": "inclusionAI/Ling-3.0-flash-Fin"
-          },
-          {
-            "mapped_to": [
-              "ling-3-0-tiny"
-            ],
-            "name": "inclusionAI/Ling-3.0-tiny"
-          },
-          {
-            "mapped_to": [
-              "ling-mini-2-0"
-            ],
-            "name": "inclusionAI/Ling-mini-2.0"
+            "name": "Gemini 4 Hydrogen"
           }
         ]
       },
-      "default": "ling-3-2-flash",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'inclusionAI/Ling-3.2-flash' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.2-flash/",
-      "subject": "inclusionAI/Ling-3.2-flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gemini-4-hydrogen",
-          "reason": "exact to Gemini 4 Hydrogen, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-argon",
-          "reason": "exact to Gemini 4 Hydrogen, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-carbon",
-          "reason": "exact to Gemini 4 Hydrogen, most components match"
-        }
-      ],
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Terminal-Bench model 'Gemini 4 Hydrogen' to llm.json model",
+      "question": "Map Terminal-Bench model 'Gemini 4 Argon' to llm.json model",
       "route": "update_tbench_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-      "subject": "Gemini 4 Hydrogen",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "Gemini 4 Argon",
       "universe": "models"
     }
   ]
