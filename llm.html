@@ -2448,6 +2448,170 @@
       margin-top: 8px;
     }
 
+    /* The name cell: padlock and name in one grid track, so a closed model's
+       row keeps the same three columns as an open one's. */
+    .rank-name {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .rank-name > .recent-model {
+      min-width: 0;
+    }
+
+    .rank-name > .reference-tag {
+      flex: none;
+    }
+
+    /* The controls over a timeline: how it is grouped, then (for rankings)
+       which index it is narrowed to. */
+    .panel-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      margin: 0 0 14px;
+    }
+
+    .panel-controls .rank-filter {
+      margin: 0;
+    }
+
+    /* A segmented switch: one choice of four, so drawn as one control. */
+    .span-switch {
+      display: inline-flex;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-alt);
+      overflow: hidden;
+    }
+
+    .span-switch button {
+      width: auto;
+      min-height: 0;
+      padding: 3px 11px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 150ms ease, background-color 150ms ease;
+    }
+
+    .span-switch button + button {
+      border-left: 1px solid var(--line);
+    }
+
+    .span-switch button:hover {
+      color: var(--accent);
+    }
+
+    .span-switch button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    /* The netted list's gutter names a window, not a day. */
+    .recent-day.is-span .recent-date-day,
+    .recent-day.is-span .recent-date-age {
+      white-space: nowrap;
+    }
+
+    /* The directory panels (Reference, Credits, Sources) keep their own
+       heading margin once their heading is a fold's handle. */
+    .benchmarks-panel .panel-fold[open] > summary {
+      margin-bottom: 14px;
+    }
+
+    .credits-panel .panel-fold[open] > summary,
+    .sources-panel .panel-fold[open] > summary {
+      margin-bottom: 10px;
+    }
+
+    /* ── Leaderboard band ──
+       The table's section heading, above its filters: folding it puts both
+       away. Styled like the panel headings below the table. */
+    .board-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .board-head h2 {
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .board-head button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: auto;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .board-head button::before {
+      content: "▾";
+      font-size: 0.75rem;
+      letter-spacing: 0;
+      transition: transform 150ms ease;
+    }
+
+    .page.board-collapsed .board-head button::before {
+      transform: rotate(-90deg);
+    }
+
+    .board-head:hover button {
+      color: var(--accent);
+    }
+
+    .board-head button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .board-count {
+      color: var(--subtle);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .page.board-collapsed .filters,
+    .page.board-collapsed #content > .table-shell,
+    .page.board-collapsed #content > .empty {
+      display: none;
+    }
+
+    .page.detail-view .board-head {
+      display: none;
+    }
+
     .detail-history-lead {
       margin: 0 0 14px;
       max-width: 82ch;
@@ -4966,9 +5130,36 @@
         padding-bottom: 24px;
       }
 
-      .recent-panel {
+      .recent-panel,
+      .board-head {
         padding-left: 16px;
         padding-right: 16px;
+      }
+
+      /* The grouping switch spans the width, its four choices sharing it. */
+      .span-switch {
+        display: flex;
+        width: 100%;
+      }
+
+      .span-switch button {
+        flex: 1;
+        padding: 6px 4px;
+      }
+
+      .panel-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      /* Tighter tracks: badge, name, places on one line at phone width. */
+      .rank-line {
+        grid-template-columns: 3.1em minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      .rank-places > span {
+        min-width: 0;
       }
 
       /* One swipeable row of short index names rather than four rows of
@@ -5283,6 +5474,14 @@
       </div>
     </section>
 
+    <!-- The table's own section heading. Folding it puts the filters and the
+         table away together, leaving the panels underneath one click from
+         the top of the page. -->
+    <section class="board-head" id="boardHead" hidden>
+      <h2><button type="button" id="boardToggle" aria-expanded="true" aria-controls="filtersPanel content">Leaderboard</button></h2>
+      <span class="board-count" id="boardCount" aria-hidden="true"></span>
+    </section>
+
     <section class="filters" id="filtersPanel" hidden>
       <!-- The head band stays put when the fields fold away, which is why the
            reference checkbox lives here and not among them: it is the one
@@ -5493,11 +5692,16 @@
         // HISTORY_DAYS days and "Show all history" widens it to everything
         // llm.json records; not an address, because it is a way of reading one
         // panel rather than a different view of the index.
-        history: { showAll: false, collapsed: panelCollapsed("recent") },
+        // span: 0 lists the window day by day; 3, 7 or 14 nets every change
+        // of that many days into one list (see SPAN_CHOICES).
+        history: { showAll: false, span: storedSpan("recent") },
         // The Ranking Changes panel: the same window as Recently Added, kept
         // separately so widening one does not flood the other, and the index
         // the reader narrowed it to ("" for all of them).
-        rankings: { showAll: false, index: "", collapsed: panelCollapsed("rankings") },
+        rankings: { showAll: false, index: "", span: storedSpan("rankings") },
+        // Which foldable sections are folded, by name, read from localStorage
+        // the first time each is drawn (see isPanelCollapsed).
+        folds: {},
         radar: {
           axes: [],
           pickerOpen: false
@@ -5625,6 +5829,9 @@
         title: document.getElementById("title"),
         subtitle: document.getElementById("subtitle"),
         filtersPanel: document.getElementById("filtersPanel"),
+        boardHead: document.getElementById("boardHead"),
+        boardToggle: document.getElementById("boardToggle"),
+        boardCount: document.getElementById("boardCount"),
         filtersHead: document.getElementById("filtersHead"),
         filtersToggle: document.getElementById("filtersToggle"),
         filtersCount: document.getElementById("filtersCount"),
@@ -5825,6 +6032,8 @@
         // visible and hide only the toggle and filter fields — otherwise the
         // import pills/button would be hidden along with the panel.
         ui.filtersPanel.hidden = false;
+        ui.boardHead.hidden = true;
+        setBoardCollapsed(false, false);
         ui.filtersHead.style.display = "none";
         ui.controls.style.display = "none";
         ui.toolbar.hidden = false;
@@ -5832,6 +6041,22 @@
         ui.status.textContent = message;
         ui.resultCount.textContent = "No data loaded";
         ui.benchmarkCount.textContent = "Import required";
+      }
+
+      // Fold the whole leaderboard -- filters and table -- under its heading.
+      // A class on the page rather than on #content, since the table is
+      // redrawn into #content on every filter change and the panels below it
+      // stay.
+      function setBoardCollapsed(collapsed, remember) {
+        document.getElementById("app").classList.toggle("board-collapsed", collapsed);
+        ui.boardToggle.setAttribute("aria-expanded", String(!collapsed));
+        if (remember) {
+          state.folds.board = collapsed;
+          rememberPanelCollapsed("board", collapsed);
+        }
+        if (!collapsed) {
+          queueStickyHeadSync();
+        }
       }
 
       // Collapse/expand the filter fields. overflow on the collapse wrapper is
@@ -5939,6 +6164,8 @@
         ui.subtitle.textContent = data.subtitle || "";
         ui.subtitle.hidden = !data.subtitle;
         ui.filtersPanel.hidden = false;
+        ui.boardHead.hidden = false;
+        setBoardCollapsed(isPanelCollapsed("board"), false);
         // Collapsed on mobile by default, expanded on desktop.
         setFiltersCollapsed(window.matchMedia("(max-width: 860px)").matches, false);
         // Enable collapse/chevron transitions only after the initial state paints.
@@ -6506,6 +6733,10 @@
       }
 
       function bindEvents() {
+        ui.boardHead.addEventListener("click", () => {
+          setBoardCollapsed(!document.getElementById("app").classList.contains("board-collapsed"), true);
+        });
+
         // On the band, not the button: the chevron and the strip between them
         // fold the panel too, and the button's own click simply bubbles here.
         // The checkbox is the one thing in the band that is not a collapse.
@@ -7200,6 +7431,7 @@
             ${renderCreditsDirectory()}
             ${renderSourcesDirectory()}
           `;
+          bindPanelFolds();
           return;
         }
 
@@ -7289,17 +7521,7 @@
             window.scrollBy(0, moved.getBoundingClientRect().top - anchor);
           }
         };
-        ui.content.querySelectorAll("[data-panel-fold]").forEach((fold) => {
-          fold.addEventListener("toggle", () => {
-            const collapsed = !fold.open;
-            const panel = fold.dataset.panelFold;
-            const slot = panel === "rankings" ? state.rankings : state.history;
-            if (slot.collapsed !== collapsed) {
-              slot.collapsed = collapsed;
-              rememberPanelCollapsed(panel, collapsed);
-            }
-          });
-        });
+        bindPanelFolds();
 
         const rankToggle = ui.content.querySelector("[data-rank-toggle]");
         if (rankToggle) {
@@ -7307,8 +7529,17 @@
             state.rankings.showAll = !state.rankings.showAll;
           }));
         }
+        // By day, or every change of the last N days netted into one list.
+        ui.content.querySelectorAll("[data-span-panel]").forEach((button) => {
+          const panel = button.dataset.spanPanel;
+          button.addEventListener("click", () => rerenderAround(`.span-switch[data-span-group="${panel}"]`, () => {
+            const span = Number(button.dataset.span) || 0;
+            (panel === "rankings" ? state.rankings : state.history).span = span;
+            rememberSpan(panel, span);
+          }));
+        });
         ui.content.querySelectorAll("[data-rank-index]").forEach((button) => {
-          button.addEventListener("click", () => rerenderAround(".rank-filter", () => {
+          button.addEventListener("click", () => rerenderAround("[data-rank-filter]", () => {
             state.rankings.index = button.dataset.rankIndex || "";
           }));
         });
@@ -7432,7 +7663,8 @@
       }
 
       /* ── Foldable panels ──
-         Recently Added and Ranking Changes fold away under their own heading.
+         Every section under the table folds away under its own heading (and
+         the table itself, under the Leaderboard band above the filters).
          The panel is rebuilt from a string on every filter change, so whether
          it is folded lives in state (and in localStorage, so it stays folded
          across visits) rather than in the element. */
@@ -7454,8 +7686,76 @@
         } catch (err) { /* not worth failing over */ }
       }
 
+      // Keeps a fold's state across the rebuilds every filter change makes.
+      function bindPanelFolds() {
+        ui.content.querySelectorAll("[data-panel-fold]").forEach((fold) => {
+          fold.addEventListener("toggle", () => {
+            const collapsed = !fold.open;
+            const panel = fold.dataset.panelFold;
+            if (isPanelCollapsed(panel) !== collapsed) {
+              state.folds[panel] = collapsed;
+              rememberPanelCollapsed(panel, collapsed);
+            }
+          });
+        });
+      }
+
+      // Folded or not, from state, falling back to what this browser stored.
+      function isPanelCollapsed(panel) {
+        if (!(panel in state.folds)) {
+          state.folds[panel] = panelCollapsed(panel);
+        }
+        return state.folds[panel];
+      }
+
+      // The grouped windows the two timelines offer besides "by day".
+      const SPAN_CHOICES = [3, 7, 14];
+
+      function storedSpan(panel) {
+        try {
+          const span = Number(localStorage.getItem(`panel-span:${panel}`));
+          return SPAN_CHOICES.includes(span) ? span : 0;
+        } catch (err) {
+          return 0;
+        }
+      }
+
+      function rememberSpan(panel, span) {
+        try {
+          if (span) {
+            localStorage.setItem(`panel-span:${panel}`, String(span));
+          } else {
+            localStorage.removeItem(`panel-span:${panel}`);
+          }
+        } catch (err) { /* not worth failing over */ }
+      }
+
+      // The switch between the day-by-day timeline and one netted list.
+      function renderSpanSwitch(panel, span) {
+        const choices = [[0, "By day"], ...SPAN_CHOICES.map((days) => [days, `${days} days`])];
+        return `
+          <div class="span-switch" role="group" aria-label="Group changes" data-span-group="${escapeAttr(panel)}">
+            ${choices.map(([days, label]) => `<button type="button" data-span-panel="${escapeAttr(panel)}" data-span="${days}" aria-pressed="${days === span ? "true" : "false"}"${days ? ` title="Every change of the last ${days} days, netted per model"` : ` title="One entry per day"`}>${label}</button>`).join("")}
+          </div>
+        `;
+      }
+
+      // A date gutter for a netted list: the window instead of a day.
+      function renderSpanDate(span) {
+        const start = new Date();
+        start.setDate(start.getDate() - (span - 1));
+        const iso = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, "0")}-${String(start.getDate()).padStart(2, "0")}`;
+        return `
+          <div class="recent-date">
+            <span class="recent-date-day">Last ${span} days</span>
+            <span class="recent-date-age">since ${escapeHtml(iso)}</span>
+          </div>
+        `;
+      }
+
       // The panel's heading as the summary of a <details> holding the rest.
-      function renderPanelFold(panel, collapsed, title, body) {
+      function renderPanelFold(panel, title, body) {
+        const collapsed = isPanelCollapsed(panel);
         return `
           <details class="panel-fold" data-panel-fold="${escapeAttr(panel)}"${collapsed ? "" : " open"}>
             <summary><h2>${title}</h2></summary>
@@ -7517,7 +7817,7 @@
       // so one renderer draws either. Reads state.filteredModels and the
       // visible benchmark keys, so it describes the table on screen rather
       // than the whole file.
-      function recentAdditions() {
+      function recentAdditions(inWindow = inHistoryWindow) {
         const benchKeys = visibleBenchmarkKeys().filter((key) => !isDerivedBenchmark(key));
         const byDate = new Map();
         const dayFor = (date) => {
@@ -7533,7 +7833,7 @@
           // week the arrival is still an event, just an unbadged one. A
           // reference model is never an arrival either way — it is closed and
           // carried as a yardstick, which is not news about the open field.
-          const arrival = !isReferenceModel(model) && inHistoryWindow(model.date_added)
+          const arrival = !isReferenceModel(model) && inWindow(model.date_added)
             ? model.date_added
             : "";
           const arrived = [];
@@ -7543,7 +7843,7 @@
 
           benchKeys.forEach((key) => {
             scoreHistory(model, key).forEach((event) => {
-              if (event.kind === "removed" || !inHistoryWindow(event.date)) {
+              if (event.kind === "removed" || !inWindow(event.date)) {
                 return;
               }
               // Dated no later than the model itself: it came with it. A
@@ -7576,6 +7876,58 @@
         // Newest day first; within a day, table order, since these were
         // collected by walking the rows.
         return [...byDate.values()].sort((a, b) => a.age - b.age);
+      }
+
+      // Every change of the last `span` days netted into one list: a model's
+      // entries gathered across the days they fell on, each benchmark once,
+      // holding the latest value and what it replaced before the window
+      // opened. A score that arrived and then moved is an arrival at its
+      // latest value; one that moved and moved back is no news and is
+      // dropped. Arrivals first, then the rest, each in table order.
+      function recentSpanSummary(span) {
+        const days = recentAdditions((date) => {
+          const age = daysSince(date);
+          return age !== null && age >= 0 && age < span;
+        });
+        const byModel = new Map();
+        const slotFor = (model) => {
+          if (!byModel.has(model)) {
+            byModel.set(model, { model, arrived: false, entries: new Map() });
+          }
+          return byModel.get(model);
+        };
+        const merge = (slot, entry) => {
+          const earlier = slot.entries.get(entry.key);
+          slot.entries.set(entry.key, earlier
+            ? { ...entry, kind: earlier.kind, previous: earlier.previous }
+            : { ...entry });
+        };
+        // Oldest day first, so each later entry overwrites the value.
+        [...days].reverse().forEach((day) => {
+          day.models.forEach((row) => {
+            const slot = slotFor(row.model);
+            slot.arrived = true;
+            row.entries.forEach((entry) => merge(slot, entry));
+          });
+          day.scores.forEach((row) => {
+            const slot = slotFor(row.model);
+            row.entries.forEach((entry) => merge(slot, entry));
+          });
+        });
+        const order = new Map(state.filteredModels.map((model, position) => [model, position]));
+        const rows = [...byModel.values()]
+          .map((slot) => ({
+            model: slot.model,
+            arrived: slot.arrived,
+            entries: [...slot.entries.values()].filter((entry) =>
+              entry.kind !== "updated" || !Number.isFinite(entry.previous) || entry.value !== entry.previous)
+          }))
+          .filter((row) => row.arrived || row.entries.length)
+          .sort((a, b) => (order.get(a.model) ?? 0) - (order.get(b.model) ?? 0));
+        return {
+          models: rows.filter((row) => row.arrived),
+          scores: rows.filter((row) => !row.arrived)
+        };
       }
 
       // Links in this panel pass through the same gate a slip's link does, so an
@@ -7626,7 +7978,10 @@
       // arriving and a score moving, not between the rows they sit in.
       function renderRecentScoreChips(row, day) {
         const model = row.model;
-        const chips = row.entries.map(({ key, value, previous, kind, source: stamped }) => {
+        const chips = row.entries.map(({ key, value, previous, kind, source: stamped, date: stampedOn }) => {
+          // Each entry's own day: in a netted list the row spans several.
+          const date = stampedOn || day.date;
+          const age = stampedOn ? (daysSince(stampedOn) ?? day.age) : day.age;
           // The page the score was read from on the day it was read, which is
           // not always the page the model cites now.
           const source = recentLinkUrl(stamped || model.scores_source?.[key] || "");
@@ -7640,10 +7995,12 @@
             body: scoreTipBody(key),
             meta: [
               moved
-                ? `Updated ${day.date} · ${describeAge(day.age)} — was ${formatScore(previous, key)}`
+                ? (day.span
+                  ? `Was ${formatScore(previous, key)} ${day.span} days ago — last updated ${date} · ${describeAge(age)}`
+                  : `Updated ${date} · ${describeAge(age)} — was ${formatScore(previous, key)}`)
                 : kind === "recorded"
-                  ? `First recorded ${day.date} · ${describeAge(day.age)} — the index kept no history before ${state.data?.history_since || "it began"}, so this is the day the score was last written, not necessarily the day it arrived`
-                  : `Added ${day.date} · ${describeAge(day.age)}`,
+                  ? `First recorded ${date} · ${describeAge(age)} — the index kept no history before ${state.data?.history_since || "it began"}, so this is the day the score was last written, not necessarily the day it arrived`
+                  : `Added ${date} · ${describeAge(age)}`,
               source ? "" : "No source recorded for this score."
             ].filter(Boolean).join("\n"),
             url: source
@@ -7679,7 +8036,9 @@
           <div class="recent-entry">
             <span class="recent-entry-head">${renderNewBadge(model.date_added)}${renderRecentModelName(model, true)}</span>
             ${model.creatorName ? `<span class="recent-creator">${escapeHtml(model.creatorName)}</span>` : ""}
-            ${scored ? `<span class="recent-note">arrived with ${countLabel(scored, "score")}</span>` : ""}
+            ${day.span
+              ? `<span class="recent-note">added ${escapeHtml(describeAge(daysSince(model.date_added) ?? 0))}${scored ? ` · ${countLabel(scored, "score")}` : ""}</span>`
+              : (scored ? `<span class="recent-note">arrived with ${countLabel(scored, "score")}</span>` : "")}
             ${renderRecentScoreChips(row, day)}
           </div>
         `;
@@ -7705,50 +8064,71 @@
         `;
       }
 
-      function renderRecentPanel() {
-        const days = recentAdditions();
-        const showAll = state.history.showAll;
-        // The days below say what happened; only their absence needs saying in
-        // words, so the lead is the empty case and nothing else.
-        const lead = days.length
-          ? ""
-          : `<p class="recent-lead">Nothing has changed ${showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.</p>`;
+      // One day's (or one window's) entries: the head of the list stands for
+      // it, the tail waits behind a disclosure.
+      function renderRecentEntries(day) {
+        const entries = [
+          ...day.models.map((row) => renderRecentModelEntry(row, day)),
+          ...day.scores.map((row) => renderRecentScoreEntry(row, day))
+        ];
+        // One fetch can restamp a hundred models at once, and a day that long
+        // buries every other day under it. The head of the list stands for the
+        // day — in table order, so it is the day's best-ranked models — and
+        // the tail waits behind a disclosure. Nothing is dropped, and <details>
+        // needs no wiring, which matters where the panel is rebuilt from a
+        // string on every filter change.
+        const head = entries.slice(0, RECENT_DAY_PREVIEW).join("");
+        const tail = entries.slice(RECENT_DAY_PREVIEW);
+        const more = tail.length
+          ? `<details class="recent-more"><summary>${tail.length} more ${tail.length === 1 ? "entry" : "entries"}</summary><div class="recent-entries">${tail.join("")}</div></details>`
+          : "";
+        return `<div class="recent-entries">${head}${more}</div>`;
+      }
 
-        const items = days.map((day) => {
-          // The dot fades across the window the table marks in red — the
-          // panel's own window is longer, so most days sit at its faintest.
-          const fresh = Math.max(0, (NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
-          const entries = [
-            ...day.models.map((row) => renderRecentModelEntry(row, day)),
-            ...day.scores.map((row) => renderRecentScoreEntry(row, day))
-          ];
-          // One fetch can restamp a hundred models at once, and a day that long
-          // buries every other day under it. The head of the list stands for the
-          // day — in table order, so it is the day's best-ranked models — and
-          // the tail waits behind a disclosure. Nothing is dropped, and <details>
-          // needs no wiring, which matters where the panel is rebuilt from a
-          // string on every filter change.
-          const head = entries.slice(0, RECENT_DAY_PREVIEW).join("");
-          const tail = entries.slice(RECENT_DAY_PREVIEW);
-          const more = tail.length
-            ? `<details class="recent-more"><summary>${tail.length} more ${tail.length === 1 ? "entry" : "entries"}</summary><div class="recent-entries">${tail.join("")}</div></details>`
-            : "";
-          return `
-            <li class="recent-day" style="--fresh:${fresh}">
-              <div class="recent-date">
-                <span class="recent-date-day">${escapeHtml(day.date)}</span>
-                <span class="recent-date-age">${escapeHtml(describeAge(day.age))}</span>
-              </div>
-              <div class="recent-entries">${head}${more}</div>
+      function renderRecentPanel() {
+        const span = state.history.span;
+        const showAll = state.history.showAll && !span;
+        let items = "";
+        let empty = false;
+        if (span) {
+          const summary = recentSpanSummary(span);
+          empty = !summary.models.length && !summary.scores.length;
+          items = empty ? "" : `
+            <li class="recent-day is-span" style="--fresh:1">
+              ${renderSpanDate(span)}
+              ${renderRecentEntries({ date: "", age: 0, span, ...summary })}
             </li>
           `;
-        }).join("");
+        } else {
+          const days = recentAdditions();
+          empty = !days.length;
+          items = days.map((day) => {
+            // The dot fades across the window the table marks in red — the
+            // panel's own window is longer, so most days sit at its faintest.
+            const fresh = Math.max(0, (NEW_DAYS - day.age) / NEW_DAYS).toFixed(3);
+            return `
+              <li class="recent-day" style="--fresh:${fresh}">
+                <div class="recent-date">
+                  <span class="recent-date-day">${escapeHtml(day.date)}</span>
+                  <span class="recent-date-age">${escapeHtml(describeAge(day.age))}</span>
+                </div>
+                ${renderRecentEntries(day)}
+              </li>
+            `;
+          }).join("");
+        }
+        // The days below say what happened; only their absence needs saying in
+        // words, so the lead is the empty case and nothing else.
+        const windowDays = span || HISTORY_DAYS;
+        const lead = empty
+          ? `<p class="recent-lead">Nothing has changed ${showAll ? "on record" : `in the last ${windowDays} days`}.</p>`
+          : (span ? `<p class="recent-lead">Every change of the last ${span} days, one line per model: a score that moved more than once shows what it was before the window opened and where it stands now.</p>` : "");
 
         // The window is a button rather than a <details> holding both lists:
         // the full history is thousands of entries, and building it into every
         // filter change to keep it one click away would cost every reader who
-        // never opens it.
-        const toggle = `
+        // never opens it. Only the day-by-day view has a window to widen.
+        const toggle = span ? "" : `
           <button type="button" class="recent-window" data-history-toggle aria-pressed="${showAll ? "true" : "false"}">
             ${showAll ? `Show the last ${HISTORY_DAYS} days` : "Show all history"}
           </button>
@@ -7756,7 +8136,8 @@
 
         return `
           <section class="recent-panel" aria-label="Recently added and updated scores">
-            ${renderPanelFold("recent", state.history.collapsed, showAll ? "Score History" : "Recently Added", `
+            ${renderPanelFold("recent", showAll ? "Score History" : "Recently Added", `
+              <div class="panel-controls">${renderSpanSwitch("recent", span)}</div>
               ${lead}
               ${items ? `<ol class="recent-days">${items}</ol>` : ""}
               ${toggle}
@@ -7827,7 +8208,36 @@
         if (age === null || age < 0) {
           return false;
         }
+        if (state.rankings.span) {
+          return age < state.rankings.span;
+        }
         return state.rankings.showAll || age < HISTORY_DAYS;
+      }
+
+      // A window's changes netted per model and index: where the model stood
+      // before its first change in the window to where its last one left it.
+      // A model that entered is an entry at its latest place; one that came
+      // back to where it started, or entered and left again, is dropped.
+      function netRankingChanges(changes) {
+        const groups = new Map();
+        [...changes]
+          .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+          .forEach((change) => {
+            const id = `${change.index}\u0000${change.model}`;
+            if (!groups.has(id)) groups.set(id, []);
+            groups.get(id).push(change);
+          });
+        return [...groups.values()].map((list) => {
+          const first = list[0];
+          const last = list[list.length - 1];
+          const from = first.from;
+          const to = last.to;
+          if ((from === null && to === null) || from === to) {
+            return null;
+          }
+          const kind = from === null ? "entered" : (to === null ? "left" : (to < from ? "up" : "down"));
+          return { ...last, from, to, kind, of: last.of || first.of };
+        }).filter(Boolean);
       }
 
       // One line: what happened to one model on one index on one day.
@@ -7856,7 +8266,7 @@
         return `
           <li class="rank-line is-${change.kind}">
             <span class="rank-delta" role="img" aria-label="${escapeAttr(label)}" title="${escapeAttr(label)}">${delta}</span>
-            ${name}
+            <span class="rank-name">${name}</span>
             <span class="rank-places" aria-hidden="true">${places}</span>
           </li>
         `;
@@ -7871,6 +8281,8 @@
       }
 
       function renderRankingPanel() {
+        const span = state.rankings.span;
+        const showAll = state.rankings.showAll && !span;
         const record = state.data?.index_rankings;
         if (!record || typeof record !== "object") {
           return "";
@@ -7887,17 +8299,20 @@
         // and so is a closed reference row until the reader asks for those. A
         // model no longer in the file at all has nothing to filter on, so what
         // it did before it went is still listed, under its plain name.
-        const changes = rankingChanges().filter((change) => {
+        const windowed = rankingChanges().filter((change) => {
           if (!order.has(change.index) || (selected && change.index !== selected) || !inRankingWindow(change.date)) {
             return false;
           }
           return byName.has(change.model) || !known.has(change.model);
         }).map(rankingChangeInField).filter(Boolean);
+        const changes = span ? netRankingChanges(windowed) : windowed;
 
+        // By day, one group per date; netted, the whole window is one group.
         const byDay = new Map();
         changes.forEach((change) => {
-          if (!byDay.has(change.date)) byDay.set(change.date, new Map());
-          const day = byDay.get(change.date);
+          const group = span ? "" : change.date;
+          if (!byDay.has(group)) byDay.set(group, new Map());
+          const day = byDay.get(group);
           if (!day.has(change.index)) day.set(change.index, []);
           day.get(change.index).push(change);
         });
@@ -7923,8 +8338,10 @@
                 .map(([kind, n]) => `<span class="is-${kind}">${glyphs[kind]}${n}</span>`).join("");
               const field = Math.max(0, ...list.map((c) => c.of || 0));
               const lines = list.map((change) => renderRankLine(change, byName.get(change.model)));
-              const head = lines.slice(0, RANK_PREVIEW).join("");
-              const tail = lines.slice(RANK_PREVIEW);
+              // A netted window is the one list on screen, so it shows more.
+              const preview = span ? RANK_PREVIEW * 2 : RANK_PREVIEW;
+              const head = lines.slice(0, preview).join("");
+              const tail = lines.slice(preview);
               const more = tail.length
                 ? `<details class="recent-more"><summary>${tail.length} more</summary><ul class="rank-lines">${tail.join("")}</ul></details>`
                 : "";
@@ -7940,12 +8357,14 @@
                 </div>
               `;
             }).join("");
-          return `
-            <li class="recent-day" style="--fresh:${fresh}">
+          const gutter = span ? renderSpanDate(span) : `
               <div class="recent-date">
                 <span class="recent-date-day">${escapeHtml(date)}</span>
                 <span class="recent-date-age">${escapeHtml(describeAge(age))}</span>
-              </div>
+              </div>`;
+          return `
+            <li class="recent-day${span ? " is-span" : ""}" style="--fresh:${span ? 1 : fresh}">
+              ${gutter}
               <div class="recent-entries">${blocks}</div>
             </li>
           `;
@@ -7953,7 +8372,7 @@
 
         const since = typeof record.since === "string" ? record.since : "";
         const filter = keys.length > 1
-          ? `<div class="rank-filter" role="group" aria-label="Index">
+          ? `<div class="rank-filter" role="group" aria-label="Index" data-rank-filter>
               ${["", ...keys].map((key) => `<button type="button" data-rank-index="${escapeAttr(key)}"${key ? ` title="${escapeAttr(getBenchmarkFullName(key))}"` : ""} aria-pressed="${key === selected ? "true" : "false"}">${escapeHtml(key ? shortIndexName(key) : "All")}</button>`).join("")}
             </div>`
           : "";
@@ -7961,19 +8380,20 @@
           <p class="recent-lead">
             Places on the derived indexes, counted over ${state.filters.includeReference ? "every ranked model, closed reference rows included" : "the open models only, as the table shows them; switch on the closed frontier models to count them in"}${since ? `, recorded since ${escapeHtml(since)}` : ""}.
             A move is listed when a model overtakes another or is overtaken; being pushed down a place by a newcomer is the newcomer's entry, not a move.
-            ${items.length ? "" : ` Nothing has changed ${state.rankings.showAll ? "on record" : `in the last ${HISTORY_DAYS} days`}.`}
+            ${span ? ` Over ${span} days each model is listed once, from where it stood before its first move to where its last one left it.` : ""}
+            ${items.length ? "" : ` Nothing has changed ${showAll ? "on record" : `in the last ${span || HISTORY_DAYS} days`}.`}
           </p>
         `;
-        const toggle = `
-          <button type="button" class="recent-window" data-rank-toggle aria-pressed="${state.rankings.showAll ? "true" : "false"}">
-            ${state.rankings.showAll ? `Show the last ${HISTORY_DAYS} days` : "Show all ranking history"}
+        const toggle = span ? "" : `
+          <button type="button" class="recent-window" data-rank-toggle aria-pressed="${showAll ? "true" : "false"}">
+            ${showAll ? `Show the last ${HISTORY_DAYS} days` : "Show all ranking history"}
           </button>
         `;
         return `
           <section class="recent-panel rank-panel" id="ranking-changes" aria-label="Index ranking changes">
-            ${renderPanelFold("rankings", state.rankings.collapsed, "Index Ranking Changes", `
+            ${renderPanelFold("rankings", "Index Ranking Changes", `
               ${lead}
-              ${filter}
+              <div class="panel-controls">${renderSpanSwitch("rankings", span)}${filter}</div>
               ${items.length ? `<ol class="recent-days">${items.slice(0, RANK_OPEN_DAYS).join("")}</ol>` : ""}
               ${items.length > RANK_OPEN_DAYS ? `<details class="recent-more rank-earlier"><summary>${items.length - RANK_OPEN_DAYS} earlier ${items.length - RANK_OPEN_DAYS === 1 ? "day" : "days"}</summary><ol class="recent-days">${items.slice(RANK_OPEN_DAYS).join("")}</ol></details>` : ""}
               ${toggle}
@@ -8027,8 +8447,7 @@
 
         return `
           <section class="benchmarks-panel" aria-label="Benchmark and column reference">
-            <h2>Reference</h2>
-            <div class="benchmarks-list">${items}</div>
+            ${renderPanelFold("reference", "Reference", `<div class="benchmarks-list">${items}</div>`)}
           </section>
         `;
       }
@@ -8085,8 +8504,7 @@
 
         return `
           <section class="credits-panel" aria-label="Credits">
-            <h2>Credits</h2>
-            <div class="credits-list">${items}</div>
+            ${renderPanelFold("credits", "Credits", `<div class="credits-list">${items}</div>`)}
           </section>
         `;
       }
@@ -8109,8 +8527,7 @@
 
         return `
           <section class="sources-panel" aria-label="Sources">
-            <h2>Sources</h2>
-            <div class="sources-list">${links}</div>
+            ${renderPanelFold("sources", "Sources", `<div class="sources-list">${links}</div>`)}
           </section>
         `;
       }
@@ -11089,6 +11506,9 @@
         const pool = modelPool();
         const total = pool.length;
         ui.resultCount.textContent = `${shown} of ${total} models`;
+        // Repeated in the Leaderboard band, so a folded table still says
+        // how much of it there is.
+        ui.boardCount.textContent = `${shown} of ${total} models`;
         const shownCreators = new Set(state.filteredModels.map((m) => m.creatorName)).size;
         const totalCreators = new Set(pool.map(creatorNameOf)).size;
         ui.creatorCount.textContent = `${shownCreators} of ${totalCreators} creators`;
