@@ -1095,11 +1095,11 @@
         "https://epoch.ai/benchmarks/scicode"
       ]
     },
-    "terminal_bench_4_0": {
-      "name": "Terminal-Bench 4.0",
-      "short_name": "Term 4.0",
+    "terminal_bench_4_1": {
+      "name": "Terminal-Bench 4.1",
+      "short_name": "Term 4.1",
       "category": "Agentic Tool Use",
-      "description": "Current Terminal-Bench release: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials.",
+      "description": "Current Terminal-Bench release: 4.0's 66 tasks under hardened verifiers. Nothing the agent sees changed; 44 tasks that run agent-written code now grade it as an untrusted user in a separate process, and several verifier flakes were fixed. The maintainers re-graded every 4.0 trial with the new verifiers (about 1.2% of rewards flipped, every agent inside its 4.0 95% interval), and new submissions are scored on 4.1 only. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. Not aggregated into any index yet: it is the same runs as 4.0, re-graded.",
       "settings": [
         "Resolved %",
         "66 tasks",
@@ -1107,7 +1107,28 @@
       ],
       "excludes": [
         "runs named for a harness (Claude Code, Terminus-2)",
-        "Terminal-Bench 3.0, 2.1 and 2.0",
+        "Terminal-Bench 4.0, 3.0, 2.1 and 2.0",
+        "a bare “Terminal-Bench” naming no version"
+      ],
+      "urls": [
+        "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "https://www.tbench.ai/news/terminal-bench-4-1",
+        "https://github.com/harbor-framework/terminal-bench/releases/tag/v4.1.0"
+      ]
+    },
+    "terminal_bench_4_0": {
+      "name": "Terminal-Bench 4.0",
+      "short_name": "Term 4.0",
+      "category": "Agentic Tool Use",
+      "description": "The Terminal-Bench release before 4.1: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. 4.1 re-graded the same trials with hardened verifiers, so 4.0 stays the column Artificial Analysis and Vals still run against.",
+      "settings": [
+        "Resolved %",
+        "66 tasks",
+        "agentic"
+      ],
+      "excludes": [
+        "runs named for a harness (Claude Code, Terminus-2)",
+        "Terminal-Bench 4.1, 3.0, 2.1 and 2.0",
         "a bare “Terminal-Bench” naming no version"
       ],
       "urls": [

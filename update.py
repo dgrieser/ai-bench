@@ -568,7 +568,7 @@ def parse_args() -> argparse.Namespace:
         "--skip-tbench",
         action="store_true",
         help=(
-            "Skip fetching Terminal-Bench 4.0, 3.0, 2.1 and 2.0 and "
+            "Skip fetching Terminal-Bench 4.1, 4.0, 3.0, 2.1 and 2.0 and "
             "Terminal-Bench-Science 0.1 scores from tbench.ai."
         ),
     )

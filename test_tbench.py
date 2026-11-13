@@ -95,12 +95,14 @@ BOARD_2_0 = board(
         row_2_0("Delta", 12.5),
     ],
 )
+# 4.1 re-grades 4.0's trials, so it shares 4.0's package and differs by name.
+BOARD_4_1 = board("terminal_bench_4_1", [row("Alpha", 58.18), row("Beta", 41.21, agent="Codex")])
 BOARD_3_0 = board("terminal_bench_3_0", [row("Alpha", 42.7, agent="mini-SWE-agent")])
 BOARD_SCIENCE = board(
     "terminal_bench_science_0_1",
     [row("Alpha", 68.1, agent="Codex"), row("Bravo", 12.4, agent="mini-SWE-agent")],
 )
-BOARDS = {"terminal_bench_4_0": BOARD_4_0, "terminal_bench_3_0": BOARD_3_0,
+BOARDS = {"terminal_bench_4_1": BOARD_4_1, "terminal_bench_4_0": BOARD_4_0, "terminal_bench_3_0": BOARD_3_0,
           "terminal_bench_2_1": BOARD_2_1, "terminal_bench_2_0": BOARD_2_0,
           "terminal_bench_science_0_1": BOARD_SCIENCE}
 
@@ -146,6 +148,31 @@ class TestBoards(unittest.TestCase):
             tb.BOARDS["terminal_bench_science_0_1"]["package"],
             "terminal-bench-science/terminal-bench-science",
         )
+
+    def test_4_1_is_read_from_the_4_0_package_under_its_own_name(self):
+        """4.1 and 4.0 are two leaderboards of one Harbor package; asking by the
+        package alone would get whichever the hub calls current."""
+        self.assertEqual(tb.BOARDS["terminal_bench_4_1"]["package"],
+                         tb.BOARDS["terminal_bench_4_0"]["package"])
+        self.assertEqual(tb.BOARDS["terminal_bench_4_1"]["name"], "4-1-0")
+        self.assertEqual(tb.board_url("terminal_bench_4_1"),
+                         "https://www.tbench.ai/leaderboard/terminal-bench/4.1")
+
+    def test_4_1_rows_stay_out_of_the_4_0_column(self):
+        got = scores()
+        self.assertEqual([(e["model"], e["score"]) for e in on("terminal_bench_4_1", got)],
+                         [("Alpha", 58.18), ("Beta", 41.21)])
+        self.assertNotIn(58.18, [e["score"] for e in on("terminal_bench_4_0", got)])
+
+    def test_4_1_is_not_aggregated_yet(self):
+        """A re-grade of 4.0's own trials (Spearman 0.998 over the 52 runs on
+        both): weighting it beside 4.0 would count one measurement twice. When
+        AA moves to 4.1 it takes 4.0's slot instead; until then it is shown,
+        not voted on."""
+        import derive_indexes
+        for index in derive_indexes.INDEXES:
+            with self.subTest(index=index.key):
+                self.assertNotIn("terminal_bench_4_1", dict(index.contributing))
 
     def test_terminal_bench_science_rows_land_in_its_column(self):
         got = on("terminal_bench_science_0_1", scores(keys=["terminal_bench_science_0_1"]))
