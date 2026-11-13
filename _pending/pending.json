@@ -4,6 +4,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "terminal_bench_4_1",
+          "reason": "the same name without the vendor prefix: exact to terminal-bench (terminalbench_4_1), most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "terminal_bench_4_0",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
@@ -21,15 +26,10 @@
           "confidence": "weak",
           "option": "terminal_bench_2_1",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "terminal_bench_3_0",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 1533,
+        "known": 1539,
         "mapped": {
           "terminal_bench_2_0": [
             "Terminal Bench 2",
@@ -58,11 +58,6 @@
             "TerminalBench 2.1 (with terminus2)",
             "harborframework/terminal-bench-2.1"
           ],
-          "terminal_bench_3_0": [
-            "Terminal Bench 3.0",
-            "Terminal-Bench 3.0 (Pass@1)",
-            "harborframework/terminal-bench (terminalbench_3)"
-          ],
           "terminal_bench_4_0": [
             "Terminal Bench 4",
             "Terminal Bench 4.0",
@@ -73,6 +68,12 @@
             "TerminalBench 4.0",
             "harborframework/terminal-bench (terminalbench_4)",
             "harborframework/terminal-bench-4.0 (terminalbench_4)"
+          ],
+          "terminal_bench_4_1": [
+            "Terminal Bench 4.1",
+            "Terminal Bench Core 4.1",
+            "Terminal-Bench 4.1",
+            "Terminal-Bench 4.1 (Pass@1)"
           ],
           "terminal_bench_hard": [
             "Terminal Bench (hard subset)",
@@ -125,9 +126,9 @@
           },
           {
             "mapped_to": [
-              "terminal_bench_4_0"
+              "terminal_bench_4_1"
             ],
-            "name": "Terminal-Bench 4.0 (Pass@1)"
+            "name": "Terminal Bench 4.1"
           }
         ]
       },
@@ -140,6 +141,126 @@
       "source_url": "https://huggingface.co/zai-org/GLM-5.3",
       "subject": "harborframework/terminal-bench (terminalbench_4_1)",
       "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-2",
+          "reason": "exact to Fable 5.2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to Fable 5.2, most components match"
+        }
+      ],
+      "context": {
+        "known": 57,
+        "mapped": {
+          "claude-fable-5-1": [
+            "Fable 5.1"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Fable 5"
+          },
+          {
+            "mapped_to": [
+              "claude-fable-5-1"
+            ],
+            "name": "Fable 5.1"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Fable 5.2' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "Fable 5.2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling Small 2, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-small",
+          "reason": "exact to Inkling Small 2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "devstral-small-2",
+          "reason": "the same name without its first 1 word(s): exact to small-2, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptors to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 57,
+        "mapped": {
+          "glm-5-2": [
+            "GLM 5.2"
+          ],
+          "inkling-small": [
+            "Inkling Small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-small"
+            ],
+            "name": "Inkling Small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Inkling Small 2' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "Inkling Small 2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-ember",
+          "reason": "exact to Muse Ember, exact match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Muse Ember' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "Muse Ember",
+      "universe": "models"
     }
   ]
 }
