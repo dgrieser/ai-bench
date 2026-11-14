@@ -1,17 +1,32 @@
 {
  "version": 1,
- "checked_at": "2026-11-11T22:04:02Z",
- "commit": "9fabd3c54dba09b34ebc757154e0ee73867752f8",
- "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/43107509842",
+ "checked_at": "2026-11-14T11:45:53Z",
+ "commit": "d0f2b28f200bf5596b038c1ddfd578ac6dcac894",
+ "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/43591146054",
  "python": "3.13.18",
- "duration_s": 409.3,
+ "duration_s": 311.2,
  "totals": {
-  "files": 63,
+  "files": 64,
   "files_broken": 0,
-  "tests": 1545,
-  "failed": 0,
+  "tests": 1558,
+  "failed": 1,
   "skipped": 0,
-  "passed": 1545
+  "passed": 1557
  },
- "failures": []
+ "failures": [
+  {
+   "test": "test_source_versions.TestArtificialAnalysis.test_aa_still_runs_the_terminal_bench_revision_its_column_holds (page='coding agents')",
+   "kind": "failure",
+   "message": "AssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's coding agents page (https://artificialanalysis.ai/agents/coding-agents) names Terminal-Bench 4.1, newer than the 4.0 that terminal_bench_4_0 holds",
+   "traceback": "Traceback (most recent call last):\n  File \"test_source_versions.py\", line 172, in test_aa_still_runs_the_terminal_bench_revision_its_column_holds\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        newer_than(found, AA_TERMINAL_BENCH), [],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        f\"{AA_TERMINAL_BENCH} that terminal_bench_4_0 holds\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's coding agents page (https://artificialanalysis.ai/agents/coding-agents) names Terminal-Bench 4.1, newer than the 4.0 that terminal_bench_4_0 holds\n",
+   "stdout": "",
+   "stderr": "",
+   "duration_s": 0.698,
+   "doc": "AA feeds terminal_bench_4_0 (107 values) under ids that name no minor\nrevision, so a move to 4.1 would land in the 4.0 column unannounced.\nThis fails as soon as an AA page names a Terminal-Bench newer than\nAA_TERMINAL_BENCH, or stops naming that one: check AA's runs, then see\nthis file's docstring for what to change.",
+   "line": 160,
+   "file": "test_source_versions.py",
+   "since": "2026-11-14T11:45:53Z",
+   "since_commit": "d0f2b28f200bf5596b038c1ddfd578ac6dcac894"
+  }
+ ]
 }
