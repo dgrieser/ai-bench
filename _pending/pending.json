@@ -4,164 +4,109 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "claude-fable-5-2",
-          "reason": "exact to claude fable 5.2, exact match"
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini-4-hydrogen, exact match"
         },
         {
           "confidence": "weak",
-          "option": "claude-fable-5-1",
-          "reason": "exact to claude fable 5.2, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-opus-5-5",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-haiku-5-5",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "claude-sonnet-5-5",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 59,
-        "mapped": {
-          "claude-fable-5-1": [
-            "claude fable 5.1",
-            "fable 5.1"
-          ],
-          "claude-haiku-5-5": [
-            "claude haiku 5.5",
-            "haiku 5.5"
-          ],
-          "claude-opus-5-5": [
-            "claude opus 5.5",
-            "opus 5.5"
-          ],
-          "claude-sonnet-5-5": [
-            "claude sonnet 5.5",
-            "sonnet 5.5"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "claude fable 5.1 xhigh + swe 2 medium"
-          },
-          {
-            "mapped_to": [
-              "claude-fable-5-1"
-            ],
-            "name": "claude fable 5.1"
-          },
-          {
-            "mapped_to": [
-              "claude-opus-5-5"
-            ],
-            "name": "claude opus 5.5"
-          },
-          {
-            "mapped_to": [
-              "claude-haiku-5-5"
-            ],
-            "name": "claude haiku 5.5"
-          },
-          {
-            "mapped_to": [
-              "claude-sonnet-5-5"
-            ],
-            "name": "claude sonnet 5.5"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "claude opus 5.5 max + gpt 6 luna high"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'claude fable 5.2' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
-      "subject": "claude fable 5.2",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "kimi-k3-1-pro",
-          "reason": "exact to kimi k3.1 pro, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "kimi-k3",
-          "reason": "drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 59,
-        "mapped": {
-          "kimi-k3": [
-            "kimi k3"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "kimi-k3"
-            ],
-            "name": "kimi k3"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Coding Agent Index model 'kimi k3.1 pro' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
-      "subject": "kimi k3.1 pro",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
           "option": "gemini-4-argon",
-          "reason": "exact to Gemini 4 Argon, exact match"
+          "reason": "exact to gemini-4-hydrogen, most components match"
         },
         {
           "confidence": "weak",
           "option": "gemini-4-carbon",
-          "reason": "exact to Gemini 4 Argon, most components match"
+          "reason": "exact to gemini-4-hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 43,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini-4-carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini-4-carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'gemini-4-hydrogen' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://agents-last-exam.org/leaderboard",
+      "subject": "gemini-4-hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash-1001",
+          "reason": "exact to ling-3-2-flash, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'ling-3-2-flash'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "ruled_out": 741,
+      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-flash",
+      "subject": "ling-3-2-flash",
+      "universe": "aa-slugs"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-carbon",
+          "reason": "exact to Gemini 4 Carbon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to Gemini 4 Carbon, most components match"
         },
         {
           "confidence": "weak",
           "option": "gemini-4-hydrogen",
-          "reason": "exact to Gemini 4 Argon, most components match"
+          "reason": "exact to Gemini 4 Carbon, most components match"
         }
       ],
       "context": {
-        "known": 61,
+        "known": 62,
         "mapped": {
+          "gemini-4-argon": [
+            "Gemini 4 Argon"
+          ],
           "gemini-4-hydrogen": [
             "Gemini 4 Hydrogen"
           ]
         },
         "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "Gemini 4 Argon"
+          },
           {
             "mapped_to": [
               "gemini-4-hydrogen"
@@ -173,11 +118,11 @@
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Terminal-Bench model 'Gemini 4 Argon' to llm.json model",
+      "question": "Map Terminal-Bench model 'Gemini 4 Carbon' to llm.json model",
       "route": "update_tbench_mapping.py",
       "route_kind": "mapping",
       "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-      "subject": "Gemini 4 Argon",
+      "subject": "Gemini 4 Carbon",
       "universe": "models"
     }
   ]
