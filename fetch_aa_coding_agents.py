@@ -3,22 +3,32 @@
 Fetch Artificial Analysis Coding Agent Index benchmark scores.
 
 https://artificialanalysis.ai/agents/coding-agents publishes AA's own runs of
-the coding-agent benchmarks — DeepSWE v1.1, SWE-Atlas-QnA and Terminal-Bench
-v4 — one row per (agent harness, model) pair, e.g. "Claude Code - Opus 5
-(xhigh)". This is the only AA surface carrying DeepSWE and SWE-Atlas numbers:
-the model pages and the v2 API report neither.
+the coding-agent benchmarks -- since Coding Agent Index v2.1 (2026-11)
+FrontierCode-AA 2.0, Terminal-Bench 4.1 and SWE-Atlas-QnA-AA, before that
+DeepSWE v1.1, SWE-Atlas-QnA and Terminal-Bench 4.0 -- one row per (agent
+harness, model) pair, e.g. "Claude Code - Opus 5 (xhigh)", and the index
+itself, the plain average of the three.
 
-Terminal-Bench 4.0 it shares with the model pages, and the two disagree by
-design: here each model runs under its own vendor's agent (Claude Code, Codex,
-Opencode), on the model pages under AA's single harness, so Opus 5 scores 54.5
-here and 49.0 there. Where both report a model this surface wins
-(_precedence.RANK_AA_CODING_AGENTS ranks it above the model pages), so the
-stored value does not depend on which of the two ingests ran last.
+Each model runs under its own vendor's agent (Claude Code, Codex, Opencode)
+rather than AA's single harness on the model pages, so the two AA surfaces
+disagree by design where they share a column (FrontierCode 2.0). The model
+pages outrank this one there (_precedence.RANK_AA); everywhere else this page
+outranks the benchmark sites, tbench.ai's 4.1 board included.
+
+AA's dataset ids do not always name the revision they run: Terminal-Bench
+stayed "terminal-bench-v4" when the page moved from 4.0 to 4.1. So a dataset
+whose id names no minor revision is read only while the page's own label for it
+(the benchmark list's "Terminal-Bench 4.1") is the one LABEL_GATES expects, and
+the index only while the page names the version INDEX_VERSION expects
+("Artificial Analysis Coding Agent Index v2.1"). Anything else is skipped and
+reported on stderr: a new revision needs a column of its own.
 
 The page is a Next.js App Router app; requesting it with an "RSC: 1" header
 returns the flight payload, in which every leaderboard row is a plain JSON
 object ({"id":"<32 hex>", ..., "evals":[...]}) that json.JSONDecoder can
-decode in place — no headless browser, mirroring fetch_swe_atlas.py.
+decode in place -- no headless browser, mirroring fetch_swe_atlas.py. The
+index's version is rendered only into the HTML, which is fetched once more
+without the header.
 
 Row labels embed the agent and modifiers ("Opus 5 (xhigh)", "Fable 5 (max)
 (with fallback)"), so the reported `model` is a normalized base name with
@@ -49,12 +59,28 @@ URL = "https://artificialanalysis.ai/agents/coding-agents"
 # columns -- now names one, so it is ingested as the comment here always said
 # it would be. An id this file does not know costs one line on stderr and
 # nothing else, so both columns went unfed between the rename and this change
-# while the page kept publishing them.
+# while the page kept publishing them. Index v2.1 then dropped DeepSWE for
+# FrontierCode 2.0 (whose id names its revision) and moved Terminal-Bench to
+# 4.1 under the unchanged "terminal-bench-v4", which is why LABEL_GATES exists.
 DATASETS: dict[str, str] = {
     "deep-swe-v1.1": "deepswe_1_1",
+    "frontiercode-v2.0": "frontiercode_2_0",
     "swe-atlas-qna": "swe_atlas_qna",
-    "terminal-bench-v4": "terminal_bench_4_0",
+    "terminal-bench-v4": "terminal_bench_4_1",
 }
+
+# Datasets whose id names no minor revision -> the label the page's benchmark
+# list must give them for DATASETS' column to be right. A different label (or
+# none) skips the dataset. FrontierCode's and DeepSWE's ids carry the revision;
+# swe_atlas_qna is an unversioned column.
+LABEL_GATES: dict[str, str] = {
+    "terminal-bench-v4": "Terminal-Bench 4.1",
+}
+
+# The index itself: each row's indexScore (0-1), read while the page names
+# this version of it.
+INDEX_KEY = "aa_coding_agent_index_2_1"
+INDEX_VERSION = "2.1"
 
 HEADERS = {
     "User-Agent": (
@@ -66,10 +92,20 @@ HEADERS = {
 }
 
 _ROW_START_RE = re.compile(r'\{"id":"[0-9a-f]{32}"')
+# The benchmark list in the flight payload, keyed by dataset id:
+# ["$","li","terminal-bench-v4",{"children":[["$","span",null,{...,"children":"Terminal-Bench 4.1"}]
+_DATASET_LABEL_RE = re.compile(
+    r'\["\$","li","(?P<dataset>[^"]+)",\{"children":\[\["\$","span",null,'
+    r'\{"className":"font-medium","children":"(?P<label>[^"]+)"'
+)
+_INDEX_VERSION_RE = re.compile(r"Coding Agent Index v(\d+(?:\.\d+)*)")
 
 
-def fetch_payload(url: str, retries: int = 3, delay: float = 2.0) -> str:
-    req = urllib.request.Request(url, headers=HEADERS)
+def fetch_payload(
+    url: str, retries: int = 3, delay: float = 2.0, rsc: bool = True
+) -> str:
+    headers = HEADERS if rsc else {k: v for k, v in HEADERS.items() if k != "RSC"}
+    req = urllib.request.Request(url, headers=headers)
     for attempt in range(1, retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
@@ -113,6 +149,19 @@ def extract_rows(payload: str) -> list[dict]:
     return rows
 
 
+def dataset_labels(payload: str) -> dict[str, str]:
+    """{dataset id: the label the page's benchmark list gives it}."""
+    return {m["dataset"]: m["label"] for m in _DATASET_LABEL_RE.finditer(payload)}
+
+
+def index_version(html: str) -> str | None:
+    """The Coding Agent Index version the page names, the most-cited one."""
+    found = _INDEX_VERSION_RE.findall(html)
+    if not found:
+        return None
+    return max(set(found), key=found.count)
+
+
 def normalize_model(raw: str) -> str:
     """Normalize a row's model label to a base name for mapping.
 
@@ -133,8 +182,29 @@ def get_scores() -> list[dict]:
     key (llm.json benchmark key), score (percentage).
     """
     print(f"Fetching {URL} ...", file=sys.stderr)
-    rows = extract_rows(fetch_payload(URL))
+    payload = fetch_payload(URL)
+    rows = extract_rows(payload)
     print(f"  parsed {len(rows)} leaderboard rows", file=sys.stderr)
+
+    labels = dataset_labels(payload)
+    gated_out: set[str] = set()
+    for dataset, expected in LABEL_GATES.items():
+        if labels.get(dataset) != expected:
+            gated_out.add(dataset)
+            print(
+                f"  not reading {dataset}: the page labels it "
+                f"{labels.get(dataset)!r}, {DATASETS[dataset]} holds {expected!r}",
+                file=sys.stderr,
+            )
+    version = index_version(fetch_payload(URL, rsc=False))
+    read_index = version == INDEX_VERSION
+    if not read_index:
+        print(
+            f"  not reading the index: the page names "
+            f"{'Coding Agent Index v' + version if version else 'no index version'}, "
+            f"{INDEX_KEY} holds v{INDEX_VERSION}",
+            file=sys.stderr,
+        )
 
     results: list[dict] = []
     ignored: set[str] = set()
@@ -143,6 +213,17 @@ def get_scores() -> list[dict]:
         raw_model = display["model"]
         agent = obj.get("agentName")
         label = obj.get("displayLabel") or raw_model
+        base = {"model": normalize_model(raw_model), "raw": label, "agent": agent}
+        index_score = obj.get("indexScore")
+        components, evals = obj.get("indexComponentCount"), obj.get("evalCount")
+        # An index over fewer than all its components is not the index.
+        complete = not (isinstance(components, int) and isinstance(evals, int)) or evals >= components
+        if (
+            read_index and complete
+            and isinstance(index_score, (int, float)) and not isinstance(index_score, bool)
+        ):
+            check_fractions([index_score], URL, "indexScore")
+            results.append({**base, "key": INDEX_KEY, "score": round(float(index_score) * 100.0, 2)})
         for entry in obj["evals"]:
             if not isinstance(entry, dict):
                 continue
@@ -158,15 +239,9 @@ def get_scores() -> list[dict]:
                 if isinstance(dataset, str):
                     ignored.add(dataset)
                 continue
-            results.append(
-                {
-                    "model": normalize_model(raw_model),
-                    "raw": label,
-                    "agent": agent,
-                    "key": key,
-                    "score": round(float(reward) * 100.0, 2),
-                }
-            )
+            if dataset in gated_out:
+                continue
+            results.append({**base, "key": key, "score": round(float(reward) * 100.0, 2)})
     # A new index revision can add a benchmark; surface it instead of silence.
     for dataset in sorted(ignored):
         print(f"  ignoring unmapped dataset: {dataset}", file=sys.stderr)

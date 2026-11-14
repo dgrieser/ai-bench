@@ -26,16 +26,17 @@ The rungs, strongest first:
   0. ``RANK_AA`` -- Artificial Analysis' evaluations: the API, model pages
      and official social posts. Nothing overwrites them but AA itself.
   1. ``RANK_AA_CODING_AGENTS`` -- Artificial Analysis' Coding Agent Index. It
-     shares Terminal-Bench 4.0 (and could share DeepSWE) with the model pages,
+     shares FrontierCode 2.0 with the model pages (and shared Terminal-Bench
+     4.0 until index v2.1 moved its run to 4.1, which the pages do not run),
      but runs each model under its vendor's own coding agent rather than AA's
      single harness, so the two AA readings of one column differ by design.
      The two used to share a rung, where each refresh let one overwrite the
      other; then the index sat above the pages. Since 2026-10-03 the pages sit
      above it: the column is meant to compare models, and AA's one harness
      holds the harness fixed where the vendor agents do not. The index still
-     fills what the pages do not carry -- Terminal-Bench 4.0 for a model AA
-     has not run itself, its DeepSWE and SWE Atlas rows -- and outranks every
-     benchmark site there.
+     fills what the pages do not carry -- FrontierCode 2.0 for a model AA
+     has not run itself, its Terminal-Bench 4.1 and SWE Atlas rows -- and
+     outranks every benchmark site there, tbench.ai's 4.1 board included.
   2. ``RANK_BENCHMARK_SITE`` -- the leaderboard run by the team that owns the
      benchmark. First-party for the one column it publishes, and no two members
      of this rung publish the same column, so their relative order is

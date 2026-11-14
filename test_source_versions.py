@@ -9,8 +9,10 @@ A column such as terminal_bench_4_0 says which revision it holds, and most
 sources say so too, in a URL or a dataset id the fetcher checks. Not all of
 them. Artificial Analysis files its Terminal-Bench runs under
 "terminal-bench-v4" on the coding-agents page and under "terminalbench_4_0" in
-its model records, and a switch to 4.1 could arrive under either without a
-fetch noticing -- the 4.0 column would quietly fill with 4.1 numbers. The same
+its model records, and a switch could arrive under either without a fetch
+noticing. The coding-agents page did exactly that on 2026-11-14, moving to 4.1
+under the same id while the model pages stayed on 4.0; it is read into
+terminal_bench_4_1 now, behind fetch_aa_coding_agents.LABEL_GATES. The same
 goes for a newer tbench.ai board than fetch_tbench.BOARDS reads: nothing fails,
 it simply goes unread.
 
@@ -22,11 +24,15 @@ lands on the admin page's Tests tab through the daily full-tests run.
 
 What to do when one fails:
 
-* AA names a newer Terminal-Bench: check whether its runs moved. If they did,
-  give the new revision a column (or point AA's extractor at the existing one,
-  e.g. terminal_bench_4_1), let that column take 4.0's weight in
+* AA's model pages name a newer Terminal-Bench: check whether their runs
+  moved. If they did, point update.py's SCORE_MAPPINGS at the new revision's
+  column (terminal_bench_4_1 exists), let that column take 4.0's weight in
   derive_indexes.py with a REVISION_FALLBACKS entry from 4.0, and bump
   AA_TERMINAL_BENCH below. If it is only a mention, bump nothing and note why.
+* AA's coding-agents page names a newer Terminal-Bench or Coding Agent Index:
+  the fetcher already stops reading it (and says so on stderr). Give the new
+  revision a column, then move fetch_aa_coding_agents' DATASETS / LABEL_GATES /
+  INDEX_KEY / INDEX_VERSION and AA_CODING_AGENTS_TERMINAL_BENCH below.
 * tbench.ai names a board newer than BOARDS: add it to fetch_tbench.BOARDS and
   llm.json, as 4.1 was.
 * A Vals pin no longer matches: fetch_vals.VERSIONS explains the choice; the
@@ -46,6 +52,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import fetch_aa_coding_agents
 import fetch_tbench
 import fetch_vals
 
@@ -58,18 +65,26 @@ HEADERS = {
 }
 
 # The Terminal-Bench revisions this repository reads from Artificial Analysis:
-# update.py's terminal_bench_4_0 (model records' terminalbench_4_0 and the
-# coding-agents page's terminal-bench-v4) and terminal_bench_science_0_1.
-# terminal_bench_2_1 is read too but is older, so it can never be "newer".
+# update.py's terminal_bench_4_0 off the model records' terminalbench_4_0,
+# terminal_bench_4_1 off the coding-agents page's terminal-bench-v4, and
+# terminal_bench_science_0_1. terminal_bench_2_1 is read too but is older, so
+# it can never be "newer".
 AA_TERMINAL_BENCH = "4.0"
+AA_CODING_AGENTS_TERMINAL_BENCH = "4.1"
 AA_TERMINAL_BENCH_SCIENCE = "0.1"
 
-# Pages where AA describes the evaluations it runs. Each names the revision in
-# prose ("Terminal-Bench 4.0") or in a slug ("terminal-bench-v4-0").
+# Pages where AA describes the evaluations it runs, and the Terminal-Bench
+# revision each must name and not exceed. Each names it in prose
+# ("Terminal-Bench 4.0") or in a slug ("terminal-bench-v4-0"). The
+# coding-agents page also links the 4.0 evaluation page in its navigation,
+# which is older and so never fails it.
 AA_PAGES = {
-    "evaluations": "https://artificialanalysis.ai/evaluations",
-    "methodology": "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
-    "coding agents": "https://artificialanalysis.ai/agents/coding-agents",
+    "evaluations": ("https://artificialanalysis.ai/evaluations", AA_TERMINAL_BENCH),
+    "methodology": (
+        "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
+        AA_TERMINAL_BENCH,
+    ),
+    "coding agents": (fetch_aa_coding_agents.URL, AA_CODING_AGENTS_TERMINAL_BENCH),
 }
 
 TBENCH_HOME = "https://www.tbench.ai/"
@@ -158,32 +173,58 @@ class TestVersionParsing(unittest.TestCase):
 
 class TestArtificialAnalysis(LiveTestCase):
     def test_aa_still_runs_the_terminal_bench_revision_its_column_holds(self):
-        """AA feeds terminal_bench_4_0 (107 values) under ids that name no minor
-        revision, so a move to 4.1 would land in the 4.0 column unannounced.
-        This fails as soon as an AA page names a Terminal-Bench newer than
-        AA_TERMINAL_BENCH, or stops naming that one: check AA's runs, then see
-        this file's docstring for what to change."""
-        named_anywhere: set[str] = set()
-        for label, url in AA_PAGES.items():
+        """AA feeds terminal_bench_4_0 (107 values, model pages) and
+        terminal_bench_4_1 (coding-agents page) under ids that name no minor
+        revision, so a move would land in the old column unannounced. This
+        fails as soon as an AA page names a Terminal-Bench newer than the one
+        AA_PAGES expects of it, or stops naming that one: check AA's runs,
+        then see this file's docstring for what to change."""
+        for label, (url, expected) in AA_PAGES.items():
             with self.subTest(page=label):
                 _final, body = self.page(url)
                 found = versions_named(body)["terminal-bench"]
-                named_anywhere |= found
                 self.assertEqual(
-                    newer_than(found, AA_TERMINAL_BENCH), [],
+                    newer_than(found, expected), [],
                     f"AA's {label} page ({url}) names Terminal-Bench "
-                    f"{', '.join(newer_than(found, AA_TERMINAL_BENCH))}, newer than the "
-                    f"{AA_TERMINAL_BENCH} that terminal_bench_4_0 holds",
+                    f"{', '.join(newer_than(found, expected))}, newer than the "
+                    f"{expected} it is read as",
                 )
-        self.assertIn(
-            AA_TERMINAL_BENCH, named_anywhere,
-            f"No AA page names Terminal-Bench {AA_TERMINAL_BENCH} any more",
+                self.assertIn(
+                    expected, found,
+                    f"AA's {label} page ({url}) no longer names Terminal-Bench {expected}",
+                )
+
+    def test_coding_agents_page_still_labels_what_the_fetcher_reads(self):
+        """fetch_aa_coding_agents reads "terminal-bench-v4" only while the
+        page labels it LABEL_GATES' revision, and the index only at
+        INDEX_VERSION; at refresh time a mismatch is a skipped column and a
+        line on stderr. This puts the same check on the Tests tab."""
+        url = fetch_aa_coding_agents.URL
+        try:
+            payload = fetch_aa_coding_agents.fetch_payload(url, retries=2)
+            html = fetch_aa_coding_agents.fetch_payload(url, retries=2, rsc=False)
+        except urllib.error.HTTPError as exc:
+            self.fail(f"{url}: HTTP {exc.code}")
+        except (urllib.error.URLError, OSError) as exc:
+            self.skipTest(f"offline: {url}: {exc}")
+        labels = fetch_aa_coding_agents.dataset_labels(payload)
+        for dataset, expected in fetch_aa_coding_agents.LABEL_GATES.items():
+            with self.subTest(dataset=dataset):
+                self.assertEqual(
+                    labels.get(dataset), expected,
+                    f"{url} labels {dataset} {labels.get(dataset)!r}; "
+                    f"{fetch_aa_coding_agents.DATASETS[dataset]} holds {expected!r}",
+                )
+        self.assertEqual(
+            fetch_aa_coding_agents.index_version(html), fetch_aa_coding_agents.INDEX_VERSION,
+            f"{url} names another Coding Agent Index version than "
+            f"{fetch_aa_coding_agents.INDEX_KEY} holds",
         )
 
     def test_aa_still_runs_terminal_bench_science_0_1(self):
         """terminal_bench_science_0_1 is read from AA's unversioned
         "terminalbench_science" field; fails when AA names a newer Science."""
-        for label, url in AA_PAGES.items():
+        for label, (url, _expected) in AA_PAGES.items():
             with self.subTest(page=label):
                 _final, body = self.page(url)
                 found = versions_named(body)["science"]

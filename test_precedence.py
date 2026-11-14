@@ -214,6 +214,19 @@ class TestSameHostFamilies(unittest.TestCase):
         )
         self.assertEqual(model["scores"]["terminal_bench_4_0"], 54.5)
 
+    def test_coding_agent_index_outranks_tbench_on_terminal_bench_4_1(self) -> None:
+        # Index v2.1 runs Terminal-Bench 4.1, which the model pages do not, so
+        # its vendor-agent run is the one that lands over tbench.ai's board.
+        board = update.TBENCH_KEY_URLS["terminal_bench_4_1"]
+        for order in ((board, AA_CODING_AGENTS_SOURCE_URL), (AA_CODING_AGENTS_SOURCE_URL, board)):
+            with self.subTest(order=order):
+                model = model_with(key="terminal_bench_4_1")
+                values = {board: 59.7, AA_CODING_AGENTS_SOURCE_URL: 67.17}
+                for url in order:
+                    update.apply_score(DOC, model, "m", "terminal_bench_4_1", values[url], url, [])
+                self.assertEqual(model["scores"]["terminal_bench_4_1"], 67.2)
+                self.assertEqual(model["scores_source"]["terminal_bench_4_1"], AA_CODING_AGENTS_SOURCE_URL)
+
     def test_coding_agent_index_outranks_the_aggregates(self) -> None:
         self.assertTrue(may_overwrite(AA_CODING_AGENTS_SOURCE_URL, HF_CARD))
         self.assertFalse(may_overwrite(HF_CARD, AA_CODING_AGENTS_SOURCE_URL))

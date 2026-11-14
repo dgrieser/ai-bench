@@ -349,6 +349,33 @@
         "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
       ]
     },
+    "aa_coding_agent_index_2_1": {
+      "name": "AA Coding Agent Index v2.1",
+      "short_name": "CAgent2.1",
+      "category": "Composite Index",
+      "description": "Artificial Analysis' Coding Agent Index v2.1: the plain average of three benchmarks AA runs itself, FrontierCode-AA 2.0, Terminal-Bench 4.1 and SWE-Atlas-QnA-AA, each task-normalized over three attempts. Unlike AA's Intelligence Index, every model runs inside its vendor's own coding agent (Claude Code, Codex, Gemini CLI, Opencode, ...), so it measures the agent and model together; where AA lists several agents or efforts for a model the best is kept. v2.0 used DeepSWE v1.1 and Terminal-Bench 4.0 and is not comparable. Scored 0 to 100. Not aggregated: its components are columns of their own.",
+      "settings": [
+        "v2.1",
+        "index scale",
+        "vendor coding agents",
+        "best agent and effort",
+        "Artificial Analysis"
+      ],
+      "excludes": [
+        "Coding Agent Index v2.0 (DeepSWE v1.1 and Terminal-Bench 4.0)",
+        "multi-model ensembles such as Devin Fusion",
+        "AA's Coding Index, which runs AA's single harness"
+      ],
+      "icon_svg": "icons/artificial-analysis.svg",
+      "urls": [
+        "https://artificialanalysis.ai/agents/coding-agents"
+      ],
+      "components": [
+        "frontiercode_2_0",
+        "terminal_bench_4_1",
+        "swe_atlas_qna"
+      ]
+    },
     "aa_coding_index_4_1": {
       "name": "AA Coding Index v4.1",
       "short_name": "Code4.1",
@@ -613,7 +640,7 @@
       "name": "FrontierCode 2.0",
       "short_name": "FCo 2.0",
       "category": "Software Engineering",
-      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. Cognition's board and Artificial Analysis' own implementation, which outranks it where both report; not comparable with 1.x.",
+      "description": "Cognition's benchmark of hard, hand-crafted software engineering tasks graded on whether a maintainer would merge the change. Revision 2.0 (2026-10-27) rebuilds the suite to evaluate user experience: 132 tasks spanning more repositories and categories, including security patches and performance optimizations, with higher mergeability standards and more emphasis on thoroughness. The score is a weighted aggregate of rubric items, zero for a solution that fails a blocking criterion. Cognition's board and Artificial Analysis' own implementation, which outranks it where both report: AA's model pages (its single harness) first, then its Coding Agent Index (each model under its vendor's own agent) for models the pages lack; not comparable with 1.x.",
       "settings": [
         "would-be-merged score",
         "132 tasks",
@@ -1099,7 +1126,7 @@
       "name": "Terminal-Bench 4.1",
       "short_name": "Term 4.1",
       "category": "Agentic Tool Use",
-      "description": "Current Terminal-Bench release: 4.0's 66 tasks under hardened verifiers. Nothing the agent sees changed; 44 tasks that run agent-written code now grade it as an untrusted user in a separate process, and several verifier flakes were fixed. The maintainers re-graded every 4.0 trial with the new verifiers (about 1.2% of rewards flipped, every agent inside its 4.0 95% interval), and new submissions are scored on 4.1 only. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. Not aggregated into any index yet: it is the same runs as 4.0, re-graded.",
+      "description": "Current Terminal-Bench release: 4.0's 66 tasks under hardened verifiers. Nothing the agent sees changed; 44 tasks that run agent-written code now grade it as an untrusted user in a separate process, and several verifier flakes were fixed. The maintainers re-graded every 4.0 trial with the new verifiers (about 1.2% of rewards flipped, every agent inside its 4.0 95% interval), and new submissions are scored on 4.1 only. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. Read from tbench.ai's board and from Artificial Analysis' Coding Agent Index (each model under its vendor's own agent, three attempts per task), which outranks the board where both report a model. Not aggregated into any index yet: Artificial Analysis' model pages, which feed 4.0's index weight, still run 4.0.",
       "settings": [
         "Resolved %",
         "66 tasks",
@@ -2696,7 +2723,7 @@
       },
       "scores": {
         "openbench_index": 26882,
-        "coding_index": 17476,
+        "coding_index": 17475,
         "tooling_index": 29912,
         "knowledge_index": 19409,
         "vision_index": null,
@@ -3280,7 +3307,7 @@
       },
       "scores": {
         "openbench_index": 23122,
-        "coding_index": 16619,
+        "coding_index": 16618,
         "tooling_index": 28851,
         "knowledge_index": 14105,
         "vision_index": 11253,
@@ -4842,7 +4869,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 27901,
+        "coding_index": 27897,
         "tooling_index": null,
         "knowledge_index": 50068,
         "vision_index": null,
@@ -5907,7 +5934,7 @@
       },
       "scores": {
         "openbench_index": 24564,
-        "coding_index": 18793,
+        "coding_index": 18792,
         "tooling_index": 24670,
         "knowledge_index": 30942,
         "vision_index": null,
@@ -7630,8 +7657,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 45502,
-        "coding_index": 30260,
+        "openbench_index": 45501,
+        "coding_index": 30256,
         "tooling_index": 42661,
         "knowledge_index": 63910,
         "vision_index": 61535,
@@ -12514,8 +12541,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 34493,
-        "coding_index": 17884,
+        "openbench_index": 34492,
+        "coding_index": 17883,
         "tooling_index": 29261,
         "knowledge_index": 53307,
         "vision_index": null,
@@ -13648,7 +13675,7 @@
       },
       "scores": {
         "openbench_index": 25526,
-        "coding_index": 20365,
+        "coding_index": 20364,
         "tooling_index": 21662,
         "knowledge_index": 34612,
         "vision_index": null,
@@ -14248,8 +14275,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 30996,
-        "coding_index": 18460,
+        "openbench_index": 31000,
+        "coding_index": 18473,
         "tooling_index": 25748,
         "knowledge_index": 47749,
         "vision_index": null,
@@ -15632,8 +15659,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 30514,
-        "coding_index": 16304,
+        "openbench_index": 30516,
+        "coding_index": 16312,
         "tooling_index": 23156,
         "knowledge_index": 39996,
         "vision_index": 25555,
@@ -18462,8 +18489,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 39024,
-        "coding_index": 22743,
+        "openbench_index": 39032,
+        "coding_index": 22768,
         "tooling_index": 40223,
         "knowledge_index": 53191,
         "vision_index": 43317,
@@ -20938,7 +20965,7 @@
       },
       "scores": {
         "openbench_index": 40381,
-        "coding_index": 22046,
+        "coding_index": 22045,
         "tooling_index": 37592,
         "knowledge_index": 55477,
         "vision_index": 49632,
@@ -21609,8 +21636,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 45285,
-        "coding_index": 27346,
+        "openbench_index": 45284,
+        "coding_index": 27344,
         "tooling_index": 43655,
         "knowledge_index": 59263,
         "vision_index": 48584,
@@ -22255,8 +22282,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 64130,
-        "coding_index": 59467,
+        "openbench_index": 64123,
+        "coding_index": 59441,
         "tooling_index": 71259,
         "knowledge_index": 75919,
         "vision_index": null,
@@ -23164,8 +23191,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 52452,
-        "coding_index": 36552,
+        "openbench_index": 52451,
+        "coding_index": 36548,
         "tooling_index": 58125,
         "knowledge_index": 61109,
         "vision_index": null,
@@ -25351,8 +25378,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37902,
-        "coding_index": 24597,
+        "openbench_index": 37891,
+        "coding_index": 24560,
         "tooling_index": 39742,
         "knowledge_index": 37988,
         "vision_index": 30632,
@@ -27742,8 +27769,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 42716,
-        "coding_index": 24783,
+        "openbench_index": 42726,
+        "coding_index": 24818,
         "tooling_index": 35072,
         "knowledge_index": 56620,
         "vision_index": 29161,
@@ -29508,8 +29535,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 34249,
-        "coding_index": 26485,
+        "openbench_index": 34251,
+        "coding_index": 26489,
         "tooling_index": 32600,
         "knowledge_index": 38991,
         "vision_index": null,
@@ -30222,8 +30249,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 68699,
-        "coding_index": 54473,
+        "openbench_index": 68679,
+        "coding_index": 54404,
         "tooling_index": 69655,
         "knowledge_index": 82128,
         "vision_index": null,
@@ -31281,8 +31308,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 64048,
-        "coding_index": 55928,
+        "openbench_index": 64003,
+        "coding_index": 55779,
         "tooling_index": 60739,
         "knowledge_index": 76874,
         "vision_index": 70571,
@@ -33757,8 +33784,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 22154,
-        "coding_index": 14346,
+        "openbench_index": 22153,
+        "coding_index": 14345,
         "tooling_index": 12810,
         "knowledge_index": 24123,
         "vision_index": 20090,
@@ -41562,8 +41589,8 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 34161,
-        "coding_index": 21054,
+        "openbench_index": 34160,
+        "coding_index": 21053,
         "tooling_index": 38344,
         "knowledge_index": 47107,
         "vision_index": null,
@@ -52743,8 +52770,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 25635,
-        "coding_index": 15973,
+        "openbench_index": 25634,
+        "coding_index": 15972,
         "tooling_index": 23536,
         "knowledge_index": 25479,
         "vision_index": 24156,
@@ -58153,7 +58180,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 37902,
+        "coding_index": 37897,
         "tooling_index": 46864,
         "knowledge_index": null,
         "vision_index": null,
@@ -58505,7 +58532,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 52257,
+        "coding_index": 52248,
         "tooling_index": 55356,
         "knowledge_index": null,
         "vision_index": null,
@@ -58856,8 +58883,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 52590,
-        "coding_index": 32699,
+        "openbench_index": 52591,
+        "coding_index": 32701,
         "tooling_index": 44971,
         "knowledge_index": 72390,
         "vision_index": null,
@@ -60227,8 +60254,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 55133,
-        "coding_index": 38590,
+        "openbench_index": 55134,
+        "coding_index": 38593,
         "tooling_index": 54955,
         "knowledge_index": 73092,
         "vision_index": 44345,
@@ -61259,8 +61286,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 67539,
-        "coding_index": 63797,
+        "openbench_index": 67511,
+        "coding_index": 63705,
         "tooling_index": 73935,
         "knowledge_index": 79289,
         "vision_index": null,
@@ -62336,8 +62363,8 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 42060,
-        "coding_index": 25337,
+        "openbench_index": 42059,
+        "coding_index": 25334,
         "tooling_index": 37291,
         "knowledge_index": 61830,
         "vision_index": null,
@@ -63277,8 +63304,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 48395,
-        "coding_index": 32743,
+        "openbench_index": 48393,
+        "coding_index": 32738,
         "tooling_index": 41274,
         "knowledge_index": 68607,
         "vision_index": 53249,
@@ -64085,8 +64112,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 60001,
-        "coding_index": 43152,
+        "openbench_index": 60002,
+        "coding_index": 43155,
         "tooling_index": 56759,
         "knowledge_index": 79780,
         "vision_index": 71182,
@@ -64948,8 +64975,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 58528,
-        "coding_index": 48545,
+        "openbench_index": 58492,
+        "coding_index": 48424,
         "tooling_index": 60939,
         "knowledge_index": 71845,
         "vision_index": null,
@@ -65629,8 +65656,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 80801,
-        "coding_index": 75524,
+        "openbench_index": 80783,
+        "coding_index": 75463,
         "tooling_index": 81549,
         "knowledge_index": 89032,
         "vision_index": 85004,
@@ -67130,7 +67157,7 @@
       },
       "scores": {
         "openbench_index": 47020,
-        "coding_index": 29270,
+        "coding_index": 29267,
         "tooling_index": 45158,
         "knowledge_index": 63499,
         "vision_index": 56773,
@@ -67765,8 +67792,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 53194,
-        "coding_index": 32427,
+        "openbench_index": 53193,
+        "coding_index": 32423,
         "tooling_index": 48007,
         "knowledge_index": 73290,
         "vision_index": 67093,
@@ -68457,8 +68484,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 55160,
-        "coding_index": 40848,
+        "openbench_index": 55153,
+        "coding_index": 40823,
         "tooling_index": 56040,
         "knowledge_index": 71096,
         "vision_index": 44750,
@@ -69834,8 +69861,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 75382,
-        "coding_index": 64282,
+        "openbench_index": 76202,
+        "coding_index": 67016,
         "tooling_index": 80215,
         "knowledge_index": 86867,
         "vision_index": 90797,
@@ -69925,7 +69952,10 @@
         "aa_legal_index": 37,
         "aa_healthcare_index": 39,
         "aa_economics_index": 37.3,
-        "terminal_bench_science_0_1": 12.9
+        "terminal_bench_science_0_1": 12.9,
+        "aa_coding_agent_index_2_1": 32.7,
+        "frontiercode_2_0": 24.8,
+        "terminal_bench_4_1": 17.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -70019,7 +70049,10 @@
         "aa_legal_index": "2026-10-31",
         "aa_healthcare_index": "2026-10-31",
         "aa_economics_index": "2026-11-05",
-        "terminal_bench_science_0_1": "2026-11-04"
+        "terminal_bench_science_0_1": "2026-11-04",
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "frontiercode_2_0": "2026-11-14",
+        "terminal_bench_4_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -70113,7 +70146,10 @@
         "aa_legal_index": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b",
         "aa_healthcare_index": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b",
         "aa_economics_index": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b",
-        "terminal_bench_science_0_1": "https://www.vals.ai/benchmarks/terminal-bench-science"
+        "terminal_bench_science_0_1": "https://www.vals.ai/benchmarks/terminal-bench-science",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "frontiercode_2_0": "https://artificialanalysis.ai/agents/coding-agents",
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -70140,6 +70176,13 @@
             "date": "2026-08-14",
             "score": 57.7,
             "source": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 32.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_coding_index_4_1": [
@@ -70211,6 +70254,13 @@
             "date": "2026-10-22",
             "score": 57.5,
             "source": "https://deepswe.datacurve.ai"
+          }
+        ],
+        "frontiercode_2_0": [
+          {
+            "date": "2026-11-14",
+            "score": 24.8,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "frontierswe_2_0": [
@@ -70286,6 +70336,13 @@
             "date": "2026-09-04",
             "score": 54.1,
             "source": "https://artificialanalysis.ai/models/qwen3-8-2-4t-a95b"
+          }
+        ],
+        "terminal_bench_4_1": [
+          {
+            "date": "2026-11-14",
+            "score": 17.2,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -70597,6 +70654,7 @@
           "measured": [
             "deepswe_1_1",
             "frontierswe_2_0",
+            "frontiercode_2_0",
             "terminal_bench_4_0",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -70610,7 +70668,7 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.567,
+          "share": 0.662,
           "second_hand": [
             "swe_bench_pro",
             "nl2repo"
@@ -70719,8 +70777,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43751,
-        "coding_index": 26528,
+        "openbench_index": 43750,
+        "coding_index": 26525,
         "tooling_index": 41033,
         "knowledge_index": 58926,
         "vision_index": null,
@@ -72244,8 +72302,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 48981,
-        "coding_index": 33513,
+        "openbench_index": 48978,
+        "coding_index": 33502,
         "tooling_index": 50737,
         "knowledge_index": 54778,
         "vision_index": 50653,
@@ -73034,8 +73092,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 37565,
-        "coding_index": 19967,
+        "openbench_index": 37571,
+        "coding_index": 19986,
         "tooling_index": 34646,
         "knowledge_index": 45458,
         "vision_index": null,
@@ -73771,8 +73829,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 80636,
-        "coding_index": 75606,
+        "openbench_index": 80616,
+        "coding_index": 75540,
         "tooling_index": 86054,
         "knowledge_index": 84912,
         "vision_index": null,
@@ -73878,7 +73936,8 @@
         "terminal_bench_science_0_1": 9.5,
         "critpt_2_0": 57.4,
         "critpt_hard_2_0": 33.5,
-        "terminal_bench_4_1": 41.2
+        "terminal_bench_4_1": 40.4,
+        "aa_coding_agent_index_2_1": 40.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -73988,7 +74047,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -74098,7 +74158,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/glm-5-3",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/glm-5-3",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -74132,6 +74193,13 @@
             "date": "2026-08-19",
             "score": 59.5,
             "source": "https://artificialanalysis.ai/models/glm-5-3"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 40.1,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_coding_index_4_1": [
@@ -74372,6 +74440,11 @@
             "date": "2026-11-13",
             "score": 41.2,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 40.4,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -74971,8 +75044,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 64448,
-        "coding_index": 51061,
+        "openbench_index": 64425,
+        "coding_index": 50985,
         "tooling_index": 70880,
         "knowledge_index": 68002,
         "vision_index": 70590,
@@ -76448,8 +76521,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 44751,
-        "coding_index": 20761,
+        "openbench_index": 44757,
+        "coding_index": 20781,
         "tooling_index": 37959,
         "knowledge_index": 71823,
         "vision_index": null,
@@ -78328,8 +78401,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 61279,
-        "coding_index": 49046,
+        "openbench_index": 61306,
+        "coding_index": 49136,
         "tooling_index": 74803,
         "knowledge_index": 70545,
         "vision_index": 51929,
@@ -78884,8 +78957,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 75181,
-        "coding_index": 58627,
+        "openbench_index": 75175,
+        "coding_index": 58605,
         "tooling_index": 87781,
         "knowledge_index": 79310,
         "vision_index": null,
@@ -79934,8 +80007,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 71631,
-        "coding_index": 67204,
+        "openbench_index": 71648,
+        "coding_index": 67261,
         "tooling_index": 79108,
         "knowledge_index": 73918,
         "vision_index": 72249,
@@ -80767,8 +80840,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 28757,
-        "coding_index": 14440,
+        "openbench_index": 28758,
+        "coding_index": 14441,
         "tooling_index": 19604,
         "knowledge_index": 32019,
         "vision_index": null,
@@ -81440,8 +81513,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 32485,
-        "coding_index": 14437,
+        "openbench_index": 32486,
+        "coding_index": 14439,
         "tooling_index": 28027,
         "knowledge_index": 38948,
         "vision_index": null,
@@ -82155,8 +82228,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 36941,
-        "coding_index": 18516,
+        "openbench_index": 36940,
+        "coding_index": 18515,
         "tooling_index": 31512,
         "knowledge_index": 46037,
         "vision_index": null,
@@ -82805,7 +82878,7 @@
       },
       "scores": {
         "openbench_index": 76484,
-        "coding_index": 74907,
+        "coding_index": 74904,
         "tooling_index": 85094,
         "knowledge_index": 86909,
         "vision_index": null,
@@ -83604,8 +83677,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 61882,
-        "coding_index": 44187,
+        "openbench_index": 61857,
+        "coding_index": 44102,
         "tooling_index": 64648,
         "knowledge_index": 70394,
         "vision_index": null,
@@ -84304,7 +84377,7 @@
       },
       "scores": {
         "openbench_index": 34376,
-        "coding_index": 14771,
+        "coding_index": 14770,
         "tooling_index": 34581,
         "knowledge_index": 39722,
         "vision_index": null,
@@ -84865,8 +84938,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 73911,
-        "coding_index": 76553,
+        "openbench_index": 73879,
+        "coding_index": 76447,
         "tooling_index": 81120,
         "knowledge_index": 78507,
         "vision_index": 64192,
@@ -86188,8 +86261,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 88782,
-        "coding_index": 92141,
+        "openbench_index": 88784,
+        "coding_index": 92148,
         "tooling_index": 90566,
         "knowledge_index": 96224,
         "vision_index": null,
@@ -86291,7 +86364,8 @@
         "terminal_bench_science_0_1": 43.3,
         "critpt_2_0": 72.9,
         "critpt_hard_2_0": 52.5,
-        "terminal_bench_4_1": 57.6
+        "terminal_bench_4_1": 58.1,
+        "aa_coding_agent_index_2_1": 52.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -86397,7 +86471,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -86503,7 +86578,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/claude-fable-5-1",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-fable-5-1",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -86523,6 +86599,13 @@
             "date": "2026-09-11",
             "score": 53.4,
             "source": "https://artificialanalysis.ai/models/claude-fable-5-1"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 52.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -86771,6 +86854,11 @@
             "date": "2026-11-13",
             "score": 57.6,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 58.1,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -87352,8 +87440,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 65952,
-        "coding_index": 62807,
+        "openbench_index": 65919,
+        "coding_index": 62697,
         "tooling_index": 69696,
         "knowledge_index": 80007,
         "vision_index": 72570,
@@ -88344,8 +88432,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 77017,
-        "coding_index": 73244,
+        "openbench_index": 76964,
+        "coding_index": 73068,
         "tooling_index": 83524,
         "knowledge_index": 86879,
         "vision_index": 83515,
@@ -89369,8 +89457,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 80671,
-        "coding_index": 75558,
+        "openbench_index": 80679,
+        "coding_index": 75586,
         "tooling_index": 86821,
         "knowledge_index": 94620,
         "vision_index": 91079,
@@ -90419,7 +90507,7 @@
       },
       "scores": {
         "openbench_index": 90732,
-        "coding_index": 94299,
+        "coding_index": 94296,
         "tooling_index": 90697,
         "knowledge_index": 98658,
         "vision_index": 98509,
@@ -90524,7 +90612,8 @@
         "terminal_bench_science_0_1": 63.3,
         "critpt_2_0": 83.1,
         "critpt_hard_2_0": 70.5,
-        "terminal_bench_4_1": 60.3
+        "terminal_bench_4_1": 57.6,
+        "aa_coding_agent_index_2_1": 53.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -90633,7 +90722,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -90742,7 +90832,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gpt-6-astra",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-astra",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -90762,6 +90853,13 @@
             "date": "2026-09-19",
             "score": 52.7,
             "source": "https://artificialanalysis.ai/models/gpt-6-astra"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 53.1,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -90987,6 +91085,11 @@
             "date": "2026-11-13",
             "score": 60.3,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 57.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -92795,8 +92898,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 36061,
-        "coding_index": 16980,
+        "openbench_index": 36052,
+        "coding_index": 16950,
         "tooling_index": 41238,
         "knowledge_index": 42147,
         "vision_index": null,
@@ -93342,8 +93445,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 46536,
-        "coding_index": 28695,
+        "openbench_index": 46533,
+        "coding_index": 28685,
         "tooling_index": 55707,
         "knowledge_index": 50230,
         "vision_index": null,
@@ -93891,8 +93994,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 48716,
-        "coding_index": 26580,
+        "openbench_index": 48701,
+        "coding_index": 26527,
         "tooling_index": 50787,
         "knowledge_index": 61231,
         "vision_index": null,
@@ -94380,8 +94483,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 77853,
-        "coding_index": 71472,
+        "openbench_index": 77783,
+        "coding_index": 71240,
         "tooling_index": 84283,
         "knowledge_index": 85273,
         "vision_index": 70823,
@@ -95338,8 +95441,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 70639,
-        "coding_index": 68720,
+        "openbench_index": 70576,
+        "coding_index": 68511,
         "tooling_index": 79404,
         "knowledge_index": 72766,
         "vision_index": 51707,
@@ -96291,8 +96394,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 91371,
-        "coding_index": 96207,
+        "openbench_index": 91370,
+        "coding_index": 96204,
         "tooling_index": 92107,
         "knowledge_index": 97874,
         "vision_index": 98966,
@@ -96395,7 +96498,8 @@
         "terminal_bench_science_0_1": 59,
         "critpt_2_0": 81.7,
         "critpt_hard_2_0": 68,
-        "terminal_bench_4_1": 65.8
+        "terminal_bench_4_1": 64.7,
+        "aa_coding_agent_index_2_1": 58.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -96502,7 +96606,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -96609,7 +96714,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/claude-opus-5-5",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-opus-5-5",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -96629,6 +96735,13 @@
             "date": "2026-09-22",
             "score": 57.6,
             "source": "https://artificialanalysis.ai/models/claude-opus-5-5"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 58.2,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -96825,6 +96938,11 @@
             "date": "2026-11-13",
             "score": 65.8,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 64.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -97411,8 +97529,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 71192,
-        "coding_index": 63227,
+        "openbench_index": 71216,
+        "coding_index": 63308,
         "tooling_index": 71589,
         "knowledge_index": 83978,
         "vision_index": 77847,
@@ -97514,7 +97632,8 @@
         "terminal_bench_science_0_1": 8.6,
         "critpt_2_0": 65.1,
         "critpt_hard_2_0": 42.5,
-        "terminal_bench_4_1": 15.2
+        "terminal_bench_4_1": 15.2,
+        "aa_coding_agent_index_2_1": 25.9
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -97620,7 +97739,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -97726,7 +97846,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gpt-6-luna",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-luna",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -97751,6 +97872,13 @@
             "date": "2026-10-01",
             "score": 38.1,
             "source": "https://artificialanalysis.ai/models/gpt-6-luna"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 25.9,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -98446,8 +98574,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 84920,
-        "coding_index": 83735,
+        "openbench_index": 84918,
+        "coding_index": 83726,
         "tooling_index": 85561,
         "knowledge_index": 94853,
         "vision_index": 91642,
@@ -99794,8 +99922,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 70993,
-        "coding_index": 65711,
+        "openbench_index": 70920,
+        "coding_index": 65468,
         "tooling_index": 80817,
         "knowledge_index": 83266,
         "vision_index": 75985,
@@ -101490,8 +101618,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90887,
-        "coding_index": 92755,
+        "openbench_index": 90886,
+        "coding_index": 92752,
         "tooling_index": 95522,
         "knowledge_index": 95092,
         "vision_index": null,
@@ -101590,7 +101718,8 @@
         "terminal_bench_science_0_1": 53.3,
         "critpt_2_0": 75.7,
         "critpt_hard_2_0": 59,
-        "terminal_bench_4_1": 63.9
+        "terminal_bench_4_1": 65.7,
+        "aa_coding_agent_index_2_1": 56.3
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -101693,7 +101822,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -101796,7 +101926,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -101816,6 +101947,13 @@
             "date": "2026-09-28",
             "score": 56,
             "source": "https://artificialanalysis.ai/models/claude-sonnet-5-5"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 56.3,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -102009,6 +102147,11 @@
             "date": "2026-11-13",
             "score": 63.9,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 65.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -102525,8 +102668,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 87658,
-        "coding_index": 88613,
+        "openbench_index": 87656,
+        "coding_index": 88605,
         "tooling_index": 86278,
         "knowledge_index": 98104,
         "vision_index": 95428,
@@ -102625,7 +102768,8 @@
         "critpt_2_0": 82.6,
         "critpt_hard_2_0": 69.5,
         "vending_bench_2": 12861,
-        "terminal_bench_4_1": 60.9
+        "terminal_bench_4_1": 54,
+        "aa_coding_agent_index_2_1": 52.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -102728,7 +102872,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "vending_bench_2": "2026-11-09",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -102831,7 +102976,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-1-sol",
         "vending_bench_2": "https://epoch.ai/benchmarks/vending-bench-2",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -102851,6 +102997,13 @@
             "date": "2026-09-29",
             "score": 51.8,
             "source": "https://artificialanalysis.ai/models/gpt-6-1-sol"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 52.2,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -103009,6 +103162,11 @@
             "date": "2026-11-13",
             "score": 60.9,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 54,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -103815,8 +103973,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90827,
-        "coding_index": 87040,
+        "openbench_index": 90833,
+        "coding_index": 87059,
         "tooling_index": 93591,
         "knowledge_index": 95570,
         "vision_index": null,
@@ -103916,7 +104074,8 @@
         "aa_economics_index": 52.6,
         "terminal_bench_science_0_1": 52.9,
         "critpt_hard_2_0": 52.5,
-        "terminal_bench_4_1": 55.5
+        "terminal_bench_4_1": 56.6,
+        "aa_coding_agent_index_2_1": 45.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -104020,7 +104179,8 @@
         "aa_economics_index": "2026-11-05",
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-14"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -104124,7 +104284,8 @@
         "aa_economics_index": "https://artificialanalysis.ai/models/gemini-4-argon",
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gemini-4-argon",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gemini-4-argon",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -104139,6 +104300,13 @@
             "date": "2026-10-01",
             "score": 52.6,
             "source": "https://artificialanalysis.ai/models/gemini-4-argon"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 45.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -104309,8 +104477,8 @@
         "terminal_bench_4_1": [
           {
             "date": "2026-11-14",
-            "score": 55.5,
-            "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+            "score": 56.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -104782,8 +104950,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 75147,
-        "coding_index": 64285,
+        "openbench_index": 75078,
+        "coding_index": 64055,
         "tooling_index": 83403,
         "knowledge_index": 84646,
         "vision_index": null,
@@ -105459,8 +105627,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 76722,
-        "coding_index": 64942,
+        "openbench_index": 76678,
+        "coding_index": 64796,
         "tooling_index": 84310,
         "knowledge_index": 87308,
         "vision_index": 61327,
@@ -105553,7 +105721,9 @@
         "terminal_bench_science_0_1": 2.4,
         "frontiercode_2_0": 12,
         "critpt_2_0": 54.6,
-        "critpt_hard_2_0": 32.5
+        "critpt_hard_2_0": 32.5,
+        "aa_coding_agent_index_2_1": 35.8,
+        "terminal_bench_4_1": 30.3
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -105650,7 +105820,9 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
-        "critpt_hard_2_0": "2026-11-04"
+        "critpt_hard_2_0": "2026-11-04",
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "terminal_bench_4_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -105747,7 +105919,9 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/step-5",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/step-5",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/step-5"
+        "critpt_hard_2_0": "https://artificialanalysis.ai/models/step-5",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -105762,6 +105936,13 @@
             "date": "2026-10-08",
             "score": 43.7,
             "source": "https://artificialanalysis.ai/models/step-5"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 35.8,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -105909,6 +106090,13 @@
             "date": "2026-10-03",
             "score": 58.9,
             "source": "https://artificialanalysis.ai/models/step-5"
+          }
+        ],
+        "terminal_bench_4_1": [
+          {
+            "date": "2026-11-14",
+            "score": 30.3,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -107027,8 +107215,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70742,
-        "coding_index": 63526,
+        "openbench_index": 70692,
+        "coding_index": 63361,
         "tooling_index": 74191,
         "knowledge_index": 77238,
         "vision_index": 61327,
@@ -107126,7 +107314,8 @@
         "critpt_2_0": 50.3,
         "critpt_hard_2_0": 27,
         "aa_healthcare_index": 36.7,
-        "terminal_bench_4_1": 27.6
+        "terminal_bench_4_1": 42.4,
+        "aa_coding_agent_index_2_1": 40.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -107228,7 +107417,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "aa_healthcare_index": "2026-11-10",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -107330,7 +107520,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/mistral-large-4",
         "aa_healthcare_index": "https://artificialanalysis.ai/models/mistral-large-4",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -107355,6 +107546,13 @@
             "date": "2026-10-06",
             "score": 38.4,
             "source": "https://artificialanalysis.ai/models/mistral-large-4"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 40.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -107527,6 +107725,11 @@
             "date": "2026-11-13",
             "score": 27.6,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 42.4,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -108057,8 +108260,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 77671,
-        "coding_index": 79317,
+        "openbench_index": 77672,
+        "coding_index": 79322,
         "tooling_index": 75576,
         "knowledge_index": 88544,
         "vision_index": null,
@@ -108156,7 +108359,8 @@
         "terminal_bench_science_0_1": 20,
         "critpt_2_0": 64,
         "critpt_hard_2_0": 43.5,
-        "terminal_bench_4_1": 40
+        "terminal_bench_4_1": 31.8,
+        "aa_coding_agent_index_2_1": 29.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -108258,7 +108462,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -108360,7 +108565,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/claude-haiku-5-5",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-haiku-5-5",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -108380,6 +108586,13 @@
             "date": "2026-10-08",
             "score": 43.4,
             "source": "https://artificialanalysis.ai/models/claude-haiku-5-5"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 29.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -108566,6 +108779,11 @@
             "date": "2026-11-13",
             "score": 40,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 31.8,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -109041,8 +109259,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 86954,
-        "coding_index": 86714,
+        "openbench_index": 86958,
+        "coding_index": 86729,
         "tooling_index": 89711,
         "knowledge_index": 92538,
         "vision_index": null,
@@ -109137,7 +109355,8 @@
         "terminal_bench_science_0_1": 25.7,
         "critpt_2_0": 71.1,
         "critpt_hard_2_0": 50.5,
-        "terminal_bench_4_1": 47
+        "terminal_bench_4_1": 47.5,
+        "aa_coding_agent_index_2_1": 44.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -109236,7 +109455,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-14"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -109335,7 +109555,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/muse-wonder",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -109355,6 +109576,13 @@
             "date": "2026-10-12",
             "score": 52.4,
             "source": "https://artificialanalysis.ai/models/muse-wonder"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 44.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -109492,8 +109720,8 @@
         "terminal_bench_4_1": [
           {
             "date": "2026-11-14",
-            "score": 47,
-            "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+            "score": 47.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -109887,8 +110115,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 90645,
-        "coding_index": 92596,
+        "openbench_index": 90649,
+        "coding_index": 92607,
         "tooling_index": 91104,
         "knowledge_index": 94706,
         "vision_index": null,
@@ -109974,7 +110202,9 @@
         "terminal_bench_science_0_1": 37.1,
         "frontiercode_2_0": 37.8,
         "critpt_2_0": 75.1,
-        "critpt_hard_2_0": 56.5
+        "critpt_hard_2_0": 56.5,
+        "aa_coding_agent_index_2_1": 54.5,
+        "terminal_bench_4_1": 59.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -110064,7 +110294,9 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
-        "critpt_hard_2_0": "2026-11-04"
+        "critpt_hard_2_0": "2026-11-04",
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "terminal_bench_4_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -110154,7 +110386,9 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/muse-wonder-full",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/muse-wonder-full",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder-full"
+        "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder-full",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -110174,6 +110408,13 @@
             "date": "2026-10-13",
             "score": 55.8,
             "source": "https://artificialanalysis.ai/models/muse-wonder-full"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 54.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -110292,6 +110533,13 @@
             "date": "2026-10-13",
             "score": 62.6,
             "source": "https://artificialanalysis.ai/models/muse-wonder-full"
+          }
+        ],
+        "terminal_bench_4_1": [
+          {
+            "date": "2026-11-14",
+            "score": 59.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -110574,8 +110822,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 82759,
-        "coding_index": 80238,
+        "openbench_index": 82761,
+        "coding_index": 80245,
         "tooling_index": 82105,
         "knowledge_index": 85228,
         "vision_index": null,
@@ -110678,7 +110926,8 @@
         "critpt_2_0": 51.4,
         "critpt_hard_2_0": 33.5,
         "ale_bench": 1546,
-        "terminal_bench_4_1": 38.8
+        "terminal_bench_4_1": 32.3,
+        "aa_coding_agent_index_2_1": 41.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -110785,7 +111034,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "ale_bench": "2026-11-09",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -110892,7 +111142,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/grok-4-7",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -110912,6 +111163,13 @@
             "date": "2026-10-13",
             "score": 46.4,
             "source": "https://artificialanalysis.ai/models/grok-4-7"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 41.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -111070,6 +111328,11 @@
             "date": "2026-11-13",
             "score": 38.8,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 32.3,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -111864,8 +112127,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 48806,
-        "coding_index": 29030,
+        "openbench_index": 48787,
+        "coding_index": 28967,
         "tooling_index": 45154,
         "knowledge_index": 71642,
         "vision_index": null,
@@ -112607,8 +112870,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 73083,
-        "coding_index": 58680,
+        "openbench_index": 73055,
+        "coding_index": 58587,
         "tooling_index": 73090,
         "knowledge_index": 85899,
         "vision_index": 85402,
@@ -113366,8 +113629,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 64094,
-        "coding_index": 49750,
+        "openbench_index": 64082,
+        "coding_index": 49709,
         "tooling_index": 68787,
         "knowledge_index": 78757,
         "vision_index": null,
@@ -113464,7 +113727,8 @@
         "critpt_2_0": 40,
         "critpt_hard_2_0": 26.5,
         "ale_bench": 1098,
-        "terminal_bench_4_1": 6.4
+        "terminal_bench_4_1": 4,
+        "aa_coding_agent_index_2_1": 15.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -113565,7 +113829,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "ale_bench": "2026-11-09",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -113666,7 +113931,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/reflection-beam",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -113681,6 +113947,13 @@
             "date": "2026-10-16",
             "score": 30.3,
             "source": "https://artificialanalysis.ai/models/reflection-beam"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 15.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -113822,6 +114095,11 @@
             "date": "2026-11-13",
             "score": 6.4,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 4,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -114231,8 +114509,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 81379,
-        "coding_index": 83427,
+        "openbench_index": 81385,
+        "coding_index": 83446,
         "tooling_index": 86815,
         "knowledge_index": 83471,
         "vision_index": 72992,
@@ -114334,7 +114612,8 @@
         "critpt_2_0": 50.6,
         "critpt_hard_2_0": 25,
         "agents_last_exam_1_1": 36.1,
-        "terminal_bench_4_1": 38.5
+        "terminal_bench_4_1": 28.3,
+        "aa_coding_agent_index_2_1": 36.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -114440,7 +114719,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "agents_last_exam_1_1": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -114546,7 +114826,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
         "agents_last_exam_1_1": "https://agents-last-exam.org/leaderboard",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -114566,6 +114847,13 @@
             "date": "2026-10-19",
             "score": 45.1,
             "source": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 36.8,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -114714,6 +115002,11 @@
             "date": "2026-11-13",
             "score": 38.5,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 28.3,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -116458,8 +116751,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 72279,
-        "coding_index": 57309,
+        "openbench_index": 72196,
+        "coding_index": 57033,
         "tooling_index": 81746,
         "knowledge_index": 84090,
         "vision_index": null,
@@ -116990,8 +117283,8 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 88923,
-        "coding_index": 84626,
+        "openbench_index": 88931,
+        "coding_index": 84650,
         "tooling_index": 95927,
         "knowledge_index": 92142,
         "vision_index": 93463,
@@ -117093,7 +117386,8 @@
         "simpleqa_verified": 62.2,
         "arena_text": 1485,
         "arena_text_non_english": 1473,
-        "terminal_bench_4_1": 59.7
+        "terminal_bench_4_1": 67.2,
+        "aa_coding_agent_index_2_1": 48.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -117199,7 +117493,8 @@
         "simpleqa_verified": "2026-11-06",
         "arena_text": "2026-11-13",
         "arena_text_non_english": "2026-11-13",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -117305,7 +117600,8 @@
         "simpleqa_verified": "https://epoch.ai/benchmarks/simple-qa-verified",
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -117325,6 +117621,13 @@
             "date": "2026-10-24",
             "score": 55.1,
             "source": "https://artificialanalysis.ai/models/kimi-k3-1-pro"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 48.6,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_cyber_index": [
@@ -117461,6 +117764,11 @@
             "date": "2026-11-13",
             "score": 59.7,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 67.2,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -118175,8 +118483,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 84744,
-        "coding_index": 80341,
+        "openbench_index": 84728,
+        "coding_index": 80287,
         "tooling_index": 85997,
         "knowledge_index": 95250,
         "vision_index": 94150,
@@ -118267,7 +118575,8 @@
         "frontiercode_2_0": 42.3,
         "critpt_2_0": 81.4,
         "critpt_hard_2_0": 68,
-        "terminal_bench_4_1": 53.3
+        "terminal_bench_4_1": 50.5,
+        "aa_coding_agent_index_2_1": 48.7
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -118362,7 +118671,8 @@
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -118457,7 +118767,8 @@
         "frontiercode_2_0": "https://artificialanalysis.ai/models/gpt-6-1-terra",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-1-terra",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -118482,6 +118793,13 @@
             "date": "2026-10-27",
             "score": 48.1,
             "source": "https://artificialanalysis.ai/models/gpt-6-1-terra"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 48.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -118595,6 +118913,11 @@
             "date": "2026-11-13",
             "score": 53.3,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 50.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -119419,8 +119742,8 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "openbench_index": 68492,
-        "coding_index": 56506,
+        "openbench_index": 68460,
+        "coding_index": 56397,
         "tooling_index": 75385,
         "knowledge_index": 70740,
         "vision_index": null,
@@ -119973,8 +120296,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 93679,
-        "coding_index": 93756,
+        "openbench_index": 93680,
+        "coding_index": 93759,
         "tooling_index": 97855,
         "knowledge_index": 98476,
         "vision_index": null,
@@ -120073,7 +120396,8 @@
         "arc_agi_1": 98.5,
         "arc_agi_2": 94.2,
         "arc_agi_3": 65.1,
-        "terminal_bench_4_1": 64.6
+        "terminal_bench_4_1": 64.7,
+        "aa_coding_agent_index_2_1": 55.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -120176,7 +120500,8 @@
         "arc_agi_1": "2026-11-11",
         "arc_agi_2": "2026-11-11",
         "arc_agi_3": "2026-11-11",
-        "terminal_bench_4_1": "2026-11-14"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -120279,7 +120604,8 @@
         "arc_agi_1": "https://arcprize.org/leaderboard",
         "arc_agi_2": "https://arcprize.org/leaderboard",
         "arc_agi_3": "https://arcprize.org/leaderboard",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -120292,6 +120618,13 @@
             "date": "2026-11-03",
             "score": 60,
             "source": "https://artificialanalysis.ai/models/gemini-4-carbon"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 55.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -120403,8 +120736,8 @@
         "terminal_bench_4_1": [
           {
             "date": "2026-11-14",
-            "score": 64.6,
-            "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+            "score": 64.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -123208,8 +123541,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 76214,
-        "coding_index": 70931,
+        "openbench_index": 76222,
+        "coding_index": 70955,
         "tooling_index": 77096,
         "knowledge_index": 87178,
         "vision_index": 87055,
@@ -124008,8 +124341,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 93701,
-        "coding_index": 97738,
+        "openbench_index": 93700,
+        "coding_index": 97734,
         "tooling_index": 95261,
         "knowledge_index": 99830,
         "vision_index": null,
@@ -124129,7 +124462,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": 65.8
+        "terminal_bench_4_1": 64.1,
+        "aa_coding_agent_index_2_1": 58.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -124253,7 +124587,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -124377,7 +124712,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -124385,6 +124721,13 @@
             "date": "2026-11-09",
             "score": 64.6,
             "source": "https://artificialanalysis.ai/models/claude-fable-5-2"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 58.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -124511,6 +124854,11 @@
             "date": "2026-11-13",
             "score": 65.8,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 64.1,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -124797,8 +125145,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 78202,
-        "coding_index": 70513,
+        "openbench_index": 78210,
+        "coding_index": 70538,
         "tooling_index": 83813,
         "knowledge_index": 85225,
         "vision_index": null,
@@ -124918,7 +125266,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": 30.6
+        "terminal_bench_4_1": 43.4,
+        "aa_coding_agent_index_2_1": 39.7
       },
       "scores_updated": {
         "openbench_index": "2026-11-14",
@@ -125042,7 +125391,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-14",
+        "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -125166,7 +125516,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -125174,6 +125525,13 @@
             "date": "2026-11-09",
             "score": 36,
             "source": "https://artificialanalysis.ai/models/muse-ember"
+          }
+        ],
+        "aa_coding_agent_index_2_1": [
+          {
+            "date": "2026-11-14",
+            "score": 39.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "aa_engineering_index": [
@@ -125244,6 +125602,11 @@
             "date": "2026-11-13",
             "score": 30.6,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-14",
+            "score": 43.4,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -126771,8 +127134,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 87436,
-        "coding_index": 84053,
+        "openbench_index": 87434,
+        "coding_index": 84047,
         "tooling_index": 89444,
         "knowledge_index": 94653,
         "vision_index": null,
@@ -127975,8 +128338,8 @@
         "grok-4-7": 16,
         "claude-haiku-5-5": 17,
         "deepseek-v4-1-flash": 18,
-        "glm-5-3": 19,
-        "gpt-5-6-sol": 20,
+        "gpt-5-6-sol": 19,
+        "glm-5-3": 20,
         "kimi-k3": 21,
         "hy4-preview": 22,
         "gpt-5-6-terra": 23,
@@ -127985,17 +128348,17 @@
         "muse-ember": 26,
         "mimo-v2-6-flash": 27,
         "qwen3-8-flash-next": 28,
-        "minimax-m3-1-flash": 29,
-        "step-5-preview": 30,
-        "ling-3-1-flash": 31,
-        "qwen3-8-2-4t-a95b": 32,
+        "qwen3-8-2-4t-a95b": 29,
+        "minimax-m3-1-flash": 30,
+        "step-5-preview": 31,
+        "ling-3-1-flash": 32,
         "deepseek-v4-pro": 33,
         "mistral-large-4": 34,
         "gpt-6-luna": 35,
         "gpt-5-6-luna": 36,
         "deepseek-v4-flash": 37,
-        "muse-spark-open": 38,
-        "glm-5-3-flash": 39,
+        "glm-5-3-flash": 38,
+        "muse-spark-open": 39,
         "ling-3-1-flash-1019": 40,
         "nanbeige4-3-33b": 41,
         "minimax-m3": 42,
@@ -128860,21 +129223,13 @@
         "index": "coding_index",
         "model": "glm-5-3",
         "from": 21,
-        "to": 19,
+        "to": 20,
         "of": 91,
         "open": {
           "from": 5,
           "to": 4,
           "of": 71
         }
-      },
-      {
-        "date": "2026-11-14",
-        "index": "coding_index",
-        "model": "gpt-5-6-sol",
-        "from": 19,
-        "to": 20,
-        "of": 91
       },
       {
         "date": "2026-11-14",
@@ -128927,26 +129282,13 @@
       {
         "date": "2026-11-14",
         "index": "coding_index",
-        "model": "minimax-m3-1-flash",
-        "from": 30,
+        "model": "qwen3-8-2-4t-a95b",
+        "from": 32,
         "to": 29,
         "of": 91,
         "open": {
-          "from": 12,
+          "from": 14,
           "to": 11,
-          "of": 71
-        }
-      },
-      {
-        "date": "2026-11-14",
-        "index": "coding_index",
-        "model": "step-5-preview",
-        "from": 31,
-        "to": 30,
-        "of": 91,
-        "open": {
-          "from": 13,
-          "to": 12,
           "of": 71
         }
       },
@@ -128955,11 +129297,11 @@
         "index": "coding_index",
         "model": "ling-3-1-flash",
         "from": 29,
-        "to": 31,
+        "to": 32,
         "of": 91,
         "open": {
           "from": 11,
-          "to": 13,
+          "to": 14,
           "of": 71
         }
       },
@@ -128992,13 +129334,26 @@
       {
         "date": "2026-11-14",
         "index": "coding_index",
-        "model": "muse-spark-open",
-        "from": 40,
+        "model": "glm-5-3-flash",
+        "from": 39,
         "to": 38,
         "of": 91,
         "open": {
-          "from": 20,
+          "from": 19,
           "to": 18,
+          "of": 71
+        }
+      },
+      {
+        "date": "2026-11-14",
+        "index": "coding_index",
+        "model": "muse-spark-open",
+        "from": 40,
+        "to": 39,
+        "of": 91,
+        "open": {
+          "from": 20,
+          "to": 19,
           "of": 71
         }
       },
