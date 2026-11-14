@@ -1693,9 +1693,10 @@ def update_aa_coding_agents_scores(
 
         matched += 1
         for benchmark_key, new_value in aa_coding_agents_scores.items():
-            # Ranked above every other source, AA's model pages included
-            # (_precedence.RANK_AA_CODING_AGENTS), so the agent run is the one
-            # that lands wherever both AA surfaces report a column.
+            # Ranked under AA's model pages and above every benchmark site
+            # (_precedence.RANK_AA_CODING_AGENTS): the vendor-agent run fills
+            # FrontierCode 2.0 where the pages lack a model, and outranks
+            # tbench.ai's board in Terminal-Bench 4.1.
             updated += apply_score(
                 doc, model, slug, benchmark_key, new_value,
                 AA_CODING_AGENTS_SOURCE_URL, changes,

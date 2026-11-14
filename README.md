@@ -434,7 +434,7 @@ current address.
 ./update.py --fill-source-urls -w
 
 # Fetch from specific benchmarks
-./fetch_aa_coding_agents.py              # DeepSWE 1.1, SWE-Atlas-QnA, Terminal-Bench 4.0 as run by AA
+./fetch_aa_coding_agents.py              # Coding Agent Index v2.1 and its FrontierCode 2.0, Terminal-Bench 4.1, SWE-Atlas-QnA runs
 ./fetch_huggingface.py owner/model-name  # or the full card URL
 ./fetch_huggingface.py --all-models --format table   # every card llm.json points at
 ./fetch_deepswe.py                      # DeepSWE, mirrored by benchlm.ai
@@ -835,7 +835,7 @@ already gives row collisions inside a single source.
 | Rank | Source | Why there |
 | --- | --- | --- |
 | 0 | **Artificial Analysis** (API, model pages, official social posts) | AA replaces every other source and refreshes its own scores. An equal AA score also takes source attribution, protecting it from later non-AA writes. |
-| 1 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares Terminal-Bench 4.0 with the model pages, which run AA's single harness, so the two disagree by design. Since 2026-10-03 the model pages rank above it, so AA's single-harness run lands wherever both report, whichever ingest ran last: a column that compares models should hold the harness fixed, and the vendor agents do not. The index fills what the pages leave empty — Terminal-Bench 4.0 for a model AA has not run itself, and its DeepSWE and SWE Atlas rows — and outranks every benchmark site there. |
+| 1 | **Artificial Analysis Coding Agent Index** | AA's own runs with each model under its vendor's coding agent (Claude Code, Codex, …). It shares FrontierCode 2.0 with the model pages, which run AA's single harness, so the two disagree by design (it shared Terminal-Bench 4.0 until index v2.1 moved its run to 4.1 on 2026-11-14). Since 2026-10-03 the model pages rank above it, so AA's single-harness run lands wherever both report, whichever ingest ran last: a column that compares models should hold the harness fixed, and the vendor agents do not. The index fills what the pages leave empty — FrontierCode 2.0 for a model AA has not run itself, its Terminal-Bench 4.1 and SWE Atlas rows, and the index itself (`aa_coding_agent_index_2_1`) — and outranks every benchmark site there, tbench.ai's 4.1 board included. |
 | 2 | **The benchmark's own leaderboard** — Toolathlon, Scale (MCP-Atlas, SWE-Atlas, SWE-Bench Pro V2), Gorilla BFCL, OSWorld (Verified and 2.0), DeepSWE/Datacurve, FrontierSWE, Specific Real-SWE, Cognition FrontierCode, SWE-Marathon, Terminal-Bench, Agents' Last Exam, ProgramBench, kernelbench.com, cybergym.io (CyberGym, ExploitGym), SEC-bench Pro, HLE-Diamond's announcement post, Vals AI *for Vibe Code Bench and CyberBench only* | First-party for the column it publishes. No two members publish the same column, so their relative order is unobservable and none is declared. A board publishing several revisions of itself is first-party for each of their columns. |
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
@@ -872,7 +872,7 @@ whether or not the agent ingest ran, and in either order. Where the pages report
 nothing, the agent run fills the column. Missing results never erase
 stored scores.
 
-tbench.ai's 4.0, 3.0, 2.1 and 2.0 boards each rank 2 for their own column, as
+tbench.ai's 4.1, 4.0, 3.0, 2.1 and 2.0 boards each rank 2 for their own column (on 4.1 under the Coding Agent Index, rank 1, which runs it too), as
 does its Terminal-Bench-Science 0.1 board for `terminal_bench_science_0_1` —
 a sibling benchmark on the same Harbor Hub (70 research-workflow tasks written
 by working scientists), not a Terminal-Bench revision. AA runs Science too,
@@ -1196,9 +1196,9 @@ cannot disagree about which column a row belongs in.
 | **Real-SWE** | `real_swe_1_1`, `real_swe_1_0` | 1.1 (October 2026, 25 tasks in five languages) replaced 1.0 (10 tasks) on the same page on 2026-10-15 without keeping 1.0's board, and for two weeks the fetcher wrote 1.1 numbers into the 1.0 column. The page's title names the release, so `fetch_real_swe.py` reads it there and refuses a page naming none; 1.0's column is the values read before the switch. |
 | **Agents' Last Exam** | `agents_last_exam_1_1`, `agents_last_exam_1_0` | The site opens on v1.1 (122 tasks), served from `/api/demo/leaderboard/v1.1`; the endpoint the fetcher had always read is v1.0 (152 public tasks), now the legacy board at `/leaderboard/v1`. Both are read; the page's "ALE v1.1" label names the current release, so a v1.2 is fetched and reported. |
 | **SEC-bench Pro** | `sec_bench_pro` (260505), `sec_bench_pro_260617` | Dated snapshots in one data file: 260505 (183 tasks, V8 and SpiderMonkey, the set vendors report) and 260617 (344, the Linux kernel added, what the site root shows). Each is checked against its own task count; a further snapshot is reported, not read. |
-| **Terminal-Bench** | `terminal_bench_4_1`, `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. 4.1 (2026-11-03) changed only the verifiers and re-graded 4.0's trials (Spearman 0.998 over the 52 runs on both); it is a column of its own but not aggregated, since Artificial Analysis — 107 of 4.0's values — still runs 4.0. `test_source_versions.py` fails the day AA, Vals or tbench.ai move on, which is the cue to give 4.1 4.0's index weight with a `REVISION_FALLBACKS` entry. Terminal-Bench-Science (`terminal_bench_science_0_1`) is a separate benchmark on the same API and keeps its version in its column name for the same reason; Vals' board for it (`terminal-bench-science`) names no version in its slug, so `fetch_vals.VERSIONS` pins it to 0.1. |
+| **Terminal-Bench** | `terminal_bench_4_1`, `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. 4.1 (2026-11-03) changed only the verifiers and re-graded 4.0's trials (Spearman 0.998 over the 52 runs on both); it is a column of its own but not aggregated, since Artificial Analysis' model pages — 107 of 4.0's values — still run 4.0. AA's Coding Agent Index moved to 4.1 on 2026-11-14 under its unchanged `terminal-bench-v4` id; its runs now feed `terminal_bench_4_1` (outranking tbench.ai's board) behind a check of the page's own label. `test_source_versions.py` fails the day AA's model pages, Vals or tbench.ai move on, which is the cue to give 4.1 4.0's index weight with a `REVISION_FALLBACKS` entry. Terminal-Bench-Science (`terminal_bench_science_0_1`) is a separate benchmark on the same API and keeps its version in its column name for the same reason; Vals' board for it (`terminal-bench-science`) names no version in its slug, so `fetch_vals.VERSIONS` pins it to 0.1. |
 | **ARC-AGI** | `arc_agi_3`, `arc_agi_2`, `arc_agi_1` | Three benchmarks rather than three runs, on ARC Prize's one board: each version's semi-private set is its own column, read by `fetch_arc_prize.py` from the files the leaderboard hydrates from (with Epoch's copy filling ARC-AGI-2). Provider Adapter runs — the provider's own agent harness, 98.6 for GPT-6 Astra on ARC-AGI-3 against 62.7 in ARC Prize's — are left out, and a new semi-private version is reported. |
-| **AA Intelligence Index**, **AA-Omniscience** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR, AA-Briefcase, Terminal-Bench-Science, CritPt v2 (`critpt_2_0` and `critpt_hard_2_0`) and FrontierCode 1.1 from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). |
+| **AA Intelligence Index**, **AA-Omniscience**, **AA Coding Agent Index** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR, AA-Briefcase, Terminal-Bench-Science, CritPt v2 (`critpt_2_0` and `critpt_hard_2_0`) and FrontierCode 1.1 from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). The Coding Agent Index starts at v2.1 (`aa_coding_agent_index_2_1`, FrontierCode-AA 2.0 + Terminal-Bench 4.1 + SWE-Atlas-QnA-AA); v2.0 was never stored, and `fetch_aa_coding_agents.py` writes the column only while the coding-agents page names v2.1. |
 
 A benchmark that keeps only its current revision as a column still spells that
 column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the
@@ -1316,14 +1316,22 @@ already get, applied consistently:
   table is **not** ingested: seven rows are the 1.0 archive verbatim, beside a
   Kimi K3 that is on neither published board, with nothing saying which is
   which.
-- The AA Coding Agent Index's `deep-swe` rows **are** ingested now, into
-  `deepswe_1_1`. They were not, for as long as the dataset id carried no
-  revision to pick a column with; AA has since re-cut the index on
-  `deep-swe-v1.1` and `terminal-bench-v4`, and the reader follows the ids. That
-  rename is also a warning: an id `fetch_aa_coding_agents.py` does not know is
-  skipped with one line on stderr, so both columns went quietly unfed between
-  the rename and this change — `test_aa_coding_agents.py` pins the ids the page
-  publishes today against the columns they are mapped to.
+- The AA Coding Agent Index's `deep-swe` rows **were** ingested into
+  `deepswe_1_1` once AA re-cut the index on `deep-swe-v1.1` and
+  `terminal-bench-v4`, and the reader follows the ids. That rename is also a
+  warning: an id `fetch_aa_coding_agents.py` does not know is skipped with one
+  line on stderr, so both columns went quietly unfed between the rename and
+  that change — `test_aa_coding_agents.py` pins the ids the page publishes
+  today against the columns they are mapped to. Index v2.1 (2026-11) then
+  dropped DeepSWE for `frontiercode-v2.0` (into `frontiercode_2_0`) and moved
+  Terminal-Bench to 4.1 under the *unchanged* id `terminal-bench-v4`. An id can
+  therefore not be trusted to name a minor revision: `terminal-bench-v4` now
+  feeds `terminal_bench_4_1` only while the page's benchmark list labels it
+  "Terminal-Bench 4.1" (`LABEL_GATES`), and the index column
+  `aa_coding_agent_index_2_1` only while the page names "Coding Agent Index
+  v2.1". Either mismatch skips the column with a line on stderr, and
+  `test_source_versions.py` puts the same check on the Tests tab. The 12
+  `deepswe_1_1` values the page wrote before v2.1 stay as measured.
 - In `huggingface-benchmark-name-mapping.json`, `DeepSWE (v1.1)` and
   `Agentic coding DeepSWE 1.1` map onto `deepswe_1_1` and a bare `DeepSWE` is
   unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1`. llm-stats'
