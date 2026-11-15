@@ -1,3 +1,58 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "hy4-preview",
+          "reason": "exact to Hy4 Preview, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "step-5-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "atria-dawn-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ripple-65b-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ernie-5-5-flash-preview",
+          "reason": "the same name without its first 1 word(s): exact to preview, substring match"
+        }
+      ],
+      "context": {
+        "known": 63,
+        "mapped": {
+          "hy4-preview": [
+            "Hy4"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "Hy4"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Hy4 Preview' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
+      "subject": "Hy4 Preview",
+      "universe": "models"
+    }
+  ]
 }
