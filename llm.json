@@ -104035,7 +104035,7 @@
         "critpt": 27.1,
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": 96.5,
+        "gpqa_diamond": 96.4,
         "hle": 57.1,
         "hle_diamond": 56.9,
         "mmlu_pro": null,
@@ -104140,7 +104140,7 @@
         "critpt": "2026-10-01",
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": "2026-10-14",
+        "gpqa_diamond": "2026-11-15",
         "hle": "2026-10-01",
         "hle_diamond": "2026-10-14",
         "mmlu_pro": null,
@@ -104245,7 +104245,7 @@
         "critpt": "https://artificialanalysis.ai/models/gemini-4-argon",
         "aime_2025": null,
         "aime_2026": null,
-        "gpqa_diamond": "https://openrouter.ai/google/gemini-4-argon",
+        "gpqa_diamond": "https://epoch.ai/benchmarks/gpqa-diamond",
         "hle": "https://artificialanalysis.ai/models/gemini-4-argon",
         "hle_diamond": "https://lastexam.ai/blog/hle-diamond",
         "mmlu_pro": null,
@@ -104806,6 +104806,11 @@
             "date": "2026-10-14",
             "score": 96.5,
             "source": "https://openrouter.ai/google/gemini-4-argon"
+          },
+          {
+            "date": "2026-11-15",
+            "score": 96.4,
+            "source": "https://epoch.ai/benchmarks/gpqa-diamond"
           }
         ],
         "hle_diamond": [
