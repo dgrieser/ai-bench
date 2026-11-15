@@ -282,6 +282,15 @@
           "why": "names the release"
         },
         {
+          "route": "update_tbench_mapping.py",
+          "route_kind": "*",
+          "source": "tbench",
+          "subject": "Hy4 Preview",
+          "preview": true,
+          "suggest": "park",
+          "why": "the release is mapped here too ('Hy4'); parking the preview row leaves only the release to read"
+        },
+        {
           "route": "update_vals_mapping.py",
           "route_kind": "*",
           "source": "vals",
@@ -939,8 +948,8 @@
           "rank": 2,
           "rank_label": "the benchmark's own board",
           "route": "update_tbench_mapping.py",
-          "era": "release",
-          "why": "read 2026-11-13, on or after the release on 2026-11-03",
+          "era": "either",
+          "why": "this source maps both the preview and the release onto the entry, so the row it read may be either",
           "suggest": "keep",
           "note": null,
           "recredit_to": null,
