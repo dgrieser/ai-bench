@@ -1115,10 +1115,18 @@ class TestWorkflowWiring(unittest.TestCase):
         self.assertEqual(apply_step["env"][_prompts.ENV_VAR], "")
 
     def test_the_answer_applier_is_tested_before_anything_is_pushed(self) -> None:
-        run = next(
-            s["run"] for s in self.steps() if s.get("name", "").startswith("Check collect mode")
-        )
-        self.assertIn("./test_answers.py", run)
+        names = [s.get("name") for s in self.steps()]
+        check = self.steps()[names.index("Check the answer validator")]
+        self.assertIn("./test_answers.py", check["run"])
+        self.assertIn("inputs.answers", str(check.get("if") or ""))
+        self.assertLess(names.index("Check the answer validator"), names.index("Apply the answers"))
+
+    def test_both_commits_are_gated_on_the_data_check(self) -> None:
+        """check_data.py runs before every commit of llm.json."""
+        for name in ("Commit and push the answers", "Commit and push"):
+            run = next(s["run"] for s in self.steps() if s.get("name") == name)
+            self.assertIn("./check_data.py || exit 1", run, name)
+            self.assertLess(run.index("./check_data.py"), run.index("git commit"), name)
 
     def test_the_step_api_php_reads_is_the_step_that_applies_answers(self) -> None:
         """The endpoint reports that step's outcome, and the page trusts it.

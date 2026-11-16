@@ -1154,7 +1154,37 @@ def _extract_eval_or_page(m: dict, api_keys, page_key: str):
     return _fetch_page_metrics(m.get("slug", "")).get(page_key)
 
 
+# Model pages read at once by _prefetch_pages(). Each is megabytes and nearly
+# all of its time is the transfer, so a few in flight turn a 150-page walk from
+# the slowest fetch of a refresh into a handful of seconds, without hammering
+# a public site.
+try:
+    PAGE_WORKERS = max(1, int(os.getenv("AI_BENCH_AA_PAGE_WORKERS", "6")))
+except ValueError:
+    PAGE_WORKERS = 6
+
+
+def _prefetch_pages(models) -> None:
+    """Fill _PAGE_METRICS_CACHE for every model's page, PAGE_WORKERS at a time.
+
+    Called with no creator name, which is exactly how the first lookup of each
+    page in _enrich_structured_metrics() asks for it (_extract_mmmu_pro, then
+    the page pass) -- and the cache is keyed by slug, so the first caller is
+    the one whose arguments count. The enrichment that follows then reads every
+    page from memory and comes out as it did when it fetched them in turn.
+    """
+    slugs = sorted({m.get("slug") for m in models if m.get("slug")} - set(_PAGE_METRICS_CACHE))
+    if len(slugs) < 2 or PAGE_WORKERS < 2:
+        return
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=PAGE_WORKERS) as executor:
+        for _ in executor.map(_fetch_page_metrics, slugs):
+            pass
+
+
 def _enrich_structured_metrics(models):
+    _prefetch_pages(models)
     for m in models:
         evals = m.get("evaluations")
         if not isinstance(evals, dict):

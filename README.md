@@ -4516,7 +4516,7 @@ about 41 are the in-memory index refresh. Every `update_*_scores` pass is
 
 Three shortcuts, each one allowed to exist only because it gives the same
 answer as the work it skips. `test_refresh_cost.py` is what holds them to
-that, and the workflow runs it before anything is fetched.
+that, in the daily full test run.
 
 - **The ranking is fitted once, not twice.** `update.py -w` refreshes every
   derived index in memory before it writes -- it has to, since a score it just
@@ -4564,28 +4564,52 @@ terms artificialanalysis.py's has used for AA (see "The request budget"):
 `AI_BENCH_LLMSTATS_CACHE_TTL`, `AI_BENCH_HF_CACHE_TTL` and
 `AI_BENCH_VALS_CACHE_TTL` override the TTL per source; `0` turns that cache off.
 The workflow already carries the directory between runs, under the
-`ai-bench-openness-` cache step.
+`responses-` cache step.
+
+#### What runs side by side
+
+Measured on a cron run of 173 seconds (plus 85 of pre-flight tests), each
+change below gives byte-identical output to the work it replaced:
+
+- **No test suites before the refresh.** `full-tests.yml` runs every suite
+  daily; the refresh ran twenty of them first, every three hours, against code
+  that had not changed since they last passed. What guards the data now is
+  `check_data.py`, run on llm.json right before each commit: it parses, has
+  not lost models or scores en masse against HEAD, and its history and sources
+  are intact -- 0.3s. `test_answers.py` still runs, only on a run carrying
+  answers, because it tests the validator in front of outside input.
+- **The mapping updaters run side by side in every unattended run,** as the
+  quick run already did (`run_parallel`, `AI_BENCH_JOBS` at a time), slowest
+  first. 76s in sequence; about the slowest one now. At a terminal they still
+  run in turn, since they prompt.
+- **The Hugging Face cards are read 8 at a time** (`AI_BENCH_HF_WORKERS`):
+  49s to 7s, in the same order, so the cached payload is the same.
+- **AA's model pages are read 6 at a time** (`AI_BENCH_AA_PAGE_WORKERS`),
+  prefetched with exactly the arguments the sequential first lookup used:
+  40 pages, 19.7s to 5.6s.
+- **The six index fits run in worker processes** (`AI_BENCH_INDEX_JOBS`,
+  default one per CPU): same function, same inputs, so bit-identical; 25s to
+  13s, bounded by the knowledge index alone. Any failure to start the pool
+  falls back to fitting in turn.
+- **The openness index reads its three sources at once,** merged under the
+  same all-must-say-closed rule, which does not depend on order.
+- **One cache step instead of two** for `~/.cache/artificialanalysis` and
+  `~/.cache/ai-bench`.
 
 #### Still on the table
 
-- **The per-model loops are sequential.** AA walks 149 model pages, llm-stats
-  ~100 HLE detail pages, Hugging Face ~150 cards and Spheron 188, one request
-  at a time, and update.py runs its 23 fetchers one after another. That is
-  most of what is left. A thread pool would turn a sum of variable latencies
-  into a max -- worth noting that two adjacent runs measured 279s and 439s on
-  identical code, so the variance is upstream and parallelism cuts it too.
-- **The index fit is pure-Python.** 8,292 Bradley-Terry sweeps, about 41
-  seconds. A numpy rewrite measured 27.2s -> 1.7s with bit-identical published
-  values; replacing `_set_scale`'s 60-step bisection with Newton measured
-  28.4s -> 19.3s, also identical, and needs no new dependency.
+- **The index fit is pure-Python.** The knowledge index alone is ~13s and is
+  now the floor of the fit. A numpy rewrite measured 27.2s -> 1.7s with
+  bit-identical published values; replacing `_set_scale`'s 60-step bisection
+  with Newton measured 28.4s -> 19.3s, also identical, and needs no new
+  dependency.
 - **The openness index reads llm-stats the expensive way.** `_pool_llmstats`
-  calls `get_scores()`, which resolves every model's tool mode -- 72 seconds
-  measured -- to read one licence field per record. Only on a cache miss
-  (12h TTL), so twice a day at most. `resolve_hle=False` would make it
-  near-free, but it also changes which records survive -- a model whose only
-  score is a rejected HLE run drops out -- and that changes which names the
-  pooled index can call closed. Worth doing deliberately, not as a
-  performance change.
+  calls `get_scores()`, which resolves every model's tool mode, to read one
+  licence field per record. Only on a cache miss (12h TTL), so twice a day at
+  most. `resolve_hle=False` would make it near-free, but it also changes which
+  records survive -- a model whose only score is a rejected HLE run drops out
+  -- and that changes which names the pooled index can call closed. Worth
+  doing deliberately, not as a performance change.
 
 ## Notes
 

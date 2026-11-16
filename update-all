@@ -206,9 +206,22 @@ report_timings() {
 # loop rather than read from a pipe: the sequential run below is interactive at
 # a terminal, and a loop fed by a pipe would hand the prompts that pipe as stdin.
 UPDATERS=()
+# The slowest updaters first, so a side-by-side run starts its long poles
+# straight away instead of after a queue of one-second boards; the Hugging
+# Face crawl alone is most of the fan-out. Sequentially the order changes
+# nothing but where their output sits in the log.
+SLOW_UPDATERS=(update_huggingface_mapping.py update_aa_coding_agents_mapping.py
+               update_frontierswe_mapping.py update_llmstats_mapping.py
+               update_tbench_mapping.py)
+for name in "${SLOW_UPDATERS[@]}"; do
+    [ -f "${SCRIPT_DIR}/${name}" ] && UPDATERS+=("${SCRIPT_DIR}/${name}")
+done
 for s in "${SCRIPT_DIR}"/update_*.py; do
     case "$(basename "$s")" in
         update_rebench_mapping.py) continue ;;
+    esac
+    case " ${SLOW_UPDATERS[*]} " in
+        *" $(basename "$s") "*) continue ;;
     esac
     UPDATERS+=("$s")
 done
@@ -306,9 +319,23 @@ run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
 # Interactive when run from a terminal; report-only otherwise.
 run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
 
-for s in "${UPDATERS[@]}"; do
-    run "$(basename "$s")" "$s" -w "${COLLECT_ARGS[@]}"
-done
+if [ -n "$REPORT" ]; then
+    # Unattended, the updaters ask nothing, so they run side by side exactly
+    # as in the quick run -- which has done so on every admin-page dispatch
+    # for the same reasons it is safe (see run_parallel). Sequentially they
+    # were ~75 seconds of a three-minute refresh, nearly all of it waiting on
+    # one board at a time; side by side it is about the slowest one. They all
+    # still finish before update.py starts, so the response caches it reads
+    # are warm exactly as before.
+    run "openness index" python3 -c "import sys; sys.path.insert(0, '${SCRIPT_DIR}'); import _openness; _openness.open_index()"
+    run_parallel "${UPDATERS[@]}"
+else
+    # At a terminal they prompt, and twenty prompts at once on one tty is no
+    # way to answer anything.
+    for s in "${UPDATERS[@]}"; do
+        run "$(basename "$s")" "$s" -w "${COLLECT_ARGS[@]}"
+    done
+fi
 
 run "update.py" "${SCRIPT_DIR}/update.py" -w
 

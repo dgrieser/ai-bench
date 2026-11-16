@@ -114,6 +114,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -1981,6 +1982,73 @@ def apply_coverage(
     return changed
 
 
+def _timed_index(
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor],
+) -> tuple[dict[str, int | None], float]:
+    started = time.monotonic()
+    values = compute_index(models, doc, index, factors)
+    return values, time.monotonic() - started
+
+
+def compute_all(
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    factors: dict[str, RevisionFactor],
+) -> dict[str, dict[str, int | None]]:
+    """compute_index() for every index, side by side in worker processes.
+
+    The fits are independent -- each reads only the scores, never another
+    index's column -- and each is pure-Python Bradley-Terry, so they are CPU
+    bound and a thread would buy nothing. A process per index turns a refresh's
+    thirty-odd seconds of fitting into roughly its longest single fit (the
+    knowledge index). Every fit is the same function on the same inputs, so
+    the values are identical to the sequential loop's, bit for bit.
+
+    AI_BENCH_INDEX_JOBS=1 (or a machine with one CPU) runs them in turn, and so
+    does any failure to start the pool -- a sandbox without process support
+    must cost speed, never the refresh.
+    """
+    indexes = list(INDEXES)
+    try:
+        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or (os.cpu_count() or 1)
+    except ValueError:
+        jobs = os.cpu_count() or 1
+    jobs = min(jobs, len(indexes))
+    results: dict[str, tuple[dict[str, int | None], float]] = {}
+    if jobs > 1:
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor
+
+            started = time.monotonic()
+            # spawn, not fork: update.py reaches here with its fetcher threads
+            # still around, and forking a threaded process can deadlock on a
+            # lock some other thread held. A fresh interpreter costs a fraction
+            # of a second against a fit of several.
+            context = multiprocessing.get_context("spawn")
+            with ProcessPoolExecutor(max_workers=jobs, mp_context=context) as pool:
+                futures = {
+                    index.key: pool.submit(_timed_index, models, doc, index, factors)
+                    for index in indexes
+                }
+                results = {key: future.result() for key, future in futures.items()}
+            report(f"{len(indexes)} index fits side by side", started)
+        except (OSError, RuntimeError, ImportError) as exc:
+            # BrokenProcessPool is a RuntimeError. Whatever ran is discarded and
+            # everything is fitted again in turn, so a half-finished pool
+            # cannot leave a mix behind.
+            print(f"  index fits: no worker processes ({exc}); fitting in turn", file=sys.stderr)
+            results = {}
+    if not results:
+        results = {index.key: _timed_index(models, doc, index, factors) for index in indexes}
+    for index in reversed(indexes):
+        print(f"  {index.key}: {results[index.key][1]:.1f}s", file=sys.stderr)
+    return {key: values for key, (values, _) in results.items()}
+
+
 def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]]:
     """Recompute the derived columns in `doc` in memory; returns the changes as
     (index key, model, old, new) tuples.
@@ -2005,15 +2073,14 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
+    computed = compute_all(models, doc, factors)
     for index in reversed(INDEXES):
-        started = time.monotonic()
-        values = compute_index(models, doc, index, factors)
+        values = computed[index.key]
         per_index[index.key] = (values, index_coverage(models, index, factors))
         changes.extend(
             (index.key, name, old, new)
             for name, old, new in apply_index(doc, index, values)
         )
-        report(index.key, started)
     apply_coverage(doc, per_index)
     # Last, because it reads the component values just written -- and last
     # applied is first in each model's maps, which is where the overall column
@@ -2294,12 +2361,11 @@ def main() -> int:
     factors = revision_factors(models)
     print_conversions(factors)
     per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
+    computed = compute_all(models, doc, factors)
     for index in reversed(INDEXES):
-        started = time.monotonic()
-        values = compute_index(models, doc, index, factors)
+        values = computed[index.key]
         coverage = index_coverage(models, index, factors)
         per_index[index.key] = (values, coverage)
-        report(index.key, started)
 
         ranked = sum(1 for value in values.values() if value is not None)
         print(
