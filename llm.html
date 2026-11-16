@@ -1715,6 +1715,47 @@
       background: #eeeeed;
     }
 
+    /* The table window's stand-ins for the rows and columns it has not drawn
+       (see renderTableWindow). They take no part in the stripes, the hover or
+       the pinned first column, and draw nothing but the row rule a real cell
+       would have. */
+    .table-shell tbody tr.v-spacer,
+    .table-shell tbody tr.v-spacer:hover {
+      background: transparent;
+    }
+
+    .table-shell tbody tr.v-spacer td {
+      position: static;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .table-shell tbody td.h-spacer {
+      padding: 0;
+    }
+
+    /* Every row one height, so the window can turn a row number into an
+       offset. The NEW badge is the one thing taller than a line of text; it
+       overhangs the cell's padding instead of pushing the row open. */
+    .table-shell .new-badge {
+      margin: -4px 0;
+    }
+
+    /* The unit letters in the spec columns are set smaller than the digits;
+       left on the cell's line height, the smaller face's leading lands lower
+       and opens the line by a fraction of a pixel, enough to put those rows
+       out of step with the rest. The raised count on a thinly covered index
+       score does the same from above, unless it takes no line height at all. */
+    .table-shell tbody .p-letter,
+    .table-shell tbody .p-unit {
+      line-height: 1;
+    }
+
+    .table-shell tbody .index-thin-mark {
+      line-height: 0;
+    }
+
     .col-model {
       min-width: 220px;
       max-width: 340px;
@@ -1985,6 +2026,17 @@
        as the Leaderboard and Filters bands, its chevron at the far right. The
        panel itself has no vertical padding, so a folded panel is the band and
        nothing else; an open one pads below its body instead. */
+    /* The panels under the table are long -- tens of thousands of pixels on
+       a phone -- and redrawn with it on every filter change. Off screen they
+       are skipped: not laid out, not painted, until scrolled near. The size
+       a skipped panel stands in at is the one it last had on screen, carried
+       over from the panel it replaces (see renderTable), so the page does not
+       change length under the reader as they come into view. */
+    .panel-fold[open] {
+      content-visibility: auto;
+      contain-intrinsic-size: auto var(--panel-height, 1200px);
+    }
+
     .panel-fold > summary {
       display: flex;
       align-items: center;
@@ -6897,8 +6949,16 @@
         // change what every browser here needs measured.
         window.addEventListener("resize", queueStickyHeadSync);
         if (typeof ResizeObserver === "function") {
-          new ResizeObserver(queueStickyHeadSync).observe(document.body);
+          new ResizeObserver(() => {
+            queueStickyHeadSync();
+            queueTableWindow();
+          }).observe(document.body);
         }
+
+        // The table window follows both the page's scroll and the shell's own
+        // (scroll events do not bubble, but they can be caught on the way down).
+        document.addEventListener("scroll", queueTableWindow, { passive: true, capture: true });
+        window.addEventListener("resize", queueTableWindow);
 
         ui.sortMode.addEventListener("change", (event) => {
           const nextSort = parseSortModeValue(event.target.value);
@@ -7515,9 +7575,33 @@
         return Math.ceil(widestLabel + 6);
       }
 
+      // How tall each panel under the table last stood, so the panel that
+      // replaces it can stand in at that size while it is off screen and
+      // skipped (see .panel-fold in the stylesheet).
+      const panelHeights = new Map();
+
+      function rememberPanelHeights() {
+        ui.content.querySelectorAll(".panel-fold[open]").forEach((fold) => {
+          const height = fold.getBoundingClientRect().height;
+          if (height > 0) {
+            panelHeights.set(fold.dataset.panelFold, height);
+          }
+        });
+      }
+
+      function restorePanelHeights() {
+        ui.content.querySelectorAll(".panel-fold[open]").forEach((fold) => {
+          const height = panelHeights.get(fold.dataset.panelFold);
+          if (height) {
+            fold.style.setProperty("--panel-height", `${height}px`);
+          }
+        });
+      }
+
       function renderTable() {
         // Every anchor in here is about to be replaced.
         closeTip();
+        rememberPanelHeights();
 
         if (!state.filteredModels.length) {
           ui.content.innerHTML = `
@@ -7526,6 +7610,7 @@
             ${renderCreditsDirectory()}
             ${renderSourcesDirectory()}
           `;
+          restorePanelHeights();
           bindPanelFolds();
           return;
         }
@@ -7572,9 +7657,7 @@
                   ${headers.map((header) => renderHeaderCell(header)).join("")}
                 </tr>
               </thead>
-              <tbody>
-                ${state.filteredModels.map((model) => renderRow(model, bestInTableByModel.get(model) || new Set(), scoreRanges, benchKeys)).join("")}
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
           ${renderRecentPanel()}
@@ -7585,6 +7668,7 @@
         `;
 
         ui.content.innerHTML = tableHtml;
+        restorePanelHeights();
 
         // Widening the Recently Added panel to the whole history, and back.
         // The table is rebuilt around it, which is cheap and keeps the panel
@@ -7661,8 +7745,213 @@
           });
         });
 
+        // With an empty body the header is all the layout has to go on, so
+        // fixing the column widths here costs a row of cells rather than the
+        // whole grid -- the rows arrive afterwards into a table whose widths
+        // are already settled.
         initColumnResize();
+        const table = ui.content.querySelector(".table-shell table");
+        state.tableView = {
+          shell: table.parentElement,
+          tbody: table.tBodies[0],
+          headHeight: table.tHead.getBoundingClientRect().height,
+          models: state.filteredModels,
+          benchKeys,
+          bestInTableByModel,
+          scoreRanges,
+          rowHeight: state.tableRowHeight || TABLE_ROW_HEIGHT_GUESS,
+          range: null
+        };
+        renderTableWindow(true);
         syncStickyHead();
+      }
+
+      /* ── The table window ──
+         The leaderboard is every model against every benchmark: a couple of
+         hundred rows by well over a hundred columns, tens of thousands of
+         cells. Building, styling, laying out and painting all of them took
+         seconds on a phone, on every filter change, and kept a scroll that
+         touched them heavy. So only the part of the grid near the screen is
+         in the DOM: the rows within a screen's height of what is showing, and
+         of those the benchmark columns within a screen's width. Blank spacers
+         stand in for the rest -- one row above and one below, one cell to the
+         left and one to the right in each row -- sized so the table measures
+         exactly what it would in full, which keeps the scrollbars, the sticky
+         header's slide and the column resizing none the wiser.
+
+         Rows are all one height (the stylesheet holds them to it), which is
+         what lets a row number turn into a pixel offset without measuring.
+         Columns are as wide as state.columnWidths says, the same numbers the
+         header cells are given.
+
+         The window moves in steps (ROW_STEP rows, COL_STEP columns), so a
+         scroll redraws the body only when it crosses a step rather than on
+         every frame, and the margin either side is wide enough that a flick
+         lands on rows already drawn. ROW_STEP is even on purpose: a row whose
+         number is even must stay an odd child of the body, or the zebra stripe
+         would swap shades as the window moves (see renderTableWindow). */
+      const TABLE_ROW_HEIGHT_GUESS = 36;
+      const ROW_STEP = 10;
+      const COL_STEP = 4;
+
+      function tableWindowRange(view) {
+        const { shell, models, benchKeys, rowHeight, headHeight } = view;
+        const rect = shell.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const rowCount = models.length;
+
+        // The stretch of the shell's content that is on screen. The shell
+        // scrolls on its own on a desktop (its height is capped) and with the
+        // page on a phone (it is not), so both scrolls are counted.
+        const marginY = Math.max(viewportHeight, 600);
+        let top = shell.scrollTop + Math.max(0, -rect.top) - headHeight;
+        let bottom = shell.scrollTop + Math.min(rect.height, viewportHeight - rect.top) - headHeight;
+        if (bottom < top) {
+          // Off screen altogether: draw the end the reader would scroll back
+          // into first.
+          if (rect.top >= viewportHeight) {
+            top = 0;
+            bottom = 0;
+          } else {
+            top = rowCount * rowHeight;
+            bottom = top;
+          }
+        }
+        let rowStart = Math.floor((top - marginY) / rowHeight);
+        let rowEnd = Math.ceil((bottom + marginY) / rowHeight);
+        rowStart = Math.max(0, Math.floor(rowStart / ROW_STEP) * ROW_STEP);
+        rowEnd = Math.min(rowCount, Math.ceil(Math.max(rowEnd, 0) / ROW_STEP) * ROW_STEP);
+
+        // Columns: offsets from the stored widths, fixed columns first.
+        const shellWidth = shell.clientWidth;
+        const marginX = Math.max(shellWidth, 400);
+        const left = shell.scrollLeft - marginX;
+        const right = shell.scrollLeft + shellWidth + marginX;
+        let x = FIXED_COLUMNS.reduce((sum, column) => sum + (state.columnWidths[column.key] || 0), 0);
+        let colStart = benchKeys.length;
+        let colEnd = 0;
+        benchKeys.forEach((key, index) => {
+          const width = state.columnWidths[key] || 0;
+          if (x + width > left && x < right) {
+            colStart = Math.min(colStart, index);
+            colEnd = index + 1;
+          }
+          x += width;
+        });
+        if (colEnd <= colStart) {
+          colStart = 0;
+          colEnd = 0;
+        }
+        colStart = Math.floor(colStart / COL_STEP) * COL_STEP;
+        colEnd = Math.min(benchKeys.length, Math.ceil(colEnd / COL_STEP) * COL_STEP);
+
+        return { rowStart, rowEnd, colStart, colEnd };
+      }
+
+      function renderTableWindow(force) {
+        const view = state.tableView;
+        if (!view || !view.tbody.isConnected) {
+          return;
+        }
+        // A row drawn earlier may have changed height since -- the display
+        // fonts arriving, a breakpoint crossed -- and every spacer with it.
+        if (!force) {
+          const drawn = view.tbody.querySelector("tr[data-r]");
+          const height = drawn ? drawn.getBoundingClientRect().height : 0;
+          if (height > 0 && Math.abs(height - view.rowHeight) > 0.01) {
+            force = true;
+          }
+        }
+        const range = tableWindowRange(view);
+        const last = view.range;
+        if (!force && last &&
+            last.rowStart === range.rowStart && last.rowEnd === range.rowEnd &&
+            last.colStart === range.colStart && last.colEnd === range.colEnd) {
+          return;
+        }
+        view.range = range;
+
+        // A slip pinned to a cell that is about to be rebuilt would be left
+        // pointing at nothing.
+        if (tooltip.anchor && view.tbody.contains(tooltip.anchor)) {
+          closeTip();
+        }
+
+        const { models, benchKeys, bestInTableByModel, scoreRanges } = view;
+        const { rowStart, rowEnd, colStart, colEnd } = range;
+        const rowsHtml = (from, to) => {
+          let html = "";
+          for (let index = from; index < to; index += 1) {
+            const model = models[index];
+            html += renderRow(model, bestInTableByModel.get(model) || new Set(), scoreRanges, benchKeys,
+              index, colStart, colEnd);
+          }
+          return html;
+        };
+
+        // The body is always the same frame: a spacer for the rows above the
+        // window, an empty row, the window's rows, and a spacer for the rows
+        // below. The empty row keeps the stripes right: rowStart is always
+        // even, and so the first drawn row is the third child -- odd, as row 0
+        // would be in the full table.
+        //
+        // A scroll straight up or down keeps the columns, and most of the
+        // rows: those are left where they are, and only the rows that left the
+        // window are dropped and the ones that entered it drawn. Anything else
+        // -- new columns, a jump past the whole window, a fresh table -- draws
+        // the body over.
+        const tbody = view.tbody;
+        const overlaps = !force && last &&
+          last.colStart === colStart && last.colEnd === colEnd &&
+          rowStart < last.rowEnd && rowEnd > last.rowStart &&
+          tbody.rows.length === 3 + (last.rowEnd - last.rowStart);
+        if (overlaps) {
+          for (let n = Math.max(0, rowStart - last.rowStart); n > 0; n -= 1) {
+            tbody.rows[2].remove();
+          }
+          for (let n = Math.max(0, last.rowEnd - rowEnd); n > 0; n -= 1) {
+            tbody.rows[tbody.rows.length - 2].remove();
+          }
+          if (rowStart < last.rowStart) {
+            tbody.rows[1].insertAdjacentHTML("afterend", rowsHtml(rowStart, last.rowStart));
+          }
+          if (rowEnd > last.rowEnd) {
+            tbody.rows[tbody.rows.length - 1].insertAdjacentHTML("beforebegin", rowsHtml(last.rowEnd, rowEnd));
+          }
+        } else {
+          const span = FIXED_COLUMNS.length + benchKeys.length;
+          const spacer = `<tr class="v-spacer" aria-hidden="true"><td colspan="${span}"></td></tr>`;
+          tbody.innerHTML = spacer + `<tr class="v-spacer" aria-hidden="true"></tr>` +
+            rowsHtml(rowStart, rowEnd) + spacer;
+        }
+        tbody.rows[0].cells[0].style.height = `${rowStart * view.rowHeight}px`;
+        tbody.rows[tbody.rows.length - 1].cells[0].style.height = `${(models.length - rowEnd) * view.rowHeight}px`;
+
+        // The row height the spacers are sized in is a guess until a row has
+        // been drawn at the size the stylesheet and the reader's fonts give it
+        // (and it changes with the breakpoint), so a fresh body is measured.
+        // The layout that reads is one the browser had to do before painting
+        // anyway; a mismatch is redrawn straight away.
+        if (!overlaps) {
+          const row = tbody.querySelector("tr[data-r]");
+          const measured = row ? row.getBoundingClientRect().height : 0;
+          if (measured > 0 && Math.abs(measured - view.rowHeight) > 0.01) {
+            state.tableRowHeight = measured;
+            view.rowHeight = measured;
+            renderTableWindow(true);
+          }
+        }
+      }
+
+      let tableWindowFrame = 0;
+      function queueTableWindow() {
+        if (tableWindowFrame) {
+          return;
+        }
+        tableWindowFrame = requestAnimationFrame(() => {
+          tableWindowFrame = 0;
+          renderTableWindow(false);
+        });
       }
 
       /* ── Sticky header ───────────────────────────────
@@ -8786,6 +9075,9 @@
             const finalWidth = cancelled ? th.getBoundingClientRect().width : widthAt(ev.clientX);
             state.columnWidths[key] = finalWidth;
             applyWidth(finalWidth);
+            // The columns to the right have moved, so the window may need to
+            // take in a different set of them.
+            queueTableWindow();
           }
 
           // Swallow the click the browser fires after the release so the drag
@@ -8988,19 +9280,26 @@
         );
       }
 
-      function renderRow(model, bestInTable, scoreRanges, benchKeys) {
+      // One leaderboard row. Only the benchmark columns from colStart up to
+      // colEnd are written out; the ones either side are folded into a blank
+      // spacer cell apiece (see the table window below). The row and column
+      // numbers ride on the elements, because with rows and cells missing from
+      // the DOM their positions in it no longer say which model or benchmark
+      // they are -- the tooltip resolvers read these instead.
+      function renderRow(model, bestInTable, scoreRanges, benchKeys, rowIndex,
+          colStart = 0, colEnd = benchKeys.length) {
         const modelName = escapeHtml(model.name || "Unknown");
         const creatorName = escapeHtml(model.creatorName);
         const creatorUrl = model.creator?.url || "";
         const isNew = isRecentModel(model);
         const isReference = isReferenceModel(model);
         const modelTip = tipAttrs(modelTipFields(model));
-        const scoreCells = benchKeys.map((key) => {
+        const scoreCells = benchKeys.slice(colStart, colEnd).map((key, offset) => {
           const value = toNumber(model.scores?.[key]);
           const hasValue = Number.isFinite(value);
           // Only cells that hold a number get a slip, and they carry a kind
           // rather than their text — see TIP_RESOLVERS.score.
-          const tipAttr = hasValue ? ` data-tip-kind="score"` : "";
+          const tipAttr = hasValue ? ` data-tip-kind="score" data-c="${colStart + offset}"` : "";
           const isTop = bestInTable.has(key);
           // An empty cell has no score, so nothing about it can be new.
           const fresh = hasValue ? scoreFreshness(model, key) : 0;
@@ -9020,8 +9319,13 @@
           return `<td class="${className}"${style}${tipAttr}>${content}</td>`;
         }).join("");
 
+        const leadGap = colStart > 0 ? `<td class="h-spacer" colspan="${colStart}"></td>` : "";
+        const tailGap = colEnd < benchKeys.length
+          ? `<td class="h-spacer" colspan="${benchKeys.length - colEnd}"></td>`
+          : "";
+
         return `
-          <tr>
+          <tr data-r="${rowIndex}">
             <td class="col-model"><span class="model-name-wrap">${isNew ? renderNewBadge(model.date_added) : ""}${withReferenceLock(model, `<a href="#model/${escapeAttr(modelSlug(model.name))}"${modelTip} class="model-name-label${isNew ? ' model-new' : ""}${isReference ? ' model-reference' : ""}">${modelName}</a>`)}</span></td>
             <td class="creator">${creatorUrl ? `<a href="${escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${creatorName}</a>` : creatorName}</td>
             <td class="mono">${formatParams(model.params)}</td>
@@ -9029,7 +9333,7 @@
             ${renderVramCell(model.vram?.fp16)}
             ${renderVramCell(model.vram?.int8)}
             ${renderVramCell(model.vram?.int4)}
-            ${scoreCells}
+            ${leadGap}${scoreCells}${tailGap}
           </tr>
         `;
       }
@@ -12427,7 +12731,7 @@
           const column = cell && FIXED_COLUMNS[cell.cellIndex];
           if (!cell || !row || !column?.key.startsWith("vram_")) return null;
 
-          const model = state.filteredModels[row.sectionRowIndex];
+          const model = state.filteredModels[Number(row.dataset.r)];
           const quant = column.key.slice("vram_".length);
           const value = model?.vram?.[quant];
           const num = typeof value === "number" ? value : parseFloat(value);
@@ -12464,8 +12768,8 @@
           const row = cell && cell.parentElement;
           if (!cell || !row) return null;
 
-          const model = state.filteredModels[row.sectionRowIndex];
-          const key = visibleBenchmarkKeys()[cell.cellIndex - FIXED_COLUMNS.length];
+          const model = state.filteredModels[Number(row.dataset.r)];
+          const key = visibleBenchmarkKeys()[Number(cell.dataset.c)];
           if (!model || !key) return null;
 
           const bench = state.data?.benchmarks?.[key] || {};
