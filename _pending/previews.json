@@ -822,7 +822,25 @@
           "text": "spheron lists it as 'baidu/ERNIE-5.5-Flash-Base' -- the repo its URL already points at, which is no sign of a release"
         }
       ],
-      "watch": null,
+      "watch": {
+        "all": [
+          {
+            "op": "contains",
+            "value": "baidu/ERNIE-5.5-Flash"
+          },
+          {
+            "op": "contains",
+            "value": "base",
+            "not": true
+          }
+        ],
+        "describe": "a Hugging Face repo whose id contains 'baidu/ERNIE-5.5-Flash' and does not contain 'base'",
+        "lookup_owner": "baidu",
+        "date": "2026-11-16",
+        "hub": "checked",
+        "matched": [],
+        "own_matches": false
+      },
       "renames": [
         {
           "name": "ernie-5-5-flash",

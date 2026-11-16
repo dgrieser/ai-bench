@@ -1,1 +1,16 @@
-{}
+{
+  "ernie-5-5-flash-preview": {
+    "all": [
+      {
+        "op": "contains",
+        "value": "baidu/ERNIE-5.5-Flash"
+      },
+      {
+        "op": "contains",
+        "value": "base",
+        "not": true
+      }
+    ],
+    "date": "2026-11-16"
+  }
+}
