@@ -4591,10 +4591,13 @@ change below gives byte-identical output to the work it replaced:
   default one per CPU): same function, same inputs, so bit-identical; 25s to
   13s, bounded by the knowledge index alone. The slowest fit is submitted
   first, by each index's last measured time (kept in
-  `~/.cache/ai-bench/index-fit-seconds.json`): on CI's hyperthreaded runner,
-  queued behind the short ones, it ran at half speed and the side-by-side
-  fit was no faster than the sequential one. Any failure to start the pool
-  falls back to fitting in turn.
+  `~/.cache/ai-bench/index-fit-seconds.json`), and the pool has one worker
+  per *physical* core. The runner's 4 CPUs are 2 cores with two threads
+  each -- measured: two CPU-bound processes run at full speed, four at half
+  -- so four workers left the knowledge fit at half speed and the
+  side-by-side fit no faster than the sequential one (29s either way).
+  Calibration, which is throughput over a hundred-odd fits, uses every
+  logical CPU. Any failure to start the pool falls back to fitting in turn.
 - **The openness index reads its three sources at once,** merged under the
   same all-must-say-closed rule, which does not depend on order.
 - **One cache step instead of two** for `~/.cache/artificialanalysis` and

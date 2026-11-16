@@ -1834,7 +1834,9 @@ def calibrate_all(
     (pool=None) when worker processes cannot be had; the results are the same
     either way.
     """
-    jobs = _index_jobs(len(INDEXES) * 8)
+    # Throughput, not one slow member: a hundred-odd fits keep every
+    # hyperthread busy, and four half-speed threads still do more than two.
+    jobs = _index_jobs(len(INDEXES) * 8, physical=False)
     if jobs > 1:
         try:
             import multiprocessing
@@ -2028,13 +2030,44 @@ def apply_coverage(
     return changed
 
 
-def _index_jobs(most: int) -> int:
-    """Worker processes for the index fits: AI_BENCH_INDEX_JOBS, else one per
-    CPU, and never more than there is work for."""
+def _logical_cpus() -> int:
+    counter = getattr(os, "process_cpu_count", None) or os.cpu_count
+    return counter() or 1
+
+
+def _physical_cpus() -> int:
+    """Cores rather than hyperthreads, where Linux says which is which.
+
+    The GitHub runner reports 4 CPUs that are 2 cores with two threads each:
+    two CPU-bound processes there run at full speed, four at half speed each.
+    For a fit that waits on its slowest member that halving is the whole
+    difference -- the knowledge fit took 29s beside three others and 15s on a
+    core of its own. Anything unreadable falls back to the logical count.
+    """
     try:
-        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or (os.cpu_count() or 1)
+        cpus = sorted(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        return _logical_cpus()
+    siblings = set()
+    for cpu in cpus:
+        try:
+            path = f"/sys/devices/system/cpu/cpu{cpu}/topology/thread_siblings_list"
+            with open(path, encoding="utf-8") as handle:
+                siblings.add(handle.read().strip())
+        except OSError:
+            return _logical_cpus()
+    return len(siblings) or _logical_cpus()
+
+
+def _index_jobs(most: int, physical: bool = True) -> int:
+    """Worker processes for the index fits: AI_BENCH_INDEX_JOBS, else one per
+    core (or per logical CPU, for throughput-bound work like calibration's
+    hundred-odd fits), and never more than there is work for."""
+    default = _physical_cpus() if physical else _logical_cpus()
+    try:
+        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or default
     except ValueError:
-        jobs = os.cpu_count() or 1
+        jobs = default
     return max(1, min(jobs, most))
 
 

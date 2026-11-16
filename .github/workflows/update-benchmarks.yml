@@ -338,20 +338,6 @@ jobs:
           HAS_ANSWERS: ${{ steps.apply.conclusion == 'success' }}
           TOUCHED: ${{ steps.apply.outputs.models }}
         run: |
-          echo "DIAG nproc=$(nproc) cpu.max=$(cat /sys/fs/cgroup/cpu.max 2>/dev/null) $(python3 -c 'import os; print("cpu_count", os.cpu_count(), "process_cpu_count", os.process_cpu_count())')"
-          python3 - <<'PY'
-          import time, os
-          from concurrent.futures import ProcessPoolExecutor
-          def burn(_):
-              t = time.perf_counter(); x = 0
-              for i in range(20_000_000): x += i
-              return time.perf_counter() - t
-          print("DIAG one burn", round(burn(0), 2))
-          for n in (2, 4):
-              t = time.perf_counter()
-              with ProcessPoolExecutor(n) as p: each = list(p.map(burn, range(n)))
-              print("DIAG", n, "burns side by side: wall", round(time.perf_counter() - t, 2), "each", [round(e, 2) for e in each])
-          PY
           status=0
           quick=()
           if [ "$QUICK" = "true" ]; then
