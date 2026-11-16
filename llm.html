@@ -8732,9 +8732,10 @@
           if (!day.has(change.index)) day.set(change.index, []);
           day.get(change.index).push(change);
         });
-        // Arrivals first -- they are what reorders the rest -- then moves by
-        // where the model landed, then departures by where it was.
-        const weight = { entered: 0, up: 1, down: 1, left: 2 };
+        // By rank: arrivals and moves together, in the place each model now
+        // holds, so a newcomer stands where it landed rather than heading the
+        // list. A departure has no place left and goes last, by where it was.
+        const weight = { entered: 0, up: 0, down: 0, left: 1 };
         const days = [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1));
 
         const items = days.map(([date, indexes]) => {
