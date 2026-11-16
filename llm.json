@@ -351,7 +351,7 @@
     },
     "aa_coding_agent_index_2_1": {
       "name": "AA Coding Agent Index v2.1",
-      "short_name": "CAgent2.1",
+      "short_name": "CoAgIdx",
       "category": "Composite Index",
       "description": "Artificial Analysis' Coding Agent Index v2.1: the plain average of three benchmarks AA runs itself, FrontierCode-AA 2.0, Terminal-Bench 4.1 and SWE-Atlas-QnA-AA, each task-normalized over three attempts. Unlike AA's Intelligence Index, every model runs inside its vendor's own coding agent (Claude Code, Codex, Gemini CLI, Opencode, ...), so it measures the agent and model together; where AA lists several agents or efforts for a model the best is kept. v2.0 used DeepSWE v1.1 and Terminal-Bench 4.0 and is not comparable. Scored 0 to 100. Not aggregated: its components are columns of their own.",
       "settings": [
