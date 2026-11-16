@@ -4,6 +4,108 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
+      "note": "released 2026-11-16 - Alibaba",
+      "question": "Carry newly released closed model 'qwen4-max' as a reference model?",
+      "route": "check_new.py",
+      "route_kind": "new-closed-model",
+      "subject": "qwen4-max",
+      "universe": null
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "recorded",
+          "option": "qwen3-4b-instruct",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-14b-instruct",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-5-4b",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-8-2-4t-a95b",
+          "reason": "offered by the prompt"
+        },
+        {
+          "confidence": "recorded",
+          "option": "qwen3-coder-480b-a35b-instruct",
+          "reason": "offered by the prompt"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'qwen-4' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://agents-last-exam.org/leaderboard",
+      "subject": "qwen-4",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        }
+      ],
+      "context": {
+        "known": 439,
+        "mapped": {
+          "minimax-m2-5": [
+            "minimax-m2.5"
+          ],
+          "minimax-m2-7": [
+            "minimax-m2.7"
+          ],
+          "minimax-m3": [
+            "minimax-m3"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'qwen4-max' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/webdev",
+      "subject": "qwen4-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
       "note": null,
       "question": "Map evals.report model 'Beam 1.0' to llm.json model",
       "route": "update_evals_report_mapping.py",
@@ -450,6 +552,152 @@
       "route_kind": "mapping",
       "source_url": "https://evals.report/benchmarks/frontiercode?tab=scores",
       "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "the same name without its first 2 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 2 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "the same name without its first 2 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 2 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "the same name without its first 2 word(s): exact to max, substring match"
+        }
+      ],
+      "context": {
+        "known": 431,
+        "mapped": {
+          "minimax-m1-80k": [
+            "minimax/minimax-m1"
+          ],
+          "minimax-m2-5": [
+            "minimax/minimax-m2.5"
+          ],
+          "minimax-m2-7": [
+            "minimax/minimax-m2.7"
+          ],
+          "minimax-m3": [
+            "minimax/minimax-m3"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "qwen/qwen3-max"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "qwen/qwen3.7-max"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "qwen/qwen3-max-thinking"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "qwen/qwen3.8-max-0902"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "qwen/qwen3.8-max-prime"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "qwen/qwen3.6-max-preview"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'qwen/qwen4-max' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/qwen/qwen4-max",
+      "subject": "qwen/qwen4-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m1-80k",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        }
+      ],
+      "context": {
+        "known": 218,
+        "mapped": {
+          "minimax-m2-5": [
+            "minimax/MiniMax-M2.5"
+          ],
+          "minimax-m2-7": [
+            "minimax/MiniMax-M2.7"
+          ],
+          "minimax-m3": [
+            "minimax/MiniMax-M3"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'alibaba/qwen4-max' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "alibaba/qwen4-max",
       "universe": "models"
     }
   ]
