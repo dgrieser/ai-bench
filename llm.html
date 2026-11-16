@@ -33,6 +33,9 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
+      /* A subsection heading under a section's own (Filters under
+         Leaderboard): the same hue, a step brighter. */
+      --accent-sub: #3b82f6;
       --top-score-text: var(--accent);
       /* Freshly updated score: the same red .model-new gives a new model's name,
          so red means "new" wherever it appears, and nothing in the table's blues
@@ -184,7 +187,7 @@
       /* Reserves the corner the repo, theme and export buttons float over, so
          a wrapping title clears them. Only the title needs it — the subtitle
          starts below the buttons and keeps the full width. */
-      padding-right: 150px;
+      padding-right: 196px;
     }
 
     .hero p {
@@ -427,8 +430,10 @@
     .filters-head {
       display: flex;
       align-items: center;
+      min-height: var(--band-height);
+      color: var(--accent-sub);
       cursor: pointer;
-      transition: background-color 120ms ease;
+      transition: background-color 120ms ease, color 120ms ease;
     }
 
     .filters-head:hover {
@@ -441,17 +446,19 @@
       gap: 10px;
       flex: 1;
       min-width: 0;
+      align-self: stretch;
       min-height: 0;
-      padding: 13px 20px;
+      padding: 0 20px;
       border: 0;
       border-radius: 0;
       background: transparent;
-      color: var(--subtle);
+      color: inherit;
       cursor: pointer;
       text-align: left;
       transition: color 120ms ease;
     }
 
+    .filters-head:hover,
     .filters-head:hover .filters-toggle {
       color: var(--text);
       border: 0;
@@ -488,54 +495,72 @@
     }
 
     .filters-chevron {
+      margin: 0 20px 0 12px;
+    }
+
+    /* Every section band (Leaderboard, Filters and the panels under the
+       table) is the same height and folds by the same chevron at its far
+       right: pointing up while the section is open, down once folded. */
+    .page {
+      --band-height: 44px;
+    }
+
+    .fold-chevron {
       width: 12px;
       height: 8px;
       flex-shrink: 0;
-      margin: 0 20px 0 12px;
-      color: var(--subtle);
+      color: inherit;
       transform: rotate(180deg);
+      transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1), color 120ms ease;
     }
 
-    /* The reference checkbox, right-aligned in the head band beside the
-       chevron. Off, it is as quiet as the band it sits in; on, it takes the
-       same accent every other engaged filter takes -- see "Active filter
-       glow". Nothing here is its own visual language. */
+    /* The closed-models switch: a round button in the hero's corner row,
+       left of the repo link. The checkbox inside is kept for its state and
+       keyboard handling but drawn as nothing; the padlock says the state,
+       open while only open models show, shut once the closed ones are in. */
     .reference-toggle {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-shrink: 0;
-      padding: 13px 0;
-      cursor: pointer;
-      font-family: var(--font-ui);
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--subtle);
-      white-space: nowrap;
-      transition: color 120ms ease;
+      position: absolute;
+      top: 33px;
+      right: 174px;
     }
 
-    /* display:flex above would otherwise beat the UA's [hidden] rule, and the
-       toggle hides itself on data that carries no reference rows at all. */
+    /* The hero buttons' display:flex would otherwise beat the UA's [hidden]
+       rule, and the toggle hides itself on data with no reference rows. */
     .reference-toggle[hidden] {
       display: none;
     }
 
-    .reference-toggle:hover {
-      color: var(--text);
+    .reference-toggle input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .reference-toggle input {
-      width: 14px;
-      height: 14px;
-      margin: 0;
-      flex-shrink: 0;
-      accent-color: var(--accent);
-      cursor: pointer;
+    .reference-toggle:has(input:focus-visible) {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .reference-toggle .icon-locked,
+    .reference-toggle:has(input:checked) .icon-unlocked {
+      display: none;
+    }
+
+    .reference-toggle:has(input:checked) .icon-locked {
+      display: block;
     }
 
     .filters.collapsed .filters-chevron {
       transform: rotate(0deg);
+    }
+
+    /* Away from the table there is nothing for it to switch: a model page and
+       a comparison always offer the closed models. */
+    .page.detail-view .reference-toggle {
+      display: none;
     }
 
     .controls-collapse {
@@ -545,8 +570,8 @@
     }
 
     /* Transitions only after first paint so the initial state doesn't animate */
-    .filters.ready .filters-chevron {
-      transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+    .filters:not(.ready) .filters-chevron {
+      transition: none;
     }
 
     .filters.ready .controls-collapse {
@@ -1433,11 +1458,12 @@
       text-shadow: 0 0 16px rgba(91, 138, 247, 0.55);
     }
 
-    /* The head-band checkbox takes the label half of that treatment and none
-       of the border glow: it is a checkbox in a band, not a field in a grid,
-       and "slightly lit" is the whole brief. */
-    .reference-toggle.filter-on {
+    /* Switched on, the padlock takes the accent every engaged filter takes,
+       ring and all, and keeps it under the hover. */
+    .reference-toggle.filter-on,
+    .reference-toggle.filter-on:hover {
       color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
     }
 
     /* Reset button hints when any filter is active */
@@ -1456,7 +1482,7 @@
       }
 
       .filters.ready .controls-collapse,
-      .filters.ready .filters-chevron {
+      .fold-chevron {
         transition: none;
       }
     }
@@ -1938,8 +1964,9 @@
        fades the marker exactly as it fades the stroke in the table. */
 
     .recent-panel {
+      --fold-pad: 30px;
       margin: 0;
-      padding: 26px 20px 30px;
+      padding: 0 20px;
       border-top: 1px solid var(--line);
       background: var(--surface);
     }
@@ -1954,38 +1981,42 @@
       font-family: var(--font-mono);
     }
 
-    /* The panel's heading is the fold's handle: a chevron in front of it
-       says it opens and closes. */
+    /* The panel's heading is the fold's handle: a band of the same height
+       as the Leaderboard and Filters bands, its chevron at the far right. The
+       panel itself has no vertical padding, so a folded panel is the band and
+       nothing else; an open one pads below its body instead. */
     .panel-fold > summary {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      min-height: var(--band-height);
       list-style: none;
       cursor: pointer;
-      color: var(--subtle);
+      color: var(--accent);
     }
 
     .panel-fold > summary::-webkit-details-marker {
       display: none;
     }
 
-    .panel-fold > summary::before {
-      content: "▾";
-      font-size: 0.75rem;
-      transition: transform 150ms ease;
+    .panel-fold:not([open]) > summary .fold-chevron {
+      transform: rotate(0deg);
     }
 
-    .panel-fold:not([open]) > summary::before {
-      transform: rotate(-90deg);
+    .panel-fold > summary:hover {
+      color: var(--text);
     }
 
-    .panel-fold > summary:hover,
-    .panel-fold > summary:hover h2 {
-      color: var(--accent);
-    }
-
+    /* Every section heading wears the same accent, the band's colour. */
     .panel-fold > summary h2 {
+      color: inherit;
+      flex: 1;
+      min-width: 0;
       margin: 0;
+    }
+
+    .panel-fold[open] {
+      padding-bottom: var(--fold-pad, 28px);
     }
 
     .panel-fold[open] > summary {
@@ -2256,7 +2287,6 @@
        heavier rule above, so the two timelines read as two panels. */
     .rank-panel {
       border-top: 2px solid var(--line);
-      margin-top: 18px;
     }
 
     .rank-filter {
@@ -2543,16 +2573,24 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 20px;
+      min-height: var(--band-height);
+      padding: 0 20px;
       border-bottom: 1px solid var(--line);
       background: var(--surface);
+      color: var(--accent);
       cursor: pointer;
+      transition: color 120ms ease;
     }
 
+    /* A line box of the button's own size: the h2's default font size
+       would otherwise hang the label off a baseline well below centre. */
     .board-head h2 {
+      display: flex;
       margin: 0;
       flex: 1;
       min-width: 0;
+      font-size: inherit;
+      line-height: 1;
     }
 
     .board-head button {
@@ -2565,7 +2603,7 @@
       border: 0;
       border-radius: 0;
       background: transparent;
-      color: var(--subtle);
+      color: inherit;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       font-weight: 700;
@@ -2574,19 +2612,12 @@
       cursor: pointer;
     }
 
-    .board-head button::before {
-      content: "▾";
-      font-size: 0.75rem;
-      letter-spacing: 0;
-      transition: transform 150ms ease;
+    .page.board-collapsed .board-head .fold-chevron {
+      transform: rotate(0deg);
     }
 
-    .page.board-collapsed .board-head button::before {
-      transform: rotate(-90deg);
-    }
-
-    .board-head:hover button {
-      color: var(--accent);
+    .board-head:hover {
+      color: var(--text);
     }
 
     .board-head button:focus-visible {
@@ -2674,8 +2705,9 @@
     /* ── Benchmarks panel ─────────────────────────── */
 
     .benchmarks-panel {
+      --fold-pad: 36px;
       margin: 0;
-      padding: 28px 20px 36px;
+      padding: 0 20px;
       border-top: 1px solid var(--line);
       background: var(--surface-alt);
     }
@@ -2798,7 +2830,7 @@
        card, with the citation in the publisher's own words. */
     .credits-panel {
       margin: 0;
-      padding: 20px 20px 28px;
+      padding: 0 20px;
       border-top: 1px solid var(--line);
       background: var(--surface-alt);
     }
@@ -2880,9 +2912,9 @@
 
     @media (max-width: 860px) {
       .credits-panel {
+        --fold-pad: 20px;
         padding-left: 16px;
         padding-right: 16px;
-        padding-bottom: 20px;
       }
     }
 
@@ -2890,7 +2922,7 @@
 
     .sources-panel {
       margin: 0;
-      padding: 20px 20px 28px;
+      padding: 0 20px;
       border-top: 1px solid var(--line);
       background: var(--surface);
     }
@@ -2930,9 +2962,9 @@
 
     @media (max-width: 860px) {
       .sources-panel {
+        --fold-pad: 20px;
         padding-left: 16px;
         padding-right: 16px;
-        padding-bottom: 20px;
       }
     }
 
@@ -4373,6 +4405,7 @@
 
     /* ── Hero icon buttons (repo, theme toggle, export) ──── */
 
+    .reference-toggle,
     .repo-link,
     .theme-toggle,
     .export-toggle {
@@ -4392,6 +4425,7 @@
       transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease;
     }
 
+    .reference-toggle:hover,
     .repo-link:hover,
     .theme-toggle:hover,
     .export-toggle:hover {
@@ -4401,6 +4435,7 @@
       transform: scale(1.08);
     }
 
+    .reference-toggle svg,
     .repo-link svg,
     .theme-toggle svg,
     .export-toggle svg {
@@ -4414,11 +4449,13 @@
       flex-shrink: 0;
     }
 
-    /* The corner runs repo → theme → export, left to right, so each button
+    /* Top-aligned with the title's capitals: the hero's 32px padding plus
+       the --cap-inset of the type, about a pixel at every size it takes.
+       The corner runs closed models → repo → theme → export, left to right, so each button
        sits one 36px slot plus a 10px gap further in than the one to its right. */
     .repo-link {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 128px;
       /* It is an <a>, so the UA underline has to go for it to read as a button. */
       text-decoration: none;
@@ -4435,7 +4472,7 @@
 
     .theme-toggle {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 82px;
     }
 
@@ -4455,7 +4492,7 @@
 
     .export-menu {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 36px;
     }
 
@@ -4587,25 +4624,30 @@
     }
 
     @media (max-width: 860px) {
+      .reference-toggle {
+        top: 33px;
+        right: 154px;
+      }
+
       .repo-link {
-        top: 20px;
+        top: 33px;
         right: 108px;
       }
 
       .theme-toggle {
-        top: 20px;
+        top: 33px;
         right: 62px;
       }
 
       .export-menu {
-        top: 20px;
+        top: 33px;
         right: 16px;
       }
 
       /* All three buttons shift inward on this breakpoint, so the title needs
          less room reserved beside them. */
       .hero h1 {
-        padding-right: 132px;
+        padding-right: 178px;
       }
 
       /* Narrow enough that the title wraps and the subtitle runs several lines
@@ -4638,6 +4680,43 @@
          un-wrap the title even at the mark's full height. */
       .brand {
         --title-lines: 2;
+      }
+    }
+
+    /* Phone width: four buttons in the corner leave the title too little
+       room at full size, so the buttons close up a little and the lockup
+       (title and mark together, sized off one property) steps down. */
+    @media (max-width: 480px) {
+      .reference-toggle,
+      .repo-link,
+      .theme-toggle,
+      .export-toggle {
+        width: 32px;
+        height: 32px;
+      }
+
+      .reference-toggle { right: 130px; }
+      .repo-link { right: 92px; }
+      .theme-toggle { right: 54px; }
+
+      .hero h1 {
+        padding-right: 154px;
+      }
+
+      .brand {
+        --title-size: 1.55rem;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .brand {
+        --title-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 340px) {
+      .brand {
+        --title-size: 1.05rem;
       }
     }
 
@@ -4905,6 +4984,7 @@
       --line-soft: #222120;
       --accent: #5b8af7;
       --accent-hover: #7aa3f8;
+      --accent-sub: #93b8ff;
       /* Brick red disappears into near-black, so the stroke lightens with the
          rest of the palette — the same red .model-new switches to here. */
       --fresh-ink: #f87171;
@@ -5125,9 +5205,9 @@
       }
 
       .benchmarks-panel {
+        --fold-pad: 24px;
         padding-left: 16px;
         padding-right: 16px;
-        padding-bottom: 24px;
       }
 
       .recent-panel,
@@ -5147,8 +5227,12 @@
         padding: 6px 4px;
       }
 
+      /* No wrapping in a column: a wrapped column gives every item a line
+         as wide as its own content, which leaves the chip row as wide as
+         all its chips and no narrower than the page. */
       .panel-controls {
         flex-direction: column;
+        flex-wrap: nowrap;
         align-items: stretch;
       }
 
@@ -5175,6 +5259,15 @@
 
       .rank-filter::-webkit-scrollbar {
         display: none;
+      }
+
+      /* Beats the desktop .panel-controls reset, which would otherwise put
+         the chips 16px in from the span switch above them, and lets the row
+         shrink to the panel so it scrolls instead of running off the page. */
+      .panel-controls .rank-filter {
+        min-width: 0;
+        margin-left: -16px;
+        margin-right: -16px;
       }
 
       .rank-filter button {
@@ -5247,6 +5340,21 @@
   </svg>
   <main class="page" id="app" aria-live="polite">
     <section class="hero">
+      <!-- Not a filter but the field the whole page is drawn from: open models
+           only, or the closed frontier reference rows alongside them. The
+           table, Recently Added and the ranking changes all follow it, so it
+           sits with the page-wide buttons. A checkbox under the skin, drawn as
+           a padlock: open while only open models show, shut once the closed
+           ones join them. -->
+      <label class="reference-toggle" id="referenceToggleLabel" hidden for="includeReference" data-tip-title="Closed models" data-tip="Show closed frontier models next to the open ones, as a yardstick. They carry a padlock and teal names.">
+        <input id="includeReference" type="checkbox" aria-label="Show closed models">
+        <svg class="icon-unlocked" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.75-1.4"/>
+        </svg>
+        <svg class="icon-locked" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+        </svg>
+      </label>
       <a class="repo-link" id="repoLink" href="https://github.com/dgrieser/ai-bench" target="_blank" rel="noopener noreferrer" data-tip="Browse the source, the data files and the update scripts behind this page." data-tip-title="GitHub repository" data-tip-url="https://github.com/dgrieser/ai-bench" aria-label="Open the GitHub repository">
         <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
@@ -5480,26 +5588,20 @@
     <section class="board-head" id="boardHead" hidden>
       <h2><button type="button" id="boardToggle" aria-expanded="true" aria-controls="filtersPanel content">Leaderboard</button></h2>
       <span class="board-count" id="boardCount" aria-hidden="true"></span>
+      <svg class="fold-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </section>
 
     <section class="filters" id="filtersPanel" hidden>
-      <!-- The head band stays put when the fields fold away, which is why the
-           reference checkbox lives here and not among them: it is the one
-           control that says what the table *is* rather than narrowing it, and
-           it has to be readable at a glance whether the panel is open or not.
-           The collapse click is bound to the band rather than the button, so
-           the chevron can sit at the far right, past the checkbox, and the
-           whole strip still folds the panel. -->
+      <!-- The head band stays put when the fields fold away. The collapse
+           click is bound to the band rather than the button, so the chevron
+           can sit at the far right and the whole strip still folds the
+           panel. -->
       <div class="filters-head" id="filtersHead">
         <button class="filters-toggle" id="filtersToggle" type="button" aria-expanded="true" aria-controls="controls">
           <span class="filters-eyebrow">Filters</span>
           <span class="filters-count" id="filtersCount" hidden></span>
         </button>
-        <label class="reference-toggle" id="referenceToggleLabel" for="includeReference" data-tip-title="Closed frontier models" data-tip="A few closed frontier models are kept in the index as a yardstick for the open field. They are hidden from the table by default; switch them on and they filter, sort and export like any other row, with a padlock in front of their names and the names themselves in teal. A model's own page and a comparison always offer them.">
-          <input id="includeReference" type="checkbox">
-          <span>Closed models</span>
-        </label>
-        <svg class="filters-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="filters-chevron fold-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
@@ -6740,10 +6842,7 @@
         // On the band, not the button: the chevron and the strip between them
         // fold the panel too, and the button's own click simply bubbles here.
         // The checkbox is the one thing in the band that is not a collapse.
-        ui.filtersHead.addEventListener("click", (event) => {
-          if (event.target.closest(".reference-toggle")) {
-            return;
-          }
+        ui.filtersHead.addEventListener("click", () => {
           setFiltersCollapsed(!ui.filtersPanel.classList.contains("collapsed"), true);
         });
 
@@ -6821,10 +6920,6 @@
           state.sort.direction = "desc";
 
           ui.search.value = "";
-          // Back to the open field, which is what this table is. It
-          // repopulates the model picker on its way out; the widget syncing
-          // below then runs over the list it just rebuilt.
-          setIncludeReference(false);
 
           ui.modelCompare.classList.remove("open");
           ui.benchmarkPick.classList.remove("open");
@@ -7107,10 +7202,10 @@
         const vendorOn = state.gpu.vendor !== "all";
         const reserveOn = state.gpu.reserve > 0;
         const addedOn = Boolean(state.filters.addedFrom || state.filters.addedTo);
-        // Not counted in the "N active" badge below: that badge stands for
-        // the constraints the collapsed panel is hiding, and this checkbox
-        // sits in the band beside it, visible either way. It does light itself
-        // up, and it does arm Reset Filters.
+        // Not counted in the "N active" badge below, and not armed into Reset
+        // Filters: the checkbox sits in the hero and picks the field the whole
+        // page is drawn from, rather than narrowing the table. It does light
+        // itself up.
         const referenceOn = state.filters.includeReference;
 
         ui.search.closest(".field")?.classList.toggle("filter-on", searchOn);
@@ -7123,7 +7218,7 @@
         ui.gpuVram.closest(".field")?.classList.toggle("filter-on", gpuOn);
         ui.gpuReserve?.closest(".field")?.classList.toggle("filter-on", reserveOn);
         ui.referenceToggleLabel?.classList.toggle("filter-on", referenceOn);
-        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn || referenceOn);
+        ui.resetBtn.classList.toggle("filter-on", searchOn || compareOn || benchmarksOn || addedOn || gpuOn || sortOn || vendorOn || reserveOn);
         updateReserveHint();
         syncHostingPresets();
         syncDevicePresets();
@@ -7758,7 +7853,7 @@
         const collapsed = isPanelCollapsed(panel);
         return `
           <details class="panel-fold" data-panel-fold="${escapeAttr(panel)}"${collapsed ? "" : " open"}>
-            <summary><h2>${title}</h2></summary>
+            <summary><h2>${title}</h2><svg class="fold-chevron" viewBox="0 0 12 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
             ${body}
           </details>
         `;
