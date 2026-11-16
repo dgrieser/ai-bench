@@ -2049,6 +2049,38 @@ def _timed_index(
     return values, time.monotonic() - started
 
 
+# How long each index's fit took last time, so the next run can start the
+# slowest first. Under ~/.cache/ai-bench, which the workflow carries between
+# runs; a missing or unreadable file only costs the ordering, never a value.
+FIT_SECONDS_PATH = Path(os.path.expanduser("~/.cache/ai-bench/index-fit-seconds.json"))
+
+
+def _longest_first(indexes: list[IndexDef]) -> list[IndexDef]:
+    try:
+        seconds = json.loads(FIT_SECONDS_PATH.read_text(encoding="utf-8"))
+        if not isinstance(seconds, dict):
+            seconds = {}
+    except (OSError, ValueError):
+        seconds = {}
+
+    def cost(index: IndexDef) -> float:
+        value = seconds.get(index.key)
+        return float(value) if isinstance(value, (int, float)) else 0.0
+
+    # sorted() is stable: with no record, INDEXES order stands.
+    return sorted(indexes, key=cost, reverse=True)
+
+
+def _remember_fit_seconds(seconds: dict[str, float]) -> None:
+    try:
+        FIT_SECONDS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        temporary = FIT_SECONDS_PATH.with_suffix(f".{os.getpid()}.tmp")
+        temporary.write_text(json.dumps(seconds, sort_keys=True), encoding="utf-8")
+        os.replace(temporary, FIT_SECONDS_PATH)
+    except OSError:
+        pass
+
+
 def compute_all(
     models: list[dict[str, Any]],
     doc: dict[str, Any],
@@ -2082,11 +2114,17 @@ def compute_all(
             # of a second against a fit of several.
             context = multiprocessing.get_context("spawn")
             with ProcessPoolExecutor(max_workers=jobs, mp_context=context) as pool:
+                # Longest first. The pool's queue is first come, first
+                # served, and the wall time is bounded by the slowest fit, so
+                # that one has to start at once rather than wait behind five
+                # short ones -- on CI's hyperthreaded runner it even ran at
+                # half speed while they shared its core.
                 futures = {
                     index.key: pool.submit(_timed_index, models, doc, index, factors)
-                    for index in indexes
+                    for index in _longest_first(indexes)
                 }
                 results = {key: future.result() for key, future in futures.items()}
+            _remember_fit_seconds({key: seconds for key, (_, seconds) in results.items()})
             report(f"{len(indexes)} index fits side by side", started)
         except (OSError, RuntimeError, ImportError) as exc:
             # BrokenProcessPool is a RuntimeError. Whatever ran is discarded and
