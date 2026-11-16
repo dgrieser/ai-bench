@@ -53,13 +53,15 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # The index math and the calibration code, before either is trusted to
-      # rewrite the published ranking.
-      - name: Check the index math
-        run: |
-          ./test_index_math.py
-          ./test_index_revision_fallback.py
-
+      # No test suites here any more: full-tests.yml runs every one of them
+      # daily (test_index_math.py among them, at 04:29, against what this run
+      # commits). This job is in the refresh's concurrency group, so every
+      # minute it spends is a minute an admin-page quick run waits in the
+      # queue; check_data.py below guards the file it publishes.
+      #
+      # The fits themselves run side by side (derive_indexes.calibrate_all,
+      # one worker process per CPU), with results identical to the
+      # sequential walk.
       - name: Calibrate
         run: ./derive_indexes.py --calibrate --write | tee -a "$GITHUB_STEP_SUMMARY"
 
@@ -72,8 +74,7 @@ jobs:
             echo "Calibration unchanged." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          python3 -c 'import json, sys; sys.exit(0 if json.load(open("llm.json")).get("models") else "llm.json has no models; refusing to commit")' \
-            || exit 1
+          ./check_data.py || exit 1
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index-calibration.json llm.json

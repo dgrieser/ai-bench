@@ -1686,7 +1686,10 @@ def apparent_ability(
 
 
 def calibrate(
-    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    pool: Any = None,
 ) -> tuple[float, int] | None:
     """Measure `index.transfer_ratio` -- how much a benchmark disagrees with the
     rest of its index, against how much models disagree with each other.
@@ -1708,14 +1711,25 @@ def calibrate(
 
     Returns (ratio, sample size), or None when the index is too small to hold a
     benchmark out.
+
+    With `pool` (a concurrent.futures executor) every fit -- the full one and
+    one per held-out benchmark -- runs there, the held-out ones all at once.
+    They are independent and each is the same bradley_terry() call on the same
+    record, so the result is the sequential one, bit for bit.
     """
+    def fit_all(records: list[Comparisons]) -> list[dict[str, float]]:
+        if pool is None:
+            return [bradley_terry(record) for record in records]
+        futures = [pool.submit(bradley_terry, record) for record in records]
+        return [future.result() for future in futures]
+
     factors = revision_factors(models)
     full = comparisons(models, doc, index, factors)
     keys = list(full.weight)
     if len(keys) < 3:
         return None
 
-    ability = bradley_terry(full)
+    (ability,) = fit_all([full])
     if len(ability) < 2:
         return None
 
@@ -1743,7 +1757,7 @@ def calibrate(
     # variance = transfer_ratio / weight, a heavy benchmark is expected to miss
     # by less, so each gap is scaled back to what a unit-weight benchmark would
     # have missed by before they are pooled.
-    gaps: list[tuple[float, float]] = []
+    held: list[tuple[str, Comparisons, Comparisons]] = []
     for held_out in keys:
         rest = IndexDef(
             key=index.key,
@@ -1755,8 +1769,6 @@ def calibrate(
             ],
         )
         record = comparisons(models, doc, rest, factors)
-        without = bradley_terry(record)
-        rest_weight = sum(record.weight.values())
         # The held-out benchmark on its own, so apparent_ability sees only what
         # it said. Passing the whole index here would feed `without` back into
         # the target it is being scored against -- see apparent_ability.
@@ -1774,6 +1786,12 @@ def calibrate(
             ),
             factors,
         )
+        held.append((held_out, record, alone))
+
+    gaps: list[tuple[float, float]] = []
+    fits = fit_all([record for _, record, _ in held])
+    for (held_out, record, alone), without in zip(held, fits):
+        rest_weight = sum(record.weight.values())
         for model in models:
             name = model.get("name")
             if not isinstance(name, str) or name not in without:
@@ -1803,6 +1821,34 @@ def calibrate(
         weight * (gap - mean) ** 2 for weight, gap in gaps
     ) / len(gaps)
     return between_benchmarks / between_models, len(gaps)
+
+
+def calibrate_all(
+    models: list[dict[str, Any]], doc: dict[str, Any]
+) -> list[tuple[float, int] | None]:
+    """calibrate() for every index in INDEXES order, every fit side by side.
+
+    One process pool takes the fits of all the indexes at once -- a full fit
+    plus one per held-out benchmark each -- and a thread per index feeds it,
+    so the pool is never idle while one index builds its records. Sequential
+    (pool=None) when worker processes cannot be had; the results are the same
+    either way.
+    """
+    jobs = _index_jobs(len(INDEXES) * 8)
+    if jobs > 1:
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+
+            context = multiprocessing.get_context("spawn")
+            with ProcessPoolExecutor(max_workers=jobs, mp_context=context) as pool, \
+                    ThreadPoolExecutor(max_workers=len(INDEXES)) as feeders:
+                return list(
+                    feeders.map(lambda index: calibrate(models, doc, index, pool), INDEXES)
+                )
+        except (OSError, RuntimeError, ImportError) as exc:
+            print(f"  calibration: no worker processes ({exc}); fitting in turn", file=sys.stderr)
+    return [calibrate(models, doc, index) for index in INDEXES]
 
 
 def calibration_head(
@@ -1982,6 +2028,16 @@ def apply_coverage(
     return changed
 
 
+def _index_jobs(most: int) -> int:
+    """Worker processes for the index fits: AI_BENCH_INDEX_JOBS, else one per
+    CPU, and never more than there is work for."""
+    try:
+        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or (os.cpu_count() or 1)
+    except ValueError:
+        jobs = os.cpu_count() or 1
+    return max(1, min(jobs, most))
+
+
 def _timed_index(
     models: list[dict[str, Any]],
     doc: dict[str, Any],
@@ -2012,11 +2068,7 @@ def compute_all(
     must cost speed, never the refresh.
     """
     indexes = list(INDEXES)
-    try:
-        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or (os.cpu_count() or 1)
-    except ValueError:
-        jobs = os.cpu_count() or 1
-    jobs = min(jobs, len(indexes))
+    jobs = _index_jobs(len(indexes))
     results: dict[str, tuple[dict[str, int | None], float]] = {}
     if jobs > 1:
         try:
@@ -2333,8 +2385,7 @@ def main() -> int:
             + ".\n"
         )
         results: dict[str, tuple[float, int]] = {}
-        for index in INDEXES:
-            measured = calibrate(models, doc, index)
+        for index, measured in zip(INDEXES, calibrate_all(models, doc)):
             if measured is None:
                 print(f"  {index.key:16} too few benchmarks to hold one out")
                 continue

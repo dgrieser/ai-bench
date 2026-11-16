@@ -78,7 +78,8 @@ def ignored_slugs() -> set[str]:
 
 
 def fetch_aa_models(cutoff: date, weights: str) -> list[dict]:
-    """AA's models released on/after cutoff; weights is "open" or "closed"."""
+    """AA's models released on/after cutoff; weights is "open", "closed", or
+    "tag" for both in one run, each carrying "_open": true or false."""
     cmd = [
         sys.executable,
         str(AA_SCRIPT),
@@ -87,13 +88,24 @@ def fetch_aa_models(cutoff: date, weights: str) -> list[dict]:
         "--output",
         "json",
         "--no-mmmu-pro",
-        f"--{weights}",
+        "--tag-weights" if weights == "tag" else f"--{weights}",
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr)
         raise SystemExit(f"artificialanalysis.py failed (exit {proc.returncode})")
     return json.loads(proc.stdout).get("data", [])
+
+
+def split_tagged(tagged: list[dict]) -> list[dict]:
+    """A --tag-weights run as the two runs it replaces would have returned it:
+    the open models, then the closed ones marked "_closed", each in AA's order."""
+    verdicts = [m.pop("_open", None) for m in tagged]
+    models = [m for m, is_open in zip(tagged, verdicts) if is_open is True]
+    models += [
+        {**m, "_closed": True} for m, is_open in zip(tagged, verdicts) if is_open is False
+    ]
+    return models
 
 
 def creator_name(m: dict) -> str:
@@ -244,9 +256,13 @@ def main() -> int:
         | set(load_decisions())
         | load_dismissed()
     )
-    models = fetch_aa_models(cutoff, "open")
-    if not args.open_only:
-        models += [{**m, "_closed": True} for m in fetch_aa_models(cutoff, "closed")]
+    if args.open_only:
+        models = fetch_aa_models(cutoff, "open")
+    else:
+        # One run for both, tagged, rather than an --open and a --closed run:
+        # each of those read every recent model's page to decide which it was.
+        # Split back into the same two lists, open first, in AA's order.
+        models = split_tagged(fetch_aa_models(cutoff, "tag"))
 
     new = [m for m in models if m.get("slug") and m["slug"] not in known]
     # Open releases first: they are what llm.json is for.

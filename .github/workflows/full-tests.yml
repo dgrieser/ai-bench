@@ -62,7 +62,11 @@ jobs:
         continue-on-error: true
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: ./run_tests.py --report _tests/report.json --summary "$GITHUB_STEP_SUMMARY" --run-url "$RUN_URL"
+        # One file per CPU side by side: each file is its own process with its
+        # own temporary files, and the whole suite passes the same either way
+        # (checked twice over before turning this on), in about a quarter of
+        # the time.
+        run: ./run_tests.py --jobs "$(nproc)" --report _tests/report.json --summary "$GITHUB_STEP_SUMMARY" --run-url "$RUN_URL"
 
       - name: Commit and push the report
         run: |

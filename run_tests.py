@@ -335,7 +335,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--summary", type=Path, help="append a markdown summary here, e.g. $GITHUB_STEP_SUMMARY")
     parser.add_argument("--run-url", default="", help="the CI run, linked from the report")
     parser.add_argument("--jobs", type=int, default=1,
-                        help="files to run side by side (default 1: the suites were written to run alone)")
+                        help="files to run side by side (default 1; full-tests.yml runs one per CPU)")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="seconds per file")
     parser.add_argument("--root", type=Path, default=HERE, help=argparse.SUPPRESS)
     parser.add_argument("--child", type=Path, help=argparse.SUPPRESS)

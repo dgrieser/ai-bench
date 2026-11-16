@@ -277,15 +277,46 @@ run_parallel() {
     rm -rf "$dir"
 }
 
+# The openness index, warmed in the background while check_new.py runs. It
+# reads three boards (llm-stats, evals.report, DeepSWE) and nothing check_new.py
+# writes -- not llm.json, not the reference list -- so the two only ever waited
+# on each other by being written one after the other. It must be finished
+# before the updaters fan out, or twenty of them would each find it missing
+# and rebuild it at once; finish_openness is that barrier.
+OPENNESS_CMD=(python3 -c "import sys; sys.path.insert(0, '${SCRIPT_DIR}'); import _openness; _openness.open_index()")
+start_openness() {
+    OPENNESS_DIR=$(mktemp -d)
+    OPENNESS_STARTED=$(now_ms)
+    echo "+ Running openness index (beside check_new.py)" 1>&2
+    (
+        "${OPENNESS_CMD[@]}" >"${OPENNESS_DIR}/out" 2>"${OPENNESS_DIR}/err"
+        echo $? >"${OPENNESS_DIR}/status"
+    ) &
+    OPENNESS_PID=$!
+}
+finish_openness() {
+    wait "$OPENNESS_PID" 2>/dev/null
+    local elapsed=$(( $(now_ms) - OPENNESS_STARTED ))
+    local status
+    read -r status <"${OPENNESS_DIR}/status" 2>/dev/null || status=1
+    cat "${OPENNESS_DIR}/out"
+    cat "${OPENNESS_DIR}/err" 1>&2
+    TIMINGS+=("openness index	${elapsed}")
+    echo "+ openness index took $(fmt_ms ${elapsed}) (beside check_new.py)" 1>&2
+    # As it was when run in turn: a failure here is a failed step. The index
+    # skips a dead source by itself, so this is a bug, not a flaky board.
+    [ "$status" -ne 0 ] && FAILED+=("openness index (exit ${status})")
+    rm -rf "$OPENNESS_DIR"
+}
+
 if [ -n "$MAPPINGS_ONLY" ]; then
     # The quick run: what a person needs in order to answer the mapping
     # questions for a model just added, and nothing that only moves scores.
     # check_new.py first, as in the full run, so a new model's own question is
     # in the same queue; then every board's names at once.
+    start_openness
     run "check_new.py" "${SCRIPT_DIR}/check_new.py" "${COLLECT_ARGS[@]}"
-    # Warmed once, here, rather than raced for by twenty updaters: each would
-    # otherwise find the index missing and rebuild it from three sources.
-    run "openness index" python3 -c "import sys; sys.path.insert(0, '${SCRIPT_DIR}'); import _openness; _openness.open_index()"
+    finish_openness
     run_parallel "${UPDATERS[@]}"
 
     echo 1>&2
@@ -310,6 +341,9 @@ if [ -n "$MAPPINGS_ONLY" ]; then
     exit 0
 fi
 
+# Unattended, the openness index is read while the next two steps run.
+[ -n "$REPORT" ] && start_openness
+
 # Record the pages the scrapers below read; independent of the scores, so first
 # and non-interactive either way.
 run "fill_source_urls.py" "${SCRIPT_DIR}/fill_source_urls.py" -w
@@ -327,7 +361,7 @@ if [ -n "$REPORT" ]; then
     # one board at a time; side by side it is about the slowest one. They all
     # still finish before update.py starts, so the response caches it reads
     # are warm exactly as before.
-    run "openness index" python3 -c "import sys; sys.path.insert(0, '${SCRIPT_DIR}'); import _openness; _openness.open_index()"
+    finish_openness
     run_parallel "${UPDATERS[@]}"
 else
     # At a terminal they prompt, and twenty prompts at once on one tty is no

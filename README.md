@@ -4595,6 +4595,21 @@ change below gives byte-identical output to the work it replaced:
   same all-must-say-closed rule, which does not depend on order.
 - **One cache step instead of two** for `~/.cache/artificialanalysis` and
   `~/.cache/ai-bench`.
+- **`check_new.py` reads AA once, not twice.** It used to run
+  `artificialanalysis.py --open` and then `--closed`, and on the free tier each
+  run decides open or closed by reading every recent model's page, one at a
+  time. One `--tag-weights` run now returns both, split back into the same two
+  lists (`check_new.split_tagged`), with those pages prefetched side by side.
+- **The openness index is read while `check_new.py` runs,** in the
+  background, and waited for before the updaters fan out. It reads three
+  boards and nothing `check_new.py` writes.
+- **Calibration fits side by side.** `--calibrate` is a full fit per index
+  plus one per held-out benchmark; `calibrate_all` feeds them all to one
+  process pool. Same fits, same ratios to the last bit; 6m50s to 1m33s
+  locally. It shares the refresh's concurrency group, so its length was
+  queue time for every quick run dispatched behind it. Its pre-flight suites
+  went the same way as the refresh's, and its commit is gated on
+  `check_data.py`.
 
 #### Still on the table
 
