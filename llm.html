@@ -5803,6 +5803,11 @@
 
   <script>
     (function () {
+      // The grouped windows the two timelines offer besides "by day". Up
+      // here because the state below reads the remembered one through it
+      // (storedSpan) while it is being built.
+      const SPAN_CHOICES = [3, 7, 14];
+
       const state = {
         data: null,
         benchmarkKeys: [],
@@ -5852,7 +5857,7 @@
         // The Ranking Changes panel: the same window as Recently Added, kept
         // separately so widening one does not flood the other, and the index
         // the reader narrowed it to ("" for all of them).
-        rankings: { showAll: false, index: "", span: storedSpan("rankings") },
+        rankings: { showAll: false, index: storedRankIndex(), span: storedSpan("rankings") },
         // Which foldable sections are folded, by name, read from localStorage
         // the first time each is drawn (see isPanelCollapsed).
         folds: {},
@@ -7720,6 +7725,7 @@
         ui.content.querySelectorAll("[data-rank-index]").forEach((button) => {
           button.addEventListener("click", () => rerenderAround("[data-rank-filter]", () => {
             state.rankings.index = button.dataset.rankIndex || "";
+            rememberRankIndex(state.rankings.index);
           }));
         });
 
@@ -8092,9 +8098,6 @@
         return state.folds[panel];
       }
 
-      // The grouped windows the two timelines offer besides "by day".
-      const SPAN_CHOICES = [3, 7, 14];
-
       function storedSpan(panel) {
         try {
           const span = Number(localStorage.getItem(`panel-span:${panel}`));
@@ -8110,6 +8113,27 @@
             localStorage.setItem(`panel-span:${panel}`, String(span));
           } else {
             localStorage.removeItem(`panel-span:${panel}`);
+          }
+        } catch (err) { /* not worth failing over */ }
+      }
+
+      // The index the Ranking Changes panel is narrowed to, kept across visits
+      // like its window. An index the data no longer has falls back to All
+      // where the panel reads it (renderRankingPanel).
+      function storedRankIndex() {
+        try {
+          return localStorage.getItem("panel-rank-index") || "";
+        } catch (err) {
+          return "";
+        }
+      }
+
+      function rememberRankIndex(key) {
+        try {
+          if (key) {
+            localStorage.setItem("panel-rank-index", key);
+          } else {
+            localStorage.removeItem("panel-rank-index");
           }
         } catch (err) { /* not worth failing over */ }
       }
@@ -8530,9 +8554,6 @@
         `;
       }
 
-      // How many of one index's lines a day lists before the rest fold away.
-      const RANK_PREVIEW = 6;
-
       // How many days are drawn open; the rest of the window folds behind one
       // disclosure, since a refit can move a hundred places in a day.
       const RANK_OPEN_DAYS = 5;
@@ -8721,14 +8742,10 @@
               const tally = counts.filter(([, n]) => n)
                 .map(([kind, n]) => `<span class="is-${kind}">${glyphs[kind]}${n}</span>`).join("");
               const field = Math.max(0, ...list.map((c) => c.of || 0));
-              const lines = list.map((change) => renderRankLine(change, byName.get(change.model)));
-              // A netted window is the one list on screen, so it shows more.
-              const preview = span ? RANK_PREVIEW * 2 : RANK_PREVIEW;
-              const head = lines.slice(0, preview).join("");
-              const tail = lines.slice(preview);
-              const more = tail.length
-                ? `<details class="recent-more"><summary>${tail.length} more</summary><ul class="rank-lines">${tail.join("")}</ul></details>`
-                : "";
+              // Every move is listed: an index rarely has more than a
+              // handful in a day, and a fold hiding one or two of them cost a
+              // tap for less than it saved.
+              const lines = list.map((change) => renderRankLine(change, byName.get(change.model))).join("");
               return `
                 <div class="rank-index">
                   <div class="rank-index-head">
@@ -8736,8 +8753,7 @@
                     <span class="rank-tally" role="img" aria-label="${escapeAttr(note)}" title="${escapeAttr(note)}">${tally}</span>
                     ${field ? `<span class="rank-field">of ${field}</span>` : ""}
                   </div>
-                  <ul class="rank-lines">${head}</ul>
-                  ${more}
+                  <ul class="rank-lines">${lines}</ul>
                 </div>
               `;
             }).join("");
