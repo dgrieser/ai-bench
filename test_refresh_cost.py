@@ -278,14 +278,12 @@ class TestTheQuickRun(unittest.TestCase):
         self.assertEqual(called, [(["m1", "m3"],)])
 
     def test_the_shortcuts_are_the_quick_run_s_alone(self) -> None:
-        """The tests, the narrowed crawl and the long TTLs: quick only."""
+        """The narrowed crawl and the long TTLs: quick only."""
         import yaml
 
         steps = {step.get("name"): step
                  for step in yaml.safe_load(self.WORKFLOW.read_text(encoding="utf-8"))
                  ["jobs"]["update"]["steps"]}
-        self.assertEqual(steps["Check collect mode, the matcher and the answer applier"]["if"],
-                         "${{ !inputs.quick }}")
         refresh = steps["Refresh benchmarks"]["run"]
         quick_block = refresh.split('if [ "$QUICK" = "true" ]; then', 1)[1].split("\n          fi", 1)[0]
         for knob in ("AI_BENCH_QUICK_MODELS", "ARTIFICIAL_ANALYSIS_CACHE_TTL", "AI_BENCH_OPENNESS_TTL"):

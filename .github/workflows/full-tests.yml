@@ -1,9 +1,9 @@
 name: full tests
 
-# Once a day, every test_*.py -- not just the handful update-benchmarks.yml runs
-# before it writes. Those have to stay quick, so most suites (every fetcher's
-# parser, every mapping's checks against llm.json) only ran when someone ran
-# them by hand, and a test broken by a refresh could sit unnoticed for weeks.
+# Once a day, every test_*.py. This is the only place the suites run
+# unattended: update-benchmarks.yml has to stay quick, so it only checks the
+# llm.json it is about to commit (check_data.py), plus test_answers.py on a run
+# carrying answers. A test broken by a refresh shows up here the next morning.
 #
 # Failures land in _tests/report.json, which the admin page's Tests tab reads.
 # Passing tests are only counted. The report is committed only when what it
@@ -62,7 +62,11 @@ jobs:
         continue-on-error: true
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: ./run_tests.py --report _tests/report.json --summary "$GITHUB_STEP_SUMMARY" --run-url "$RUN_URL"
+        # One file per CPU side by side: each file is its own process with its
+        # own temporary files, and the whole suite passes the same either way
+        # (checked twice over before turning this on), in about a quarter of
+        # the time.
+        run: ./run_tests.py --jobs "$(nproc)" --report _tests/report.json --summary "$GITHUB_STEP_SUMMARY" --run-url "$RUN_URL"
 
       - name: Commit and push the report
         run: |

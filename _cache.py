@@ -22,7 +22,7 @@ budget" in README.md -- rather than inventing a second convention:
     again".
 
 The directory is the one the workflow already carries between runs (see the
-`ai-bench-openness-` cache step), so a file written here survives to the next
+`responses-` cache step), so a file written here survives to the next
 run without anything being added to the workflow.
 """
 

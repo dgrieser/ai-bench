@@ -1536,6 +1536,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# Cards read at once by crawl_all_models(). Polite for an authenticated client
+# of the Hub, and enough to turn the walk into a handful of round trips.
+try:
+    CRAWL_WORKERS = max(1, int(os.getenv("AI_BENCH_HF_WORKERS", "8")))
+except ValueError:
+    CRAWL_WORKERS = 8
+
+
 def crawl_all_models(doc: dict[str, Any], only: set[str] | None = None) -> list[dict[str, Any]]:
     """Read every Hugging Face model card llm.json points at, cached per crawl.
 
@@ -1567,19 +1575,29 @@ def crawl_all_models(doc: dict[str, Any], only: set[str] | None = None) -> list[
     if isinstance(cached, list):
         return cached
 
-    results: list[dict[str, Any]] = []
-    for slug, repo in pairs:
+    def read_card(pair: tuple[str, str]) -> dict[str, Any] | None:
+        slug, repo = pair
         failures: list[str] = []
         try:
             scores, channels = extract_scores_and_channels(repo, slug, failures)
         except Exception as exc:
             print(f"warning: {slug} ({repo}): {exc}", file=sys.stderr)
-            continue
+            return None
         row = {"model": slug, "repo": repo, "scores": scores, "channels": channels}
         if failures:
             # Read only in part: update.py treats this card as a failed fetch.
             row["partial"] = True
-        results.append(row)
+        return row
+
+    # A card is two small requests and almost all of their time is latency,
+    # so the walk runs CRAWL_WORKERS cards at a time: a hundred and fifty
+    # sequential round trips were the longest single step of a refresh.
+    # executor.map keeps the input order, so the result -- and the cache key's
+    # payload -- is the sequential walk's.
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=CRAWL_WORKERS) as executor:
+        results = [row for row in executor.map(read_card, pairs) if row is not None]
     # A short crawl is not stored, the same way artificialanalysis.py refuses
     # to publish a short model list: a run that lost its network partway would
     # otherwise serve a stub to the fetcher that follows it, for an hour.

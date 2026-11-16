@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Run every test_*.py in the repository and report what failed.
 
-The refresh workflow runs only the handful of suites that guard what it is
-about to write, because it runs every three hours and has to stay quick. The
-rest -- every fetcher's parser, every mapping's checks against llm.json -- used
-to run only when someone remembered to. full-tests.yml runs this once a day
+The refresh workflow runs no suites of its own any more -- it runs every
+three hours and has to stay quick, so it only checks the llm.json it is about
+to commit (check_data.py), plus test_answers.py on a run carrying answers.
+Everything else used to run only when someone remembered to. full-tests.yml runs this once a day
 instead, and the admin page's Tests tab shows what it found.
 
     ./run_tests.py                      every test_*.py, a line per file
@@ -335,7 +335,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--summary", type=Path, help="append a markdown summary here, e.g. $GITHUB_STEP_SUMMARY")
     parser.add_argument("--run-url", default="", help="the CI run, linked from the report")
     parser.add_argument("--jobs", type=int, default=1,
-                        help="files to run side by side (default 1: the suites were written to run alone)")
+                        help="files to run side by side (default 1; full-tests.yml runs one per CPU)")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="seconds per file")
     parser.add_argument("--root", type=Path, default=HERE, help=argparse.SUPPRESS)
     parser.add_argument("--child", type=Path, help=argparse.SUPPRESS)

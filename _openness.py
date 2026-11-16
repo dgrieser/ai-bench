@@ -185,16 +185,39 @@ def _pool_evals_report(verdicts: dict[str, bool]) -> None:
 
 def build_index() -> dict[str, bool]:
     """Fetch every source that publishes weight availability and pool it."""
-    verdicts: dict[str, bool] = {}
-    for label, pool in (
+    from concurrent.futures import ThreadPoolExecutor
+
+    sources = (
         ("llm-stats", _pool_llmstats),
         ("evals.report", _pool_evals_report),
         ("DeepSWE", _pool_deepswe),
-    ):
+    )
+
+    def read(label: str, pool: Any) -> dict[str, bool]:
+        # Each source pools into its own dict: three hosts, read at once
+        # rather than one after another, which was the whole fifteen seconds.
+        own: dict[str, bool] = {}
         try:
-            timed(f"openness: {label}", pool, verdicts)
+            timed(f"openness: {label}", pool, own)
         except Exception as exc:  # noqa: BLE001 - a dead source must not block review
             print(f"  openness: skipping {label} ({exc})", file=sys.stderr)
+        return own
+
+    with ThreadPoolExecutor(max_workers=len(sources)) as executor:
+        per_source = list(executor.map(lambda source: read(*source), sources))
+
+    # Merged in the old order. _pool's rule -- closed only while every verdict
+    # seen says closed -- does not depend on order, and a key a source
+    # already poisoned to open stays open here too, so the index is the one
+    # the sequential loop built.
+    verdicts: dict[str, bool] = {}
+    for own in per_source:
+        for key, is_open in own.items():
+            previous = verdicts.get(key)
+            if previous is None:
+                verdicts[key] = is_open
+            elif previous is not is_open:
+                verdicts[key] = True
     return verdicts
 
 

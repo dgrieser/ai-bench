@@ -114,6 +114,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -1685,7 +1686,10 @@ def apparent_ability(
 
 
 def calibrate(
-    models: list[dict[str, Any]], doc: dict[str, Any], index: IndexDef
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    pool: Any = None,
 ) -> tuple[float, int] | None:
     """Measure `index.transfer_ratio` -- how much a benchmark disagrees with the
     rest of its index, against how much models disagree with each other.
@@ -1707,14 +1711,25 @@ def calibrate(
 
     Returns (ratio, sample size), or None when the index is too small to hold a
     benchmark out.
+
+    With `pool` (a concurrent.futures executor) every fit -- the full one and
+    one per held-out benchmark -- runs there, the held-out ones all at once.
+    They are independent and each is the same bradley_terry() call on the same
+    record, so the result is the sequential one, bit for bit.
     """
+    def fit_all(records: list[Comparisons]) -> list[dict[str, float]]:
+        if pool is None:
+            return [bradley_terry(record) for record in records]
+        futures = [pool.submit(bradley_terry, record) for record in records]
+        return [future.result() for future in futures]
+
     factors = revision_factors(models)
     full = comparisons(models, doc, index, factors)
     keys = list(full.weight)
     if len(keys) < 3:
         return None
 
-    ability = bradley_terry(full)
+    (ability,) = fit_all([full])
     if len(ability) < 2:
         return None
 
@@ -1742,7 +1757,7 @@ def calibrate(
     # variance = transfer_ratio / weight, a heavy benchmark is expected to miss
     # by less, so each gap is scaled back to what a unit-weight benchmark would
     # have missed by before they are pooled.
-    gaps: list[tuple[float, float]] = []
+    held: list[tuple[str, Comparisons, Comparisons]] = []
     for held_out in keys:
         rest = IndexDef(
             key=index.key,
@@ -1754,8 +1769,6 @@ def calibrate(
             ],
         )
         record = comparisons(models, doc, rest, factors)
-        without = bradley_terry(record)
-        rest_weight = sum(record.weight.values())
         # The held-out benchmark on its own, so apparent_ability sees only what
         # it said. Passing the whole index here would feed `without` back into
         # the target it is being scored against -- see apparent_ability.
@@ -1773,6 +1786,12 @@ def calibrate(
             ),
             factors,
         )
+        held.append((held_out, record, alone))
+
+    gaps: list[tuple[float, float]] = []
+    fits = fit_all([record for _, record, _ in held])
+    for (held_out, record, alone), without in zip(held, fits):
+        rest_weight = sum(record.weight.values())
         for model in models:
             name = model.get("name")
             if not isinstance(name, str) or name not in without:
@@ -1802,6 +1821,36 @@ def calibrate(
         weight * (gap - mean) ** 2 for weight, gap in gaps
     ) / len(gaps)
     return between_benchmarks / between_models, len(gaps)
+
+
+def calibrate_all(
+    models: list[dict[str, Any]], doc: dict[str, Any]
+) -> list[tuple[float, int] | None]:
+    """calibrate() for every index in INDEXES order, every fit side by side.
+
+    One process pool takes the fits of all the indexes at once -- a full fit
+    plus one per held-out benchmark each -- and a thread per index feeds it,
+    so the pool is never idle while one index builds its records. Sequential
+    (pool=None) when worker processes cannot be had; the results are the same
+    either way.
+    """
+    # Throughput, not one slow member: a hundred-odd fits keep every
+    # hyperthread busy, and four half-speed threads still do more than two.
+    jobs = _index_jobs(len(INDEXES) * 8, physical=False)
+    if jobs > 1:
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+
+            context = multiprocessing.get_context("spawn")
+            with ProcessPoolExecutor(max_workers=jobs, mp_context=context) as pool, \
+                    ThreadPoolExecutor(max_workers=len(INDEXES)) as feeders:
+                return list(
+                    feeders.map(lambda index: calibrate(models, doc, index, pool), INDEXES)
+                )
+        except (OSError, RuntimeError, ImportError) as exc:
+            print(f"  calibration: no worker processes ({exc}); fitting in turn", file=sys.stderr)
+    return [calibrate(models, doc, index) for index in INDEXES]
 
 
 def calibration_head(
@@ -1981,6 +2030,148 @@ def apply_coverage(
     return changed
 
 
+def _logical_cpus() -> int:
+    counter = getattr(os, "process_cpu_count", None) or os.cpu_count
+    return counter() or 1
+
+
+def _physical_cpus() -> int:
+    """Cores rather than hyperthreads, where Linux says which is which.
+
+    The GitHub runner reports 4 CPUs that are 2 cores with two threads each:
+    two CPU-bound processes there run at full speed, four at half speed each.
+    For a fit that waits on its slowest member that halving is the whole
+    difference -- the knowledge fit took 29s beside three others and 15s on a
+    core of its own. Anything unreadable falls back to the logical count.
+    """
+    try:
+        cpus = sorted(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        return _logical_cpus()
+    siblings = set()
+    for cpu in cpus:
+        try:
+            path = f"/sys/devices/system/cpu/cpu{cpu}/topology/thread_siblings_list"
+            with open(path, encoding="utf-8") as handle:
+                siblings.add(handle.read().strip())
+        except OSError:
+            return _logical_cpus()
+    return len(siblings) or _logical_cpus()
+
+
+def _index_jobs(most: int, physical: bool = True) -> int:
+    """Worker processes for the index fits: AI_BENCH_INDEX_JOBS, else one per
+    core (or per logical CPU, for throughput-bound work like calibration's
+    hundred-odd fits), and never more than there is work for."""
+    default = _physical_cpus() if physical else _logical_cpus()
+    try:
+        jobs = int(os.getenv("AI_BENCH_INDEX_JOBS", "0")) or default
+    except ValueError:
+        jobs = default
+    return max(1, min(jobs, most))
+
+
+def _timed_index(
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    index: IndexDef,
+    factors: dict[str, RevisionFactor],
+) -> tuple[dict[str, int | None], float]:
+    started = time.monotonic()
+    values = compute_index(models, doc, index, factors)
+    return values, time.monotonic() - started
+
+
+# How long each index's fit took last time, so the next run can start the
+# slowest first. Under ~/.cache/ai-bench, which the workflow carries between
+# runs; a missing or unreadable file only costs the ordering, never a value.
+FIT_SECONDS_PATH = Path(os.path.expanduser("~/.cache/ai-bench/index-fit-seconds.json"))
+
+
+def _longest_first(indexes: list[IndexDef]) -> list[IndexDef]:
+    try:
+        seconds = json.loads(FIT_SECONDS_PATH.read_text(encoding="utf-8"))
+        if not isinstance(seconds, dict):
+            seconds = {}
+    except (OSError, ValueError):
+        seconds = {}
+
+    def cost(index: IndexDef) -> float:
+        value = seconds.get(index.key)
+        return float(value) if isinstance(value, (int, float)) else 0.0
+
+    # sorted() is stable: with no record, INDEXES order stands.
+    return sorted(indexes, key=cost, reverse=True)
+
+
+def _remember_fit_seconds(seconds: dict[str, float]) -> None:
+    try:
+        FIT_SECONDS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        temporary = FIT_SECONDS_PATH.with_suffix(f".{os.getpid()}.tmp")
+        temporary.write_text(json.dumps(seconds, sort_keys=True), encoding="utf-8")
+        os.replace(temporary, FIT_SECONDS_PATH)
+    except OSError:
+        pass
+
+
+def compute_all(
+    models: list[dict[str, Any]],
+    doc: dict[str, Any],
+    factors: dict[str, RevisionFactor],
+) -> dict[str, dict[str, int | None]]:
+    """compute_index() for every index, side by side in worker processes.
+
+    The fits are independent -- each reads only the scores, never another
+    index's column -- and each is pure-Python Bradley-Terry, so they are CPU
+    bound and a thread would buy nothing. A process per index turns a refresh's
+    thirty-odd seconds of fitting into roughly its longest single fit (the
+    knowledge index). Every fit is the same function on the same inputs, so
+    the values are identical to the sequential loop's, bit for bit.
+
+    AI_BENCH_INDEX_JOBS=1 (or a machine with one CPU) runs them in turn, and so
+    does any failure to start the pool -- a sandbox without process support
+    must cost speed, never the refresh.
+    """
+    indexes = list(INDEXES)
+    jobs = _index_jobs(len(indexes))
+    results: dict[str, tuple[dict[str, int | None], float]] = {}
+    if jobs > 1:
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor
+
+            started = time.monotonic()
+            # spawn, not fork: update.py reaches here with its fetcher threads
+            # still around, and forking a threaded process can deadlock on a
+            # lock some other thread held. A fresh interpreter costs a fraction
+            # of a second against a fit of several.
+            context = multiprocessing.get_context("spawn")
+            with ProcessPoolExecutor(max_workers=jobs, mp_context=context) as pool:
+                # Longest first. The pool's queue is first come, first
+                # served, and the wall time is bounded by the slowest fit, so
+                # that one has to start at once rather than wait behind five
+                # short ones -- on CI's hyperthreaded runner it even ran at
+                # half speed while they shared its core.
+                futures = {
+                    index.key: pool.submit(_timed_index, models, doc, index, factors)
+                    for index in _longest_first(indexes)
+                }
+                results = {key: future.result() for key, future in futures.items()}
+            _remember_fit_seconds({key: seconds for key, (_, seconds) in results.items()})
+            report(f"{len(indexes)} index fits side by side", started)
+        except (OSError, RuntimeError, ImportError) as exc:
+            # BrokenProcessPool is a RuntimeError. Whatever ran is discarded and
+            # everything is fitted again in turn, so a half-finished pool
+            # cannot leave a mix behind.
+            print(f"  index fits: no worker processes ({exc}); fitting in turn", file=sys.stderr)
+            results = {}
+    if not results:
+        results = {index.key: _timed_index(models, doc, index, factors) for index in indexes}
+    for index in reversed(indexes):
+        print(f"  {index.key}: {results[index.key][1]:.1f}s", file=sys.stderr)
+    return {key: values for key, (values, _) in results.items()}
+
+
 def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]]:
     """Recompute the derived columns in `doc` in memory; returns the changes as
     (index key, model, old, new) tuples.
@@ -2005,15 +2196,14 @@ def refresh(doc: dict[str, Any]) -> list[tuple[str, str, int | None, int | None]
     per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
     # Applied back to front because put_first prepends: the last index applied
     # ends up leading each model's maps, so the keys sit in INDEXES order.
+    computed = compute_all(models, doc, factors)
     for index in reversed(INDEXES):
-        started = time.monotonic()
-        values = compute_index(models, doc, index, factors)
+        values = computed[index.key]
         per_index[index.key] = (values, index_coverage(models, index, factors))
         changes.extend(
             (index.key, name, old, new)
             for name, old, new in apply_index(doc, index, values)
         )
-        report(index.key, started)
     apply_coverage(doc, per_index)
     # Last, because it reads the component values just written -- and last
     # applied is first in each model's maps, which is where the overall column
@@ -2266,8 +2456,7 @@ def main() -> int:
             + ".\n"
         )
         results: dict[str, tuple[float, int]] = {}
-        for index in INDEXES:
-            measured = calibrate(models, doc, index)
+        for index, measured in zip(INDEXES, calibrate_all(models, doc)):
             if measured is None:
                 print(f"  {index.key:16} too few benchmarks to hold one out")
                 continue
@@ -2294,12 +2483,11 @@ def main() -> int:
     factors = revision_factors(models)
     print_conversions(factors)
     per_index: dict[str, tuple[dict[str, int | None], dict[str, dict[str, Any]]]] = {}
+    computed = compute_all(models, doc, factors)
     for index in reversed(INDEXES):
-        started = time.monotonic()
-        values = compute_index(models, doc, index, factors)
+        values = computed[index.key]
         coverage = index_coverage(models, index, factors)
         per_index[index.key] = (values, coverage)
-        report(index.key, started)
 
         ranked = sum(1 for value in values.values() if value is not None)
         print(

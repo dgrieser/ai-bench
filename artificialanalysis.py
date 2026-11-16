@@ -98,6 +98,14 @@ def _is_open_source(model: dict):
     return bool(_fetch_page_metrics(slug).get("hugging_face_url", ""))
 
 
+def _needs_page_for_weights(model: dict) -> bool:
+    """Whether _is_open_source() has to read this model's page to decide."""
+    licensing = model.get("licensing")
+    if isinstance(licensing, dict) and licensing.get("is_open_weights") is not None:
+        return False
+    return not any(key in model for key in ("open_source", "is_open_source", "open"))
+
+
 def _parse_release_date(raw: str) -> date:
     return datetime.strptime(raw, "%Y-%m-%d").date()
 
@@ -1154,7 +1162,37 @@ def _extract_eval_or_page(m: dict, api_keys, page_key: str):
     return _fetch_page_metrics(m.get("slug", "")).get(page_key)
 
 
+# Model pages read at once by _prefetch_pages(). Each is megabytes and nearly
+# all of its time is the transfer, so a few in flight turn a 150-page walk from
+# the slowest fetch of a refresh into a handful of seconds, without hammering
+# a public site.
+try:
+    PAGE_WORKERS = max(1, int(os.getenv("AI_BENCH_AA_PAGE_WORKERS", "6")))
+except ValueError:
+    PAGE_WORKERS = 6
+
+
+def _prefetch_pages(models) -> None:
+    """Fill _PAGE_METRICS_CACHE for every model's page, PAGE_WORKERS at a time.
+
+    Called with no creator name, which is exactly how the first lookup of each
+    page in _enrich_structured_metrics() asks for it (_extract_mmmu_pro, then
+    the page pass) -- and the cache is keyed by slug, so the first caller is
+    the one whose arguments count. The enrichment that follows then reads every
+    page from memory and comes out as it did when it fetched them in turn.
+    """
+    slugs = sorted({m.get("slug") for m in models if m.get("slug")} - set(_PAGE_METRICS_CACHE))
+    if len(slugs) < 2 or PAGE_WORKERS < 2:
+        return
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=PAGE_WORKERS) as executor:
+        for _ in executor.map(_fetch_page_metrics, slugs):
+            pass
+
+
 def _enrich_structured_metrics(models):
+    _prefetch_pages(models)
     for m in models:
         evals = m.get("evaluations")
         if not isinstance(evals, dict):
@@ -1416,6 +1454,15 @@ def main():
     parser.add_argument("--open", action="store_true", help="only open source")
     parser.add_argument("--closed", action="store_true", help="only closed source")
     parser.add_argument(
+        "--tag-weights",
+        action="store_true",
+        help=(
+            "keep open and closed models alike, each tagged \"_open\": true or "
+            "false, and drop the ones neither (one pass instead of an --open "
+            "and a --closed run, which read every page twice)"
+        ),
+    )
+    parser.add_argument(
         "--no-context-window",
         action="store_true",
         help="skip context window retrieval from model pages",
@@ -1485,6 +1532,7 @@ def main():
             args.model,
             args.open,
             args.closed,
+            args.tag_weights,
             args.creator,
             args.release_date,
         ]
@@ -1545,10 +1593,19 @@ def main():
                 continue
         models = filtered
 
-    if args.open or args.closed:
+    if args.open or args.closed or args.tag_weights:
+        # On the free tier the verdict comes from each model's page, read one
+        # at a time below; read them all at once first. Same lookup, same
+        # arguments, so the verdicts are unchanged.
+        _prefetch_pages([m for m in models if _needs_page_for_weights(m)])
         filtered = []
         for m in models:
             is_open = _is_open_source(m)
+            if args.tag_weights:
+                if is_open is not None:
+                    m["_open"] = is_open
+                    filtered.append(m)
+                continue
             if args.open and is_open is True:
                 filtered.append(m)
             elif args.closed and is_open is False:
