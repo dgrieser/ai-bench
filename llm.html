@@ -5853,11 +5853,11 @@
         // panel rather than a different view of the index.
         // span: 0 lists the window day by day; 3, 7 or 14 nets every change
         // of that many days into one list (see SPAN_CHOICES).
-        history: { showAll: false, span: storedSpan("recent") },
+        history: { showAll: storedShowAll("recent"), span: storedSpan("recent") },
         // The Ranking Changes panel: the same window as Recently Added, kept
         // separately so widening one does not flood the other, and the index
         // the reader narrowed it to ("" for all of them).
-        rankings: { showAll: false, index: storedRankIndex(), span: storedSpan("rankings") },
+        rankings: { showAll: storedShowAll("rankings"), index: storedRankIndex(), span: storedSpan("rankings") },
         // Which foldable sections are folded, by name, read from localStorage
         // the first time each is drawn (see isPanelCollapsed).
         folds: {},
@@ -7684,6 +7684,7 @@
           historyToggle.addEventListener("click", () => {
             const anchor = historyToggle.getBoundingClientRect().top;
             state.history.showAll = !state.history.showAll;
+            rememberShowAll("recent", state.history.showAll);
             renderTable();
             const moved = ui.content.querySelector("[data-history-toggle]");
             if (moved) {
@@ -7711,6 +7712,7 @@
         if (rankToggle) {
           rankToggle.addEventListener("click", () => rerenderAround("[data-rank-toggle]", () => {
             state.rankings.showAll = !state.rankings.showAll;
+            rememberShowAll("rankings", state.rankings.showAll);
           }));
         }
         // By day, or every change of the last N days netted into one list.
@@ -8117,6 +8119,26 @@
         } catch (err) { /* not worth failing over */ }
       }
 
+      // Whether a timeline panel is widened to its whole history, kept across
+      // visits like its window.
+      function storedShowAll(panel) {
+        try {
+          return localStorage.getItem(`panel-show-all:${panel}`) === "1";
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function rememberShowAll(panel, on) {
+        try {
+          if (on) {
+            localStorage.setItem(`panel-show-all:${panel}`, "1");
+          } else {
+            localStorage.removeItem(`panel-show-all:${panel}`);
+          }
+        } catch (err) { /* not worth failing over */ }
+      }
+
       // The index the Ranking Changes panel is narrowed to, kept across visits
       // like its window. An index the data no longer has falls back to All
       // where the panel reads it (renderRankingPanel).
@@ -8176,9 +8198,6 @@
          The week the table marks, written out underneath it: every model
          wearing a NEW badge and every score set in red, filed under the day it
          was stamped. */
-
-      // How many of a day's models are listed before the rest fold away.
-      const RECENT_DAY_PREVIEW = 12;
 
       // "5 models", "1 score" — the counts in the lead and beside a new model.
       function countLabel(count, noun) {
@@ -8479,18 +8498,10 @@
           ...day.models.map((row) => renderRecentModelEntry(row, day)),
           ...day.scores.map((row) => renderRecentScoreEntry(row, day))
         ];
-        // One fetch can restamp a hundred models at once, and a day that long
-        // buries every other day under it. The head of the list stands for the
-        // day — in table order, so it is the day's best-ranked models — and
-        // the tail waits behind a disclosure. Nothing is dropped, and <details>
-        // needs no wiring, which matters where the panel is rebuilt from a
-        // string on every filter change.
-        const head = entries.slice(0, RECENT_DAY_PREVIEW).join("");
-        const tail = entries.slice(RECENT_DAY_PREVIEW);
-        const more = tail.length
-          ? `<details class="recent-more"><summary>${tail.length} more ${tail.length === 1 ? "entry" : "entries"}</summary><div class="recent-entries">${tail.join("")}</div></details>`
-          : "";
-        return `<div class="recent-entries">${head}${more}</div>`;
+        // Every entry is listed, in table order: a fold hiding the tail of a
+        // long day cost a tap for less than it saved, and the panel itself
+        // folds away whole under its heading.
+        return `<div class="recent-entries">${entries.join("")}</div>`;
       }
 
       function renderRecentPanel() {
