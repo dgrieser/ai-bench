@@ -33,6 +33,9 @@
       --line-soft: #edece9;
       --accent: #1d4ed8;
       --accent-hover: #1e40af;
+      /* A subsection heading under a section's own (Filters under
+         Leaderboard): the same hue, a step brighter. */
+      --accent-sub: #3b82f6;
       --top-score-text: var(--accent);
       /* Freshly updated score: the same red .model-new gives a new model's name,
          so red means "new" wherever it appears, and nothing in the table's blues
@@ -428,7 +431,7 @@
       display: flex;
       align-items: center;
       min-height: var(--band-height);
-      color: var(--accent);
+      color: var(--accent-sub);
       cursor: pointer;
       transition: background-color 120ms ease, color 120ms ease;
     }
@@ -517,7 +520,7 @@
        open while only open models show, shut once the closed ones are in. */
     .reference-toggle {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 174px;
     }
 
@@ -4446,11 +4449,13 @@
       flex-shrink: 0;
     }
 
-    /* The corner runs closed models → repo → theme → export, left to right, so each button
+    /* Top-aligned with the title's capitals: the hero's 32px padding plus
+       the --cap-inset of the type, about a pixel at every size it takes.
+       The corner runs closed models → repo → theme → export, left to right, so each button
        sits one 36px slot plus a 10px gap further in than the one to its right. */
     .repo-link {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 128px;
       /* It is an <a>, so the UA underline has to go for it to read as a button. */
       text-decoration: none;
@@ -4467,7 +4472,7 @@
 
     .theme-toggle {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 82px;
     }
 
@@ -4487,7 +4492,7 @@
 
     .export-menu {
       position: absolute;
-      top: 28px;
+      top: 33px;
       right: 36px;
     }
 
@@ -4620,22 +4625,22 @@
 
     @media (max-width: 860px) {
       .reference-toggle {
-        top: 20px;
+        top: 33px;
         right: 154px;
       }
 
       .repo-link {
-        top: 20px;
+        top: 33px;
         right: 108px;
       }
 
       .theme-toggle {
-        top: 20px;
+        top: 33px;
         right: 62px;
       }
 
       .export-menu {
-        top: 20px;
+        top: 33px;
         right: 16px;
       }
 
@@ -4979,6 +4984,7 @@
       --line-soft: #222120;
       --accent: #5b8af7;
       --accent-hover: #7aa3f8;
+      --accent-sub: #93b8ff;
       /* Brick red disappears into near-black, so the stroke lightens with the
          rest of the palette — the same red .model-new switches to here. */
       --fresh-ink: #f87171;
