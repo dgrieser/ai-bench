@@ -868,6 +868,13 @@ select {
 }
 .preview-score .score-past a { color: var(--muted); }
 .era-preview { color: var(--warn); }
+/* A release rule's condition: not, the operator, the value, remove. */
+.watch-cond { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: .4rem; align-items: center; margin: .35rem 0; }
+.watch-cond select, .watch-cond input { margin: 0; min-width: 0; }
+@media (max-width: 520px) {
+  .watch-cond { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .watch-cond input { grid-column: 1 / -1; grid-row: 2; }
+}
 .section-title { font-size: 1rem; font-weight: 600; margin: .25rem 0 0; }
 
 /* --------------------------------------------------------------- buttons */
@@ -2118,7 +2125,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-cleanup) /.test(key);
+  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -2280,7 +2287,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-cleanup) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)) /.test(key));
 
 function readSent() {
   try {
@@ -2723,6 +2730,9 @@ async function loadData() {
     for (const name of [...previewWork.keys()]) {
       if (!state.answers.has(PREVIEW_KEY(name))) previewWork.delete(name);
     }
+    for (const name of [...watchWork.keys()]) {
+      if (!state.answers.has(WATCH_KEY(name))) watchWork.delete(name);
+    }
   } else {
     state.previews = {
       cases: null, done: [],
@@ -3114,6 +3124,8 @@ function staleQueueNote() {
 const tabList = (mappingCount = null, newCount = null) => [
   ["queue", "Queue", mappingCount],
   ["new", "New models", newCount],
+  /* Only the cases that look released: a preview with no sign of one yet, or
+     one still waiting for the repo its release rule names, is nothing to do. */
   ["cleanup", "Cleanup", state.previews.cases?.filter((c) => c.evidence?.length).length || null],
   ["updates", "Updates", null],
   ["models", "Models", null],
@@ -4231,7 +4243,9 @@ function renderPreviewCard(c) {
       c.creator ? chip("", c.creator, { prose: true }) : null,
       c.released ? chip("released", c.released, { className: "now" })
         : c.evidence?.length ? chip("", "looks released", { prose: true, className: "now" })
-          : chip("", "no sign of a release", { prose: true }),
+          : chip("", c.watch ? "its release repo is not out yet" : "no sign of a release", { prose: true }),
+      c.watch ? chip("waits for", "a Hugging Face repo", { prose: true }) : null,
+      state.answers.has(WATCH_KEY(c.name)) ? chip("", "release rule changes on the next run", { prose: true, className: "now" }) : null,
       chip("preview scores", `${previewScores.length} / ${(c.scores || []).length}`),
       parks.length ? chip("preview mappings", String(parks.length)) : null,
       c.queue?.length ? chip("queued", String(c.queue.length)) : null,
@@ -4264,7 +4278,15 @@ function fillPreviewCard(card, c) {
   if (c.evidence?.length) {
     card.append(el("div", { className: "q-context" }, [
       el("h4", {}, "Why it looks released"),
-      el("ul", {}, c.evidence.map((e) => el("li", {}, el("span", {}, e.text)))),
+      el("ul", {}, c.evidence.map((e) => el("li", {}, e.url
+        ? el("a", { href: e.url, target: "_blank", rel: "noopener noreferrer" }, e.text)
+        : el("span", {}, e.text)))),
+    ]));
+  }
+  if (c.hints?.length) {
+    card.append(el("div", { className: "q-context" }, [
+      el("h4", {}, c.watch ? "Other signs -- not counted under the release rule" : "Not counted"),
+      el("ul", {}, c.hints.map((e) => el("li", {}, el("span", { style: "color:var(--muted)" }, e.text)))),
     ]));
   }
 
@@ -4279,6 +4301,9 @@ function fillPreviewCard(card, c) {
     );
     return;
   }
+
+  /* -- what counts as the release */
+  card.append(renderWatch(c));
 
   const problem = el("p", { className: "note-text bad-text" });
   const commit = () => {
@@ -4501,6 +4526,251 @@ function fillPreviewCard(card, c) {
     }),
   ]));
   commit();
+}
+
+/* ------------------------------------------------- release rules */
+
+/* What a case waits for, when its name cannot say. The default -- a source
+   listing the model without "preview" -- fails for a preview served by an
+   API only: the entry points at a checkpoint the lab did publish (ERNIE 5.5
+   Flash's -Base), and that repo's name never had the word in it. A release
+   rule names the Hugging Face repo instead, as conditions on its id that must
+   all hold; _preview_cleanup.py matches it against the Hub on every run, and
+   until a repo matches, the case is not counted as released. One
+   `preview-watch` record per change; choosing the default again drops the
+   rule. Matched the way the Python side matches: case-insensitively, a pasted
+   https://huggingface.co/ prefix ignored. */
+
+const WATCH_KEY = (name) => `preview-watch  ${name}`;
+const watchWork = new Map();
+const WATCH_OPS = [
+  ["starts_with", "starts with"],
+  ["ends_with", "ends with"],
+  ["contains", "contains"],
+  ["equals", "is exactly"],
+  ["regex", "matches regex"],
+];
+const WATCH_MAX = 8;
+const WATCH_PATTERN_MAX = 120;
+const HF_PREFIX = /^(?:https?:\/\/)?(?:www\.)?(?:huggingface\.co|hf\.co)\//i;
+/* The same refusals as _preview_cleanup.normalize_rule: a quantified group
+   holding a quantifier backtracks for ever, and Python's re has no timeout. */
+const NESTED_QUANTIFIER = /\((?:[^()\\]|\\.)*[+*}](?:[^()\\]|\\.)*\)\s*[+*{?]/;
+const REGEX_EXTRAS = /\\[1-9]|\(\?[=!<]/;
+
+const watchRuleOf = (c) => (c.watch ? { all: c.watch.all || [], ...(c.watch.owner ? { owner: c.watch.owner } : {}) } : null);
+const sameRule = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+/* A first guess at the rule: the owner's repo named like the URL now, without
+   its preview word and without a -Base suffix -- and nothing with Base in it,
+   when the stand-in is a base checkpoint. */
+function suggestedConditions(c) {
+  const repo = hfRepoOf(c.url);
+  const stem = unpreview(repo ? repo[2] : (c.renames?.[0]?.name || c.name)).replace(/[-_.]base$/i, "");
+  const conds = [{ op: "starts_with", value: repo ? `${repo[1]}/${stem}` : stem, not: false }];
+  if (repo && /base/i.test(repo[2])) conds.push({ op: "contains", value: "Base", not: true });
+  return conds;
+}
+
+function watchWorkFor(c) {
+  if (watchWork.has(c.name)) return watchWork.get(c.name);
+  const sent = state.answers.get(WATCH_KEY(c.name));
+  const rule = sent ? sent.watch : watchRuleOf(c);
+  const work = rule
+    ? { mode: "hf", conds: rule.all.map((x) => ({ op: x.op, value: x.value, not: Boolean(x.not) })), owner: rule.owner || "" }
+    : { mode: "default", conds: suggestedConditions(c), owner: "" };
+  watchWork.set(c.name, work);
+  return work;
+}
+
+/* [rule, problem] for the hf mode, checked as the server will check it. */
+function watchRule(work) {
+  const all = [];
+  for (const cond of work.conds) {
+    let value = String(cond.value || "").trim();
+    if (!value) return [null, "every condition needs a value"];
+    if (value.length > WATCH_PATTERN_MAX) return [null, `a value is at most ${WATCH_PATTERN_MAX} characters`];
+    if (cond.op === "regex") {
+      if (NESTED_QUANTIFIER.test(value) || REGEX_EXTRAS.test(value)) {
+        return [null, "the regex nests a quantifier, refers back or looks around; say it with plainer conditions"];
+      }
+      try { new RegExp(value, "i"); } catch (e) { return [null, `the regex does not compile: ${e.message}`]; }
+    } else {
+      value = value.replace(HF_PREFIX, "");
+      if (!value) return [null, "a value needs more than the Hugging Face host"];
+    }
+    all.push({ op: cond.op, value, ...(cond.not ? { not: true } : {}) });
+  }
+  if (!all.length) return [null, "add a condition"];
+  if (all.length > WATCH_MAX) return [null, `at most ${WATCH_MAX} conditions`];
+  if (!all.some((x) => !x.not)) return [null, "one condition has to say what to look for, not only what to rule out"];
+  const owner = work.owner.trim();
+  if (owner && !/^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/.test(owner)) return [null, "the owner is not a Hugging Face account name"];
+  return [{ all, ...(owner ? { owner } : {}) }, ""];
+}
+
+function watchMatches(rule, id) {
+  if (!id || id.length > 96) return false;
+  const subject = id.toLowerCase();
+  return rule.all.every((x) => {
+    const v = x.value.toLowerCase();
+    const hit = x.op === "regex" ? new RegExp(x.value, "i").test(id)
+      : x.op === "starts_with" ? subject.startsWith(v)
+        : x.op === "ends_with" ? subject.endsWith(v)
+          : x.op === "contains" ? subject.includes(v)
+            : subject === v;
+    return hit !== Boolean(x.not);
+  });
+}
+
+function watchOwner(rule, c) {
+  if (rule.owner) return rule.owner;
+  const repo = hfRepoOf(c.url);
+  if (repo) return repo[1];
+  const lead = rule.all.find((x) => !x.not && (x.op === "starts_with" || x.op === "equals") && x.value.includes("/"));
+  return lead ? lead.value.split("/")[0] : "";
+}
+
+/* The owner's newest repos and those named like the rule's longest literal --
+   what the run asks the Hub, so the check here shows what it will find. */
+async function watchCandidates(rule, owner) {
+  const base = `${HF_API}?author=${encodeURIComponent(owner)}&limit=100`;
+  const literals = rule.all.filter((x) => !x.not && x.op !== "regex")
+    .map((x) => (x.value.includes("/") ? x.value.split("/").slice(1).join("/") : x.value))
+    .filter((v) => v.length >= 2).sort((a, b) => b.length - a.length);
+  const urls = [`${base}&sort=createdAt&direction=-1`, ...(literals[0] ? [`${base}&search=${encodeURIComponent(literals[0])}`] : [])];
+  const ids = new Set();
+  for (const url of urls) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    for (const m of await response.json()) if (m && typeof m.id === "string") ids.add(m.id);
+  }
+  return [...ids];
+}
+
+/* Keeps the batch in step: a rule that differs from the stored one is a
+   record; the stored one, or the default when there is none, is nothing. */
+function syncWatch(c, work) {
+  const key = WATCH_KEY(c.name);
+  const stored = watchRuleOf(c);
+  if (work.mode === "default") {
+    if (stored) state.answers.set(key, { kind: "preview-watch", name: c.name, watch: null });
+    else state.answers.delete(key);
+    return "";
+  }
+  const [rule, problem] = watchRule(work);
+  if (!rule || sameRule(rule, stored)) state.answers.delete(key);
+  else state.answers.set(key, { kind: "preview-watch", name: c.name, watch: rule });
+  return problem;
+}
+
+function renderWatch(c) {
+  const key = WATCH_KEY(c.name);
+  const work = watchWorkFor(c);
+  const box = el("div", { className: "provenance" });
+  box.append(el("div", { className: "field" }, el("label", {}, "looks released when")));
+  const modes = el("div", { className: "options" });
+  const editor = el("div", {});
+  const status = el("p", { className: "note-text" });
+  const problem = el("p", { className: "note-text bad-text" });
+  const result = el("div", {});
+
+  const commit = () => {
+    problem.textContent = syncWatch(c, work);
+    const pending = state.answers.get(key);
+    const stored = watchRuleOf(c);
+    status.textContent = pending
+      ? (pending.watch ? "This rule is in the batch; it replaces " + (stored ? "the stored one" : "the default") + " on the next run."
+        : "Back to the default on the next run: the stored rule is dropped.")
+      : stored ? (work.mode === "hf" ? "The stored rule." : "") : "";
+    status.className = pending ? "note-text good-text" : "note-text";
+    box.classList.toggle("answered", Boolean(pending));
+    refreshFooter();
+  };
+
+  const drawModes = () => modes.replaceChildren(
+    option("Default", "a source lists it without 'preview': Artificial Analysis, a board, the Queue", {
+      pressed: work.mode === "default",
+      onclick: () => { work.mode = "default"; draw(); commit(); },
+    }),
+    option("A Hugging Face repo", "say what the release's repo looks like -- for a preview whose weights are not out", {
+      pressed: work.mode === "hf",
+      onclick: () => { work.mode = "hf"; draw(); commit(); },
+    }),
+  );
+
+  const drawEditor = () => {
+    if (work.mode !== "hf") { editor.replaceChildren(); return; }
+    const rows = work.conds.map((cond, i) => {
+      const op = el("select", { onchange: () => { cond.op = op.value; commit(); } },
+        WATCH_OPS.map(([value, label]) => el("option", { value, selected: value === cond.op }, label)));
+      const negate = el("button", { type: "button", className: "btn ghost tiny", title: "turn this condition around",
+        onclick: () => { cond.not = !cond.not; negate.setAttribute("aria-pressed", String(cond.not)); commit(); } }, "not");
+      negate.setAttribute("aria-pressed", String(cond.not));
+      const value = el("input", { type: "text", value: cond.value, placeholder: "owner/Repo-Name, or part of it",
+        autocapitalize: "off", spellcheck: false, maxLength: WATCH_PATTERN_MAX });
+      value.oninput = () => { cond.value = value.value; commit(); };
+      const remove = el("button", { type: "button", className: "btn ghost tiny", title: "remove this condition",
+        onclick: () => { work.conds.splice(i, 1); drawEditor(); commit(); } }, "✕");
+      remove.disabled = work.conds.length === 1;
+      return el("div", { className: "watch-cond" }, [el("div", { className: "seg" }, negate), op, value, remove]);
+    });
+    const add = el("button", { type: "button", className: "btn ghost tiny", onclick: () => {
+      work.conds.push({ op: "contains", value: "", not: false }); drawEditor(); commit();
+    } }, "+ condition");
+    add.disabled = work.conds.length >= WATCH_MAX;
+    const owner = el("input", { type: "text", value: work.owner, autocapitalize: "off", spellcheck: false,
+      placeholder: `owner to search (default: ${hfRepoOf(c.url)?.[1] || "from the first condition"})` });
+    owner.oninput = () => { work.owner = owner.value; commit(); };
+    const check = el("button", { type: "button", className: "btn ghost tiny", onclick: async () => {
+      const [rule, why] = watchRule(work);
+      if (!rule) { result.replaceChildren(el("p", { className: "note-text bad-text" }, why)); return; }
+      const who = watchOwner(rule, c);
+      if (!who) { result.replaceChildren(el("p", { className: "note-text bad-text" }, "name an owner to search")); return; }
+      result.replaceChildren(el("p", { className: "note-text" }, `asking Hugging Face for ${who}'s repos...`));
+      let ids;
+      try { ids = await watchCandidates(rule, who); } catch (e) {
+        result.replaceChildren(el("p", { className: "note-text" }, `could not reach Hugging Face (${e.message})`));
+        return;
+      }
+      const own = hfRepoOf(c.url) ? `${hfRepoOf(c.url)[1]}/${hfRepoOf(c.url)[2]}`.toLowerCase() : "";
+      const hits = ids.filter((id) => id.toLowerCase().startsWith(`${who.toLowerCase()}/`) && watchMatches(rule, id));
+      const counted = hits.filter((id) => id.toLowerCase() !== own);
+      result.replaceChildren(
+        el("p", { className: `note-text ${counted.length ? "bad-text" : "good-text"}` }, counted.length
+          ? `${counted.length} of ${ids.length} repos of ${who} match already -- the case would look released now. Tighten the rule unless one of these is the release:`
+          : `None of ${ids.length} repos of ${who} matches yet: the case stays quiet until one does.`),
+        counted.length ? el("ul", {}, counted.slice(0, 12).map((id) => el("li", {},
+          el("a", { href: HF_BASE + id, target: "_blank", rel: "noopener noreferrer" }, id)))) : "",
+        hits.length > counted.length ? el("p", { className: "note-text" },
+          "The URL it has now matches too; that one is never counted.") : "",
+      );
+    } }, "Check against Hugging Face now");
+    editor.replaceChildren(
+      el("p", { className: "note-text" },
+        "Every condition must hold, matched case-insensitively against the repo id (owner/Name); "
+        + "a pasted https://huggingface.co/ prefix is fine. Until a repo of the owner matches, the "
+        + "case does not count as released, whatever else lists it. The URL the entry has now never counts."),
+      ...rows,
+      el("div", { className: "card-foot", style: "gap:.4rem;flex-wrap:wrap;justify-content:flex-start" }, [add, check]),
+      el("div", { className: "field" }, owner),
+      result,
+    );
+  };
+
+  const draw = () => { drawModes(); drawEditor(); result.replaceChildren(); };
+  draw();
+  if (c.watch) {
+    box.append(el("p", { className: "note-text" }, [
+      `Stored${c.watch.date ? ` ${c.watch.date}` : ""}: waits for ${c.watch.describe || "a Hugging Face repo"}. `,
+      c.watch.hub === "checked" ? "The last run asked the Hub."
+        : c.watch.hub === "carried over" ? "The last run could not ask the Hub; this is the answer before."
+          : "Not asked of the Hub yet: the next run does.",
+    ]));
+  }
+  box.append(modes, editor, problem, status);
+  commit();
+  return box;
 }
 
 /* One score's row: what it is, why it reads as the preview's, and the choice. */
@@ -6681,6 +6951,9 @@ async function send() {
     for (const name of [...previewWork.keys()]) {
       if (keys.includes(PREVIEW_KEY(name))) previewWork.delete(name);
     }
+    for (const name of [...watchWork.keys()]) {
+      if (keys.includes(WATCH_KEY(name))) watchWork.delete(name);
+    }
     /* Before the run list is refreshed, so nothing can settle the batch before
        it is even recorded. */
     /* `queued` is read off the queue as it stands now, because settling cannot:
@@ -6746,6 +7019,7 @@ document.getElementById("clear").onclick = () => {
   state.referenceDraft = "";
   state.benchDraft = null;
   previewWork.clear();
+  watchWork.clear();
   render();
 };
 load();

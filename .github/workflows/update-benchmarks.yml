@@ -300,8 +300,9 @@ jobs:
           # The Cleanup tab's preview report, re-read from what the batch just wrote,
           # so a cleanup or a check-off leaves the page in this same push rather
           # than at the end of the refresh. Reads only; a failure costs the
-          # report, never the answers.
-          ./preview_cleanup.py --publish \
+          # report, never the answers. --hub asks Hugging Face about the cases
+          # with a release rule (a rule the batch may just have set).
+          ./preview_cleanup.py --publish --hub \
             || echo "::warning title=Preview report::could not republish _pending/previews.json"
           # Which mapping changes the batch asked for and which followed from it
           # -- read off answer.py's validated result, never off the input.
@@ -437,13 +438,15 @@ jobs:
       # The Cleanup tab: preview entries whose model looks released, with the
       # decisions a cleanup needs (see _preview_cleanup.py). Read off llm.json,
       # the mapping files, the queue and the AA list above -- all files this
-      # run just wrote -- so it costs no request. Not gated on the refresh: it
+      # run just wrote. The only requests are --hub's: one or two to the
+      # Hugging Face Hub per case with a release rule (preview-cleanup-rules.json),
+      # whose failure carries the last answer over. Not gated on the refresh: it
       # describes the files as they are, and a stale report would offer
       # decisions about scores that have since moved (answer.py would refuse
       # them as stale, but the page should not offer them in the first place).
       - name: Publish the preview cleanup report
         continue-on-error: true
-        run: ./preview_cleanup.py --publish
+        run: ./preview_cleanup.py --publish --hub
 
       - name: Commit and push
         if: ${{ !inputs.dry_run }}
