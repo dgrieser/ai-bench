@@ -1,17 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-16 - Alibaba",
-      "question": "Carry newly released closed model 'qwen4-max' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "qwen4-max",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "recorded",
@@ -52,6 +41,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "qwen4-max",
+          "reason": "exact to qwen4-max, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "minimax-m3",
           "reason": "the same name without its first 1 word(s): exact to max, substring match"
@@ -69,11 +63,6 @@
         {
           "confidence": "weak",
           "option": "nex-n2-5-max",
-          "reason": "the same name without its first 1 word(s): exact to max, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m1-80k",
           "reason": "the same name without its first 1 word(s): exact to max, substring match"
         }
       ],
@@ -558,6 +547,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "qwen4-max",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "minimax-m3",
           "reason": "the same name without its first 2 word(s): exact to max, substring match"
         },
@@ -575,19 +569,11 @@
           "confidence": "weak",
           "option": "nex-n2-5-max",
           "reason": "the same name without its first 2 word(s): exact to max, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m1-80k",
-          "reason": "the same name without its first 2 word(s): exact to max, substring match"
         }
       ],
       "context": {
         "known": 431,
         "mapped": {
-          "minimax-m1-80k": [
-            "minimax/minimax-m1"
-          ],
           "minimax-m2-5": [
             "minimax/minimax-m2.5"
           ],
@@ -650,6 +636,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "qwen4-max",
+          "reason": "exact to qwen4-max, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "minimax-m3",
           "reason": "the same name without its first 1 word(s): exact to max, substring match"
@@ -667,11 +658,6 @@
         {
           "confidence": "weak",
           "option": "nex-n2-5-max",
-          "reason": "the same name without its first 1 word(s): exact to max, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "minimax-m1-80k",
           "reason": "the same name without its first 1 word(s): exact to max, substring match"
         }
       ],
