@@ -546,6 +546,168 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini-4-hydrogen, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini-4-hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini-4-hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 362,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini-4-carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini-4-carbon"
+          }
+        ]
+      },
+      "default": "gemini-4-hydrogen",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gemini-4-hydrogen'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/gemini-4-hydrogen",
+      "subject": "gemini-4-hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        }
+      ],
+      "context": {
+        "known": 362,
+        "mapped": {
+          "glm-4-7-flash": [
+            "glm-4.7-flash"
+          ],
+          "glm-5-3-flash": [
+            "glm-5.3-flash"
+          ],
+          "ling-3-0-flash": [
+            "ling-3.0-flash"
+          ],
+          "mimo-v2-flash": [
+            "mimo-v2-flash"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'hy4-flash'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/hy4-flash",
+      "subject": "hy4-flash",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen4-max",
+          "reason": "exact to qwen4-max, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        }
+      ],
+      "context": {
+        "known": 362,
+        "mapped": {
+          "minimax-m2-5": [
+            "minimax-m2.5"
+          ],
+          "minimax-m2-7": [
+            "minimax-m2.7"
+          ],
+          "minimax-m3": [
+            "minimax-m3"
+          ]
+        },
+        "siblings": []
+      },
+      "default": "qwen4-max",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'qwen4-max'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/qwen4-max",
+      "subject": "qwen4-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
           "confidence": "weak",
           "option": "qwen4-max",
           "reason": "the same name without the vendor prefix"
@@ -631,6 +793,75 @@
       "route_kind": "mapping",
       "source_url": "https://openrouter.ai/qwen/qwen4-max",
       "subject": "qwen/qwen4-max",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "the same name without its first 2 word(s): exact to flash, substring match"
+        }
+      ],
+      "context": {
+        "known": 431,
+        "mapped": {
+          "glm-4-7-flash": [
+            "z-ai/glm-4.7-flash"
+          ],
+          "glm-5-3-flash": [
+            "z-ai/glm-5.3-flash"
+          ],
+          "ling-3-0-flash": [
+            "inclusionai/ling-3.0-flash"
+          ],
+          "reka-flash-3": [
+            "rekaai/reka-flash-3"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "tencent/hy4"
+          },
+          {
+            "mapped_to": [
+              "hy4-preview"
+            ],
+            "name": "tencent/hy4-preview"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'tencent/hy4-flash' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/tencent/hy4-flash",
+      "subject": "tencent/hy4-flash",
       "universe": "models"
     },
     {
