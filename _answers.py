@@ -116,6 +116,12 @@ BENCHMARK_ORDER = "benchmark-order"
 # mess it exists to clean up.
 PREVIEW_CLEANUP = "preview-cleanup"
 PREVIEW_ACTIONS = ("apply", "dismiss", "restore")
+# What a preview entry's release will look like, when its name cannot tell:
+# {"kind": "preview-watch", "name": ..., "watch": {"all": [conditions]}} sets
+# the case's release rule (see _preview_cleanup.normalize_rule), and
+# "watch": null goes back to the default. Its own kind, so a rule and a
+# cleanup of the same entry can share a batch.
+PREVIEW_WATCH = "preview-watch"
 # Enough for every mapping a model is likely to have; a bound, because each
 # one is a file write.
 MAX_PARKS = 40
@@ -136,6 +142,7 @@ KINDS = frozenset(
         BENCHMARK_EDIT,
         BENCHMARK_ORDER,
         PREVIEW_CLEANUP,
+        PREVIEW_WATCH,
     }
 )
 
@@ -276,6 +283,10 @@ class Answer:
             return f"reorder benchmarks ({len(self.value)} columns)"
         if self.kind == PREVIEW_CLEANUP:
             return self.value.describe()
+        if self.kind == PREVIEW_WATCH:
+            if self.value is None:
+                return f"preview {self.subject!r}: back to the default release signal"
+            return f"preview {self.subject!r}: wait for {_preview_cleanup.describe_rule(self.value)}"
         changes = sorted([*self.fields, *self.scores])
         described = f"edit model {self.subject!r}: {', '.join(changes)}"
         if self.score_date:
@@ -675,6 +686,8 @@ def _validate_one(
         return _validate_benchmark_order(index, record, doc or {})
     if kind == PREVIEW_CLEANUP:
         return _validate_preview_cleanup(index, record, model_names, benchmarks, doc or {})
+    if kind == PREVIEW_WATCH:
+        return _validate_preview_watch(index, record, model_names)
     # A model-edit answers no queued question -- it is free-form maintenance of
     # an entry that already exists -- so it is bounded by the model having to
     # exist and by the field and benchmark whitelists instead.
@@ -1511,6 +1524,31 @@ def _validate_preview_cleanup(
     ))
 
 
+def _validate_preview_watch(index: int, record: dict[str, Any], model_names: set[str]) -> Answer:
+    """A preview entry's release rule, or null for the default."""
+    name = _subject_of(record, "name")
+    if name not in model_names:
+        raise AnswerError(f"{name!r} is not a model in llm.json")
+    extra = sorted(set(record) - {"kind", "name", "watch"})
+    if extra:
+        raise AnswerError(f"a release rule carries only 'watch' (got {', '.join(extra)})")
+    if "watch" not in record:
+        raise AnswerError("'watch' is required: a rule, or null for the default")
+    raw = record["watch"]
+    if raw is None:
+        if name not in _preview_cleanup.load_rules():
+            raise AnswerError(f"{name!r} already uses the default release signal")
+        return Answer(index=index, kind=PREVIEW_WATCH, subject=name, value=None)
+    try:
+        rule = _preview_cleanup.normalize_rule(raw)
+    except _preview_cleanup.CleanupError as exc:
+        raise AnswerError(str(exc)) from None
+    current = _preview_cleanup.load_rules().get(name)
+    if current and {k: current[k] for k in ("all", "owner") if k in current} == rule:
+        raise AnswerError(f"{name!r} already waits for exactly that")
+    return Answer(index=index, kind=PREVIEW_WATCH, subject=name, value=rule)
+
+
 def _validate_model_edit(
     index: int,
     record: dict[str, Any],
@@ -1583,6 +1621,8 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
             # a failure part way through is precisely the half-renamed model
             # nothing else in the repository can detect.
             paths.update(_rename.touched_paths(llm_path))
+        elif answer.kind == PREVIEW_WATCH:
+            paths.add(_preview_cleanup.RULES_FILE)
         elif answer.kind == PREVIEW_CLEANUP:
             paths.update(_preview_cleanup.touched_paths(answer.value))
             if answer.value.rename:
@@ -1704,6 +1744,12 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
 
     if answer.kind == BENCHMARK_ORDER:
         return _order_benchmarks(answer, llm_path)
+
+    if answer.kind == PREVIEW_WATCH:
+        try:
+            return _preview_cleanup.set_rule(answer.subject, answer.value)
+        except _preview_cleanup.CleanupError as exc:
+            raise AnswerError(str(exc)) from None
 
     if answer.kind == PREVIEW_CLEANUP:
         try:

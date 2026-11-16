@@ -209,6 +209,94 @@ class TestDetect(unittest.TestCase):
         self.assertEqual(names, ["hy4-preview", "a-preview"])
 
 
+ERNIE_BASE = "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base"
+ERNIE_RULE = {"all": [{"op": "starts_with", "value": "https://huggingface.co/baidu/ERNIE-5.5-Flash"},
+                      {"op": "contains", "value": "base", "not": True}]}
+
+
+def ernie_inputs(**overrides) -> cleanup.Inputs:
+    """An API-only preview: the entry points at the base checkpoint Baidu did publish."""
+    base = dict(
+        doc={"benchmarks": BENCHMARKS, "models": [model("ernie-5-5-flash-preview", ERNIE_BASE, {})]},
+        mappings={
+            ("update_spheron_mapping.py", "*"): {"baidu/ERNIE-5.5-Flash-Base": "ernie-5-5-flash-preview"},
+            ("update_openrouter_mapping.py", "*"): {"baidu/ernie-5.5-flash-preview": "ernie-5-5-flash-preview"},
+        },
+        llm_to_aa={}, aa_models=[], questions=[], done={},
+    )
+    base.update(overrides)
+    return cleanup.Inputs(**base)
+
+
+class TestReleaseRules(unittest.TestCase):
+    def test_the_repo_the_url_already_points_at_is_no_evidence(self) -> None:
+        (case,) = cleanup.detect(ernie_inputs())["cases"]
+        self.assertEqual(case["evidence"], [])
+        self.assertEqual([h["kind"] for h in case["hints"]], ["self"])
+        spheron = next(m for m in case["mappings"] if m["source"] == "spheron")
+        self.assertIn("URL points at", spheron["why"])
+
+    def test_a_rule_waits_for_its_repo(self) -> None:
+        rule = cleanup.normalize_rule(ERNIE_RULE)
+        self.assertEqual(rule["all"][0]["value"], "baidu/ERNIE-5.5-Flash")  # the URL prefix dropped
+        # The Hub lists the base and a BF16 copy of it: neither is the release.
+        quiet = ernie_inputs(rules={"ernie-5-5-flash-preview": rule},
+                             hub={"ernie-5-5-flash-preview": ["baidu/ERNIE-5.5-Flash-Base",
+                                                              "baidu/ERNIE-5.5-Flash-Base-BF16"]})
+        (case,) = cleanup.detect(quiet)["cases"]
+        self.assertEqual(case["evidence"], [])
+        self.assertEqual(case["watch"]["hub"], "checked")
+        self.assertIsNone(case["new_url"])
+
+        out = ernie_inputs(rules={"ernie-5-5-flash-preview": rule},
+                           hub={"ernie-5-5-flash-preview": ["baidu/ERNIE-5.5-Flash", "other/ERNIE-5.5-Flash"]})
+        (case,) = cleanup.detect(out)["cases"]
+        self.assertEqual([e["kind"] for e in case["evidence"]], ["rule"])
+        self.assertEqual(case["watch"]["matched"], ["baidu/ERNIE-5.5-Flash"])
+        self.assertEqual(case["new_url"], "https://huggingface.co/baidu/ERNIE-5.5-Flash")
+
+    def test_under_a_rule_other_signals_are_hints(self) -> None:
+        rule = cleanup.normalize_rule({"all": [{"op": "equals", "value": "tencent/Hy4-Final"}]})
+        case = only_case(cleanup.detect(inputs(rules={"hy4-preview": rule})))
+        self.assertEqual(case["evidence"], [])
+        self.assertIsNone(case["released"])
+        self.assertTrue(any(h["kind"] == "aa" for h in case["hints"]))
+        self.assertEqual(case["watch"]["hub"], "not checked")
+
+    def test_operators_negation_and_case(self) -> None:
+        rule = cleanup.normalize_rule({"all": [
+            {"op": "regex", "value": r"^baidu/ernie-5\.5-flash(-instruct)?$"},
+            {"op": "ends_with", "value": "-BASE", "not": True},
+        ]})
+        self.assertTrue(cleanup.rule_matches(rule, "baidu/ERNIE-5.5-Flash"))
+        self.assertTrue(cleanup.rule_matches(rule, "Baidu/ERNIE-5.5-Flash-Instruct"))
+        self.assertFalse(cleanup.rule_matches(rule, "baidu/ERNIE-5.5-Flash-Base"))
+        self.assertFalse(cleanup.rule_matches(rule, "x" * 200))
+
+    def test_bad_rules_are_refused(self) -> None:
+        for raw, needle in [
+            ({"all": []}, "at least one"),
+            ({"all": [{"op": "glob", "value": "x"}]}, "op must be"),
+            ({"all": [{"op": "contains", "value": " "}]}, "needs a value"),
+            ({"all": [{"op": "regex", "value": "(a+)+$"}]}, "nests a quantifier"),
+            ({"all": [{"op": "regex", "value": "(?=x)"}]}, "looks around"),
+            ({"all": [{"op": "regex", "value": "("}]}, "does not compile"),
+            ({"all": [{"op": "contains", "value": "base", "not": True}]}, "what to look for"),
+            ({"all": [{"op": "contains", "value": "x" * 200}]}, "at most"),
+            ({"all": [{"op": "contains", "value": "x"}], "owner": "a b"}, "account name"),
+            ({"all": [{"op": "contains", "value": "x"}], "extra": 1}, "not extra"),
+        ]:
+            with self.assertRaises(cleanup.CleanupError, msg=raw) as caught:
+                cleanup.normalize_rule(raw)
+            self.assertIn(needle, str(caught.exception))
+
+    def test_the_owner_and_search_term(self) -> None:
+        rule = cleanup.normalize_rule(ERNIE_RULE)
+        self.assertEqual(cleanup.rule_owner(rule, ERNIE_BASE), "baidu")
+        self.assertEqual(cleanup.rule_owner(rule, None), "baidu")
+        self.assertEqual(cleanup.rule_search_term(rule), "ERNIE-5.5-Flash")
+
+
 class TestMappingLog(unittest.TestCase):
     def test_parks_are_the_admin_page_and_the_rename_is_followed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -234,7 +322,8 @@ class TestPage(unittest.TestCase):
         for pattern in patterns:
             regex = re.compile(f"^({pattern.replace('(', '(?:').replace('(?:?:', '(?:')}) ")
             for kind in sorted(_answers.MODEL_KINDS - {_answers.MODEL_ADD}
-                               | _answers.BENCHMARK_KINDS | {_answers.PREVIEW_CLEANUP}):
+                               | _answers.BENCHMARK_KINDS
+                               | {_answers.PREVIEW_CLEANUP, _answers.PREVIEW_WATCH}):
                 self.assertTrue(regex.match(f"{kind}  some-name"), f"{kind} missing from {pattern}")
 
 
@@ -337,6 +426,32 @@ class TestApply(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0, result.stdout)
         self.assertIn(needle, result.stderr)
         self.assertEqual({p.name: p.read_bytes() for p in self.repo.glob("*.json")}, before)
+
+    def test_a_release_rule_is_set_and_dropped(self) -> None:
+        self.write("preview-cleanup-rules.json", {})
+        result = self.answer({"kind": "preview-watch", "name": "hy4-preview", "watch": ERNIE_RULE})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        stored = self.read("preview-cleanup-rules.json")["hy4-preview"]
+        self.assertEqual(stored["all"][0]["value"], "baidu/ERNIE-5.5-Flash")
+        self.assertIn("date", stored)
+        # The same again is refused; null goes back to the default.
+        self.assertRefused({"kind": "preview-watch", "name": "hy4-preview", "watch": ERNIE_RULE},
+                           "already waits")
+        result = self.answer({"kind": "preview-watch", "name": "hy4-preview", "watch": None})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.read("preview-cleanup-rules.json"), {})
+        self.assertRefused({"kind": "preview-watch", "name": "hy4-preview", "watch": None},
+                           "already uses the default")
+
+    def test_a_bad_rule_writes_nothing(self) -> None:
+        self.assertRefused({"kind": "preview-watch", "name": "hy4-preview",
+                            "watch": {"all": [{"op": "regex", "value": "(x*)*"}]}}, "nests a quantifier")
+
+    def test_a_cleanup_drops_the_rule_it_waited_for(self) -> None:
+        self.write("preview-cleanup-rules.json", {})
+        result = self.answer({"kind": "preview-watch", "name": "hy4-preview", "watch": ERNIE_RULE}, self.FULL)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.read("preview-cleanup-rules.json"), {})
 
     def test_a_stale_score_is_refused(self) -> None:
         self.assertRefused({"kind": "preview-cleanup", "name": "hy4-preview",

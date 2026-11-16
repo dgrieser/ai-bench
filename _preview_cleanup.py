@@ -35,6 +35,23 @@ the two halves of doing it from the admin page:
   ``apply()``   carries one ``preview-cleanup`` record out (see _answers.py for
                 the validation), atomically with the rest of the batch.
 
+Some previews cannot be told apart from their release by a name. Baidu's
+ERNIE 5.5 Flash preview is served by an API only; the entry points at the
+base checkpoint Baidu did publish (`baidu/ERNIE-5.5-Flash-Base`), and Spheron
+lists that repo without a `preview` in it. Two things keep that from reading
+as a release:
+
+  * a signal that only restates the entry's own URL is not evidence: the
+    repo the entry already points at was there before anyone called it
+    released (``_self_referential``);
+  * a person can say what the release will look like: a **release rule** in
+    ``preview-cleanup-rules.json``, set from the Cleanup tab -- the Hugging
+    Face repo the case is waiting for, as conditions on its id (starts with,
+    ends with, contains, equals, or a regex; any of them negated; matched
+    case-insensitively). A case with a rule looks released only once a repo
+    on Hugging Face matches it; every other signal is shown as a hint and
+    counts for nothing. No rule is the default: a name without `preview`.
+
 A case that is not a release after all -- a preview whose name simply lacks a
 sibling yet, or one already cleaned up by hand -- is *checked off*: it goes in
 ``preview-cleanup-done.json`` and is not listed again. A cleanup that was
@@ -63,6 +80,7 @@ DEFAULT_QUEUE = HERE / "_pending" / "pending.json"
 DEFAULT_AA_MODELS = HERE / "_aa" / "models.json"
 DEFAULT_REPORT = HERE / "_pending" / "previews.json"
 DONE_FILE = HERE / "preview-cleanup-done.json"
+RULES_FILE = HERE / "preview-cleanup-rules.json"
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
 
 # "preview" as a word of its own: "-preview", " Preview", "(Preview)",
@@ -131,6 +149,207 @@ def strip_slug(name: str) -> str:
 def strip_url(url: str) -> str:
     """The URL without its `preview` word: .../tencent/Hy4-preview -> .../tencent/Hy4."""
     return _URL_PREVIEW_RE.sub("", url)
+
+
+# --------------------------------------------------------------------------
+# release rules: what a case waits for, when a name cannot tell
+# --------------------------------------------------------------------------
+
+# The operators a condition may use. All of them compare case-insensitively.
+RULE_OPS = ("starts_with", "ends_with", "contains", "equals", "regex")
+MAX_CONDITIONS = 8
+MAX_PATTERN = 120
+# The Hub caps a repo id at 96 characters; nothing longer is ever matched, which
+# also bounds what a regex can be made to chew on.
+MAX_REPO_ID = 96
+_HF_URL_RE = re.compile(r"^https?://(?:www\.)?(?:huggingface\.co|hf\.co)/([^/\s?#]+)/([^/\s?#]+)/?(?:[?#].*)?$",
+                        re.IGNORECASE)
+_HF_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
+# A quantified group that itself holds a quantifier -- (a+)+, (\w*)*, (x+){2,}
+# -- is how a regex backtracks for ever. Refused outright: nothing a repo id
+# needs to say takes one, and Python's re has no timeout to fall back on.
+_NESTED_QUANTIFIER = re.compile(r"\((?:[^()\\]|\\.)*[+*}](?:[^()\\]|\\.)*\)\s*[+*{?]")
+# A pasted URL prefix means the repo id after it.
+_HF_PREFIX = re.compile(r"^(?:https?://)?(?:www\.)?(?:huggingface\.co|hf\.co)/", re.IGNORECASE)
+
+
+def hf_repo_id(url: Any) -> str | None:
+    """`owner/name` of a Hugging Face model URL, else None."""
+    if not isinstance(url, str):
+        return None
+    match = _HF_URL_RE.match(url.strip())
+    if not match or match.group(1).lower() in {"datasets", "spaces", "api", "docs", "papers", "collections"}:
+        return None
+    return f"{match.group(1)}/{match.group(2)}"
+
+
+def normalize_rule(raw: Any) -> dict[str, Any]:
+    """A release rule as stored, or CleanupError saying what is wrong with it.
+
+    ``{"all": [{"op": "starts_with", "value": "baidu/ERNIE-5.5-Flash"},
+               {"op": "ends_with", "value": "-Base", "not": true}],
+       "owner": "baidu"}``
+
+    Every condition must hold (an AND); `owner` is the Hugging Face account
+    searched for a match, optional when the entry's URL or a condition names it.
+    """
+    if not isinstance(raw, dict):
+        raise CleanupError("a release rule must be an object with 'all': [conditions]")
+    unknown = sorted(set(raw) - {"all", "owner"})
+    if unknown:
+        raise CleanupError(f"a release rule takes 'all' and 'owner', not {', '.join(unknown)}")
+    conditions = raw.get("all")
+    if not isinstance(conditions, list) or not conditions:
+        raise CleanupError("a release rule needs at least one condition in 'all'")
+    if len(conditions) > MAX_CONDITIONS:
+        raise CleanupError(f"a release rule takes at most {MAX_CONDITIONS} conditions")
+    out: list[dict[str, Any]] = []
+    for cond in conditions:
+        if not isinstance(cond, dict) or set(cond) - {"op", "value", "not"}:
+            raise CleanupError("each condition is {op, value, not?}")
+        op = cond.get("op")
+        if op not in RULE_OPS:
+            raise CleanupError(f"a condition's op must be one of: {', '.join(RULE_OPS)}")
+        value = cond.get("value")
+        if not isinstance(value, str) or not value.strip():
+            raise CleanupError(f"the {op} condition needs a value")
+        value = value.strip()
+        if len(value) > MAX_PATTERN:
+            raise CleanupError(f"a condition's value is at most {MAX_PATTERN} characters")
+        if any(ord(ch) < 32 for ch in value):
+            raise CleanupError("a condition's value may not hold control characters")
+        if op == "regex":
+            if _NESTED_QUANTIFIER.search(value) or re.search(r"\\[1-9]|\(\?[=!<]", value):
+                raise CleanupError(
+                    "the regex nests a quantifier, refers back or looks around; "
+                    "say it with plainer conditions"
+                )
+            try:
+                re.compile(value, re.IGNORECASE)
+            except re.error as exc:
+                raise CleanupError(f"the regex does not compile: {exc}") from None
+        else:
+            value = _HF_PREFIX.sub("", value)
+            if not value:
+                raise CleanupError(f"the {op} condition needs more than the Hugging Face host")
+        negate = cond.get("not", False)
+        if not isinstance(negate, bool):
+            raise CleanupError("a condition's 'not' is true or false")
+        out.append({"op": op, "value": value, **({"not": True} if negate else {})})
+    if not any(not c.get("not") for c in out):
+        raise CleanupError("a release rule needs one condition that says what to look for, not only what to rule out")
+    rule: dict[str, Any] = {"all": out}
+    owner = raw.get("owner")
+    if owner not in (None, ""):
+        if not isinstance(owner, str) or not _HF_NAME_RE.match(owner.strip()):
+            raise CleanupError("the owner must be a Hugging Face account name")
+        rule["owner"] = owner.strip()
+    return rule
+
+
+def _condition_holds(cond: dict[str, Any], repo_id: str) -> bool:
+    subject = repo_id.lower()
+    value = cond["value"]
+    op = cond["op"]
+    if op == "regex":
+        hit = re.search(value, repo_id, re.IGNORECASE) is not None
+    elif op == "starts_with":
+        hit = subject.startswith(value.lower())
+    elif op == "ends_with":
+        hit = subject.endswith(value.lower())
+    elif op == "contains":
+        hit = value.lower() in subject
+    else:
+        hit = subject == value.lower()
+    return hit != bool(cond.get("not"))
+
+
+def rule_matches(rule: dict[str, Any], repo_id: str) -> bool:
+    if not isinstance(repo_id, str) or not repo_id or len(repo_id) > MAX_REPO_ID:
+        return False
+    return all(_condition_holds(c, repo_id) for c in rule.get("all") or [])
+
+
+def rule_owner(rule: dict[str, Any], url: Any) -> str | None:
+    """The account a Hub lookup lists: the rule's, the URL's, or a condition's."""
+    if rule.get("owner"):
+        return rule["owner"]
+    own = hf_repo_id(url)
+    if own:
+        return own.split("/", 1)[0]
+    for cond in rule.get("all") or []:
+        if cond["op"] in ("starts_with", "equals") and not cond.get("not") and "/" in cond["value"]:
+            owner = cond["value"].split("/", 1)[0]
+            if _HF_NAME_RE.match(owner):
+                return owner
+    return None
+
+
+def rule_search_term(rule: dict[str, Any]) -> str | None:
+    """The longest literal a match must contain, to narrow the Hub's search with."""
+    terms = []
+    for cond in rule.get("all") or []:
+        if cond.get("not") or cond["op"] == "regex":
+            continue
+        value = cond["value"].split("/", 1)[1] if "/" in cond["value"] else cond["value"]
+        if len(value) >= 2:
+            terms.append(value)
+    return max(terms, key=len) if terms else None
+
+
+_RULE_WORDS = {
+    "starts_with": ("starts with", "does not start with"),
+    "ends_with": ("ends with", "does not end with"),
+    "contains": ("contains", "does not contain"),
+    "equals": ("is", "is not"),
+    "regex": ("matches", "does not match"),
+}
+
+
+def describe_rule(rule: dict[str, Any]) -> str:
+    parts = [f"{_RULE_WORDS[c['op']][bool(c.get('not'))]} {c['value']!r}" for c in rule.get("all") or []]
+    return "a Hugging Face repo whose id " + " and ".join(parts)
+
+
+def load_rules(path: Path | None = None) -> dict[str, dict[str, Any]]:
+    """Name -> rule. A rule the file holds that no longer validates is left out."""
+    raw = _read_json(path or RULES_FILE, {})
+    rules: dict[str, dict[str, Any]] = {}
+    if not isinstance(raw, dict):
+        return rules
+    for name, entry in raw.items():
+        if not isinstance(name, str) or not isinstance(entry, dict):
+            continue
+        try:
+            rule = normalize_rule({k: entry[k] for k in ("all", "owner") if k in entry})
+        except CleanupError:
+            continue
+        rules[name] = {**rule, **({"date": entry["date"]} if isinstance(entry.get("date"), str) else {})}
+    return rules
+
+
+def write_rules(rules: dict[str, dict[str, Any]], path: Path | None = None) -> None:
+    (path or RULES_FILE).write_text(
+        json.dumps({k: rules[k] for k in sorted(rules)}, **JSON_DUMP_KWARGS) + "\n",
+        encoding="utf-8",
+    )
+
+
+def known_hf_repos(doc: dict[str, Any], mappings: dict[tuple[str, str], dict[str, Any]]) -> set[str]:
+    """Hugging Face repos the repository already names, without asking the Hub:
+    every model's URL and score pages, and Spheron's keys (which are repo ids)."""
+    found: set[str] = set()
+    for model in doc.get("models") or []:
+        if not isinstance(model, dict):
+            continue
+        for url in [model.get("url"), *(model.get("scores_source") or {}).values()]:
+            repo = hf_repo_id(url)
+            if repo:
+                found.add(repo)
+    for (route, _kind), raw in mappings.items():
+        if route == "update_spheron_mapping.py" and isinstance(raw, dict):
+            found.update(k for k in raw if isinstance(k, str) and k.count("/") == 1)
+    return found
 
 
 # --------------------------------------------------------------------------
@@ -269,6 +488,12 @@ class Inputs:
     aa_models: list[dict[str, Any]] = field(default_factory=list)
     questions: list[dict[str, Any]] = field(default_factory=list)
     done: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # Release rules by model name, and what a Hub lookup found for each: the
+    # repo ids it listed, or None when nobody asked (the report then says so).
+    rules: dict[str, dict[str, Any]] = field(default_factory=dict)
+    hub: dict[str, list[str] | None] = field(default_factory=dict)
+    # Name -> "carried over" for a hub answer taken from the last report.
+    hub_status: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_repo(
@@ -277,6 +502,7 @@ class Inputs:
         queue_path: Path = DEFAULT_QUEUE,
         aa_path: Path = DEFAULT_AA_MODELS,
         done_path: Path | None = None,
+        rules_path: Path | None = None,
     ) -> "Inputs":
         aa = _read_json(aa_path, {})
         queue = _read_json(queue_path, {})
@@ -289,6 +515,7 @@ class Inputs:
             questions=[q for q in (queue.get("questions") if isinstance(queue, dict) else []) or []
                        if isinstance(q, dict)],
             done=load_done(done_path),
+            rules=load_rules(rules_path),
         )
 
 
@@ -310,10 +537,28 @@ def _aa_slugs_of(model: dict[str, Any], llm_to_aa: dict[str, list[str]]) -> list
     return slugs
 
 
-def _release(model: dict[str, Any], inputs: Inputs) -> tuple[str | None, list[dict[str, str]]]:
-    """(release date, evidence) -- that a preview entry now stands for a release."""
+def _self_referential(model: dict[str, Any], source_name: str) -> bool:
+    """Whether a source's name for the entry is only the repo its URL already is.
+
+    An entry named `preview` whose URL is not points at a stand-in -- the base
+    checkpoint of an API-only preview, say -- and a source that lists that repo
+    by its id says nothing about a release: it was there all along.
+    """
+    own = hf_repo_id(model.get("url"))
+    return bool(own) and isinstance(source_name, str) and source_name.lower() == own.lower()
+
+
+def _release(
+    model: dict[str, Any], inputs: Inputs
+) -> tuple[str | None, list[dict[str, str]], list[dict[str, str]]]:
+    """(release date, evidence, hints) -- that a preview entry now stands for a release.
+
+    Hints are signals that look like evidence but are not: a source naming the
+    repo the entry already points at.
+    """
     name = model["name"]
     evidence: list[dict[str, str]] = []
+    hints: list[dict[str, str]] = []
     released: str | None = None
 
     by_slug = {m.get("slug"): m for m in inputs.aa_models}
@@ -336,6 +581,14 @@ def _release(model: dict[str, Any], inputs: Inputs) -> tuple[str | None, list[di
         if not isinstance(raw, dict):
             continue
         names = sorted(k for k, v in raw.items() if _points_at(v, name) and not is_preview(k))
+        own = [n for n in names if _self_referential(model, n)]
+        names = [n for n in names if n not in own]
+        if own:
+            hints.append({
+                "kind": "self",
+                "text": f"{_source_label(route)} lists it as {own[0]!r} -- the repo its URL already "
+                        "points at, which is no sign of a release",
+            })
         if names:
             evidence.append({
                 "kind": "mapping",
@@ -354,7 +607,41 @@ def _release(model: dict[str, Any], inputs: Inputs) -> tuple[str | None, list[di
                 "text": f"{_source_label(question.get('route') or '')} asks about "
                         f"{question.get('subject')!r}, with this entry as a candidate",
             })
-    return released, evidence
+    return released, evidence, hints
+
+
+def _watch(
+    model: dict[str, Any], rule: dict[str, Any], inputs: Inputs, known: set[str]
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """The rule's state for the report, and the evidence it yields: the repos that match."""
+    name = model["name"]
+    own = hf_repo_id(model.get("url"))
+    looked = inputs.hub.get(name)
+    owner = rule_owner(rule, model.get("url"))
+    # Only the owner's repos, when there is one: a rule is about one lab's
+    # release, not any repo in the index that happens to fit it.
+    candidates = {r for r in set(known) | set(looked or [])
+                  if not owner or r.lower().startswith(f"{owner.lower()}/")}
+    matched = sorted(
+        {r for r in candidates if rule_matches(rule, r) and not (own and r.lower() == own.lower())},
+        key=str.lower,
+    )
+    evidence = [{
+        "kind": "rule",
+        "text": f"Hugging Face has {repo}, which is what this entry waits for",
+        "url": f"https://huggingface.co/{repo}",
+    } for repo in matched]
+    state = {
+        "all": rule["all"],
+        **({"owner": rule["owner"]} if rule.get("owner") else {}),
+        "describe": describe_rule(rule),
+        "lookup_owner": owner,
+        "date": rule.get("date"),
+        "hub": inputs.hub_status.get(name, "checked") if looked is not None else "not checked",
+        "matched": matched,
+        "own_matches": bool(own and rule_matches(rule, own)),
+    }
+    return state, evidence
 
 
 def _source_label(route: str) -> str:
@@ -382,7 +669,9 @@ def _score_era(
     return ERA_UNKNOWN, "no release date to compare against"
 
 
-def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, Any] | None:
+def _case(
+    model: dict[str, Any], inputs: Inputs, names: set[str], known: set[str] = frozenset()
+) -> dict[str, Any] | None:
     name = model.get("name")
     url = model.get("url") if isinstance(model.get("url"), str) else None
     if not isinstance(name, str):
@@ -392,7 +681,18 @@ def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, A
     if name in inputs.done:
         return None
 
-    released, evidence = _release(model, inputs)
+    released, evidence, hints = _release(model, inputs)
+
+    # A release rule replaces the default signals: only a matching repo on
+    # Hugging Face counts, and whatever else was seen is a hint.
+    rule = inputs.rules.get(name)
+    watch = None
+    if rule:
+        watch, matched = _watch(model, rule, inputs, known)
+        hints = evidence + hints
+        evidence = matched
+        if not matched:
+            released = None
 
     # The rename. The name without its preview word first, then the AA slug
     # it is mapped to, which also retires the mapping for good.
@@ -408,6 +708,12 @@ def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, A
                                 "taken": slug in names})
 
     new_url = strip_url(url) if is_preview(url) else None
+    if watch and watch["matched"]:
+        # What the rule found is the release's repo; the stripped URL a guess.
+        stripped = hf_repo_id(new_url)
+        found = next((r for r in watch["matched"] if stripped and r.lower() == stripped.lower()),
+                     watch["matched"][0])
+        new_url = f"https://huggingface.co/{found}"
 
     # Mappings: every source name pointing at the entry, by file.
     mappings: list[dict[str, Any]] = []
@@ -435,6 +741,8 @@ def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, A
                     "the only row this source lists for the model; keep it until "
                     "the release appears there (the Queue will ask)"
                 )
+            elif _self_referential(model, key):
+                suggest, why = KEEP, "the repo the entry's URL points at, not a release"
             else:
                 suggest, why = KEEP, "names the release"
             mappings.append({
@@ -508,6 +816,8 @@ def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, A
         "reference": model.get("reference") is True,
         "released": released,
         "evidence": evidence,
+        "hints": hints,
+        "watch": watch,
         "renames": renames,
         "mappings": mappings,
         "scores": rows,
@@ -518,8 +828,9 @@ def _case(model: dict[str, Any], inputs: Inputs, names: set[str]) -> dict[str, A
 def detect(inputs: Inputs) -> dict[str, Any]:
     """The report the admin page renders. Pure: reads nothing but `inputs`."""
     names = {m.get("name") for m in inputs.doc.get("models") or [] if isinstance(m, dict)}
+    known = known_hf_repos(inputs.doc, inputs.mappings) if inputs.rules else set()
     cases = [c for m in inputs.doc.get("models") or [] if isinstance(m, dict)
-             for c in [_case(m, inputs, names)] if c]
+             for c in [_case(m, inputs, names, known)] if c]
     # Released ones first; then by name, so the file only changes when a case does.
     cases.sort(key=lambda c: (not c["evidence"], c["name"]))
     return {
@@ -584,7 +895,7 @@ def mapping_value(route: str, kind: str, subject: str) -> Any:
 
 
 def touched_paths(plan: Plan) -> list[Path]:
-    paths = {DONE_FILE}
+    paths = {DONE_FILE, RULES_FILE}
     for route, kind, _subject in plan.parks:
         by_kind = propose.ROUTES[route]
         paths.add(route_path(by_kind.get(kind, by_kind.get("*"))))
@@ -660,4 +971,22 @@ def carry_out(plan: Plan, llm_path: Path, *, today: str | None = None) -> list[s
     done[final] = {"date": now, "how": "cleaned up", **({"was": plan.name} if final != plan.name else {})}
     write_done(done)
     log.append(f"{DONE_FILE.name}: {final!r} recorded as cleaned up")
+    # Waited for and cleaned up: the rule has nothing left to watch.
+    rules = load_rules()
+    if rules.pop(plan.name, None) is not None:
+        write_rules(rules)
+        log.append(f"{RULES_FILE.name}: {plan.name!r}'s release rule dropped")
     return log
+
+
+def set_rule(name: str, rule: dict[str, Any] | None, *, today: str | None = None) -> list[str]:
+    """Store a case's release rule, or drop it to go back to the default."""
+    rules = load_rules()
+    if rule is None:
+        if rules.pop(name, None) is None:
+            raise CleanupError(f"{name!r} has no release rule; it already uses the default")
+        write_rules(rules)
+        return [f"{RULES_FILE.name}: {name!r} back to the default (a name without 'preview')"]
+    rules[name] = {**rule, "date": today or date.today().isoformat()}
+    write_rules(rules)
+    return [f"{RULES_FILE.name}: {name!r} waits for {describe_rule(rule)}"]

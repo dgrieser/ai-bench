@@ -302,6 +302,28 @@ tells you why.
   scores), a board mapping a name without it, a queued name offering the
   entry. The rest are folded under *no sign of a release yet*.
 
+  A source naming only the repo the entry's URL already points at is not
+  evidence: ERNIE 5.5 Flash's preview is API-only, the entry points at the
+  base checkpoint Baidu did publish, and Spheron listing
+  `baidu/ERNIE-5.5-Flash-Base` says nothing about a release. It is shown as a
+  hint, not counted. Where the release cannot be told from a name at all, a
+  card's **looks released when** box sets a **release rule**: the Hugging Face
+  repo the case waits for, as conditions on its id that must all hold --
+  *starts with*, *ends with*, *contains*, *is exactly* or a regex, each one
+  negatable, matched case-insensitively (a pasted `https://huggingface.co/`
+  prefix is dropped). For ERNIE: starts with `baidu/ERNIE-5.5-Flash`, *not*
+  contains `Base` (Baidu also publishes `...-Flash-Base-BF16`, so "does not end
+  with -Base" would fire at once). *Check against Hugging Face now* shows which
+  of the owner's repos match today. Rules live in `preview-cleanup-rules.json`,
+  are sent as `preview-watch` records, and choosing *Default* again drops one.
+  With a rule, only a matching repo of the owner counts (the URL the entry has
+  is never one); every other signal is a hint. `preview_cleanup.py --hub` asks
+  the Hub on each run -- the owner's 100 newest repos and a search for the
+  rule's longest literal, only for cases with a rule -- and a failed lookup
+  carries the last answer over. Regexes that nest quantifiers, refer back or
+  look around are refused, so a rule cannot make a run backtrack for ever. The
+  tab's badge counts only the cases that look released.
+
   Each card holds every decision, pre-set to a suggestion:
 
   | | choices | suggested |
