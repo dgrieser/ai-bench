@@ -1,3 +1,217 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini 4 hydrogen, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 hydrogen, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 hydrogen, most components match"
+        }
+      ],
+      "context": {
+        "known": 61,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini 4 argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini 4 carbon"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini 4 argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini 4 carbon"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'gemini 4 hydrogen' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "gemini 4 hydrogen",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "claude-fable-5-2",
+          "reason": "exact to claude-fable-5-2, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-fable-5-1",
+          "reason": "exact to claude-fable-5-2, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-opus-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-haiku-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "claude-sonnet-5-5",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 45,
+        "mapped": {
+          "claude-opus-5-5": [
+            "claude-opus-5-5"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "anthropic-claude-fable-5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5"
+            ],
+            "name": "claude-opus-5"
+          },
+          {
+            "mapped_to": [
+              "claude-opus-5-5"
+            ],
+            "name": "claude-opus-5-5"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Agents' Last Exam model 'claude-fable-5-2' to llm.json model",
+      "route": "update_agents_last_exam_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://agents-last-exam.org/leaderboard",
+      "subject": "claude-fable-5-2",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "g9v3-3b",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "motif-3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 143,
+        "mapped": {
+          "kimi-k3": [
+            "kimi k3"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ARC Prize model 'mercury 3 preview' to llm.json model",
+      "route": "update_arc_prize_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arcprize.org/leaderboard",
+      "subject": "mercury 3 preview",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "hy3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "g9v3-3b",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "kimi-k3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "motif-3",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 143,
+        "mapped": {
+          "kimi-k3": [
+            "kimi k3"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map ARC Prize model 'mercury 3 preview (instant)' to llm.json model",
+      "route": "update_arc_prize_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arcprize.org/leaderboard",
+      "subject": "mercury 3 preview (instant)",
+      "universe": "models"
+    }
+  ]
 }
