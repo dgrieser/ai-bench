@@ -143,6 +143,320 @@
       "source_url": "https://www.cybergym.io/cybergym/",
       "subject": "SecLLM-3.6-27B",
       "universe": "models"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (gap_contains)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_thai)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_urdu)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_czech)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_dutch)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_farsi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_hindi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_khmer)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'facebook/multiloko (max_contains)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+      "subject": "facebook/multiloko (max_contains)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (gap_em)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_thai)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_urdu)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_czech)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_dutch)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_farsi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_hindi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_khmer)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'facebook/multiloko (max_em)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+      "subject": "facebook/multiloko (max_em)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (gap_contains)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_thai)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_urdu)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_czech)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_dutch)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_farsi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_hindi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (contains_khmer)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'facebook/multiloko (min_contains)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+      "subject": "facebook/multiloko (min_contains)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (gap_em)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_thai)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_urdu)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_czech)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_dutch)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_farsi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_hindi)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "facebook/multiloko (em_khmer)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'facebook/multiloko (min_em)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+      "subject": "facebook/multiloko (min_em)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "hy4-flash",
+          "reason": "exact to hy4-flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        }
+      ],
+      "context": {
+        "known": 219,
+        "mapped": {
+          "glm-5-3-flash": [
+            "zai/glm-5.3-flash"
+          ],
+          "mimo-v2-flash": [
+            "xiaomi/mimo-v2-flash"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Vals AI path 'tencent/hy4-flash' to llm.json model",
+      "route": "update_vals_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
+      "subject": "tencent/hy4-flash",
+      "universe": "models"
     }
   ]
 }
