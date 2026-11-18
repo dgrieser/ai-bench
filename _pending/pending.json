@@ -1,28 +1,6 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'astra-for-law-6-2' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "astra-for-law-6-2",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - Joy Future Academy",
-      "question": "Carry newly released closed model 'joyai-vl' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "joyai-vl",
-      "universe": null
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
