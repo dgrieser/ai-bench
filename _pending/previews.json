@@ -61,11 +61,15 @@
             "op": "contains",
             "value": "preview",
             "not": true
+          },
+          {
+            "op": "contains",
+            "value": "flash"
           }
         ],
-        "describe": "a Hugging Face repo whose id starts with 'tencent/Hy4' and does not contain 'preview'",
+        "describe": "a Hugging Face repo whose id starts with 'tencent/Hy4' and does not contain 'preview' and contains 'flash'",
         "lookup_owner": "tencent",
-        "date": "2026-11-16",
+        "date": "2026-11-18",
         "hub": "checked",
         "matched": [
           "tencent/Hy4-flash",
