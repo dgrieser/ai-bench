@@ -15,117 +15,28 @@
       "candidates": [],
       "default": null,
       "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-astra' as a reference model?",
+      "note": "released 2026-11-17 - Joy Future Academy",
+      "question": "Carry newly released closed model 'joyai-vl' as a reference model?",
       "route": "check_new.py",
       "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-astra",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-astra-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-astra-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-astra-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-astra-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-astra-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-astra-medium",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-astra-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-astra-xhigh",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-sol' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-sol",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-sol-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-sol-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-sol-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-sol-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-sol-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-sol-medium",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-17 - OpenAI",
-      "question": "Carry newly released closed model 'gpt-6-2-sol-xhigh' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gpt-6-2-sol-xhigh",
+      "subject": "joyai-vl",
       "universe": null
     },
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt 6.2 astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to gpt 6.2 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "exact to gpt 6.2 astra, most components match"
         },
         {
@@ -137,27 +48,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 62,
         "mapped": {
-          "gpt-5-6-sol": [
-            "gpt 5.6 sol"
-          ],
-          "gpt-6-1-sol": [
-            "gpt 6.1 sol"
-          ],
           "gpt-6-astra": [
             "gpt 6 astra"
           ],
@@ -232,6 +127,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt 6.2 sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to gpt 6.2 sol, most components match"
@@ -248,13 +148,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt 6.2 sol, most components match"
         }
       ],
       "context": {
@@ -265,12 +160,6 @@
           ],
           "gpt-6-1-sol": [
             "gpt 6.1 sol"
-          ],
-          "gpt-6-astra": [
-            "gpt 6 astra"
-          ],
-          "gpt-6-luna": [
-            "gpt 6 luna"
           ],
           "gpt-6-sol": [
             "gpt 6 sol"
@@ -340,8 +229,18 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to gpt-6.2-astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "exact to gpt-6.2-astra, most components match"
         },
         {
@@ -353,25 +252,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 46,
         "mapped": {
-          "gpt-5-6-sol": [
-            "GPT-5.6-Sol",
-            "gpt-5.6-sol"
-          ],
           "gpt-6-astra": [
             "gpt-6-astra"
           ],
@@ -446,6 +331,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2-sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to gpt-6.2-sol, most components match"
@@ -462,13 +352,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-sol, most components match"
         }
       ],
       "context": {
@@ -477,12 +362,6 @@
           "gpt-5-6-sol": [
             "GPT-5.6-Sol",
             "gpt-5.6-sol"
-          ],
-          "gpt-6-astra": [
-            "gpt-6-astra"
-          ],
-          "gpt-6-luna": [
-            "gpt-6-luna"
           ],
           "gpt-6-sol": [
             "gpt-6-sol"
@@ -552,8 +431,18 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2 astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to gpt-6.2 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "exact to gpt-6.2 astra, most components match"
         },
         {
@@ -565,27 +454,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 143,
         "mapped": {
-          "gpt-5-6-sol": [
-            "gpt-5.6 sol"
-          ],
-          "gpt-6-1-sol": [
-            "gpt-6.1 sol"
-          ],
           "gpt-6-astra": [
             "gpt-6 astra"
           ],
@@ -660,6 +533,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2 sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to gpt-6.2 sol, most components match"
@@ -676,13 +554,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2 sol, most components match"
         }
       ],
       "context": {
@@ -693,12 +566,6 @@
           ],
           "gpt-6-1-sol": [
             "gpt-6.1 sol"
-          ],
-          "gpt-6-astra": [
-            "gpt-6 astra"
-          ],
-          "gpt-6-luna": [
-            "gpt-6 luna"
           ],
           "gpt-6-sol": [
             "gpt-6 sol"
@@ -913,6 +780,192 @@
       "candidates": [
         {
           "confidence": "exact",
+          "option": "deepseek-v4-pro",
+          "reason": "exact to DeepSeek V4 Pro, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash",
+          "reason": "exact to DeepSeek V4 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash",
+          "reason": "exact to DeepSeek V4 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-flash-vision",
+          "reason": "exact to DeepSeek V4 Pro, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "deepseek-v4-1-flash-1017",
+          "reason": "exact to DeepSeek V4 Pro, most components match"
+        }
+      ],
+      "context": {
+        "known": 99,
+        "mapped": {
+          "deepseek-v4-flash": [
+            "DeepSeek V4 Flash 0731",
+            "deepseek-v4-flash[max]"
+          ],
+          "deepseek-v4-pro": [
+            "DeepSeek V4 Pro 0813",
+            "deepseek-v4-pro",
+            "deepseek-v4-pro[max]"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "deepseek-v4-pro"
+            ],
+            "name": "deepseek-v4-pro"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-pro"
+            ],
+            "name": "deepseek-v4-pro[max]"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-pro"
+            ],
+            "name": "DeepSeek V4 Pro 0813"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-flash"
+            ],
+            "name": "DeepSeek V4 Flash 0731"
+          },
+          {
+            "mapped_to": [
+              "deepseek-v4-flash"
+            ],
+            "name": "deepseek-v4-flash[max]"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map DeepSWE model 'DeepSeek V4 Pro' to llm.json model",
+      "route": "update_deepswe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://benchlm.ai/benchmarks/deepSwe",
+      "subject": "DeepSeek V4 Pro",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Astra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 309,
+        "mapped": {
+          "gpt-6-astra": [
+            "GPT-6 Astra"
+          ],
+          "gpt-6-luna": [
+            "GPT-6 Luna"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "GPT-5.2"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "GPT-6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "GPT-5.6 Luna"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "GPT-5.2 Codex"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'GPT-6.2 Astra' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "GPT-6.2 Astra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
           "option": "gemini-4-hydrogen",
           "reason": "exact to Gemini 4 Hydrogen, exact match"
         },
@@ -965,8 +1018,18 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "exact to GPT-6.2 Astra, most components match"
         },
         {
@@ -978,27 +1041,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 65,
         "mapped": {
-          "gpt-5-6-sol": [
-            "GPT-5.6 Sol"
-          ],
-          "gpt-6-1-sol": [
-            "GPT-6.1 Sol"
-          ],
           "gpt-6-astra": [
             "GPT-6 Astra"
           ],
@@ -1073,6 +1120,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to GPT-6.2 Sol, most components match"
@@ -1089,13 +1141,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Sol, most components match"
         }
       ],
       "context": {
@@ -1106,12 +1153,6 @@
           ],
           "gpt-6-1-sol": [
             "GPT-6.1 Sol"
-          ],
-          "gpt-6-astra": [
-            "GPT-6 Astra"
-          ],
-          "gpt-6-luna": [
-            "GPT-6 Luna"
           ],
           "gpt-6-sol": [
             "GPT-6 Sol"
@@ -1181,8 +1222,375 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 20,
+        "mapped": {
+          "gpt-6-astra": [
+            "GPT-6 Astra"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'GPT-6.2 Astra' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
+      "subject": "GPT-6.2 Astra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        }
+      ],
+      "context": {
+        "known": 20,
+        "mapped": {
+          "gpt-5-6-sol": [
+            "GPT-5.6 Sol"
+          ],
+          "gpt-6-1-sol": [
+            "GPT-6.1 Sol"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HLE-Diamond model 'GPT-6.2 Sol' to llm.json model",
+      "route": "update_hle_diamond_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://lastexam.ai/blog/hle-diamond",
+      "subject": "GPT-6.2 Sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-astra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt-6.2-astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2-astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 365,
+        "mapped": {
+          "gpt-6-astra": [
+            "gpt-6-astra"
+          ],
+          "gpt-6-luna": [
+            "gpt-6-luna"
+          ],
+          "gpt-6-sol": [
+            "gpt-6-sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "gpt-6-astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "gpt-6-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "gpt-6-luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "gpt-5.6-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "gpt-6.1-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "gpt-5.6-luna"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "gpt-5.2-codex"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-terra"
+            ],
+            "name": "gpt-5.6-terra"
+          }
+        ]
+      },
+      "default": "gpt-6-2-astra",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gpt-6.2-astra'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/gpt-6.2-astra",
+      "subject": "gpt-6.2-astra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2-sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt-6.2-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt-6.2-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt-6.2-sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-sol, most components match"
+        }
+      ],
+      "context": {
+        "known": 365,
+        "mapped": {
+          "gpt-5-6-sol": [
+            "gpt-5.6-sol"
+          ],
+          "gpt-6-1-sol": [
+            "gpt-6.1-sol"
+          ],
+          "gpt-6-sol": [
+            "gpt-6-sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "gpt-6-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "gpt-5.6-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "gpt-6.1-sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "gpt-6-luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "gpt-6-astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "gpt-5.6-luna"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "gpt-5.2-codex"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-terra"
+            ],
+            "name": "gpt-5.6-terra"
+          }
+        ]
+      },
+      "default": "gpt-6-2-sol",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gpt-6.2-sol'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/gpt-6.2-sol",
+      "subject": "gpt-6.2-sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.2-astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "the same name without the vendor prefix: exact to gpt-6.2-astra, most components match"
         },
         {
@@ -1194,27 +1602,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 433,
         "mapped": {
-          "gpt-5-6-sol": [
-            "openai/gpt-5.6-sol"
-          ],
-          "gpt-6-1-sol": [
-            "openai/gpt-6.1-sol"
-          ],
           "gpt-6-astra": [
             "openai/gpt-6-astra"
           ],
@@ -1290,7 +1682,17 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.2-astra-pro, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
         {
@@ -1302,27 +1704,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 433,
         "mapped": {
-          "gpt-5-6-sol": [
-            "openai/gpt-5.6-sol"
-          ],
-          "gpt-6-1-sol": [
-            "openai/gpt-6.1-sol"
-          ],
           "gpt-6-astra": [
             "openai/gpt-6-astra"
           ],
@@ -1398,6 +1784,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "the same name without the vendor prefix"
+        },
+        {
+          "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "the same name without the vendor prefix: exact to gpt-6.2-sol, most components match"
         },
@@ -1413,13 +1804,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.2-sol, most components match"
         }
       ],
       "context": {
@@ -1430,12 +1816,6 @@
           ],
           "gpt-6-1-sol": [
             "openai/gpt-6.1-sol"
-          ],
-          "gpt-6-astra": [
-            "openai/gpt-6-astra"
-          ],
-          "gpt-6-luna": [
-            "openai/gpt-6-luna"
           ],
           "gpt-6-sol": [
             "openai/gpt-6-sol"
@@ -1506,6 +1886,11 @@
       "candidates": [
         {
           "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "the same name without the vendor prefix: exact to gpt-6.2-sol-pro, most components match"
+        },
+        {
+          "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
@@ -1521,12 +1906,7 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
+          "option": "gpt-6-2-astra",
           "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
@@ -1538,12 +1918,6 @@
           ],
           "gpt-6-1-sol": [
             "openai/gpt-6.1-sol"
-          ],
-          "gpt-6-astra": [
-            "openai/gpt-6-astra"
-          ],
-          "gpt-6-luna": [
-            "openai/gpt-6-luna"
           ],
           "gpt-6-sol": [
             "openai/gpt-6-sol"
@@ -1631,8 +2005,222 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Astra, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-astra",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 64,
+        "mapped": {
+          "gpt-6-astra": [
+            "GPT-6 Astra"
+          ],
+          "gpt-6-luna": [
+            "GPT-6 Luna"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "GPT-6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "GPT-5.6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-terra"
+            ],
+            "name": "GPT-5.6 Terra"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-terra"
+            ],
+            "name": "GPT-6.1 Terra"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'GPT-6.2 Astra' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "GPT-6.2 Astra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Sol, most components match"
+        }
+      ],
+      "context": {
+        "known": 64,
+        "mapped": {
+          "gpt-5-6-sol": [
+            "GPT-5.6 Sol"
+          ],
+          "gpt-6-1-sol": [
+            "GPT-6.1 Sol"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "GPT-6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "GPT-5.6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-terra"
+            ],
+            "name": "GPT-5.6 Terra"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-terra"
+            ],
+            "name": "GPT-6.1 Terra"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'GPT-6.2 Sol' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "GPT-6.2 Sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-astra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt-6.2-astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
           "reason": "exact to gpt-6.2-astra, most components match"
         },
         {
@@ -1644,27 +2232,11 @@
           "confidence": "weak",
           "option": "gpt-6-luna",
           "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "drop suffix to a variant, most components match"
         }
       ],
       "context": {
         "known": 219,
         "mapped": {
-          "gpt-5-6-sol": [
-            "openai/gpt-5.6-sol"
-          ],
-          "gpt-6-1-sol": [
-            "openai/gpt-6.1-sol"
-          ],
           "gpt-6-astra": [
             "openai/gpt-6-astra"
           ],
@@ -1739,6 +2311,11 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2-sol, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gpt-6-sol",
           "reason": "exact to gpt-6.2-sol, most components match"
@@ -1755,13 +2332,8 @@
         },
         {
           "confidence": "weak",
-          "option": "gpt-6-luna",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-astra",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2-sol, most components match"
         }
       ],
       "context": {
@@ -1772,12 +2344,6 @@
           ],
           "gpt-6-1-sol": [
             "openai/gpt-6.1-sol"
-          ],
-          "gpt-6-astra": [
-            "openai/gpt-6-astra"
-          ],
-          "gpt-6-luna": [
-            "openai/gpt-6-luna"
           ],
           "gpt-6-sol": [
             "openai/gpt-6-sol"
