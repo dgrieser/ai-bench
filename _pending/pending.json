@@ -115,44 +115,6 @@
       "source_url": "https://arcprize.org/leaderboard",
       "subject": "mercury 3 preview (instant)",
       "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "qwen3-6-27b",
-          "reason": "the same name without its first 1 word(s): exact to 3-6-27b, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemma-3-27b",
-          "reason": "the same name without its first 1 word(s): exact to 3-6-27b, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "qwen3-6-35b-a3b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-4-6",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nex-n2-6",
-          "reason": "the same name without its first 2 word(s): drop size to a variant, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map cybergym.io model 'SecLLM-3.6-27B' to llm.json model",
-      "route": "update_cybergym_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.cybergym.io/cybergym/",
-      "subject": "SecLLM-3.6-27B",
-      "universe": "models"
     }
   ]
 }
