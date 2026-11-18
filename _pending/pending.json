@@ -117,18 +117,6 @@
       "universe": "models"
     },
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map cybergym.io model 'Creation Model' to llm.json model",
-      "route": "update_cybergym_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.cybergym.io/cybergym/",
-      "subject": "Creation Model",
-      "universe": "models"
-    },
-    {
       "candidates": [
         {
           "confidence": "weak",
@@ -164,108 +152,6 @@
       "route_kind": "mapping",
       "source_url": "https://www.cybergym.io/cybergym/",
       "subject": "SecLLM-3.6-27B",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "deepseek-v4-pro",
-          "reason": "exact to DeepSeek V4 Pro, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash",
-          "reason": "exact to DeepSeek V4 Pro, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash",
-          "reason": "exact to DeepSeek V4 Pro, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-flash-vision",
-          "reason": "exact to DeepSeek V4 Pro, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "deepseek-v4-1-flash-1017",
-          "reason": "exact to DeepSeek V4 Pro, most components match"
-        }
-      ],
-      "context": {
-        "known": 99,
-        "mapped": {
-          "deepseek-v4-flash": [
-            "DeepSeek V4 Flash 0731",
-            "deepseek-v4-flash[max]"
-          ],
-          "deepseek-v4-pro": [
-            "DeepSeek V4 Pro 0813",
-            "deepseek-v4-pro",
-            "deepseek-v4-pro[max]"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "deepseek-v4-pro"
-            ],
-            "name": "deepseek-v4-pro"
-          },
-          {
-            "mapped_to": [
-              "deepseek-v4-pro"
-            ],
-            "name": "deepseek-v4-pro[max]"
-          },
-          {
-            "mapped_to": [
-              "deepseek-v4-pro"
-            ],
-            "name": "DeepSeek V4 Pro 0813"
-          },
-          {
-            "mapped_to": [
-              "deepseek-v4-flash"
-            ],
-            "name": "DeepSeek V4 Flash 0731"
-          },
-          {
-            "mapped_to": [
-              "deepseek-v4-flash"
-            ],
-            "name": "deepseek-v4-flash[max]"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map DeepSWE model 'DeepSeek V4 Pro' to llm.json model",
-      "route": "update_deepswe_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://benchlm.ai/benchmarks/deepSwe",
-      "subject": "DeepSeek V4 Pro",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "diffusiongemma-26b-a4b",
-          "reason": "the same name without its first 1 word(s): exact to fusion, substring match"
-        }
-      ],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Terminal-Bench model 'Copilot Fusion' to llm.json model",
-      "route": "update_tbench_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-      "subject": "Copilot Fusion",
       "universe": "models"
     }
   ]
