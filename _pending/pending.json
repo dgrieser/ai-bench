@@ -1,51 +1,12 @@
 {
   "questions": [
     {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-18 - Google",
-      "question": "Carry newly released closed model 'gemini-4-neon' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-neon",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-18 - Google",
-      "question": "Carry newly released closed model 'gemini-4-neon-high' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-neon-high",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-18 - Google",
-      "question": "Carry newly released closed model 'gemini-4-neon-low' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-neon-low",
-      "universe": null
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": "released 2026-11-18 - Google",
-      "question": "Carry newly released closed model 'gemini-4-neon-medium' as a reference model?",
-      "route": "check_new.py",
-      "route_kind": "new-closed-model",
-      "subject": "gemini-4-neon-medium",
-      "universe": null
-    },
-    {
       "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-neon",
+          "reason": "exact to gemini 4 neon, exact match"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
@@ -109,6 +70,282 @@
     {
       "candidates": [
         {
+          "confidence": "exact",
+          "option": "gemini-4-neon",
+          "reason": "exact to gemini 4 neon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 neon, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 neon, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini 4 neon, most components match"
+        }
+      ],
+      "context": {
+        "known": 440,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini 4 argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini 4 carbon"
+          ],
+          "gemini-4-hydrogen": [
+            "gemini 4 hydrogen"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini 4 argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini 4 carbon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-hydrogen"
+            ],
+            "name": "gemini 4 hydrogen"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'gemini 4 neon' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "subject": "gemini 4 neon",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2 astra, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-astra",
+          "reason": "exact to gpt-6.2 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2 astra, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-luna",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 440,
+        "mapped": {
+          "gpt-6-astra": [
+            "gpt-6 astra"
+          ],
+          "gpt-6-luna": [
+            "gpt-6 luna"
+          ],
+          "gpt-6-sol": [
+            "gpt-6 sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "gpt-6 astra"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "gpt-5.2"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "gpt-6 sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "gpt-6 luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "gpt-5.6 sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "gpt-6.1 sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "gpt-5.6 luna"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "gpt-5.2-codex"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'gpt-6.2 astra' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/webdev",
+      "subject": "gpt-6.2 astra",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to gpt-6.2 sol, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-sol",
+          "reason": "exact to gpt-6.2 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-5-6-sol",
+          "reason": "exact to gpt-6.2 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-1-sol",
+          "reason": "exact to gpt-6.2 sol, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gpt-6-2-astra",
+          "reason": "exact to gpt-6.2 sol, most components match"
+        }
+      ],
+      "context": {
+        "known": 440,
+        "mapped": {
+          "gpt-5-6-sol": [
+            "gpt-5.6 sol"
+          ],
+          "gpt-6-1-sol": [
+            "gpt-6.1 sol"
+          ],
+          "gpt-6-sol": [
+            "gpt-6 sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "gpt-6 sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "gpt-5.6 sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "gpt-6.1 sol"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "gpt-5.6 sol (xhigh, codex harness)"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "gpt-5.2"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "gpt-6 luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "gpt-6 astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "gpt-5.6 luna"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'gpt-6.2 sol' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/webdev",
+      "subject": "gpt-6.2 sol",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-neon",
+          "reason": "exact to Gemini 4 Neon, exact match"
+        },
+        {
           "confidence": "weak",
           "option": "gemini-4-argon",
           "reason": "exact to Gemini 4 Neon, most components match"
@@ -170,6 +407,11 @@
     },
     {
       "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemini-4-neon",
+          "reason": "the same name without the vendor prefix"
+        },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
