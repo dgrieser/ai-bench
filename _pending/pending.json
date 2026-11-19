@@ -1,6 +1,111 @@
 {
   "questions": [
     {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "olmo-3-1-32b-instruct",
+          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'aion-1.0-instruct'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/aion-1.0-instruct",
+      "subject": "aion-1.0-instruct",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "gemini-4-neon",
+          "reason": "exact to gemini-4-neon, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini-4-neon, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini-4-neon, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini-4-neon, most components match"
+        }
+      ],
+      "context": {
+        "known": 367,
+        "mapped": {
+          "gemini-4-argon": [
+            "gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "gemini-4-carbon"
+          ],
+          "gemini-4-hydrogen": [
+            "gemini-4-hydrogen"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gemini-4-argon"
+            ],
+            "name": "gemini-4-argon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-carbon"
+            ],
+            "name": "gemini-4-carbon"
+          },
+          {
+            "mapped_to": [
+              "gemini-4-hydrogen"
+            ],
+            "name": "gemini-4-hydrogen"
+          }
+        ]
+      },
+      "default": "gemini-4-neon",
+      "if_previous": null,
+      "note": null,
+      "question": "Which llm.json model is llm-stats id 'gemini-4-neon'?",
+      "route": "update_llmstats_mapping.py",
+      "route_kind": "llmstats-model",
+      "source_url": "https://llm-stats.com/models/gemini-4-neon",
+      "subject": "gemini-4-neon",
+      "universe": "models"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
