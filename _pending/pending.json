@@ -106,6 +106,53 @@
       "universe": "models"
     },
     {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "hy4-flash",
+          "reason": "exact to Hy4 Flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "reka-flash-3",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-7-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-flash",
+          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+        }
+      ],
+      "context": {
+        "known": 67,
+        "mapped": {
+          "glm-5-3-flash": [
+            "GLM-5.3-Flash"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Terminal-Bench model 'Hy4 Flash' to llm.json model",
+      "route": "update_tbench_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+      "subject": "Hy4 Flash",
+      "universe": "models"
+    },
+    {
       "candidates": [],
       "default": null,
       "if_previous": null,
