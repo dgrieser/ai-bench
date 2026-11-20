@@ -3,273 +3,646 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "gpt-6-2-sol",
-          "reason": "exact to GPT-6.2 Sol, exact match"
-        },
-        {
           "confidence": "weak",
-          "option": "gpt-6-sol",
-          "reason": "exact to GPT-6.2 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-5-6-sol",
-          "reason": "exact to GPT-6.2 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-1-sol",
-          "reason": "exact to GPT-6.2 Sol, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gpt-6-2-astra",
-          "reason": "exact to GPT-6.2 Sol, most components match"
+          "option": "pixtral-large-2411",
+          "reason": "exact to pixtral-large-2502, most components match"
         }
       ],
-      "context": {
-        "known": 311,
-        "mapped": {
-          "gpt-5-6-sol": [
-            "GPT-5.6 Sol"
-          ],
-          "gpt-6-1-sol": [
-            "GPT-6.1 Sol"
-          ],
-          "gpt-6-2-astra": [
-            "GPT-6.2 Astra"
-          ],
-          "gpt-6-sol": [
-            "GPT-6 Sol"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "gpt-6-sol"
-            ],
-            "name": "GPT-6 Sol"
-          },
-          {
-            "mapped_to": [
-              "gpt-5-6-sol"
-            ],
-            "name": "GPT-5.6 Sol"
-          },
-          {
-            "mapped_to": [
-              "gpt-6-1-sol"
-            ],
-            "name": "GPT-6.1 Sol"
-          },
-          {
-            "mapped_to": [
-              "gpt-6-2-astra"
-            ],
-            "name": "GPT-6.2 Astra"
-          },
-          {
-            "mapped_to": [
-              "__closed_weights__"
-            ],
-            "name": "GPT-5.2"
-          },
-          {
-            "mapped_to": [
-              "gpt-6-luna"
-            ],
-            "name": "GPT-6 Luna"
-          },
-          {
-            "mapped_to": [
-              "gpt-6-astra"
-            ],
-            "name": "GPT-6 Astra"
-          },
-          {
-            "mapped_to": [
-              "gpt-5-6-luna"
-            ],
-            "name": "GPT-5.6 Luna"
-          }
-        ]
-      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Epoch AI model 'GPT-6.2 Sol' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://epoch.ai/benchmarks",
-      "subject": "GPT-6.2 Sol",
-      "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "gemini-4-neon",
-          "reason": "exact to Gemini 4 Neon, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-argon",
-          "reason": "exact to Gemini 4 Neon, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-carbon",
-          "reason": "exact to Gemini 4 Neon, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "gemini-4-hydrogen",
-          "reason": "exact to Gemini 4 Neon, most components match"
-        }
-      ],
-      "context": {
-        "known": 311,
-        "mapped": {
-          "gemini-4-argon": [
-            "Gemini 4 Argon"
-          ],
-          "gemini-4-carbon": [
-            "Gemini 4 Carbon"
-          ],
-          "gemini-4-hydrogen": [
-            "Gemini 4 Hydrogen"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "gemini-4-argon"
-            ],
-            "name": "Gemini 4 Argon"
-          },
-          {
-            "mapped_to": [
-              "gemini-4-carbon"
-            ],
-            "name": "Gemini 4 Carbon"
-          },
-          {
-            "mapped_to": [
-              "gemini-4-hydrogen"
-            ],
-            "name": "Gemini 4 Hydrogen"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Epoch AI model 'Gemini 4 Neon' to llm.json model",
-      "route": "update_epoch_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://epoch.ai/benchmarks",
-      "subject": "Gemini 4 Neon",
-      "universe": "models"
+      "question": "Which Artificial Analysis slug is llm.json model 'pixtral-large-2502'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "subject": "pixtral-large-2502",
+      "universe": "aa-slugs"
     },
     {
       "candidates": [],
       "context": {
-        "known": 438,
+        "known": 1644,
         "mapped": {},
         "siblings": [
           {
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "mistralai/mistral-large"
+            "name": "AGI EVAL"
           },
           {
             "mapped_to": [
               "__unmappable__"
             ],
-            "name": "mistralai/mistral-large-2407"
+            "name": "AGI Eval"
           },
           {
             "mapped_to": [
-              "mistral-large-3"
+              "__unmappable__"
             ],
-            "name": "mistralai/mistral-large-2512"
+            "name": "AGIEval (EM)"
           },
           {
             "mapped_to": [
-              "mistral-large-4"
+              "__unmappable__"
             ],
-            "name": "mistralai/mistral-large-4-0"
+            "name": "AGIEval 5-shot"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGIEval-En (acc)"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map OpenRouter model 'mistralai/pixtral-large-2502' to llm.json model",
-      "route": "update_openrouter_mapping.py",
+      "question": "Map HF label 'AGIEval (Chinese)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://openrouter.ai/mistralai/pixtral-large-2502",
-      "subject": "mistralai/pixtral-large-2502",
-      "universe": "models"
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "AGIEval (Chinese)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGI Eval English"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGI EVAL"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGI Eval"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGIEval (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGIEval 5-shot"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "AGIEval-En (acc)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'AGIEval (English)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "AGIEval (English)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Average Score"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Average Score (out of 4)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "Average Score (out of 4)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Belebele (5-language subset)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "Belebele (5-language subset)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CV-Bench"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CVBench2D"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CVBench (EM)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'CVBench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "CVBench",
+      "universe": "benchmarks"
     },
     {
       "candidates": [
         {
           "confidence": "weak",
-          "option": "aion-1-0-instruct",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ornith-1-0-397b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "exaone-4-0-1-2b",
-          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
+          "option": "simpleqa_verified",
+          "reason": "the same name without its first 1 word(s): exact to simpleqa, substring match"
         }
       ],
       "context": {
-        "known": 228,
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chinese-simpleQA"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chinese-SimpleQA (Pass@1)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Chinese-SimpleQA' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "Chinese-SimpleQA",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "aa_lcr",
+          "reason": "exact to C³, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "critpt",
+          "reason": "exact to C³, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "bfcl_v4",
+          "reason": "exact to C³, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ifbench",
+          "reason": "exact to C³, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "scicode",
+          "reason": "exact to C³, substring match"
+        }
+      ],
+      "context": {
+        "known": 1644,
         "mapped": {
-          "exaone-4-0-1-2b": [
-            "LGAI-EXAONE/EXAONE-4.0-1.2B"
+          "aa_lcr": [
+            "AA LCR",
+            "AA-LCR",
+            "AA-LCR Long-context reasoning",
+            "AA-LCR v1.1",
+            "AA.LCR"
           ],
-          "ornith-1-0-35b": [
-            "ornith-ai/Ornith-1.0-35B",
-            "ornith-ai/Ornith-1.0-35B-GGUF"
+          "bfcl_v4": [
+            "BFCL (v4)",
+            "BFCL V4",
+            "BFCL v4",
+            "BFCL v4 (overall)",
+            "BFCL v4 Function calling",
+            "BFCL-V4",
+            "BFCLv4"
           ],
-          "ornith-1-0-397b": [
-            "ornith-ai/Ornith-1.0-397B"
+          "critpt": [
+            "CritPt",
+            "CritPt (no tools)",
+            "CritPt Frontier physics reasoning"
           ],
-          "ornith-1-0-9b": [
-            "ornith-ai/Ornith-1.0-9B",
-            "ornith-ai/Ornith-1.0-9B-GGUF"
+          "ifbench": [
+            "IF Bench",
+            "IFBench",
+            "Instruction following IFBench"
+          ],
+          "scicode": [
+            "SciCode",
+            "SciCode (wbg)",
+            "SciCode Scientific coding",
+            "Scicode"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "CNB"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "LCB"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "VCT"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "BFCL"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Chat"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "Code"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HPCT"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MBCT"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'C³' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "C³",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HellaSwag"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HellaSwag (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "HellaSwag (acc_norm)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'HellaSwag (3,000-item subset)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "HellaSwag (3,000-item subset)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "KORBench"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'KOR-Bench' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "KOR-Bench",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mmmu_pro",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 1644,
+        "mapped": {
+          "mmmu_pro": [
+            "MMMU Pro",
+            "MMMU Pro (Standard 10)",
+            "MMMU-PRO (10 choice)",
+            "MMMU-Pro",
+            "MMMU/MMMU_Pro",
+            "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU Pro (Standard 10)"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU-PRO (10 choice)"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU Pro"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU-Pro"
+          },
+          {
+            "mapped_to": [
+              "mmmu_pro"
+            ],
+            "name": "MMMU/MMMU_Pro"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU-Pro (EM)"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "MMMU/MMMU_Pro (mmmu_pro_vision)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'MMMU-Pro (Standard, 10 opts)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "MMMU-Pro (Standard, 10 opts)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'OCW Courses' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "OCW Courses",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'Social IQa' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "Social IQa",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 1644,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "TextVQA (val)"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'TextVQA' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "TextVQA",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "mathvista_mini",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tier_4",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "frontiermath_tiers_1_3",
+          "reason": "the same name without its first 1 word(s): exact to math, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmmlu",
+          "reason": "the first 1 word(s) of the label: exact to u, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mmlu_pro",
+          "reason": "the first 1 word(s) of the label: exact to u, substring match"
+        }
+      ],
+      "context": {
+        "known": 1644,
+        "mapped": {
+          "mathvista_mini": [
+            "MathVista",
+            "MathVista (mini)",
+            "MathVista mini",
+            "MathVista_MINI",
+            "Mathvista(mini)"
+          ],
+          "mmlu_pro": [
+            "MMLU Pro",
+            "MMLU-Pro",
+            "MMLU-Pro (acc)",
+            "MMLU-Pro CoT (EN)",
+            "MMLU-Pro(acc)",
+            "MMLUPro",
+            "TIGER-Lab/MMLU-Pro"
+          ],
+          "mmmlu": [
+            "MMLU (MC acc)",
+            "MMMLU",
+            "MMMLU (EM)"
           ]
         },
         "siblings": []
       },
-      "default": "aion-1-0-instruct",
+      "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Spheron path 'microsoft/Aion-1.0-Instruct-2.3B' to llm.json model",
+      "question": "Map HF label 'U-MATH' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/tencent/Hy4",
+      "subject": "U-MATH",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "hy4",
+          "reason": "exact to Hy4, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "hy4-flash",
+          "reason": "exact to Hy4, substring match"
+        }
+      ],
+      "context": {
+        "known": 229,
+        "mapped": {
+          "hy4": [
+            "tencent/Hy4-preview"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "hy4"
+            ],
+            "name": "tencent/Hy4-preview"
+          }
+        ]
+      },
+      "default": "hy4",
+      "if_previous": null,
+      "note": null,
+      "question": "Map Spheron path 'tencent/Hy4' to llm.json model",
       "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/microsoft/Aion-1.0-Instruct-2.3B/",
-      "subject": "microsoft/Aion-1.0-Instruct-2.3B",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/tencent/Hy4/",
+      "subject": "tencent/Hy4",
       "universe": "models"
     }
   ]
