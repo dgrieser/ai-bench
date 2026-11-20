@@ -12,24 +12,5 @@
       }
     ],
     "date": "2026-11-16"
-  },
-  "hy4-preview": {
-    "all": [
-      {
-        "op": "starts_with",
-        "value": "tencent/Hy4"
-      },
-      {
-        "op": "contains",
-        "value": "preview",
-        "not": true
-      },
-      {
-        "op": "contains",
-        "value": "flash",
-        "not": true
-      }
-    ],
-    "date": "2026-11-18"
   }
 }
