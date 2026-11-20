@@ -3,39 +3,106 @@
     {
       "candidates": [
         {
-          "confidence": "weak",
-          "option": "ornith-1-0-9b",
-          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+          "confidence": "exact",
+          "option": "gpt-6-2-sol",
+          "reason": "exact to GPT-6.2 Sol, exact match"
         },
         {
           "confidence": "weak",
-          "option": "ornith-1-0-35b",
-          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+          "option": "gpt-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
         },
         {
           "confidence": "weak",
-          "option": "ornith-1-0-397b",
-          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+          "option": "gpt-5-6-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
         },
         {
           "confidence": "weak",
-          "option": "exaone-4-0-1-2b",
-          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+          "option": "gpt-6-1-sol",
+          "reason": "exact to GPT-6.2 Sol, most components match"
         },
         {
           "confidence": "weak",
-          "option": "olmo-3-1-32b-instruct",
-          "reason": "the same name without its first 1 word(s): exact to 1-0-instruct, most components match"
+          "option": "gpt-6-2-astra",
+          "reason": "exact to GPT-6.2 Sol, most components match"
         }
       ],
+      "context": {
+        "known": 311,
+        "mapped": {
+          "gpt-5-6-sol": [
+            "GPT-5.6 Sol"
+          ],
+          "gpt-6-1-sol": [
+            "GPT-6.1 Sol"
+          ],
+          "gpt-6-2-astra": [
+            "GPT-6.2 Astra"
+          ],
+          "gpt-6-sol": [
+            "GPT-6 Sol"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "gpt-6-sol"
+            ],
+            "name": "GPT-6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-sol"
+            ],
+            "name": "GPT-5.6 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-1-sol"
+            ],
+            "name": "GPT-6.1 Sol"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-2-astra"
+            ],
+            "name": "GPT-6.2 Astra"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "GPT-5.2"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-luna"
+            ],
+            "name": "GPT-6 Luna"
+          },
+          {
+            "mapped_to": [
+              "gpt-6-astra"
+            ],
+            "name": "GPT-6 Astra"
+          },
+          {
+            "mapped_to": [
+              "gpt-5-6-luna"
+            ],
+            "name": "GPT-5.6 Luna"
+          }
+        ]
+      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'aion-1.0-instruct'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/aion-1.0-instruct",
-      "subject": "aion-1.0-instruct",
+      "question": "Map Epoch AI model 'GPT-6.2 Sol' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "GPT-6.2 Sol",
       "universe": "models"
     },
     {
@@ -43,35 +110,35 @@
         {
           "confidence": "exact",
           "option": "gemini-4-neon",
-          "reason": "exact to gemini-4-neon, exact match"
+          "reason": "exact to Gemini 4 Neon, exact match"
         },
         {
           "confidence": "weak",
           "option": "gemini-4-argon",
-          "reason": "exact to gemini-4-neon, most components match"
+          "reason": "exact to Gemini 4 Neon, most components match"
         },
         {
           "confidence": "weak",
           "option": "gemini-4-carbon",
-          "reason": "exact to gemini-4-neon, most components match"
+          "reason": "exact to Gemini 4 Neon, most components match"
         },
         {
           "confidence": "weak",
           "option": "gemini-4-hydrogen",
-          "reason": "exact to gemini-4-neon, most components match"
+          "reason": "exact to Gemini 4 Neon, most components match"
         }
       ],
       "context": {
-        "known": 367,
+        "known": 311,
         "mapped": {
           "gemini-4-argon": [
-            "gemini-4-argon"
+            "Gemini 4 Argon"
           ],
           "gemini-4-carbon": [
-            "gemini-4-carbon"
+            "Gemini 4 Carbon"
           ],
           "gemini-4-hydrogen": [
-            "gemini-4-hydrogen"
+            "Gemini 4 Hydrogen"
           ]
         },
         "siblings": [
@@ -79,89 +146,130 @@
             "mapped_to": [
               "gemini-4-argon"
             ],
-            "name": "gemini-4-argon"
+            "name": "Gemini 4 Argon"
           },
           {
             "mapped_to": [
               "gemini-4-carbon"
             ],
-            "name": "gemini-4-carbon"
+            "name": "Gemini 4 Carbon"
           },
           {
             "mapped_to": [
               "gemini-4-hydrogen"
             ],
-            "name": "gemini-4-hydrogen"
+            "name": "Gemini 4 Hydrogen"
           }
         ]
       },
-      "default": "gemini-4-neon",
+      "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Which llm.json model is llm-stats id 'gemini-4-neon'?",
-      "route": "update_llmstats_mapping.py",
-      "route_kind": "llmstats-model",
-      "source_url": "https://llm-stats.com/models/gemini-4-neon",
-      "subject": "gemini-4-neon",
+      "question": "Map Epoch AI model 'Gemini 4 Neon' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Gemini 4 Neon",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 438,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "mistralai/mistral-large"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "mistralai/mistral-large-2407"
+          },
+          {
+            "mapped_to": [
+              "mistral-large-3"
+            ],
+            "name": "mistralai/mistral-large-2512"
+          },
+          {
+            "mapped_to": [
+              "mistral-large-4"
+            ],
+            "name": "mistralai/mistral-large-4-0"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'mistralai/pixtral-large-2502' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/mistralai/pixtral-large-2502",
+      "subject": "mistralai/pixtral-large-2502",
       "universe": "models"
     },
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "hy4-flash",
-          "reason": "exact to Hy4 Flash, exact match"
+          "confidence": "weak",
+          "option": "aion-1-0-instruct",
+          "reason": "drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "reka-flash-3",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "ornith-1-0-9b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4-7-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "ornith-1-0-35b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-3-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "ornith-1-0-397b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "mimo-v2-flash",
-          "reason": "the same name without its first 1 word(s): exact to flash, substring match"
+          "option": "exaone-4-0-1-2b",
+          "reason": "the same name without its first 1 word(s): drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 67,
+        "known": 228,
         "mapped": {
-          "glm-5-3-flash": [
-            "GLM-5.3-Flash"
+          "exaone-4-0-1-2b": [
+            "LGAI-EXAONE/EXAONE-4.0-1.2B"
+          ],
+          "ornith-1-0-35b": [
+            "ornith-ai/Ornith-1.0-35B",
+            "ornith-ai/Ornith-1.0-35B-GGUF"
+          ],
+          "ornith-1-0-397b": [
+            "ornith-ai/Ornith-1.0-397B"
+          ],
+          "ornith-1-0-9b": [
+            "ornith-ai/Ornith-1.0-9B",
+            "ornith-ai/Ornith-1.0-9B-GGUF"
           ]
         },
         "siblings": []
       },
-      "default": null,
+      "default": "aion-1-0-instruct",
       "if_previous": null,
       "note": null,
-      "question": "Map Terminal-Bench model 'Hy4 Flash' to llm.json model",
-      "route": "update_tbench_mapping.py",
+      "question": "Map Spheron path 'microsoft/Aion-1.0-Instruct-2.3B' to llm.json model",
+      "route": "update_spheron_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-      "subject": "Hy4 Flash",
-      "universe": "models"
-    },
-    {
-      "candidates": [],
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map Vals AI path 'google/cobalt-c-high-1p00' to llm.json model",
-      "route": "update_vals_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.vals.ai/benchmarks/terminal-bench-4",
-      "subject": "google/cobalt-c-high-1p00",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/microsoft/Aion-1.0-Instruct-2.3B/",
+      "subject": "microsoft/Aion-1.0-Instruct-2.3B",
       "universe": "models"
     }
   ]
