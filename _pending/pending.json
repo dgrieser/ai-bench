@@ -1,3 +1,60 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "gemma-3-27b",
+          "reason": "the same name without its first 2 word(s): exact to 27b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-5-27b",
+          "reason": "the same name without its first 2 word(s): exact to 27b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-6-27b",
+          "reason": "the same name without its first 2 word(s): exact to 27b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "qwen3-8-27b",
+          "reason": "the same name without its first 2 word(s): exact to 27b, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "bonsai-2-27b",
+          "reason": "the same name without its first 2 word(s): exact to 27b, substring match"
+        }
+      ],
+      "context": {
+        "known": 439,
+        "mapped": {
+          "gemma-3-27b": [
+            "google/gemma-3-27b-it"
+          ],
+          "qwen3-5-27b": [
+            "qwen/qwen3.5-27b"
+          ],
+          "qwen3-6-27b": [
+            "qwen/qwen3.6-27b"
+          ],
+          "qwen3-8-27b": [
+            "qwen/qwen3.8-27b"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'radixark/daisyrose-27b' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/radixark/daisyrose-27b",
+      "subject": "radixark/daisyrose-27b",
+      "universe": "models"
+    }
+  ]
 }

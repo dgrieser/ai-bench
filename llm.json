@@ -57936,7 +57936,8 @@
         "aa_coding_index_4_1": 31,
         "aa_omniscience_1_1": -52.3,
         "aa_omniscience_hallucination_1_1": 80.6,
-        "aa_omniscience_accuracy_1_1": 15.7
+        "aa_omniscience_accuracy_1_1": 15.7,
+        "terminal_bench_science_0_1": 0
       },
       "scores_updated": {
         "openbench_index": null,
@@ -58015,7 +58016,8 @@
         "aa_coding_index_4_1": "2026-07-27",
         "aa_omniscience_1_1": "2026-11-17",
         "aa_omniscience_hallucination_1_1": "2026-11-17",
-        "aa_omniscience_accuracy_1_1": "2026-11-17"
+        "aa_omniscience_accuracy_1_1": "2026-11-17",
+        "terminal_bench_science_0_1": "2026-11-21"
       },
       "scores_source": {
         "openbench_index": null,
@@ -58094,7 +58096,8 @@
         "aa_coding_index_4_1": "https://artificialanalysis.ai/models/gemma-4-12b",
         "aa_omniscience_1_1": "https://artificialanalysis.ai/models/gemma-4-12b",
         "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gemma-4-12b",
-        "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gemma-4-12b"
+        "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gemma-4-12b",
+        "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gemma-4-12b"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -58165,6 +58168,13 @@
           {
             "date": "2026-06-29",
             "score": 18.2,
+            "source": "https://artificialanalysis.ai/models/gemma-4-12b"
+          }
+        ],
+        "terminal_bench_science_0_1": [
+          {
+            "date": "2026-11-21",
+            "score": 0,
             "source": "https://artificialanalysis.ai/models/gemma-4-12b"
           }
         ],
